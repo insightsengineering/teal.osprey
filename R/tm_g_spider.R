@@ -35,20 +35,20 @@
 #' @author Carolyn Zhang
 #' 
 #' @examples 
-#' 
+#' #Example spiderplot
 #' library(random.cdisc.data)
 #' library(plyr)
 #' library(dplyr)
+#' library(gridExtra)
+#' library(ggplot2)
 #' 
-#' asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#' aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+#' #asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+#' #aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 #'
 #' atr <- left_join(radam("ATR", N=10),radam("ADSL", N=10))
 #' #dat <- atr %>% filter(PARAMCD == "SUMTGLES") %>% as.data.frame()
 #' dat <- atr %>% as.data.frame()
 #'
-#' cmp <- max(dat["TUDY"])
-#' lbl <- apply(dat, 1, function(dat){if(dat["TUDY"] == cmp){paste(dat["USUBJID"], "test-length")}else{""}})
 #' colors <- c("black", "red", "blue", "green", "yellow", "brown")
 #' shapes <- c(0, 1, 2, 3, 4, 5, 6)
 #' map_marker_color <- mapvalues(dat$RACE, from = levels(dat$RACE), to = colors[1:nlevels(dat$RACE)])
@@ -57,12 +57,13 @@
 #'              y_label = "Change (%) from Baseline",
 #'              marker_x = dat$TUDY,
 #'              marker_y = dat$PCHG,
-#'              marker_color = dat$RACE,
+#'              marker_color = dat$USUBJID,
 #'              #marker_color_opt = map_marker_color,
-#'              #marker_shape = dat$RACE,
+#'              marker_shape = dat$RACE,
 #'              #marker_shape_opt = map_marker_shape,
-#'              line_color = dat$USUBJID,
-#'              datalabel_txt = lbl,
+#'              marker_size = 5,
+#'              line_color_colby = dat$USUBJID,
+#'              datalabel_txt = list(one = dat$USUBJID, two = dat$USUBJID, three = c("id-2", "id-4", "id-7")),
 #'              facet_rows = dat$SEX,
 #'              facet_columns = dat$ARM,
 #'              vref_line = c(10, 37),
@@ -85,10 +86,11 @@
 #'        marker_colorby_var = "RACE",
 #'        marker_colorby_var_choices = c("None", "RACE"),
 #'        line_colorby_var = "USUBJID",
-#'        line_colorby_var_choices = c("None", "USUBJID"),
+#'        line_colorby_var_choices = c("None", "USUBJID", "RACE"),
 #'        vref_line = c(10, 37),
 #'        href_line = c(-0.3, 1),
 #'        anno_txt_var = TRUE,
+#'        anno_disc_study = TRUE,
 #'        xfacet_var = "SEX",
 #'        xfacet_var_choices = c("None", "SEX"),
 #'        yfacet_var = "ARM",
@@ -118,6 +120,7 @@ tm_g_spiderplot <- function(label,
                             vref_line,
                             href_line,
                             anno_txt_var,
+                            anno_disc_study,
                             xfacet_var,
                             xfacet_var_choices = xfacet_var,
                             yfacet_var,
@@ -159,6 +162,7 @@ ui_g_spider <- function(id, ...) {
       optionalSelectInput(ns("xfacet_var"), "X-facet By Variable", a$xfacet_var_choices, a$xfacet_var, multiple = TRUE),
       optionalSelectInput(ns("yfacet_var"), "Y-facet By Variable", a$yfacet_var_choices, a$yfacet_var, multiple = TRUE),
       checkboxInput(ns("anno_txt_var"), "Add subject ID label", value = a$anno_txt_var),
+      checkboxInput(ns("anno_disc_study"), "Add marker for discontinued study", value = a$anno_disc_study),
       optionalSelectInput(ns("vref_line"), "X-reference line", a$vref_line, a$vref_line, multiple = TRUE),
       optionalSelectInput(ns("href_line"), "Y-reference line", a$href_line, a$href_line, multiple = TRUE),
       tags$label("Plot Settings", class="text-primary", style="margin-top: 15px;"),
@@ -166,7 +170,7 @@ ui_g_spider <- function(id, ...) {
     ),
     forms = tags$div(
       actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
-      actionButton(ns("export_plot"), "Export Plot", width = "100%")
+      downloadButton(ns("export_plot"), "Export Image", width = "100%")
     ),
     pre_output = a$pre_output,
     post_output = a$post_output
@@ -175,6 +179,8 @@ ui_g_spider <- function(id, ...) {
 }
 
 srv_g_spider <- function(input, output, session, datasets, dataname, code_data_processing) {
+  
+  vals <- reactiveValues(spiderplot=NULL)
   
   # dynamic plot height
   output$plot_ui <- renderUI({
@@ -185,6 +191,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
   })
   
   chunks <- list(
+    vars = "# Not Calculated",
     p_spiderplot = "# Not Calculated"
   )
   
@@ -201,16 +208,41 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     vref_line <- as.numeric(input$vref_line)
     href_line <- as.numeric(input$href_line)
     anno_txt_var <- input$anno_txt_var
+    anno_disc_study <- input$anno_disc_study
     xfacet_var <- input$xfacet_var
     yfacet_var <- input$yfacet_var
     
     ADAE_f <- ADAE %>% filter(PARAMCD == paramcd) %>% as.data.frame()
     
     lbl <- NULL
-    if(anno_txt_var){
-      cmp <- max(ADAE_f[,x_var])
-      lbl <- apply(ADAE_f, 1, function(dat){if(dat[x_var] == cmp){dat[line_colorby_var]}else{""}})
+    if(!anno_txt_var && anno_disc_study){
+      lbl <- list(two = as.factor(ADAE_f[,line_colorby_var]), three = c('id-1', 'id-2', 'id-3'))
     }
+    else if(anno_txt_var && !anno_disc_study){
+      lbl <- list(one = as.factor(ADAE_f[,line_colorby_var]))
+    }
+    else if(anno_txt_var && anno_disc_study){
+      # cmp <- max(ADAE_f[,x_var])
+      # label <- apply(ADAE_f, 1, function(dat){if(dat[x_var] == cmp){dat[line_colorby_var]}else{""}})
+      lbl <- list(one = as.factor(ADAE_f[,line_colorby_var]), two = as.factor(ADAE_f[,line_colorby_var]), three = c('id-1', 'id-2'))
+    }
+
+    chunks$vars <<- bquote({
+      paramcd <- .(paramcd)
+      x_var <- .(x_var)
+      y_var <- .(y_var)
+      marker_var <- .(marker_var)
+      marker_colorby_var <- .(marker_colorby_var)
+      line_colorby_var <- .(line_colorby_var)
+      vref_line <- .(vref_line)
+      href_line <- .(href_line)
+      anno_txt_var <- .(anno_txt_var)
+      anno_disc_study <- .(anno_disc_study)
+      xfacet_var <- .(xfacet_var)
+      yfacet_var <- .(yfacet_var)
+      ADAE_f <- .(ADAE_f)
+      lbl <- .(lbl)
+    })
     
     chunks$p_spiderplot <<- call(
       "g_spiderplot",
@@ -221,14 +253,15 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       marker_color = bquote(if(marker_colorby_var != "None"){ADAE_f[,marker_colorby_var]}else{NULL}),
       marker_shape = bquote(if(marker_var != "None"){ADAE_f[,marker_var]}else{NULL}),
       marker_size = 5,
-      line_color = bquote(ADAE_f[,line_colorby_var]),
+      line_color_colby = bquote(ADAE_f[,line_colorby_var]),
       datalabel_txt = bquote(lbl),
       facet_rows = bquote(if(yfacet_var != "None"){ADAE_f[,yfacet_var]}else{NULL}),
       facet_columns = bquote(if(xfacet_var != "None")ADAE_f[,xfacet_var]else{NULL}),
       vref_line = as.numeric(vref_line),
       href_line = as.numeric(href_line)
     )
-     eval(chunks$p_spiderplot)
+     vals$spiderplot <- eval(chunks$p_spiderplot)
+     vals$spiderplot
 
   })
   
@@ -245,7 +278,9 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       "",
       header,
       "",
-      remove_enclosing_curly_braces(deparse(chunks$analysis, width.cutoff = 60))
+      remove_enclosing_curly_braces(deparse(chunks$vars, width.cutoff = 60)),
+      "",
+      remove_enclosing_curly_braces(deparse(chunks$p_spiderplot, width.cutoff = 60))
     ), collapse = "\n")
     
     # .log("show R code")
@@ -257,4 +292,14 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     ))
   })
   
+  #export plot as a pdf
+  output$export_plot = downloadHandler(
+  filename = "spiderplot.pdf",
+  content = function(file) {
+     pdf(file)
+     print(vals$spiderplot) 
+     dev.off()
+  })
+  
 }
+

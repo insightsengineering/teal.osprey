@@ -58,7 +58,7 @@
 #'   )
 #' )
 #'    
-#' shinyApp(x$ui, x$server) 
+#' shinyApp(x$ui, x$server)  
 #'   
 #' 
 tm_t_ae <- function(label, 
@@ -112,6 +112,7 @@ ui_t_ae <- function(id, ...) {
 srv_t_ae <- function(input, output, session, datasets, dataname, code_data_processing) {
   
   chunks <- list(
+    vars = "# Not Calculated", 
     analysis = "# Not Calculated"
   )
   
@@ -122,8 +123,6 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     arm_var <- input$arm_var
     class_var <- input$class_var
     term_var <- input$term_var
-    
-    chunks$analysis <<- "# Not Calculated"
     
     validate_has_data(ADAE, min_nrow = 15)    
     validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
@@ -154,6 +153,11 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     }
     
     validate(need(nrow(ADAE_f) > 1, "need at least 1 data point"))
+    
+    chunks$vars <<- bquote({
+      ADAE_f <- .(ADAE_f)
+      arm_var <- .(arm_var)
+    })
    
     chunks$analysis <<- call(
       "t_ae",
@@ -185,6 +189,8 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     str_rcode <- paste(c(
       "",
       header,
+      "",
+      remove_enclosing_curly_braces(deparse(chunks$vars, width.cutoff = 60)),
       "",
       remove_enclosing_curly_braces(deparse(chunks$analysis, width.cutoff = 60))
     ), collapse = "\n")

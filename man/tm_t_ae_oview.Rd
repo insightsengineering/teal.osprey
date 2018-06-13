@@ -40,7 +40,6 @@ Display AET01 Adverse Events Summary Table Teal Module
 }
 \examples{
 
-
 library(dplyr)
 suppressPackageStartupMessages(library(tidyverse))
 library(rtables)
@@ -75,8 +74,6 @@ x <- teal::init(
    
 shinyApp(x$ui, x$server) 
   
-
-
 
 }
 \author{

@@ -82,7 +82,7 @@ x <- teal::init(
   )
 )
    
-shinyApp(x$ui, x$server) 
+shinyApp(x$ui, x$server)  
   
 
 }

@@ -4,12 +4,14 @@
 \alias{tm_g_spiderplot}
 \title{Spiderplot (Early Development) Teal Module}
 \usage{
-tm_g_spiderplot(label, dataname, paramcd, paramcd_choices, x_var, x_var_choices,
-  y_var, y_var_choices, marker_var, marker_var_choices, marker_colorby_var,
-  marker_colorby_var_choices, line_colorby_var, line_colorby_var_choices,
-  vref_line, href_line, anno_txt_var, xfacet_var, xfacet_var_choices,
-  yfacet_var, yfacet_var_choices, plot_height, pre_output = NULL,
-  post_output = NULL, code_data_processing = NULL)
+tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd, x_var,
+  x_var_choices = x_var, y_var, y_var_choices = y_var, marker_var,
+  marker_var_choices = marker_var, marker_colorby_var,
+  marker_colorby_var_choices = marker_colorby_var, line_colorby_var,
+  line_colorby_var_choices = line_colorby_var_choices, vref_line, href_line,
+  anno_txt_var, anno_disc_study, xfacet_var, xfacet_var_choices = xfacet_var,
+  yfacet_var, yfacet_var_choices = y_facet_var, plot_height,
+  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -77,16 +79,20 @@ an \code{\link[teal]{module}} object
 Spiderplot (Early Development) Teal Module
 }
 \examples{
-
+#Example spiderplot
 library(random.cdisc.data)
 library(plyr)
 library(dplyr)
+library(gridExtra)
+library(ggplot2)
+
+#asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+#aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 
 atr <- left_join(radam("ATR", N=10),radam("ADSL", N=10))
-dat <- atr \%>\% filter(PARAMCD == "SUMTGLES")
+#dat <- atr \%>\% filter(PARAMCD == "SUMTGLES") \%>\% as.data.frame()
+dat <- atr \%>\% as.data.frame()
 
-cmp <- max(dat["TUDY"])
-lbl <- apply(dat, 1, function(dat){if(dat["TUDY"] == cmp){paste(dat["USUBJID"], "test-length")}else{""}})
 colors <- c("black", "red", "blue", "green", "yellow", "brown")
 shapes <- c(0, 1, 2, 3, 4, 5, 6)
 map_marker_color <- mapvalues(dat$RACE, from = levels(dat$RACE), to = colors[1:nlevels(dat$RACE)])
@@ -95,42 +101,44 @@ g_spiderplot(x_label = "Time (Days)",
              y_label = "Change (\%) from Baseline",
              marker_x = dat$TUDY,
              marker_y = dat$PCHG,
-             marker_color = dat$RACE,
-             marker_color_opt = map_marker_color,
+             marker_color = dat$USUBJID,
+             #marker_color_opt = map_marker_color,
              marker_shape = dat$RACE,
-             marker_shape_opt = map_marker_shape,
-             line_color = dat$USUBJID,
-             datalabel_txt = lbl,
+             #marker_shape_opt = map_marker_shape,
+             marker_size = 5,
+             line_color_colby = dat$USUBJID,
+             datalabel_txt = list(one = dat$USUBJID, two = dat$USUBJID, three = c("id-2", "id-4", "id-7")),
              facet_rows = dat$SEX,
              facet_columns = dat$ARM,
              vref_line = c(10, 37),
              href_line = -0.3,
              show_legend = FALSE)
 x <- teal::init(
-  data = list(ASL = adae),
+  data = list(ASL = dat),
   modules = root_modules(
-    tm_g_spider(
+    tm_g_spiderplot(
        label = "Spiderplot",
        dataname = "ADAE",
        paramcd = "SUMTGLES",
-       paramcd_choices = unique(dat$PARAMCD),
+       paramcd_choices = c("SUMTGLES", "LDIAM"),
        x_var = "TUDY",
-       x_var_choices = "TUDY",
+       x_var_choices = c("None", "TUDY"),
        y_var = "PCHG",
-       y_var_choices = "PCHG",
+       y_var_choices = c("None", "PCHG"),
        marker_var = "RACE",
        marker_var_choices = c("None", "RACE"),
        marker_colorby_var = "RACE",
        marker_colorby_var_choices = c("None", "RACE"),
        line_colorby_var = "USUBJID",
-       line_colorby_var_choices = c("None", "USUBJID"),
+       line_colorby_var_choices = c("None", "USUBJID", "RACE"),
        vref_line = c(10, 37),
-       href_line = -0.3,
-       anno_txt_var = lbl,
+       href_line = c(-0.3, 1),
+       anno_txt_var = TRUE,
+       anno_disc_study = TRUE,
        xfacet_var = "SEX",
-       xfacet_var_choices = c("SEX"),
+       xfacet_var_choices = c("None", "SEX"),
        yfacet_var = "ARM",
-       yfacet_var_choices = c("ARM"),
+       yfacet_var_choices = c("None", "ARM"),
        plot_height = c(600, 200, 2000)
    )
   )

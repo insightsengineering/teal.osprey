@@ -21,7 +21,6 @@
 #' 
 #' @examples 
 #' 
-#' 
 #' library(dplyr)
 #' suppressPackageStartupMessages(library(tidyverse))
 #' library(rtables)
@@ -56,8 +55,6 @@
 #'    
 #' shinyApp(x$ui, x$server) 
 #'   
-#' 
-#' 
 #' 
 tm_t_ae_oview <- function(label, 
                           dataname, 
@@ -104,23 +101,18 @@ ui_t_ae_oview <- function(id, ...) {
 srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data_processing) {
   
   chunks <- list(
+    vars = "# Not Calculated",
     analysis = "# Not Calculated"
   )
   
   
   output$table <- renderUI({
-    #ADAE_f <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     ADAE <- datasets$get_data("ASL", reactive = FALSE, filtered = FALSE)
     arm_var <- input$arm_var
-    
-    chunks$analysis <<- "# Not Calculated"
     
     validate_has_data(ADAE, min_nrow = 15)    
     validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
     validate(need(!("" %in% ADAE[[arm_var]]), "arm values can not contain empty strings ''"))
-    
-    #data_name <- paste0(dataname, "_FILTERED")
-    #assign(data_name, ADAE_f)
     
     all_p <- input$All_Patients
     if(all_p == TRUE){
@@ -129,6 +121,13 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
     else{
       total = "NONE"
     }
+    
+    chunks$vars <<- bquote({
+      ADAE <- .(ADAE)
+      arm_var <- .(arm_var)
+      dataname <- .(dataname)
+      total <- .(total)
+    })
     
     chunks$analysis <<- call(
       "t_ae_oview",
@@ -168,6 +167,8 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
     str_rcode <- paste(c(
       "",
       header,
+      "",
+      remove_enclosing_curly_braces(deparse(chunks$vars, width.cutoff = 60)),
       "",
       remove_enclosing_curly_braces(deparse(chunks$analysis, width.cutoff = 60))
     ), collapse = "\n")
