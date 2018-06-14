@@ -45,11 +45,9 @@
 #' #asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
 #' #aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 #'
-#' #atr <- left_join(radam("ATR", N=10),radam("ADSL", N=10))
-#' #dat <- atr %>% filter(PARAMCD == "SUMTGLES") %>% as.data.frame()
-#' #dat <- atr %>% as.data.frame()
 #' ASL <- radam("ADSL", N=10)
 #' ATR <- radam("ATR", N=10)
+#' dat <- left_join(ATR, ASL) %>% filter(PARAMCD == "SUMTGLES") %>% as.data.frame()
 #'
 #' colors <- c("black", "red", "blue", "green", "yellow", "brown")
 #' shapes <- c(0, 1, 2, 3, 4, 5, 6)
