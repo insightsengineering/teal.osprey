@@ -89,9 +89,11 @@ library(ggplot2)
 #asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
 #aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 
-atr <- left_join(radam("ATR", N=10),radam("ADSL", N=10))
+#atr <- left_join(radam("ATR", N=10),radam("ADSL", N=10))
 #dat <- atr \%>\% filter(PARAMCD == "SUMTGLES") \%>\% as.data.frame()
-dat <- atr \%>\% as.data.frame()
+#dat <- atr \%>\% as.data.frame()
+ASL <- radam("ADSL", N=10)
+ATR <- radam("ATR", N=10)
 
 colors <- c("black", "red", "blue", "green", "yellow", "brown")
 shapes <- c(0, 1, 2, 3, 4, 5, 6)
@@ -114,11 +116,11 @@ g_spiderplot(x_label = "Time (Days)",
              href_line = -0.3,
              show_legend = FALSE)
 x <- teal::init(
-  data = list(ASL = dat),
+  data = list(ASL = ASL, ATR = ATR),
   modules = root_modules(
     tm_g_spiderplot(
        label = "Spiderplot",
-       dataname = "ADAE",
+       dataname = "ATR",
        paramcd = "SUMTGLES",
        paramcd_choices = c("SUMTGLES", "LDIAM"),
        x_var = "TUDY",

@@ -40,6 +40,32 @@ Display AET01 Adverse Events Summary Table Teal Module
 }
 \examples{
 
+#Example using stream (adam) dataset 
+
+library(dplyr)
+suppressPackageStartupMessages(library(tidyverse))
+library(rtables)
+
+ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+
+x1 <- teal::init(
+  data = list(ASL = ASL, AAE = AAE),
+  modules = root_modules(
+    tm_t_ae_oview(
+       label = "AE Overview Summary Table",
+       dataname = "AAE",
+       arm_var = "ARM",
+       arm_var_choices = c("ARM", "ARMCD"),
+       total_col = FALSE
+   )
+  )
+)
+   
+shinyApp(x1$ui, x1$server) 
+
+\dontrun{
+
 library(dplyr)
 suppressPackageStartupMessages(library(tidyverse))
 library(rtables)
@@ -73,6 +99,7 @@ x <- teal::init(
 )
    
 shinyApp(x$ui, x$server) 
+}
   
 
 }

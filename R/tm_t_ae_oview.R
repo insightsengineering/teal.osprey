@@ -19,7 +19,33 @@
 #' @author Carolyn Zhang
 #' 
 #' 
-#' @examples 
+#' @examples
+#' 
+#' #Example using stream (adam) dataset 
+#' 
+#' library(dplyr)
+#' suppressPackageStartupMessages(library(tidyverse))
+#' library(rtables)
+#' 
+#' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+#' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+#' 
+#' x1 <- teal::init(
+#'   data = list(ASL = ASL, AAE = AAE),
+#'   modules = root_modules(
+#'     tm_t_ae_oview(
+#'        label = "AE Overview Summary Table",
+#'        dataname = "AAE",
+#'        arm_var = "ARM",
+#'        arm_var_choices = c("ARM", "ARMCD"),
+#'        total_col = FALSE
+#'    )
+#'   )
+#' )
+#'    
+#' shinyApp(x1$ui, x1$server) 
+#' 
+#' \dontrun{
 #' 
 #' library(dplyr)
 #' suppressPackageStartupMessages(library(tidyverse))
@@ -54,6 +80,7 @@
 #' )
 #'    
 #' shinyApp(x$ui, x$server) 
+#' }
 #'   
 #' 
 tm_t_ae_oview <- function(label, 
@@ -105,9 +132,17 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
     analysis = "# Not Calculated"
   )
   
-  
   output$table <- renderUI({
-    ADAE <- datasets$get_data("ASL", reactive = FALSE, filtered = FALSE)
+    #if merging asl and aae
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    
+    ADAE  <- merge(ASL_FILTERED, AAE_FILTERED) %>% 
+      filter(AEBODSYS != "") %>%
+      filter(AEDECOD != "") %>%
+      as.data.frame()
+    
+    #ADAE <- datasets$get_data("ASL", reactive = FALSE, filtered = FALSE)
     arm_var <- input$arm_var
     
     validate_has_data(ADAE, min_nrow = 15)    
@@ -142,7 +177,7 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       arel = bquote(ADAE$AREL), 
       aerel = bquote(ADAE$AEREL), 
       aetoxgr = bquote(ADAE$AETOXGR),
-      col_by = bquote(as.factor(.(as.name(dataname))[[.(arm_var)]])),
+      col_by = bquote(as.factor(.(ADAE)[[.(arm_var)]])),
       total = total
     )
     

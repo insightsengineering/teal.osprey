@@ -25,6 +25,37 @@
 #' 
 #' @examples 
 #' 
+#' #Example using stream (adam) dataset 
+#' 
+#' library(dplyr)
+#' suppressPackageStartupMessages(library(tidyverse))
+#' library(rtables)
+#' 
+#' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+#' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+#' 
+#' 
+#' x1 <- teal::init(
+#'   data = list(ASL = ASL, AAE = AAE),
+#'   modules = root_modules(
+#'     tm_t_ae(
+#'        label = "Adverse Events Table",
+#'        dataname = "AAE",
+#'        arm_var = "ARM",
+#'        arm_var_choices = c("ARM", "ARMCD"),
+#'        class_var = "All Classes",
+#'        class_var_choices = c(unique(AAE$AEBODSYS), "All Classes"),
+#'        term_var = "All Terms",
+#'        term_var_choices = c(unique(AAE$AEDECOD), "All Terms"),
+#'        total_col = TRUE
+#'    )
+#'   )
+#' )
+#'    
+#' shinyApp(x1$ui, x1$server)  
+#' 
+#' \dontrun{
+#' #Example with random data
 #' 
 #' library(dplyr)
 #' suppressPackageStartupMessages(library(tidyverse))
@@ -41,7 +72,7 @@
 #' )
 #' 
 #' 
-#' x <- teal::init(
+#' x2 <- teal::init(
 #'   data = list(ASL = adae),
 #'   modules = root_modules(
 #'     tm_t_ae(
@@ -58,7 +89,8 @@
 #'   )
 #' )
 #'    
-#' shinyApp(x$ui, x$server)  
+#' shinyApp(x2$ui, x2$server)  
+#' }
 #'   
 #' 
 tm_t_ae <- function(label, 
@@ -118,8 +150,19 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
   
   
   output$table <- renderUI({
-    #ADAE_f <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    ADAE <- datasets$get_data("ASL", reactive = FALSE, filtered = FALSE)
+
+    #if using adae 
+    #ADAE <- datasets$get_data("ASL", reactive = FALSE, filtered = FALSE)
+    
+    #if merging asl and aae
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    
+    ADAE  <- merge(ASL_FILTERED, AAE_FILTERED) %>% 
+      filter(AEBODSYS != "") %>%
+      filter(AEDECOD != "") %>%
+      as.data.frame()
+    
     arm_var <- input$arm_var
     class_var <- input$class_var
     term_var <- input$term_var
@@ -139,7 +182,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     else{
       total = "NONE"
     }
-    
+
     ADAE_f <- ADAE
     if(class_var != "All Classes"){
       ADAE_f <- ADAE %>% 
@@ -155,8 +198,8 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     validate(need(nrow(ADAE_f) > 1, "need at least 1 data point"))
     
     chunks$vars <<- bquote({
-      ADAE_f <- .(ADAE_f)
       arm_var <- .(arm_var)
+      ADAE_f <- .(ADAE_f) %>% select(AEBODSYS, AEDECOD, USUBJID, arm_var)
     })
    
     chunks$analysis <<- call(

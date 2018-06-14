@@ -49,6 +49,37 @@ Display AET02 Adverse Events Table Teal Module
 }
 \examples{
 
+#Example using stream (adam) dataset 
+
+library(dplyr)
+suppressPackageStartupMessages(library(tidyverse))
+library(rtables)
+
+ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+
+
+x1 <- teal::init(
+  data = list(ASL = ASL, AAE = AAE),
+  modules = root_modules(
+    tm_t_ae(
+       label = "Adverse Events Table",
+       dataname = "AAE",
+       arm_var = "ARM",
+       arm_var_choices = c("ARM", "ARMCD"),
+       class_var = "All Classes",
+       class_var_choices = c(unique(AAE$AEBODSYS), "All Classes"),
+       term_var = "All Terms",
+       term_var_choices = c(unique(AAE$AEDECOD), "All Terms"),
+       total_col = TRUE
+   )
+  )
+)
+   
+shinyApp(x1$ui, x1$server)  
+
+\dontrun{
+#Example with random data
 
 library(dplyr)
 suppressPackageStartupMessages(library(tidyverse))
@@ -65,7 +96,7 @@ adae <- data.frame(
 )
 
 
-x <- teal::init(
+x2 <- teal::init(
   data = list(ASL = adae),
   modules = root_modules(
     tm_t_ae(
@@ -82,7 +113,8 @@ x <- teal::init(
   )
 )
    
-shinyApp(x$ui, x$server)  
+shinyApp(x2$ui, x2$server)  
+}
   
 
 }
