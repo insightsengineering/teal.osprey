@@ -41,6 +41,7 @@
 #' library(dplyr)
 #' library(gridExtra)
 #' library(ggplot2)
+#' require(lemon)
 #' 
 #' #asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
 #' #aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
@@ -53,22 +54,24 @@
 #' shapes <- c(0, 1, 2, 3, 4, 5, 6)
 #' map_marker_color <- mapvalues(dat$RACE, from = levels(dat$RACE), to = colors[1:nlevels(dat$RACE)])
 #' map_marker_shape <- mapvalues(dat$RACE, from = levels(dat$RACE), to = shapes[1:nlevels(dat$RACE)])
-#' g_spiderplot(x_label = "Time (Days)",
-#'              y_label = "Change (%) from Baseline",
-#'              marker_x = dat$TUDY,
+#' g_spiderplot(marker_x = data.frame(day = dat$TUDY),
 #'              marker_y = dat$PCHG,
+#'              line_colby = dat$USUBJID,
 #'              marker_color = dat$USUBJID,
 #'              #marker_color_opt = map_marker_color,
 #'              marker_shape = dat$RACE,
 #'              #marker_shape_opt = map_marker_shape,
 #'              marker_size = 5,
-#'              line_color_colby = dat$USUBJID,
 #'              datalabel_txt = list(one = dat$USUBJID, two = dat$USUBJID, three = c("id-2", "id-4", "id-7")),
+#'              #datalabel_txt = list(two = dat$USUBJID, three = c("id-2", "id-4", "id-7")),
 #'              facet_rows = dat$SEX,
 #'              facet_columns = dat$ARM,
 #'              vref_line = c(10, 37),
 #'              href_line = -0.3,
+#'              x_label = "Time (Days)",
+#'              y_label = "Change (%) from Baseline",
 #'              show_legend = FALSE)
+#'
 #' x <- teal::init(
 #'   data = list(ASL = ASL, ATR = ATR),
 #'   modules = root_modules(
@@ -86,7 +89,7 @@
 #'        marker_colorby_var = "RACE",
 #'        marker_colorby_var_choices = c("None", "RACE"),
 #'        line_colorby_var = "USUBJID",
-#'        line_colorby_var_choices = c("None", "USUBJID", "RACE"),
+#'        line_colorby_var_choices = c("USUBJID", "RACE"),
 #'        vref_line = c(10, 37),
 #'        href_line = c(-0.3, 1),
 #'        anno_txt_var = TRUE,
@@ -156,13 +159,13 @@ ui_g_spider <- function(id, ...) {
       optionalSelectInput(ns("paramcd"), "Parameter - from ATR", a$paramcd_choices, a$paramcd, multiple = FALSE),
       optionalSelectInput(ns("x_var"), "X-axis Variable", a$x_var_choices, a$x_var, multiple = FALSE),
       optionalSelectInput(ns("y_var"), "Y-axis Variable", a$y_var_choices, a$y_var, multiple = FALSE),
-      optionalSelectInput(ns("marker_colorby_var"), "Color By Variable (Marker)", a$marker_colorby_var_choices, a$marker_colorby_var, multiple = FALSE),
       optionalSelectInput(ns("line_colorby_var"), "Color By Variable (Line)", a$line_colorby_var_choices, a$line_colorby_var, multiple = FALSE),
+      optionalSelectInput(ns("marker_colorby_var"), "Color By Variable (Marker)", a$marker_colorby_var_choices, a$marker_colorby_var, multiple = FALSE),
       optionalSelectInput(ns("marker_var"), "Marker Symbol By Variable", a$marker_var_choices, a$marker_var, multiple = FALSE),
-      optionalSelectInput(ns("xfacet_var"), "X-facet By Variable", a$xfacet_var_choices, a$xfacet_var, multiple = TRUE),
-      optionalSelectInput(ns("yfacet_var"), "Y-facet By Variable", a$yfacet_var_choices, a$yfacet_var, multiple = TRUE),
+      optionalSelectInput(ns("xfacet_var"), "X-facet By Variable", a$xfacet_var_choices, a$xfacet_var, multiple = FALSE),
+      optionalSelectInput(ns("yfacet_var"), "Y-facet By Variable", a$yfacet_var_choices, a$yfacet_var, multiple = FALSE),
       checkboxInput(ns("anno_txt_var"), "Add subject ID label", value = a$anno_txt_var),
-      checkboxInput(ns("anno_disc_study"), "Add marker for discontinued study", value = a$anno_disc_study),
+      checkboxInput(ns("anno_disc_study"), "Add annotation marker", value = a$anno_disc_study),
       optionalSelectInput(ns("vref_line"), "X-reference line", a$vref_line, a$vref_line, multiple = TRUE),
       optionalSelectInput(ns("href_line"), "Y-reference line", a$href_line, a$href_line, multiple = TRUE),
       tags$label("Plot Settings", class="text-primary", style="margin-top: 15px;"),
@@ -252,19 +255,19 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     
     chunks$p_spiderplot <<- call(
       "g_spiderplot",
-      x_label = "Time (Days)",
-      y_label = "Change (%) from Baseline",
-      marker_x = bquote(ADAE_f[,x_var]),
+      marker_x = bquote(data.frame(day = ADAE_f[,x_var], groupby = ADAE_f$USUBJID)),
       marker_y = bquote(ADAE_f[,y_var]),
+      line_colby = bquote(if(line_colorby_var != "None"){ADAE_f[,line_colorby_var]}else{NULL}),
       marker_color = bquote(if(marker_colorby_var != "None"){ADAE_f[,marker_colorby_var]}else{NULL}),
       marker_shape = bquote(if(marker_var != "None"){ADAE_f[,marker_var]}else{NULL}),
       marker_size = 5,
-      line_color_colby = bquote(ADAE_f[,line_colorby_var]),
       datalabel_txt = bquote(lbl),
       facet_rows = bquote(if(yfacet_var != "None"){ADAE_f[,yfacet_var]}else{NULL}),
       facet_columns = bquote(if(xfacet_var != "None")ADAE_f[,xfacet_var]else{NULL}),
       vref_line = as.numeric(vref_line),
-      href_line = as.numeric(href_line)
+      href_line = as.numeric(href_line),
+      x_label = "Time (Days)",
+      y_label = "Change (%) from Baseline"
     )
      vals$spiderplot <- eval(chunks$p_spiderplot)
      vals$spiderplot

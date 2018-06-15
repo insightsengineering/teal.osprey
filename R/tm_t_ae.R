@@ -31,8 +31,11 @@
 #' suppressPackageStartupMessages(library(tidyverse))
 #' library(rtables)
 #' 
-#' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+#' #ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+#' #AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+#' 
+#' ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
+#' AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
 #' 
 #' 
 #' x1 <- teal::init(

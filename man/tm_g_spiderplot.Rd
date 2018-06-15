@@ -85,6 +85,7 @@ library(plyr)
 library(dplyr)
 library(gridExtra)
 library(ggplot2)
+require(lemon)
 
 #asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
 #aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
@@ -97,22 +98,24 @@ colors <- c("black", "red", "blue", "green", "yellow", "brown")
 shapes <- c(0, 1, 2, 3, 4, 5, 6)
 map_marker_color <- mapvalues(dat$RACE, from = levels(dat$RACE), to = colors[1:nlevels(dat$RACE)])
 map_marker_shape <- mapvalues(dat$RACE, from = levels(dat$RACE), to = shapes[1:nlevels(dat$RACE)])
-g_spiderplot(x_label = "Time (Days)",
-             y_label = "Change (\%) from Baseline",
-             marker_x = dat$TUDY,
+g_spiderplot(marker_x = data.frame(day = dat$TUDY),
              marker_y = dat$PCHG,
+             line_colby = dat$USUBJID,
              marker_color = dat$USUBJID,
              #marker_color_opt = map_marker_color,
              marker_shape = dat$RACE,
              #marker_shape_opt = map_marker_shape,
              marker_size = 5,
-             line_color_colby = dat$USUBJID,
              datalabel_txt = list(one = dat$USUBJID, two = dat$USUBJID, three = c("id-2", "id-4", "id-7")),
+             #datalabel_txt = list(two = dat$USUBJID, three = c("id-2", "id-4", "id-7")),
              facet_rows = dat$SEX,
              facet_columns = dat$ARM,
              vref_line = c(10, 37),
              href_line = -0.3,
+             x_label = "Time (Days)",
+             y_label = "Change (\%) from Baseline",
              show_legend = FALSE)
+
 x <- teal::init(
   data = list(ASL = ASL, ATR = ATR),
   modules = root_modules(
@@ -130,7 +133,7 @@ x <- teal::init(
        marker_colorby_var = "RACE",
        marker_colorby_var_choices = c("None", "RACE"),
        line_colorby_var = "USUBJID",
-       line_colorby_var_choices = c("None", "USUBJID", "RACE"),
+       line_colorby_var_choices = c("USUBJID", "RACE"),
        vref_line = c(10, 37),
        href_line = c(-0.3, 1),
        anno_txt_var = TRUE,
