@@ -46,11 +46,11 @@ library(dplyr)
 suppressPackageStartupMessages(library(tidyverse))
 library(rtables)
 
-#ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 
-ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
-AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
+#ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
+#AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
 
 x1 <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
@@ -67,42 +67,6 @@ x1 <- teal::init(
    
 shinyApp(x1$ui, x1$server) 
 
-\dontrun{
-
-library(dplyr)
-suppressPackageStartupMessages(library(tidyverse))
-library(rtables)
-
-adae <- read_bce("/opt/BIOSTAT/home_ext2/qit3/cdt70194/go39733/libraries/adae.sas7bdat")
-adae <- data.frame(USUBJID = adae$USUBJID,
-   AESOC = adae$AESOC,
-   AEDECOD = adae$AEDECOD,
-   DTHFL = adae$DTHFL,
-   DCSREAS = adae$DCSREAS,
-   AESDTH = adae$AESDTH,
-   AESER = adae$AESER,
-   AEACN = adae$AEACN,
-   AREL = adae$AREL,
-   AEREL = adae$AEREL,
-   AETOXGR = adae$AETOXGR,
-   ARM = adae$ARM)
-
-
-x <- teal::init(
-  data = list(ASL = adae),
-  modules = root_modules(
-    tm_t_ae_oview(
-       label = "AE Overview Summary Table",
-       dataname = "ADAE",
-       arm_var = "ARM",
-       arm_var_choices = c("ARM", "ARMCD"),
-       total_col = FALSE
-   )
-  )
-)
-   
-shinyApp(x$ui, x$server) 
-}
   
 
 }

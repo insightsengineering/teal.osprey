@@ -31,11 +31,11 @@
 #' suppressPackageStartupMessages(library(tidyverse))
 #' library(rtables)
 #' 
-#' #ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#' #AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+#' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+#' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 #' 
-#' ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
-#' AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
+#' #ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
+#' #AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
 #' 
 #' 
 #' x1 <- teal::init(
@@ -57,43 +57,6 @@
 #'    
 #' shinyApp(x1$ui, x1$server)  
 #' 
-#' \dontrun{
-#' #Example with random data
-#' 
-#' library(dplyr)
-#' suppressPackageStartupMessages(library(tidyverse))
-#' library(random.cdisc.data)
-#' library(rtables)
-#' 
-#' data <- left_join(radam("AAE", N=10),radam("ADSL", N=10))
-#'
-#' adae <- data.frame(
-#'   AEBODSYS = data$AEBODSYS,
-#'   AEDECOD =  data$AEDECOD,
-#'   USUBJID = data$USUBJID,
-#'   ARM = data$ARM
-#' )
-#' 
-#' 
-#' x2 <- teal::init(
-#'   data = list(ASL = adae),
-#'   modules = root_modules(
-#'     tm_t_ae(
-#'        label = "Adverse Events Table",
-#'        dataname = "ADAE",
-#'        arm_var = "ARM",
-#'        arm_var_choices = c("ARM", "ARMCD"),
-#'        class_var = "All Classes",
-#'        class_var_choices = c(unique(data$AEBODSYS), "All Classes"),
-#'        term_var = "All Terms",
-#'        term_var_choices = c(unique(data$AEDECOD), "All Terms"),
-#'        total_col = TRUE
-#'    )
-#'   )
-#' )
-#'    
-#' shinyApp(x2$ui, x2$server)  
-#' }
 #'   
 #' 
 tm_t_ae <- function(label, 
@@ -154,10 +117,6 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
   
   output$table <- renderUI({
 
-    #if using adae 
-    #ADAE <- datasets$get_data("ASL", reactive = FALSE, filtered = FALSE)
-    
-    #if merging asl and aae
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
@@ -170,13 +129,10 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     class_var <- input$class_var
     term_var <- input$term_var
     
-    validate_has_data(ADAE, min_nrow = 15)    
+    validate_has_data(ADAE, min_nrow = 1)    
     validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
     validate(need(!("" %in% ADAE[[arm_var]]), "arm values can not contain empty strings ''"))
-    
-    #data_name <- paste0(dataname, "_FILTERED")
-    #assign(data_name, ADAE_f)
-    
+
     all_p <- input$All_Patients
     
     if(all_p == TRUE){
@@ -227,7 +183,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     
     header <- get_rcode_header(
       title = "Adverse Events Table",
-      datanames = "ASL",
+      datanames = dataname,
       datasets = datasets,
       code_data_processing
     )

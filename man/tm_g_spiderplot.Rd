@@ -92,29 +92,11 @@ require(lemon)
 
 ASL <- radam("ADSL", N=10)
 ATR <- radam("ATR", N=10)
-dat <- left_join(ATR, ASL) \%>\% filter(PARAMCD == "SUMTGLES") \%>\% as.data.frame()
+#dat <- left_join(ATR, ASL) \%>\% filter(PARAMCD == "SUMTGLES") \%>\% as.data.frame()
 
-colors <- c("black", "red", "blue", "green", "yellow", "brown")
-shapes <- c(0, 1, 2, 3, 4, 5, 6)
-map_marker_color <- mapvalues(dat$RACE, from = levels(dat$RACE), to = colors[1:nlevels(dat$RACE)])
-map_marker_shape <- mapvalues(dat$RACE, from = levels(dat$RACE), to = shapes[1:nlevels(dat$RACE)])
-g_spiderplot(marker_x = data.frame(day = dat$TUDY),
-             marker_y = dat$PCHG,
-             line_colby = dat$USUBJID,
-             marker_color = dat$USUBJID,
-             #marker_color_opt = map_marker_color,
-             marker_shape = dat$RACE,
-             #marker_shape_opt = map_marker_shape,
-             marker_size = 5,
-             datalabel_txt = list(one = dat$USUBJID, two = dat$USUBJID, three = c("id-2", "id-4", "id-7")),
-             #datalabel_txt = list(two = dat$USUBJID, three = c("id-2", "id-4", "id-7")),
-             facet_rows = dat$SEX,
-             facet_columns = dat$ARM,
-             vref_line = c(10, 37),
-             href_line = -0.3,
-             x_label = "Time (Days)",
-             y_label = "Change (\%) from Baseline",
-             show_legend = FALSE)
+# test character vector as x axis labels
+#ATR <-  ATR \%>\% arrange(TUDY) \%>\% mutate(day = as.numeric(TUDY))# \%>\% as.data.frame()
+ATR$TUDY <- as.numeric(ATR$TUDY)
 
 x <- teal::init(
   data = list(ASL = ASL, ATR = ATR),

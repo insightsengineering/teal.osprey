@@ -48,29 +48,11 @@
 #'
 #' ASL <- radam("ADSL", N=10)
 #' ATR <- radam("ATR", N=10)
-#' dat <- left_join(ATR, ASL) %>% filter(PARAMCD == "SUMTGLES") %>% as.data.frame()
-#'
-#' colors <- c("black", "red", "blue", "green", "yellow", "brown")
-#' shapes <- c(0, 1, 2, 3, 4, 5, 6)
-#' map_marker_color <- mapvalues(dat$RACE, from = levels(dat$RACE), to = colors[1:nlevels(dat$RACE)])
-#' map_marker_shape <- mapvalues(dat$RACE, from = levels(dat$RACE), to = shapes[1:nlevels(dat$RACE)])
-#' g_spiderplot(marker_x = data.frame(day = dat$TUDY),
-#'              marker_y = dat$PCHG,
-#'              line_colby = dat$USUBJID,
-#'              marker_color = dat$USUBJID,
-#'              #marker_color_opt = map_marker_color,
-#'              marker_shape = dat$RACE,
-#'              #marker_shape_opt = map_marker_shape,
-#'              marker_size = 5,
-#'              datalabel_txt = list(one = dat$USUBJID, two = dat$USUBJID, three = c("id-2", "id-4", "id-7")),
-#'              #datalabel_txt = list(two = dat$USUBJID, three = c("id-2", "id-4", "id-7")),
-#'              facet_rows = dat$SEX,
-#'              facet_columns = dat$ARM,
-#'              vref_line = c(10, 37),
-#'              href_line = -0.3,
-#'              x_label = "Time (Days)",
-#'              y_label = "Change (%) from Baseline",
-#'              show_legend = FALSE)
+#' #dat <- left_join(ATR, ASL) %>% filter(PARAMCD == "SUMTGLES") %>% as.data.frame()
+#' 
+#' # test character vector as x axis labels
+#' #ATR <-  ATR %>% arrange(TUDY) %>% mutate(day = as.numeric(TUDY))# %>% as.data.frame()
+#' ATR$TUDY <- as.character(ATR$TUDY)
 #'
 #' x <- teal::init(
 #'   data = list(ASL = ASL, ATR = ATR),
@@ -90,7 +72,7 @@
 #'        marker_colorby_var_choices = c("None", "RACE"),
 #'        line_colorby_var = "USUBJID",
 #'        line_colorby_var_choices = c("USUBJID", "RACE"),
-#'        vref_line = c(10, 37),
+#'        vref_line = c("10", "37"),
 #'        href_line = c(-0.3, 1),
 #'        anno_txt_var = TRUE,
 #'        anno_disc_study = TRUE,
@@ -200,8 +182,6 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
   
   output$spiderplot <- renderPlot({
     
-    #ADAE <- datasets$get_data("ASL", reactive = FALSE, filtered = FALSE)
-    #if merging asl and aae
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     ATR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
@@ -214,14 +194,23 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     marker_var <- input$marker_var
     marker_colorby_var <- input$marker_colorby_var
     line_colorby_var <- input$line_colorby_var
-    vref_line <- as.numeric(input$vref_line)
-    href_line <- as.numeric(input$href_line)
     anno_txt_var <- input$anno_txt_var
     anno_disc_study <- input$anno_disc_study
     xfacet_var <- input$xfacet_var
     yfacet_var <- input$yfacet_var
     
     ADAE_f <- ADAE %>% filter(PARAMCD == paramcd) %>% as.data.frame()
+    
+    if(is.numeric(ADAE_f[,x_var])){
+      vref_line <- as.numeric(input$vref_line)
+      print("numeric")
+    } else{
+      vref_line <- input$vref_line
+    }
+    href_line <- as.numeric(input$href_line)
+    
+    print(class(vref_line))
+    print(vref_line)
     
     lbl <- NULL
     if(!anno_txt_var && anno_disc_study){
@@ -231,8 +220,6 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       lbl <- list(one = as.factor(ADAE_f[,line_colorby_var]))
     }
     else if(anno_txt_var && anno_disc_study){
-      # cmp <- max(ADAE_f[,x_var])
-      # label <- apply(ADAE_f, 1, function(dat){if(dat[x_var] == cmp){dat[line_colorby_var]}else{""}})
       lbl <- list(one = as.factor(ADAE_f[,line_colorby_var]), two = as.factor(ADAE_f[,line_colorby_var]), three = c('id-1', 'id-2'))
     }
 
@@ -264,8 +251,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       datalabel_txt = bquote(lbl),
       facet_rows = bquote(if(yfacet_var != "None"){ADAE_f[,yfacet_var]}else{NULL}),
       facet_columns = bquote(if(xfacet_var != "None")ADAE_f[,xfacet_var]else{NULL}),
-      vref_line = as.numeric(vref_line),
-      href_line = as.numeric(href_line),
+      vref_line = bquote(vref_line),
+      href_line = bquote(href_line),
       x_label = "Time (Days)",
       y_label = "Change (%) from Baseline"
     )
@@ -278,7 +265,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     
     header <- get_rcode_header(
       title = "Spiderplot",
-      datanames = "ASL",
+      datanames = dataname,
       datasets = datasets,
       code_data_processing
     )
