@@ -96,7 +96,7 @@ ATR <- radam("ATR", N=10)
 
 # test character vector as x axis labels
 #ATR <-  ATR \%>\% arrange(TUDY) \%>\% mutate(day = as.numeric(TUDY))# \%>\% as.data.frame()
-ATR$TUDY <- as.numeric(ATR$TUDY)
+ATR$TUDY <- as.character(ATR$TUDY)
 
 x <- teal::init(
   data = list(ASL = ASL, ATR = ATR),
@@ -116,7 +116,7 @@ x <- teal::init(
        marker_colorby_var_choices = c("None", "RACE"),
        line_colorby_var = "USUBJID",
        line_colorby_var_choices = c("USUBJID", "RACE"),
-       vref_line = c(10, 37),
+       vref_line = c("10", "37"),
        href_line = c(-0.3, 1),
        anno_txt_var = TRUE,
        anno_disc_study = TRUE,
