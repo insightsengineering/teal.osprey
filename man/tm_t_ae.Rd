@@ -48,9 +48,7 @@ an \code{\link[teal]{module}} object
 Display AET02 Adverse Events Table Teal Module
 }
 \examples{
-
 #Example using stream (adam) dataset 
-
 library(dplyr)
 suppressPackageStartupMessages(library(tidyverse))
 library(rtables)
@@ -61,7 +59,6 @@ AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.s
 #ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
 #AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
 
-
 x1 <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
   modules = root_modules(
@@ -70,10 +67,10 @@ x1 <- teal::init(
        dataname = "AAE",
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
-       class_var = "All Classes",
-       class_var_choices = c(unique(AAE$AEBODSYS), "All Classes"),
-       term_var = "All Terms",
-       term_var_choices = c(unique(AAE$AEDECOD), "All Terms"),
+       class_var = "AEBODSYS",
+       class_var_choices = c("AEBODSYS", "DEFAULT"),
+       term_var = "AEDECOD",
+       term_var_choices = c("AEDECOD", "DEFAULT"),
        total_col = TRUE
    )
   )
@@ -81,7 +78,6 @@ x1 <- teal::init(
    
 shinyApp(x1$ui, x1$server)  
 
-  
 
 }
 \author{

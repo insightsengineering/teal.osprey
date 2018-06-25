@@ -4,9 +4,9 @@
 \alias{tm_t_ds}
 \title{Display DST01 Patient Disposition Table Teal Module}
 \usage{
-tm_t_ds(label, dataname, arm_var, arm_var_choices, term_var, term_var_choices,
-  total_col = TRUE, pre_output = NULL, post_output = NULL,
-  code_data_processing = NULL)
+tm_t_ds(label, dataname, arm_var, arm_var_choices, class_var, class_var_choices,
+  term_var, term_var_choices, total_col = TRUE, pre_output = NULL,
+  post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -54,7 +54,6 @@ library(rtables)
 ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
 AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 
-#this dataset also has other: should this be included in table?
 x <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
   modules = root_modules(
@@ -63,6 +62,8 @@ x <- teal::init(
        dataname = "AAE",
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
+       class_var = "EOSSTT",
+       class_var_choices = "EOSSTT",
        term_var = "DCSREAS",
        term_var_choices = c("DCSREAS", "DCSREASP"),
        total_col = TRUE

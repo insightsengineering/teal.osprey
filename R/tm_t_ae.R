@@ -24,9 +24,7 @@
 #' 
 #' 
 #' @examples 
-#' 
 #' #Example using stream (adam) dataset 
-#' 
 #' library(dplyr)
 #' suppressPackageStartupMessages(library(tidyverse))
 #' library(rtables)
@@ -37,7 +35,6 @@
 #' #ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
 #' #AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
 #' 
-#' 
 #' x1 <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
 #'   modules = root_modules(
@@ -46,10 +43,10 @@
 #'        dataname = "AAE",
 #'        arm_var = "ARM",
 #'        arm_var_choices = c("ARM", "ARMCD"),
-#'        class_var = "All Classes",
-#'        class_var_choices = c(unique(AAE$AEBODSYS), "All Classes"),
-#'        term_var = "All Terms",
-#'        term_var_choices = c(unique(AAE$AEDECOD), "All Terms"),
+#'        class_var = "AEBODSYS",
+#'        class_var_choices = c("AEBODSYS", "DEFAULT"),
+#'        term_var = "AEDECOD",
+#'        term_var_choices = c("AEDECOD", "DEFAULT"),
 #'        total_col = TRUE
 #'    )
 #'   )
@@ -57,7 +54,6 @@
 #'    
 #' shinyApp(x1$ui, x1$server)  
 #' 
-#'   
 #' 
 tm_t_ae <- function(label, 
                     dataname, 
@@ -96,8 +92,8 @@ ui_t_ae <- function(id, ...) {
       tags$label("Encodings", class="text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
       optionalSelectInput(ns("arm_var"), "Arm Variable", a$arm_var_choices, a$arm_var, multiple = FALSE),
-      optionalSelectInput(ns("class_var"), "Class Variables", a$class_var_choices, a$class_var, multiple = TRUE),
-      optionalSelectInput(ns("term_var"), "Term variables", a$term_var_choices, a$term_var, multiple = TRUE),
+      optionalSelectInput(ns("class_var"), "Class Variables", a$class_var_choices, a$class_var, multiple = FALSE),
+      optionalSelectInput(ns("term_var"), "Term variables", a$term_var_choices, a$term_var, multiple = FALSE),
       checkboxInput(ns("All_Patients"), "Add All Patients", value = a$total_col)
     ),
     forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
@@ -114,20 +110,20 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     analysis = "# Not Calculated"
   )
   
-  
   output$table <- renderUI({
 
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
-    ADAE  <- merge(ASL_FILTERED, AAE_FILTERED) %>% 
-      filter(AEBODSYS != "") %>%
-      filter(AEDECOD != "") %>%
-      as.data.frame()
-    
     arm_var <- input$arm_var
     class_var <- input$class_var
     term_var <- input$term_var
+    
+    ADAE  <- merge(ASL_FILTERED, AAE_FILTERED) %>% 
+      as.data.frame()
+    
+    ADAE <- ADAE[!(ADAE[,class_var] == ""),]
+    ADAE <- ADAE[!(ADAE[,term_var] == ""),]
     
     validate_has_data(ADAE, min_nrow = 1)    
     validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
@@ -137,34 +133,23 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     
     if(all_p == TRUE){
       total = "ALL Patients"
-    }
-    else{
+    } else{
       total = "NONE"
     }
 
     ADAE_f <- ADAE
-    if(class_var != "All Classes"){
-      ADAE_f <- ADAE %>% 
-        filter(AEBODSYS %in% class_var) %>% 
-        droplevels()
-    }
-    if(term_var != "All Terms"){
-      ADAE_f <- ADAE %>% 
-        filter(AEDECOD %in% term_var) %>% 
-        droplevels()
-    }
     
     validate(need(nrow(ADAE_f) > 1, "need at least 1 data point"))
     
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)
-      ADAE_f <- .(ADAE_f) %>% select(AEBODSYS, AEDECOD, USUBJID, arm_var)
+      ADAE_f <- .(ADAE_f) 
     })
    
     chunks$analysis <<- call(
       "t_ae",
-      class = bquote(ADAE_f$AEBODSYS), 
-      term = bquote(ADAE_f$AEDECOD), 
+      class = bquote(ADAE_f[[.(class_var)]]), 
+      term = bquote(ADAE_f[[.(term_var)]]), 
       id = bquote(ADAE_f$USUBJID),
       col_by = bquote(as.factor(.(ADAE_f)[[.(arm_var)]])),
       total = total
@@ -176,7 +161,6 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     
     as_html(tbl)
   })
-  
   
   
   observeEvent(input$show_rcode, {

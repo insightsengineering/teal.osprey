@@ -39,9 +39,7 @@ an \code{\link[teal]{module}} object
 Display AET01 Adverse Events Summary Table Teal Module
 }
 \examples{
-
 #Example using stream (adam) dataset 
-
 library(dplyr)
 suppressPackageStartupMessages(library(tidyverse))
 library(rtables)
@@ -68,7 +66,6 @@ x1 <- teal::init(
 shinyApp(x1$ui, x1$server) 
 
   
-
 }
 \author{
 Carolyn Zhang

@@ -31,7 +31,6 @@
 #' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
 #' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 #' 
-#' #this dataset also has other: should this be included in table?
 #' x <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
 #'   modules = root_modules(
@@ -40,6 +39,8 @@
 #'        dataname = "AAE",
 #'        arm_var = "ARM",
 #'        arm_var_choices = c("ARM", "ARMCD"),
+#'        class_var = "EOSSTT",
+#'        class_var_choices = "EOSSTT",
 #'        term_var = "DCSREAS",
 #'        term_var_choices = c("DCSREAS", "DCSREASP"),
 #'        total_col = TRUE
@@ -55,6 +56,8 @@ tm_t_ds <- function(label,
                     dataname, 
                     arm_var, 
                     arm_var_choices, 
+                    class_var,
+                    class_var_choices,
                     term_var, 
                     term_var_choices, 
                     total_col = TRUE, 
@@ -86,7 +89,8 @@ ui_t_ds <- function(id, ...) {
       tags$label("Encodings", class="text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
       optionalSelectInput(ns("arm_var"), "Arm Variable", a$arm_var_choices, a$arm_var, multiple = FALSE),
-      optionalSelectInput(ns("term_var"), "Disposition Variable", a$term_var_choices, a$term_var, multiple = FALSE),
+      optionalSelectInput(ns("class_var"), "Class Variable", a$class_var_choices, a$class_var, multiple = FALSE),
+      optionalSelectInput(ns("term_var"), "Term Variable", a$term_var_choices, a$term_var, multiple = FALSE),
       checkboxInput(ns("All_Patients"), "Add All Patients", value = a$total_col)
     ),
     forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
@@ -113,6 +117,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       as.data.frame()
     
     arm_var <- input$arm_var
+    class_var <- input$class_var
     term_var <- input$term_var
     
     validate_has_data(ADAE, min_nrow = 1)    
@@ -128,17 +133,21 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       total = "NONE"
     }
     
+    ADAE <- ADAE[!(ADAE[,class_var] == ""),]
+    ADAE <- ADAE[!(ADAE[,term_var] == ""),]
+    
     ADAE_f <- ADAE
     
     validate(need(nrow(ADAE_f) > 1, "need at least 1 data point"))
     
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)
-      ADAE_f <- .(ADAE_f) %>% select(DCSREAS, USUBJID, arm_var)
+      ADAE_f <- .(ADAE_f) 
     })
     
     chunks$analysis <<- call(
       "t_ds",
+      class = bquote(ADAE_f[, class_var]),
       term = bquote(ADAE_f[, term_var]), 
       id = bquote(ADAE_f$USUBJID),
       col_by = bquote(as.factor(.(ADAE_f)[[.(arm_var)]])),

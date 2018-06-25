@@ -20,9 +20,7 @@
 #' 
 #' 
 #' @examples
-#' 
 #' #Example using stream (adam) dataset 
-#' 
 #' library(dplyr)
 #' suppressPackageStartupMessages(library(tidyverse))
 #' library(rtables)
@@ -49,7 +47,6 @@
 #' shinyApp(x1$ui, x1$server) 
 #' 
 #'   
-#' 
 tm_t_ae_oview <- function(label, 
                           dataname, 
                           arm_var, 
@@ -109,10 +106,9 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       filter(AEDECOD != "") %>%
       as.data.frame()
     
-    #ADAE <- datasets$get_data("ASL", reactive = FALSE, filtered = FALSE)
     arm_var <- input$arm_var
     
-    validate_has_data(ADAE, min_nrow = 15)    
+    validate_has_data(ADAE, min_nrow = 1)    
     validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
     validate(need(!("" %in% ADAE[[arm_var]]), "arm values can not contain empty strings ''"))
     
@@ -124,10 +120,23 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       total = "NONE"
     }
     
+    flag <- data.frame(dthfl = ADAE$DTHFL,
+                       dcsreas = ADAE$DCSREAS,
+                       aesdth = ADAE$AESDTH,
+                       aeser = ADAE$AESER,
+                       aeacn = ADAE$AEACN,
+                       arel = ADAE$AREL,
+                       aerel = ADAE$AEREL,
+                       aetoxgr = ADAE$AETOXGR)
+    display <- c("fatal", "ser", "serwd", "serdsm", "relser",
+                 "wd", "dsm", "rel", "relwd", "reldsm", "ctc35")
+    
     chunks$vars <<- bquote({
       ADAE <- .(ADAE)
       arm_var <- .(arm_var)
       total <- .(total)
+      flag <- .(flag)
+      display <- .(display)
     })
     
     chunks$analysis <<- call(
@@ -135,14 +144,8 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       id = bquote(ADAE$USUBJID), 
       class = bquote(ADAE$AESOC), 
       term = bquote(ADAE$AEDECOD), 
-      dthfl = bquote(ADAE$DTHFL), 
-      dcsreas = bquote(ADAE$DCSREAS), 
-      aesdth = bquote(ADAE$AESDTH), 
-      aeser = bquote(ADAE$AESER), 
-      aeacn = bquote(ADAE$AEACN), 
-      arel = bquote(ADAE$AREL), 
-      aerel = bquote(ADAE$AEREL), 
-      aetoxgr = bquote(ADAE$AETOXGR),
+      flags = bquote(flag),
+      display_id = bquote(display),
       col_by = bquote(as.factor(.(ADAE)[[.(arm_var)]])),
       total = total
     )
