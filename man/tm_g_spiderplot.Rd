@@ -9,9 +9,10 @@ tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd, x_var,
   marker_var_choices = marker_var, marker_colorby_var,
   marker_colorby_var_choices = marker_colorby_var, line_colorby_var,
   line_colorby_var_choices = line_colorby_var_choices, vref_line, href_line,
-  anno_txt_var, anno_disc_study, xfacet_var, xfacet_var_choices = xfacet_var,
-  yfacet_var, yfacet_var_choices = y_facet_var, plot_height,
-  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
+  anno_txt_var, anno_disc_study, legend_on = FALSE, xfacet_var,
+  xfacet_var_choices = xfacet_var, yfacet_var,
+  yfacet_var_choices = y_facet_var, plot_height, pre_output = NULL,
+  post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -50,6 +51,10 @@ Note that the data is expected to be in vertical form with the
 \item{href_line}{horizontal reference lines}
 
 \item{anno_txt_var}{annotation text}
+
+\item{anno_disc_study}{marker annotation}
+
+\item{legend_on}{boolean value for whether legend is displayed}
 
 \item{xfacet_var}{variable for x facets}
 
@@ -90,13 +95,12 @@ require(lemon)
 #asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
 #aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 
-ASL <- radam("ADSL", N=10)
-ATR <- radam("ATR", N=10)
+ASL <- radam("ADSL", N=30)
+ATR <- radam("ATR", N=30)
 #dat <- left_join(ATR, ASL) \%>\% filter(PARAMCD == "SUMTGLES") \%>\% as.data.frame()
 
 # test character vector as x axis labels
-#ATR <-  ATR \%>\% arrange(TUDY) \%>\% mutate(day = as.numeric(TUDY))# \%>\% as.data.frame()
-ATR$TUDY <- as.character(ATR$TUDY)
+#ATR$TUDY <- as.character(ATR$TUDY)
 
 x <- teal::init(
   data = list(ASL = ASL, ATR = ATR),
@@ -120,6 +124,7 @@ x <- teal::init(
        href_line = c(-0.3, 1),
        anno_txt_var = TRUE,
        anno_disc_study = TRUE,
+       legend_on = FALSE,
        xfacet_var = "SEX",
        xfacet_var_choices = c("None", "SEX"),
        yfacet_var = "ARM",
