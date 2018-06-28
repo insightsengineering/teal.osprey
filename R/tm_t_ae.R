@@ -119,11 +119,14 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     class_var <- input$class_var
     term_var <- input$term_var
     
-    ADAE  <- merge(ASL_FILTERED, AAE_FILTERED) %>% 
+    ADAE  <- merge(ASL_FILTERED[,c("USUBJID", "STUDYID", arm_var)], AAE_FILTERED) %>% 
       as.data.frame()
     
     ADAE <- ADAE[!(ADAE[,class_var] == ""),]
     ADAE <- ADAE[!(ADAE[,term_var] == ""),]
+    
+    print("test")
+    print(head(ASL_FILTERED))
     
     validate_has_data(ADAE, min_nrow = 1)    
     validate(need(ADAE[[arm_var]], "Arm variable does not exist"))

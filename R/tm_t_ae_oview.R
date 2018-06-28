@@ -101,12 +101,12 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
-    ADAE  <- merge(ASL_FILTERED, AAE_FILTERED) %>% 
+    arm_var <- input$arm_var
+    
+    ADAE  <- merge(ASL_FILTERED[,c("USUBJID", "STUDYID", arm_var)], AAE_FILTERED) %>% 
       filter(AEBODSYS != "") %>%
       filter(AEDECOD != "") %>%
       as.data.frame()
-    
-    arm_var <- input$arm_var
     
     validate_has_data(ADAE, min_nrow = 1)    
     validate(need(ADAE[[arm_var]], "Arm variable does not exist"))

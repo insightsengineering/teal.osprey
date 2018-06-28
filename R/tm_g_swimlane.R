@@ -193,7 +193,6 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
 
     for (i in seq_along(chunks)) chunks[[i]] <<- "# Not calculated"
 
-
     # validate input values
     teal.tern:::validate_standard_inputs(
       ASL = ASL_FILTERED,
