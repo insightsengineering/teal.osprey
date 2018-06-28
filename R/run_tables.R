@@ -94,7 +94,7 @@ x <- teal::init(
       line_colorby_var = "USUBJID",
       line_colorby_var_choices = c("USUBJID", "RACE"),
       vref_line = c(10, 37),
-      href_line = c(-30, 30),
+      href_line = c(-0.3, 1),
       anno_txt_var = TRUE,
       anno_disc_study = TRUE,
       legend_on = FALSE,
