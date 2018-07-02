@@ -69,8 +69,6 @@ library(gridExtra)
 library(ggplot2)
 require(lemon)
 
-#asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 
 ASL <- radam("ADSL", N=30)
 AAE <- radam("AAE", N=30)
@@ -79,7 +77,7 @@ x <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
   modules = root_modules(
     tm_g_butterfly(
-       label = "butterfly",
+       label = "Butterfly Plot",
        dataname = "AAE",
        dich_var = "SEX",
        dich_var_choices = c("SEX", "ARM"),

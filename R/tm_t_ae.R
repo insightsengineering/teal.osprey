@@ -125,9 +125,6 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     ADAE <- ADAE[!(ADAE[,class_var] == ""),]
     ADAE <- ADAE[!(ADAE[,term_var] == ""),]
     
-    print("test")
-    print(head(ASL_FILTERED))
-    
     validate_has_data(ADAE, min_nrow = 1)    
     validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
     validate(need(!("" %in% ADAE[[arm_var]]), "arm values can not contain empty strings ''"))

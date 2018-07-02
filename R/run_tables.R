@@ -124,6 +124,22 @@
 #       vref_line = c(100, 200),
 #       anno_txt_var = c("SEX", "RACE", "COUNTRY")
 # 
+#     ),
+#     tm_g_butterfly(
+#       label = "Butterfly Plot",
+#       dataname = "AAE",
+#       dich_var = "SEX",
+#       dich_var_choices = c("SEX", "ARM"),
+#       category_var = "AEBODSYS",
+#       category_var_choices = c("AEDECOD", "AEBODSYS"),
+#       color_by_var = "AETOXGR",
+#       color_by_var_choices = c("AETOXGR", "None"),
+#       count_by_var = "# of patients",
+#       count_by_var_choices = c("# of patients", "# of AEs"),
+#       facet_var = "None",
+#       facet_var_choices = c("RACE", "SEX", "ARM", "None"),
+#       legend_on = TRUE,
+#       plot_height = c(600, 200, 2000)
 #     )
 #   )
 # )

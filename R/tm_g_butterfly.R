@@ -35,8 +35,6 @@
 #' library(ggplot2)
 #' require(lemon)
 #' 
-#' #asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#' #aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 #'
 #' ASL <- radam("ADSL", N=30)
 #' AAE <- radam("AAE", N=30)
@@ -45,7 +43,7 @@
 #'   data = list(ASL = ASL, AAE = AAE),
 #'   modules = root_modules(
 #'     tm_g_butterfly(
-#'        label = "butterfly",
+#'        label = "Butterfly Plot",
 #'        dataname = "AAE",
 #'        dich_var = "SEX",
 #'        dich_var_choices = c("SEX", "ARM"),
@@ -154,12 +152,10 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
 
     
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    ATR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
-    ADAE  <- merge(ASL_FILTERED, ATR_FILTERED, by = c("USUBJID", "STUDYID")) %>%
-      as.data.frame()
-    
-    ADAE_f <- ADAE 
+    ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
+      as.data.frame() 
     
     chunks$vars <<- bquote({
       ADAE_f <- .(ADAE_f)
@@ -209,7 +205,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     
     # .log("show R code")
     showModal(modalDialog(
-      title = "R Code for the Current butterfly",
+      title = "R Code for the Current Butterfly Plot",
       tags$pre(tags$code(class="R", str_rcode)),
       easyClose = TRUE,
       size = "l"
