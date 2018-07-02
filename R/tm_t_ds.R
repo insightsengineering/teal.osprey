@@ -32,7 +32,7 @@
 #' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 #' 
 #' x <- teal::init(
-#'   data = list(ASL = ASL, AAE = AAE),
+#'   data = list(ASL = ASL, AAE = AAE), #can take out AAE from here
 #'   modules = root_modules(
 #'     tm_t_ds(
 #'        label = "Patient Disposition Table",

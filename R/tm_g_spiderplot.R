@@ -225,8 +225,6 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     else if(anno_txt_var && anno_disc_study){
       lbl <- list(one = as.factor(ADAE_f[,line_colorby_var]), two = as.factor(ADAE_f[,line_colorby_var]), three = c('id-1', 'id-2'))
     }
-    
-    print(lbl)
 
     chunks$vars <<- bquote({
       paramcd <- .(paramcd)
