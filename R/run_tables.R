@@ -65,6 +65,8 @@
 #       class_var_choices = c("AEBODSYS", "AESOC"),
 #       term_var = "AEDECOD",
 #       term_var_choices = c("AEDECOD", "AETERM"),
+#       sort_by_var = "count",
+#       sort_by_var_choices = c("count", "alphabetical"),
 #       total_col = TRUE
 #     ),
 #     tm_t_ds(
@@ -77,6 +79,19 @@
 #       term_var = "DCSREAS",
 #       term_var_choices = c("DCSREAS", "DCSREASP"),
 #       total_col = TRUE
+#     ),
+#     tm_t_ae_ctc(
+#       label = "Adverse Events Table By Highest NCI CTCAE Grade",
+#       dataname = "AAE",
+#       arm_var = "ARM",
+#       arm_var_choices = c("ARM", "ARMCD"),
+#       class_var = "AEBODSYS",
+#       class_var_choices = c("AEBODSYS", "DEFAULT"),
+#       term_var = "AEDECOD",
+#       term_var_choices = c("AEDECOD", "DEFAULT"),
+#       total_col = TRUE,
+#       sort_by_var = "count",
+#       sort_by_var_choices = c("count", "alphabetical")
 #     ),
 #     tm_g_spiderplot(
 #       label = "Spiderplot",

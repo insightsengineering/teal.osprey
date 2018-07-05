@@ -1,4 +1,4 @@
-#' Display AET02 Adverse Events Table Teal Module
+#' Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 #' 
 #' @param label menu item label of the module in the teal app
 #' @param dataname analysis data used in teal module, needs to be available in
@@ -27,22 +27,20 @@
 #' 
 #' 
 #' @examples 
-#' #Example using stream (adam) dataset 
+#' #Example 
+#' library(random.cdisc.data)
 #' library(dplyr)
 #' suppressPackageStartupMessages(library(tidyverse))
 #' library(rtables)
 #' 
-#' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
-#' 
-#' #ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
-#' #AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
+#' ASL <- radam("ASL", N = 10)
+#' AAE <- radam("AAE", ADSL = ASL)
 #' 
 #' x1 <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
 #'   modules = root_modules(
-#'     tm_t_ae(
-#'        label = "Adverse Events Table",
+#'     tm_t_ae_ctc(
+#'        label = "Adverse Events Table By Highest NCI CTCAE Grade",
 #'        dataname = "AAE",
 #'        arm_var = "ARM",
 #'        arm_var_choices = c("ARM", "ARMCD"),
@@ -60,7 +58,7 @@
 #' shinyApp(x1$ui, x1$server)  
 #' 
 #' 
-tm_t_ae <- function(label, 
+tm_t_ae_ctc <- function(label, 
                     dataname, 
                     arm_var, 
                     arm_var_choices, 
@@ -79,8 +77,8 @@ tm_t_ae <- function(label,
   
   module(
     label = label,
-    server = srv_t_ae,
-    ui = ui_t_ae,
+    server = srv_t_ae_ctc,
+    ui = ui_t_ae_ctc,
     ui_args = args,
     server_args = list(dataname = dataname, code_data_processing = code_data_processing),
     filters = dataname
@@ -88,7 +86,7 @@ tm_t_ae <- function(label,
   
 }
 
-ui_t_ae <- function(id, ...) {
+ui_t_ae_ctc <- function(id, ...) {
   
   ns <- NS(id)
   a <- list(...)
@@ -111,7 +109,7 @@ ui_t_ae <- function(id, ...) {
   
 }
 
-srv_t_ae <- function(input, output, session, datasets, dataname, code_data_processing) {
+srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_processing) {
   
   chunks <- list(
     vars = "# Not Calculated", 
@@ -119,7 +117,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
   )
   
   output$table <- renderUI({
-
+    
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
@@ -137,7 +135,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     validate_has_data(ADAE, min_nrow = 1)    
     validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
     validate(need(!("" %in% ADAE[[arm_var]]), "arm values can not contain empty strings ''"))
-
+    
     all_p <- input$All_Patients
     
     if(all_p == TRUE){
@@ -145,7 +143,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     } else{
       total = "NONE"
     }
-
+    
     ADAE_f <- ADAE
     
     validate(need(nrow(ADAE_f) > 1, "need at least 1 data point"))
@@ -155,17 +153,18 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
       ADAE_f <- .(ADAE_f) 
       sort_by_var <- .(sort_by_var)
     })
-   
+    
     chunks$analysis <<- call(
-      "t_ae",
+      "t_ae_ctc_v2",
       class = bquote(ADAE_f[[.(class_var)]]), 
       term = bquote(ADAE_f[[.(term_var)]]), 
       id = bquote(ADAE_f$USUBJID),
+      grade = bquote(as.numeric(ADAE_f$AETOXGR)),
       col_by = bquote(as.factor(.(ADAE_f)[[.(arm_var)]])),
       total = total,
       sort_by = bquote(sort_by_var)
     )
-
+    
     tbl <- try(eval(chunks$analysis))
     
     if (is(tbl, "try-error")) validate(need(FALSE, paste0("could not calculate the table:\n\n", tbl)))
