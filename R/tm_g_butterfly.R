@@ -15,6 +15,9 @@
 #' @param count_by_var_choices vector of choices for count_by_var
 #' @param facet_var variable for row facets
 #' @param facet_var_choices vector with \code{facet_var} choices
+#' @param sort_by_var argument for order of class and term elements in table,
+#'  defaulte here is "count"
+#' @param sort_by_var_choices vector with \code{sort_by_var} choices
 #' @param legend_on boolean value for whether legend is displayed
 #' @param plot_height range of plot height
 #' @param code_data_processing string with data preprocessing before the teal
@@ -46,7 +49,7 @@
 #'        label = "Butterfly Plot",
 #'        dataname = "AAE",
 #'        dich_var = "SEX",
-#'        dich_var_choices = c("SEX", "ARM"),
+#'        dich_var_choices = c("SEX", "ARM", "RACE"),
 #'        category_var = "AEBODSYS",
 #'        category_var_choices = c("AEDECOD", "AEBODSYS"),
 #'        color_by_var = "AETOXGR",
@@ -55,6 +58,8 @@
 #'        count_by_var_choices = c("# of patients", "# of AEs"),
 #'        facet_var = "None",
 #'        facet_var_choices = c("RACE", "SEX", "ARM", "None"),
+#'        sort_by_var = "count",
+#'        sort_by_var_choices = c("count", "alphabetical"),
 #'        legend_on = TRUE,
 #'        plot_height = c(600, 200, 2000)
 #'    )
@@ -75,7 +80,9 @@ tm_g_butterfly <- function(label,
                            count_by_var,
                            count_by_var_choices = c(count_by_var, "None"),
                            facet_var,
-                           facet_var_choices = c(facet_var, "None"),        
+                           facet_var_choices = c(facet_var, "None"),  
+                           sort_by_var,
+                           sort_by_var_choices,
                            legend_on = TRUE,
                            plot_height,
                            pre_output = NULL, 
@@ -106,10 +113,12 @@ ui_g_butterfly <- function(id, ...) {
       tags$label("Encodings", class="text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
       optionalSelectInput(ns("dich_var"), "Dichotomization Variable", a$dich_var_choices, a$dich_var, multiple = FALSE),
+      checkboxGroupInput(ns("dich"), "Choose 2 dichotomization variables"),
       optionalSelectInput(ns("category_var"), "Category Variable", a$category_var_choices, a$category_var, multiple = FALSE),
       radioButtons(ns("color_by_var"), "Color Block By Variable", a$color_by_var_choices, a$color_by_var),
       radioButtons(ns("count_by_var"), "Count By Variable", a$count_by_var_choices, a$count_by_var),
       optionalSelectInput(ns("facet_var"), "Facet By Variable", a$facet_var_choices, a$facet_var, multiple = FALSE),
+      radioButtons(ns("sort_by_var"), "Sort By Variable", a$sort_by_var_choices, a$sort_by_var),
       checkboxInput(ns("legend_on"), "Add legend", value = a$legend_on),
       tags$label("Plot Settings", class="text-primary", style="margin-top: 15px;"),
       optionalSliderInputValMinMax(ns("plot_height"), "plot height", a$plot_height, ticks = FALSE)
@@ -128,12 +137,25 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
   
   vals <- reactiveValues(butterfly=NULL)
   
+  #dynamic options for dichotomization variable
+  observe({
+    dich_var <- input$dich_var
+
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+
+    ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
+      as.data.frame()
+
+    options_d <- unique(ADAE_f[, dich_var])
+    updateCheckboxGroupInput(session, "dich", choices = options_d)
+  })
+  
   # dynamic plot height
   output$plot_ui <- renderUI({
     plot_height <- input$plot_height
     validate(need(plot_height, "need valid plot height"))
     plotOutput(session$ns("butterfly"), height=plot_height)
-    
   })
   
   chunks <- list(
@@ -149,6 +171,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     count_by_var <- input$count_by_var
     legend_on <- input$legend_on
     facet_var <- input$facet_var
+    sort_by_var <- input$sort_by_var
 
     
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
@@ -156,6 +179,16 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     
     ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
       as.data.frame() 
+    
+    options_d <- unique(ADAE_f[, dich_var])
+    
+    if(length(options_d) > 2){
+      dich <- input$dich
+      if(length(dich) == 2){
+        ADAE_f <- ADAE_f %>% filter(ADAE_f[,dich_var] == dich[1] | ADAE_f[,dich_var] == dich[2])
+        print(unique(ADAE_f[,dich_var]))
+      }
+    }
     
     chunks$vars <<- bquote({
       ADAE_f <- .(ADAE_f)
@@ -165,6 +198,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       count_by_var <- .(count_by_var)
       legend_on <- .(legend_on)
       facet_var <- .(facet_var)
+      sort_by_var <- .(sort_by_var)
     })
     
     chunks$p_butterfly <<- call(
@@ -178,6 +212,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       x_label = bquote(count_by_var),
       y_label = "AE Derived Terms",
       legend_label = bquote(color_by_var),
+      sort_by = bquote(sort_by_var),
       show_legend = bquote(legend_on) 
     )
     vals$butterfly <- eval(chunks$p_butterfly)

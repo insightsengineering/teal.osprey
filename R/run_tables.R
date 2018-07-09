@@ -153,6 +153,8 @@
 #       count_by_var_choices = c("# of patients", "# of AEs"),
 #       facet_var = "None",
 #       facet_var_choices = c("RACE", "SEX", "ARM", "None"),
+#       sort_by_var = "count",
+#       sort_by_var_choices = c("count", "alphabetical"),
 #       legend_on = TRUE,
 #       plot_height = c(600, 200, 2000)
 #     )

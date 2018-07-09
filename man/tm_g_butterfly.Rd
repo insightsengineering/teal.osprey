@@ -8,8 +8,9 @@ tm_g_butterfly(label, dataname, dich_var, dich_var_choices = dich_var,
   category_var, category_var_choices = category_var, color_by_var,
   color_by_var_choices = c(color_by_var, "None"), count_by_var,
   count_by_var_choices = c(count_by_var, "None"), facet_var,
-  facet_var_choices = c(facet_var, "None"), legend_on = TRUE, plot_height,
-  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
+  facet_var_choices = c(facet_var, "None"), sort_by_var, sort_by_var_choices,
+  legend_on = TRUE, plot_height, pre_output = NULL, post_output = NULL,
+  code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -38,6 +39,11 @@ Note that the data is expected to be in vertical form with the
 \item{facet_var}{variable for row facets}
 
 \item{facet_var_choices}{vector with \code{facet_var} choices}
+
+\item{sort_by_var}{argument for order of class and term elements in table,
+defaulte here is "count"}
+
+\item{sort_by_var_choices}{vector with \code{sort_by_var} choices}
 
 \item{legend_on}{boolean value for whether legend is displayed}
 
@@ -80,7 +86,7 @@ x <- teal::init(
        label = "Butterfly Plot",
        dataname = "AAE",
        dich_var = "SEX",
-       dich_var_choices = c("SEX", "ARM"),
+       dich_var_choices = c("SEX", "ARM", "RACE"),
        category_var = "AEBODSYS",
        category_var_choices = c("AEDECOD", "AEBODSYS"),
        color_by_var = "AETOXGR",
@@ -89,6 +95,8 @@ x <- teal::init(
        count_by_var_choices = c("# of patients", "# of AEs"),
        facet_var = "None",
        facet_var_choices = c("RACE", "SEX", "ARM", "None"),
+       sort_by_var = "count",
+       sort_by_var_choices = c("count", "alphabetical"),
        legend_on = TRUE,
        plot_height = c(600, 200, 2000)
    )
