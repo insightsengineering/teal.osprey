@@ -144,7 +144,7 @@
 #       label = "Butterfly Plot",
 #       dataname = "AAE",
 #       dich_var = "SEX",
-#       dich_var_choices = c("SEX", "ARM"),
+#       dich_var_choices = c("SEX", "ARM", "RACE"),
 #       category_var = "AEBODSYS",
 #       category_var_choices = c("AEDECOD", "AEBODSYS"),
 #       color_by_var = "AETOXGR",
