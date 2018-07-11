@@ -186,7 +186,6 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       dich <- input$dich
       if(length(dich) == 2){
         ADAE_f <- ADAE_f %>% filter(ADAE_f[,dich_var] == dich[1] | ADAE_f[,dich_var] == dich[2])
-        print(unique(ADAE_f[,dich_var]))
       }
     }
     
