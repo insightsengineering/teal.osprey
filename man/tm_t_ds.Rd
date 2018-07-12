@@ -52,14 +52,13 @@ suppressPackageStartupMessages(library(tidyverse))
 library(rtables)
 
 ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 
 x <- teal::init(
-  data = list(ASL = ASL, AAE = AAE), #can take out AAE from here
+  data = list(ASL = ASL), 
   modules = root_modules(
     tm_t_ds(
        label = "Patient Disposition Table",
-       dataname = "AAE",
+       dataname = "ASL",
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
        class_var = "EOSSTT",

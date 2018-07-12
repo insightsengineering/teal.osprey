@@ -60,8 +60,8 @@ library(dplyr)
 suppressPackageStartupMessages(library(tidyverse))
 library(rtables)
 
-ASL <- radam("ASL", N = 10)
-AAE <- radam("AAE", ADSL = ASL)
+ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 
 x1 <- teal::init(
   data = list(ASL = ASL, AAE = AAE),

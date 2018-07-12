@@ -33,8 +33,8 @@
 #' suppressPackageStartupMessages(library(tidyverse))
 #' library(rtables)
 #' 
-#' ASL <- radam("ASL", N = 10)
-#' AAE <- radam("AAE", ADSL = ASL)
+#' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+#' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 #' 
 #' x1 <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
@@ -113,6 +113,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
   
   chunks <- list(
     vars = "# Not Calculated", 
+    data = "# Not Calculated", 
     analysis = "# Not Calculated"
   )
   
@@ -125,42 +126,41 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
     class_var <- input$class_var
     term_var <- input$term_var
     sort_by_var <- input$sort_by_var
-    
-    ADAE  <- merge(ASL_FILTERED[,c("USUBJID", "STUDYID", arm_var)], AAE_FILTERED) %>% 
-      as.data.frame()
-    
-    ADAE <- ADAE[!(ADAE[,class_var] == ""),]
-    ADAE <- ADAE[!(ADAE[,term_var] == ""),]
-    
-    validate_has_data(ADAE, min_nrow = 1)    
-    validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
-    validate(need(!("" %in% ADAE[[arm_var]]), "arm values can not contain empty strings ''"))
-    
     all_p <- input$All_Patients
-    
-    if(all_p == TRUE){
-      total = "ALL Patients"
-    } else{
-      total = "NONE"
-    }
-    
-    ADAE_f <- ADAE
-    
-    validate(need(nrow(ADAE_f) > 1, "need at least 1 data point"))
     
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)
-      ADAE_f <- .(ADAE_f) 
+      class_var <- .(class_var)
+      term_var <- .(term_var)
       sort_by_var <- .(sort_by_var)
+      all_p <- .(all_p)
     })
+    
+    asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
+    aae_vars <- unique(c("USUBJID", "STUDYID", arm_var, class_var, term_var, "AETOXGR")) 
+    
+    chunks$data <<- bquote({
+      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
+      AAE <- AAE_FILTERED[, .(aae_vars)] %>% as.data.frame() 
+      
+      ADAE  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID", .(arm_var))) %>% 
+        as.data.frame()
+      
+      if(all_p == TRUE){
+        total = "ALL Patients"
+      } else{
+        total = "NONE"
+      }
+    })
+    eval(chunks$data)
     
     chunks$analysis <<- call(
       "t_ae_ctc_v2",
-      class = bquote(ADAE_f[[.(class_var)]]), 
-      term = bquote(ADAE_f[[.(term_var)]]), 
-      id = bquote(ADAE_f$USUBJID),
-      grade = bquote(as.numeric(ADAE_f$AETOXGR)),
-      col_by = bquote(as.factor(.(ADAE_f)[[.(arm_var)]])),
+      class = bquote(ADAE[,class_var]), 
+      term = bquote(ADAE[,term_var]), 
+      id = bquote(ADAE$USUBJID),
+      grade = bquote(as.numeric(ADAE$AETOXGR)),
+      col_by = bquote(as.factor(ADAE[[.(arm_var)]])),
       total = total,
       sort_by = bquote(sort_by_var)
     )
@@ -176,7 +176,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
   observeEvent(input$show_rcode, {
     
     header <- get_rcode_header(
-      title = "Adverse Events Table",
+      title = "Adverse Events Table By CTC Grade",
       datanames = dataname,
       datasets = datasets,
       code_data_processing
@@ -187,6 +187,8 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
       header,
       "",
       remove_enclosing_curly_braces(deparse(chunks$vars, width.cutoff = 60)),
+      "",
+      remove_enclosing_curly_braces(deparse(chunks$data, width.cutoff = 60)),
       "",
       remove_enclosing_curly_braces(deparse(chunks$analysis, width.cutoff = 60))
     ), collapse = "\n")

@@ -29,14 +29,13 @@
 #' library(rtables)
 #' 
 #' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 #' 
 #' x <- teal::init(
-#'   data = list(ASL = ASL, AAE = AAE), #can take out AAE from here
+#'   data = list(ASL = ASL), 
 #'   modules = root_modules(
 #'     tm_t_ds(
 #'        label = "Patient Disposition Table",
-#'        dataname = "AAE",
+#'        dataname = "ASL",
 #'        arm_var = "ARM",
 #'        arm_var_choices = c("ARM", "ARMCD"),
 #'        class_var = "EOSSTT",
@@ -103,7 +102,8 @@ ui_t_ds <- function(id, ...) {
 srv_t_ds <- function(input, output, session, datasets, dataname, code_data_processing) {
   
   chunks <- list(
-    vars = "# Not Calculated", 
+    vars = "# Not Calculated",
+    data = "# Not Calculated",
     analysis = "# Not Calculated"
   )
   
@@ -111,46 +111,54 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
   output$table <- renderUI({
     
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
-    
-    ADAE  <- merge(ASL_FILTERED, AAE_FILTERED) %>% 
-      as.data.frame()
     
     arm_var <- input$arm_var
     class_var <- input$class_var
     term_var <- input$term_var
-    
-    validate_has_data(ADAE, min_nrow = 1)    
-    validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
-    validate(need(!("" %in% ADAE[[arm_var]]), "arm values can not contain empty strings ''"))
-    
     all_p <- input$All_Patients
     
-    if(all_p == TRUE){
-      total = "ALL Patients"
-    }
-    else{
-      total = "NONE"
-    }
+    # # validate your input values
+    # validate_standard_inputs(
+    #   ASL = ASL_FILTERED,
+    #   aslvars = c("USUBJID", arm_var, class_var, term_var)
+    # )
     
-    ADAE <- ADAE[!(ADAE[,class_var] == ""),]
-    ADAE <- ADAE[!(ADAE[,term_var] == ""),]
-    
-    ADAE_f <- ADAE
-    
-    validate(need(nrow(ADAE_f) > 1, "need at least 1 data point"))
+    asl_vars <- unique(c("USUBJID", arm_var, class_var, term_var))
     
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)
-      ADAE_f <- .(ADAE_f) 
+      class_var <- .(class_var)
+      term_var <- .(term_var)
+      all_p <- .(all_p)
+      asl_vars <- .(asl_vars)
+
     })
+    
+    chunks$data <<- bquote({
+      ASL_f <- ASL_FILTERED
+      
+      if(all_p == TRUE){
+        total = "ALL Patients"
+      } else{
+        total = "NONE"
+      }
+      
+      ASL_f <- ASL_f[, .(asl_vars)] %>% as.data.frame()
+      
+    })
+    
+    eval(chunks$data)
+    
+    validate_has_data(ASL_f, min_nrow = 1)
+    validate(need(ASL_f[[arm_var]], "Arm variable does not exist"))
+    validate(need(!("" %in% ASL_f[[arm_var]]), "arm values can not contain empty strings ''"))
     
     chunks$analysis <<- call(
       "t_ds",
-      class = bquote(ADAE_f[, class_var]),
-      term = bquote(ADAE_f[, term_var]), 
-      id = bquote(ADAE_f$USUBJID),
-      col_by = bquote(as.factor(.(ADAE_f)[[.(arm_var)]])),
+      class = bquote(ASL_f[, class_var]),
+      term = bquote(ASL_f[, term_var]), 
+      id = bquote(ASL_f$USUBJID),
+      col_by = bquote(as.factor(ASL_f[[.(arm_var)]])),
       total = total
     )
     
@@ -177,6 +185,8 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       header,
       "",
       remove_enclosing_curly_braces(deparse(chunks$vars, width.cutoff = 60)),
+      "",
+      remove_enclosing_curly_braces(deparse(chunks$data, width.cutoff = 60)),
       "",
       remove_enclosing_curly_braces(deparse(chunks$analysis, width.cutoff = 60))
     ), collapse = "\n")

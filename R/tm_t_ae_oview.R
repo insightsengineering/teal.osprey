@@ -93,51 +93,57 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
   
   chunks <- list(
     vars = "# Not Calculated",
+    data = "# Not Calculated",
     analysis = "# Not Calculated"
   )
   
   output$table <- renderUI({
-    #if merging asl and aae
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
     arm_var <- input$arm_var
+    all_p <- input$All_Patients
     
-    ADAE  <- merge(ASL_FILTERED[,c("USUBJID", "STUDYID", arm_var)], AAE_FILTERED) %>% 
-      filter(AEBODSYS != "") %>%
-      filter(AEDECOD != "") %>%
-      as.data.frame()
+    asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
+    aae_vars <- unique(c("USUBJID", "STUDYID", "DTHFL", "DCSREAS", 
+                         "AESDTH", "AESER", "AESOC", "AEDECOD", 
+                         "AEACN", "AREL", "AEREL", "AETOXGR")) ## add column name of extra flage here
+
+    chunks$vars <<- bquote({
+      arm_var <- .(arm_var)
+      all_p <- .(all_p)
+    })
+    
+    chunks$data <<- bquote({
+      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
+      AAE <- AAE_FILTERED[, .(aae_vars)] %>% as.data.frame() 
+      
+      ADAE  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
+        as.data.frame()
+      
+      flag <- data.frame(dthfl = ADAE$DTHFL,
+                         dcsreas = ADAE$DCSREAS,
+                         aesdth = ADAE$AESDTH,
+                         aeser = ADAE$AESER,
+                         aeacn = ADAE$AEACN,
+                         arel = ADAE$AREL,
+                         aerel = ADAE$AEREL,
+                         aetoxgr = ADAE$AETOXGR)
+      display <- c("fatal", "ser", "serwd", "serdsm", "relser",
+                   "wd", "dsm", "rel", "relwd", "reldsm", "ctc35")
+      
+      if(all_p == TRUE){
+        total = "ALL Patients"
+      }
+      else{
+        total = "NONE"
+      }
+    })
+    eval(chunks$data)
     
     validate_has_data(ADAE, min_nrow = 1)    
     validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
     validate(need(!("" %in% ADAE[[arm_var]]), "arm values can not contain empty strings ''"))
-    
-    all_p <- input$All_Patients
-    if(all_p == TRUE){
-      total = "ALL Patients"
-    }
-    else{
-      total = "NONE"
-    }
-    
-    flag <- data.frame(dthfl = ADAE$DTHFL,
-                       dcsreas = ADAE$DCSREAS,
-                       aesdth = ADAE$AESDTH,
-                       aeser = ADAE$AESER,
-                       aeacn = ADAE$AEACN,
-                       arel = ADAE$AREL,
-                       aerel = ADAE$AEREL,
-                       aetoxgr = ADAE$AETOXGR)
-    display <- c("fatal", "ser", "serwd", "serdsm", "relser",
-                 "wd", "dsm", "rel", "relwd", "reldsm", "ctc35")
-    
-    chunks$vars <<- bquote({
-      ADAE <- .(ADAE)
-      arm_var <- .(arm_var)
-      total <- .(total)
-      flag <- .(flag)
-      display <- .(display)
-    })
     
     chunks$analysis <<- call(
       "t_ae_oview",
@@ -145,8 +151,14 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       class = bquote(ADAE$AESOC), 
       term = bquote(ADAE$AEDECOD), 
       flags = bquote(flag),
+      ####--------------------------------
+      #
+      # add extra_flag variables here
+      # example: extra_flag = data.frame(NAME_DISPALYED_IN_TABLE = VECTOR),
+      #
+      ####--------------------------------
       display_id = bquote(display),
-      col_by = bquote(as.factor(.(ADAE)[[.(arm_var)]])),
+      col_by = bquote(as.factor(ADAE[[.(arm_var)]])),
       total = total
     )
     
@@ -173,6 +185,8 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       header,
       "",
       remove_enclosing_curly_braces(deparse(chunks$vars, width.cutoff = 60)),
+      "",
+      remove_enclosing_curly_braces(deparse(chunks$data, width.cutoff = 60)),
       "",
       remove_enclosing_curly_braces(deparse(chunks$analysis, width.cutoff = 60))
     ), collapse = "\n")
