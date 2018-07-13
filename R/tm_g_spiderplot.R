@@ -181,6 +181,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
   
   chunks <- list(
     vars = "# Not Calculated",
+    data = "#Not Calculated",
     p_spiderplot = "# Not Calculated"
   )
   
@@ -197,34 +198,11 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     legend_on <- input$legend_on
     xfacet_var <- input$xfacet_var
     yfacet_var <- input$yfacet_var
+    vref_line <- input$vref_line
+    href_line <- input$href_line
     
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     ATR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
-    
-    ADAE  <- merge(ASL_FILTERED, ATR_FILTERED, by = c("USUBJID", "STUDYID")) 
-    ADAE <- ADAE %>% group_by(USUBJID, PARAM) %>% arrange(ADAE[,x_var]) %>%
-      as.data.frame()
-   
-    
-    ADAE_f <- ADAE %>% filter(PARAMCD == paramcd) %>% as.data.frame()
-    
-    if(is.numeric(ADAE_f[,x_var])){
-      vref_line <- as.numeric(input$vref_line)
-    } else{
-      vref_line <- input$vref_line
-    }
-    href_line <- as.numeric(input$href_line)
-    
-    lbl <- NULL
-    if(!anno_txt_var && anno_disc_study){
-      lbl <- list(two = as.factor(ADAE_f[,line_colorby_var]), three = c('id-1', 'id-2', 'id-3'))
-    }
-    else if(anno_txt_var && !anno_disc_study){
-      lbl <- list(one = as.factor(ADAE_f[,line_colorby_var]))
-    }
-    else if(anno_txt_var && anno_disc_study){
-      lbl <- list(one = as.factor(ADAE_f[,line_colorby_var]), two = as.factor(ADAE_f[,line_colorby_var]), three = c('id-1', 'id-2'))
-    }
 
     chunks$vars <<- bquote({
       paramcd <- .(paramcd)
@@ -240,9 +218,33 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       legend_on <- .(legend_on)
       xfacet_var <- .(xfacet_var)
       yfacet_var <- .(yfacet_var)
-      ADAE_f <- .(ADAE_f)
-      lbl <- .(lbl)
     })
+    
+    chunks$data <<- bquote({
+      ADAE <- merge(ASL_FILTERED, ATR_FILTERED, by = c("USUBJID", "STUDYID")) 
+      ADAE <- ADAE %>% group_by(USUBJID, PARAM) %>% arrange(ADAE[,.(x_var)]) %>%
+        as.data.frame()
+      
+      ADAE_f <- ADAE %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame()
+      
+      if(is.numeric(ADAE_f[,.(x_var)])){
+        vref_line <- as.numeric(.(vref_line))
+      } 
+      href_line <- as.numeric(.(href_line))
+      
+      lbl <- NULL
+      if(!.(anno_txt_var) && .(anno_disc_study)){
+        lbl <- list(two = as.factor(ADAE_f[,.(line_colorby_var)]), three = c('id-1', 'id-2', 'id-3'))
+      }
+      else if(.(anno_txt_var) && !.(anno_disc_study)){
+        lbl <- list(one = as.factor(ADAE_f[,.(line_colorby_var)]))
+      }
+      else if(.(anno_txt_var) && .(anno_disc_study)){
+        lbl <- list(one = as.factor(ADAE_f[,.(line_colorby_var)]), two = as.factor(ADAE_f[,.(line_colorby_var)]), three = c('id-1', 'id-2'))
+      }
+    }) 
+    
+    eval(chunks$data)
     
     chunks$p_spiderplot <<- call(
       "g_spiderplot",
@@ -280,6 +282,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       header,
       "",
       remove_enclosing_curly_braces(deparse(chunks$vars, width.cutoff = 60)),
+      "",
+      remove_enclosing_curly_braces(deparse(chunks$data, width.cutoff = 60)),
       "",
       remove_enclosing_curly_braces(deparse(chunks$p_spiderplot, width.cutoff = 60))
     ), collapse = "\n")

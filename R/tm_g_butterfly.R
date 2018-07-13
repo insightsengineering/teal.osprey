@@ -160,6 +160,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
   
   chunks <- list(
     vars = "# Not Calculated",
+    data = "#Not Calculated",
     p_butterfly = "# Not Calculated"
   )
   
@@ -172,25 +173,14 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     legend_on <- input$legend_on
     facet_var <- input$facet_var
     sort_by_var <- input$sort_by_var
+    dich <- input$dich
 
     
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
-    ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
-      as.data.frame() 
-    
-    options_d <- unique(ADAE_f[, dich_var])
-    
-    if(length(options_d) > 2){
-      dich <- input$dich
-      if(length(dich) == 2){
-        ADAE_f <- ADAE_f %>% filter(ADAE_f[,dich_var] == dich[1] | ADAE_f[,dich_var] == dich[2])
-      }
-    }
     
     chunks$vars <<- bquote({
-      ADAE_f <- .(ADAE_f)
       dich_var <- .(dich_var)
       category_var <- .(category_var)
       color_by_var <- .(color_by_var)
@@ -198,7 +188,23 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       legend_on <- .(legend_on)
       facet_var <- .(facet_var)
       sort_by_var <- .(sort_by_var)
+      dich <- .(dich)
     })
+    
+    chunks$data <<- bquote({
+      ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
+        as.data.frame() 
+      
+      options_d <- unique(ADAE_f[, .(dich_var)])
+      
+      if(length(options_d) > 2){
+        
+        if(length(.(dich)) == 2){
+          ADAE_f <- ADAE_f %>% filter(ADAE_f[,.(dich_var)] == dich[1] | ADAE_f[,.(dich_var)] == dich[2])
+        }
+      }
+    })
+    eval(chunks$data)
     
     chunks$p_butterfly <<- call(
       "g_butterfly",
@@ -206,7 +212,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       groups = bquote(ADAE_f[,dich_var]),
       block_count = bquote(count_by_var),
       block_color = bquote(if(color_by_var != "None"){ADAE_f[,color_by_var]}else{NULL}),
-      id = ADAE_f$USUBJID,
+      id = bquote(ADAE_f$USUBJID),
       facet_rows = bquote(if(facet_var != "None"){ADAE_f[,facet_var]}else{NULL}),
       x_label = bquote(count_by_var),
       y_label = "AE Derived Terms",
@@ -233,6 +239,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       header,
       "",
       remove_enclosing_curly_braces(deparse(chunks$vars, width.cutoff = 60)),
+      "",
+      remove_enclosing_curly_braces(deparse(chunks$data, width.cutoff = 60)),
       "",
       remove_enclosing_curly_braces(deparse(chunks$p_butterfly, width.cutoff = 60))
     ), collapse = "\n")
