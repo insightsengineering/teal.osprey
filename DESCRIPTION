@@ -7,7 +7,7 @@ Authors@R: c(
   person("Nina", "Qi", email = "qit3@gene.com", role = c("aut")),
   person("Carolyn", "Zhang", email = "zhang.carolyn@gene.com", role = c("aut")))
 Description: What the package does (one paragraph).
-Depends: ggplot2, dplyr, tidyr, osprey
+Depends: ggplot2, dplyr, tidyr, osprey, teal, teal.tern
 Suggests: random.cdisc.data
 Additional_repositories: 
   https://github.roche.com/Rpackages/osprey
