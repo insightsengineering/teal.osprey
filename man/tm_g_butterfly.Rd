@@ -78,6 +78,9 @@ require(lemon)
 
 ASL <- radam("ADSL", N=30)
 AAE <- radam("AAE", N=30)
+AAE <- AAE \%>\% mutate(flag1 = ifelse(AETOXGR == 1, 1, 0)) \%>\% 
+               mutate(flag2 = ifelse(AETOXGR == 2, 1, 0)) \%>\% 
+               mutate(flag3 = ifelse(AETOXGR == 3, 1, 0)) 
 
 x <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
@@ -86,7 +89,7 @@ x <- teal::init(
        label = "Butterfly Plot",
        dataname = "AAE",
        dich_var = "SEX",
-       dich_var_choices = c("SEX", "ARM", "RACE"),
+       dich_var_choices = c("SEX", "ARM", "RACE", "MODIFIED FLAGS"),
        category_var = "AEBODSYS",
        category_var_choices = c("AEDECOD", "AEBODSYS"),
        color_by_var = "AETOXGR",

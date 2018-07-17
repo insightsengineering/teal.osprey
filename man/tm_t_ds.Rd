@@ -45,13 +45,16 @@ Display DST01 Patient Disposition Table Teal Module
 }
 \examples{
 
-#Example using stream (adam) dataset 
+#Example using random dataset 
 
 library(dplyr)
 suppressPackageStartupMessages(library(tidyverse))
 library(rtables)
 
-ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+data("rADSL")
+ASL <- rADSL
+
+#ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
 
 x <- teal::init(
   data = list(ASL = ASL), 
