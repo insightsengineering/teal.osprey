@@ -234,13 +234,13 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       
       lbl <- NULL
       if(!.(anno_txt_var) && .(anno_disc_study)){
-        lbl <- list(two = as.factor(ADAE_f[,.(line_colorby_var)]), three = c('id-1', 'id-2', 'id-3'))
+        lbl <- list(mrkr_all = as.factor(ADAE_f[,.(line_colorby_var)]), mrkr_ann = c('id-1', 'id-2', 'id-3'))
       }
       else if(.(anno_txt_var) && !.(anno_disc_study)){
-        lbl <- list(one = as.factor(ADAE_f[,.(line_colorby_var)]))
+        lbl <- list(txt_ann = as.factor(ADAE_f[,.(line_colorby_var)]))
       }
       else if(.(anno_txt_var) && .(anno_disc_study)){
-        lbl <- list(one = as.factor(ADAE_f[,.(line_colorby_var)]), two = as.factor(ADAE_f[,.(line_colorby_var)]), three = c('id-1', 'id-2'))
+        lbl <- list(txt_ann = as.factor(ADAE_f[,.(line_colorby_var)]), mrkr_all = as.factor(ADAE_f[,.(line_colorby_var)]), mrkr_ann = c('id-1', 'id-2'))
       }
     }) 
     
