@@ -1,3 +1,4 @@
+
 #' Butterfly plot (Early Development) Teal Module
 #' 
 #' @param label menu item label of the module in the teal app
@@ -41,6 +42,9 @@
 #'
 #' ASL <- radam("ADSL", N=30)
 #' AAE <- radam("AAE", N=30)
+#' AAE <- AAE %>% mutate(flag1 = ifelse(AETOXGR == 1, 1, 0)) %>% 
+#'                mutate(flag2 = ifelse(AETOXGR == 2, 1, 0)) %>% 
+#'                mutate(flag3 = ifelse(AETOXGR == 3, 1, 0)) 
 #'
 #' x <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
@@ -49,7 +53,7 @@
 #'        label = "Butterfly Plot",
 #'        dataname = "AAE",
 #'        dich_var = "SEX",
-#'        dich_var_choices = c("SEX", "ARM", "RACE"),
+#'        dich_var_choices = c("SEX", "ARM", "RACE", "MODIFIED FLAGS"),
 #'        category_var = "AEBODSYS",
 #'        category_var_choices = c("AEDECOD", "AEBODSYS"),
 #'        color_by_var = "AETOXGR",
@@ -141,13 +145,25 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
   observe({
     dich_var <- input$dich_var
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
-
-    ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
-      as.data.frame()
-
-    options_d <- unique(ADAE_f[, dich_var])
+    if(dich_var != "MODIFIED FLAGS"){
+      ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+      AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+      
+      ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
+        as.data.frame()
+      
+      options_d <- unique(ADAE_f[, dich_var])
+    } else{
+      
+      #######input flag variable name options here-----
+      
+      options_d <- c("flag1", "flag2", "flag3")
+      
+      ##########################
+      
+    }
+    
+    
     updateCheckboxGroupInput(session, "dich", choices = options_d)
   })
   
@@ -194,32 +210,58 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     chunks$data <<- bquote({
       ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
         as.data.frame() 
-      
-      options_d <- unique(ADAE_f[, .(dich_var)])
-      
-      if(length(options_d) > 2){
-        
+      if(dich_var == "MODIFIED FLAGS"){
         if(length(.(dich)) == 2){
-          ADAE_f <- ADAE_f %>% filter(ADAE_f[,.(dich_var)] == dich[1] | ADAE_f[,.(dich_var)] == dich[2])
+          if(!(dich[1] %in% colnames(ADAE_f)) || !(dich[2] %in% colnames(ADAE_f)))
+            stop("OPTIONAL FLAGS must be column names in AAE")
+        }
+        
+        
+      }  else{
+        options_d <- unique(ADAE_f[, .(dich_var)])
+        
+        if(length(options_d) > 2){
+          
+          if(length(.(dich)) == 2){
+            ADAE_f <- ADAE_f %>% filter(ADAE_f[,.(dich_var)] == dich[1] | ADAE_f[,.(dich_var)] == dich[2])
+          }
         }
       }
+
     })
     eval(chunks$data)
+    if(dich_var != "MODIFIED FLAGS" && length(dich) == 2){
+      chunks$p_butterfly <<- call(
+        "g_butterfly",
+        category = bquote(ADAE_f[,category_var]),
+        groups = bquote(ADAE_f[,dich_var]),
+        block_count = bquote(count_by_var),
+        block_color = bquote(if(color_by_var != "None"){ADAE_f[,color_by_var]}else{NULL}),
+        id = bquote(ADAE_f$USUBJID),
+        facet_rows = bquote(if(facet_var != "None"){ADAE_f[,facet_var]}else{NULL}),
+        x_label = bquote(count_by_var),
+        y_label = "AE Derived Terms",
+        legend_label = bquote(color_by_var),
+        sort_by = bquote(sort_by_var),
+        show_legend = bquote(legend_on) 
+        )
+    } else if(dich_var == "MODIFIED FLAGS" && length(dich) == 2){
+      chunks$p_butterfly <<- call(
+        "g_butterfly_modD",
+        category = bquote(ADAE_f[,category_var]),
+        groups = bquote(data.frame(ADAE_f[,dich[1]], ADAE_f[,dich[2]])),
+        block_count = bquote(count_by_var),
+        block_color = bquote(if(color_by_var != "None"){ADAE_f[,color_by_var]}else{NULL}),
+        id = bquote(ADAE_f$USUBJID),
+        facet_rows = bquote(if(facet_var != "None"){ADAE_f[,facet_var]}else{NULL}),
+        x_label = bquote(count_by_var),
+        y_label = "AE Derived Terms",
+        legend_label = bquote(color_by_var),
+        sort_by = bquote(sort_by_var),
+        show_legend = bquote(legend_on) 
+      )
+    }
     
-    chunks$p_butterfly <<- call(
-      "g_butterfly",
-      category = bquote(ADAE_f[,category_var]),
-      groups = bquote(ADAE_f[,dich_var]),
-      block_count = bquote(count_by_var),
-      block_color = bquote(if(color_by_var != "None"){ADAE_f[,color_by_var]}else{NULL}),
-      id = bquote(ADAE_f$USUBJID),
-      facet_rows = bquote(if(facet_var != "None"){ADAE_f[,facet_var]}else{NULL}),
-      x_label = bquote(count_by_var),
-      y_label = "AE Derived Terms",
-      legend_label = bquote(color_by_var),
-      sort_by = bquote(sort_by_var),
-      show_legend = bquote(legend_on) 
-    )
     vals$butterfly <- eval(chunks$p_butterfly)
     vals$butterfly
     

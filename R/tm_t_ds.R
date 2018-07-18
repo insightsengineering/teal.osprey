@@ -1,3 +1,4 @@
+
 #' Display DST01 Patient Disposition Table Teal Module
 #' 
 #' @param label menu item label of the module in the teal app
@@ -22,13 +23,16 @@
 #' 
 #' @examples 
 #' 
-#' #Example using stream (adam) dataset 
+#' #Example using random dataset 
 #' 
 #' library(dplyr)
 #' suppressPackageStartupMessages(library(tidyverse))
 #' library(rtables)
 #' 
-#' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
+#' data("rADSL")
+#' ASL <- rADSL
+#' 
+#' #ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
 #' 
 #' x <- teal::init(
 #'   data = list(ASL = ASL), 
@@ -143,7 +147,8 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
         total = "NONE"
       }
       
-      ASL_f <- ASL_f[, .(asl_vars)] %>% as.data.frame()
+      ASL_f <- ASL_f[, .(asl_vars)] %>% 
+        as.data.frame() 
       
     })
     
