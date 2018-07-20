@@ -142,9 +142,9 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       ASL_f <- ASL_FILTERED
       
       if(all_p == TRUE){
-        total = "ALL Patients"
+        total = "All Patients"
       } else{
-        total = "NONE"
+        total = "None"
       }
       
       ASL_f <- ASL_f[, .(asl_vars)] %>% 

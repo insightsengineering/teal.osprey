@@ -133,10 +133,10 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
                    "wd", "dsm", "rel", "relwd", "reldsm", "ctc35")
       
       if(all_p == TRUE){
-        total = "ALL Patients"
+        total = "All Patients"
       }
       else{
-        total = "NONE"
+        total = "None"
       }
     })
     eval(chunks$data)
