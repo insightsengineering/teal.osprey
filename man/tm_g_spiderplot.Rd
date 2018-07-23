@@ -7,9 +7,9 @@
 tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd, x_var,
   x_var_choices = x_var, y_var, y_var_choices = y_var, marker_var,
   marker_var_choices = marker_var, line_colorby_var,
-  line_colorby_var_choices = line_colorby_var_choices, vref_line, href_line,
-  anno_txt_var, anno_disc_study, legend_on = FALSE, xfacet_var,
-  xfacet_var_choices = xfacet_var, yfacet_var,
+  line_colorby_var_choices = line_colorby_var_choices, vref_line = NULL,
+  href_line = NULL, anno_txt_var, anno_disc_study, legend_on = FALSE,
+  xfacet_var, xfacet_var_choices = xfacet_var, yfacet_var,
   yfacet_var_choices = y_facet_var, plot_height, pre_output = NULL,
   post_output = NULL, code_data_processing = NULL)
 }
@@ -108,8 +108,8 @@ x <- teal::init(
        marker_var_choices = c("None", "RACE"),
        line_colorby_var = "USUBJID",
        line_colorby_var_choices = c("USUBJID", "RACE"),
-       vref_line = c("10", "37"),
-       href_line = c(-0.3, 1),
+       vref_line = "10, 37",
+       href_line = "-0.3, 1",
        anno_txt_var = TRUE,
        anno_disc_study = TRUE,
        legend_on = FALSE,

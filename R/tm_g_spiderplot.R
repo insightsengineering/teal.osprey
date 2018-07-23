@@ -67,8 +67,8 @@
 #'        marker_var_choices = c("None", "RACE"),
 #'        line_colorby_var = "USUBJID",
 #'        line_colorby_var_choices = c("USUBJID", "RACE"),
-#'        vref_line = c("10", "37"),
-#'        href_line = c(-0.3, 1),
+#'        vref_line = "10, 37",
+#'        href_line = "-0.3, 1",
 #'        anno_txt_var = TRUE,
 #'        anno_disc_study = TRUE,
 #'        legend_on = FALSE,
@@ -96,8 +96,8 @@ tm_g_spiderplot <- function(label,
                             marker_var_choices = marker_var,
                             line_colorby_var,
                             line_colorby_var_choices = line_colorby_var_choices,
-                            vref_line,
-                            href_line,
+                            vref_line = NULL,
+                            href_line = NULL,
                             anno_txt_var,
                             anno_disc_study,
                             legend_on = FALSE,
@@ -143,8 +143,14 @@ ui_g_spider <- function(id, ...) {
       checkboxInput(ns("anno_txt_var"), "Add subject ID label", value = a$anno_txt_var),
       checkboxInput(ns("anno_disc_study"), "Add annotation marker", value = a$anno_disc_study),
       checkboxInput(ns("legend_on"), "Add legend", value = a$legend_on),
-      optionalSelectInput(ns("vref_line"), "X-reference line", a$vref_line, a$vref_line, multiple = TRUE),
-      optionalSelectInput(ns("href_line"), "Y-reference line", a$href_line, a$href_line, multiple = TRUE),
+      textInput(ns("vref_line"), 
+                label = div("Vertical Reference Line(s)", tags$br(), 
+                            helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")), 
+                value = a$vref_line),
+      textInput(ns("href_line"), 
+                label = div("Hortizontal Reference Line(s)", tags$br(), 
+                            helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")), 
+                value = a$href_line),
       tags$label("Plot Settings", class="text-primary", style="margin-top: 15px;"),
       optionalSliderInputValMinMax(ns("plot_height"), "plot height", a$plot_height, ticks = FALSE)
     ),
@@ -188,6 +194,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     legend_on <- input$legend_on
     xfacet_var <- input$xfacet_var
     yfacet_var <- input$yfacet_var
+    
     vref_line <- input$vref_line
     href_line <- input$href_line
     
@@ -199,6 +206,9 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
                          marker_var, line_colorby_var, xfacet_var, yfacet_var)) 
 
     chunks$vars <<- bquote({
+      asl_vars <- .(asl_vars)
+      atr_vars <- .(atr_vars)
+      
       paramcd <- .(paramcd)
       x_var <- .(x_var)
       y_var <- .(y_var)
@@ -227,15 +237,25 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       
       ANL_f <- ANL %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame()
       
-      if(is.numeric(ANL_f[,.(x_var)])){
-        vref_line <- as.numeric(.(vref_line))
-        if(length(vref_line) == 0){
-          vref_line <- NULL
+      #If reference lines are requested
+      if (!is.null(vref_line)) {
+        vref_line <- unlist(strsplit(.(vref_line), ","))
+
+        if(is.numeric(ANL_f[,.(x_var)])){
+          vref_line <- as.numeric(vref_line)
+          validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
+        } else{
+          validate(need(all(href_line %in% unique(ANL_f[,.(x_var)])), "Not all values entered for reference line(s) are in the x-axis"))
         }
-      } 
-      href_line <- as.numeric(.(href_line))
-      
-      print(vref_line)
+      }  else{
+        vref_line <- NULL
+      }
+      if (!is.null(href_line)) {
+        href_line <- as.numeric(unlist(strsplit(.(href_line), ",")))
+        validate(need(all(!is.na(href_line)), "Not all values entered for reference line(s) were numeric"))
+      } else{
+        href_line <- NULL
+      }
       
       lbl <- NULL
       if(!.(anno_txt_var) && .(anno_disc_study)){
