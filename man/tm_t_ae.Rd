@@ -2,12 +2,11 @@
 % Please edit documentation in R/tm_t_ae.R
 \name{tm_t_ae}
 \alias{tm_t_ae}
-\title{Display AET02 Adverse Events Table Teal Module}
+\title{Adverse Events Table Teal Module}
 \usage{
 tm_t_ae(label, dataname, arm_var, arm_var_choices, class_var, class_var_choices,
-  term_var, term_var_choices, total_col = TRUE, sort_by_var,
-  sort_by_var_choices, pre_output = NULL, post_output = NULL,
-  code_data_processing = NULL)
+  term_var, term_var_choices, total_col = TRUE, pre_output = NULL,
+  post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -34,11 +33,6 @@ Note that the data is expected to be in vertical form with the
 \item{total_col}{argument for appearance of All Patients column,
 default here is TRUE}
 
-\item{sort_by_var}{argument for order of class and term elements in table,
-defaulte here is "count"}
-
-\item{sort_by_var_choices}{vector with \code{sort_by_var} choices}
-
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
@@ -51,17 +45,17 @@ output to put the output into context. For example the
 an \code{\link[teal]{module}} object
 }
 \description{
-Display AET02 Adverse Events Table Teal Module
+This shiny module displays the adverse events table (AET02).
 }
 \examples{
 #Example using stream (adam) dataset 
 library(dplyr)
-suppressPackageStartupMessages(library(tidyverse))
-library(rtables)
 
-ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+data("rADSL")
+data("rADAE")
 
+ASL <- rADSL
+AAE <- rADAE
 
 x1 <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
@@ -75,9 +69,7 @@ x1 <- teal::init(
        class_var_choices = c("AEBODSYS", "DEFAULT"),
        term_var = "AEDECOD",
        term_var_choices = c("AEDECOD", "DEFAULT"),
-       total_col = TRUE,
-       sort_by_var = "count",
-       sort_by_var_choices = c("count", "alphabetical")
+       total_col = TRUE
    )
   )
 )

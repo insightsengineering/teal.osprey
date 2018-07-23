@@ -1,5 +1,7 @@
 
-#' Display DST01 Patient Disposition Table Teal Module
+#' Disposition Table Teal Module
+#' 
+#' Display DST01 Patient Disposition Table as a shiny module
 #' 
 #' @param label menu item label of the module in the teal app
 #' @param dataname analysis data used in teal module, needs to be available in
@@ -19,20 +21,15 @@
 #' @return an \code{\link[teal]{module}} object
 #' @export
 #' 
-#' @author Carolyn Zhang
+#' @template author_zhanc107
 #' 
 #' @examples 
-#' 
 #' #Example using random dataset 
 #' 
 #' library(dplyr)
-#' suppressPackageStartupMessages(library(tidyverse))
-#' library(rtables)
 #' 
 #' data("rADSL")
 #' ASL <- rADSL
-#' 
-#' #ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
 #' 
 #' x <- teal::init(
 #'   data = list(ASL = ASL), 

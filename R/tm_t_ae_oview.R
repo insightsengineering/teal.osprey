@@ -1,4 +1,7 @@
-#' Display AET01 Adverse Events Summary Table Teal Module
+
+#' Adverse Events Summary Table Teal Module
+#' 
+#' Display AET01 Adverse Events Summary Table as a shiny Module
 #' 
 #' @param label menu item label of the module in the teal app
 #' @param dataname analysis data used in teal module, needs to be available in
@@ -16,20 +19,18 @@
 #' @return an \code{\link[teal]{module}} object
 #' @export
 #' 
-#' @author Carolyn Zhang
+#' @template author_zhanc107
 #' 
 #' 
 #' @examples
 #' #Example using stream (adam) dataset 
 #' library(dplyr)
-#' suppressPackageStartupMessages(library(tidyverse))
-#' library(rtables)
 #' 
-#' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+#' data("rADSL")
+#' data("rADAE")
 #' 
-#' #ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
-#' #AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
+#' ASL <- rADSL
+#' AAE <- rADAE
 #' 
 #' x1 <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
