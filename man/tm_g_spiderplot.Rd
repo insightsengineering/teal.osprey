@@ -2,12 +2,11 @@
 % Please edit documentation in R/tm_g_spiderplot.R
 \name{tm_g_spiderplot}
 \alias{tm_g_spiderplot}
-\title{Spiderplot (Early Development) Teal Module}
+\title{Spiderplot Teal Module}
 \usage{
 tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd, x_var,
   x_var_choices = x_var, y_var, y_var_choices = y_var, marker_var,
-  marker_var_choices = marker_var, marker_colorby_var,
-  marker_colorby_var_choices = marker_colorby_var, line_colorby_var,
+  marker_var_choices = marker_var, line_colorby_var,
   line_colorby_var_choices = line_colorby_var_choices, vref_line, href_line,
   anno_txt_var, anno_disc_study, legend_on = FALSE, xfacet_var,
   xfacet_var_choices = xfacet_var, yfacet_var,
@@ -37,10 +36,6 @@ Note that the data is expected to be in vertical form with the
 \item{marker_var}{variable dictates marker symbol}
 
 \item{marker_var_choices}{vector with \code{marker_var} choices}
-
-\item{marker_colorby_var}{variable dictates marker color}
-
-\item{marker_colorby_var_choices}{vector with \code{marker_colorby_var} choices}
 
 \item{line_colorby_var}{variable dictates line color}
 
@@ -81,22 +76,17 @@ app is initialized, default is NULL}
 an \code{\link[teal]{module}} object
 }
 \description{
-Spiderplot (Early Development) Teal Module
+Display spiderplot as a shiny module
 }
 \examples{
 #Example spiderplot
-library(random.cdisc.data)
-library(plyr)
 library(dplyr)
-library(gridExtra)
-library(ggplot2)
-require(lemon)
 
-#asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+data("rADSL")
+data("rADTR") 
 
-ASL <- radam("ADSL", N=30)
-ATR <- radam("ATR", N=30)
+ASL <- rADSL
+ATR <- rADTR
 #dat <- left_join(ATR, ASL) \%>\% filter(PARAMCD == "SUMTGLES") \%>\% as.data.frame()
 
 # test character vector as x axis labels
@@ -108,16 +98,14 @@ x <- teal::init(
     tm_g_spiderplot(
        label = "Spiderplot",
        dataname = "ATR",
-       paramcd = "SUMTGLES",
-       paramcd_choices = c("SUMTGLES", "LDIAM"),
-       x_var = "TUDY",
-       x_var_choices = c("None", "TUDY"),
+       paramcd = "SLDINV",
+       paramcd_choices = c("SLDINV", "None"),
+       x_var = "ADY",
+       x_var_choices = c("None", "ADY"),
        y_var = "PCHG",
-       y_var_choices = c("None", "PCHG"),
+       y_var_choices = c("None", "PCHG", "CHG", "AVAL"),
        marker_var = "RACE",
        marker_var_choices = c("None", "RACE"),
-       marker_colorby_var = "RACE",
-       marker_colorby_var_choices = c("None", "RACE"),
        line_colorby_var = "USUBJID",
        line_colorby_var_choices = c("USUBJID", "RACE"),
        vref_line = c("10", "37"),
@@ -139,5 +127,5 @@ shinyApp(x$ui, x$server)
 
 }
 \author{
-Carolyn Zhang
+Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
 }

@@ -1,4 +1,7 @@
-#' Spiderplot (Early Development) Teal Module
+
+#' Spiderplot Teal Module
+#' 
+#' Display spiderplot as a shiny module
 #' 
 #' @param label menu item label of the module in the teal app
 #' @param dataname analysis data used in teal module, needs to be available in
@@ -13,8 +16,6 @@
 #' @param y_var_choices vector with \code{y_var} choices
 #' @param marker_var variable dictates marker symbol
 #' @param marker_var_choices vector with \code{marker_var} choices
-#' @param marker_colorby_var variable dictates marker color
-#' @param marker_colorby_var_choices vector with \code{marker_colorby_var} choices
 #' @param line_colorby_var variable dictates line color
 #' @param line_colorby_var_choices vector with \code{line_colorby_var} choices
 #' @param vref_line vertical reference lines
@@ -34,22 +35,17 @@
 #' @return an \code{\link[teal]{module}} object
 #' @export
 #' 
-#' @author Carolyn Zhang
+#' @template author_zhanc107
 #' 
 #' @examples 
 #' #Example spiderplot
-#' library(random.cdisc.data)
-#' library(plyr)
 #' library(dplyr)
-#' library(gridExtra)
-#' library(ggplot2)
-#' require(lemon)
-#' 
-#' #asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#' #aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
 #'
-#' ASL <- radam("ADSL", N=30)
-#' ATR <- radam("ATR", N=30)
+#' data("rADSL")
+#' data("rADTR") 
+#'
+#' ASL <- rADSL
+#' ATR <- rADTR
 #' #dat <- left_join(ATR, ASL) %>% filter(PARAMCD == "SUMTGLES") %>% as.data.frame()
 #' 
 #' # test character vector as x axis labels
@@ -61,16 +57,14 @@
 #'     tm_g_spiderplot(
 #'        label = "Spiderplot",
 #'        dataname = "ATR",
-#'        paramcd = "SUMTGLES",
-#'        paramcd_choices = c("SUMTGLES", "LDIAM"),
-#'        x_var = "TUDY",
-#'        x_var_choices = c("None", "TUDY"),
+#'        paramcd = "SLDINV",
+#'        paramcd_choices = c("SLDINV", "None"),
+#'        x_var = "ADY",
+#'        x_var_choices = c("None", "ADY"),
 #'        y_var = "PCHG",
-#'        y_var_choices = c("None", "PCHG"),
+#'        y_var_choices = c("None", "PCHG", "CHG", "AVAL"),
 #'        marker_var = "RACE",
 #'        marker_var_choices = c("None", "RACE"),
-#'        marker_colorby_var = "RACE",
-#'        marker_colorby_var_choices = c("None", "RACE"),
 #'        line_colorby_var = "USUBJID",
 #'        line_colorby_var_choices = c("USUBJID", "RACE"),
 #'        vref_line = c("10", "37"),
@@ -100,8 +94,6 @@ tm_g_spiderplot <- function(label,
                             y_var_choices = y_var,
                             marker_var,
                             marker_var_choices = marker_var,
-                            marker_colorby_var,
-                            marker_colorby_var_choices = marker_colorby_var,
                             line_colorby_var,
                             line_colorby_var_choices = line_colorby_var_choices,
                             vref_line,
@@ -145,7 +137,6 @@ ui_g_spider <- function(id, ...) {
       optionalSelectInput(ns("x_var"), "X-axis Variable", a$x_var_choices, a$x_var, multiple = FALSE),
       optionalSelectInput(ns("y_var"), "Y-axis Variable", a$y_var_choices, a$y_var, multiple = FALSE),
       optionalSelectInput(ns("line_colorby_var"), "Color By Variable (Line)", a$line_colorby_var_choices, a$line_colorby_var, multiple = FALSE),
-      optionalSelectInput(ns("marker_colorby_var"), "Color By Variable (Marker)", a$marker_colorby_var_choices, a$marker_colorby_var, multiple = FALSE),
       optionalSelectInput(ns("marker_var"), "Marker Symbol By Variable", a$marker_var_choices, a$marker_var, multiple = FALSE),
       optionalSelectInput(ns("xfacet_var"), "X-facet By Variable", a$xfacet_var_choices, a$xfacet_var, multiple = FALSE),
       optionalSelectInput(ns("yfacet_var"), "Y-facet By Variable", a$yfacet_var_choices, a$yfacet_var, multiple = FALSE),
@@ -191,7 +182,6 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     x_var <- input$x_var
     y_var <- input$y_var
     marker_var <- input$marker_var
-    marker_colorby_var <- input$marker_colorby_var
     line_colorby_var <- input$line_colorby_var
     anno_txt_var <- input$anno_txt_var
     anno_disc_study <- input$anno_disc_study
@@ -203,13 +193,16 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     ATR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    
+    asl_vars <- unique(c("USUBJID", "STUDYID"))
+    atr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, 
+                         marker_var, line_colorby_var, xfacet_var, yfacet_var)) 
 
     chunks$vars <<- bquote({
       paramcd <- .(paramcd)
       x_var <- .(x_var)
       y_var <- .(y_var)
       marker_var <- .(marker_var)
-      marker_colorby_var <- .(marker_colorby_var)
       line_colorby_var <- .(line_colorby_var)
       vref_line <- .(vref_line)
       href_line <- .(href_line)
@@ -221,26 +214,41 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     })
     
     chunks$data <<- bquote({
-      ADAE <- merge(ASL_FILTERED, ATR_FILTERED, by = c("USUBJID", "STUDYID")) 
-      ADAE <- ADAE %>% group_by(USUBJID, PARAM) %>% arrange(ADAE[,.(x_var)]) %>%
+      atr_vars <- atr_vars[atr_vars != "None"]
+      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
+      ATR <- ATR_FILTERED[, atr_vars] %>% as.data.frame() 
+      
+      ANL <- merge(ASL, ATR, by = c("USUBJID", "STUDYID")) 
+      ANL <- ANL %>% group_by(USUBJID, PARAMCD) %>% arrange(ANL[,.(x_var)]) %>%
         as.data.frame()
       
-      ADAE_f <- ADAE %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame()
+      #replace USUBJID with all text after id
+      ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, '-', fixed = TRUE), '[', 4))
       
-      if(is.numeric(ADAE_f[,.(x_var)])){
+      ANL_f <- ANL %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame()
+      
+      if(is.numeric(ANL_f[,.(x_var)])){
         vref_line <- as.numeric(.(vref_line))
+        if(length(vref_line) == 0){
+          vref_line <- NULL
+        }
       } 
       href_line <- as.numeric(.(href_line))
       
+      print(vref_line)
+      
       lbl <- NULL
       if(!.(anno_txt_var) && .(anno_disc_study)){
-        lbl <- list(mrkr_all = as.factor(ADAE_f[,.(line_colorby_var)]), mrkr_ann = c('id-1', 'id-2', 'id-3'))
+        #######
+        #here is where you can add marker annotations
+        lbl <- list(mrkr_all = as.factor(ANL_f[,.(line_colorby_var)]), mrkr_ann = c('id-1', 'id-2', 'id-3'))
+        #######
       }
       else if(.(anno_txt_var) && !.(anno_disc_study)){
-        lbl <- list(txt_ann = as.factor(ADAE_f[,.(line_colorby_var)]))
+        lbl <- list(txt_ann = as.factor(ANL_f[,.(line_colorby_var)]))
       }
       else if(.(anno_txt_var) && .(anno_disc_study)){
-        lbl <- list(txt_ann = as.factor(ADAE_f[,.(line_colorby_var)]), mrkr_all = as.factor(ADAE_f[,.(line_colorby_var)]), mrkr_ann = c('id-1', 'id-2'))
+        lbl <- list(txt_ann = as.factor(ANL_f[,.(line_colorby_var)]), mrkr_all = as.factor(ANL_f[,.(line_colorby_var)]), mrkr_ann = c('id-1', 'id-2'))
       }
     }) 
     
@@ -248,15 +256,14 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     
     chunks$p_spiderplot <<- call(
       "g_spiderplot",
-      marker_x = bquote(data.frame(day = ADAE_f[,x_var], groupby = ADAE_f$USUBJID)),
-      marker_y = bquote(ADAE_f[,y_var]),
-      line_colby = bquote(if(line_colorby_var != "None"){ADAE_f[,line_colorby_var]}else{NULL}),
-      marker_color = bquote(if(marker_colorby_var != "None"){ADAE_f[,marker_colorby_var]}else{NULL}),
-      marker_shape = bquote(if(marker_var != "None"){ADAE_f[,marker_var]}else{NULL}),
-      marker_size = 5,
+      marker_x = bquote(data.frame(day = ANL_f[,x_var], groupby = ANL_f$USUBJID)),
+      marker_y = bquote(ANL_f[,y_var]),
+      line_colby = bquote(if(line_colorby_var != "None"){ANL_f[,line_colorby_var]}else{NULL}),
+      marker_shape = bquote(if(marker_var != "None"){ANL_f[,marker_var]}else{NULL}),
+      marker_size = 4,
       datalabel_txt = bquote(lbl),
-      facet_rows = bquote(if(yfacet_var != "None"){ADAE_f[,yfacet_var]}else{NULL}),
-      facet_columns = bquote(if(xfacet_var != "None")ADAE_f[,xfacet_var]else{NULL}),
+      facet_rows = bquote(if(yfacet_var != "None"){ANL_f[,yfacet_var]}else{NULL}),
+      facet_columns = bquote(if(xfacet_var != "None")ANL_f[,xfacet_var]else{NULL}),
       vref_line = bquote(vref_line),
       href_line = bquote(href_line),
       x_label = "Time (Days)",
