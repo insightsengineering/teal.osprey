@@ -2,7 +2,7 @@
 % Please edit documentation in R/tm_t_ds.R
 \name{tm_t_ds}
 \alias{tm_t_ds}
-\title{Display DST01 Patient Disposition Table Teal Module}
+\title{Disposition Table Teal Module}
 \usage{
 tm_t_ds(label, dataname, arm_var, arm_var_choices, class_var, class_var_choices,
   term_var, term_var_choices, total_col = TRUE, pre_output = NULL,
@@ -41,7 +41,7 @@ output to put the output into context. For example the
 an \code{\link[teal]{module}} object
 }
 \description{
-Display DST01 Patient Disposition Table Teal Module
+Display DST01 Patient Disposition Table as a shiny module
 }
 \examples{
 #Example using random dataset 
@@ -74,5 +74,5 @@ shinyApp(x$ui, x$server)
 
 }
 \author{
-Carolyn Zhang
+Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
 }

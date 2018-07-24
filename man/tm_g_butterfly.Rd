@@ -2,10 +2,11 @@
 % Please edit documentation in R/tm_g_butterfly.R
 \name{tm_g_butterfly}
 \alias{tm_g_butterfly}
-\title{Butterfly plot (Early Development) Teal Module}
+\title{Butterfly plot Teal Module}
 \usage{
-tm_g_butterfly(label, dataname, dich_var, dich_var_choices = dich_var,
-  category_var, category_var_choices = category_var, color_by_var,
+tm_g_butterfly(label, dataname, right_var, right_var_choices = dich_var,
+  left_var, left_var_choices = dich_var, category_var,
+  category_var_choices = category_var, color_by_var,
   color_by_var_choices = c(color_by_var, "None"), count_by_var,
   count_by_var_choices = c(count_by_var, "None"), facet_var,
   facet_var_choices = c(facet_var, "None"), sort_by_var, sort_by_var_choices,
@@ -20,9 +21,13 @@ the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 Note that the data is expected to be in vertical form with the
 \code{PARAMCD} variable filtering to one observation per patient.}
 
-\item{dich_var}{dichotomization variable}
+\item{right_var}{dichotomization variable for right side}
 
-\item{dich_var_choices}{vector with dichotomization choices}
+\item{right_var_choices}{vector with dichotomization choices}
+
+\item{left_var}{dichotomization variable for left side}
+
+\item{left_var_choices}{vector with dichotomization choices}
 
 \item{category_var}{category (y axis) variable}
 
@@ -41,7 +46,7 @@ Note that the data is expected to be in vertical form with the
 \item{facet_var_choices}{vector with \code{facet_var} choices}
 
 \item{sort_by_var}{argument for order of class and term elements in table,
-defaulte here is "count"}
+default here is "count"}
 
 \item{sort_by_var_choices}{vector with \code{sort_by_var} choices}
 
@@ -64,20 +69,16 @@ app is initialized, default is NULL}
 an \code{\link[teal]{module}} object
 }
 \description{
-Butterfly plot (Early Development) Teal Module
+Display butterfly plot as a shiny module
 }
 \examples{
 #Example butterfly plot
-library(random.cdisc.data)
-library(plyr)
 library(dplyr)
-library(gridExtra)
-library(ggplot2)
-require(lemon)
 
-
-ASL <- radam("ADSL", N=30)
-AAE <- radam("AAE", N=30)
+data("rADSL")
+data("rADAE")
+ASL <- rADSL
+AAE <- rADAE
 AAE <- AAE \%>\% mutate(flag1 = ifelse(AETOXGR == 1, 1, 0)) \%>\% 
                mutate(flag2 = ifelse(AETOXGR == 2, 1, 0)) \%>\% 
                mutate(flag3 = ifelse(AETOXGR == 3, 1, 0)) 
@@ -88,8 +89,10 @@ x <- teal::init(
     tm_g_butterfly(
        label = "Butterfly Plot",
        dataname = "AAE",
-       dich_var = "SEX",
-       dich_var_choices = c("SEX", "ARM", "RACE", "MODIFIED FLAGS"),
+       right_var = "SEX",
+       right_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
+       left_var = "SEX",
+       left_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
        category_var = "AEBODSYS",
        category_var_choices = c("AEDECOD", "AEBODSYS"),
        color_by_var = "AETOXGR",

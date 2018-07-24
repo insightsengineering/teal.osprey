@@ -79,5 +79,5 @@ shinyApp(x1$ui, x1$server)
 
 }
 \author{
-Carolyn Zhang
+Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
 }

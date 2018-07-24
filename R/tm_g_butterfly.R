@@ -1,13 +1,17 @@
 
-#' Butterfly plot (Early Development) Teal Module
+#' Butterfly plot Teal Module
+#' 
+#' Display butterfly plot as a shiny module
 #' 
 #' @param label menu item label of the module in the teal app
 #' @param dataname analysis data used in teal module, needs to be available in
 #'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 #'   Note that the data is expected to be in vertical form with the
 #'   \code{PARAMCD} variable filtering to one observation per patient.
-#' @param dich_var dichotomization variable
-#' @param dich_var_choices vector with dichotomization choices
+#' @param right_var dichotomization variable for right side
+#' @param right_var_choices vector with dichotomization choices
+#' @param left_var dichotomization variable for left side
+#' @param left_var_choices vector with dichotomization choices
 #' @param category_var category (y axis) variable
 #' @param category_var_choices vector of category choices
 #' @param color_by_var variable defines color blocks within each bar
@@ -17,7 +21,7 @@
 #' @param facet_var variable for row facets
 #' @param facet_var_choices vector with \code{facet_var} choices
 #' @param sort_by_var argument for order of class and term elements in table,
-#'  defaulte here is "count"
+#'  default here is "count"
 #' @param sort_by_var_choices vector with \code{sort_by_var} choices
 #' @param legend_on boolean value for whether legend is displayed
 #' @param plot_height range of plot height
@@ -32,16 +36,12 @@
 #' 
 #' @examples 
 #' #Example butterfly plot
-#' library(random.cdisc.data)
-#' library(plyr)
 #' library(dplyr)
-#' library(gridExtra)
-#' library(ggplot2)
-#' require(lemon)
 #' 
-#'
-#' ASL <- radam("ADSL", N=30)
-#' AAE <- radam("AAE", N=30)
+#' data("rADSL")
+#' data("rADAE")
+#' ASL <- rADSL
+#' AAE <- rADAE
 #' AAE <- AAE %>% mutate(flag1 = ifelse(AETOXGR == 1, 1, 0)) %>% 
 #'                mutate(flag2 = ifelse(AETOXGR == 2, 1, 0)) %>% 
 #'                mutate(flag3 = ifelse(AETOXGR == 3, 1, 0)) 
@@ -52,8 +52,10 @@
 #'     tm_g_butterfly(
 #'        label = "Butterfly Plot",
 #'        dataname = "AAE",
-#'        dich_var = "SEX",
-#'        dich_var_choices = c("SEX", "ARM", "RACE", "MODIFIED FLAGS"),
+#'        right_var = "SEX",
+#'        right_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
+#'        left_var = "SEX",
+#'        left_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
 #'        category_var = "AEBODSYS",
 #'        category_var_choices = c("AEDECOD", "AEBODSYS"),
 #'        color_by_var = "AETOXGR",
@@ -75,8 +77,10 @@
 #' 
 tm_g_butterfly <- function(label, 
                            dataname, 
-                           dich_var,
-                           dich_var_choices = dich_var,
+                           right_var,
+                           right_var_choices = dich_var,
+                           left_var,
+                           left_var_choices = dich_var,
                            category_var,
                            category_var_choices = category_var,
                            color_by_var,
@@ -116,8 +120,10 @@ ui_g_butterfly <- function(id, ...) {
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
-      optionalSelectInput(ns("dich_var"), "Dichotomization Variable", a$dich_var_choices, a$dich_var, multiple = FALSE),
-      checkboxGroupInput(ns("dich"), "Choose 2 dichotomization variables"),
+      optionalSelectInput(ns("right_ch"), "Right Dichotomization Variable", a$right_var_choices, a$right_var, multiple = FALSE),
+      radioButtons(ns("right_v"), "Choose one", a$right_var),
+      optionalSelectInput(ns("left_ch"), "Left Dichotomization Variable", a$left_var_choices, a$left_var, multiple = FALSE),
+      radioButtons(ns("left_v"), "Choose one", a$left_var),
       optionalSelectInput(ns("category_var"), "Category Variable", a$category_var_choices, a$category_var, multiple = FALSE),
       radioButtons(ns("color_by_var"), "Color Block By Variable", a$color_by_var_choices, a$color_by_var),
       radioButtons(ns("count_by_var"), "Count By Variable", a$count_by_var_choices, a$count_by_var),
@@ -143,28 +149,19 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
   
   #dynamic options for dichotomization variable
   observe({
-    dich_var <- input$dich_var
-
-    if(dich_var != "MODIFIED FLAGS"){
-      ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-      AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
-      
-      ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
-        as.data.frame()
-      
-      options_d <- unique(ADAE_f[, dich_var])
-    } else{
-      
-      #######input flag variable name options here-----
-      
-      options_d <- c("flag1", "flag2", "flag3")
-      
-      ##########################
-      
-    }
+    right_ch <- input$right_ch
+    left_ch <- input$left_ch
     
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
+      as.data.frame()
     
-    updateCheckboxGroupInput(session, "dich", choices = options_d)
+    options_r <- unique(ADAE_f[, right_ch])
+    options_l <- unique(ADAE_f[, left_ch])
+    
+    updateRadioButtons(session, "right_v", choices = options_r)
+    updateRadioButtons(session, "left_v", choices = options_l)
   })
   
   # dynamic plot height
@@ -182,59 +179,81 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
   
   output$butterfly <- renderPlot({
     
-    dich_var <- input$dich_var
+    right_v <- input$right_v
+    left_v <- input$left_v
+    right_ch <- input$right_ch
+    left_ch <- input$left_ch
     category_var <- input$category_var
     color_by_var <- input$color_by_var
     count_by_var <- input$count_by_var
     legend_on <- input$legend_on
     facet_var <- input$facet_var
     sort_by_var <- input$sort_by_var
-    dich <- input$dich
 
-    
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
+    asl_vars <- unique(c("USUBJID", "STUDYID"))
+    aae_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", category_var, color_by_var, 
+                         count_by_var, facet_var, right_ch, left_ch)) 
     
     chunks$vars <<- bquote({
-      dich_var <- .(dich_var)
+      right_v <- .(right_v)
+      left_v <- .(left_v)
+      right_ch <- .(right_ch)
+      left_ch <- .(left_ch)
       category_var <- .(category_var)
       color_by_var <- .(color_by_var)
       count_by_var <- .(count_by_var)
       legend_on <- .(legend_on)
       facet_var <- .(facet_var)
       sort_by_var <- .(sort_by_var)
-      dich <- .(dich)
+      asl_vars <- .(asl_vars)
+      aae_vars <- .(aae_vars)
     })
     
     chunks$data <<- bquote({
-      ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
+      aae_vars <- aae_vars[aae_vars %in% names(AAE_FILTERED)]
+      ASL <- ASL_FILTERED[, asl_vars] %>% as.data.frame()
+      AAE <- AAE_FILTERED[, aae_vars] %>% as.data.frame() 
+
+      ADAE_f  <- merge(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
         as.data.frame() 
-      if(dich_var == "MODIFIED FLAGS"){
-        if(length(.(dich)) == 2){
-          if(!(dich[1] %in% colnames(ADAE_f)) || !(dich[2] %in% colnames(ADAE_f)))
-            stop("OPTIONAL FLAGS must be column names in AAE")
+
+      if(!is.null(right_v) && !is.null(left_v)){
+        if(!(right_v %in% c(0, 1))){
+          temp <- replace(as.character(ADAE_f[, .(right_ch)]), as.character(ADAE_f[, .(right_ch)]) != .(right_v), 0)
+          temp <- replace(temp, temp == .(right_v), 1)
+          right <- as.numeric(temp)
+          right_name <- right_v
+        } else{
+          right <- ADAE_f[, .(right_ch)]
+          right_name <- right_ch
         }
         
-        
-      }  else{
-        options_d <- unique(ADAE_f[, .(dich_var)])
-        
-        if(length(options_d) > 2){
-          
-          if(length(.(dich)) == 2){
-            ADAE_f <- ADAE_f %>% filter(ADAE_f[,.(dich_var)] == dich[1] | ADAE_f[,.(dich_var)] == dich[2])
-          }
+        if(!(left_v %in% c(0, 1))){
+          temp <- replace(as.character(ADAE_f[, .(left_ch)]), as.character(ADAE_f[, .(left_ch)]) != .(left_v), 0)
+          temp <- replace(temp, temp == .(left_v), 1)
+          left <- as.numeric(temp)
+          left_name <- left_v
+        } else{
+          left <- ADAE_f[, .(left_ch)]
+          left_name <- left_ch
         }
+        
       }
 
     })
+    
     eval(chunks$data)
-    if(dich_var != "MODIFIED FLAGS" && length(dich) == 2){
+    
+    if(!is.null(right_v) && !is.null(left_v)){
       chunks$p_butterfly <<- call(
         "g_butterfly",
         category = bquote(ADAE_f[,category_var]),
-        groups = bquote(ADAE_f[,dich_var]),
+        rightFlag = bquote(right),
+        leftFlag = bquote(left),
+        group_names = bquote(c(right_name, left_name)),
         block_count = bquote(count_by_var),
         block_color = bquote(if(color_by_var != "None"){ADAE_f[,color_by_var]}else{NULL}),
         id = bquote(ADAE_f$USUBJID),
@@ -245,21 +264,6 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
         sort_by = bquote(sort_by_var),
         show_legend = bquote(legend_on) 
         )
-    } else if(dich_var == "MODIFIED FLAGS" && length(dich) == 2){
-      chunks$p_butterfly <<- call(
-        "g_butterfly_modD",
-        category = bquote(ADAE_f[,category_var]),
-        groups = bquote(data.frame(ADAE_f[,dich[1]], ADAE_f[,dich[2]])),
-        block_count = bquote(count_by_var),
-        block_color = bquote(if(color_by_var != "None"){ADAE_f[,color_by_var]}else{NULL}),
-        id = bquote(ADAE_f$USUBJID),
-        facet_rows = bquote(if(facet_var != "None"){ADAE_f[,facet_var]}else{NULL}),
-        x_label = bquote(count_by_var),
-        y_label = "AE Derived Terms",
-        legend_label = bquote(color_by_var),
-        sort_by = bquote(sort_by_var),
-        show_legend = bquote(legend_on) 
-      )
     }
     
     vals$butterfly <- eval(chunks$p_butterfly)
