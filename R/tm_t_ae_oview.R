@@ -119,17 +119,17 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
       AAE <- AAE_FILTERED[, .(aae_vars)] %>% as.data.frame() 
       
-      ADAE  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
+      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
         as.data.frame()
       
-      flag <- data.frame(dthfl = ADAE$DTHFL,
-                         dcsreas = ADAE$DCSREAS,
-                         aesdth = ADAE$AESDTH,
-                         aeser = ADAE$AESER,
-                         aeacn = ADAE$AEACN,
-                         arel = ADAE$AREL,
-                         aerel = ADAE$AEREL,
-                         aetoxgr = ADAE$AETOXGR)
+      flag <- data.frame(dthfl = ANL$DTHFL,
+                         dcsreas = ANL$DCSREAS,
+                         aesdth = ANL$AESDTH,
+                         aeser = ANL$AESER,
+                         aeacn = ANL$AEACN,
+                         arel = ANL$AREL,
+                         aerel = ANL$AEREL,
+                         aetoxgr = ANL$AETOXGR)
       display <- c("fatal", "ser", "serwd", "serdsm", "relser",
                    "wd", "dsm", "rel", "relwd", "reldsm", "ctc35")
       
@@ -142,15 +142,15 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
     })
     eval(chunks$data)
     
-    validate_has_data(ADAE, min_nrow = 1)    
-    validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
-    validate(need(!("" %in% ADAE[[arm_var]]), "arm values can not contain empty strings ''"))
+    validate_has_data(ANL, min_nrow = 1)    
+    validate(need(ANL[[arm_var]], "Arm variable does not exist"))
+    validate(need(!("" %in% ANL[[arm_var]]), "arm values can not contain empty strings ''"))
     
     chunks$analysis <<- call(
       "t_ae_oview",
-      id = bquote(ADAE$USUBJID), 
-      class = bquote(ADAE$AESOC), 
-      term = bquote(ADAE$AEDECOD), 
+      id = bquote(ANL$USUBJID), 
+      class = bquote(ANL$AESOC), 
+      term = bquote(ANL$AEDECOD), 
       flags = bquote(flag),
       ####--------------------------------
       #
@@ -159,7 +159,7 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       #
       ####--------------------------------
       display_id = bquote(display),
-      col_by = bquote(as.factor(ADAE[[.(arm_var)]])),
+      col_by = bquote(as.factor(ANL[[.(arm_var)]])),
       total = total
     )
     

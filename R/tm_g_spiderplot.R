@@ -238,7 +238,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       ANL_f <- ANL %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame()
       
       #If reference lines are requested
-      if (!is.null(vref_line)) {
+      if (vref_line != "" || is.null(vref_line)) {
         vref_line <- unlist(strsplit(.(vref_line), ","))
 
         if(is.numeric(ANL_f[,.(x_var)])){
@@ -250,7 +250,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       }  else{
         vref_line <- NULL
       }
-      if (!is.null(href_line)) {
+      if (!is.null(href_line) || href_line != "") {
         href_line <- as.numeric(unlist(strsplit(.(href_line), ",")))
         validate(need(all(!is.na(href_line)), "Not all values entered for reference line(s) were numeric"))
       } else{

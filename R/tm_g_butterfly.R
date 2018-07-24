@@ -154,11 +154,11 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
-    ADAE_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
+    ANL_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
       as.data.frame()
     
-    options_r <- unique(ADAE_f[, right_ch])
-    options_l <- unique(ADAE_f[, left_ch])
+    options_r <- unique(ANL_f[, right_ch])
+    options_l <- unique(ANL_f[, left_ch])
     
     updateRadioButtons(session, "right_v", choices = options_r)
     updateRadioButtons(session, "left_v", choices = options_l)
@@ -217,27 +217,27 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       ASL <- ASL_FILTERED[, asl_vars] %>% as.data.frame()
       AAE <- AAE_FILTERED[, aae_vars] %>% as.data.frame() 
 
-      ADAE_f  <- merge(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
+      ANL_f  <- merge(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
         as.data.frame() 
 
       if(!is.null(right_v) && !is.null(left_v)){
         if(!(right_v %in% c(0, 1))){
-          temp <- replace(as.character(ADAE_f[, .(right_ch)]), as.character(ADAE_f[, .(right_ch)]) != .(right_v), 0)
+          temp <- replace(as.character(ANL_f[, .(right_ch)]), as.character(ANL_f[, .(right_ch)]) != .(right_v), 0)
           temp <- replace(temp, temp == .(right_v), 1)
           right <- as.numeric(temp)
           right_name <- right_v
         } else{
-          right <- ADAE_f[, .(right_ch)]
+          right <- ANL_f[, .(right_ch)]
           right_name <- right_ch
         }
         
         if(!(left_v %in% c(0, 1))){
-          temp <- replace(as.character(ADAE_f[, .(left_ch)]), as.character(ADAE_f[, .(left_ch)]) != .(left_v), 0)
+          temp <- replace(as.character(ANL_f[, .(left_ch)]), as.character(ANL_f[, .(left_ch)]) != .(left_v), 0)
           temp <- replace(temp, temp == .(left_v), 1)
           left <- as.numeric(temp)
           left_name <- left_v
         } else{
-          left <- ADAE_f[, .(left_ch)]
+          left <- ANL_f[, .(left_ch)]
           left_name <- left_ch
         }
         
@@ -250,14 +250,14 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     if(!is.null(right_v) && !is.null(left_v)){
       chunks$p_butterfly <<- call(
         "g_butterfly",
-        category = bquote(ADAE_f[,category_var]),
+        category = bquote(ANL_f[,category_var]),
         rightFlag = bquote(right),
         leftFlag = bquote(left),
         group_names = bquote(c(right_name, left_name)),
         block_count = bquote(count_by_var),
-        block_color = bquote(if(color_by_var != "None"){ADAE_f[,color_by_var]}else{NULL}),
-        id = bquote(ADAE_f$USUBJID),
-        facet_rows = bquote(if(facet_var != "None"){ADAE_f[,facet_var]}else{NULL}),
+        block_color = bquote(if(color_by_var != "None"){ANL_f[,color_by_var]}else{NULL}),
+        id = bquote(ANL_f$USUBJID),
+        facet_rows = bquote(if(facet_var != "None"){ANL_f[,facet_var]}else{NULL}),
         x_label = bquote(count_by_var),
         y_label = "AE Derived Terms",
         legend_label = bquote(color_by_var),
