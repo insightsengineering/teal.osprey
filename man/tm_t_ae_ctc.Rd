@@ -6,8 +6,7 @@
 \usage{
 tm_t_ae_ctc(label, dataname, arm_var, arm_var_choices, class_var,
   class_var_choices, term_var, term_var_choices, total_col = TRUE,
-  sort_by_var, sort_by_var_choices, pre_output = NULL, post_output = NULL,
-  code_data_processing = NULL)
+  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -33,11 +32,6 @@ Note that the data is expected to be in vertical form with the
 
 \item{total_col}{argument for appearance of All Patients column,
 default here is TRUE}
-
-\item{sort_by_var}{argument for order of class and term elements in table,
-defaulte here is "count"}
-
-\item{sort_by_var_choices}{vector with \code{sort_by_var} choices}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
@@ -75,9 +69,7 @@ x1 <- teal::init(
        class_var_choices = c("AEBODSYS", "DEFAULT"),
        term_var = "AEDECOD",
        term_var_choices = c("AEDECOD", "DEFAULT"),
-       total_col = TRUE,
-       sort_by_var = "count",
-       sort_by_var_choices = c("count", "alphabetical")
+       total_col = TRUE
    )
   )
 )

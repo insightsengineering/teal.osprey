@@ -1,3 +1,4 @@
+
 #' Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 #' 
 #' @param label menu item label of the module in the teal app
@@ -15,9 +16,6 @@
 #' @param term_var_choices vector with \code{term_var} choices
 #' @param total_col argument for appearance of All Patients column,
 #'  default here is TRUE
-#' @param sort_by_var argument for order of class and term elements in table,
-#'  defaulte here is "count"
-#' @param sort_by_var_choices vector with \code{sort_by_var} choices
 #' @inheritParams teal::standard_layout
 #' 
 #' @return an \code{\link[teal]{module}} object
@@ -48,9 +46,7 @@
 #'        class_var_choices = c("AEBODSYS", "DEFAULT"),
 #'        term_var = "AEDECOD",
 #'        term_var_choices = c("AEDECOD", "DEFAULT"),
-#'        total_col = TRUE,
-#'        sort_by_var = "count",
-#'        sort_by_var_choices = c("count", "alphabetical")
+#'        total_col = TRUE
 #'    )
 #'   )
 #' )
@@ -67,8 +63,6 @@ tm_t_ae_ctc <- function(label,
                     term_var, 
                     term_var_choices, 
                     total_col = TRUE, 
-                    sort_by_var,
-                    sort_by_var_choices,
                     pre_output = NULL, 
                     post_output = NULL, 
                     code_data_processing = NULL) {
@@ -99,7 +93,6 @@ ui_t_ae_ctc <- function(id, ...) {
       optionalSelectInput(ns("arm_var"), "Arm Variable", a$arm_var_choices, a$arm_var, multiple = FALSE),
       optionalSelectInput(ns("class_var"), "Class Variables", a$class_var_choices, a$class_var, multiple = FALSE),
       optionalSelectInput(ns("term_var"), "Term Variables", a$term_var_choices, a$term_var, multiple = FALSE),
-      radioButtons(ns("sort_by_var"), "Sort By Variable", a$sort_by_var_choices, a$sort_by_var),
       checkboxInput(ns("All_Patients"), "Add All Patients", value = a$total_col)
     ),
     forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
@@ -125,14 +118,12 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
     arm_var <- input$arm_var
     class_var <- input$class_var
     term_var <- input$term_var
-    sort_by_var <- input$sort_by_var
     all_p <- input$All_Patients
     
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)
       class_var <- .(class_var)
       term_var <- .(term_var)
-      sort_by_var <- .(sort_by_var)
       all_p <- .(all_p)
     })
     
@@ -161,8 +152,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
       id = bquote(ADAE$USUBJID),
       grade = bquote(as.numeric(ADAE$AETOXGR)),
       col_by = bquote(as.factor(ADAE[[.(arm_var)]])),
-      total = total,
-      sort_by = bquote(sort_by_var)
+      total = total
     )
     
     tbl <- try(eval(chunks$analysis))
