@@ -4,10 +4,10 @@
 \alias{tm_t_ae}
 \title{Adverse Events Table Teal Module}
 \usage{
-tm_t_ae(label, dataname, filter_var, filter_var_choices, arm_var,
-  arm_var_choices, class_var, class_var_choices, term_var, term_var_choices,
-  total_col = TRUE, pre_output = NULL, post_output = NULL,
-  code_data_processing = NULL)
+tm_t_ae(label, dataname, filter_var = NULL, filter_var_choices = NULL,
+  arm_var, arm_var_choices, class_var, class_var_choices, term_var,
+  term_var_choices, total_col = TRUE, pre_output = NULL,
+  post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -17,9 +17,10 @@ the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 Note that the data is expected to be in vertical form with the
 \code{PARAMCD} variable filtering to one observation per patient.}
 
-\item{filter_var}{variable name of data filter}
+\item{filter_var}{variable name of data filter, default here is \code{NULL}}
 
-\item{filter_var_choices}{vector with \code{filter_var} choices}
+\item{filter_var_choices}{vector with \code{filter_var} choices, default 
+here is \code{NULL}}
 
 \item{arm_var}{single name of variable in analysis data that is used as
 \code{col_by} argument for the respective \code{tern} function.}

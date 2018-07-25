@@ -8,8 +8,9 @@
 #'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 #'   Note that the data is expected to be in vertical form with the
 #'   \code{PARAMCD} variable filtering to one observation per patient.
-#' @param filter_var variable name of data filter 
-#' @param filter_var_choices vector with \code{filter_var} choices
+#' @param filter_var variable name of data filter, default here is \code{NULL}
+#' @param filter_var_choices vector with \code{filter_var} choices, default 
+#' here is \code{NULL}
 #' @param arm_var single name of variable in analysis data that is used as
 #'   \code{col_by} argument for the respective \code{tern} function.
 #' @param arm_var_choices vector with variable names that can be used as
@@ -62,8 +63,8 @@
 #' 
 tm_t_ae <- function(label, 
                     dataname,
-                    filter_var,
-                    filter_var_choices,
+                    filter_var = NULL,
+                    filter_var_choices = NULL,
                     arm_var, 
                     arm_var_choices, 
                     class_var, 
