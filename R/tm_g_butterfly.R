@@ -130,9 +130,9 @@ ui_g_butterfly <- function(id, ...) {
       helpText("Dataset is:", tags$code(a$dataname)),
       optionalSelectInput(ns("filter_var"), "Preset Data Filters", a$filter_var_choices, a$filter_var, multiple = TRUE),
       optionalSelectInput(ns("right_ch"), "Right Dichotomization Variable", a$right_var_choices, a$right_var, multiple = FALSE),
-      radioButtons(ns("right_v"), "Choose one", a$right_var),
+      checkboxGroupInput(ns("right_v"), "Choose one", a$right_var),
       optionalSelectInput(ns("left_ch"), "Left Dichotomization Variable", a$left_var_choices, a$left_var, multiple = FALSE),
-      radioButtons(ns("left_v"), "Choose one", a$left_var),
+      checkboxGroupInput(ns("left_v"), "Choose one", a$left_var),
       optionalSelectInput(ns("category_var"), "Category Variable", a$category_var_choices, a$category_var, multiple = FALSE),
       radioButtons(ns("color_by_var"), "Color Block By Variable", a$color_by_var_choices, a$color_by_var),
       radioButtons(ns("count_by_var"), "Count By Variable", a$count_by_var_choices, a$count_by_var),
@@ -169,8 +169,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     options_r <- unique(ANL_f[, right_ch])
     options_l <- unique(ANL_f[, left_ch])
     
-    updateRadioButtons(session, "right_v", choices = options_r)
-    updateRadioButtons(session, "left_v", choices = options_l)
+    updateCheckboxGroupInput(session, "right_v", choices = options_r, selected = options_r[1])
+    updateCheckboxGroupInput(session, "left_v", choices = options_l, selected = options_l[1])
   })
   
   # dynamic plot height
@@ -237,23 +237,23 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
         as.data.frame() 
       
       ANL_f <- na.omit(ANL_f)
-
+      
       if(!is.null(right_v) && !is.null(left_v)){
         if(!(right_v %in% c(0, 1))){
-          temp <- replace(as.character(ANL_f[, .(right_ch)]), as.character(ANL_f[, .(right_ch)]) != .(right_v), 0)
-          temp <- replace(temp, temp == .(right_v), 1)
-          right <- as.numeric(temp)
-          right_name <- right_v
+          right <- as.character(ANL_f[, .(right_ch)])
+          right <- replace(right, !(right %in% right_v), 0)
+          right <- replace(right, right %in% right_v, 1)
+          right_name <- paste(right_v, collapse = " - ")
         } else{
           right <- ANL_f[, .(right_ch)]
           right_name <- right_ch
         }
         
         if(!(left_v %in% c(0, 1))){
-          temp <- replace(as.character(ANL_f[, .(left_ch)]), as.character(ANL_f[, .(left_ch)]) != .(left_v), 0)
-          temp <- replace(temp, temp == .(left_v), 1)
-          left <- as.numeric(temp)
-          left_name <- left_v
+          left <- as.character(ANL_f[, .(left_ch)])
+          left <- replace(left, !(left %in% left_v), 0)
+          left <- replace(left, left %in% left_v, 1)
+          left_name <- paste(left_v, collapse = " - ")
         } else{
           left <- ANL_f[, .(left_ch)]
           left_name <- left_ch
