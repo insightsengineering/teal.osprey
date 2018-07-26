@@ -138,9 +138,9 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
         as.data.frame()
       
       if(all_p == TRUE){
-        total = "ALL Patients"
+        total = "All Patients"
       } else{
-        total = "NONE"
+        total = "None"
       }
     })
     eval(chunks$data)
