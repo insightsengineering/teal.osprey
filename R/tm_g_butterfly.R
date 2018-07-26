@@ -8,6 +8,9 @@
 #'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 #'   Note that the data is expected to be in vertical form with the
 #'   \code{PARAMCD} variable filtering to one observation per patient.
+#' @param filter_var variable name of data filter, default here is \code{NULL}
+#' @param filter_var_choices vector with \code{filter_var} choices, default 
+#' here is \code{NULL}
 #' @param right_var dichotomization variable for right side
 #' @param right_var_choices vector with dichotomization choices
 #' @param left_var dichotomization variable for left side
@@ -45,6 +48,7 @@
 #' AAE <- AAE %>% mutate(flag1 = ifelse(AETOXGR == 1, 1, 0)) %>% 
 #'                mutate(flag2 = ifelse(AETOXGR == 2, 1, 0)) %>% 
 #'                mutate(flag3 = ifelse(AETOXGR == 3, 1, 0)) 
+#' AAE <- AAE %>% mutate(flag1_filt = rep("Y", nrow(AAE))) 
 #'
 #' x <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
@@ -52,6 +56,8 @@
 #'     tm_g_butterfly(
 #'        label = "Butterfly Plot",
 #'        dataname = "AAE",
+#'        filter_var = "NULL",
+#'        filter_var_choices = c("NULL", "DTHFL", "flag1_filt"), 
 #'        right_var = "SEX",
 #'        right_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
 #'        left_var = "SEX",
@@ -77,6 +83,8 @@
 #' 
 tm_g_butterfly <- function(label, 
                            dataname, 
+                           filter_var = NULL,
+                           filter_var_choices = NULL,
                            right_var,
                            right_var_choices = dich_var,
                            left_var,
@@ -120,6 +128,7 @@ ui_g_butterfly <- function(id, ...) {
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
+      optionalSelectInput(ns("filter_var"), "Preset Data Filters", a$filter_var_choices, a$filter_var, multiple = TRUE),
       optionalSelectInput(ns("right_ch"), "Right Dichotomization Variable", a$right_var_choices, a$right_var, multiple = FALSE),
       radioButtons(ns("right_v"), "Choose one", a$right_var),
       optionalSelectInput(ns("left_ch"), "Left Dichotomization Variable", a$left_var_choices, a$left_var, multiple = FALSE),
@@ -154,8 +163,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
-    ANL_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>%
-      as.data.frame()
+    
+    ANL_f  <- merge(ASL_FILTERED, AAE) %>% as.data.frame()
     
     options_r <- unique(ANL_f[, right_ch])
     options_l <- unique(ANL_f[, left_ch])
@@ -189,6 +198,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     legend_on <- input$legend_on
     facet_var <- input$facet_var
     sort_by_var <- input$sort_by_var
+    filter_var <- input$filter_var
 
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
@@ -210,15 +220,23 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       sort_by_var <- .(sort_by_var)
       asl_vars <- .(asl_vars)
       aae_vars <- .(aae_vars)
+      filter_var <- .(filter_var)
     })
     
     chunks$data <<- bquote({
       aae_vars <- aae_vars[aae_vars %in% names(AAE_FILTERED)]
       ASL <- ASL_FILTERED[, asl_vars] %>% as.data.frame()
-      AAE <- AAE_FILTERED[, aae_vars] %>% as.data.frame() 
+      
+      if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
+        AAE <- quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
+      } 
+      
+      AAE <- AAE[, aae_vars] %>% as.data.frame() 
 
-      ANL_f  <- merge(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
+      ANL_f  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
         as.data.frame() 
+      
+      ANL_f <- na.omit(ANL_f)
 
       if(!is.null(right_v) && !is.null(left_v)){
         if(!(right_v %in% c(0, 1))){

@@ -6,6 +6,9 @@
 #'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 #'   Note that the data is expected to be in vertical form with the
 #'   \code{PARAMCD} variable filtering to one observation per patient.
+#' @param filter_var variable name of data filter, default here is \code{NULL}
+#' @param filter_var_choices vector with \code{filter_var} choices, default 
+#' here is \code{NULL}
 #' @param arm_var single name of variable in analysis data that is used as
 #'   \code{col_by} argument for the respective \code{tern} function.
 #' @param arm_var_choices vector with variable names that can be used as
@@ -26,13 +29,14 @@
 #' 
 #' @examples 
 #' #Example 
-#' library(random.cdisc.data)
 #' library(dplyr)
-#' suppressPackageStartupMessages(library(tidyverse))
-#' library(rtables)
 #' 
-#' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+#' data("rADSL")
+#' data("rADAE")
+#' 
+#' ASL <- rADSL
+#' AAE <- rADAE
+#' AAE <- AAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
 #' 
 #' x1 <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
@@ -40,6 +44,8 @@
 #'     tm_t_ae_ctc(
 #'        label = "Adverse Events Table By Highest NCI CTCAE Grade",
 #'        dataname = "AAE",
+#'        filter_var = "NULL",
+#'        filter_var_choices = c("NULL", "DTHFL", "flag1"), 
 #'        arm_var = "ARM",
 #'        arm_var_choices = c("ARM", "ARMCD"),
 #'        class_var = "AEBODSYS",
@@ -56,6 +62,8 @@
 #' 
 tm_t_ae_ctc <- function(label, 
                     dataname, 
+                    filter_var = NULL,
+                    filter_var_choices = NULL,
                     arm_var, 
                     arm_var_choices, 
                     class_var, 
@@ -90,6 +98,7 @@ ui_t_ae_ctc <- function(id, ...) {
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
+      optionalSelectInput(ns("filter_var"), "Preset Data Filters", a$filter_var_choices, a$filter_var, multiple = TRUE),
       optionalSelectInput(ns("arm_var"), "Arm Variable", a$arm_var_choices, a$arm_var, multiple = FALSE),
       optionalSelectInput(ns("class_var"), "Class Variables", a$class_var_choices, a$class_var, multiple = FALSE),
       optionalSelectInput(ns("term_var"), "Term Variables", a$term_var_choices, a$term_var, multiple = FALSE),
@@ -119,12 +128,14 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
     class_var <- input$class_var
     term_var <- input$term_var
     all_p <- input$All_Patients
+    filter_var <- input$filter_var
     
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)
       class_var <- .(class_var)
       term_var <- .(term_var)
       all_p <- .(all_p)
+      filter_var <- .(filter_var)
     })
     
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
@@ -132,7 +143,12 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
     
     chunks$data <<- bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-      AAE <- AAE_FILTERED[, .(aae_vars)] %>% as.data.frame() 
+      
+      if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
+        AAE <- quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
+      } 
+      
+      AAE <- AAE[, .(aae_vars)] %>% as.data.frame() 
       
       ADAE  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID", .(arm_var))) %>% 
         as.data.frame()

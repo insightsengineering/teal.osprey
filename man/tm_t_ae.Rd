@@ -62,6 +62,7 @@ data("rADAE")
 
 ASL <- rADSL
 AAE <- rADAE
+AAE <- AAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
 
 x1 <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
@@ -69,8 +70,8 @@ x1 <- teal::init(
     tm_t_ae(
        label = "Adverse Events Table",
        dataname = "AAE",
-       filter_var = "None",
-       filter_var_choices = c("None", "filter1", "filter2"), 
+       filter_var = "NULL",
+       filter_var_choices = c("NULL", "DTHFL", "flag1"), 
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
        class_var = "AEBODSYS",

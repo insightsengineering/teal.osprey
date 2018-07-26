@@ -38,6 +38,7 @@
 #' 
 #' ASL <- rADSL
 #' AAE <- rADAE
+#' AAE <- AAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
 #' 
 #' x1 <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
@@ -45,8 +46,8 @@
 #'     tm_t_ae(
 #'        label = "Adverse Events Table",
 #'        dataname = "AAE",
-#'        filter_var = "None",
-#'        filter_var_choices = c("None", "filter1", "filter2"), 
+#'        filter_var = "NULL",
+#'        filter_var_choices = c("NULL", "DTHFL", "flag1"), 
 #'        arm_var = "ARM",
 #'        arm_var_choices = c("ARM", "ARMCD"),
 #'        class_var = "AEBODSYS",
@@ -99,7 +100,7 @@ ui_t_ae <- function(id, ...) {
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
-      optionalSelectInput(ns("filter_var"), "Preset Data Filters", a$filter_var_choices, a$filter_var, multiple = FALSE),
+      optionalSelectInput(ns("filter_var"), "Preset Data Filters", a$filter_var_choices, a$filter_var, multiple = TRUE),
       optionalSelectInput(ns("arm_var"), "Arm Variable", a$arm_var_choices, a$arm_var, multiple = FALSE),
       optionalSelectInput(ns("class_var"), "Class Variables", a$class_var_choices, a$class_var, multiple = FALSE),
       optionalSelectInput(ns("term_var"), "Term Variables", a$term_var_choices, a$term_var, multiple = FALSE),
@@ -144,14 +145,15 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     
     chunks$data <<- bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-      AAE <- AAE_FILTERED[, .(aae_vars)] %>% as.data.frame() 
+      
+      if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
+        AAE <- quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
+      } 
+      
+      AAE <- AAE[, .(aae_vars)] %>% as.data.frame() 
       
       ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID", .(arm_var))) %>% 
         as.data.frame()
-      
-      if(filter_var != "None"){
-        ANL <- quick_filter(.(filter_var), ANL, .(class_var), .(term_var))#choose filter of interest
-      }
       
       if(all_p == TRUE){
         total = "All Patients"
