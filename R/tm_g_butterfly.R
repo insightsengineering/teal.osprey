@@ -56,8 +56,8 @@
 #'     tm_g_butterfly(
 #'        label = "Butterfly Plot",
 #'        dataname = "AAE",
-#'        filter_var = "NULL",
-#'        filter_var_choices = c("NULL", "DTHFL", "flag1_filt"), 
+#'        filter_var = NULL,
+#'        filter_var_choices = c(NULL, "DTHFL", "flag1_filt"), 
 #'        right_var = "SEX",
 #'        right_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
 #'        left_var = "SEX",

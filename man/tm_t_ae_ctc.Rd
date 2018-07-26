@@ -4,9 +4,10 @@
 \alias{tm_t_ae_ctc}
 \title{Adverse Events Table by Highest NCI CTCAE Grade Teal Module}
 \usage{
-tm_t_ae_ctc(label, dataname, arm_var, arm_var_choices, class_var,
-  class_var_choices, term_var, term_var_choices, total_col = TRUE,
-  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
+tm_t_ae_ctc(label, dataname, filter_var = NULL, filter_var_choices = NULL,
+  arm_var, arm_var_choices, class_var, class_var_choices, term_var,
+  term_var_choices, total_col = TRUE, pre_output = NULL,
+  post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -15,6 +16,11 @@ tm_t_ae_ctc(label, dataname, arm_var, arm_var_choices, class_var,
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 Note that the data is expected to be in vertical form with the
 \code{PARAMCD} variable filtering to one observation per patient.}
+
+\item{filter_var}{variable name of data filter, default here is \code{NULL}}
+
+\item{filter_var_choices}{vector with \code{filter_var} choices, default 
+here is \code{NULL}}
 
 \item{arm_var}{single name of variable in analysis data that is used as
 \code{col_by} argument for the respective \code{tern} function.}
@@ -49,13 +55,14 @@ Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 }
 \examples{
 #Example 
-library(random.cdisc.data)
 library(dplyr)
-suppressPackageStartupMessages(library(tidyverse))
-library(rtables)
 
-ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+data("rADSL")
+data("rADAE")
+
+ASL <- rADSL
+AAE <- rADAE
+AAE <- AAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
 
 x1 <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
@@ -63,6 +70,8 @@ x1 <- teal::init(
     tm_t_ae_ctc(
        label = "Adverse Events Table By Highest NCI CTCAE Grade",
        dataname = "AAE",
+       filter_var = NULL,
+       filter_var_choices = c(NULL, "DTHFL", "flag1"), 
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
        class_var = "AEBODSYS",

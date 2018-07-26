@@ -44,8 +44,8 @@
 #'     tm_t_ae_ctc(
 #'        label = "Adverse Events Table By Highest NCI CTCAE Grade",
 #'        dataname = "AAE",
-#'        filter_var = "NULL",
-#'        filter_var_choices = c("NULL", "DTHFL", "flag1"), 
+#'        filter_var = NULL,
+#'        filter_var_choices = c(NULL, "DTHFL", "flag1"), 
 #'        arm_var = "ARM",
 #'        arm_var_choices = c("ARM", "ARMCD"),
 #'        class_var = "AEBODSYS",
