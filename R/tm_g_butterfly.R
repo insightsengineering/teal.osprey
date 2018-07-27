@@ -65,11 +65,11 @@
 #'        category_var = "AEBODSYS",
 #'        category_var_choices = c("AEDECOD", "AEBODSYS"),
 #'        color_by_var = "AETOXGR",
-#'        color_by_var_choices = c("AETOXGR", "None"),
+#'        color_by_var_choices = c("AETOXGR", NULL),
 #'        count_by_var = "# of patients",
 #'        count_by_var_choices = c("# of patients", "# of AEs"),
 #'        facet_var = "None",
-#'        facet_var_choices = c("RACE", "SEX", "ARM", "None"),
+#'        facet_var_choices = c("None", "RACE", "SEX", "ARM"),
 #'        sort_by_var = "count",
 #'        sort_by_var_choices = c("count", "alphabetical"),
 #'        legend_on = TRUE,
@@ -92,11 +92,11 @@ tm_g_butterfly <- function(label,
                            category_var,
                            category_var_choices = category_var,
                            color_by_var,
-                           color_by_var_choices = c(color_by_var, "None"),
+                           color_by_var_choices = c(color_by_var, NULL),
                            count_by_var,
-                           count_by_var_choices = c(count_by_var, "None"),
-                           facet_var,
-                           facet_var_choices = c(facet_var, "None"),  
+                           count_by_var_choices = c(count_by_var, NULL),
+                           facet_var = NULL,
+                           facet_var_choices = c(facet_var, NULL),  
                            sort_by_var,
                            sort_by_var_choices,
                            legend_on = TRUE,
@@ -225,6 +225,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     
     chunks$data <<- bquote({
       aae_vars <- aae_vars[aae_vars %in% names(AAE_FILTERED)]
+      aae_vars <- aae_vars[!is.null(aae_vars)]
       ASL <- ASL_FILTERED[, asl_vars] %>% as.data.frame()
       
       if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
@@ -273,7 +274,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
         leftFlag = bquote(left),
         group_names = bquote(c(right_name, left_name)),
         block_count = bquote(count_by_var),
-        block_color = bquote(if(color_by_var != "None"){ANL_f[,color_by_var]}else{NULL}),
+        block_color = bquote(if(!is.null(color_by_var)){ANL_f[,color_by_var]}else{NULL}),
         id = bquote(ANL_f$USUBJID),
         facet_rows = bquote(if(facet_var != "None"){ANL_f[,facet_var]}else{NULL}),
         x_label = bquote(count_by_var),
