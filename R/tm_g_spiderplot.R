@@ -58,13 +58,13 @@
 #'        label = "Spiderplot",
 #'        dataname = "ATR",
 #'        paramcd = "SLDINV",
-#'        paramcd_choices = c("SLDINV", "None"),
+#'        paramcd_choices = c("SLDINV", NULL),
 #'        x_var = "ADY",
-#'        x_var_choices = c("None", "ADY"),
+#'        x_var_choices = c(NULL, "ADY"),
 #'        y_var = "PCHG",
-#'        y_var_choices = c("None", "PCHG", "CHG", "AVAL"),
+#'        y_var_choices = c(NULL, "PCHG", "CHG", "AVAL"),
 #'        marker_var = "RACE",
-#'        marker_var_choices = c("None", "RACE"),
+#'        marker_var_choices = c(NULL, "RACE"),
 #'        line_colorby_var = "USUBJID",
 #'        line_colorby_var_choices = c("USUBJID", "RACE"),
 #'        vref_line = "10, 37",
@@ -73,9 +73,9 @@
 #'        anno_disc_study = TRUE,
 #'        legend_on = FALSE,
 #'        xfacet_var = "SEX",
-#'        xfacet_var_choices = c("None", "SEX"),
+#'        xfacet_var_choices = c(NULL, "SEX", "ARM"),
 #'        yfacet_var = "ARM",
-#'        yfacet_var_choices = c("None", "ARM"),
+#'        yfacet_var_choices = c(NULL, "ARM", "SEX"),
 #'        plot_height = c(600, 200, 2000)
 #'    )
 #'   )
@@ -138,8 +138,8 @@ ui_g_spider <- function(id, ...) {
       optionalSelectInput(ns("y_var"), "Y-axis Variable", a$y_var_choices, a$y_var, multiple = FALSE),
       optionalSelectInput(ns("line_colorby_var"), "Color By Variable (Line)", a$line_colorby_var_choices, a$line_colorby_var, multiple = FALSE),
       optionalSelectInput(ns("marker_var"), "Marker Symbol By Variable", a$marker_var_choices, a$marker_var, multiple = FALSE),
-      optionalSelectInput(ns("xfacet_var"), "X-facet By Variable", a$xfacet_var_choices, a$xfacet_var, multiple = FALSE),
-      optionalSelectInput(ns("yfacet_var"), "Y-facet By Variable", a$yfacet_var_choices, a$yfacet_var, multiple = FALSE),
+      optionalSelectInput(ns("xfacet_var"), "X-facet By Variable", a$xfacet_var_choices, a$xfacet_var, multiple = TRUE),
+      optionalSelectInput(ns("yfacet_var"), "Y-facet By Variable", a$yfacet_var_choices, a$yfacet_var, multiple = TRUE),
       checkboxInput(ns("anno_txt_var"), "Add subject ID label", value = a$anno_txt_var),
       checkboxInput(ns("anno_disc_study"), "Add annotation marker", value = a$anno_disc_study),
       checkboxInput(ns("legend_on"), "Add legend", value = a$legend_on),
@@ -225,6 +225,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     
     chunks$data <<- bquote({
       atr_vars <- atr_vars[atr_vars != "None"]
+      atr_vars <- atr_vars[!is.null(atr_vars)]
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
       ATR <- ATR_FILTERED[, atr_vars] %>% as.data.frame() 
       
@@ -278,12 +279,12 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       "g_spiderplot",
       marker_x = bquote(data.frame(day = ANL_f[,x_var], groupby = ANL_f$USUBJID)),
       marker_y = bquote(ANL_f[,y_var]),
-      line_colby = bquote(if(line_colorby_var != "None"){ANL_f[,line_colorby_var]}else{NULL}),
-      marker_shape = bquote(if(marker_var != "None"){ANL_f[,marker_var]}else{NULL}),
+      line_colby = bquote(if(!is.null(line_colorby_var)){ANL_f[,line_colorby_var]}else{NULL}),
+      marker_shape = bquote(if(!is.null(marker_var)){ANL_f[,marker_var]}else{NULL}),
       marker_size = 4,
       datalabel_txt = bquote(lbl),
-      facet_rows = bquote(if(yfacet_var != "None"){ANL_f[,yfacet_var]}else{NULL}),
-      facet_columns = bquote(if(xfacet_var != "None")ANL_f[,xfacet_var]else{NULL}),
+      facet_rows = bquote(if(!is.null(yfacet_var)){data.frame(ANL_f[,yfacet_var])}else{NULL}),
+      facet_columns = bquote(if(!is.null(xfacet_var))data.frame(ANL_f[,xfacet_var])else{NULL}),
       vref_line = bquote(vref_line),
       href_line = bquote(href_line),
       x_label = "Time (Days)",
