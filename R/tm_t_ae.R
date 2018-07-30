@@ -148,7 +148,9 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
       
       if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
         AAE <- quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
-      } 
+      } else{
+        AAE <- AAE_FILTERED
+      }
       
       AAE <- AAE[, .(aae_vars)] %>% as.data.frame() 
       
