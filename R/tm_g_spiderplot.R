@@ -21,7 +21,6 @@
 #' @param vref_line vertical reference lines
 #' @param href_line horizontal reference lines
 #' @param anno_txt_var annotation text
-#' @param anno_disc_study marker annotation
 #' @param legend_on boolean value for whether legend is displayed
 #' @param xfacet_var variable for x facets
 #' @param xfacet_var_choices vector with \code{xfacet_var} choices
@@ -64,13 +63,12 @@
 #'        y_var = "PCHG",
 #'        y_var_choices = c(NULL, "PCHG", "CHG", "AVAL"),
 #'        marker_var = "RACE",
-#'        marker_var_choices = c(NULL, "RACE"),
+#'        marker_var_choices = c("SEX", "RACE", "USUBJID", "None"),
 #'        line_colorby_var = "USUBJID",
-#'        line_colorby_var_choices = c("USUBJID", "RACE"),
+#'        line_colorby_var_choices = c("USUBJID", "RACE", "None"),
 #'        vref_line = "10, 37",
 #'        href_line = "-0.3, 1",
 #'        anno_txt_var = TRUE,
-#'        anno_disc_study = TRUE,
 #'        legend_on = FALSE,
 #'        xfacet_var = "SEX",
 #'        xfacet_var_choices = c(NULL, "SEX", "ARM"),
@@ -99,7 +97,6 @@ tm_g_spiderplot <- function(label,
                             vref_line = NULL,
                             href_line = NULL,
                             anno_txt_var,
-                            anno_disc_study,
                             legend_on = FALSE,
                             xfacet_var,
                             xfacet_var_choices = xfacet_var,
@@ -141,7 +138,6 @@ ui_g_spider <- function(id, ...) {
       optionalSelectInput(ns("xfacet_var"), "X-facet By Variable", a$xfacet_var_choices, a$xfacet_var, multiple = TRUE),
       optionalSelectInput(ns("yfacet_var"), "Y-facet By Variable", a$yfacet_var_choices, a$yfacet_var, multiple = TRUE),
       checkboxInput(ns("anno_txt_var"), "Add subject ID label", value = a$anno_txt_var),
-      checkboxInput(ns("anno_disc_study"), "Add annotation marker", value = a$anno_disc_study),
       checkboxInput(ns("legend_on"), "Add legend", value = a$legend_on),
       textInput(ns("vref_line"), 
                 label = div("Vertical Reference Line(s)", tags$br(), 
@@ -190,7 +186,6 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     marker_var <- input$marker_var
     line_colorby_var <- input$line_colorby_var
     anno_txt_var <- input$anno_txt_var
-    anno_disc_study <- input$anno_disc_study
     legend_on <- input$legend_on
     xfacet_var <- input$xfacet_var
     yfacet_var <- input$yfacet_var
@@ -217,7 +212,6 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       vref_line <- .(vref_line)
       href_line <- .(href_line)
       anno_txt_var <- .(anno_txt_var)
-      anno_disc_study <- .(anno_disc_study)
       legend_on <- .(legend_on)
       xfacet_var <- .(xfacet_var)
       yfacet_var <- .(yfacet_var)
@@ -259,18 +253,10 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       }
       
       lbl <- NULL
-      if(!.(anno_txt_var) && .(anno_disc_study)){
-        #######
-        #here is where you can add marker annotations
-        lbl <- list(mrkr_all = as.factor(ANL_f$USUBJID), mrkr_ann = c('id-1', 'id-2', 'id-3'))
-        #######
-      }
-      else if(.(anno_txt_var) && !.(anno_disc_study)){
+      if(.(anno_txt_var)){
         lbl <- list(txt_ann = as.factor(ANL_f$USUBJID))
       }
-      else if(.(anno_txt_var) && .(anno_disc_study)){
-        lbl <- list(txt_ann = as.factor(ANL_f$USUBJID), mrkr_all = as.factor(ANL_f[,.(line_colorby_var)]), mrkr_ann = c('id-1', 'id-2'))
-      }
+
     }) 
     
     eval(chunks$data)
@@ -279,8 +265,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       "g_spiderplot",
       marker_x = bquote(data.frame(day = ANL_f[,x_var], groupby = ANL_f$USUBJID)),
       marker_y = bquote(ANL_f[,y_var]),
-      line_colby = bquote(if(!is.null(line_colorby_var)){ANL_f[,line_colorby_var]}else{NULL}),
-      marker_shape = bquote(if(!is.null(marker_var)){ANL_f[,marker_var]}else{NULL}),
+      line_colby = bquote(if(line_colorby_var != "None"){ANL_f[,line_colorby_var]}else{NULL}),
+      marker_shape = bquote(if(marker_var != "None"){ANL_f[,marker_var]}else{NULL}),
       marker_size = 4,
       datalabel_txt = bquote(lbl),
       facet_rows = bquote(if(!is.null(yfacet_var)){data.frame(ANL_f[,yfacet_var])}else{NULL}),

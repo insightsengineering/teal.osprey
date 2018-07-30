@@ -65,7 +65,7 @@
 #'        category_var = "AEBODSYS",
 #'        category_var_choices = c("AEDECOD", "AEBODSYS"),
 #'        color_by_var = "AETOXGR",
-#'        color_by_var_choices = c("AETOXGR", NULL),
+#'        color_by_var_choices = c("AETOXGR", "None"),
 #'        count_by_var = "# of patients",
 #'        count_by_var_choices = c("# of patients", "# of AEs"),
 #'        facet_var = "None",
@@ -265,6 +265,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     })
     
     eval(chunks$data)
+    print(color_by_var)
     
     if(!is.null(right_v) && !is.null(left_v)){
       chunks$p_butterfly <<- call(
@@ -274,7 +275,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
         leftFlag = bquote(left),
         group_names = bquote(c(right_name, left_name)),
         block_count = bquote(count_by_var),
-        block_color = bquote(if(!is.null(color_by_var)){ANL_f[,color_by_var]}else{NULL}),
+        block_color = bquote(if(color_by_var != "None"){ANL_f[,color_by_var]}else{NULL}),
         id = bquote(ANL_f$USUBJID),
         facet_rows = bquote(if(facet_var != "None"){ANL_f[,facet_var]}else{NULL}),
         x_label = bquote(count_by_var),

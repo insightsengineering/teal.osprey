@@ -105,7 +105,7 @@ x <- teal::init(
        category_var = "AEBODSYS",
        category_var_choices = c("AEDECOD", "AEBODSYS"),
        color_by_var = "AETOXGR",
-       color_by_var_choices = c("AETOXGR", NULL),
+       color_by_var_choices = c("AETOXGR", "None"),
        count_by_var = "# of patients",
        count_by_var_choices = c("# of patients", "# of AEs"),
        facet_var = "None",

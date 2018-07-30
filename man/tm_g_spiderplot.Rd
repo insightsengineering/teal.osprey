@@ -8,8 +8,8 @@ tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd, x_var,
   x_var_choices = x_var, y_var, y_var_choices = y_var, marker_var,
   marker_var_choices = marker_var, line_colorby_var,
   line_colorby_var_choices = line_colorby_var_choices, vref_line = NULL,
-  href_line = NULL, anno_txt_var, anno_disc_study, legend_on = FALSE,
-  xfacet_var, xfacet_var_choices = xfacet_var, yfacet_var,
+  href_line = NULL, anno_txt_var, legend_on = FALSE, xfacet_var,
+  xfacet_var_choices = xfacet_var, yfacet_var,
   yfacet_var_choices = y_facet_var, plot_height, pre_output = NULL,
   post_output = NULL, code_data_processing = NULL)
 }
@@ -46,8 +46,6 @@ Note that the data is expected to be in vertical form with the
 \item{href_line}{horizontal reference lines}
 
 \item{anno_txt_var}{annotation text}
-
-\item{anno_disc_study}{marker annotation}
 
 \item{legend_on}{boolean value for whether legend is displayed}
 
@@ -105,13 +103,12 @@ x <- teal::init(
        y_var = "PCHG",
        y_var_choices = c(NULL, "PCHG", "CHG", "AVAL"),
        marker_var = "RACE",
-       marker_var_choices = c(NULL, "RACE"),
+       marker_var_choices = c("SEX", "RACE", "USUBJID", "None"),
        line_colorby_var = "USUBJID",
-       line_colorby_var_choices = c("USUBJID", "RACE"),
+       line_colorby_var_choices = c("USUBJID", "RACE", "None"),
        vref_line = "10, 37",
        href_line = "-0.3, 1",
        anno_txt_var = TRUE,
-       anno_disc_study = TRUE,
        legend_on = FALSE,
        xfacet_var = "SEX",
        xfacet_var_choices = c(NULL, "SEX", "ARM"),
