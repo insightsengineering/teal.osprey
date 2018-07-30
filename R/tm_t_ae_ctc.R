@@ -156,7 +156,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
       if(all_p == TRUE){
         total = "All Patients"
       } else{
-        total = "None"
+        total = NULL
       }
     })
     eval(chunks$data)

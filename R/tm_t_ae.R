@@ -158,7 +158,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
       if(all_p == TRUE){
         total = "All Patients"
       } else{
-        total = "None"
+        total = NULL
       }
     })
     eval(chunks$data)
@@ -169,7 +169,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
       term = bquote(ANL[, term_var]), 
       id = bquote(ANL$USUBJID),
       col_by = bquote(as.factor(ANL[[.(arm_var)]])),
-      total = total
+      total = bquote(total)
     )
 
     tbl <- try(eval(chunks$analysis))

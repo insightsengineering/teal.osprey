@@ -141,7 +141,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       if(all_p == TRUE){
         total = "All Patients"
       } else{
-        total = "None"
+        total = NULL
       }
       
       ASL_f <- ASL_f[, .(asl_vars)] %>% 
