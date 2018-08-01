@@ -164,7 +164,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
-    ANL_f  <- merge(ASL_FILTERED, AAE) %>% as.data.frame()
+    ANL_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>% as.data.frame()
     
     options_r <- unique(ANL_f[, right_ch])
     options_l <- unique(ANL_f[, left_ch])
@@ -230,7 +230,9 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       
       if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
         AAE <- quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
-      } 
+      } else{
+        AAE <- AAE_FILTERED
+      }
       
       AAE <- AAE[, aae_vars] %>% as.data.frame() 
 
