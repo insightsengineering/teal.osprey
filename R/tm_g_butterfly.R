@@ -267,7 +267,6 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     })
     
     eval(chunks$data)
-    print(color_by_var)
     
     if(!is.null(right_v) && !is.null(left_v)){
       chunks$p_butterfly <<- call(
