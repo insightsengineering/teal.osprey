@@ -4,13 +4,13 @@
 \alias{tm_g_swimlane}
 \title{Teal Module for Swimlane Plot}
 \usage{
-tm_g_swimlane(label, dataname, bar_var = "TRTDUR",
-  bar_var_choices = bar_var, bar_color_var = "ARM",
-  bar_color_var_choices = bar_color_var, sort_var = NULL,
-  sort_var_choices = sort_var, marker_shape_var = NULL,
+tm_g_swimlane(label, dataname, bar_var, bar_var_choices = bar_var,
+  bar_color_var = NULL, bar_color_var_choices = bar_color_var,
+  sort_var = NULL, sort_var_choices = sort_var, marker_shape_var = NULL,
   marker_shape_var_choices = marker_shape_var, marker_shape_opt = NULL,
   marker_color_var = NULL, marker_color_var_choices = marker_color_var,
-  marker_color_opt = NULL, anno_txt_var = "SEX", vref_line = NULL,
+  marker_color_opt = NULL, anno_txt_var = NULL,
+  anno_txt_var_choices = anno_txt_var, vref_line = NULL,
   plot_height = c(1200, 400, 5000), pre_output = NULL, post_output = NULL,
   code_data_processing = NULL)
 }
@@ -44,7 +44,9 @@ to the \code{data} argument of \code{\link[teal]{init}}.}
 
 \item{marker_color_opt}{aesthetic values to map color values (named vector to map color values to each name)}
 
-\item{anno_txt_var}{dataset to be plotted on the left of the plot}
+\item{anno_txt_var}{character vector with variable names that are selected as annotation by default}
+
+\item{anno_txt_var_choices}{vector with variable names that can be selected as \code{anno_txt_var}}
 
 \item{vref_line}{vertical reference line}
 
@@ -103,9 +105,9 @@ x <- teal::init(
        bar_var = "TRTDUR",
        bar_var_choices = c("TRTDUR", "AGE"),
        bar_color_var = "None",
-       bar_color_var_choices = c("None", "ARM", "ARMCD"),
+       bar_color_var_choices = c("ARM", "ARMCD"),
        sort_var = "ARM",
-       sort_var_choices = c("None", "ARM", "TRTDUR"),
+       sort_var_choices = c("ARM", "TRTDUR"),
        marker_shape_var = "None",
        marker_shape_var_choices = c("None", "AVALC", "AVISIT"),
        marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15,
@@ -114,8 +116,9 @@ x <- teal::init(
        marker_color_var_choices = c("None", "AVALC", "AVISIT"),
        marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "yellow", "PD" = "red",
                             "DEATH" = "black", "LOST TO FOLLOW-UP" = "purple", "WITHDRAWAL BY SUBJECT" = "darkred"),
-       vref_line = c(100, 200),
-       anno_txt_var = c("SEX", "RACE", "COUNTRY", "CADX")
+       vref_line = NULL,
+       anno_txt_var = c("SEX", "COUNTRY"),
+       anno_txt_var_choices = c("SEX", "RACE", "COUNTRY", "CADX")
 
    )
   )
