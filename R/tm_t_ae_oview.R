@@ -1,4 +1,7 @@
-#' Display AET01 Adverse Events Summary Table Teal Module
+
+#' Adverse Events Summary Table Teal Module
+#' 
+#' Display AET01 Adverse Events Summary Table as a shiny Module
 #' 
 #' @param label menu item label of the module in the teal app
 #' @param dataname analysis data used in teal module, needs to be available in
@@ -16,20 +19,18 @@
 #' @return an \code{\link[teal]{module}} object
 #' @export
 #' 
-#' @author Carolyn Zhang
+#' @template author_zhanc107
 #' 
 #' 
 #' @examples
 #' #Example using stream (adam) dataset 
 #' library(dplyr)
-#' suppressPackageStartupMessages(library(tidyverse))
-#' library(rtables)
 #' 
-#' ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#' AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+#' data("rADSL")
+#' data("rADAE")
 #' 
-#' #ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
-#' #AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
+#' ASL <- rADSL
+#' AAE <- rADAE
 #' 
 #' x1 <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
@@ -118,38 +119,38 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
       AAE <- AAE_FILTERED[, .(aae_vars)] %>% as.data.frame() 
       
-      ADAE  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
+      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
         as.data.frame()
       
-      flag <- data.frame(dthfl = ADAE$DTHFL,
-                         dcsreas = ADAE$DCSREAS,
-                         aesdth = ADAE$AESDTH,
-                         aeser = ADAE$AESER,
-                         aeacn = ADAE$AEACN,
-                         arel = ADAE$AREL,
-                         aerel = ADAE$AEREL,
-                         aetoxgr = ADAE$AETOXGR)
+      flag <- data.frame(dthfl = ANL$DTHFL,
+                         dcsreas = ANL$DCSREAS,
+                         aesdth = ANL$AESDTH,
+                         aeser = ANL$AESER,
+                         aeacn = ANL$AEACN,
+                         arel = ANL$AREL,
+                         aerel = ANL$AEREL,
+                         aetoxgr = ANL$AETOXGR)
       display <- c("fatal", "ser", "serwd", "serdsm", "relser",
                    "wd", "dsm", "rel", "relwd", "reldsm", "ctc35")
       
       if(all_p == TRUE){
-        total = "ALL Patients"
+        total = "All Patients"
       }
       else{
-        total = "NONE"
+        total = NULL
       }
     })
     eval(chunks$data)
     
-    validate_has_data(ADAE, min_nrow = 1)    
-    validate(need(ADAE[[arm_var]], "Arm variable does not exist"))
-    validate(need(!("" %in% ADAE[[arm_var]]), "arm values can not contain empty strings ''"))
+    validate_has_data(ANL, min_nrow = 1)    
+    validate(need(ANL[[arm_var]], "Arm variable does not exist"))
+    validate(need(!("" %in% ANL[[arm_var]]), "arm values can not contain empty strings ''"))
     
     chunks$analysis <<- call(
       "t_ae_oview",
-      id = bquote(ADAE$USUBJID), 
-      class = bquote(ADAE$AESOC), 
-      term = bquote(ADAE$AEDECOD), 
+      id = bquote(ANL$USUBJID), 
+      class = bquote(ANL$AESOC), 
+      term = bquote(ANL$AEDECOD), 
       flags = bquote(flag),
       ####--------------------------------
       #
@@ -158,7 +159,7 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       #
       ####--------------------------------
       display_id = bquote(display),
-      col_by = bquote(as.factor(ADAE[[.(arm_var)]])),
+      col_by = bquote(as.factor(ANL[[.(arm_var)]])),
       total = total
     )
     

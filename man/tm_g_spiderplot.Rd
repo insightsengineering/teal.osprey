@@ -2,15 +2,14 @@
 % Please edit documentation in R/tm_g_spiderplot.R
 \name{tm_g_spiderplot}
 \alias{tm_g_spiderplot}
-\title{Spiderplot (Early Development) Teal Module}
+\title{Spiderplot Teal Module}
 \usage{
 tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd, x_var,
   x_var_choices = x_var, y_var, y_var_choices = y_var, marker_var,
-  marker_var_choices = marker_var, marker_colorby_var,
-  marker_colorby_var_choices = marker_colorby_var, line_colorby_var,
-  line_colorby_var_choices = line_colorby_var_choices, vref_line, href_line,
-  anno_txt_var, anno_disc_study, legend_on = FALSE, xfacet_var,
-  xfacet_var_choices = xfacet_var, yfacet_var,
+  marker_var_choices = marker_var, line_colorby_var,
+  line_colorby_var_choices = line_colorby_var_choices, vref_line = NULL,
+  href_line = NULL, anno_txt_var, legend_on = FALSE, xfacet_var = NULL,
+  xfacet_var_choices = xfacet_var, yfacet_var = NULL,
   yfacet_var_choices = y_facet_var, plot_height, pre_output = NULL,
   post_output = NULL, code_data_processing = NULL)
 }
@@ -38,10 +37,6 @@ Note that the data is expected to be in vertical form with the
 
 \item{marker_var_choices}{vector with \code{marker_var} choices}
 
-\item{marker_colorby_var}{variable dictates marker color}
-
-\item{marker_colorby_var_choices}{vector with \code{marker_colorby_var} choices}
-
 \item{line_colorby_var}{variable dictates line color}
 
 \item{line_colorby_var_choices}{vector with \code{line_colorby_var} choices}
@@ -51,8 +46,6 @@ Note that the data is expected to be in vertical form with the
 \item{href_line}{horizontal reference lines}
 
 \item{anno_txt_var}{annotation text}
-
-\item{anno_disc_study}{marker annotation}
 
 \item{legend_on}{boolean value for whether legend is displayed}
 
@@ -81,22 +74,17 @@ app is initialized, default is NULL}
 an \code{\link[teal]{module}} object
 }
 \description{
-Spiderplot (Early Development) Teal Module
+Display spiderplot as a shiny module
 }
 \examples{
 #Example spiderplot
-library(random.cdisc.data)
-library(plyr)
 library(dplyr)
-library(gridExtra)
-library(ggplot2)
-require(lemon)
 
-#asl <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-#aae <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+data("rADSL")
+data("rADTR") 
 
-ASL <- radam("ADSL", N=30)
-ATR <- radam("ATR", N=30)
+ASL <- rADSL
+ATR <- rADTR
 #dat <- left_join(ATR, ASL) \%>\% filter(PARAMCD == "SUMTGLES") \%>\% as.data.frame()
 
 # test character vector as x axis labels
@@ -108,27 +96,24 @@ x <- teal::init(
     tm_g_spiderplot(
        label = "Spiderplot",
        dataname = "ATR",
-       paramcd = "SUMTGLES",
-       paramcd_choices = c("SUMTGLES", "LDIAM"),
-       x_var = "TUDY",
-       x_var_choices = c("None", "TUDY"),
+       paramcd = "SLDINV",
+       paramcd_choices = "SLDINV",
+       x_var = "ADY",
+       x_var_choices = "ADY",
        y_var = "PCHG",
-       y_var_choices = c("None", "PCHG"),
-       marker_var = "RACE",
-       marker_var_choices = c("None", "RACE"),
-       marker_colorby_var = "RACE",
-       marker_colorby_var_choices = c("None", "RACE"),
-       line_colorby_var = "USUBJID",
-       line_colorby_var_choices = c("USUBJID", "RACE"),
-       vref_line = c("10", "37"),
-       href_line = c(-0.3, 1),
+       y_var_choices = c("PCHG", "CHG", "AVAL"),
+       marker_var = "SEX",
+       marker_var_choices = c("SEX", "RACE", "USUBJID"),
+       line_colorby_var = "SEX",
+       line_colorby_var_choices = c("SEX","USUBJID", "RACE"),
+       vref_line = "10, 37",
+       href_line = "-20, 0",
        anno_txt_var = TRUE,
-       anno_disc_study = TRUE,
        legend_on = FALSE,
        xfacet_var = "SEX",
-       xfacet_var_choices = c("None", "SEX"),
+       xfacet_var_choices = c("SEX", "ARM"),
        yfacet_var = "ARM",
-       yfacet_var_choices = c("None", "ARM"),
+       yfacet_var_choices = c("ARM", "SEX"),
        plot_height = c(600, 200, 2000)
    )
   )
@@ -139,5 +124,5 @@ shinyApp(x$ui, x$server)
 
 }
 \author{
-Carolyn Zhang
+Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
 }

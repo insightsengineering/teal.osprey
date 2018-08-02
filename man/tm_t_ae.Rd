@@ -2,12 +2,12 @@
 % Please edit documentation in R/tm_t_ae.R
 \name{tm_t_ae}
 \alias{tm_t_ae}
-\title{Display AET02 Adverse Events Table Teal Module}
+\title{Adverse Events Table Teal Module}
 \usage{
-tm_t_ae(label, dataname, arm_var, arm_var_choices, class_var, class_var_choices,
-  term_var, term_var_choices, total_col = TRUE, sort_by_var,
-  sort_by_var_choices, pre_output = NULL, post_output = NULL,
-  code_data_processing = NULL)
+tm_t_ae(label, dataname, filter_var = NULL, filter_var_choices = NULL,
+  arm_var, arm_var_choices, class_var, class_var_choices, term_var,
+  term_var_choices, total_col = TRUE, pre_output = NULL,
+  post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -16,6 +16,11 @@ tm_t_ae(label, dataname, arm_var, arm_var_choices, class_var, class_var_choices,
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 Note that the data is expected to be in vertical form with the
 \code{PARAMCD} variable filtering to one observation per patient.}
+
+\item{filter_var}{variable name of data filter, default here is \code{NULL}}
+
+\item{filter_var_choices}{vector with \code{filter_var} choices, default 
+here is \code{NULL}}
 
 \item{arm_var}{single name of variable in analysis data that is used as
 \code{col_by} argument for the respective \code{tern} function.}
@@ -34,11 +39,6 @@ Note that the data is expected to be in vertical form with the
 \item{total_col}{argument for appearance of All Patients column,
 default here is TRUE}
 
-\item{sort_by_var}{argument for order of class and term elements in table,
-defaulte here is "count"}
-
-\item{sort_by_var_choices}{vector with \code{sort_by_var} choices}
-
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
@@ -51,17 +51,18 @@ output to put the output into context. For example the
 an \code{\link[teal]{module}} object
 }
 \description{
-Display AET02 Adverse Events Table Teal Module
+This shiny module displays the adverse events table (AET02).
 }
 \examples{
 #Example using stream (adam) dataset 
 library(dplyr)
-suppressPackageStartupMessages(library(tidyverse))
-library(rtables)
 
-ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+data("rADSL")
+data("rADAE")
 
+ASL <- rADSL
+AAE <- rADAE
+AAE <- AAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
 
 x1 <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
@@ -69,15 +70,15 @@ x1 <- teal::init(
     tm_t_ae(
        label = "Adverse Events Table",
        dataname = "AAE",
+       filter_var = NULL,
+       filter_var_choices = c(NULL, "DTHFL", "flag1"), 
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
        class_var = "AEBODSYS",
        class_var_choices = c("AEBODSYS", "DEFAULT"),
        term_var = "AEDECOD",
        term_var_choices = c("AEDECOD", "DEFAULT"),
-       total_col = TRUE,
-       sort_by_var = "count",
-       sort_by_var_choices = c("count", "alphabetical")
+       total_col = TRUE
    )
   )
 )
@@ -87,5 +88,5 @@ shinyApp(x1$ui, x1$server)
 
 }
 \author{
-Carolyn Zhang
+Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
 }

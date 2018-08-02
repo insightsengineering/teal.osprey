@@ -18,7 +18,8 @@
 #' @param marker_color_var_choices vector with variable names that can be used as \code{marker_color_var}
 #' @param marker_color_opt aesthetic values to map color values (named vector to map color values to each name)
 #' @param vref_line vertical reference line
-#' @param anno_txt_var dataset to be plotted on the left of the plot
+#' @param anno_txt_var character vector with variable names that are selected as annotation by default
+#' @param anno_txt_var_choices vector with variable names that can be selected as \code{anno_txt_var}
 #' @param plot_height plot height
 #' @inheritParams teal::standard_layout
 #' @param code_data_processing string with data preprocessing before the teal app is initialized
@@ -68,9 +69,9 @@
 #'        bar_var = "TRTDUR",
 #'        bar_var_choices = c("TRTDUR", "AGE"),
 #'        bar_color_var = "None",
-#'        bar_color_var_choices = c("None", "ARM", "ARMCD"),
+#'        bar_color_var_choices = c("ARM", "ARMCD"),
 #'        sort_var = "ARM",
-#'        sort_var_choices = c("None", "ARM", "TRTDUR"),
+#'        sort_var_choices = c("ARM", "TRTDUR"),
 #'        marker_shape_var = "None",
 #'        marker_shape_var_choices = c("None", "AVALC", "AVISIT"),
 #'        marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15,
@@ -79,8 +80,9 @@
 #'        marker_color_var_choices = c("None", "AVALC", "AVISIT"),
 #'        marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "yellow", "PD" = "red",
 #'                             "DEATH" = "black", "LOST TO FOLLOW-UP" = "purple", "WITHDRAWAL BY SUBJECT" = "darkred"),
-#'        vref_line = c(100, 200),
-#'        anno_txt_var = c("SEX", "RACE", "COUNTRY", "CADX")
+#'        vref_line = NULL,
+#'        anno_txt_var = c("SEX", "COUNTRY"),
+#'        anno_txt_var_choices = c("SEX", "RACE", "COUNTRY", "CADX")
 #'
 #'    )
 #'   )
@@ -90,9 +92,9 @@
 
 tm_g_swimlane <- function(label,
                           dataname,
-                          bar_var = "TRTDUR",
+                          bar_var,
                           bar_var_choices = bar_var,
-                          bar_color_var = "ARM",
+                          bar_color_var = NULL,
                           bar_color_var_choices = bar_color_var,
                           sort_var = NULL,
                           sort_var_choices = sort_var,
@@ -102,7 +104,8 @@ tm_g_swimlane <- function(label,
                           marker_color_var = NULL,
                           marker_color_var_choices = marker_color_var,
                           marker_color_opt = NULL,
-                          anno_txt_var = "SEX",
+                          anno_txt_var = NULL,
+                          anno_txt_var_choices = anno_txt_var,
                           vref_line = NULL,
                           plot_height = c(1200, 400, 5000),
                           pre_output = NULL,
@@ -145,10 +148,12 @@ ui_g_swimlane <- function(id, ...){
       optionalSelectInput(ns("sort_var"), "Sort by", choices = a$sort_var_choices,
                           selected = a$sort_var, multiple = FALSE,
                           label_help = helpText("from ", tags$code("ASL"))),
-      optionalSelectInput(ns("anno_txt_var"), "Annotation Variables",
-                          a$anno_txt_var, a$anno_txt_var, multiple = TRUE,
-                          label_help = helpText("from ", tags$code("ASL"))),
-      optionalSelectInput(ns("vref_line"), "Vertical Reference Line", a$vref_line, a$vref_line, multiple = TRUE),
+      optionalSelectInput(ns("anno_txt_var"), "Annotation Variables", choices = a$anno_txt_var_choices,
+                          selected = a$anno_txt_var, multiple = TRUE),
+      textInput(ns("vref_line"), 
+                label = div("Vertical Reference Line(s)", tags$br(), 
+                            helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")), 
+                value = a$vref_line),
       optionalSliderInputValMinMax(ns("plot_height"), "plot height", a$plot_height, ticks = FALSE)
     ),
     forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
@@ -187,7 +192,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     marker_color_var <- if (input$marker_color_var == "None") NULL else input$marker_color_var
     marker_color_opt <- input$marker_color_opt
     anno_txt_var <- input$anno_txt_var
-    vref_line <- as.numeric(input$vref_line)
+    vref_line <- input$vref_line
 
     if (length(anno_txt_var) == 0) anno_txt_var <- NULL
 
@@ -224,7 +229,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     chunks$data <<- bquote({
       ASL_p <- ASL_FILTERED
       ANL_p <- .(as.name(anl_name))
-
+      
       ASL <- ASL_p[, .(asl_vars)]
       ANL <- merge(
         x = ASL_p[, .(asl_vars)],
@@ -232,9 +237,18 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
         all.x = FALSE, all.y = FALSE,
         by = c("USUBJID", "STUDYID")
       )
-
+      
+      #If reference lines are requested
+      if (vref_line != "" || is.null(vref_line)) {
+        vref_line <- unlist(strsplit(.(vref_line), ","))
+        vref_line <- as.numeric(vref_line)
+        validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
+      }  else{
+        vref_line <- NULL
+      }
+      
     })
-
+    
     eval(chunks$data)
 
     chunks$g_swimlaneplot <<- bquote({
@@ -251,7 +265,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
                       marker_color = if (length(marker_color_var) > 0) ANL[[.(marker_color_var)]] else NULL, 
                       marker_color_opt <- .(marker_color_opt),
                       anno_txt = if (length(anno_txt_var) > 0) ASL[.(anno_txt_var)] else data.frame(),
-                      yref_line = vref_line,
+                      yref_line = .(vref_line),
                       ytick_at = waiver(),
                       ylab = "Time from First Treatment (Day)",
                       title = "Swimlane Plot")

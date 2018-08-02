@@ -2,7 +2,7 @@
 % Please edit documentation in R/tm_t_ae_oview.R
 \name{tm_t_ae_oview}
 \alias{tm_t_ae_oview}
-\title{Display AET01 Adverse Events Summary Table Teal Module}
+\title{Adverse Events Summary Table Teal Module}
 \usage{
 tm_t_ae_oview(label, dataname, arm_var, arm_var_choices, total_col = TRUE,
   pre_output = NULL, post_output = NULL, code_data_processing = NULL)
@@ -36,19 +36,17 @@ output to put the output into context. For example the
 an \code{\link[teal]{module}} object
 }
 \description{
-Display AET01 Adverse Events Summary Table Teal Module
+Display AET01 Adverse Events Summary Table as a shiny Module
 }
 \examples{
 #Example using stream (adam) dataset 
 library(dplyr)
-suppressPackageStartupMessages(library(tidyverse))
-library(rtables)
 
-ASL <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adsl.sas7bdat")
-AAE <- read.bce("/opt/BIOSTAT/home/bundfuss/stream_um/str_para2/libraries/adae.sas7bdat")
+data("rADSL")
+data("rADAE")
 
-#ASL <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adsl.sas7bdat")
-#AAE <- read.bce("/opt/BIOSTAT/home/qit3/go39733/libraries/adae.sas7bdat")
+ASL <- rADSL
+AAE <- rADAE
 
 x1 <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
@@ -68,5 +66,5 @@ shinyApp(x1$ui, x1$server)
   
 }
 \author{
-Carolyn Zhang
+Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
 }
