@@ -82,7 +82,9 @@ get_rcode_header_osprey <- function(title, datanames, datasets, code_data_proces
       paste0('devtools::install_github("Rpackages/tern", ref="v',
              packageDescription("tern")$Version,'", host="https://github.roche.com/api/v3")'),
       paste0('devtools::install_github("Rpackages/osprey", ref="v',
-             packageDescription("osprey")$Version,'", host="https://github.roche.com/api/v3")')
+             packageDescription("osprey")$Version,'", host="https://github.roche.com/api/v3")'),
+      paste0('devtools::install_github("Rpackages/teal.osprey", ref="v',
+             packageDescription("teal.osprey")$Version,'", host="https://github.roche.com/api/v3")')
     )
     
     needs_rcd <- any(grepl("radam\\(", txt_data))
@@ -112,6 +114,7 @@ get_rcode_header_osprey <- function(title, datanames, datasets, code_data_proces
       "",
       "library(tern)",
       "library(osprey)",
+      "library(teal.osprey)",
       if (needs_rcd) "library(random.cdisc.data)" else NULL,
       "",
       txt_data,
