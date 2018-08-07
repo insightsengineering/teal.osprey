@@ -280,7 +280,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
 
   observeEvent(input$show_rcode, {
 
-    header <- get_rcode_header(
+    header <- get_rcode_header_osprey(
       title = "Swimlane Plot",
       datanames = if (is.null(code_data_processing)) dataname else datasets$datanames(),
       datasets = datasets,

@@ -294,7 +294,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
   
   observeEvent(input$show_rcode, {
     
-    header <- get_rcode_header(
+    header <- get_rcode_header_osprey(
       title = "butterfly",
       datanames = dataname,
       datasets = datasets,

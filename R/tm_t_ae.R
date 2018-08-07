@@ -157,9 +157,9 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
       ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID", .(arm_var))) %>% 
         as.data.frame()
       
-      if(all_p == TRUE){
+      if(all_p == TRUE) {
         total = "All Patients"
-      } else{
+      } else {
         total = NULL
       }
     })
@@ -184,7 +184,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
   
   observeEvent(input$show_rcode, {
     
-    header <- get_rcode_header(
+    header <- get_rcode_header_osprey(
       title = "Adverse Events Table",
       datanames = dataname,
       datasets = datasets,

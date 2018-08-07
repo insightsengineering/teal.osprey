@@ -284,7 +284,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
   
   observeEvent(input$show_rcode, {
     
-    header <- get_rcode_header(
+    header <- get_rcode_header_osprey(
       title = "Spiderplot",
       datanames = dataname,
       datasets = datasets,

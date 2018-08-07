@@ -155,9 +155,9 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
       ADAE  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID", .(arm_var))) %>% 
         as.data.frame()
       
-      if(all_p == TRUE){
+      if(all_p == TRUE) {
         total = "All Patients"
-      } else{
+      } else {
         total = NULL
       }
     })
@@ -183,7 +183,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
   
   observeEvent(input$show_rcode, {
     
-    header <- get_rcode_header(
+    header <- get_rcode_header_osprey(
       title = "Adverse Events Table By CTC Grade",
       datanames = dataname,
       datasets = datasets,
