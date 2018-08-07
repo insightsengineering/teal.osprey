@@ -29,7 +29,9 @@
 #' @template author_zhanc107
 #' 
 #' 
-#' @examples 
+#' @examples
+#' 
+#' \dontrun{
 #' #Example using stream (adam) dataset 
 #' library(dplyr)
 #' 
@@ -59,8 +61,9 @@
 #'   )
 #' )
 #'    
-#' shinyApp(x1$ui, x1$server)  
+#' shinyApp(x1$ui, x1$server)
 #' 
+#' }
 #' 
 tm_t_ae <- function(label, 
                     dataname,
@@ -146,22 +149,22 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     chunks$data <<- bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
       
-      if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
-        AAE <- quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
+      {if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
+        AAE <- teal.osprey:::quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
       } else{
         AAE <- AAE_FILTERED
-      }
+      }}
       
       AAE <- AAE[, .(aae_vars)] %>% as.data.frame() 
       
       ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID", .(arm_var))) %>% 
         as.data.frame()
       
-      if(all_p == TRUE){
+      {if(all_p == TRUE) {
         total = "All Patients"
-      } else{
+      } else {
         total = NULL
-      }
+      }}
     })
     eval(chunks$data)
     
@@ -184,7 +187,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
   
   observeEvent(input$show_rcode, {
     
-    header <- get_rcode_header(
+    header <- get_rcode_header_osprey(
       title = "Adverse Events Table",
       datanames = dataname,
       datasets = datasets,

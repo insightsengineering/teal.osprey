@@ -23,7 +23,9 @@
 #' 
 #' @template author_zhanc107
 #' 
-#' @examples 
+#' @examples
+#' 
+#' \dontrun{
 #' #Example using random dataset 
 #' 
 #' library(dplyr)
@@ -48,8 +50,8 @@
 #'   )
 #' )
 #'    
-#' shinyApp(x$ui, x$server)  
-#' 
+#' shinyApp(x$ui, x$server)
+#' }
 #'   
 #' 
 tm_t_ds <- function(label, 
@@ -138,11 +140,11 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
     chunks$data <<- bquote({
       ASL_f <- ASL_FILTERED
       
-      if(all_p == TRUE){
+      {if(all_p == TRUE) {
         total = "All Patients"
-      } else{
+      } else {
         total = NULL
-      }
+      }}
       
       ASL_f <- ASL_f[, .(asl_vars)] %>% 
         as.data.frame() 
@@ -175,7 +177,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
   
   observeEvent(input$show_rcode, {
     
-    header <- get_rcode_header(
+    header <- get_rcode_header_osprey(
       title = "Patient Disposition Table",
       datanames = dataname,
       datasets = datasets,

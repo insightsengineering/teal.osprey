@@ -41,6 +41,7 @@
 #'
 #' @examples
 #'
+#' \dontrun{
 #' library(dplyr)
 #'
 #' atx <- read.bce("/opt/BIOSTAT/qa/s30103j/libraries/atx.sas7bdat")
@@ -89,6 +90,7 @@
 #' )
 #'
 #' shinyApp(x$ui, x$server)
+#' }
 
 tm_g_swimlane <- function(label,
                           dataname,
@@ -239,12 +241,14 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       )
       
       #If reference lines are requested
-      if (vref_line != "" || is.null(vref_line)) {
-        vref_line <- unlist(strsplit(.(vref_line), ","))
-        vref_line <- as.numeric(vref_line)
-        validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
-      }  else{
-        vref_line <- NULL
+      {
+        if (vref_line != "" || is.null(vref_line)) {
+          vref_line <- unlist(strsplit(.(vref_line), ","))
+          vref_line <- as.numeric(vref_line)
+          validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
+        } else{
+          vref_line <- NULL
+        }
       }
       
     })
@@ -280,7 +284,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
 
   observeEvent(input$show_rcode, {
 
-    header <- get_rcode_header(
+    header <- get_rcode_header_osprey(
       title = "Swimlane Plot",
       datanames = if (is.null(code_data_processing)) dataname else datasets$datanames(),
       datasets = datasets,
