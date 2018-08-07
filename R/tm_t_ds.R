@@ -23,7 +23,9 @@
 #' 
 #' @template author_zhanc107
 #' 
-#' @examples 
+#' @examples
+#' 
+#' \dontrun{
 #' #Example using random dataset 
 #' 
 #' library(dplyr)
@@ -48,8 +50,8 @@
 #'   )
 #' )
 #'    
-#' shinyApp(x$ui, x$server)  
-#' 
+#' shinyApp(x$ui, x$server)
+#' }
 #'   
 #' 
 tm_t_ds <- function(label, 

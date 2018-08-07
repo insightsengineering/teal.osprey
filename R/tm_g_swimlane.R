@@ -41,6 +41,7 @@
 #'
 #' @examples
 #'
+#' \dontrun{
 #' library(dplyr)
 #'
 #' atx <- read.bce("/opt/BIOSTAT/qa/s30103j/libraries/atx.sas7bdat")
@@ -89,6 +90,7 @@
 #' )
 #'
 #' shinyApp(x$ui, x$server)
+#' }
 
 tm_g_swimlane <- function(label,
                           dataname,

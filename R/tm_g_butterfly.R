@@ -38,6 +38,8 @@
 #' @author Carolyn Zhang
 #' 
 #' @examples 
+#' 
+#' \dontrun{
 #' #Example butterfly plot
 #' library(dplyr)
 #' 
@@ -79,7 +81,8 @@
 #' )
 #'    
 #' shinyApp(x$ui, x$server) 
-#'   
+#'
+#' }
 #' 
 tm_g_butterfly <- function(label, 
                            dataname, 
