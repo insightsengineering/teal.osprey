@@ -54,6 +54,8 @@ an \code{\link[teal]{module}} object
 This shiny module displays the adverse events table (AET02).
 }
 \examples{
+
+\dontrun{
 #Example using stream (adam) dataset 
 library(dplyr)
 
@@ -84,7 +86,7 @@ x1 <- teal::init(
 )
    
 shinyApp(x1$ui, x1$server)  
-
+}
 
 }
 \author{

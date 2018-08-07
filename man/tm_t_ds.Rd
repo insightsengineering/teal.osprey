@@ -44,6 +44,8 @@ an \code{\link[teal]{module}} object
 Display DST01 Patient Disposition Table as a shiny module
 }
 \examples{
+
+\dontrun{
 #Example using random dataset 
 
 library(dplyr)
@@ -69,7 +71,7 @@ x <- teal::init(
 )
    
 shinyApp(x$ui, x$server)  
-
+}
   
 
 }

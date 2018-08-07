@@ -77,6 +77,7 @@ This modules expects that the analysis data has the following variables
 }
 \examples{
 
+\dontrun{
 library(dplyr)
 
 atx <- read.bce("/opt/BIOSTAT/qa/s30103j/libraries/atx.sas7bdat")
@@ -125,6 +126,7 @@ x <- teal::init(
 )
 
 shinyApp(x$ui, x$server)
+}
 }
 \author{
 qit3

@@ -54,6 +54,8 @@ an \code{\link[teal]{module}} object
 Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 }
 \examples{
+
+\dontrun{
 #Example 
 library(dplyr)
 
@@ -84,7 +86,7 @@ x1 <- teal::init(
 )
    
 shinyApp(x1$ui, x1$server)  
-
+}
 
 }
 \author{

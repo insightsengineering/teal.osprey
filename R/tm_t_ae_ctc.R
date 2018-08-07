@@ -28,6 +28,8 @@
 #' 
 #' 
 #' @examples 
+#' 
+#' \dontrun{
 #' #Example 
 #' library(dplyr)
 #' 
@@ -58,7 +60,7 @@
 #' )
 #'    
 #' shinyApp(x1$ui, x1$server)  
-#' 
+#' }
 #' 
 tm_t_ae_ctc <- function(label, 
                     dataname, 

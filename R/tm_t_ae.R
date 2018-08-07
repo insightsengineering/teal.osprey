@@ -30,6 +30,8 @@
 #' 
 #' 
 #' @examples 
+#' 
+#' \dontrun{
 #' #Example using stream (adam) dataset 
 #' library(dplyr)
 #' 
@@ -60,7 +62,7 @@
 #' )
 #'    
 #' shinyApp(x1$ui, x1$server)  
-#' 
+#' }
 #' 
 tm_t_ae <- function(label, 
                     dataname,

@@ -77,6 +77,8 @@ an \code{\link[teal]{module}} object
 Display spiderplot as a shiny module
 }
 \examples{
+
+\dontrun{
 #Example spiderplot
 library(dplyr)
 
@@ -120,7 +122,7 @@ x <- teal::init(
 )
    
 shinyApp(x$ui, x$server) 
-  
+}
 
 }
 \author{

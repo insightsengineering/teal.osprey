@@ -79,6 +79,8 @@ an \code{\link[teal]{module}} object
 Display butterfly plot as a shiny module
 }
 \examples{
+
+\dontrun{
 #Example butterfly plot
 library(dplyr)
 
@@ -120,7 +122,7 @@ x <- teal::init(
 )
    
 shinyApp(x$ui, x$server) 
-  
+}  
 
 }
 \author{
