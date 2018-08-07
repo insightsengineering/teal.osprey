@@ -233,25 +233,31 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       ANL_f <- ANL %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame()
       
       #If reference lines are requested
-      if (vref_line != "" || is.null(vref_line)) {
-        vref_line <- unlist(strsplit(.(vref_line), ","))
-
-        if(is.numeric(ANL_f[,.(x_var)])){
-          vref_line <- as.numeric(vref_line)
-          validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
+      {
+        if (vref_line != "" || is.null(vref_line)) {
+          vref_line <- unlist(strsplit(.(vref_line), ","))
+          
+          if(is.numeric(ANL_f[,.(x_var)])){
+            vref_line <- as.numeric(vref_line)
+            validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
+          } else{
+            validate(need(all(href_line %in% unique(ANL_f[,.(x_var)])), "Not all values entered for reference line(s) are in the x-axis"))
+          }
         } else{
-          validate(need(all(href_line %in% unique(ANL_f[,.(x_var)])), "Not all values entered for reference line(s) are in the x-axis"))
+          vref_line <- NULL
         }
-      }  else{
-        vref_line <- NULL
       }
-      if (!is.null(href_line) || href_line != "") {
-        href_line <- as.numeric(unlist(strsplit(.(href_line), ",")))
-        validate(need(all(!is.na(href_line)), "Not all values entered for reference line(s) were numeric"))
-      } else{
-        href_line <- NULL
+
+      {
+        if (!is.null(href_line) || href_line != "") {
+          href_line <- as.numeric(unlist(strsplit(.(href_line), ",")))
+          validate(need(all(!is.na(href_line)), "Not all values entered for reference line(s) were numeric"))
+        } else{
+          href_line <- NULL
+        }
       }
       
+    
       lbl <- NULL
       if(.(anno_txt_var)){
         lbl <- list(txt_ann = as.factor(ANL_f$USUBJID))

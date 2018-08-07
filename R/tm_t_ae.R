@@ -146,22 +146,22 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     chunks$data <<- bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
       
-      if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
+      {if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
         AAE <- quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
       } else{
         AAE <- AAE_FILTERED
-      }
+      }}
       
       AAE <- AAE[, .(aae_vars)] %>% as.data.frame() 
       
       ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID", .(arm_var))) %>% 
         as.data.frame()
       
-      if(all_p == TRUE) {
+      {if(all_p == TRUE) {
         total = "All Patients"
       } else {
         total = NULL
-      }
+      }}
     })
     eval(chunks$data)
     

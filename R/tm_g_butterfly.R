@@ -228,10 +228,12 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       aae_vars <- aae_vars[!is.null(aae_vars)]
       ASL <- ASL_FILTERED[, asl_vars] %>% as.data.frame()
       
-      if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
-        AAE <- quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
-      } else{
-        AAE <- AAE_FILTERED
+      {
+        if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
+          AAE <- quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
+        } else{
+          AAE <- AAE_FILTERED
+        }
       }
       
       AAE <- AAE[, aae_vars] %>% as.data.frame() 
@@ -241,27 +243,29 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
       
       ANL_f <- na.omit(ANL_f)
       
-      if(!is.null(right_v) && !is.null(left_v)){
-        if(!(right_v %in% c(0, 1))){
-          right <- as.character(ANL_f[, .(right_ch)])
-          right <- replace(right, !(right %in% right_v), 0)
-          right <- replace(right, right %in% right_v, 1)
-          right_name <- paste(right_v, collapse = " - ")
-        } else{
-          right <- ANL_f[, .(right_ch)]
-          right_name <- right_ch
+      {
+        if(!is.null(right_v) && !is.null(left_v)){
+          if(!(right_v %in% c(0, 1))){
+            right <- as.character(ANL_f[, .(right_ch)])
+            right <- replace(right, !(right %in% right_v), 0)
+            right <- replace(right, right %in% right_v, 1)
+            right_name <- paste(right_v, collapse = " - ")
+          } else{
+            right <- ANL_f[, .(right_ch)]
+            right_name <- right_ch
+          }
+          
+          if(!(left_v %in% c(0, 1))){
+            left <- as.character(ANL_f[, .(left_ch)])
+            left <- replace(left, !(left %in% left_v), 0)
+            left <- replace(left, left %in% left_v, 1)
+            left_name <- paste(left_v, collapse = " - ")
+          } else{
+            left <- ANL_f[, .(left_ch)]
+            left_name <- left_ch
+          }
+          
         }
-        
-        if(!(left_v %in% c(0, 1))){
-          left <- as.character(ANL_f[, .(left_ch)])
-          left <- replace(left, !(left %in% left_v), 0)
-          left <- replace(left, left %in% left_v, 1)
-          left_name <- paste(left_v, collapse = " - ")
-        } else{
-          left <- ANL_f[, .(left_ch)]
-          left_name <- left_ch
-        }
-        
       }
 
     })

@@ -138,11 +138,11 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
     chunks$data <<- bquote({
       ASL_f <- ASL_FILTERED
       
-      if(all_p == TRUE) {
+      {if(all_p == TRUE) {
         total = "All Patients"
       } else {
         total = NULL
-      }
+      }}
       
       ASL_f <- ASL_f[, .(asl_vars)] %>% 
         as.data.frame() 

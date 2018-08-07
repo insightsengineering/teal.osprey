@@ -239,12 +239,14 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       )
       
       #If reference lines are requested
-      if (vref_line != "" || is.null(vref_line)) {
-        vref_line <- unlist(strsplit(.(vref_line), ","))
-        vref_line <- as.numeric(vref_line)
-        validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
-      }  else{
-        vref_line <- NULL
+      {
+        if (vref_line != "" || is.null(vref_line)) {
+          vref_line <- unlist(strsplit(.(vref_line), ","))
+          vref_line <- as.numeric(vref_line)
+          validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
+        } else{
+          vref_line <- NULL
+        }
       }
       
     })
