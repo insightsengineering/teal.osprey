@@ -271,7 +271,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     
     chunks$p_spiderplot <<- call(
       "g_spiderplot",
-      marker_x = bquote(data.frame(day = ANL_f[,x_var], groupby = ANL_f$USUBJID)),
+      marker_x = bquote(ANL_f[,x_var]),
+      marker_id = bquote(ANL_f$USUBJID),
       marker_y = bquote(ANL_f[,y_var]),
       line_colby = bquote(if(line_colorby_var != "None"){ANL_f[,line_colorby_var]}else{NULL}),
       marker_shape = bquote(if(marker_var != "None"){ANL_f[,marker_var]}else{NULL}),
