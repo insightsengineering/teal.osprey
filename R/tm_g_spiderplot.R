@@ -230,7 +230,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
         as.data.frame()
       
       #replace USUBJID with all text after id
-      ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, '-', fixed = TRUE), '[', 4))
+      ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, '-', fixed = TRUE), tail, 1))
       
       ANL_f <- ANL %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame()
       

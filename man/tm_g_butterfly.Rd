@@ -122,7 +122,8 @@ x <- teal::init(
 )
    
 shinyApp(x$ui, x$server) 
-}  
+
+}
 
 }
 \author{
