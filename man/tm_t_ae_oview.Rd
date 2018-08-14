@@ -41,7 +41,6 @@ Display AET01 Adverse Events Summary Table as a shiny Module
 \examples{
 
 \dontrun{
-
 #Example using stream (adam) dataset 
 library(dplyr)
 
@@ -64,8 +63,10 @@ x1 <- teal::init(
   )
 )
    
-shinyApp(x1$ui, x1$server) 
+shinyApp(x1$ui, x1$server)
+
 }
+
   
 }
 \author{
