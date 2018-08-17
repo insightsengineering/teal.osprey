@@ -6,8 +6,8 @@
 \usage{
 tm_t_ae_ctc(label, dataname, filter_var = NULL, filter_var_choices = NULL,
   arm_var, arm_var_choices, class_var, class_var_choices, term_var,
-  term_var_choices, total_col = TRUE, pre_output = NULL,
-  post_output = NULL, code_data_processing = NULL)
+  term_var_choices, toxgr_var = "AETOXGR", total_col = TRUE,
+  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -35,6 +35,8 @@ here is \code{NULL}}
 \item{term_var}{term variables selected for display}
 
 \item{term_var_choices}{vector with \code{term_var} choices}
+
+\item{toxgr_var}{variable name of AE toxicitiy grade}
 
 \item{total_col}{argument for appearance of All Patients column,
 default here is TRUE}
@@ -73,7 +75,7 @@ x1 <- teal::init(
        label = "Adverse Events Table By Highest NCI CTCAE Grade",
        dataname = "AAE",
        filter_var = NULL,
-       filter_var_choices = c(NULL, "DTHFL", "flag1"), 
+       filter_var_choices = c("DTHFL", "flag1"), 
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
        class_var = "AEBODSYS",

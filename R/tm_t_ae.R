@@ -49,7 +49,7 @@
 #'        label = "Adverse Events Table",
 #'        dataname = "AAE",
 #'        filter_var = NULL,
-#'        filter_var_choices = c(NULL, "DTHFL", "flag1"), 
+#'        filter_var_choices = c("DTHFL", "flag1"), 
 #'        arm_var = "ARM",
 #'        arm_var_choices = c("ARM", "ARMCD"),
 #'        class_var = "AEBODSYS",
@@ -144,7 +144,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
     })
     
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
-    aae_vars <- unique(c("USUBJID", "STUDYID", arm_var, class_var, term_var)) 
+    aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var)) 
     
     chunks$data <<- bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
@@ -157,7 +157,7 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
       
       AAE <- AAE[, .(aae_vars)] %>% as.data.frame() 
       
-      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID", .(arm_var))) %>% 
+      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
         as.data.frame()
       
       {if(all_p == TRUE) {

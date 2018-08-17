@@ -126,7 +126,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
     #   aslvars = c("USUBJID", arm_var, class_var, term_var)
     # )
     
-    asl_vars <- unique(c("USUBJID", arm_var, class_var, term_var))
+    asl_vars <- unique(c("STUDYID","USUBJID", arm_var, class_var, term_var))
     
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)

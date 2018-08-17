@@ -73,7 +73,7 @@ x1 <- teal::init(
        label = "Adverse Events Table",
        dataname = "AAE",
        filter_var = NULL,
-       filter_var_choices = c(NULL, "DTHFL", "flag1"), 
+       filter_var_choices = c("DTHFL", "flag1"), 
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
        class_var = "AEBODSYS",

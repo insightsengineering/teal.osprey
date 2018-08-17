@@ -17,6 +17,7 @@
 #' @param class_var_choices vector with \code{class_var} choices
 #' @param term_var term variables selected for display
 #' @param term_var_choices vector with \code{term_var} choices
+#' @param toxgr_var variable name of AE toxicitiy grade
 #' @param total_col argument for appearance of All Patients column,
 #'  default here is TRUE
 #' @inheritParams teal::standard_layout
@@ -47,7 +48,7 @@
 #'        label = "Adverse Events Table By Highest NCI CTCAE Grade",
 #'        dataname = "AAE",
 #'        filter_var = NULL,
-#'        filter_var_choices = c(NULL, "DTHFL", "flag1"), 
+#'        filter_var_choices = c("DTHFL", "flag1"), 
 #'        arm_var = "ARM",
 #'        arm_var_choices = c("ARM", "ARMCD"),
 #'        class_var = "AEBODSYS",
@@ -73,6 +74,7 @@ tm_t_ae_ctc <- function(label,
                     class_var_choices, 
                     term_var, 
                     term_var_choices, 
+                    toxgr_var = "AETOXGR",
                     total_col = TRUE, 
                     pre_output = NULL, 
                     post_output = NULL, 
@@ -85,7 +87,9 @@ tm_t_ae_ctc <- function(label,
     server = srv_t_ae_ctc,
     ui = ui_t_ae_ctc,
     ui_args = args,
-    server_args = list(dataname = dataname, code_data_processing = code_data_processing),
+    server_args = list(dataname = dataname,
+                       toxgr_var = toxgr_var,
+                       code_data_processing = code_data_processing),
     filters = dataname
   )
   
@@ -114,7 +118,7 @@ ui_t_ae_ctc <- function(id, ...) {
   
 }
 
-srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_processing) {
+srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var, code_data_processing) {
   
   chunks <- list(
     vars = "# Not Calculated", 
@@ -139,10 +143,11 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
       term_var <- .(term_var)
       all_p <- .(all_p)
       filter_var <- .(filter_var)
+      toxgr_var <- .(toxgr_var)
     })
     
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
-    aae_vars <- unique(c("USUBJID", "STUDYID", arm_var, class_var, term_var, "AETOXGR")) 
+    aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, toxgr_var)) 
     
     chunks$data <<- bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
@@ -155,7 +160,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
       
       AAE <- AAE[, .(aae_vars)] %>% as.data.frame() 
       
-      ADAE  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID", .(arm_var))) %>% 
+      ADAE  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
         as.data.frame()
       
       {if(all_p == TRUE) {
@@ -171,7 +176,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, code_data_p
       class = bquote(ADAE[,class_var]), 
       term = bquote(ADAE[,term_var]), 
       id = bquote(ADAE$USUBJID),
-      grade = bquote(as.numeric(ADAE$AETOXGR)),
+      grade = bquote(as.numeric(ADAE[[.(toxgr_var)]])),
       col_by = bquote(as.factor(ADAE[[.(arm_var)]])),
       total = total
     )
