@@ -198,9 +198,13 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     ATR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
-    asl_vars <- unique(c("USUBJID", "STUDYID"))
-    atr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, 
-                         marker_var, line_colorby_var, xfacet_var, yfacet_var)) 
+    #if variable is not in ASL, then take from domain VADs
+    varlist <- c(xfacet_var, yfacet_var, marker_var, line_colorby_var)
+    varlist_from_asl <- varlist[varlist %in% ASL_FILTERED]
+    varlist_from_anl <- varlist[!varlist %in% ASL_FILTERED]
+    
+    asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl))
+    atr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl)) 
 
     chunks$vars <<- bquote({
       asl_vars <- .(asl_vars)

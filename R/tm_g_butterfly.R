@@ -62,7 +62,7 @@
 #'        filter_var_choices = c("DTHFL", "flag1_filt"), 
 #'        right_var = "SEX",
 #'        right_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
-#'        left_var = "SEX",
+#'        left_var = "RACE",
 #'        left_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
 #'        category_var = "AEBODSYS",
 #'        category_var_choices = c("AEDECOD", "AEBODSYS"),
@@ -89,9 +89,9 @@ tm_g_butterfly <- function(label,
                            filter_var = NULL,
                            filter_var_choices = NULL,
                            right_var,
-                           right_var_choices = dich_var,
+                           right_var_choices = right_var,
                            left_var,
-                           left_var_choices = dich_var,
+                           left_var_choices = left_var,
                            category_var,
                            category_var_choices = category_var,
                            color_by_var,
@@ -114,7 +114,8 @@ tm_g_butterfly <- function(label,
     label = label,
     filters = dataname,
     server = srv_g_butterfly,
-    server_args = list(dataname = dataname, code_data_processing = code_data_processing),
+    server_args = list(dataname = dataname, 
+                       code_data_processing = code_data_processing),
     ui = ui_g_butterfly,
     ui_args = args
   )
@@ -167,10 +168,11 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
-    ANL_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>% as.data.frame()
-    
-    options_r <- unique(ANL_f[, right_ch])
-    options_l <- unique(ANL_f[, left_ch])
+    ASL_df <- ASL_FILTERED %>% as.data.frame()
+    AAE_df <- AAE_FILTERED %>% as.data.frame()
+
+    options_r <- if (right_ch %in% names(ASL_df)) unique(ASL_df[, right_ch]) else unique(AAE_df[, right_ch])
+    options_l <- if (left_ch %in% names(ASL_df)) unique(ASL_df[, left_ch]) else unique(AAE_df[, left_ch])
     
     updateCheckboxGroupInput(session, "right_v", choices = options_r, selected = options_r[1])
     updateCheckboxGroupInput(session, "left_v", choices = options_l, selected = options_l[1])
@@ -206,9 +208,13 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
-    asl_vars <- unique(c("USUBJID", "STUDYID"))
-    aae_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", category_var, color_by_var, 
-                         count_by_var, facet_var, right_ch, left_ch)) 
+    #if variable is not in ASL, then take from domain VADs
+    varlist <- c(category_var, color_by_var, count_by_var, facet_var, right_ch, left_ch)
+    varlist_from_asl <- varlist[varlist %in% ASL_FILTERED]
+    varlist_from_anl <- varlist[!varlist %in% ASL_FILTERED]
+    
+    asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl))
+    aae_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) 
     
     chunks$vars <<- bquote({
       right_v <- .(right_v)

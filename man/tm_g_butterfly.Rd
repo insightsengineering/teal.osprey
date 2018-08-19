@@ -5,8 +5,8 @@
 \title{Butterfly plot Teal Module}
 \usage{
 tm_g_butterfly(label, dataname, filter_var = NULL,
-  filter_var_choices = NULL, right_var, right_var_choices = dich_var,
-  left_var, left_var_choices = dich_var, category_var,
+  filter_var_choices = NULL, right_var, right_var_choices = right_var,
+  left_var, left_var_choices = left_var, category_var,
   category_var_choices = category_var, color_by_var,
   color_by_var_choices = color_by_var, count_by_var,
   count_by_var_choices = count_by_var, facet_var = NULL,
@@ -103,7 +103,7 @@ x <- teal::init(
        filter_var_choices = c("DTHFL", "flag1_filt"), 
        right_var = "SEX",
        right_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
-       left_var = "SEX",
+       left_var = "RACE",
        left_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
        category_var = "AEBODSYS",
        category_var_choices = c("AEDECOD", "AEBODSYS"),
