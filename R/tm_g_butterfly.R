@@ -35,7 +35,8 @@
 #' @return an \code{\link[teal]{module}} object
 #' @export
 #' 
-#' @author Carolyn Zhang
+#' @template author_zhanc107
+#' @template author_liaoc10
 #' 
 #' @examples
 #' 

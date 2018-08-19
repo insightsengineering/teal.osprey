@@ -35,6 +35,7 @@
 #' @export
 #' 
 #' @template author_zhanc107
+#' @template author_liaoc10
 #' 
 #' @examples 
 #' 

@@ -56,7 +56,7 @@ This shiny module displays the adverse events table (AET02).
 \examples{
 
 \dontrun{
-#Example using stream (adam) dataset 
+#Example using stream (ADaM) dataset 
 library(dplyr)
 
 data("rADSL")
@@ -92,4 +92,6 @@ shinyApp(x1$ui, x1$server)
 }
 \author{
 Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
+
+Chendi Liao (liaoc10) \email{chendi.liao@roche.com}
 }

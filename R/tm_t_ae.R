@@ -27,12 +27,12 @@
 #' @export
 #' 
 #' @template author_zhanc107
-#' 
+#' @template author_liaoc10 
 #' 
 #' @examples 
 #' 
 #' \dontrun{
-#' #Example using stream (adam) dataset 
+#' #Example using stream (ADaM) dataset 
 #' library(dplyr)
 #' 
 #' data("rADSL")

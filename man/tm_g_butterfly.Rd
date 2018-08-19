@@ -127,5 +127,7 @@ shinyApp(x$ui, x$server)
 
 }
 \author{
-Carolyn Zhang
+Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
+
+Chendi Liao (liaoc10) \email{chendi.liao@roche.com}
 }
