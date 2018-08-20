@@ -53,9 +53,9 @@
 #'        arm_var = "ARM",
 #'        arm_var_choices = c("ARM", "ARMCD"),
 #'        class_var = "AEBODSYS",
-#'        class_var_choices = c("AEBODSYS", "DEFAULT"),
+#'        class_var_choices = c("AEBODSYS", "AEHLTCD"),
 #'        term_var = "AEDECOD",
-#'        term_var_choices = c("AEDECOD", "DEFAULT"),
+#'        term_var_choices = c("AEDECOD", "AETERM"),
 #'        total_col = TRUE
 #'    )
 #'   )
@@ -160,20 +160,25 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
       ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
         as.data.frame()
       
+      attr(ANL[, class_var], "label") <- label_aevar(class_var)
+      attr(ANL[, term_var], "label") <- label_aevar(term_var)
+      
       {if(all_p == TRUE) {
         total = "All Patients"
       } else {
         total = NULL
       }}
+      
     })
     eval(chunks$data)
+    
     
     chunks$analysis <<- call(
       "t_ae",
       class = bquote(ANL[, class_var]), 
       term = bquote(ANL[, term_var]), 
       id = bquote(ANL$USUBJID),
-      col_by = bquote(as.factor(ANL[[.(arm_var)]])),
+      col_by = bquote(droplevels(as.factor(ANL[[.(arm_var)]]))),
       total = bquote(total)
     )
 

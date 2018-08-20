@@ -161,8 +161,14 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var, 
       
       AAE <- AAE[, .(aae_vars)] %>% as.data.frame() 
       
-      ADAE  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
+      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
         as.data.frame()
+      
+      ANL$TOXGR <- as.numeric(ANL[, toxgr_var])
+      
+      attr(ANL[, class_var], "label") <- label_aevar(class_var)
+      attr(ANL[, term_var], "label") <- label_aevar(term_var)
+      attr(ANL[, "TOXGR"], "label") <- label_aevar(toxgr_var)
       
       {if(all_p == TRUE) {
         total = "All Patients"
@@ -174,11 +180,11 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var, 
     
     chunks$analysis <<- call(
       "t_ae_ctc_v2",
-      class = bquote(ADAE[,class_var]), 
-      term = bquote(ADAE[,term_var]), 
-      id = bquote(ADAE$USUBJID),
-      grade = bquote(as.numeric(ADAE[[.(toxgr_var)]])),
-      col_by = bquote(as.factor(ADAE[[.(arm_var)]])),
+      class = bquote(ANL[,class_var]), 
+      term = bquote(ANL[,term_var]), 
+      id = bquote(ANL$USUBJID),
+      grade = bquote(ANL$TOXGR),
+      col_by = bquote(as.factor(ANL[[.(arm_var)]])),
       total = total
     )
     

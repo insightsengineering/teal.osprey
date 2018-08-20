@@ -77,9 +77,9 @@ x1 <- teal::init(
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
        class_var = "AEBODSYS",
-       class_var_choices = c("AEBODSYS", "DEFAULT"),
+       class_var_choices = c("AEBODSYS", "AEHLTCD"),
        term_var = "AEDECOD",
-       term_var_choices = c("AEDECOD", "DEFAULT"),
+       term_var_choices = c("AEDECOD", "AETERM"),
        total_col = TRUE
    )
   )
