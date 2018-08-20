@@ -70,7 +70,7 @@
 #'        bar_var = "TRTDUR",
 #'        bar_var_choices = c("TRTDUR", "AGE"),
 #'        bar_color_var = "None",
-#'        bar_color_var_choices = c("ARM", "ARMCD"),
+#'        bar_color_var_choices = c("None", "ARM", "ARMCD"),
 #'        sort_var = "ARM",
 #'        sort_var_choices = c("ARM", "TRTDUR"),
 #'        marker_shape_var = "None",
@@ -206,7 +206,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       aslvars = c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var),
       ANL = ANL_FILTERED,
       anlvars = unique(c("USUBJID", "STUDYID", "ADY", marker_shape_var, marker_color_var)),
-      min_row = 3
+      min_nrow = 3
     )
 
     # any other validations
