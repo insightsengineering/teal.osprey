@@ -180,7 +180,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var, 
       term = bquote(ANL[,term_var]), 
       id = bquote(ANL$USUBJID),
       grade = bquote(ANL$TOXGR),
-      col_by = bquote(as.factor(ANL[[.(arm_var)]])),
+      col_by = bquote(droplevels(as.factor(ANL[[.(arm_var)]]))),
       total = total
     )
     

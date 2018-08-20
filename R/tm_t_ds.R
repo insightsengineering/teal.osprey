@@ -150,7 +150,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       class = bquote(ASL_f[, class_var]),
       term = bquote(ASL_f[, term_var]), 
       id = bquote(ASL_f$USUBJID),
-      col_by = bquote(as.factor(ASL_f[[.(arm_var)]])),
+      col_by = bquote(droplevels(as.factor(ASL_f[[.(arm_var)]]))),
       total = total
     )
     

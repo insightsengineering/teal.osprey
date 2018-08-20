@@ -152,7 +152,7 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       #
       ####--------------------------------
       display_id = bquote(display),
-      col_by = bquote(as.factor(ANL[[.(arm_var)]])),
+      col_by = bquote(droplevels(as.factor(ANL[[.(arm_var)]]))),
       total = total
     )
     
