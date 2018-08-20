@@ -1,0 +1,8 @@
+pandoc: 1.17.2
+pkgdown: 1.1.0
+pkgdown_sha: ~
+articles: []
+urls:
+  reference: https://pages.github.roche.com/Rpackages/teal.osprey/dev//reference
+  article: https://pages.github.roche.com/Rpackages/teal.osprey/dev//articles
+

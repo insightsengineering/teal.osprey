@@ -182,8 +182,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     options_r <- if (right_ch %in% names(ASL_df)) unique(ASL_df[, right_ch]) else unique(AAE_df[, right_ch])
     options_l <- if (left_ch %in% names(ASL_df)) unique(ASL_df[, left_ch]) else unique(AAE_df[, left_ch])
     
-    updateCheckboxGroupInput(session, "right_v", choices = options_r, selected = options_r)
-    updateCheckboxGroupInput(session, "left_v", choices = options_l, selected = options_l)
+    updateCheckboxGroupInput(session, "right_v", choices = options_r, selected = options_r[1])
+    updateCheckboxGroupInput(session, "left_v", choices = options_l, selected = options_l[1])
   })
   
   # dynamic plot height
