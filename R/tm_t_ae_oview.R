@@ -3,24 +3,14 @@
 #' 
 #' Display AET01 Adverse Events Summary Table as a shiny Module
 #' 
-#' @param label menu item label of the module in the teal app
-#' @param dataname analysis data used in teal module, needs to be available in
-#'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
-#'   Note that the data is expected to be in vertical form with the
-#'   \code{PARAMCD} variable filtering to one observation per patient.
-#' @param arm_var single name of variable in analysis data that is used as
-#'   \code{col_by} argument for the respective \code{tern} function.
-#' @param arm_var_choices vector with variable names that can be used as
-#'   \code{arm_var}
-#' @param total_col argument for appearance of All Patients column,
-#'   default here is TRUE
 #' @inheritParams teal::standard_layout
+#' @inheritParams tm_t_ae
 #' 
 #' @return an \code{\link[teal]{module}} object
 #' @export
 #' 
 #' @template author_zhanc107
-#' 
+#' @template author_liaoc10
 #' 
 #' @examples
 #' 
@@ -109,10 +99,9 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
     arm_var <- input$arm_var
     all_p <- input$All_Patients
     
-    asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
-    aae_vars <- unique(c("USUBJID", "STUDYID", "DTHFL", "DCSREAS", 
-                         "AESDTH", "AESER", "AESOC", "AEDECOD", 
-                         "AEACN", "AREL", "AEREL", "AETOXGR")) ## add column name of extra flage here
+    asl_vars <- unique(c("USUBJID", "STUDYID", arm_var, "DTHFL", "DCSREAS"))
+    aae_vars <- unique(c("USUBJID", "STUDYID", "AESOC", "AEDECOD", 
+                         "AESDTH", "AESER", "AEACN", "AREL", "AEREL", "AETOXGR")) ## add column name of extra flage here
 
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)

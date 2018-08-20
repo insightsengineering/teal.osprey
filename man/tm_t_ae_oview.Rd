@@ -10,19 +10,18 @@ tm_t_ae_oview(label, dataname, arm_var, arm_var_choices, total_col = TRUE,
 \arguments{
 \item{label}{menu item label of the module in the teal app}
 
-\item{dataname}{analysis data used in teal module, needs to be available in
-the list passed to the \code{data} argument of \code{\link[teal]{init}}.
-Note that the data is expected to be in vertical form with the
-\code{PARAMCD} variable filtering to one observation per patient.}
+\item{dataname}{analysis data used in teal module, needs to be available in 
+the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{arm_var}{single name of variable in analysis data that is used as
-\code{col_by} argument for the respective \code{tern} function.}
+\item{arm_var}{single name of variable in analysis data that is used as 
+\code{col_by} argument for the respective \code{tern} or \code{osprey} 
+function.}
 
-\item{arm_var_choices}{vector with variable names that can be used as
+\item{arm_var_choices}{vector with variable names that can be used as 
 \code{arm_var}}
 
-\item{total_col}{argument for appearance of All Patients column,
-default here is TRUE}
+\item{total_col}{argument for appearance of "All Patients" column (default is
+\code{TRUE})}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
@@ -71,4 +70,6 @@ shinyApp(x1$ui, x1$server)
 }
 \author{
 Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
+
+Chendi Liao (liaoc10) \email{chendi.liao@roche.com}
 }

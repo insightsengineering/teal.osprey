@@ -3,14 +3,9 @@
 #' 
 #' Display butterfly plot as a shiny module
 #' 
-#' @param label menu item label of the module in the teal app
-#' @param dataname analysis data used in teal module, needs to be available in
-#'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
-#'   Note that the data is expected to be in vertical form with the
-#'   \code{PARAMCD} variable filtering to one observation per patient.
-#' @param filter_var variable name of data filter, default here is \code{NULL}
-#' @param filter_var_choices vector with \code{filter_var} choices, default 
-#' here is \code{NULL}
+#' @inheritParams teal::standard_layout
+#' @inheritParams tm_t_ae
+#'   
 #' @param right_var dichotomization variable for right side
 #' @param right_var_choices vector with dichotomization choices
 #' @param left_var dichotomization variable for left side
@@ -19,24 +14,37 @@
 #' @param category_var_choices vector of category choices
 #' @param color_by_var variable defines color blocks within each bar
 #' @param color_by_var_choices vector of choices for color_block_by
-#' @param count_by_var variable defines how x axis is calculated 
+#' @param count_by_var variable defines how x axis is calculated
 #' @param count_by_var_choices vector of choices for count_by_var
 #' @param facet_var variable for row facets
 #' @param facet_var_choices vector with \code{facet_var} choices
-#' @param sort_by_var argument for order of class and term elements in table,
-#'  default here is "count"
+#' @param sort_by_var argument for order of class and term elements in table, 
+#'   default here is "count"
 #' @param sort_by_var_choices vector with \code{sort_by_var} choices
 #' @param legend_on boolean value for whether legend is displayed
 #' @param plot_height range of plot height
-#' @param code_data_processing string with data preprocessing before the teal
+#' @param code_data_processing string with data preprocessing before the teal 
 #'   app is initialized, default is NULL
-#' @inheritParams teal::standard_layout
+#'   
+#' @details \code{filter_var} option is designed to work in conjuction with 
+#'   filtering function provided by \code{teal} (encoding panel on the right 
+#'   hand side of the shiny app). It can be used as quick access to pre-defined 
+#'   subsets of the domain datasets (not subject-level dataset) to be used for 
+#'   analysis, denoted by an value of "Y". Each variable within the 
+#'   \code{filter_var_choices} is expected to contain values of either "Y" or 
+#'   "N". If multiple variables are selected as \code{filter_var}, only 
+#'   observations with "Y" value in each and every selected variables will be 
+#'   used for subsequent analysis. Flag variables (from ADaM datasets) can be 
+#'   used directly as filter.
+#' @details
+#' 
 #' 
 #' @return an \code{\link[teal]{module}} object
 #' @export
 #' 
-#' @author Carolyn Zhang
-#' 
+#' @template author_zhanc107
+#' @template author_liaoc10
+#'   
 #' @examples
 #' 
 #' \dontrun{
@@ -45,25 +53,23 @@
 #' 
 #' data("rADSL")
 #' data("rADAE")
-#' ASL <- rADSL
+#' ASL <- rADSL %>% mutate(DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"))
 #' AAE <- rADAE
 #' AAE <- AAE %>% mutate(flag1 = ifelse(AETOXGR == 1, 1, 0)) %>% 
 #'                mutate(flag2 = ifelse(AETOXGR == 2, 1, 0)) %>% 
 #'                mutate(flag3 = ifelse(AETOXGR == 3, 1, 0)) 
 #' AAE <- AAE %>% mutate(flag1_filt = rep("Y", nrow(AAE))) 
-#'
+#' 
 #' x <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
 #'   modules = root_modules(
 #'     tm_g_butterfly(
 #'        label = "Butterfly Plot",
 #'        dataname = "AAE",
-#'        filter_var = NULL,
-#'        filter_var_choices = c("DTHFL", "flag1_filt"), 
 #'        right_var = "SEX",
-#'        right_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
-#'        left_var = "SEX",
-#'        left_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
+#'        right_var_choices = c("DOSE","SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
+#'        left_var = "RACE",
+#'        left_var_choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
 #'        category_var = "AEBODSYS",
 #'        category_var_choices = c("AEDECOD", "AEBODSYS"),
 #'        color_by_var = "AETOXGR",
@@ -81,7 +87,7 @@
 #' )
 #'    
 #' shinyApp(x$ui, x$server) 
-#'
+#' 
 #' }
 #' 
 tm_g_butterfly <- function(label, 
@@ -89,9 +95,9 @@ tm_g_butterfly <- function(label,
                            filter_var = NULL,
                            filter_var_choices = NULL,
                            right_var,
-                           right_var_choices = dich_var,
+                           right_var_choices = right_var,
                            left_var,
-                           left_var_choices = dich_var,
+                           left_var_choices = left_var,
                            category_var,
                            category_var_choices = category_var,
                            color_by_var,
@@ -114,7 +120,8 @@ tm_g_butterfly <- function(label,
     label = label,
     filters = dataname,
     server = srv_g_butterfly,
-    server_args = list(dataname = dataname, code_data_processing = code_data_processing),
+    server_args = list(dataname = dataname, 
+                       code_data_processing = code_data_processing),
     ui = ui_g_butterfly,
     ui_args = args
   )
@@ -131,7 +138,9 @@ ui_g_butterfly <- function(id, ...) {
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
-      optionalSelectInput(ns("filter_var"), "Preset Data Filters", a$filter_var_choices, a$filter_var, multiple = TRUE),
+      optionalSelectInput(ns("filter_var"), 
+                          label = div("Preset Data Filters", tags$br(), helpText("Observations with value of 'Y' for selected variable(s) will be used for analysis")),
+                          choices = a$filter_var_choices, selected = a$filter_var, multiple = TRUE),
       optionalSelectInput(ns("right_ch"), "Right Dichotomization Variable", a$right_var_choices, a$right_var, multiple = FALSE),
       checkboxGroupInput(ns("right_v"), "Choose one", a$right_var),
       optionalSelectInput(ns("left_ch"), "Left Dichotomization Variable", a$left_var_choices, a$left_var, multiple = FALSE),
@@ -167,13 +176,14 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
-    ANL_f  <- merge(ASL_FILTERED, AAE_FILTERED) %>% as.data.frame()
+    ASL_df <- ASL_FILTERED %>% as.data.frame()
+    AAE_df <- AAE_FILTERED %>% as.data.frame()
+
+    options_r <- if (right_ch %in% names(ASL_df)) unique(ASL_df[, right_ch]) else unique(AAE_df[, right_ch])
+    options_l <- if (left_ch %in% names(ASL_df)) unique(ASL_df[, left_ch]) else unique(AAE_df[, left_ch])
     
-    options_r <- unique(ANL_f[, right_ch])
-    options_l <- unique(ANL_f[, left_ch])
-    
-    updateCheckboxGroupInput(session, "right_v", choices = options_r, selected = options_r[1])
-    updateCheckboxGroupInput(session, "left_v", choices = options_l, selected = options_l[1])
+    updateCheckboxGroupInput(session, "right_v", choices = options_r, selected = options_r)
+    updateCheckboxGroupInput(session, "left_v", choices = options_l, selected = options_l)
   })
   
   # dynamic plot height
@@ -206,9 +216,13 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
-    asl_vars <- unique(c("USUBJID", "STUDYID"))
-    aae_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", category_var, color_by_var, 
-                         count_by_var, facet_var, right_ch, left_ch)) 
+    #if variable is not in ASL, then take from domain VADs
+    varlist <- c(category_var, color_by_var, facet_var, right_ch, left_ch)
+    varlist_from_asl <- varlist[varlist %in% names(ASL_FILTERED)]
+    varlist_from_anl <- varlist[!varlist %in% names(ASL_FILTERED)]
+    
+    asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl))
+    aae_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) 
     
     chunks$vars <<- bquote({
       right_v <- .(right_v)

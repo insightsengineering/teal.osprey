@@ -6,26 +6,26 @@
 \usage{
 tm_t_ae_ctc(label, dataname, filter_var = NULL, filter_var_choices = NULL,
   arm_var, arm_var_choices, class_var, class_var_choices, term_var,
-  term_var_choices, total_col = TRUE, pre_output = NULL,
-  post_output = NULL, code_data_processing = NULL)
+  term_var_choices, toxgr_var = "AETOXGR", total_col = TRUE,
+  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
 
-\item{dataname}{analysis data used in teal module, needs to be available in
-the list passed to the \code{data} argument of \code{\link[teal]{init}}.
-Note that the data is expected to be in vertical form with the
-\code{PARAMCD} variable filtering to one observation per patient.}
+\item{dataname}{analysis data used in teal module, needs to be available in 
+the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{filter_var}{variable name of data filter, default here is \code{NULL}}
+\item{filter_var}{variable name of data filter, please see details regarding 
+expected values, default is \code{NULL}}
 
-\item{filter_var_choices}{vector with \code{filter_var} choices, default 
-here is \code{NULL}}
+\item{filter_var_choices}{vector with \code{filter_var} choices, default is 
+\code{NULL}}
 
-\item{arm_var}{single name of variable in analysis data that is used as
-\code{col_by} argument for the respective \code{tern} function.}
+\item{arm_var}{single name of variable in analysis data that is used as 
+\code{col_by} argument for the respective \code{tern} or \code{osprey} 
+function.}
 
-\item{arm_var_choices}{vector with variable names that can be used as
+\item{arm_var_choices}{vector with variable names that can be used as 
 \code{arm_var}}
 
 \item{class_var}{class variables selected for display}
@@ -36,8 +36,10 @@ here is \code{NULL}}
 
 \item{term_var_choices}{vector with \code{term_var} choices}
 
-\item{total_col}{argument for appearance of All Patients column,
-default here is TRUE}
+\item{toxgr_var}{variable name of AE toxicitiy grade}
+
+\item{total_col}{argument for appearance of "All Patients" column (default is
+\code{TRUE})}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
@@ -52,6 +54,18 @@ an \code{\link[teal]{module}} object
 }
 \description{
 Adverse Events Table by Highest NCI CTCAE Grade Teal Module
+}
+\details{
+\code{filter_var} option is designed to work in conjuction with 
+  filtering function provided by \code{teal} (encoding panel on the right 
+  hand side of the shiny app). It can be used as quick access to pre-defined 
+  subsets of the domain datasets (not subject-level dataset) to be used
+  for analysis, denoted by an value of "Y". Each variable within the
+  \code{filter_var_choices} is expected to contain values of either "Y" or
+  "N". If multiple variables are selected as \code{filter_var}, only
+  observations with "Y" value in each and every selected variables will be
+  used for subsequent analysis. Flag variables (from ADaM datasets) can be
+  used directly as filter.
 }
 \examples{
 
@@ -73,7 +87,7 @@ x1 <- teal::init(
        label = "Adverse Events Table By Highest NCI CTCAE Grade",
        dataname = "AAE",
        filter_var = NULL,
-       filter_var_choices = c(NULL, "DTHFL", "flag1"), 
+       filter_var_choices = c("DTHFL", "flag1"), 
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
        class_var = "AEBODSYS",
@@ -91,5 +105,7 @@ shinyApp(x1$ui, x1$server)
 
 }
 \author{
-Carolyn Zhang
+Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
+
+Chendi Liao (liaoc10) \email{chendi.liao@roche.com}
 }
