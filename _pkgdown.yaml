@@ -1,0 +1,23 @@
+url: https://pages.github.roche.com/Rpackages/teal.osprey/dev/
+
+template:
+  params:
+    bootswatch: cerulean
+
+development:
+  mode: devel
+
+
+navbar:
+  right:
+    - icon: fa-github
+      href: https://github.roche.com/Rpackages/teal.osprey
+
+
+reference:
+  - title: Tables Modules
+    contents:
+      - starts_with("tm_t_")
+  - title: Graphs Modules
+    contents:
+      - starts_with("tm_g_")
