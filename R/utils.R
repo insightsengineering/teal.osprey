@@ -28,7 +28,7 @@ label_aevar <- function(x) {
   ae_varlabel <- c(AEBODSYS = "MedDRA System Organ Class",
                    AESOC    = "MedDRA Primary System Organ Class",
                    AEHLGT   = "MedDRA High Level Group Term",
-                   # AEHLT    = "MedDRA High Level Term",
+                   AEHLT    = "MedDRA High Level Term",
                    AELLT    = "MedDRA Lowest Level Term",
                    AEDECOD  = "MedDRA Preferred Term",
                    AETERM   = "Reported Adverse Event Term",

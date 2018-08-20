@@ -205,7 +205,8 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       ASL = ASL_FILTERED,
       aslvars = c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var),
       ANL = ANL_FILTERED,
-      anlvars = unique(c("USUBJID", "STUDYID", "ADY", marker_shape_var, marker_color_var))
+      anlvars = unique(c("USUBJID", "STUDYID", "ADY", marker_shape_var, marker_color_var)),
+      min_row = 3
     )
 
     # any other validations

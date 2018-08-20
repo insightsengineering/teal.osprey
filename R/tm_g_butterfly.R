@@ -301,7 +301,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
         id = bquote(ANL_f$USUBJID),
         facet_rows = bquote(if(!is.null(facet_var)){ANL_f[,facet_var]}else{NULL}),
         x_label = bquote(count_by_var),
-        y_label = "AE Derived Terms",
+        y_label = label_aevar(category_var),
         legend_label = bquote(color_by_var),
         sort_by = bquote(sort_by_var),
         show_legend = bquote(legend_on) 
