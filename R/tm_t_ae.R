@@ -1,34 +1,46 @@
 
 #' Adverse Events Table Teal Module
 #' 
-#' This shiny module displays the adverse events table (AET02). 
+#' This shiny module displays the adverse events table (AET02).
 #' 
+#' @inheritParams teal::standard_layout
+#'   
 #' @param label menu item label of the module in the teal app
-#' @param dataname analysis data used in teal module, needs to be available in
+#' @param dataname analysis data used in teal module, needs to be available in 
 #'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
-#'   Note that the data is expected to be in vertical form with the
-#'   \code{PARAMCD} variable filtering to one observation per patient.
-#' @param filter_var variable name of data filter, default here is \code{NULL}
-#' @param filter_var_choices vector with \code{filter_var} choices, default 
-#' here is \code{NULL}
-#' @param arm_var single name of variable in analysis data that is used as
-#'   \code{col_by} argument for the respective \code{tern} function.
-#' @param arm_var_choices vector with variable names that can be used as
+#' @param filter_var variable name of data filter, please see details regarding 
+#'   expected values, default is \code{NULL}
+#' @param filter_var_choices vector with \code{filter_var} choices, default is 
+#'   \code{NULL}
+#' @param arm_var single name of variable in analysis data that is used as 
+#'   \code{col_by} argument for the respective \code{tern} or \code{osprey} 
+#'   function.
+#' @param arm_var_choices vector with variable names that can be used as 
 #'   \code{arm_var}
 #' @param class_var class variables selected for display
 #' @param class_var_choices vector with \code{class_var} choices
 #' @param term_var term variables selected for display
 #' @param term_var_choices vector with \code{term_var} choices
-#' @param total_col argument for appearance of All Patients column,
-#'  default here is TRUE
-#' @inheritParams teal::standard_layout
-#' 
+#' @param total_col argument for appearance of "All Patients" column (default is
+#'   \code{TRUE})
+#'   
+#' @details \code{filter_var} option is designed to work in conjuction with 
+#'   filtering function provided by \code{teal} (encoding panel on the right 
+#'   hand side of the shiny app). It can be used as quick access to pre-defined 
+#'   subsets of the domain datasets (not subject-level dataset) to be used
+#'   for analysis, denoted by an value of "Y". Each variable within the
+#'   \code{filter_var_choices} is expected to contain values of either "Y" or
+#'   "N". If multiple variables are selected as \code{filter_var}, only
+#'   observations with "Y" value in each and every selected variables will be
+#'   used for subsequent analysis. Flag variables (from ADaM datasets) can be
+#'   used directly as filter.
+#'   
 #' @return an \code{\link[teal]{module}} object
 #' @export
 #' 
 #' @template author_zhanc107
-#' @template author_liaoc10 
-#' 
+#' @template author_liaoc10
+#'   
 #' @examples 
 #' 
 #' \dontrun{
@@ -103,7 +115,9 @@ ui_t_ae <- function(id, ...) {
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
-      optionalSelectInput(ns("filter_var"), "Preset Data Filters", a$filter_var_choices, a$filter_var, multiple = TRUE),
+      optionalSelectInput(ns("filter_var"), 
+                          label = div("Preset Data Filters", tags$br(), helpText("Observations with value of 'Y' for selected variable(s) will be used for analysis")),
+                          choices = a$filter_var_choices, selected = a$filter_var, multiple = TRUE),
       optionalSelectInput(ns("arm_var"), "Arm Variable", a$arm_var_choices, a$arm_var, multiple = FALSE),
       optionalSelectInput(ns("class_var"), "Class Variables", a$class_var_choices, a$class_var, multiple = FALSE),
       optionalSelectInput(ns("term_var"), "Term Variables", a$term_var_choices, a$term_var, multiple = FALSE),

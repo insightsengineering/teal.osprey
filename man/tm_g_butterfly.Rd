@@ -18,15 +18,14 @@ tm_g_butterfly(label, dataname, filter_var = NULL,
 \arguments{
 \item{label}{menu item label of the module in the teal app}
 
-\item{dataname}{analysis data used in teal module, needs to be available in
-the list passed to the \code{data} argument of \code{\link[teal]{init}}.
-Note that the data is expected to be in vertical form with the
-\code{PARAMCD} variable filtering to one observation per patient.}
+\item{dataname}{analysis data used in teal module, needs to be available in 
+the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{filter_var}{variable name of data filter, default here is \code{NULL}}
+\item{filter_var}{variable name of data filter, please see details regarding 
+expected values, default is \code{NULL}}
 
-\item{filter_var_choices}{vector with \code{filter_var} choices, default 
-here is \code{NULL}}
+\item{filter_var_choices}{vector with \code{filter_var} choices, default is 
+\code{NULL}}
 
 \item{right_var}{dichotomization variable for right side}
 
@@ -52,7 +51,7 @@ here is \code{NULL}}
 
 \item{facet_var_choices}{vector with \code{facet_var} choices}
 
-\item{sort_by_var}{argument for order of class and term elements in table,
+\item{sort_by_var}{argument for order of class and term elements in table, 
 default here is "count"}
 
 \item{sort_by_var_choices}{vector with \code{sort_by_var} choices}
@@ -69,7 +68,7 @@ output to put the output into context. For example the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 
-\item{code_data_processing}{string with data preprocessing before the teal
+\item{code_data_processing}{string with data preprocessing before the teal 
 app is initialized, default is NULL}
 }
 \value{
@@ -77,6 +76,20 @@ an \code{\link[teal]{module}} object
 }
 \description{
 Display butterfly plot as a shiny module
+}
+\details{
+\code{filter_var} option is designed to work in conjuction with 
+  filtering function provided by \code{teal} (encoding panel on the right 
+  hand side of the shiny app). It can be used as quick access to pre-defined 
+  subsets of the domain datasets (not subject-level dataset) to be used for 
+  analysis, denoted by an value of "Y". Each variable within the 
+  \code{filter_var_choices} is expected to contain values of either "Y" or 
+  "N". If multiple variables are selected as \code{filter_var}, only 
+  observations with "Y" value in each and every selected variables will be 
+  used for subsequent analysis. Flag variables (from ADaM datasets) can be 
+  used directly as filter.
+
+
 }
 \examples{
 
@@ -86,7 +99,7 @@ library(dplyr)
 
 data("rADSL")
 data("rADAE")
-ASL <- rADSL
+ASL <- rADSL \%>\% mutate(DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"))
 AAE <- rADAE
 AAE <- AAE \%>\% mutate(flag1 = ifelse(AETOXGR == 1, 1, 0)) \%>\% 
                mutate(flag2 = ifelse(AETOXGR == 2, 1, 0)) \%>\% 
@@ -99,12 +112,10 @@ x <- teal::init(
     tm_g_butterfly(
        label = "Butterfly Plot",
        dataname = "AAE",
-       filter_var = NULL,
-       filter_var_choices = c("DTHFL", "flag1_filt"), 
        right_var = "SEX",
-       right_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
+       right_var_choices = c("DOSE","SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
        left_var = "RACE",
-       left_var_choices = c("SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
+       left_var_choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
        category_var = "AEBODSYS",
        category_var_choices = c("AEDECOD", "AEBODSYS"),
        color_by_var = "AETOXGR",
