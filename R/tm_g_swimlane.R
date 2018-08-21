@@ -123,6 +123,8 @@ tm_g_swimlane <- function(label,
     ui_args = args,
     server = srv_g_swimlane,
     server_args = list(dataname = dataname,
+                       marker_shape_opt = marker_shape_opt,
+                       marker_color_opt = marker_color_opt,
                        code_data_processing = code_data_processing),
     filters = dataname
   )
@@ -165,6 +167,8 @@ ui_g_swimlane <- function(id, ...){
 }
 
 srv_g_swimlane <- function(input, output, session, datasets, dataname,
+                           marker_shape_opt,
+                           marker_color_opt,
                            code_data_processing) {
 
   ## dynamic plot height
@@ -190,9 +194,9 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     bar_color_var <- if (input$bar_color_var == "None") NULL else input$bar_color_var
     sort_var <- if (input$sort_var == "None") NULL else input$sort_var
     marker_shape_var <- if (input$marker_shape_var == "None") NULL else input$marker_shape_var
-    marker_shape_opt <- input$marker_shape_opt
+    # marker_shape_opt <- input$marker_shape_opt
     marker_color_var <- if (input$marker_color_var == "None") NULL else input$marker_color_var
-    marker_color_opt <- input$marker_color_opt
+    # marker_color_opt <- input$marker_color_opt
     anno_txt_var <- input$anno_txt_var
     vref_line <- input$vref_line
 
