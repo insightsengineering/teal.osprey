@@ -106,7 +106,7 @@ x <- teal::init(
        bar_var = "TRTDUR",
        bar_var_choices = c("TRTDUR", "AGE"),
        bar_color_var = "None",
-       bar_color_var_choices = c("ARM", "ARMCD"),
+       bar_color_var_choices = c("None", "ARM", "ARMCD"),
        sort_var = "ARM",
        sort_var_choices = c("ARM", "TRTDUR"),
        marker_shape_var = "None",
