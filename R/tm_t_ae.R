@@ -174,8 +174,8 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
       ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
         as.data.frame()
       
-      attr(ANL[, class_var], "label") <- label_aevar(class_var)
-      attr(ANL[, term_var], "label") <- label_aevar(term_var)
+      attr(ANL[, class_var], "label") <- teal.osprey:::label_aevar(class_var)
+      attr(ANL[, term_var], "label") <- teal.osprey:::label_aevar(term_var)
       
       {if(all_p == TRUE) {
         total = "All Patients"
