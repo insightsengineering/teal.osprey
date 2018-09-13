@@ -1,16 +1,19 @@
 #' Teal Module for Swimlane Plot
 #'
-#' This is teal module that generates a swimlane plot for ADaM data
+#' This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data
 #'
 #' @param label item label of the module in the teal app
 #' @param dataname analysis data used in teal module, needs to be available in the list passed
 #'     to the \code{data} argument of \code{\link[teal]{init}}.
-#' @param bar_var numeric variable from dataset to plot as the bar length
+#' @param bar_var subject-level numeric variable from dataset to plot as the bar length
 #' @param bar_var_choices vector with variable names that can be used as \code{bar_var}
-#' @param bar_color_var color by variable
+#' @param bar_color_var color by variable (subject-level)
 #' @param bar_color_var_choices vector with variable names that can be used as \code{bar_color_var}
-#' @param sort_var sort by variable
+#' @param sort_var sort by variable (subject-level)
 #' @param sort_var_choices vector with variable names that can be used as \code{sort_var}
+#' @param marker_pos_var numeric variable for marker position (Note: make sure marker position has the same
+#'      relative start day as bar length variable \code{bar_var})
+#' @param marker_pos_var_choices vector with variable names that can be used as \code{marker_pos_var}
 #' @param marker_shape_var marker shape variable
 #' @param marker_shape_var_choices vector with variable names that can be used as \code{marker_shape_var}
 #' @param marker_shape_opt aesthetic values to map shape values (named vector to map shape values to each name)
@@ -26,40 +29,28 @@
 #'
 #' @import grid
 #'
-#' @details
-#' This modules expects that the analysis data has the following variables
-#'
-#' \tabular{ll}{
-#'  \code{ADY} \tab analysis study day\cr
-#' }
-#'
-#' @return an \code{\link[teal]{module}} object
+#' @return a \code{\link[teal]{module}} object
 #'
 #' @export
 #'
-#' @author qit3
+#' @template author_qit3
 #'
 #' @examples
 #'
 #' \dontrun{
 #' library(dplyr)
+#' 
+#' data("rADSL")
+#' data("rADRS")
+#' 
+#' ASL <- rADSL
+#' ARS <- rADRS
 #'
-#' atx <- read.bce("/opt/BIOSTAT/qa/s30103j/libraries/atx.sas7bdat")
-#' asl <- read.bce("/opt/BIOSTAT/qa/s30103j/libraries/asl.sas7bdat")
-#' xars <- read.bce("/opt/BIOSTAT/qa/s30103j/libraries/xars.sas7bdat")
-#' # phase 1A data
-#' # pre-process ASl and ARS to fit in ANL
-#' ATX <- atx %>% filter(grepl("1a", APERIDC2))
-#' ASL <- ATX %>% select(USUBJID) %>%
-#' left_join(asl, by = "USUBJID") %>%
-#' filter(SAFFL == "Y")
-#'
-#' anno_txt_var <- c("ARMCD", "SEX", "CADX")
-#' anno_txt <- ASL[, anno_txt_var]
-#'
-#' ARS <- ASL %>% select(USUBJID) %>%
-#' left_join(xars %>% filter(grepl("1a", APERIDC2) & PARAMCD == "OVRINV"), "USUBJID")
-#'
+#' ARS <- ARS %>% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+#'   mutate(AVALC = DCSREAS,
+#'          ADY = EOSDY) %>%
+#'   rbind (ARS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+#'   arrange(USUBJID)
 #'
 #' x <- teal::init(
 #'   data = list(ASL = ASL, ARS = ARS),
@@ -67,24 +58,23 @@
 #'     tm_g_swimlane(
 #'        label = "Swimlane Plot",
 #'        dataname = 'ARS',
-#'        bar_var = "TRTDUR",
-#'        bar_var_choices = c("TRTDUR", "AGE"),
-#'        bar_color_var = "None",
-#'        bar_color_var_choices = c("None", "ARM", "ARMCD"),
-#'        sort_var = "ARM",
-#'        sort_var_choices = c("ARM", "TRTDUR"),
-#'        marker_shape_var = "None",
+#'        bar_var = "TRTDURD",
+#'        bar_var_choices = c("TRTDURD", "EOSDY"),
+#'        bar_color_var = "EOSSTT",
+#'        bar_color_var_choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1", "SEX"),
+#'        sort_var = "ACTARMCD",
+#'        sort_var_choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD"),
+#'        marker_pos_var = "ADY",
+#'        marker_pos_var_choices = c("None", "ADY"),
+#'        marker_shape_var = "AVALC",
 #'        marker_shape_var_choices = c("None", "AVALC", "AVISIT"),
-#'        marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15,
-#'                             "DEATH" = 8, "LOST TO FOLLOW-UP" = 10, "WITHDRAWAL BY SUBJECT" = 14),
-#'        marker_color_var = "None",
+#'        marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
+#'        marker_color_var = "AVALC",
 #'        marker_color_var_choices = c("None", "AVALC", "AVISIT"),
-#'        marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "yellow", "PD" = "red",
-#'                             "DEATH" = "black", "LOST TO FOLLOW-UP" = "purple", "WITHDRAWAL BY SUBJECT" = "darkred"),
-#'        vref_line = NULL,
-#'        anno_txt_var = c("SEX", "COUNTRY"),
-#'        anno_txt_var_choices = c("SEX", "RACE", "COUNTRY", "CADX")
-#'
+#'        marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod", "PD" = "red", "Death" = "black"),
+#'        vref_line = "30, 60",
+#'        anno_txt_var = c("ACTARM", "SEX"),
+#'        anno_txt_var_choices = c("ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1", "SEX", "RACE","COUNTRY","DCSREAS", "DCSREASP")
 #'    )
 #'   )
 #' )
@@ -100,6 +90,8 @@ tm_g_swimlane <- function(label,
                           bar_color_var_choices = bar_color_var,
                           sort_var = NULL,
                           sort_var_choices = sort_var,
+                          marker_pos_var = NULL,
+                          marker_pos_var_choices = marker_pos_var,
                           marker_shape_var = NULL,
                           marker_shape_var_choices = marker_shape_var,
                           marker_shape_opt = NULL,
@@ -145,6 +137,8 @@ ui_g_swimlane <- function(id, ...){
                           selected = a$bar_var, multiple = FALSE),
       optionalSelectInput(ns("bar_color_var"), "Bar Color", choices = a$bar_color_var_choices,
                           selected = a$bar_color_var, multiple = FALSE),
+      optionalSelectInput(ns("marker_pos_var"), "Marker Position", choices = a$marker_pos_var_choices,
+                          selected = a$marker_pos_var, multiple = FALSE),
       optionalSelectInput(ns("marker_shape_var"), "Marker Shape", choices = a$marker_shape_var_choices,
                           selected = a$marker_shape_var, multiple = FALSE),
       optionalSelectInput(ns("marker_color_var"), "Marker Color", choices = a$marker_color_var_choices,
@@ -153,7 +147,8 @@ ui_g_swimlane <- function(id, ...){
                           selected = a$sort_var, multiple = FALSE,
                           label_help = helpText("from ", tags$code("ASL"))),
       optionalSelectInput(ns("anno_txt_var"), "Annotation Variables", choices = a$anno_txt_var_choices,
-                          selected = a$anno_txt_var, multiple = TRUE),
+                          selected = a$anno_txt_var, multiple = TRUE,
+                          label_help = helpText("from ", tags$code("ASL"))),
       textInput(ns("vref_line"), 
                 label = div("Vertical Reference Line(s)", tags$br(), 
                             helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")), 
@@ -193,6 +188,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     bar_var <- input$bar_var
     bar_color_var <- if (input$bar_color_var == "None") NULL else input$bar_color_var
     sort_var <- if (input$sort_var == "None") NULL else input$sort_var
+    marker_pos_var <- if (input$marker_pos_var == "None") NULL else input$marker_pos_var
     marker_shape_var <- if (input$marker_shape_var == "None") NULL else input$marker_shape_var
     # marker_shape_opt <- input$marker_shape_opt
     marker_color_var <- if (input$marker_color_var == "None") NULL else input$marker_color_var
@@ -209,7 +205,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       ASL = ASL_FILTERED,
       aslvars = c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var),
       ANL = ANL_FILTERED,
-      anlvars = unique(c("USUBJID", "STUDYID", "ADY", marker_shape_var, marker_color_var)),
+      anlvars = unique(c("USUBJID", "STUDYID", "ADY", marker_pos_var, marker_shape_var, marker_color_var)),
       min_nrow = 3
     )
 
@@ -219,16 +215,17 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     assign(anl_name, ANL_FILTERED)
 
     asl_vars <- unique(c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
-    anl_vars <- unique(c("USUBJID", "STUDYID", "ADY", marker_shape_var, marker_color_var))
+    anl_vars <- unique(c("USUBJID", "STUDYID", "ADY", marker_pos_var, marker_shape_var, marker_color_var))
 
     chunks$vars <<- bquote({
       bar_var <- .(bar_var)
       bar_color_var <- .(bar_color_var)
       sort_var <- .(sort_var)
+      marker_pos_var <- .(marker_pos_var)
       marker_shape_var <- .(marker_shape_var)
-      marker_shape_opt <- .(marker_shape_opt)
+      # marker_shape_opt <- .(marker_shape_opt)
       marker_color_var <- .(marker_color_var)
-      marker_color_var <- .(marker_color_var)
+      # marker_color_opt <- .(marker_color_opt)
       anno_txt_var <- .(anno_txt_var)
       vref_line <- .(vref_line)
     })
@@ -268,7 +265,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
                       sort_by = if (length(sort_var) > 0) ASL[[.(sort_var)]] else NULL, 
                       col_by = if (length(bar_color_var) > 0) ASL[[.(bar_color_var)]] else NULL, 
                       marker_id = ANL[["USUBJID"]],
-                      marker_pos = ANL[["ADY"]],
+                      marker_pos = if (length(marker_pos_var) > 0) ANL[[.(marker_pos_var)]] else NULL,
                       marker_shape = if (length(marker_shape_var) > 0) ANL[[.(marker_shape_var)]] else NULL, 
                       marker_shape_opt <- .(marker_shape_opt),
                       marker_color = if (length(marker_color_var) > 0) ANL[[.(marker_color_var)]] else NULL, 
