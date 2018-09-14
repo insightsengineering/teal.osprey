@@ -46,6 +46,9 @@
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -75,48 +78,92 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>Please install the package dependencies as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(
+<div id="stable-release" class="section level3">
+<h3 class="hasAnchor">
+<a href="#stable-release" class="anchor"></a>Stable Release</h3>
+<p><a href="https://pages.github.roche.com/Rpackages/teal.osprey/">Web Manual</a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Roche/rtables"</span>, 
   <span class="dt">ref =</span> <span class="st">"v0.1.0"</span>
 )
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Rpackages/teal"</span>,
   <span class="dt">ref =</span> <span class="st">"v0.0.4"</span>, 
   <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
 )
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Rpackages/tern"</span>,
   <span class="dt">ref =</span> <span class="st">"v0.5.0"</span>, 
   <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
 )
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Rpackages/teal.tern"</span>,
   <span class="dt">ref =</span> <span class="st">"v0.5.0"</span>, 
   <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
 )
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
+  <span class="dt">repo =</span> <span class="st">"Rpackages/osprey"</span>,
+  <span class="dt">ref =</span> <span class="st">"0.1.0"</span>, 
+  <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
+)
+
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
+  <span class="dt">repo =</span> <span class="st">"Rpackages/teal.osprey"</span>,
+  <span class="dt">ref =</span> <span class="st">"0.1.0"</span>, 
+  <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
+)</code></pre></div>
+</div>
+<div id="development-version" class="section level3">
+<h3 class="hasAnchor">
+<a href="#development-version" class="anchor"></a>Development Version</h3>
+<p><a href="https://pages.github.roche.com/Rpackages/teal.osprey/dev/">Web Manual</a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
+  <span class="dt">repo =</span> <span class="st">"Roche/rtables"</span>, 
+  <span class="dt">ref =</span> <span class="st">"master"</span>
+)
+
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
+  <span class="dt">repo =</span> <span class="st">"Rpackages/teal"</span>,
+  <span class="dt">ref =</span> <span class="st">"master"</span>, 
+  <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
+)
+
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
+  <span class="dt">repo =</span> <span class="st">"Rpackages/tern"</span>,
+  <span class="dt">ref =</span> <span class="st">"master"</span>, 
+  <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
+)
+
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
+  <span class="dt">repo =</span> <span class="st">"Rpackages/teal.tern"</span>,
+  <span class="dt">ref =</span> <span class="st">"master"</span>, 
+  <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
+)
+
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Rpackages/osprey"</span>,
   <span class="dt">ref =</span> <span class="st">"master"</span>, 
   <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
 )
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Rpackages/teal.osprey"</span>,
   <span class="dt">ref =</span> <span class="st">"master"</span>, 
   <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
 )</code></pre></div>
 </div>
+</div>
 <div id="getting-started" class="section level1">
 <h1 class="hasAnchor">
 <a href="#getting-started" class="anchor"></a>Getting Started</h1>
 <p>Here is an example app that shows all modules using random data. If you save this code into a file named <code>app.R</code> then it is a valid <a href="https://shiny.rstudio.com/articles/app-formats.html">single-file shiny application</a>.</p>
-<div id="app-setup-app-r" class="section level2">
+<div id="app-setup-with-all-available-modules" class="section level2">
 <h2 class="hasAnchor">
-<a href="#app-setup-app-r" class="anchor"></a>App setup, app.R</h2>
+<a href="#app-setup-with-all-available-modules" class="anchor"></a>App setup with all available modules</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(teal.tern)
 <span class="kw">library</span>(teal.osprey)
 <span class="kw">library</span>(dplyr)
@@ -133,16 +180,16 @@ ARS_swim &lt;-<span class="st"> </span>rADRS
 
 <span class="co"># Data processing</span>
 <span class="co">#@start_preprocessing</span>
-AAE &lt;-<span class="st"> </span>AAE %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RELFL =</span> <span class="kw">ifelse</span>(AEREL ==<span class="st"> "Y"</span>, <span class="st">"Y"</span>, <span class="st">"N"</span>),
-                      <span class="dt">CTC35FL =</span> <span class="kw">ifelse</span>(AETOXGR %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span>), <span class="st">"Y"</span>, <span class="st">"N"</span>),
-                      <span class="dt">SERFL =</span> <span class="kw">ifelse</span>(AESER ==<span class="st"> "Y"</span>, <span class="st">"Y"</span>, <span class="st">"N"</span>),
-                      <span class="dt">RELSERFL =</span> <span class="kw">ifelse</span>(AEREL ==<span class="st"> "Y"</span> &amp;<span class="st"> </span>AESER ==<span class="st"> "Y"</span>, <span class="st">"Y"</span>, <span class="st">"N"</span>))
+AAE &lt;-<span class="st"> </span>AAE <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">RELFL =</span> <span class="kw">ifelse</span>(AEREL <span class="op">==</span><span class="st"> "Y"</span>, <span class="st">"Y"</span>, <span class="st">"N"</span>),
+                      <span class="dt">CTC35FL =</span> <span class="kw">ifelse</span>(AETOXGR <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span>), <span class="st">"Y"</span>, <span class="st">"N"</span>),
+                      <span class="dt">SERFL =</span> <span class="kw">ifelse</span>(AESER <span class="op">==</span><span class="st"> "Y"</span>, <span class="st">"Y"</span>, <span class="st">"N"</span>),
+                      <span class="dt">RELSERFL =</span> <span class="kw">ifelse</span>(AEREL <span class="op">==</span><span class="st"> "Y"</span> <span class="op">&amp;</span><span class="st"> </span>AESER <span class="op">==</span><span class="st"> "Y"</span>, <span class="st">"Y"</span>, <span class="st">"N"</span>))
 
-ARS_swim &lt;-<span class="st"> </span>ARS_swim %&gt;%<span class="st"> </span><span class="kw">filter</span>(PARAMCD ==<span class="st"> "LSTASDI"</span> &amp;<span class="st"> </span>DCSREAS ==<span class="st"> "Death"</span>) %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">AVALC =</span> DCSREAS,
-         <span class="dt">ADY   =</span> EOSDY) %&gt;%
-<span class="st">  </span><span class="kw">rbind</span>(ARS %&gt;%<span class="st"> </span><span class="kw">filter</span>(PARAMCD ==<span class="st"> "OVRINV"</span>)) %&gt;%
-<span class="st">  </span><span class="kw">arrange</span>(USUBJID)
+ARS_swim &lt;-<span class="st"> </span>ARS_swim <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(PARAMCD <span class="op">==</span><span class="st"> "LSTASDI"</span> <span class="op">&amp;</span><span class="st"> </span>DCSREAS <span class="op">==</span><span class="st"> "Death"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">AVALC =</span> DCSREAS,
+         <span class="dt">ADY   =</span> EOSDY) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rbind</span>(ARS <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(PARAMCD <span class="op">==</span><span class="st"> "OVRINV"</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(USUBJID)
 
 <span class="co">#@end_preprocessing</span>
 
@@ -168,25 +215,25 @@ aeterm_var &lt;-<span class="st"> "AEDECOD"</span>
 aeterm_var_choices &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"AEDECOD"</span>, <span class="st">"AETERM"</span>)
 
 paramcd_tte &lt;-<span class="st"> "OS"</span>
-paramcd_choices_tte &lt;-<span class="st"> </span><span class="kw">unique</span>(ATE$PARAMCD)
+paramcd_choices_tte &lt;-<span class="st"> </span><span class="kw">unique</span>(ATE<span class="op">$</span>PARAMCD)
 
 paramcd_tr &lt;-<span class="st"> "SLDINV"</span>
-paramcd_choices_tr &lt;-<span class="st"> </span><span class="kw">unique</span>(ATR$PARAMCD)
+paramcd_choices_tr &lt;-<span class="st"> </span><span class="kw">unique</span>(ATR<span class="op">$</span>PARAMCD)
 
 paramcd_rsp &lt;-<span class="st"> "BESRSPI"</span>
-paramcd_choices_rsp &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">unique</span>(ARS$PARAMCD), <span class="st">"OVRINV"</span>)
+paramcd_choices_rsp &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/setops.html">setdiff</a></span>(<span class="kw">unique</span>(ARS<span class="op">$</span>PARAMCD), <span class="st">"OVRINV"</span>)
 
 
 
 ## Configure teal.tern ----
-chunks &lt;-<span class="st"> </span>teal::<span class="kw">parse_code_chunks</span>(<span class="dt">file =</span> <span class="st">"./app.R"</span>)
+chunks &lt;-<span class="st"> </span>teal<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/teal/topics/parse_code_chunks">parse_code_chunks</a></span>(<span class="dt">file =</span> <span class="st">"./app.R"</span>)
 
 <span class="kw">source</span>(<span class="st">"front_page.R"</span>)
 
 
 ## Setup App
 ## Need to add ADSL to validation
-x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
+x &lt;-<span class="st"> </span>teal<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/teal/topics/init">init</a></span>(
   <span class="dt">data =</span> <span class="kw">list</span>(<span class="dt">ASL =</span> ASL, <span class="dt">ARS =</span> ARS, <span class="dt">ARS_swim =</span> ARS_swim, <span class="dt">ATE =</span> ATE, <span class="dt">AAE =</span> AAE, <span class="dt">ATR =</span> ATR),
   <span class="dt">modules =</span> <span class="kw">root_modules</span>(
     <span class="kw">module</span>(
@@ -197,7 +244,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
     ),
     <span class="kw">tm_data_table</span>(<span class="st">"Data Table"</span>),
     <span class="kw">tm_variable_browser</span>(<span class="st">"Variable Browser"</span>),
-    <span class="kw">tm_t_summarize_variables</span>(
+    <span class="kw"><a href="https://pages.github.roche.com/Rpackages/teal.oncology/reference/tm_t_summarize_variables.html">tm_t_summarize_variables</a></span>(
       <span class="dt">label =</span> <span class="st">"Demographics"</span>,
       <span class="dt">dataname =</span> <span class="st">"ASL"</span>,
       <span class="dt">arm_var =</span> arm_var,
@@ -213,7 +260,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
         <span class="dt">arm_var =</span> arm_var,
         <span class="dt">arm_var_choices =</span> arm_var_choices,
         <span class="dt">total_col =</span> <span class="ot">TRUE</span>,
-        <span class="dt">code_data_processing =</span> chunks$preprocessing
+        <span class="dt">code_data_processing =</span> chunks<span class="op">$</span>preprocessing
       ),
       <span class="kw"><a href="reference/tm_t_ae.html">tm_t_ae</a></span>(
         <span class="dt">label =</span> <span class="st">"Adverse Events Table"</span>,
@@ -228,7 +275,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
         <span class="dt">term_var_choices =</span> aeterm_var_choices,
         <span class="dt">total_col =</span> <span class="ot">TRUE</span>,
         <span class="dt">pre_output =</span> <span class="kw">helpText</span>(<span class="st">"Summary table takes some time to generate for large AE datasets, please be patient"</span>),
-        <span class="dt">code_data_processing =</span> chunks$preprocessing
+        <span class="dt">code_data_processing =</span> chunks<span class="op">$</span>preprocessing
       ),
       <span class="kw"><a href="reference/tm_t_ae_ctc.html">tm_t_ae_ctc</a></span>(
         <span class="dt">label =</span> <span class="st">"Adverse Events Table By Highest NCI CTCAE Grade"</span>,
@@ -243,7 +290,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
         <span class="dt">term_var_choices =</span> aeterm_var_choices,
         <span class="dt">total_col =</span> <span class="ot">TRUE</span>,
         <span class="dt">pre_output =</span> <span class="kw">helpText</span>(<span class="st">"Summary table takes some time to generate for large AE datasets, please be patient"</span>),
-        <span class="dt">code_data_processing =</span> chunks$preprocessing
+        <span class="dt">code_data_processing =</span> chunks<span class="op">$</span>preprocessing
       ),
       <span class="kw"><a href="reference/tm_g_butterfly.html">tm_g_butterfly</a></span>(
         <span class="dt">label =</span> <span class="st">"Butterfly Plot"</span>,
@@ -267,7 +314,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
         <span class="dt">legend_on =</span> <span class="ot">TRUE</span>,
         <span class="dt">plot_height =</span> <span class="kw">c</span>(<span class="dv">600</span>, <span class="dv">200</span>, <span class="dv">2000</span>),
         <span class="dt">pre_output =</span> <span class="kw">helpText</span>(<span class="st">"Summary table takes some time to generate for large AE datasets, please be patient"</span>),
-        <span class="dt">code_data_processing =</span> chunks$preprocessing
+        <span class="dt">code_data_processing =</span> chunks<span class="op">$</span>preprocessing
       )
     ),
     <span class="kw"><a href="reference/tm_t_ds.html">tm_t_ds</a></span>(
@@ -280,7 +327,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
       <span class="dt">term_var =</span> <span class="st">"DCSREAS"</span>,
       <span class="dt">term_var_choices =</span> <span class="kw">c</span>(<span class="st">"DCSREAS"</span>, <span class="st">"DCSREASP"</span>),
       <span class="dt">total_col =</span> <span class="ot">TRUE</span>,
-      <span class="dt">code_data_processing =</span> chunks$preprocessing
+      <span class="dt">code_data_processing =</span> chunks<span class="op">$</span>preprocessing
     ),
     <span class="kw"><a href="reference/tm_g_spiderplot.html">tm_g_spiderplot</a></span>(
       <span class="dt">label =</span> <span class="st">"Spiderplot"</span>,
@@ -305,7 +352,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
       <span class="dt">yfacet_var =</span> <span class="ot">NULL</span>,
       <span class="dt">yfacet_var_choices =</span> arm_var_choices,
       <span class="dt">plot_height =</span> <span class="kw">c</span>(<span class="dv">600</span>, <span class="dv">200</span>, <span class="dv">2000</span>),
-      <span class="dt">code_data_processing =</span> chunks$preprocessing
+      <span class="dt">code_data_processing =</span> chunks<span class="op">$</span>preprocessing
     ),
     <span class="kw"><a href="reference/tm_g_swimlane.html">tm_g_swimlane</a></span>(
       <span class="dt">label =</span> <span class="st">"Swimlane Plot"</span>,
@@ -316,6 +363,8 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
       <span class="dt">bar_color_var_choices =</span> <span class="kw">c</span>(<span class="st">"EOSSTT"</span>, arm_var_choices),
       <span class="dt">sort_var =</span> <span class="st">"ACTARMCD"</span>,
       <span class="dt">sort_var_choices =</span> <span class="kw">c</span>(<span class="st">"USUBJID"</span>, <span class="st">"SITEID"</span>, <span class="st">"ACTARMCD"</span>, <span class="st">"TRTDURD"</span>),
+      <span class="dt">marker_pos_var =</span> <span class="st">"ADY"</span>,
+      <span class="dt">marker_pos_var_choices =</span> <span class="kw">c</span>(<span class="st">"None"</span>, <span class="st">"ADY"</span>),
       <span class="dt">marker_shape_var =</span> <span class="st">"AVALC"</span>,
       <span class="dt">marker_shape_var_choices =</span> <span class="kw">c</span>(<span class="st">"None"</span>, <span class="st">"AVALC"</span>, <span class="st">"AVISIT"</span>),
       <span class="dt">marker_shape_opt =</span> <span class="kw">c</span>(<span class="st">"CR"</span> =<span class="st"> </span><span class="dv">16</span>, <span class="st">"PR"</span> =<span class="st"> </span><span class="dv">17</span>, <span class="st">"SD"</span> =<span class="st"> </span><span class="dv">18</span>, <span class="st">"PD"</span> =<span class="st"> </span><span class="dv">15</span>, <span class="st">"Death"</span> =<span class="st"> </span><span class="dv">8</span>),
@@ -325,11 +374,11 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
       <span class="dt">vref_line =</span> <span class="st">"30, 60"</span>,
       <span class="dt">anno_txt_var =</span> <span class="kw">c</span>(<span class="st">"ACTARM"</span>, <span class="st">"SEX"</span>),
       <span class="dt">anno_txt_var_choices =</span> <span class="kw">c</span>(arm_var_choices, <span class="st">"RACE"</span>,<span class="st">"COUNTRY"</span>,<span class="st">"DCSREAS"</span>, <span class="st">"DCSREASP"</span>),
-      <span class="dt">code_data_processing =</span> chunks$preprocessing
+      <span class="dt">code_data_processing =</span> chunks<span class="op">$</span>preprocessing
     ),
     <span class="kw">modules</span>(
       <span class="st">"Efficacy Analyses"</span>,
-      <span class="kw">tm_g_forest_tte</span>(
+      <span class="kw"><a href="https://pages.github.roche.com/Rpackages/teal.oncology/reference/tm_g_forest_tte.html">tm_g_forest_tte</a></span>(
         <span class="dt">label =</span> <span class="st">"Survival Forest Plot"</span>,
         <span class="dt">dataname =</span> <span class="st">"ATE"</span>,
         <span class="dt">arm_var =</span> arm_var,
@@ -340,7 +389,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
         <span class="dt">paramcd_choices =</span> paramcd_choices_tte,
         <span class="dt">plot_height =</span> <span class="kw">c</span>(<span class="dv">800</span>, <span class="dv">200</span>, <span class="dv">4000</span>)
       ),
-      <span class="kw">tm_g_forest_rsp</span>(
+      <span class="kw"><a href="https://pages.github.roche.com/Rpackages/teal.oncology/reference/tm_g_forest_rsp.html">tm_g_forest_rsp</a></span>(
         <span class="dt">label =</span> <span class="st">"Response Forest Plot"</span>,
         <span class="dt">dataname =</span> <span class="st">"ARS"</span>,
         <span class="dt">arm_var =</span> arm_var,
@@ -351,7 +400,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
         <span class="dt">paramcd_choices =</span> paramcd_choices_rsp,
         <span class="dt">plot_height =</span> <span class="kw">c</span>(<span class="dv">800</span>, <span class="dv">200</span>, <span class="dv">4000</span>)
       ),
-      <span class="kw">tm_g_km</span>(
+      <span class="kw"><a href="https://pages.github.roche.com/Rpackages/teal.oncology/reference/tm_g_km.html">tm_g_km</a></span>(
         <span class="dt">label =</span> <span class="st">"Kaplan Meier Plot"</span>,
         <span class="dt">dataname =</span> <span class="st">"ATE"</span>,
         <span class="dt">arm_var =</span> arm_var,
@@ -364,7 +413,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
         <span class="dt">strata_var_choices =</span> strata_var_choices,
         <span class="dt">plot_height =</span> <span class="kw">c</span>(<span class="dv">800</span>, <span class="dv">200</span>, <span class="dv">4000</span>)
       ),
-      <span class="kw">tm_t_rsp</span>(
+      <span class="kw"><a href="https://pages.github.roche.com/Rpackages/teal.oncology/reference/tm_t_rsp.html">tm_t_rsp</a></span>(
         <span class="dt">label =</span> <span class="st">"Response Table"</span>,
         <span class="dt">dataname =</span> <span class="st">"ARS"</span>,
         <span class="dt">arm_var =</span> arm_var,
@@ -374,7 +423,7 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
         <span class="dt">strata_var =</span> strata_var,
         <span class="dt">strata_var_choices =</span> strata_var_choices
       ),
-      <span class="kw">tm_t_tte</span>(
+      <span class="kw"><a href="https://pages.github.roche.com/Rpackages/teal.oncology/reference/tm_t_tte.html">tm_t_tte</a></span>(
         <span class="dt">label =</span> <span class="st">"Time To Event Table"</span>,
         <span class="dt">dataname =</span> <span class="st">"ATE"</span>,
         <span class="dt">arm_var =</span> arm_var,
@@ -393,34 +442,34 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
   <span class="dt">header =</span> <span class="kw">div</span>(
     <span class="dt">class=</span><span class="st">""</span>,
     <span class="dt">style=</span><span class="st">"margin-bottom: 2px;"</span>,
-    tags$<span class="kw">h1</span>(<span class="st">"Demo ED Onco teal app with random ADaM data"</span>, tags$<span class="kw">span</span>(<span class="st">"ED SPA"</span>, <span class="dt">class=</span><span class="st">"pull-right"</span>))
+    tags<span class="op">$</span><span class="kw">h1</span>(<span class="st">"Demo ED Onco teal app with random ADaM data"</span>, tags<span class="op">$</span><span class="kw">span</span>(<span class="st">"ED SPA"</span>, <span class="dt">class=</span><span class="st">"pull-right"</span>))
   ),
-  <span class="dt">footer =</span> tags$<span class="kw">p</span>(<span class="dt">class=</span><span class="st">"text-muted"</span>,
+  <span class="dt">footer =</span> tags<span class="op">$</span><span class="kw">p</span>(<span class="dt">class=</span><span class="st">"text-muted"</span>,
                   <span class="kw">actionLink</span>(<span class="st">"showAboutModal"</span>, <span class="st">"Info About Authors"</span>))
 )
 
 
 <span class="co"># Add server code</span>
-<span class="kw">body</span>(x$server)[[<span class="kw">length</span>(<span class="kw">body</span>(x$server))+<span class="dv">1</span>]] &lt;-<span class="st"> </span><span class="kw">quote</span>(
-  <span class="kw">observeEvent</span>(input$showAboutModal, {
+<span class="kw">body</span>(x<span class="op">$</span>server)[[<span class="kw">length</span>(<span class="kw">body</span>(x<span class="op">$</span>server))<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span><span class="kw">quote</span>(
+  <span class="kw">observeEvent</span>(input<span class="op">$</span>showAboutModal, {
     <span class="kw">showModal</span>(<span class="kw">modalDialog</span>(
       <span class="dt">title =</span> <span class="st">"About this shiny app"</span>,
-      tags$<span class="kw">p</span>(
+      tags<span class="op">$</span><span class="kw">p</span>(
         <span class="st">"This is shiny app was brought to you by ED SPA. For more information please contact either"</span>
       ),
-      tags$<span class="kw">ul</span>(
-        tags$<span class="kw">li</span>(tags$<span class="kw">a</span>(<span class="dt">href=</span><span class="st">"mailto:mika.maekinen@roche.com"</span>, <span class="st">"Mika Maekinen"</span>)),
-        tags$<span class="kw">li</span>(tags$<span class="kw">a</span>(<span class="dt">href=</span><span class="st">"mailto:chendi.liao@roche.com"</span>, <span class="st">"Chendi Liao"</span>)),
-        tags$<span class="kw">li</span>(tags$<span class="kw">a</span>(<span class="dt">href=</span><span class="st">"mailto:qi.ting@gene.com"</span>, <span class="st">"Nina Qi"</span>)),
-        tags$<span class="kw">li</span>(tags$<span class="kw">a</span>(<span class="dt">href=</span><span class="st">"mailto:zhang.carolyn@gene.com"</span>, <span class="st">"Carolyn Zhang"</span>))
+      tags<span class="op">$</span><span class="kw">ul</span>(
+        tags<span class="op">$</span><span class="kw">li</span>(tags<span class="op">$</span><span class="kw">a</span>(<span class="dt">href=</span><span class="st">"mailto:mika.maekinen@roche.com"</span>, <span class="st">"Mika Maekinen"</span>)),
+        tags<span class="op">$</span><span class="kw">li</span>(tags<span class="op">$</span><span class="kw">a</span>(<span class="dt">href=</span><span class="st">"mailto:chendi.liao@roche.com"</span>, <span class="st">"Chendi Liao"</span>)),
+        tags<span class="op">$</span><span class="kw">li</span>(tags<span class="op">$</span><span class="kw">a</span>(<span class="dt">href=</span><span class="st">"mailto:qi.ting@gene.com"</span>, <span class="st">"Nina Qi"</span>)),
+        tags<span class="op">$</span><span class="kw">li</span>(tags<span class="op">$</span><span class="kw">a</span>(<span class="dt">href=</span><span class="st">"mailto:zhang.carolyn@gene.com"</span>, <span class="st">"Carolyn Zhang"</span>))
       ),
-      tags$<span class="kw">p</span>(
+      tags<span class="op">$</span><span class="kw">p</span>(
         <span class="dt">class=</span><span class="st">"text-muted"</span>,
-        <span class="st">"The app uses teal version"</span>, utils::<span class="kw">packageDescription</span>(<span class="dt">pkg =</span> <span class="st">"teal"</span>, <span class="dt">field=</span><span class="st">"Version"</span>),
-        <span class="st">", rtables version"</span>, utils::<span class="kw">packageDescription</span>(<span class="dt">pkg =</span> <span class="st">"rtables"</span>, <span class="dt">field=</span><span class="st">"Version"</span>),
-        <span class="st">", teal.tern version"</span>, utils::<span class="kw">packageDescription</span>(<span class="dt">pkg =</span> <span class="st">"teal.tern"</span>, <span class="dt">field=</span><span class="st">"Version"</span>),
-        <span class="st">", osprey version"</span>, utils::<span class="kw">packageDescription</span>(<span class="dt">pkg =</span> <span class="st">"osprey"</span>, <span class="dt">field=</span><span class="st">"Version"</span>),
-        <span class="st">", teal.osprey version"</span>, utils::<span class="kw">packageDescription</span>(<span class="dt">pkg =</span> <span class="st">"teal.osprey"</span>, <span class="dt">field=</span><span class="st">"Version"</span>)
+        <span class="st">"The app uses teal version"</span>, utils<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/utils/topics/packageDescription">packageDescription</a></span>(<span class="dt">pkg =</span> <span class="st">"teal"</span>, <span class="dt">field=</span><span class="st">"Version"</span>),
+        <span class="st">", rtables version"</span>, utils<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/utils/topics/packageDescription">packageDescription</a></span>(<span class="dt">pkg =</span> <span class="st">"rtables"</span>, <span class="dt">field=</span><span class="st">"Version"</span>),
+        <span class="st">", teal.tern version"</span>, utils<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/utils/topics/packageDescription">packageDescription</a></span>(<span class="dt">pkg =</span> <span class="st">"teal.tern"</span>, <span class="dt">field=</span><span class="st">"Version"</span>),
+        <span class="st">", osprey version"</span>, utils<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/utils/topics/packageDescription">packageDescription</a></span>(<span class="dt">pkg =</span> <span class="st">"osprey"</span>, <span class="dt">field=</span><span class="st">"Version"</span>),
+        <span class="st">", teal.osprey version"</span>, utils<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/utils/topics/packageDescription">packageDescription</a></span>(<span class="dt">pkg =</span> <span class="st">"teal.osprey"</span>, <span class="dt">field=</span><span class="st">"Version"</span>)
       ),
       <span class="dt">easyClose =</span> <span class="ot">TRUE</span>
     ))
@@ -428,19 +477,19 @@ x &lt;-<span class="st"> </span>teal::<span class="kw">init</span>(
 )
 
 ## Start Teal Shiny App ----
-<span class="kw">shinyApp</span>(x$ui, x$server)</code></pre></div>
-<p>Each teal module in <code>teal.osprey</code> will be explained in a separate vignette and is accessile via the articles tab on the <a href="http://pages.github.roche.com/Rpackages/teal.tern">project site</a>.</p>
+<span class="kw">shinyApp</span>(x<span class="op">$</span>ui, x<span class="op">$</span>server)</code></pre></div>
+<p>Each teal module in <code>teal.osprey</code> will be explained in a separate vignette and is accessile via the reference tab on the <a href="http://pages.github.roche.com/Rpackages/teal.tern">project site</a>.</p>
 </div>
-<div id="deployment" class="section level2">
+<div id="deployment-setup" class="section level2">
 <h2 class="hasAnchor">
-<a href="#deployment" class="anchor"></a>Deployment</h2>
+<a href="#deployment-setup" class="anchor"></a>Deployment Setup</h2>
 <p>Save the following code in a file <code>install.R</code> and run this to reinstall all the dependencies local relative to the working directory (also on the shiny server). Then execute the script with <code>Rscript install.R</code>. Then add <code>.libPaths(c(normalizePath("./libs"), .libPaths()))</code> as the first line in <code>app.R</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## clone this project here:
 project.path &lt;-<span class="st"> </span><span class="kw">getwd</span>() <span class="co">#"/srv/shiny-server/users/..."</span>
 
 path.teal.libs &lt;-<span class="st">  </span><span class="kw">file.path</span>(project.path, <span class="st">"libs"</span>)
 
-if (!<span class="kw">dir.exists</span>(path.teal.libs)) <span class="kw">dir.create</span>(path.teal.libs)
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">dir.exists</span>(path.teal.libs)) <span class="kw">dir.create</span>(path.teal.libs)
 
 <span class="co"># delete all current versions of teal and teal.oncology in path.teal.libs</span>
 <span class="kw">lapply</span>(<span class="kw">list.dirs</span>(path.teal.libs, <span class="dt">recursive =</span> <span class="ot">FALSE</span>), unlink, <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">force =</span> <span class="ot">TRUE</span>)
@@ -450,41 +499,41 @@ orig_libpaths &lt;-<span class="st"> </span><span class="kw">.libPaths</span>()
 
 <span class="kw">.libPaths</span>(<span class="kw">c</span>(
     path.teal.libs,
-    <span class="kw">as.vector</span>(<span class="kw">Filter</span>(function(x) !<span class="kw">grepl</span>(<span class="st">"^/opt/bee/home"</span>, x), orig_libpaths))
+    <span class="kw">as.vector</span>(<span class="kw">Filter</span>(<span class="cf">function</span>(x) <span class="op">!</span><span class="kw">grepl</span>(<span class="st">"^/opt/bee/home"</span>, x), orig_libpaths))
 ))
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Roche/rtables"</span>, 
   <span class="dt">ref =</span> <span class="st">"v0.1.0"</span>
 )
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Rpackages/teal"</span>,
   <span class="dt">ref =</span> <span class="st">"v0.0.4"</span>, 
   <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
 )
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Rpackages/tern"</span>,
   <span class="dt">ref =</span> <span class="st">"v0.5.0"</span>, 
   <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
 )
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Rpackages/teal.tern"</span>,
   <span class="dt">ref =</span> <span class="st">"v0.5.0"</span>, 
   <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
 )
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Rpackages/osprey"</span>,
-  <span class="dt">ref =</span> <span class="st">"master"</span>, 
+  <span class="dt">ref =</span> <span class="st">"0.1.0"</span>, 
   <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
 )
 
-devtools::<span class="kw">install_github</span>(
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(
   <span class="dt">repo =</span> <span class="st">"Rpackages/teal.osprey"</span>,
-  <span class="dt">ref =</span> <span class="st">"master"</span>, 
+  <span class="dt">ref =</span> <span class="st">"0.1.0"</span>, 
   <span class="dt">host =</span> <span class="st">"https://github.roche.com/api/v3"</span>
 )
 
