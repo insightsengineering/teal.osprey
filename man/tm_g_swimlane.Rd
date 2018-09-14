@@ -6,13 +6,14 @@
 \usage{
 tm_g_swimlane(label, dataname, bar_var, bar_var_choices = bar_var,
   bar_color_var = NULL, bar_color_var_choices = bar_color_var,
-  sort_var = NULL, sort_var_choices = sort_var, marker_shape_var = NULL,
-  marker_shape_var_choices = marker_shape_var, marker_shape_opt = NULL,
-  marker_color_var = NULL, marker_color_var_choices = marker_color_var,
-  marker_color_opt = NULL, anno_txt_var = NULL,
-  anno_txt_var_choices = anno_txt_var, vref_line = NULL,
-  plot_height = c(1200, 400, 5000), pre_output = NULL, post_output = NULL,
-  code_data_processing = NULL)
+  sort_var = NULL, sort_var_choices = sort_var,
+  marker_pos_var = NULL, marker_pos_var_choices = marker_pos_var,
+  marker_shape_var = NULL, marker_shape_var_choices = marker_shape_var,
+  marker_shape_opt = NULL, marker_color_var = NULL,
+  marker_color_var_choices = marker_color_var, marker_color_opt = NULL,
+  anno_txt_var = NULL, anno_txt_var_choices = anno_txt_var,
+  vref_line = NULL, plot_height = c(1200, 400, 5000),
+  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{item label of the module in the teal app}
@@ -20,17 +21,22 @@ tm_g_swimlane(label, dataname, bar_var, bar_var_choices = bar_var,
 \item{dataname}{analysis data used in teal module, needs to be available in the list passed
 to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{bar_var}{numeric variable from dataset to plot as the bar length}
+\item{bar_var}{subject-level numeric variable from dataset to plot as the bar length}
 
 \item{bar_var_choices}{vector with variable names that can be used as \code{bar_var}}
 
-\item{bar_color_var}{color by variable}
+\item{bar_color_var}{color by variable (subject-level)}
 
 \item{bar_color_var_choices}{vector with variable names that can be used as \code{bar_color_var}}
 
-\item{sort_var}{sort by variable}
+\item{sort_var}{sort by variable (subject-level)}
 
 \item{sort_var_choices}{vector with variable names that can be used as \code{sort_var}}
+
+\item{marker_pos_var}{numeric variable for marker position (Note: make sure that marker position has the 
+same relative start day as bar length variable \code{bar_var})}
+
+\item{marker_pos_var_choices}{vector with variable names that can be used as \code{marker_pos_var}}
 
 \item{marker_shape_var}{marker shape variable}
 
@@ -44,11 +50,11 @@ to the \code{data} argument of \code{\link[teal]{init}}.}
 
 \item{marker_color_opt}{aesthetic values to map color values (named vector to map color values to each name)}
 
-\item{anno_txt_var}{character vector with variable names that are selected as annotation by default}
+\item{anno_txt_var}{character vector with variable names that are selected as annotation}
 
 \item{anno_txt_var_choices}{vector with variable names that can be selected as \code{anno_txt_var}}
 
-\item{vref_line}{vertical reference line}
+\item{vref_line}{vertical reference lines}
 
 \item{plot_height}{plot height}
 
@@ -63,39 +69,27 @@ output to put the output into context. For example the
 \item{code_data_processing}{string with data preprocessing before the teal app is initialized}
 }
 \value{
-an \code{\link[teal]{module}} object
+a \code{\link[teal]{module}} object
 }
 \description{
-This is teal module that generates a swimlane plot for ADaM data
-}
-\details{
-This modules expects that the analysis data has the following variables
-
-\tabular{ll}{
- \code{ADY} \tab analysis study day\cr
-}
+This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data
 }
 \examples{
 
 \dontrun{
 library(dplyr)
 
-atx <- read.bce("/opt/BIOSTAT/qa/s30103j/libraries/atx.sas7bdat")
-asl <- read.bce("/opt/BIOSTAT/qa/s30103j/libraries/asl.sas7bdat")
-xars <- read.bce("/opt/BIOSTAT/qa/s30103j/libraries/xars.sas7bdat")
-# phase 1A data
-# pre-process ASl and ARS to fit in ANL
-ATX <- atx \%>\% filter(grepl("1a", APERIDC2))
-ASL <- ATX \%>\% select(USUBJID) \%>\%
-left_join(asl, by = "USUBJID") \%>\%
-filter(SAFFL == "Y")
+data("rADSL")
+data("rADRS")
 
-anno_txt_var <- c("ARMCD", "SEX", "CADX")
-anno_txt <- ASL[, anno_txt_var]
+ASL <- rADSL
+ARS <- rADRS
 
-ARS <- ASL \%>\% select(USUBJID) \%>\%
-left_join(xars \%>\% filter(grepl("1a", APERIDC2) & PARAMCD == "OVRINV"), "USUBJID")
-
+ARS <- ARS \%>\% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
+  mutate(AVALC = DCSREAS,
+         ADY = EOSDY) \%>\%
+  rbind (ARS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+  arrange(USUBJID)
 
 x <- teal::init(
   data = list(ASL = ASL, ARS = ARS),
@@ -103,24 +97,23 @@ x <- teal::init(
     tm_g_swimlane(
        label = "Swimlane Plot",
        dataname = 'ARS',
-       bar_var = "TRTDUR",
-       bar_var_choices = c("TRTDUR", "AGE"),
-       bar_color_var = "None",
-       bar_color_var_choices = c("None", "ARM", "ARMCD"),
-       sort_var = "ARM",
-       sort_var_choices = c("ARM", "TRTDUR"),
-       marker_shape_var = "None",
+       bar_var = "TRTDURD",
+       bar_var_choices = c("TRTDURD", "EOSDY"),
+       bar_color_var = "EOSSTT",
+       bar_color_var_choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1", "SEX"),
+       sort_var = "ACTARMCD",
+       sort_var_choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD"),
+       marker_pos_var = "ADY",
+       marker_pos_var_choices = c("None", "ADY"),
+       marker_shape_var = "AVALC",
        marker_shape_var_choices = c("None", "AVALC", "AVISIT"),
-       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15,
-                            "DEATH" = 8, "LOST TO FOLLOW-UP" = 10, "WITHDRAWAL BY SUBJECT" = 14),
-       marker_color_var = "None",
+       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
+       marker_color_var = "AVALC",
        marker_color_var_choices = c("None", "AVALC", "AVISIT"),
-       marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "yellow", "PD" = "red",
-                            "DEATH" = "black", "LOST TO FOLLOW-UP" = "purple", "WITHDRAWAL BY SUBJECT" = "darkred"),
-       vref_line = NULL,
-       anno_txt_var = c("SEX", "COUNTRY"),
-       anno_txt_var_choices = c("SEX", "RACE", "COUNTRY", "CADX")
-
+       marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod", "PD" = "red", "Death" = "black"),
+       vref_line = "30, 60",
+       anno_txt_var = c("ACTARM", "SEX"),
+       anno_txt_var_choices = c("ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1", "SEX", "RACE","COUNTRY","DCSREAS", "DCSREASP")
    )
   )
 )
@@ -129,5 +122,5 @@ shinyApp(x$ui, x$server)
 }
 }
 \author{
-qit3
+Ting Qi (qit3) \email{qit3@gene.com}
 }
