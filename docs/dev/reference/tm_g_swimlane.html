@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Teal Module for Swimlane Plot — tm_g_swimlane" />
 
-<meta property="og:description" content="This is teal module that generates a swimlane plot for ADaM data" />
+<meta property="og:description" content="This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data" />
 <meta name="twitter:card" content="summary" />
 
 <meta name="robots" content="noindex">
@@ -76,6 +76,9 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -104,19 +107,20 @@
 
     <div class="ref-description">
     
-    <p>This is teal module that generates a swimlane plot for ADaM data</p>
+    <p>This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>tm_g_swimlane</span>(<span class='no'>label</span>, <span class='no'>dataname</span>, <span class='no'>bar_var</span>, <span class='kw'>bar_var_choices</span> <span class='kw'>=</span> <span class='no'>bar_var</span>,
   <span class='kw'>bar_color_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>bar_color_var_choices</span> <span class='kw'>=</span> <span class='no'>bar_color_var</span>,
-  <span class='kw'>sort_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sort_var_choices</span> <span class='kw'>=</span> <span class='no'>sort_var</span>, <span class='kw'>marker_shape_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>marker_shape_var_choices</span> <span class='kw'>=</span> <span class='no'>marker_shape_var</span>, <span class='kw'>marker_shape_opt</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>marker_color_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>marker_color_var_choices</span> <span class='kw'>=</span> <span class='no'>marker_color_var</span>,
-  <span class='kw'>marker_color_opt</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>anno_txt_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>anno_txt_var_choices</span> <span class='kw'>=</span> <span class='no'>anno_txt_var</span>, <span class='kw'>vref_line</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>plot_height</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1200</span>, <span class='fl'>400</span>, <span class='fl'>5000</span>), <span class='kw'>pre_output</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>post_output</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>code_data_processing</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>sort_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sort_var_choices</span> <span class='kw'>=</span> <span class='no'>sort_var</span>,
+  <span class='kw'>marker_pos_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>marker_pos_var_choices</span> <span class='kw'>=</span> <span class='no'>marker_pos_var</span>,
+  <span class='kw'>marker_shape_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>marker_shape_var_choices</span> <span class='kw'>=</span> <span class='no'>marker_shape_var</span>,
+  <span class='kw'>marker_shape_opt</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>marker_color_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>marker_color_var_choices</span> <span class='kw'>=</span> <span class='no'>marker_color_var</span>, <span class='kw'>marker_color_opt</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>anno_txt_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>anno_txt_var_choices</span> <span class='kw'>=</span> <span class='no'>anno_txt_var</span>,
+  <span class='kw'>vref_line</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>plot_height</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1200</span>, <span class='fl'>400</span>, <span class='fl'>5000</span>),
+  <span class='kw'>pre_output</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>post_output</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>code_data_processing</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,7 +136,7 @@ to the <code>data</code> argument of <code><a href='http://www.rdocumentation.or
     </tr>
     <tr>
       <th>bar_var</th>
-      <td><p>numeric variable from dataset to plot as the bar length</p></td>
+      <td><p>subject-level numeric variable from dataset to plot as the bar length</p></td>
     </tr>
     <tr>
       <th>bar_var_choices</th>
@@ -140,7 +144,7 @@ to the <code>data</code> argument of <code><a href='http://www.rdocumentation.or
     </tr>
     <tr>
       <th>bar_color_var</th>
-      <td><p>color by variable</p></td>
+      <td><p>color by variable (subject-level)</p></td>
     </tr>
     <tr>
       <th>bar_color_var_choices</th>
@@ -148,11 +152,20 @@ to the <code>data</code> argument of <code><a href='http://www.rdocumentation.or
     </tr>
     <tr>
       <th>sort_var</th>
-      <td><p>sort by variable</p></td>
+      <td><p>sort by variable (subject-level)</p></td>
     </tr>
     <tr>
       <th>sort_var_choices</th>
       <td><p>vector with variable names that can be used as <code>sort_var</code></p></td>
+    </tr>
+    <tr>
+      <th>marker_pos_var</th>
+      <td><p>numeric variable for marker position (Note: make sure that marker position has the 
+same relative start day as bar length variable <code>bar_var</code>)</p></td>
+    </tr>
+    <tr>
+      <th>marker_pos_var_choices</th>
+      <td><p>vector with variable names that can be used as <code>marker_pos_var</code></p></td>
     </tr>
     <tr>
       <th>marker_shape_var</th>
@@ -180,7 +193,7 @@ to the <code>data</code> argument of <code><a href='http://www.rdocumentation.or
     </tr>
     <tr>
       <th>anno_txt_var</th>
-      <td><p>character vector with variable names that are selected as annotation by default</p></td>
+      <td><p>character vector with variable names that are selected as annotation</p></td>
     </tr>
     <tr>
       <th>anno_txt_var_choices</th>
@@ -188,7 +201,7 @@ to the <code>data</code> argument of <code><a href='http://www.rdocumentation.or
     </tr>
     <tr>
       <th>vref_line</th>
-      <td><p>vertical reference line</p></td>
+      <td><p>vertical reference lines</p></td>
     </tr>
     <tr>
       <th>plot_height</th>
@@ -214,15 +227,7 @@ output to put the output into context. For example the
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an <code><a href='http://www.rdocumentation.org/packages/teal/topics/module'>module</a></code> object</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>This modules expects that the analysis data has the following variables</p>
-<table class='table'>
-<tr><td><code>ADY</code></td><td>analysis study day</td></tr>
-<tr><td></td><td><code>ADY</code></td></tr>
-</table>
+    <p>a <code><a href='http://www.rdocumentation.org/packages/teal/topics/module'>module</a></code> object</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -230,22 +235,17 @@ output to put the output into context. For example the
 </div><span class='co'># NOT RUN {</span>
 <span class='fu'>library</span>(<span class='no'>dplyr</span>)
 
-<span class='no'>atx</span> <span class='kw'>&lt;-</span> <span class='fu'>read.bce</span>(<span class='st'>"/opt/BIOSTAT/qa/s30103j/libraries/atx.sas7bdat"</span>)
-<span class='no'>asl</span> <span class='kw'>&lt;-</span> <span class='fu'>read.bce</span>(<span class='st'>"/opt/BIOSTAT/qa/s30103j/libraries/asl.sas7bdat"</span>)
-<span class='no'>xars</span> <span class='kw'>&lt;-</span> <span class='fu'>read.bce</span>(<span class='st'>"/opt/BIOSTAT/qa/s30103j/libraries/xars.sas7bdat"</span>)
-<span class='co'># phase 1A data</span>
-<span class='co'># pre-process ASl and ARS to fit in ANL</span>
-<span class='no'>ATX</span> <span class='kw'>&lt;-</span> <span class='no'>atx</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='fu'>grepl</span>(<span class='st'>"1a"</span>, <span class='no'>APERIDC2</span>))
-<span class='no'>ASL</span> <span class='kw'>&lt;-</span> <span class='no'>ATX</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>USUBJID</span>) <span class='kw'>%&gt;%</span>
-<span class='fu'><a href='http://dplyr.tidyverse.org/reference/join.html'>left_join</a></span>(<span class='no'>asl</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='st'>"USUBJID"</span>) <span class='kw'>%&gt;%</span>
-<span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>SAFFL</span> <span class='kw'>==</span> <span class='st'>"Y"</span>)
+<span class='fu'>data</span>(<span class='st'>"rADSL"</span>)
+<span class='fu'>data</span>(<span class='st'>"rADRS"</span>)
 
-<span class='no'>anno_txt_var</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>"ARMCD"</span>, <span class='st'>"SEX"</span>, <span class='st'>"CADX"</span>)
-<span class='no'>anno_txt</span> <span class='kw'>&lt;-</span> <span class='no'>ASL</span>[, <span class='no'>anno_txt_var</span>]
+<span class='no'>ASL</span> <span class='kw'>&lt;-</span> <span class='no'>rADSL</span>
+<span class='no'>ARS</span> <span class='kw'>&lt;-</span> <span class='no'>rADRS</span>
 
-<span class='no'>ARS</span> <span class='kw'>&lt;-</span> <span class='no'>ASL</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>USUBJID</span>) <span class='kw'>%&gt;%</span>
-<span class='fu'><a href='http://dplyr.tidyverse.org/reference/join.html'>left_join</a></span>(<span class='no'>xars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='fu'>grepl</span>(<span class='st'>"1a"</span>, <span class='no'>APERIDC2</span>) <span class='kw'>&amp;</span> <span class='no'>PARAMCD</span> <span class='kw'>==</span> <span class='st'>"OVRINV"</span>), <span class='st'>"USUBJID"</span>)
-
+<span class='no'>ARS</span> <span class='kw'>&lt;-</span> <span class='no'>ARS</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>PARAMCD</span> <span class='kw'>==</span> <span class='st'>"LSTASDI"</span> <span class='kw'>&amp;</span> <span class='no'>DCSREAS</span> <span class='kw'>==</span> <span class='st'>"Death"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>AVALC</span> <span class='kw'>=</span> <span class='no'>DCSREAS</span>,
+         <span class='kw'>ADY</span> <span class='kw'>=</span> <span class='no'>EOSDY</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>rbind</span> (<span class='no'>ARS</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>PARAMCD</span> <span class='kw'>==</span> <span class='st'>"OVRINV"</span> <span class='kw'>&amp;</span> <span class='no'>AVALC</span> <span class='kw'>!=</span> <span class='st'>"NE"</span>)) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span>(<span class='no'>USUBJID</span>)
 
 <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>teal</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/teal/topics/init'>init</a></span>(
   <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>ASL</span> <span class='kw'>=</span> <span class='no'>ASL</span>, <span class='kw'>ARS</span> <span class='kw'>=</span> <span class='no'>ARS</span>),
@@ -253,24 +253,23 @@ output to put the output into context. For example the
     <span class='fu'>tm_g_swimlane</span>(
        <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"Swimlane Plot"</span>,
        <span class='kw'>dataname</span> <span class='kw'>=</span> <span class='st'>'ARS'</span>,
-       <span class='kw'>bar_var</span> <span class='kw'>=</span> <span class='st'>"TRTDUR"</span>,
-       <span class='kw'>bar_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"TRTDUR"</span>, <span class='st'>"AGE"</span>),
-       <span class='kw'>bar_color_var</span> <span class='kw'>=</span> <span class='st'>"None"</span>,
-       <span class='kw'>bar_color_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ARM"</span>, <span class='st'>"ARMCD"</span>),
-       <span class='kw'>sort_var</span> <span class='kw'>=</span> <span class='st'>"ARM"</span>,
-       <span class='kw'>sort_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ARM"</span>, <span class='st'>"TRTDUR"</span>),
-       <span class='kw'>marker_shape_var</span> <span class='kw'>=</span> <span class='st'>"None"</span>,
+       <span class='kw'>bar_var</span> <span class='kw'>=</span> <span class='st'>"TRTDURD"</span>,
+       <span class='kw'>bar_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"TRTDURD"</span>, <span class='st'>"EOSDY"</span>),
+       <span class='kw'>bar_color_var</span> <span class='kw'>=</span> <span class='st'>"EOSSTT"</span>,
+       <span class='kw'>bar_color_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"EOSSTT"</span>, <span class='st'>"ARM"</span>, <span class='st'>"ARMCD"</span>, <span class='st'>"ACTARM"</span>, <span class='st'>"ACTARMCD"</span>, <span class='st'>"AGEGR1"</span>, <span class='st'>"SEX"</span>),
+       <span class='kw'>sort_var</span> <span class='kw'>=</span> <span class='st'>"ACTARMCD"</span>,
+       <span class='kw'>sort_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"USUBJID"</span>, <span class='st'>"SITEID"</span>, <span class='st'>"ACTARMCD"</span>, <span class='st'>"TRTDURD"</span>),
+       <span class='kw'>marker_pos_var</span> <span class='kw'>=</span> <span class='st'>"ADY"</span>,
+       <span class='kw'>marker_pos_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"None"</span>, <span class='st'>"ADY"</span>),
+       <span class='kw'>marker_shape_var</span> <span class='kw'>=</span> <span class='st'>"AVALC"</span>,
        <span class='kw'>marker_shape_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"None"</span>, <span class='st'>"AVALC"</span>, <span class='st'>"AVISIT"</span>),
-       <span class='kw'>marker_shape_opt</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"CR"</span> <span class='kw'>=</span> <span class='fl'>16</span>, <span class='st'>"PR"</span> <span class='kw'>=</span> <span class='fl'>17</span>, <span class='st'>"SD"</span> <span class='kw'>=</span> <span class='fl'>18</span>, <span class='st'>"PD"</span> <span class='kw'>=</span> <span class='fl'>15</span>,
-                            <span class='st'>"DEATH"</span> <span class='kw'>=</span> <span class='fl'>8</span>, <span class='st'>"LOST TO FOLLOW-UP"</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='st'>"WITHDRAWAL BY SUBJECT"</span> <span class='kw'>=</span> <span class='fl'>14</span>),
-       <span class='kw'>marker_color_var</span> <span class='kw'>=</span> <span class='st'>"None"</span>,
+       <span class='kw'>marker_shape_opt</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"CR"</span> <span class='kw'>=</span> <span class='fl'>16</span>, <span class='st'>"PR"</span> <span class='kw'>=</span> <span class='fl'>17</span>, <span class='st'>"SD"</span> <span class='kw'>=</span> <span class='fl'>18</span>, <span class='st'>"PD"</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='st'>"Death"</span> <span class='kw'>=</span> <span class='fl'>8</span>),
+       <span class='kw'>marker_color_var</span> <span class='kw'>=</span> <span class='st'>"AVALC"</span>,
        <span class='kw'>marker_color_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"None"</span>, <span class='st'>"AVALC"</span>, <span class='st'>"AVISIT"</span>),
-       <span class='kw'>marker_color_opt</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"CR"</span> <span class='kw'>=</span> <span class='st'>"green"</span>, <span class='st'>"PR"</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='st'>"SD"</span> <span class='kw'>=</span> <span class='st'>"yellow"</span>, <span class='st'>"PD"</span> <span class='kw'>=</span> <span class='st'>"red"</span>,
-                            <span class='st'>"DEATH"</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='st'>"LOST TO FOLLOW-UP"</span> <span class='kw'>=</span> <span class='st'>"purple"</span>, <span class='st'>"WITHDRAWAL BY SUBJECT"</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>),
-       <span class='kw'>vref_line</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-       <span class='kw'>anno_txt_var</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"SEX"</span>, <span class='st'>"COUNTRY"</span>),
-       <span class='kw'>anno_txt_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"SEX"</span>, <span class='st'>"RACE"</span>, <span class='st'>"COUNTRY"</span>, <span class='st'>"CADX"</span>)
-
+       <span class='kw'>marker_color_opt</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"CR"</span> <span class='kw'>=</span> <span class='st'>"green"</span>, <span class='st'>"PR"</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='st'>"SD"</span> <span class='kw'>=</span> <span class='st'>"goldenrod"</span>, <span class='st'>"PD"</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='st'>"Death"</span> <span class='kw'>=</span> <span class='st'>"black"</span>),
+       <span class='kw'>vref_line</span> <span class='kw'>=</span> <span class='st'>"30, 60"</span>,
+       <span class='kw'>anno_txt_var</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ACTARM"</span>, <span class='st'>"SEX"</span>),
+       <span class='kw'>anno_txt_var_choices</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ARM"</span>, <span class='st'>"ARMCD"</span>, <span class='st'>"ACTARM"</span>, <span class='st'>"ACTARMCD"</span>, <span class='st'>"AGEGR1"</span>, <span class='st'>"SEX"</span>, <span class='st'>"RACE"</span>,<span class='st'>"COUNTRY"</span>,<span class='st'>"DCSREAS"</span>, <span class='st'>"DCSREASP"</span>)
    )
   )
 )
@@ -284,15 +283,13 @@ output to put the output into context. For example the
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
 
     <h2>Author</h2>
     
-qit3
+Ting Qi (qit3) <a href='mailto:qit3@gene.com'>qit3@gene.com</a>
 
   </div>
 </div>

@@ -15,9 +15,9 @@ navbar:
 
 
 reference:
-  - title: Tables Modules
+  - title: Table Modules
     contents:
       - starts_with("tm_t_")
-  - title: Graphs Modules
+  - title: Graph Modules
     contents:
       - starts_with("tm_g_")

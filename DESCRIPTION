@@ -32,7 +32,7 @@ Suggests:
 License: Copyrigth Roche
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 VignetteBuilder: knitr
 URL: https://pages.github.roche.com/Rpackages/teal.osprey/, https://github.roche.com/Rpackages/teal.osprey/
 BugReports: https://github.roche.com/Rpackages/teal.osprey/issues

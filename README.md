@@ -7,6 +7,10 @@ The `teal.osprey` R package contains interactive `teal` modules for the outputs
 
 Please install the package dependencies as follows:
 
+### Stable Release
+
+[Web Manual](https://pages.github.roche.com/Rpackages/teal.osprey/)
+
 ``` r
 devtools::install_github(
   repo = "Roche/rtables", 
@@ -33,6 +37,46 @@ devtools::install_github(
 
 devtools::install_github(
   repo = "Rpackages/osprey",
+  ref = "0.1.0", 
+  host = "https://github.roche.com/api/v3"
+)
+
+devtools::install_github(
+  repo = "Rpackages/teal.osprey",
+  ref = "0.1.0", 
+  host = "https://github.roche.com/api/v3"
+)
+```
+### Development Version
+
+[Web Manual](https://pages.github.roche.com/Rpackages/teal.osprey/dev/)
+
+``` r
+devtools::install_github(
+  repo = "Roche/rtables", 
+  ref = "master"
+)
+
+devtools::install_github(
+  repo = "Rpackages/teal",
+  ref = "master", 
+  host = "https://github.roche.com/api/v3"
+)
+
+devtools::install_github(
+  repo = "Rpackages/tern",
+  ref = "master", 
+  host = "https://github.roche.com/api/v3"
+)
+
+devtools::install_github(
+  repo = "Rpackages/teal.tern",
+  ref = "master", 
+  host = "https://github.roche.com/api/v3"
+)
+
+devtools::install_github(
+  repo = "Rpackages/osprey",
   ref = "master", 
   host = "https://github.roche.com/api/v3"
 )
@@ -44,14 +88,13 @@ devtools::install_github(
 )
 ```
 
-
 # Getting Started
 
 Here is an example app that shows all modules using random data. If you save
 this code into a file named `app.R` then it is a valid [single-file shiny
 application](https://shiny.rstudio.com/articles/app-formats.html).
 
-## App setup, app.R
+## App setup with all available modules
 
 ```r
 library(teal.tern)
@@ -253,6 +296,8 @@ x <- teal::init(
       bar_color_var_choices = c("EOSSTT", arm_var_choices),
       sort_var = "ACTARMCD",
       sort_var_choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD"),
+      marker_pos_var = "ADY",
+      marker_pos_var_choices = c("None", "ADY"),
       marker_shape_var = "AVALC",
       marker_shape_var_choices = c("None", "AVALC", "AVISIT"),
       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
@@ -370,10 +415,10 @@ shinyApp(x$ui, x$server)
 
 
 Each teal module in `teal.osprey` will be explained in a separate vignette and
-is accessile via the articles tab on the [project site][ghs].
+is accessile via the reference tab on the [project site][ghs].
 
 
-## Deployment
+## Deployment Setup
 
 Save the following code in a file `install.R` and run this to reinstall all the
 dependencies local relative to the working directory (also on the shiny server).
@@ -424,13 +469,13 @@ devtools::install_github(
 
 devtools::install_github(
   repo = "Rpackages/osprey",
-  ref = "master", 
+  ref = "0.1.0", 
   host = "https://github.roche.com/api/v3"
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.osprey",
-  ref = "master", 
+  ref = "0.1.0", 
   host = "https://github.roche.com/api/v3"
 )
 
