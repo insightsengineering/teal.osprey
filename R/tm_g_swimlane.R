@@ -11,8 +11,8 @@
 #' @param bar_color_var_choices vector with variable names that can be used as \code{bar_color_var}
 #' @param sort_var sort by variable (subject-level)
 #' @param sort_var_choices vector with variable names that can be used as \code{sort_var}
-#' @param marker_pos_var numeric variable for marker position (Note: make sure marker position has the same
-#'      relative start day as bar length variable \code{bar_var})
+#' @param marker_pos_var numeric variable for marker position (Note: make sure that marker position has the 
+#'      same relative start day as bar length variable \code{bar_var})
 #' @param marker_pos_var_choices vector with variable names that can be used as \code{marker_pos_var}
 #' @param marker_shape_var marker shape variable
 #' @param marker_shape_var_choices vector with variable names that can be used as \code{marker_shape_var}
@@ -20,8 +20,8 @@
 #' @param marker_color_var marker color variable
 #' @param marker_color_var_choices vector with variable names that can be used as \code{marker_color_var}
 #' @param marker_color_opt aesthetic values to map color values (named vector to map color values to each name)
-#' @param vref_line vertical reference line
-#' @param anno_txt_var character vector with variable names that are selected as annotation by default
+#' @param vref_line vertical reference lines
+#' @param anno_txt_var character vector with variable names that are selected as annotation
 #' @param anno_txt_var_choices vector with variable names that can be selected as \code{anno_txt_var}
 #' @param plot_height plot height
 #' @inheritParams teal::standard_layout
