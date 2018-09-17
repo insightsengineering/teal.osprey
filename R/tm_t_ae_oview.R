@@ -101,7 +101,7 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
     
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var, "DTHFL", "DCSREAS"))
     aae_vars <- unique(c("USUBJID", "STUDYID", "AESOC", "AEDECOD", 
-                         "AESDTH", "AESER", "AEACN", "AREL", "AEREL", "AETOXGR")) ## add column name of extra flage here
+                         "AESDTH", "AESER", "AEACN", "AEREL", "AETOXGR")) ## add column name of extra flage here
 
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)
@@ -120,7 +120,6 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
                          aesdth = ANL$AESDTH,
                          aeser = ANL$AESER,
                          aeacn = ANL$AEACN,
-                         arel = ANL$AREL,
                          aerel = ANL$AEREL,
                          aetoxgr = ANL$AETOXGR)
       display <- c("fatal", "ser", "serwd", "serdsm", "relser",
