@@ -4,7 +4,7 @@
 #'
 #' @param label item label of the module in the teal app
 #' @param dataname analysis data used in teal module, needs to be available in the list passed
-#'     to the \code{data} argument of \code{\link[teal]{init}}.
+#'     to the \code{data} argument of \code{\link[teal]{init}}
 #' @param bar_var subject-level numeric variable from dataset to plot as the bar length
 #' @param bar_var_choices vector with variable names that can be used as \code{bar_var}
 #' @param bar_color_var color by variable (subject-level)
@@ -106,16 +106,20 @@ tm_g_swimlane <- function(label,
                           post_output = NULL,
                           code_data_processing = NULL
 ){
-
+  
   args <- as.list(environment())
-
+  
   module(
     label = label,
     ui = ui_g_swimlane,
     ui_args = args,
     server = srv_g_swimlane,
     server_args = list(dataname = dataname,
+                       marker_shape_var, 
+                       marker_shape_var_choices,
                        marker_shape_opt = marker_shape_opt,
+                       marker_color_var, 
+                       marker_color_var_choices,
                        marker_color_opt = marker_color_opt,
                        code_data_processing = code_data_processing),
     filters = dataname
@@ -124,10 +128,10 @@ tm_g_swimlane <- function(label,
 
 
 ui_g_swimlane <- function(id, ...){
-
+  
   a <- list(...)
   ns <- NS(id)
-
+  
   standard_layout(
     output = uiOutput(ns("plot_ui")),
     encoding = div(
@@ -139,10 +143,8 @@ ui_g_swimlane <- function(id, ...){
                           selected = a$bar_color_var, multiple = FALSE),
       optionalSelectInput(ns("marker_pos_var"), "Marker Position", choices = a$marker_pos_var_choices,
                           selected = a$marker_pos_var, multiple = FALSE),
-      optionalSelectInput(ns("marker_shape_var"), "Marker Shape", choices = a$marker_shape_var_choices,
-                          selected = a$marker_shape_var, multiple = FALSE),
-      optionalSelectInput(ns("marker_color_var"), "Marker Color", choices = a$marker_color_var_choices,
-                          selected = a$marker_color_var, multiple = FALSE),
+      uiOutput(ns("marker_shape_sel")),
+      uiOutput(ns("marker_color_sel")),
       optionalSelectInput(ns("sort_var"), "Sort by", choices = a$sort_var_choices,
                           selected = a$sort_var, multiple = FALSE,
                           label_help = helpText("from ", tags$code("ASL"))),
@@ -162,74 +164,90 @@ ui_g_swimlane <- function(id, ...){
 }
 
 srv_g_swimlane <- function(input, output, session, datasets, dataname,
+                           marker_shape_var, 
+                           marker_shape_var_choices,
                            marker_shape_opt,
+                           marker_color_var, 
+                           marker_color_var_choices,
                            marker_color_opt,
                            code_data_processing) {
-
+  
   ## dynamic plot height
   output$plot_ui <- renderUI({
     plot_height <- input$plot_height
     validate(need(plot_height, "need valid plot height"))
     plotOutput(session$ns("swimlaneplot"), height = plot_height)
   })
-
+  
+  # if marker position is "None", then hide options for marker shape and color
+  output$marker_shape_sel <- renderUI({
+    if(input$marker_pos_var == "None") NULL else {
+      ns <- session$ns
+      optionalSelectInput(ns("marker_shape_var"), "Marker Shape", choices = marker_shape_var_choices,
+                          selected = marker_shape_var, multiple = FALSE)
+    }
+  })
+  output$marker_color_sel <- renderUI({
+    if(input$marker_pos_var == "None") NULL else {
+      ns <- session$ns
+      optionalSelectInput(ns("marker_color_var"), "Marker Color", choices = marker_color_var_choices,
+                          selected = marker_color_var, multiple = FALSE)
+    }
+  })
+  
   chunks <- list(
     vars = "# No Calculated",
     data = "# No Calculated",
     g_swimlaneplot = "# No Calculated"
   )
-
+  
   # create plot
   output$swimlaneplot <- renderPlot({
-
+    
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
-
+    
     bar_var <- input$bar_var
     bar_color_var <- if (input$bar_color_var == "None") NULL else input$bar_color_var
     sort_var <- if (input$sort_var == "None") NULL else input$sort_var
     marker_pos_var <- if (input$marker_pos_var == "None") NULL else input$marker_pos_var
     marker_shape_var <- if (input$marker_shape_var == "None") NULL else input$marker_shape_var
-    # marker_shape_opt <- input$marker_shape_opt
     marker_color_var <- if (input$marker_color_var == "None") NULL else input$marker_color_var
-    # marker_color_opt <- input$marker_color_opt
     anno_txt_var <- input$anno_txt_var
     vref_line <- input$vref_line
-
+    
     if (length(anno_txt_var) == 0) anno_txt_var <- NULL
-
+    
     for (i in seq_along(chunks)) chunks[[i]] <<- "# Not calculated"
-
+    
     # validate input values
     validate_standard_inputs(
       ASL = ASL_FILTERED,
       aslvars = c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var),
       ANL = ANL_FILTERED,
-      anlvars = unique(c("USUBJID", "STUDYID", "ADY", marker_pos_var, marker_shape_var, marker_color_var)),
+      anlvars = unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var)),
       min_nrow = 3
     )
-
+    
     # any other validations
-
+    
     anl_name <- paste0(dataname, "_FILTERED")
     assign(anl_name, ANL_FILTERED)
-
+    
     asl_vars <- unique(c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
-    anl_vars <- unique(c("USUBJID", "STUDYID", "ADY", marker_pos_var, marker_shape_var, marker_color_var))
-
+    anl_vars <- unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
+    
     chunks$vars <<- bquote({
       bar_var <- .(bar_var)
       bar_color_var <- .(bar_color_var)
       sort_var <- .(sort_var)
       marker_pos_var <- .(marker_pos_var)
       marker_shape_var <- .(marker_shape_var)
-      # marker_shape_opt <- .(marker_shape_opt)
       marker_color_var <- .(marker_color_var)
-      # marker_color_opt <- .(marker_color_opt)
       anno_txt_var <- .(anno_txt_var)
       vref_line <- .(vref_line)
     })
-
+    
     chunks$data <<- bquote({
       ASL_p <- ASL_FILTERED
       ANL_p <- .(as.name(anl_name))
@@ -256,43 +274,43 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     })
     
     eval(chunks$data)
-
+    
     chunks$g_swimlaneplot <<- bquote({
       grid.newpage()
-
+      
       p <- g_swimlane(bar_id = ASL[["USUBJID"]],
                       bar_length = ASL[[.(bar_var)]],
                       sort_by = if (length(sort_var) > 0) ASL[[.(sort_var)]] else NULL, 
                       col_by = if (length(bar_color_var) > 0) ASL[[.(bar_color_var)]] else NULL, 
                       marker_id = ANL[["USUBJID"]],
                       marker_pos = if (length(marker_pos_var) > 0) ANL[[.(marker_pos_var)]] else NULL,
-                      marker_shape = if (length(marker_shape_var) > 0) ANL[[.(marker_shape_var)]] else NULL, 
-                      marker_shape_opt <- .(marker_shape_opt),
-                      marker_color = if (length(marker_color_var) > 0) ANL[[.(marker_color_var)]] else NULL, 
-                      marker_color_opt <- .(marker_color_opt),
+                      marker_shape = if (length(marker_shape_var) > 0) ANL[[.(marker_shape_var)]] else NULL,
+                      marker_shape_opt <- if (length(marker_shape_var) > 0) .(marker_shape_opt) else NULL,
+                      marker_color = if (length(marker_color_var) > 0) ANL[[.(marker_color_var)]] else NULL,
+                      marker_color_opt <- if (length(marker_color_var) > 0) .(marker_color_opt) else NULL,
                       anno_txt = if (length(anno_txt_var) > 0) ASL[.(anno_txt_var)] else data.frame(),
                       yref_line = .(vref_line),
                       ytick_at = waiver(),
                       ylab = "Time from First Treatment (Day)",
                       title = "Swimlane Plot")
       p
-
+      
     })
-
+    
     eval(chunks$g_swimlaneplot)
-
+    
   })
-
-
+  
+  
   observeEvent(input$show_rcode, {
-
+    
     header <- get_rcode_header_osprey(
       title = "Swimlane Plot",
       datanames = if (is.null(code_data_processing)) dataname else datasets$datanames(),
       datasets = datasets,
       code_data_processing
     )
-
+    
     str_rcode <- paste(c(
       "",
       header,
@@ -303,7 +321,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       "",
       deparse(chunks$g_swimlaneplot)
     ), collapse = "\n")
-
+    
     # .log("show R code")
     showModal(modalDialog(
       title = "R Code for the Current Swimlane Plot",
@@ -312,5 +330,5 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       size = "l"
     ))
   })
-
+  
 }
