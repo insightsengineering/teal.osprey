@@ -19,7 +19,7 @@ tm_g_swimlane(label, dataname, bar_var, bar_var_choices = bar_var,
 \item{label}{item label of the module in the teal app}
 
 \item{dataname}{analysis data used in teal module, needs to be available in the list passed
-to the \code{data} argument of \code{\link[teal]{init}}.}
+to the \code{data} argument of \code{\link[teal]{init}}}
 
 \item{bar_var}{subject-level numeric variable from dataset to plot as the bar length}
 
