@@ -29,16 +29,19 @@ Suggests:
   testthat,
   knitr,
   rmarkdown
-License: Copyrigth Roche
+License: Copyright Roche, internal use only
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
 VignetteBuilder: knitr
-URL: https://pages.github.roche.com/Rpackages/teal.osprey/, https://github.roche.com/Rpackages/teal.osprey/
-BugReports: https://github.roche.com/Rpackages/teal.osprey/issues
+URL: 
+  https://pages.github.roche.com/Rpackages/teal.osprey/, 
+  https://github.roche.com/Rpackages/teal.osprey/
+BugReports: 
+  https://github.roche.com/Rpackages/teal.osprey/issues
 Additional_repositories: 
   https://github.roche.com/Rpackages/teal,
   https://github.roche.com/Rpackages/tern,
   https://github.roche.com/Rpackages/teal.tern,
   https://github.roche.com/Rpackages/osprey,
-  https://github.com/Roche/rtables,
+  https://github.com/Roche/rtables
