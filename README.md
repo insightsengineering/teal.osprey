@@ -37,13 +37,13 @@ devtools::install_github(
 
 devtools::install_github(
   repo = "Rpackages/osprey",
-  ref = "0.1.0", 
+  ref = "v0.1.0", 
   host = "https://github.roche.com/api/v3"
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.osprey",
-  ref = "0.1.0", 
+  ref = "v0.1.0", 
   host = "https://github.roche.com/api/v3"
 )
 ```
