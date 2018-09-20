@@ -14,37 +14,43 @@ Please install the package dependencies as follows:
 ``` r
 devtools::install_github(
   repo = "Roche/rtables", 
-  ref = "v0.1.0"
+  ref = "master",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal",
   ref = "v0.0.4", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/tern",
-  ref = "v0.5.0", 
-  host = "https://github.roche.com/api/v3"
+  ref = "v0.5.1", 
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.tern",
-  ref = "v0.5.0", 
-  host = "https://github.roche.com/api/v3"
+  ref = "v0.5.1", 
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/osprey",
   ref = "v0.1.0", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.osprey",
   ref = "v0.1.0", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 ```
 ### Development Version
@@ -54,37 +60,43 @@ devtools::install_github(
 ``` r
 devtools::install_github(
   repo = "Roche/rtables", 
-  ref = "master"
+  ref = "master",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal",
   ref = "master", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/tern",
   ref = "master", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.tern",
   ref = "master", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/osprey",
   ref = "master", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.osprey",
   ref = "master", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 ```
 
@@ -97,7 +109,6 @@ application](https://shiny.rstudio.com/articles/app-formats.html).
 ## App setup with all available modules
 ```r
 # Example App Using Random ADaM Dataset
-# - to use, copy into a new R scrip file and uncomment scripts
 
 #Include this line of code only if running on BEE or shiny-server
 .libPaths(c(normalizePath("./libs"), .libPaths()))
