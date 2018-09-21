@@ -14,7 +14,7 @@ Please install the package dependencies as follows:
 ``` r
 devtools::install_github(
   repo = "Roche/rtables", 
-  ref = "master",
+  ref = "v0.1.0.5",
   upgrade_dependencies = FALSE
 )
 
@@ -27,14 +27,14 @@ devtools::install_github(
 
 devtools::install_github(
   repo = "Rpackages/tern",
-  ref = "v0.5.1", 
+  ref = "v0.5.0.3", 
   host = "https://github.roche.com/api/v3",
   upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.tern",
-  ref = "v0.5.1", 
+  ref = "v0.5.0.2", 
   host = "https://github.roche.com/api/v3",
   upgrade_dependencies = FALSE
 )
