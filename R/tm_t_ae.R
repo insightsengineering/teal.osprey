@@ -157,19 +157,20 @@ srv_t_ae <- function(input, output, session, datasets, dataname, code_data_proce
       filter_var <- .(filter_var)
     })
     
+    aae_name <- paste0(dataname, "_FILTERED")
+    assign(aae_name, AAE_FILTERED) # so that we can refer to the 'correct' data name
+    
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
-    aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var)) 
+    aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var)) 
     
     chunks$data <<- bquote({
+
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
+      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame()
       
       {if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
-        AAE <- teal.osprey:::quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
-      } else{
-        AAE <- AAE_FILTERED
+        AAE <- teal.osprey:::quick_filter(.(filter_var), AAE) %>% droplevels() %>% as.data.frame()
       }}
-      
-      AAE <- AAE[, .(aae_vars)] %>% as.data.frame() 
       
       ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
         as.data.frame()

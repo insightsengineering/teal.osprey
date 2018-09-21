@@ -201,6 +201,9 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
   
   output$butterfly <- renderPlot({
     
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    
     right_v <- input$right_v
     left_v <- input$left_v
     right_ch <- input$right_ch
@@ -212,17 +215,17 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     facet_var <- input$facet_var
     sort_by_var <- input$sort_by_var
     filter_var <- input$filter_var
-
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
     #if variable is not in ASL, then take from domain VADs
-    varlist <- c(category_var, color_by_var, facet_var, right_ch, left_ch)
+    varlist <- c(category_var, color_by_var, facet_var, filter_var, right_ch, left_ch)
     varlist_from_asl <- varlist[varlist %in% names(ASL_FILTERED)]
     varlist_from_anl <- varlist[!varlist %in% names(ASL_FILTERED)]
     
     asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl))
     aae_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) 
+    
+    aae_name <- paste0(dataname, "_FILTERED")
+    assign(aae_name, AAE_FILTERED) # so that we can refer to the 'correct' data name
     
     chunks$vars <<- bquote({
       right_v <- .(right_v)
@@ -241,20 +244,17 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
     })
     
     chunks$data <<- bquote({
-      aae_vars <- aae_vars[aae_vars %in% names(AAE_FILTERED)]
-      aae_vars <- aae_vars[!is.null(aae_vars)]
-      ASL <- ASL_FILTERED[, asl_vars] %>% as.data.frame()
       
-      {
-        if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
-          AAE <- teal.osprey:::quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
-        } else{
-          AAE <- AAE_FILTERED
-        }
-      }
+      # aae_vars <- aae_vars[aae_vars %in% names(AAE_FILTERED)]
+      # aae_vars <- aae_vars[!is.null(aae_vars)]
       
-      AAE <- AAE[, aae_vars] %>% as.data.frame() 
-
+      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
+      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame()
+      
+      {if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
+        AAE <- teal.osprey:::quick_filter(.(filter_var), AAE) %>% droplevels() %>% as.data.frame()
+      }}
+        
       ANL_f  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
         as.data.frame() 
       
@@ -301,7 +301,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, code_dat
         id = bquote(ANL_f$USUBJID),
         facet_rows = bquote(if(!is.null(facet_var)){ANL_f[,facet_var]}else{NULL}),
         x_label = bquote(count_by_var),
-        y_label = label_aevar(category_var),
+        y_label = teal.osprey:::label_aevar(category_var),
         legend_label = bquote(color_by_var),
         sort_by = bquote(sort_by_var),
         show_legend = bquote(legend_on) 
