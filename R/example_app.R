@@ -1,11 +1,14 @@
 # Example App Using Random ADaM Dataset
 # - to use, copy into a new R scrip file and uncomment scripts
 #
+# .libPaths(c(normalizePath("./libs"), .libPaths()))
+# 
 # library(teal.tern)
 # library(teal.osprey)
 # library(dplyr)
 # 
 # options(teal_logging = FALSE)
+# 
 # 
 # ASL <- rADSL
 # ATE <- rADTTE
@@ -25,8 +28,13 @@
 # ARS_swim <- ARS_swim %>% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
 #   mutate(AVALC = DCSREAS,
 #          ADY   = EOSDY) %>%
-#   rbind(ARS %>% filter(PARAMCD == "OVRINV")) %>%
+#   rbind(ARS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
 #   arrange(USUBJID)
+# 
+# ATR <- ATR %>% mutate(PCHG = ifelse(is.na(PCHG), 0, PCHG),
+#                       CHG  = ifelse(is.na(CHG), 0, CHG),
+#                       AVAL = ifelse(is.na(AVAL), BASE, AVAL),
+#                       AVALC = ifelse(is.na(AVALC), as.character(BASE), AVALC))
 # 
 # #@end_preprocessing
 # 
@@ -36,7 +44,7 @@
 # attr(ATE, "source") <- "rADTTE"
 # attr(AAE, "source") <- "rADAE"
 # attr(ATR, "source") <- "rADTR"
-# attr(ARS_swim, "source") <- "ARS_swim"
+# attr(ARS_swim, "source") <- "rADRS"
 # 
 # ## Define Reusable Configuartions for teal.osprey modules----
 # arm_var <- "ACTARM"
@@ -65,7 +73,42 @@
 # ## Configure teal.tern ----
 # chunks <- teal::parse_code_chunks(file = "./app.R")
 # 
-# source("front_page.R")
+# ## Create front page for app ----
+# srv_front_page <- function(input, output, session, datasets) {
+#   observeEvent(input$show_data_generation_rcode, {
+#     showModal(modalDialog(
+#       title = "R Code Used to Generate the random ADaM datasets - ADSL, ADAE, ADTTE, ADRS, and ADTR ",
+#       tags$pre(paste(readLines("https://raw.github.roche.com/Rpackages/osprey/master/inst/generate_random_data.R"), collapse = "\n")),
+#       size = "l"
+#     ))
+#   })
+#   
+#   observeEvent(input$show_teal_setup_code, {
+#     showModal(modalDialog(
+#       title = "R Code Used to Setup the Current Teal Shiny App",
+#       tags$pre(paste(readLines("app.R"), collapse = "\n")),
+#       size = "l"
+#     ))
+#   })
+# }
+# 
+# 
+# ui_front_page <- function(id) {
+#   ns <- NS(id)
+#   tagList(
+#     tags$p("The", tags$code("ADSL"), ",", tags$code("ADAE"), ",", tags$code("ADTTE"), ",", tags$code("ADRS"), ", and ", tags$code("ADTR"), 
+#            "data in this example app has been created using random number generators."),
+#     tags$p("", style = "height: 15px;"),
+#     actionButton(ns("show_data_generation_rcode"), "Show Data Generation R Code", icon = icon("glyphicon-align-justify")),
+#     tags$p("", style = "height: 20px;"),
+#     tags$p(paste("These apps are relatively easily setup for a study.", 
+#                  "That is, the teal framework is optimized to setup one",
+#                  "Shiny App per analysis purpose. For example, the code to setup",
+#                  "the current teal app can be requested with the following button:")),
+#     tags$p("", style = "height: 15px;"),
+#     actionButton(ns("show_teal_setup_code"), "Show Teal Shiny App Setup R-Code", icon = icon("glyphicon-align-justify"))          
+#   )
+# }
 # 
 # 
 # ## Setup App
@@ -150,7 +193,7 @@
 #         sort_by_var_choices = c("count", "alphabetical"),
 #         legend_on = TRUE,
 #         plot_height = c(600, 200, 2000),
-#         pre_output = helpText("Summary table takes some time to generate for large AE datasets, please be patient"),
+#         pre_output = helpText("Plot takes some time to generate for large AE datasets, please be patient"),
 #         code_data_processing = chunks$preprocessing
 #       )
 #     ),
@@ -200,12 +243,14 @@
 #       bar_color_var_choices = c("EOSSTT", arm_var_choices),
 #       sort_var = "ACTARMCD",
 #       sort_var_choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD"),
+#       marker_pos_var = "ADY",
+#       marker_pos_var_choices = c("None", "ADY"),
 #       marker_shape_var = "AVALC",
 #       marker_shape_var_choices = c("None", "AVALC", "AVISIT"),
 #       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
 #       marker_color_var = "AVALC",
 #       marker_color_var_choices = c("None", "AVALC", "AVISIT"),
-#       marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "yellow", "PD" = "red", "Death" = "black"),
+#       marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod", "PD" = "red", "Death" = "black"),
 #       vref_line = "30, 60",
 #       anno_txt_var = c("ACTARM", "SEX"),
 #       anno_txt_var_choices = c(arm_var_choices, "RACE","COUNTRY","DCSREAS", "DCSREASP"),

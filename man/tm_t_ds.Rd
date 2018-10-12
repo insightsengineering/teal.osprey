@@ -4,9 +4,9 @@
 \alias{tm_t_ds}
 \title{Disposition Table Teal Module}
 \usage{
-tm_t_ds(label, dataname, arm_var, arm_var_choices, class_var,
-  class_var_choices, term_var, term_var_choices, total_col = TRUE,
-  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
+tm_t_ds(label, dataname, arm_var, arm_var_choices, class_var, class_var_choices,
+  term_var, term_var_choices, total_col = TRUE, pre_output = NULL,
+  post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}

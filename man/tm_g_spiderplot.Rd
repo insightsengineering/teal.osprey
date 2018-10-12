@@ -4,12 +4,11 @@
 \alias{tm_g_spiderplot}
 \title{Spiderplot Teal Module}
 \usage{
-tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd,
-  x_var, x_var_choices = x_var, y_var, y_var_choices = y_var,
-  marker_var, marker_var_choices = marker_var, line_colorby_var,
-  line_colorby_var_choices = line_colorby_var_choices,
-  vref_line = NULL, href_line = NULL, anno_txt_var,
-  legend_on = FALSE, xfacet_var = NULL,
+tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd, x_var,
+  x_var_choices = x_var, y_var, y_var_choices = y_var, marker_var,
+  marker_var_choices = marker_var, line_colorby_var,
+  line_colorby_var_choices = line_colorby_var_choices, vref_line = NULL,
+  href_line = NULL, anno_txt_var, legend_on = FALSE, xfacet_var = NULL,
   xfacet_var_choices = xfacet_var, yfacet_var = NULL,
   yfacet_var_choices = y_facet_var, plot_height, pre_output = NULL,
   post_output = NULL, code_data_processing = NULL)

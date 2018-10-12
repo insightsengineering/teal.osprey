@@ -14,37 +14,43 @@ Please install the package dependencies as follows:
 ``` r
 devtools::install_github(
   repo = "Roche/rtables", 
-  ref = "v0.1.0"
+  ref = "v0.1.0.5",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal",
   ref = "v0.0.4", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/tern",
-  ref = "v0.5.0", 
-  host = "https://github.roche.com/api/v3"
+  ref = "v0.5.0.3", 
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.tern",
-  ref = "v0.5.0", 
-  host = "https://github.roche.com/api/v3"
+  ref = "v0.5.0.2", 
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/osprey",
-  ref = "0.1.0", 
-  host = "https://github.roche.com/api/v3"
+  ref = "v0.1.0", 
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.osprey",
-  ref = "0.1.0", 
-  host = "https://github.roche.com/api/v3"
+  ref = "v0.1.0", 
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 ```
 ### Development Version
@@ -54,37 +60,43 @@ devtools::install_github(
 ``` r
 devtools::install_github(
   repo = "Roche/rtables", 
-  ref = "master"
+  ref = "master",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal",
   ref = "master", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/tern",
   ref = "master", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.tern",
   ref = "master", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/osprey",
   ref = "master", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 
 devtools::install_github(
   repo = "Rpackages/teal.osprey",
   ref = "master", 
-  host = "https://github.roche.com/api/v3"
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
 )
 ```
 
@@ -95,13 +107,18 @@ this code into a file named `app.R` then it is a valid [single-file shiny
 application](https://shiny.rstudio.com/articles/app-formats.html).
 
 ## App setup with all available modules
-
 ```r
+# Example App Using Random ADaM Dataset
+
+#Include this line of code only if running on BEE or shiny-server
+.libPaths(c(normalizePath("./libs"), .libPaths()))
+
 library(teal.tern)
 library(teal.osprey)
 library(dplyr)
 
 options(teal_logging = FALSE)
+
 
 ASL <- rADSL
 ATE <- rADTTE
@@ -121,8 +138,13 @@ AAE <- AAE %>% mutate(RELFL = ifelse(AEREL == "Y", "Y", "N"),
 ARS_swim <- ARS_swim %>% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
   mutate(AVALC = DCSREAS,
          ADY   = EOSDY) %>%
-  rbind(ARS %>% filter(PARAMCD == "OVRINV")) %>%
+  rbind(ARS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
   arrange(USUBJID)
+
+ATR <- ATR %>% mutate(PCHG = ifelse(is.na(PCHG), 0, PCHG),
+                      CHG  = ifelse(is.na(CHG), 0, CHG),
+                      AVAL = ifelse(is.na(AVAL), BASE, AVAL),
+                      AVALC = ifelse(is.na(AVALC), as.character(BASE), AVALC))
 
 #@end_preprocessing
 
@@ -132,7 +154,7 @@ attr(ARS, "source") <- "rADRS"
 attr(ATE, "source") <- "rADTTE"
 attr(AAE, "source") <- "rADAE"
 attr(ATR, "source") <- "rADTR"
-attr(ARS_swim, "source") <- "ARS_swim"
+attr(ARS_swim, "source") <- "rADRS"
 
 ## Define Reusable Configuartions for teal.osprey modules----
 arm_var <- "ACTARM"
@@ -161,7 +183,42 @@ paramcd_choices_rsp <- setdiff(unique(ARS$PARAMCD), "OVRINV")
 ## Configure teal.tern ----
 chunks <- teal::parse_code_chunks(file = "./app.R")
 
-source("front_page.R")
+## Create front page for app ----
+srv_front_page <- function(input, output, session, datasets) {
+  observeEvent(input$show_data_generation_rcode, {
+    showModal(modalDialog(
+      title = "R Code Used to Generate the random ADaM datasets - ADSL, ADAE, ADTTE, ADRS, and ADTR ",
+      tags$pre(paste(readLines("https://raw.github.roche.com/Rpackages/osprey/master/inst/generate_random_data.R"), collapse = "\n")),
+      size = "l"
+    ))
+  })
+
+  observeEvent(input$show_teal_setup_code, {
+    showModal(modalDialog(
+      title = "R Code Used to Setup the Current Teal Shiny App",
+      tags$pre(paste(readLines("app.R"), collapse = "\n")),
+      size = "l"
+    ))
+  })
+}
+
+
+ui_front_page <- function(id) {
+  ns <- NS(id)
+  tagList(
+    tags$p("The", tags$code("ADSL"), ",", tags$code("ADAE"), ",", tags$code("ADTTE"), ",", tags$code("ADRS"), ", and ", tags$code("ADTR"),
+           "data in this example app has been created using random number generators."),
+    tags$p("", style = "height: 15px;"),
+    actionButton(ns("show_data_generation_rcode"), "Show Data Generation R Code", icon = icon("glyphicon-align-justify")),
+    tags$p("", style = "height: 20px;"),
+    tags$p(paste("These apps are relatively easily setup for a study.",
+                 "That is, the teal framework is optimized to setup one",
+                 "Shiny App per analysis purpose. For example, the code to setup",
+                 "the current teal app can be requested with the following button:")),
+    tags$p("", style = "height: 15px;"),
+    actionButton(ns("show_teal_setup_code"), "Show Teal Shiny App Setup R-Code", icon = icon("glyphicon-align-justify"))
+  )
+}
 
 
 ## Setup App
@@ -246,7 +303,7 @@ x <- teal::init(
         sort_by_var_choices = c("count", "alphabetical"),
         legend_on = TRUE,
         plot_height = c(600, 200, 2000),
-        pre_output = helpText("Summary table takes some time to generate for large AE datasets, please be patient"),
+        pre_output = helpText("Plot takes some time to generate for large AE datasets, please be patient"),
         code_data_processing = chunks$preprocessing
       )
     ),
@@ -303,7 +360,7 @@ x <- teal::init(
       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
       marker_color_var = "AVALC",
       marker_color_var_choices = c("None", "AVALC", "AVISIT"),
-      marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "yellow", "PD" = "red", "Death" = "black"),
+      marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod", "PD" = "red", "Death" = "black"),
       vref_line = "30, 60",
       anno_txt_var = c("ACTARM", "SEX"),
       anno_txt_var_choices = c(arm_var_choices, "RACE","COUNTRY","DCSREAS", "DCSREASP"),
@@ -414,74 +471,4 @@ shinyApp(x$ui, x$server)
 ```
 
 
-Each teal module in `teal.osprey` will be explained in a separate vignette and
-is accessile via the reference tab on the [project site][ghs].
-
-
-## Deployment Setup
-
-Save the following code in a file `install.R` and run this to reinstall all the
-dependencies local relative to the working directory (also on the shiny server).
-Then execute the script with `Rscript install.R`. Then add 
-`.libPaths(c(normalizePath("./libs"), .libPaths()))` as the first line in `app.R`.
-
-```r
-## clone this project here:
-project.path <- getwd() #"/srv/shiny-server/users/..."
-
-path.teal.libs <-  file.path(project.path, "libs")
-
-if (!dir.exists(path.teal.libs)) dir.create(path.teal.libs)
-
-# delete all current versions of teal and teal.oncology in path.teal.libs
-lapply(list.dirs(path.teal.libs, recursive = FALSE), unlink, recursive = TRUE, force = TRUE)
-
-orig_libpaths <- .libPaths()
-
-
-.libPaths(c(
-    path.teal.libs,
-    as.vector(Filter(function(x) !grepl("^/opt/bee/home", x), orig_libpaths))
-))
-
-devtools::install_github(
-  repo = "Roche/rtables", 
-  ref = "v0.1.0"
-)
-
-devtools::install_github(
-  repo = "Rpackages/teal",
-  ref = "v0.0.4", 
-  host = "https://github.roche.com/api/v3"
-)
-
-devtools::install_github(
-  repo = "Rpackages/tern",
-  ref = "v0.5.0", 
-  host = "https://github.roche.com/api/v3"
-)
-
-devtools::install_github(
-  repo = "Rpackages/teal.tern",
-  ref = "v0.5.0", 
-  host = "https://github.roche.com/api/v3"
-)
-
-devtools::install_github(
-  repo = "Rpackages/osprey",
-  ref = "0.1.0", 
-  host = "https://github.roche.com/api/v3"
-)
-
-devtools::install_github(
-  repo = "Rpackages/teal.osprey",
-  ref = "0.1.0", 
-  host = "https://github.roche.com/api/v3"
-)
-
-
-.libPaths(orig_libpaths)
-```
-
-
-[ghs]: http://pages.github.roche.com/Rpackages/teal.tern
+[ghs]: http://pages.github.roche.com/Rpackages/teal.osprey

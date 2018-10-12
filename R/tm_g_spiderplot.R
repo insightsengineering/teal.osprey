@@ -204,6 +204,9 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     varlist_from_asl <- varlist[varlist %in% names(ASL_FILTERED)]
     varlist_from_anl <- varlist[!varlist %in% names(ASL_FILTERED)]
     
+    atr_name <- paste0(dataname, "_FILTERED")
+    assign(atr_name, ATR_FILTERED) # so that we can refer to the 'correct' data name
+    
     asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl))
     atr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl)) 
 
@@ -227,8 +230,9 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     chunks$data <<- bquote({
       atr_vars <- atr_vars[atr_vars != "None"]
       atr_vars <- atr_vars[!is.null(atr_vars)]
+      
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-      ATR <- ATR_FILTERED[, atr_vars] %>% as.data.frame() 
+      ATR <- .(as.name(atr_name))[, .(atr_vars)] %>% as.data.frame()
       
       ANL <- merge(ASL, ATR, by = c("USUBJID", "STUDYID")) 
       ANL <- ANL %>% group_by(USUBJID, PARAMCD) %>% arrange(ANL[,.(x_var)]) %>%

@@ -143,28 +143,28 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var, 
       toxgr_var <- .(toxgr_var)
     })
     
+    aae_name <- paste0(dataname, "_FILTERED")
+    assign(aae_name, AAE_FILTERED) # so that we can refer to the 'correct' data name
+    
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
-    aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, toxgr_var)) 
+    aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var, toxgr_var)) 
     
     chunks$data <<- bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
+      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame()
       
       {if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
-        AAE <- teal.osprey:::quick_filter(.(filter_var), AAE_FILTERED) %>% droplevels()
-      } else{
-        AAE <- AAE_FILTERED
+        AAE <- teal.osprey:::quick_filter(.(filter_var), AAE) %>% droplevels() %>% as.data.frame()
       }}
-      
-      AAE <- AAE[, .(aae_vars)] %>% as.data.frame() 
       
       ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
         as.data.frame()
       
       ANL$TOXGR <- as.numeric(ANL[, toxgr_var])
       
-      attr(ANL[, class_var], "label") <- label_aevar(class_var)
-      attr(ANL[, term_var], "label") <- label_aevar(term_var)
-      attr(ANL[, "TOXGR"], "label") <- label_aevar(toxgr_var)
+      attr(ANL[, class_var], "label") <- teal.osprey:::label_aevar(class_var)
+      attr(ANL[, term_var], "label") <- teal.osprey:::label_aevar(term_var)
+      attr(ANL[, "TOXGR"], "label") <- teal.osprey:::label_aevar(toxgr_var)
       
       {if(all_p == TRUE) {
         total = "All Patients"

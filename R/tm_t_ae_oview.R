@@ -99,6 +99,9 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
     arm_var <- input$arm_var
     all_p <- input$All_Patients
     
+    aae_name <- paste0(dataname, "_FILTERED")
+    assign(aae_name, AAE_FILTERED) # so that we can refer to the 'correct' data name
+    
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var, "DTHFL", "DCSREAS"))
     aae_vars <- unique(c("USUBJID", "STUDYID", "AESOC", "AEDECOD", 
                          "AESDTH", "AESER", "AEACN", "AEREL", "AETOXGR")) ## add column name of extra flage here
@@ -110,7 +113,7 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
     
     chunks$data <<- bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-      AAE <- AAE_FILTERED[, .(aae_vars)] %>% as.data.frame() 
+      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame() 
       
       ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
         as.data.frame()
