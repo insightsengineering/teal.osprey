@@ -42,13 +42,17 @@ same relative start day as bar length variable \code{bar_var})}
 
 \item{marker_shape_var_choices}{vector with variable names that can be used as \code{marker_shape_var}}
 
-\item{marker_shape_opt}{aesthetic values to map shape values (named vector to map shape values to each name)}
+\item{marker_shape_opt}{aesthetic values to map shape values (named vector to map shape values to each name).
+If not \code{NULL}, please make sure this contains all posible values for \code{marker_shape_var} values,
+otherwise shape will be assigned by \code{ggplot} default}
 
 \item{marker_color_var}{marker color variable}
 
 \item{marker_color_var_choices}{vector with variable names that can be used as \code{marker_color_var}}
 
-\item{marker_color_opt}{aesthetic values to map color values (named vector to map color values to each name)}
+\item{marker_color_opt}{aesthetic values to map color values (named vector to map color values to each name).
+If not \code{NULL}, please make sure this contains all posible values for \code{marker_color_var} values,
+otherwise color will be assigned by \code{ggplot} default}
 
 \item{anno_txt_var}{character vector with variable names that are selected as annotation}
 
