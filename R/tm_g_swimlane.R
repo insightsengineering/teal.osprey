@@ -16,10 +16,14 @@
 #' @param marker_pos_var_choices vector with variable names that can be used as \code{marker_pos_var}
 #' @param marker_shape_var marker shape variable
 #' @param marker_shape_var_choices vector with variable names that can be used as \code{marker_shape_var}
-#' @param marker_shape_opt aesthetic values to map shape values (named vector to map shape values to each name)
+#' @param marker_shape_opt aesthetic values to map shape values (named vector to map shape values to each name).
+#'      If not \code{NULL}, please make sure this contains all posible values for \code{marker_shape_var} values,
+#'      otherwise shape will be assigned by \code{ggplot} default
 #' @param marker_color_var marker color variable
 #' @param marker_color_var_choices vector with variable names that can be used as \code{marker_color_var}
-#' @param marker_color_opt aesthetic values to map color values (named vector to map color values to each name)
+#' @param marker_color_opt aesthetic values to map color values (named vector to map color values to each name).
+#'      If not \code{NULL}, please make sure this contains all posible values for \code{marker_color_var} values,
+#'      otherwise color will be assigned by \code{ggplot} default
 #' @param vref_line vertical reference lines
 #' @param anno_txt_var character vector with variable names that are selected as annotation
 #' @param anno_txt_var_choices vector with variable names that can be selected as \code{anno_txt_var}
@@ -198,7 +202,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
   chunks <- list(
     vars = "# No Calculated",
     data = "# No Calculated",
-    g_swimlaneplot = "# No Calculated"
+    g_swimlane = "# No Calculated"
   )
   
   # create plot
@@ -217,6 +221,15 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     vref_line <- input$vref_line
     
     if (length(anno_txt_var) == 0) anno_txt_var <- NULL
+    
+    #If reference lines are requested
+    if (vref_line != "" || is.null(vref_line)) {
+      vref_line <- unlist(strsplit(vref_line, ","))
+      vref_line <- as.numeric(vref_line)
+      validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
+    } else {
+      vref_line <- NULL
+    }
     
     for (i in seq_along(chunks)) chunks[[i]] <<- "# Not calculated"
     
@@ -237,6 +250,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     asl_vars <- unique(c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
     anl_vars <- unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
     
+   
     chunks$vars <<- bquote({
       bar_var <- .(bar_var)
       bar_color_var <- .(bar_color_var)
@@ -247,7 +261,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       anno_txt_var <- .(anno_txt_var)
       vref_line <- .(vref_line)
     })
-    
+
     chunks$data <<- bquote({
       ASL_p <- ASL_FILTERED
       ANL_p <- .(as.name(anl_name))
@@ -260,45 +274,34 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
         by = c("USUBJID", "STUDYID")
       )
       
-      #If reference lines are requested
-      {
-        if (vref_line != "" || is.null(vref_line)) {
-          vref_line <- unlist(strsplit(.(vref_line), ","))
-          vref_line <- as.numeric(vref_line)
-          validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
-        } else{
-          vref_line <- NULL
-        }
-      }
-      
     })
     
     eval(chunks$data)
     
-    chunks$g_swimlaneplot <<- bquote({
-      grid.newpage()
+
+    chunks$g_swimlane <<- call(
+      "g_swimlane",
       
-      p <- g_swimlane(bar_id = ASL[["USUBJID"]],
-                      bar_length = ASL[[.(bar_var)]],
-                      sort_by = if (length(sort_var) > 0) ASL[[.(sort_var)]] else NULL, 
-                      col_by = if (length(bar_color_var) > 0) ASL[[.(bar_color_var)]] else NULL, 
-                      marker_id = ANL[["USUBJID"]],
-                      marker_pos = if (length(marker_pos_var) > 0) ANL[[.(marker_pos_var)]] else NULL,
-                      marker_shape = if (length(marker_shape_var) > 0) ANL[[.(marker_shape_var)]] else NULL,
-                      marker_shape_opt <- if (length(marker_shape_var) > 0) .(marker_shape_opt) else NULL,
-                      marker_color = if (length(marker_color_var) > 0) ANL[[.(marker_color_var)]] else NULL,
-                      marker_color_opt <- if (length(marker_color_var) > 0) .(marker_color_opt) else NULL,
-                      anno_txt = if (length(anno_txt_var) > 0) ASL[.(anno_txt_var)] else data.frame(),
-                      yref_line = .(vref_line),
-                      ytick_at = waiver(),
-                      ylab = "Time from First Treatment (Day)",
-                      title = "Swimlane Plot")
-      p
-      
-    })
+      bar_id = bquote(ASL[["USUBJID"]]),
+      bar_length = bquote(ASL[[.(bar_var)]]),
+      sort_by = if (length(sort_var) > 0) bquote(ASL[[.(sort_var)]]) else NULL,
+      col_by = if (length(bar_color_var) > 0) bquote(ASL[[.(bar_color_var)]]) else NULL,
+      marker_id = bquote(ANL[["USUBJID"]]),
+      marker_pos = if (length(marker_pos_var) > 0) bquote(ANL[[.(marker_pos_var)]]) else NULL,
+      marker_shape = if (length(marker_shape_var) > 0) bquote(ANL[[.(marker_shape_var)]]) else NULL,
+      marker_shape_opt = if (length(marker_shape_var) > 0 &
+                              all(unique(ANL[[marker_shape_var]]) %in% names(marker_shape_opt)) == T) bquote(.(marker_shape_opt)) else NULL,
+      marker_color = if (length(marker_color_var) > 0) bquote(ANL[[.(marker_color_var)]]) else NULL,
+      marker_color_opt = if (length(marker_color_var) > 0 &
+                             all(unique(ANL[[marker_color_var]]) %in% names(marker_color_opt)) == T) bquote(.(marker_color_opt)) else NULL,
+      anno_txt = if (length(anno_txt_var) > 0) bquote(ASL[.(anno_txt_var)]) else data.frame(),
+      yref_line = vref_line,
+      ytick_at = bquote(waiver()),
+      ylab = "Time from First Treatment (Day)",
+      title = "Swimlane Plot"
+    )
     
-    eval(chunks$g_swimlaneplot)
-    
+    eval(chunks$g_swimlane)
   })
   
   
@@ -319,7 +322,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       "",
       remove_enclosing_curly_braces(deparse(chunks$data)),
       "",
-      deparse(chunks$g_swimlaneplot)
+      deparse(chunks$g_swimlane)
     ), collapse = "\n")
     
     # .log("show R code")
