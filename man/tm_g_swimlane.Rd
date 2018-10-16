@@ -6,14 +6,14 @@
 \usage{
 tm_g_swimlane(label, dataname, bar_var, bar_var_choices = bar_var,
   bar_color_var = NULL, bar_color_var_choices = bar_color_var,
-  sort_var = NULL, sort_var_choices = sort_var, marker_pos_var = NULL,
-  marker_pos_var_choices = marker_pos_var, marker_shape_var = NULL,
-  marker_shape_var_choices = marker_shape_var, marker_shape_opt = NULL,
-  marker_color_var = NULL, marker_color_var_choices = marker_color_var,
-  marker_color_opt = NULL, anno_txt_var = NULL,
-  anno_txt_var_choices = anno_txt_var, vref_line = NULL,
-  plot_height = c(1200, 400, 5000), pre_output = NULL, post_output = NULL,
-  code_data_processing = NULL)
+  sort_var = NULL, sort_var_choices = sort_var,
+  marker_pos_var = NULL, marker_pos_var_choices = marker_pos_var,
+  marker_shape_var = NULL, marker_shape_var_choices = marker_shape_var,
+  marker_shape_opt = NULL, marker_color_var = NULL,
+  marker_color_var_choices = marker_color_var, marker_color_opt = NULL,
+  anno_txt_var = NULL, anno_txt_var_choices = anno_txt_var,
+  vref_line = NULL, plot_height = c(1200, 400, 5000),
+  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{item label of the module in the teal app}

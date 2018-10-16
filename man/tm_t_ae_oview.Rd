@@ -4,8 +4,9 @@
 \alias{tm_t_ae_oview}
 \title{Adverse Events Summary Table Teal Module}
 \usage{
-tm_t_ae_oview(label, dataname, arm_var, arm_var_choices, total_col = TRUE,
-  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
+tm_t_ae_oview(label, dataname, arm_var, arm_var_choices,
+  total_col = TRUE, pre_output = NULL, post_output = NULL,
+  code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
