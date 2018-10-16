@@ -265,8 +265,9 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       ASL_p <- ASL_FILTERED
       ANL_p <- .(as.name(anl_name))
       
+      ASL <- ASL_p[, .(asl_vars)]
       ANL <- merge(
-        x = ASL_p[, .(asl_vars)],
+        x = ASL,
         y = ANL_p[, .(anl_vars)],
         all.x = FALSE, all.y = FALSE,
         by = c("USUBJID", "STUDYID")
