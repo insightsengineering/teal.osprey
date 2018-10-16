@@ -259,14 +259,12 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       marker_shape_var <- .(marker_shape_var)
       marker_color_var <- .(marker_color_var)
       anno_txt_var <- .(anno_txt_var)
-      vref_line <- .(vref_line)
     })
 
     chunks$data <<- bquote({
       ASL_p <- ASL_FILTERED
       ANL_p <- .(as.name(anl_name))
       
-      ASL <- ASL_p[, .(asl_vars)]
       ANL <- merge(
         x = ASL_p[, .(asl_vars)],
         y = ANL_p[, .(anl_vars)],
@@ -283,19 +281,19 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       "g_swimlane",
       
       bar_id = bquote(ASL[["USUBJID"]]),
-      bar_length = bquote(ASL[[.(bar_var)]]),
-      sort_by = if (length(sort_var) > 0) bquote(ASL[[.(sort_var)]]) else NULL,
-      col_by = if (length(bar_color_var) > 0) bquote(ASL[[.(bar_color_var)]]) else NULL,
+      bar_length = bquote(ASL[[bar_var]]),
+      sort_by = if (length(sort_var) > 0) bquote(ASL[[sort_var]]) else NULL,
+      col_by = if (length(bar_color_var) > 0) bquote(ASL[[bar_color_var]]) else NULL,
       marker_id = bquote(ANL[["USUBJID"]]),
-      marker_pos = if (length(marker_pos_var) > 0) bquote(ANL[[.(marker_pos_var)]]) else NULL,
-      marker_shape = if (length(marker_shape_var) > 0) bquote(ANL[[.(marker_shape_var)]]) else NULL,
+      marker_pos = if (length(marker_pos_var) > 0) bquote(ANL[[marker_pos_var]]) else NULL,
+      marker_shape = if (length(marker_shape_var) > 0) bquote(ANL[[marker_shape_var]]) else NULL,
       marker_shape_opt = if (length(marker_shape_var) > 0 &
                               all(unique(ANL[[marker_shape_var]]) %in% names(marker_shape_opt)) == T) bquote(.(marker_shape_opt)) else NULL,
-      marker_color = if (length(marker_color_var) > 0) bquote(ANL[[.(marker_color_var)]]) else NULL,
+      marker_color = if (length(marker_color_var) > 0) bquote(ANL[[marker_color_var]]) else NULL,
       marker_color_opt = if (length(marker_color_var) > 0 &
                              all(unique(ANL[[marker_color_var]]) %in% names(marker_color_opt)) == T) bquote(.(marker_color_opt)) else NULL,
-      anno_txt = if (length(anno_txt_var) > 0) bquote(ASL[.(anno_txt_var)]) else data.frame(),
-      yref_line = vref_line,
+      anno_txt = if (length(anno_txt_var) > 0) bquote(ASL[, anno_txt_var]) else data.frame(),
+      yref_line = bquote(.(vref_line)),
       ytick_at = bquote(waiver()),
       ylab = "Time from First Treatment (Day)",
       title = "Swimlane Plot"
