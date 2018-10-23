@@ -143,7 +143,7 @@ ui_g_swimlane <- function(id, ...){
     output = uiOutput(ns("plot_ui")),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
-      helpText("Marker Data: ", tags$code(a$dataname)),
+      if (is.null(a$dataname)) helpText("Marker Data: ", tags$code("NULL")) else helpText("Marker Data: ", tags$code(a$dataname)),
       optionalSelectInput(ns("bar_var"), "Bar Length", choices = a$bar_var_choices,
                           selected = a$bar_var, multiple = FALSE,
                           label_help = helpText("from ", tags$code("ASL"))),
@@ -191,21 +191,22 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
   
   # if marker data is NULL, then hide options for marker position selection
   output$marker_pos_sel <- renderUI({
+    
     if(is.null(dataname)) {
       NULL
-    } else if (is.null(input$marker_pos_var)){
+    } else if (is.null(marker_pos_var)){
       NULL
     } else {
       ns <- session$ns
       optionalSelectInput(ns("marker_pos_var"), "Marker Position", choices = marker_pos_var_choices,
                           selected = marker_pos_var, multiple = FALSE,
-                          label_help = helpText("from ", tags$code(a$dataname)))
+                          label_help = helpText("from ", tags$code(dataname)))
     }
   })
   
   # if marker position is "None", then hide options for marker shape and color
   output$marker_shape_sel <- renderUI({
-    if(is.null(dataname)) {
+    if(is.null(dataname) | is.null(marker_shape_var)) {
       NULL
     } else if (is.null(input$marker_pos_var)) {
       NULL
@@ -214,12 +215,12 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       if(input$marker_pos_var == "None") NULL else {
         optionalSelectInput(ns("marker_shape_var"), "Marker Shape", choices = marker_shape_var_choices,
                             selected = marker_shape_var, multiple = FALSE,
-                            label_help = helpText("from ", tags$code(a$dataname)))
+                            label_help = helpText("from ", tags$code(dataname)))
       }
     }
   })
   output$marker_color_sel <- renderUI({
-    if(is.null(dataname)) {
+    if(is.null(dataname) | is.null(marker_color_var)) {
       NULL
     } else if (is.null(input$marker_pos_var)) {
       NULL
@@ -228,7 +229,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       if(input$marker_pos_var == "None") NULL else {
         optionalSelectInput(ns("marker_color_var"), "Marker Color", choices = marker_color_var_choices,
                             selected = marker_color_var, multiple = FALSE,
-                            label_help = helpText("from ", tags$code(a$dataname)))
+                            label_help = helpText("from ", tags$code(dataname)))
       }
     }
   })
@@ -253,9 +254,11 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       marker_shape_var <- NULL
       marker_color_var <- NULL
     } else {
-      marker_pos_var <- if (is.null(input$marker_pos_var)) NULL else if (input$marker_pos_var == "None") NULL else input$marker_pos_var
-      marker_shape_var <- if (is.null(input$marker_shape_var)) NULL else if (input$marker_shape_var == "None") NULL else input$marker_shape_var
-      marker_color_var <- if (is.null(input$marker_color_var)) NULL else if (input$marker_color_var == "None") NULL else input$marker_color_var
+      marker_pos_var <- if (is.null(marker_pos_var)) NULL else if (input$marker_pos_var == "None") NULL else input$marker_pos_var
+      marker_shape_var <- if (is.null(marker_shape_var) | is.null(input$marker_shape_var)) NULL 
+                          else if (input$marker_shape_var == "None") NULL else input$marker_shape_var
+      marker_color_var <- if (is.null(marker_color_var) | is.null(input$marker_color_var)) NULL 
+                          else if (input$marker_color_var == "None") NULL else input$marker_color_var
     }
     anno_txt_var <- input$anno_txt_var
     vref_line <- input$vref_line
@@ -296,8 +299,10 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       anl_name <- paste0(dataname, "_FILTERED")
       assign(anl_name, ANL_FILTERED)
       anl_vars <- unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
+      validate(need(!any(c(marker_pos_var, marker_shape_var, marker_color_var) %in% asl_vars),
+               "marker-related variables need to come from marker data"))
     }
-    
+
     chunks$vars <<- bquote({
       bar_var <- .(bar_var)
       bar_color_var <- .(bar_color_var)
@@ -359,7 +364,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
         bar_length = bquote(ASL[[bar_var]]),
         sort_by = if (length(sort_var) > 0) bquote(ASL[[sort_var]]) else NULL,
         col_by = if (length(bar_color_var) > 0) bquote(ASL[[bar_color_var]]) else NULL,
-        marker_id = if(!is.null(dataname)) bquote(ANL[["USUBJID"]]) else NULL,
+        marker_id = bquote(ANL[["USUBJID"]]),
         marker_pos = if (length(marker_pos_var) > 0) bquote(ANL[[marker_pos_var]]) else NULL,
         marker_shape = if (length(marker_shape_var) > 0) bquote(ANL[[marker_shape_var]]) else NULL,
         marker_shape_opt = if (length(marker_shape_var) == 0) NULL
