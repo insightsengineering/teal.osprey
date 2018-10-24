@@ -3,9 +3,9 @@
 #' This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data
 #'
 #' @param label item label of the module in the teal app
-#' @param dataname analysis data used for plotting markers in swimlane teal module. If no markers are to be 
-#'     plotted, this can be left \code{NULL}. Otherwise this will be passed to the \code{data} argument 
-#'     of \code{\link[teal]{init}}
+#' @param dataname analysis data used for plotting, needs to be available in the list passed to the \code{data} 
+#'     argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ASL" should be 
+#'     the input. If markers are to be plotted, data name for the marker data should be the input 
 #' @param bar_var subject-level numeric variable from dataset to plot as the bar length
 #' @param bar_var_choices vector with variable names that can be used as \code{bar_var}
 #' @param bar_color_var color by variable (subject-level)
@@ -88,7 +88,7 @@
 #' }
 
 tm_g_swimlane <- function(label,
-                          dataname = NULL,
+                          dataname,
                           bar_var,
                           bar_var_choices = bar_var,
                           bar_color_var = NULL,
@@ -129,7 +129,7 @@ tm_g_swimlane <- function(label,
                        marker_color_var_choices,
                        marker_color_opt = marker_color_opt,
                        code_data_processing = code_data_processing),
-    filters = if (is.null(dataname)) "ASL" else dataname
+    filters = dataname
   )
 }
 
@@ -143,7 +143,7 @@ ui_g_swimlane <- function(id, ...){
     output = uiOutput(ns("plot_ui")),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
-      if (is.null(a$dataname)) helpText("Marker Data: ", tags$code("NULL")) else helpText("Marker Data: ", tags$code(a$dataname)),
+      helpText("Analysis data:", tags$code(a$dataname)),
       optionalSelectInput(ns("bar_var"), "Bar Length", choices = a$bar_var_choices,
                           selected = a$bar_var, multiple = FALSE,
                           label_help = helpText("from ", tags$code("ASL"))),
@@ -192,7 +192,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
   # if marker data is NULL, then hide options for marker position selection
   output$marker_pos_sel <- renderUI({
     
-    if(is.null(dataname)) {
+    if(dataname == "ASL") {
       NULL
     } else if (is.null(marker_pos_var)){
       NULL
@@ -206,7 +206,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
   
   # if marker position is "None", then hide options for marker shape and color
   output$marker_shape_sel <- renderUI({
-    if(is.null(dataname) | is.null(marker_shape_var)) {
+    if(dataname == "ASL" | is.null(marker_shape_var)) {
       NULL
     } else if (is.null(input$marker_pos_var)) {
       NULL
@@ -220,7 +220,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     }
   })
   output$marker_color_sel <- renderUI({
-    if(is.null(dataname) | is.null(marker_color_var)) {
+    if(dataname == "ASL" | is.null(marker_color_var)) {
       NULL
     } else if (is.null(input$marker_pos_var)) {
       NULL
@@ -244,12 +244,12 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
   output$swimlaneplot <- renderPlot({
     
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    if(!is.null(dataname)) ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    if(dataname != "ASL") ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
     
     bar_var <- input$bar_var
     bar_color_var <- if (input$bar_color_var == "None" | input$bar_color_var == "") NULL else input$bar_color_var
     sort_var <- if (input$sort_var == "None" | input$sort_var == "") NULL else input$sort_var
-    if (is.null(dataname)) {
+    if (dataname == "ASL") {
       marker_pos_var <- NULL
       marker_shape_var <- NULL
       marker_color_var <- NULL
@@ -277,7 +277,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     for (i in seq_along(chunks)) chunks[[i]] <<- "# Not calculated"
     
     # validate input values
-    if (is.null(dataname)) {
+    if (dataname == "ASL") {
       validate_has_data(ASL_FILTERED, min_nrow = 3)
       validate_has_variable(ASL_FILTERED, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
     } else {
@@ -295,7 +295,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     
     asl_vars <- unique(c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
     
-    if (!is.null(dataname)) {
+    if (dataname != "ASL") {
       anl_name <- paste0(dataname, "_FILTERED")
       assign(anl_name, ANL_FILTERED)
       anl_vars <- unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
@@ -313,7 +313,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       anno_txt_var <- .(anno_txt_var)
     })
     
-    chunks$data <<- if (is.null(dataname)) {
+    chunks$data <<- if (dataname == "ASL") {
       bquote({
         ASL_p <- ASL_FILTERED
         ASL <- ASL_p[, .(asl_vars)]
@@ -336,7 +336,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     eval(chunks$data)
     
     
-    chunks$g_swimlane <<- if (is.null(dataname)) {
+    chunks$g_swimlane <<- if (dataname == "ASL") {
       call(
         "g_swimlane",
         

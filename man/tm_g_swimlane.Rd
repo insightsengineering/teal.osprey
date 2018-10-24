@@ -4,24 +4,23 @@
 \alias{tm_g_swimlane}
 \title{Teal Module for Swimlane Plot}
 \usage{
-tm_g_swimlane(label, dataname = NULL, bar_var,
-  bar_var_choices = bar_var, bar_color_var = NULL,
-  bar_color_var_choices = bar_color_var, sort_var = NULL,
-  sort_var_choices = sort_var, marker_pos_var = NULL,
-  marker_pos_var_choices = marker_pos_var, marker_shape_var = NULL,
-  marker_shape_var_choices = marker_shape_var, marker_shape_opt = NULL,
-  marker_color_var = NULL, marker_color_var_choices = marker_color_var,
-  marker_color_opt = NULL, anno_txt_var = NULL,
-  anno_txt_var_choices = anno_txt_var, vref_line = NULL,
-  plot_height = c(1200, 400, 5000), pre_output = NULL,
-  post_output = NULL, code_data_processing = NULL)
+tm_g_swimlane(label, dataname, bar_var, bar_var_choices = bar_var,
+  bar_color_var = NULL, bar_color_var_choices = bar_color_var,
+  sort_var = NULL, sort_var_choices = sort_var,
+  marker_pos_var = NULL, marker_pos_var_choices = marker_pos_var,
+  marker_shape_var = NULL, marker_shape_var_choices = marker_shape_var,
+  marker_shape_opt = NULL, marker_color_var = NULL,
+  marker_color_var_choices = marker_color_var, marker_color_opt = NULL,
+  anno_txt_var = NULL, anno_txt_var_choices = anno_txt_var,
+  vref_line = NULL, plot_height = c(1200, 400, 5000),
+  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{item label of the module in the teal app}
 
-\item{dataname}{analysis data used for plotting markers in swimlane teal module. If no markers are to be 
-plotted, this can be left \code{NULL}. Otherwise this will be passed to the \code{data} argument 
-of \code{\link[teal]{init}}}
+\item{dataname}{analysis data used for plotting, needs to be available in the list passed to the \code{data} 
+argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ASL" should be 
+the input. If markers are to be plotted, data name for the marker data should be the input}
 
 \item{bar_var}{subject-level numeric variable from dataset to plot as the bar length}
 
