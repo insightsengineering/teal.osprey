@@ -317,6 +317,8 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       bquote({
         ASL_p <- ASL_FILTERED
         ASL <- ASL_p[, .(asl_vars)]
+        # only take last part of USUBJID
+        ASL$USUBJID <- unlist(lapply(strsplit(ASL$USUBJID, '-', fixed = TRUE), tail, 1))
       })
     } else {
       bquote({
@@ -330,6 +332,9 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           all.x = FALSE, all.y = FALSE,
           by = c("USUBJID", "STUDYID")
         )
+        # only take last part of USUBJID
+        ASL$USUBJID <- unlist(lapply(strsplit(ASL$USUBJID, '-', fixed = TRUE), tail, 1))
+        ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, '-', fixed = TRUE), tail, 1))
       })
     }
     
