@@ -131,8 +131,9 @@
     </tr>
     <tr>
       <th>dataname</th>
-      <td><p>analysis data used in teal module, needs to be available in the list passed
-to the <code>data</code> argument of <code><a href='http://www.rdocumentation.org/packages/teal/topics/init'>init</a></code></p></td>
+      <td><p>analysis data used for plotting, needs to be available in the list passed to the <code>data</code> 
+argument of <code><a href='http://www.rdocumentation.org/packages/teal/topics/init'>init</a></code>. If no markers are to be plotted in the module, "ASL" should be 
+the input. If markers are to be plotted, data name for the marker data should be the input</p></td>
     </tr>
     <tr>
       <th>bar_var</th>
@@ -160,8 +161,8 @@ to the <code>data</code> argument of <code><a href='http://www.rdocumentation.or
     </tr>
     <tr>
       <th>marker_pos_var</th>
-      <td><p>numeric variable for marker position (Note: make sure that marker position has the 
-same relative start day as bar length variable <code>bar_var</code>)</p></td>
+      <td><p>numeric variable for marker position from marker data (Note: make sure that marker 
+position has the same relative start day as bar length variable <code>bar_var</code>)</p></td>
     </tr>
     <tr>
       <th>marker_pos_var_choices</th>
@@ -169,7 +170,7 @@ same relative start day as bar length variable <code>bar_var</code>)</p></td>
     </tr>
     <tr>
       <th>marker_shape_var</th>
-      <td><p>marker shape variable</p></td>
+      <td><p>marker shape variable from marker data</p></td>
     </tr>
     <tr>
       <th>marker_shape_var_choices</th>
@@ -183,7 +184,7 @@ otherwise shape will be assigned by <code>ggplot</code> default</p></td>
     </tr>
     <tr>
       <th>marker_color_var</th>
-      <td><p>marker color variable</p></td>
+      <td><p>marker color variable from marker data</p></td>
     </tr>
     <tr>
       <th>marker_color_var_choices</th>
@@ -197,7 +198,7 @@ otherwise color will be assigned by <code>ggplot</code> default</p></td>
     </tr>
     <tr>
       <th>anno_txt_var</th>
-      <td><p>character vector with variable names that are selected as annotation</p></td>
+      <td><p>character vector with subject-level variable names that are selected as annotation</p></td>
     </tr>
     <tr>
       <th>anno_txt_var_choices</th>
