@@ -8,12 +8,12 @@ Authors@R: c(
   person("Carolyn", "Zhang", email = "zhang.carolyn@gene.com", role = c("aut")))
 Description: Community efforts to collect teal modules for TLGs defined in the osprey package.
   The teal modules add an encoding panel to interactively change the encoding within teal.
-Depends: 
+Depends:
   R (>= 3.3),
   shiny,
-  teal (>= 0.0.4),
-  tern (>= 0.5.0.1),
-  teal.tern (>= 0.5.0.1),
+  teal (>= 0.7.0),
+  teal.devel (>= 0.1.0),
+  tern (>= 0.7.0),
   osprey
 Imports:
   methods,
@@ -32,14 +32,14 @@ Suggests:
 License: Copyright Roche, internal use only
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr
-URL: 
-  https://pages.github.roche.com/Rpackages/teal.osprey/, 
+URL:
+  https://pages.github.roche.com/Rpackages/teal.osprey/,
   https://github.roche.com/Rpackages/teal.osprey/
-BugReports: 
+BugReports:
   https://github.roche.com/Rpackages/teal.osprey/issues
-Additional_repositories: 
+Additional_repositories:
   https://github.roche.com/Rpackages/teal,
   https://github.roche.com/Rpackages/tern,
   https://github.roche.com/Rpackages/teal.tern,

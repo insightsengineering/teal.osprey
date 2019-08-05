@@ -18,8 +18,8 @@ tm_g_swimlane(label, dataname, bar_var, bar_var_choices = bar_var,
 \arguments{
 \item{label}{item label of the module in the teal app}
 
-\item{dataname}{analysis data used for plotting, needs to be available in the list passed to the \code{data} 
-argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ASL" should be 
+\item{dataname}{analysis data used for plotting, needs to be available in the list passed to the \code{data}
+argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ASL" should be
 the input. If markers are to be plotted, data name for the marker data should be the input}
 
 \item{bar_var}{subject-level numeric variable from dataset to plot as the bar length}
@@ -34,7 +34,7 @@ the input. If markers are to be plotted, data name for the marker data should be
 
 \item{sort_var_choices}{vector with variable names that can be used as \code{sort_var}}
 
-\item{marker_pos_var}{numeric variable for marker position from marker data (Note: make sure that marker 
+\item{marker_pos_var}{numeric variable for marker position from marker data (Note: make sure that marker
 position has the same relative start day as bar length variable \code{bar_var})}
 
 \item{marker_pos_var_choices}{vector with variable names that can be used as \code{marker_pos_var}}
@@ -63,14 +63,6 @@ otherwise color will be assigned by \code{ggplot} default}
 
 \item{plot_height}{plot height}
 
-\item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
-
-\item{post_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
-
 \item{code_data_processing}{string with data preprocessing before the teal app is initialized}
 }
 \value{
@@ -96,8 +88,8 @@ ARS <- ARS \%>\% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
   rbind (ARS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
   arrange(USUBJID)
 
-x <- teal::init(
-  data = list(ASL = ASL, ARS = ARS),
+x <- init(
+  data = cdisc_data(ASL = ASL, ARS = ARS),
   modules = root_modules(
     tm_g_swimlane(
        label = "Swimlane Plot",

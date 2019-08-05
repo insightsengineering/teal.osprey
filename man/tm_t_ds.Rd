@@ -31,14 +31,6 @@ function.}
 
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
-
-\item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
-
-\item{post_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
 }
 \value{
 an \code{\link[teal]{module}} object
