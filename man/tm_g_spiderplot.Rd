@@ -60,14 +60,6 @@ Note that the data is expected to be in vertical form with the
 
 \item{plot_height}{range of plot height}
 
-\item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
-
-\item{post_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
-
 \item{code_data_processing}{string with data preprocessing before the teal
 app is initialized, default is NULL}
 }

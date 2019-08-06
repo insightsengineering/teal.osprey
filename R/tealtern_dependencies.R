@@ -1,19 +1,16 @@
+#' @importFrom utils getFromNamespace
+get_fun <- function (pkg, name)
+{
+  pkg <- as.character(substitute(pkg))
+  name <- as.character(substitute(name))
+  get(name, envir = asNamespace(pkg), inherits = FALSE)
+}
+get_rcode_header <- get_fun("teal.devel", "get_rcode_header")
 
+has_source_attribute <- function(x) {
+    if (is.data.frame(x)) x <- list(x)
+    all(vapply(x, function(dat) !is.null(attr(dat, "source")), logical(1)))
+}
 
-#import teal.tern functions
-get_rcode_header <- teal.tern:::get_rcode_header
-validate_has_data <- teal.tern:::validate_has_data
-has_source_attribute <- teal.tern:::has_source_attribute
-whiteSmallWell <- teal.tern:::whiteSmallWell
-remove_enclosing_curly_braces <- teal.tern:::remove_enclosing_curly_braces
-validate_standard_inputs <- teal.tern:::validate_standard_inputs
-validate_has_data <- teal.tern:::validate_has_data
-validate_one_row_per_id <- teal.tern:::validate_one_row_per_id
-validate_in <- teal.tern:::validate_in
-validate_has_elements <- teal.tern:::validate_has_elements 
-validate_no_intersection <- teal.tern:::validate_no_intersection
-validate_has_variable <- teal.tern:::validate_has_variable
-validate_n_levels <- teal.tern:::validate_n_levels
-as.global <- teal.tern:::as.global
-
-
+#' @importFrom teal.devel white_small_well
+whiteSmallWell <- white_small_well

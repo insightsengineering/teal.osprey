@@ -2,42 +2,42 @@
 # - to use, copy into a new R scrip file and uncomment scripts
 #
 # .libPaths(c(normalizePath("./libs"), .libPaths()))
-# 
-# library(teal.tern)
+#
+# library(teal.modules.clinical)
 # library(teal.osprey)
 # library(dplyr)
-# 
+#
 # options(teal_logging = FALSE)
-# 
-# 
+#
+#
 # ASL <- rADSL
 # ATE <- rADTTE
 # AAE <- rADAE
 # ATR <- rADTR
 # ARS <- rADRS
 # ARS_swim <- rADRS
-# 
-# 
+#
+#
 # # Data processing
 # #@start_preprocessing
 # AAE <- AAE %>% mutate(RELFL = ifelse(AEREL == "Y", "Y", "N"),
 #                       CTC35FL = ifelse(AETOXGR %in% c("3", "4", "5"), "Y", "N"),
 #                       SERFL = ifelse(AESER == "Y", "Y", "N"),
 #                       RELSERFL = ifelse(AEREL == "Y" & AESER == "Y", "Y", "N"))
-# 
+#
 # ARS_swim <- ARS_swim %>% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
 #   mutate(AVALC = DCSREAS,
 #          ADY   = EOSDY) %>%
 #   rbind(ARS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
 #   arrange(USUBJID)
-# 
+#
 # ATR <- ATR %>% mutate(PCHG = ifelse(is.na(PCHG), 0, PCHG),
 #                       CHG  = ifelse(is.na(CHG), 0, CHG),
 #                       AVAL = ifelse(is.na(AVAL), BASE, AVAL),
 #                       AVALC = ifelse(is.na(AVALC), as.character(BASE), AVALC))
-# 
+#
 # #@end_preprocessing
-# 
+#
 # #Attributes must come after data preprcessing
 # attr(ASL, "source") <- "rADSL"
 # attr(ARS, "source") <- "rADRS"
@@ -45,34 +45,35 @@
 # attr(AAE, "source") <- "rADAE"
 # attr(ATR, "source") <- "rADTR"
 # attr(ARS_swim, "source") <- "rADRS"
-# 
+#
 # ## Define Reusable Configuartions for teal.osprey modules----
 # arm_var <- "ACTARM"
 # arm_var_choices <- c("ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1","SEX", "STRATA1", "STRATA2", "BMK2")
-# 
+#
 # strata_var <- "AGEGR1"
 # strata_var_choices <- c("AGEGR1", "SEX", "STRATA1", "STRATA2", "RACE", "BMK2")
-# 
+#
 # aeclass_var <- "AEBODSYS"
 # aeclass_var_choices <- c("AEBODSYS", "AESOC", "AEHLGT", "AEHLT")
-# 
+#
 # aeterm_var <- "AEDECOD"
 # aeterm_var_choices <- c("AEDECOD", "AETERM")
-# 
+#
 # paramcd_tte <- "OS"
 # paramcd_choices_tte <- unique(ATE$PARAMCD)
-# 
+#
 # paramcd_tr <- "SLDINV"
 # paramcd_choices_tr <- unique(ATR$PARAMCD)
-# 
+#
 # paramcd_rsp <- "BESRSPI"
 # paramcd_choices_rsp <- setdiff(unique(ARS$PARAMCD), "OVRINV")
-# 
-# 
-# 
-# ## Configure teal.tern ----
-# chunks <- teal::parse_code_chunks(file = "./app.R")
-# 
+#
+#
+#
+# ## Configure teal ----
+# # Not working teal function
+# # chunks <- teal::parse_code_chunks(file = "./app.R")
+#
 # ## Create front page for app ----
 # srv_front_page <- function(input, output, session, datasets) {
 #   observeEvent(input$show_data_generation_rcode, {
@@ -82,7 +83,7 @@
 #       size = "l"
 #     ))
 #   })
-#   
+#
 #   observeEvent(input$show_teal_setup_code, {
 #     showModal(modalDialog(
 #       title = "R Code Used to Setup the Current Teal Shiny App",
@@ -91,26 +92,26 @@
 #     ))
 #   })
 # }
-# 
-# 
+#
+#
 # ui_front_page <- function(id) {
 #   ns <- NS(id)
 #   tagList(
-#     tags$p("The", tags$code("ADSL"), ",", tags$code("ADAE"), ",", tags$code("ADTTE"), ",", tags$code("ADRS"), ", and ", tags$code("ADTR"), 
+#     tags$p("The", tags$code("ADSL"), ",", tags$code("ADAE"), ",", tags$code("ADTTE"), ",", tags$code("ADRS"), ", and ", tags$code("ADTR"),
 #            "data in this example app has been created using random number generators."),
 #     tags$p("", style = "height: 15px;"),
 #     actionButton(ns("show_data_generation_rcode"), "Show Data Generation R Code", icon = icon("glyphicon-align-justify")),
 #     tags$p("", style = "height: 20px;"),
-#     tags$p(paste("These apps are relatively easily setup for a study.", 
+#     tags$p(paste("These apps are relatively easily setup for a study.",
 #                  "That is, the teal framework is optimized to setup one",
 #                  "Shiny App per analysis purpose. For example, the code to setup",
 #                  "the current teal app can be requested with the following button:")),
 #     tags$p("", style = "height: 15px;"),
-#     actionButton(ns("show_teal_setup_code"), "Show Teal Shiny App Setup R-Code", icon = icon("glyphicon-align-justify"))          
+#     actionButton(ns("show_teal_setup_code"), "Show Teal Shiny App Setup R-Code", icon = icon("glyphicon-align-justify"))
 #   )
 # }
-# 
-# 
+#
+#
 # ## Setup App
 # ## Need to add ADSL to validation
 # x <- teal::init(
@@ -324,11 +325,11 @@
 #     style="margin-bottom: 2px;",
 #     tags$h1("Demo ED Onco teal app with random ADaM data", tags$span("ED SPA", class="pull-right"))
 #   ),
-#   footer = tags$p(class="text-muted", 
+#   footer = tags$p(class="text-muted",
 #                   actionLink("showAboutModal", "Info About Authors"))
 # )
-# 
-# 
+#
+#
 # # Add server code
 # body(x$server)[[length(body(x$server))+1]] <- quote(
 #   observeEvent(input$showAboutModal, {
@@ -347,7 +348,7 @@
 #         class="text-muted",
 #         "The app uses teal version", utils::packageDescription(pkg = "teal", field="Version"),
 #         ", rtables version", utils::packageDescription(pkg = "rtables", field="Version"),
-#         ", teal.tern version", utils::packageDescription(pkg = "teal.tern", field="Version"),
+#         ", teal.modules.clinical version", utils::packageDescription(pkg = "teal.modules.clinical", field="Version"),
 #         ", osprey version", utils::packageDescription(pkg = "osprey", field="Version"),
 #         ", teal.osprey version", utils::packageDescription(pkg = "teal.osprey", field="Version")
 #       ),
@@ -355,6 +356,6 @@
 #     ))
 #   })
 # )
-# 
+#
 # ## Start Teal Shiny App ----
 # shinyApp(x$ui, x$server)
