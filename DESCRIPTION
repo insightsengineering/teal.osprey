@@ -13,7 +13,7 @@ Depends:
   shiny,
   teal (>= 0.7.0),
   teal.devel (>= 0.1.0),
-  tern (>= 0.7.0),
+  tern (>= 0.6.2),
   osprey
 Imports:
   methods,
