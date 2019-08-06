@@ -41,8 +41,8 @@ URL:
 BugReports:
   https://github.roche.com/Rpackages/teal.osprey/issues
 Additional_repositories:
-  https://github.roche.com/Rpackages/teal,
-  https://github.roche.com/Rpackages/tern,
-  https://github.roche.com/Rpackages/teal.tern,
+  https://github.roche.com/NEST/teal,
+  https://github.roche.com/NEST/tern,
+  https://github.roche.com/NEST/teal.modules.clinical,
   https://github.roche.com/Rpackages/osprey,
-  https://github.com/Roche/rtables
+  https://github.roche.com/NEST/rtables
