@@ -335,7 +335,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       validate_has_variable(ASL_FILTERED, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
     } else {
       validate_standard_inputs(
-        ASL = ASL_FILTERED,
+        asl = ASL_FILTERED,
         aslvars = c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var),
         anl = ANL_FILTERED,
         anlvars = unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var)),
@@ -400,6 +400,9 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
 
     # WRITE PLOTTING CODE TO CHUNKS
 
+    validate(need(chunks_is_ok(), "Data could not be constructed."))
+    ASL <- chunks_get_var("ASL")
+    ANL <- chunks_get_var("ANL")
     if (dataname == "ASL") {
       chunks_push(call(
         "g_swimlane",

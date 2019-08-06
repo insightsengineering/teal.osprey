@@ -1,5 +1,11 @@
 #' @importFrom utils getFromNamespace
-get_rcode_header <- getFromNamespace(get_rcode_header, "teal.devel")
+get_fun <- function (pkg, name)
+{
+  pkg <- as.character(substitute(pkg))
+  name <- as.character(substitute(name))
+  get(name, envir = asNamespace(pkg), inherits = FALSE)
+}
+get_rcode_header <- get_fun("teal.devel", "get_rcode_header")
 
 has_source_attribute <- function(x) {
     if (is.data.frame(x)) x <- list(x)
