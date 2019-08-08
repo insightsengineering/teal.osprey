@@ -1,6 +1,5 @@
 #' @importFrom utils getFromNamespace
-get_fun <- function (pkg, name)
-{
+get_fun <- function (pkg, name) {
   pkg <- as.character(substitute(pkg))
   name <- as.character(substitute(name))
   get(name, envir = asNamespace(pkg), inherits = FALSE)

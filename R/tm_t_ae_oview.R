@@ -1,29 +1,29 @@
 
 #' Adverse Events Summary Table Teal Module
-#' 
+#'
 #' Display AET01 Adverse Events Summary Table as a shiny Module
-#' 
-#' @inheritParams teal::standard_layout
+#'
+#' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
-#' 
+#'
 #' @return an \code{\link[teal]{module}} object
 #' @export
-#' 
+#'
 #' @template author_zhanc107
 #' @template author_liaoc10
-#' 
+#'
 #' @examples
-#' 
+#'
 #' \dontrun{
-#' #Example using stream (adam) dataset 
+#' #Example using stream (adam) dataset
 #' library(dplyr)
-#' 
+#'
 #' data("rADSL")
 #' data("rADAE")
-#' 
+#'
 #' ASL <- rADSL
 #' AAE <- rADAE
-#' 
+#'
 #' x1 <- teal::init(
 #'   data = list(ASL = ASL, AAE = AAE),
 #'   modules = root_modules(
@@ -36,23 +36,23 @@
 #'    )
 #'   )
 #' )
-#'    
+#'
 #' shinyApp(x1$ui, x1$server)
-#' 
+#'
 #' }
-#' 
-#'   
-tm_t_ae_oview <- function(label, 
-                          dataname, 
-                          arm_var, 
-                          arm_var_choices, 
-                          total_col = TRUE, 
-                          pre_output = NULL, 
-                          post_output = NULL, 
+#'
+#'
+tm_t_ae_oview <- function(label,
+                          dataname,
+                          arm_var,
+                          arm_var_choices,
+                          total_col = TRUE,
+                          pre_output = NULL,
+                          post_output = NULL,
                           code_data_processing = NULL) {
-  
+
   args <- as.list(environment())
-  
+
   module(
     label = label,
     server = srv_t_ae_oview,
@@ -61,14 +61,14 @@ tm_t_ae_oview <- function(label,
     server_args = list(dataname = dataname, code_data_processing = code_data_processing),
     filters = dataname
   )
-  
+
 }
 
 ui_t_ae_oview <- function(id, ...) {
-  
+
   ns <- NS(id)
   a <- list(...)
-  
+
   standard_layout(
     output = whiteSmallWell(uiOutput(ns("table"))),
     encoding =  div(
@@ -81,43 +81,43 @@ ui_t_ae_oview <- function(id, ...) {
     pre_output = a$pre_output,
     post_output = a$post_output
   )
-  
+
 }
 
 srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data_processing) {
-  
+
   chunks <- list(
     vars = "# Not Calculated",
     data = "# Not Calculated",
     analysis = "# Not Calculated"
   )
-  
+
   output$table <- renderUI({
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
-    
+
     arm_var <- input$arm_var
     all_p <- input$All_Patients
-    
+
     aae_name <- paste0(dataname, "_FILTERED")
     assign(aae_name, AAE_FILTERED) # so that we can refer to the 'correct' data name
-    
+
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var, "DTHFL", "DCSREAS"))
-    aae_vars <- unique(c("USUBJID", "STUDYID", "AESOC", "AEDECOD", 
+    aae_vars <- unique(c("USUBJID", "STUDYID", "AESOC", "AEDECOD",
                          "AESDTH", "AESER", "AEACN", "AEREL", "AETOXGR")) ## add column name of extra flage here
 
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)
       all_p <- .(all_p)
     })
-    
+
     chunks$data <<- bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame() 
-      
-      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% 
+      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame()
+
+      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
         as.data.frame()
-      
+
       flag <- data.frame(dthfl = ANL$DTHFL,
                          dcsreas = ANL$DCSREAS,
                          aesdth = ANL$AESDTH,
@@ -127,25 +127,25 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
                          aetoxgr = ANL$AETOXGR)
       display <- c("fatal", "ser", "serwd", "serdsm", "relser",
                    "wd", "dsm", "rel", "relwd", "reldsm", "ctc35")
-      
+
       {if(all_p == TRUE) {
         total = "All Patients"
       } else {
         total = NULL
       }}
-      
+
     })
     eval(chunks$data)
-    
-    validate_has_data(ANL, min_nrow = 1)    
+
+    validate_has_data(ANL, min_nrow = 1)
     validate(need(ANL[[arm_var]], "Arm variable does not exist"))
     validate(need(!("" %in% ANL[[arm_var]]), "arm values can not contain empty strings ''"))
-    
+
     chunks$analysis <<- call(
       "t_ae_oview",
-      id = bquote(ANL$USUBJID), 
-      class = bquote(ANL$AESOC), 
-      term = bquote(ANL$AEDECOD), 
+      id = bquote(ANL$USUBJID),
+      class = bquote(ANL$AESOC),
+      term = bquote(ANL$AEDECOD),
       flags = bquote(flag),
       ####--------------------------------
       #
@@ -157,25 +157,25 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       col_by = bquote(droplevels(as.factor(ANL[[.(arm_var)]]))),
       total = total
     )
-    
+
     tbl <- try(eval(chunks$analysis))
-    
+
     if (is(tbl, "try-error")) validate(need(FALSE, paste0("could not calculate the table:\n\n", tbl)))
-    
+
     as_html(tbl)
   })
-  
-  
-  
+
+
+
   observeEvent(input$show_rcode, {
-    
+
     header <- get_rcode_header_osprey(
       title = "AE Overview Summary Table",
       datanames = dataname,
       datasets = datasets,
       code_data_processing
     )
-    
+
     str_rcode <- paste(c(
       "",
       header,
@@ -186,7 +186,7 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       "",
       remove_enclosing_curly_braces(deparse(chunks$analysis, width.cutoff = 60))
     ), collapse = "\n")
-    
+
     # .log("show R code")
     showModal(modalDialog(
       title = "R Code for the Current AE Overview Table",
@@ -195,5 +195,4 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname, code_data
       size = "l"
     ))
   })
-  
 }

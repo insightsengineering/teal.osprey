@@ -13,20 +13,20 @@ tm_t_ae_ctc(label, dataname, filter_var = NULL,
 \arguments{
 \item{label}{menu item label of the module in the teal app}
 
-\item{dataname}{analysis data used in teal module, needs to be available in 
+\item{dataname}{analysis data used in teal module, needs to be available in
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{filter_var}{variable name of data filter, please see details regarding 
+\item{filter_var}{variable name of data filter, please see details regarding
 expected values, default is \code{NULL}}
 
-\item{filter_var_choices}{vector with \code{filter_var} choices, default is 
+\item{filter_var_choices}{vector with \code{filter_var} choices, default is
 \code{NULL}}
 
-\item{arm_var}{single name of variable in analysis data that is used as 
-\code{col_by} argument for the respective \code{tern} or \code{osprey} 
+\item{arm_var}{single name of variable in analysis data that is used as
+\code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
-\item{arm_var_choices}{vector with variable names that can be used as 
+\item{arm_var_choices}{vector with variable names that can be used as
 \code{arm_var}}
 
 \item{class_var}{class variables selected for display}
@@ -41,6 +41,17 @@ function.}
 
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
+
+\item{pre_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
+
+\item{post_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
+
+\item{code_data_processing}{string with data preprocessing before the teal
+app is initialized, default is NULL}
 }
 \value{
 an \code{\link[teal]{module}} object
@@ -49,9 +60,9 @@ an \code{\link[teal]{module}} object
 Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 }
 \details{
-\code{filter_var} option is designed to work in conjuction with 
-  filtering function provided by \code{teal} (encoding panel on the right 
-  hand side of the shiny app). It can be used as quick access to pre-defined 
+\code{filter_var} option is designed to work in conjuction with
+  filtering function provided by \code{teal} (encoding panel on the right
+  hand side of the shiny app). It can be used as quick access to pre-defined
   subsets of the domain datasets (not subject-level dataset) to be used
   for analysis, denoted by an value of "Y". Each variable within the
   \code{filter_var_choices} is expected to contain values of either "Y" or
@@ -63,7 +74,7 @@ Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 \examples{
 
 \dontrun{
-#Example 
+#Example
 library(dplyr)
 
 data("rADSL")
@@ -71,7 +82,7 @@ data("rADAE")
 
 ASL <- rADSL
 AAE <- rADAE
-AAE <- AAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
+AAE <- AAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))
 
 x1 <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
@@ -80,7 +91,7 @@ x1 <- teal::init(
        label = "Adverse Events Table By Highest NCI CTCAE Grade",
        dataname = "AAE",
        filter_var = NULL,
-       filter_var_choices = c("DTHFL", "flag1"), 
+       filter_var_choices = c("DTHFL", "flag1"),
        arm_var = "ARM",
        arm_var_choices = c("ARM", "ARMCD"),
        class_var = "AEBODSYS",
@@ -91,8 +102,8 @@ x1 <- teal::init(
    )
   )
 )
-   
-shinyApp(x1$ui, x1$server)  
+
+shinyApp(x1$ui, x1$server)
 }
 
 
