@@ -44,7 +44,7 @@ Adverse Events Table by Highest NCI CTCAE Grade Teal Module
   hand side of the shiny app). It can be used as quick access to pre-defined
   subsets of the domain datasets (not subject-level dataset) to be used
   for analysis, denoted by an value of "Y". Each variable within the
-  \code{filter_var_choices} is expected to contain values of either "Y" or
+  \code{filter_var$choices} is expected to contain values of either "Y" or
   "N". If multiple variables are selected as \code{filter_var}, only
   observations with "Y" value in each and every selected variables will be
   used for subsequent analysis. Flag variables (from ADaM datasets) can be
@@ -57,13 +57,13 @@ library(dplyr)
 ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
 AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\% mutate(USUBJID = SUBJID)
 
-app <- teal::init(
+app <- init(
   data = cdisc_data(ASL = ASL, AAE = AAE, code = '
-    ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
-    AAE <- rADAE \%>\%
-      mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\%
-      mutate(USUBJID = SUBJID)
-  '),
+ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
+AAE <- rADAE \%>\%
+mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\%
+mutate(USUBJID = SUBJID)
+'),
   modules = root_modules(
     tm_t_ae_ctc(
       label = "Adverse Events Table By Highest NCI CTCAE Grade",
@@ -73,14 +73,12 @@ app <- teal::init(
       class_var = choices_selected(selected = "AEBODSYS", choices = c("AEBODSYS", "DEFAULT")),
       term_var = choices_selected(selected = "AEDECOD", choices = c("AEDECOD", "DEFAULT")),
       total_col = TRUE
-   )
+    )
   )
 )
-
 \dontrun{
 shinyApp(app$ui, app$server)
 }
-
 
 }
 \author{
