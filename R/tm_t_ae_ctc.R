@@ -68,7 +68,7 @@ tm_t_ae_ctc <- function(label,
 
   stopifnot(is.character.single(label))
   stopifnot(is.character.single(dataname))
-  stopifnot(is.choices_selected(filter_var))
+  stopifnot(is.null(filter_var) || is.choices_selected(filter_var))
   stopifnot(is.choices_selected(arm_var))
   stopifnot(is.choices_selected(class_var))
   stopifnot(is.choices_selected(term_var))
