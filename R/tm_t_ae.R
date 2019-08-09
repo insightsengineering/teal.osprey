@@ -198,7 +198,8 @@ srv_t_ae <- function(input,
     anl_vars <- unique(c(asl_vars, aae_vars))
     
     chunks_push(bquote({
-      ANL <- .(as.name(aae_name))
+      ANL <- .(as.name(aae_name)) %>% 
+        select(.(anl_vars))
     }))
     
     if (!is.null(filter_var)) {
@@ -209,8 +210,8 @@ srv_t_ae <- function(input,
     }
     
     chunks_push(bquote({
-      attr(ANL[, .(class_var)], "label") <- label_aevar(.(class_var))
-      attr(ANL[, .(term_var)], "label") <- label_aevar(.(term_var))
+      attr(ANL[[.(class_var)]], "label") <- label_aevar(.(class_var))
+      attr(ANL[[.(term_var)]], "label") <- label_aevar(.(term_var))
     }))
     
     chunks_push_new_line()
@@ -223,8 +224,8 @@ srv_t_ae <- function(input,
     
     chunks_push(bquote({
       tbl <- t_ae(
-        class = ANL[, .(class_var)],
-        term = ANL[, .(term_var)],
+        class = ANL[[.(class_var)]],
+        term = ANL[[.(term_var)]],
         id = ANL$USUBJID,
         col_by = droplevels(as.factor(ANL[[.(arm_var)]])),
         total = .(total)
