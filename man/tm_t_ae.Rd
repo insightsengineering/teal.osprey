@@ -52,21 +52,16 @@ This shiny module displays the adverse events table (AET02).
 #Example using stream (ADaM) dataset 
 library(dplyr)
 
-data("rADSL")
-data("rADAE")
-
-ASL <- rADSL
-AAE <- rADAE
-AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
+ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
+AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))  \%>\% mutate(USUBJID = SUBJID)
 
 app <- init(
   data = cdisc_data(
     ASL = ASL, 
     AAE = AAE,
     code = paste0(c(
-      "ASL <- rADSL",
-      "AAE <- rADAE",
-      'AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))'),
+      "ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)",
+      'AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\% mutate(USUBJID = SUBJID)'),
       collapse = ";"
     ),
     check = FALSE
