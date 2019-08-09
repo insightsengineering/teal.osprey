@@ -21,11 +21,9 @@ tm_g_butterfly(label, dataname, filter_var = NULL,
 \item{dataname}{analysis data used in teal module, needs to be available in
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{filter_var}{variable name of data filter, please see details regarding
+\item{filter_var}{\code{\link[teal]{choices_selected}}
+variable name of data filter, please see details regarding 
 expected values, default is \code{NULL}}
-
-\item{filter_var_choices}{vector with \code{filter_var} choices, default is
-\code{NULL}}
 
 \item{right_var}{dichotomization variable for right side}
 

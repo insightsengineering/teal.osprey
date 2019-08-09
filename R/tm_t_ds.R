@@ -3,23 +3,8 @@
 #'
 #' Display DST01 Patient Disposition Table as a shiny module
 #'
-#' @inheritParams teal.devel::standard_layout
-#' @param label menu item label of the module in the teal app
-#' @param dataname analysis data used in teal module, needs to be available in
-#'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
-#' @param arm_var single name of variable in analysis data that is used as
-#'   \code{col_by} argument for the respective \code{tern} or \code{osprey}
-#'   function.
-#' @param arm_var_choices vector with variable names that can be used as
-#'   \code{arm_var}
-#' @param class_var class variables selected for display
-#' @param class_var_choices vector with \code{class_var} choices
-#' @param term_var term variables selected for display
-#' @param term_var_choices vector with \code{term_var} choices
-#' @param total_col argument for appearance of "All Patients" column (default is
-#'   \code{TRUE})
-#' @param code_data_processing string with data preprocessing before the teal
-#'   app is initialized, default is NULL
+#' @inheritParams teal::standard_layout
+#' @inheritParams tm_t_ae
 #'
 #' @return an \code{\link[teal]{module}} object
 #' @export
@@ -63,13 +48,13 @@ tm_t_ds <- function(label,
                     arm_var_choices,
                     class_var,
                     class_var_choices,
-                    term_var,
-                    term_var_choices,
-                    total_col = TRUE,
-                    pre_output = NULL,
-                    post_output = NULL,
+                    term_var, 
+                    term_var_choices, 
+                    total_col = TRUE, 
+                    pre_output = NULL, 
+                    post_output = NULL, 
                     code_data_processing = NULL) {
-
+  
   args <- as.list(environment())
 
   module(
@@ -77,7 +62,7 @@ tm_t_ds <- function(label,
     server = srv_t_ds,
     ui = ui_t_ds,
     ui_args = args,
-    server_args = list(dataname = dataname, code_data_processing = code_data_processing),
+    server_args = list(dataname = dataname),
     filters = dataname
   )
 
@@ -106,7 +91,7 @@ ui_t_ds <- function(id, ...) {
 }
 
 srv_t_ds <- function(input, output, session, datasets, dataname, code_data_processing) {
-
+  
   chunks <- list(
     vars = "# Not Calculated",
     data = "# Not Calculated",
@@ -184,7 +169,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       title = "Patient Disposition Table",
       datanames = dataname,
       datasets = datasets,
-      code_data_processing
+      ""
     )
 
     str_rcode <- paste(c(
@@ -206,4 +191,5 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       size = "l"
     ))
   })
+  
 }
