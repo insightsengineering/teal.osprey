@@ -41,11 +41,7 @@
 #' #Example using stream (ADaM) dataset 
 #' library(dplyr)
 #' 
-#' data("rADSL")
-#' data("rADAE")
-#' 
 #' ASL <- rADSL
-#' AAE <- rADAE
 #' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
 #' 
 #' app <- init(
@@ -54,7 +50,6 @@
 #'     AAE = AAE,
 #'     code = paste0(c(
 #'       "ASL <- rADSL",
-#'       "AAE <- rADAE",
 #'       'AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))'),
 #'       collapse = ";"
 #'     ),
@@ -187,33 +182,37 @@ srv_t_ae <- function(input,
     term_var <- input$term_var
     all_p <- input$All_Patients
     
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+    if (dataname != "ASL") {
+      ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+      anl_name <- paste0(dataname, "_FILTERED")
+      assign(anl_name, ANL_FILTERED)
+    }
+    
     chunks_reset(envir = environment())
     
     aae_name <- paste0(dataname, "_FILTERED")
     
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
     aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var))
+    anl_vars <- unique(c(asl_vars, aae_vars))
     
     chunks_push(bquote({
-      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame()
+      ANL <- .(as.name(aae_name))
     }))
     
     if (!is.null(filter_var)) {
       chunks_push(bquote(
-        AAE <- teal.osprey:::quick_filter(.(filter_var), AAE) %>%
-          droplevels() %>%
-          as.data.frame()
+        ANL <- quick_filter(.(filter_var), ANL) %>%
+          droplevels()
       ))
     }
     
     chunks_push(bquote({
-      ANL <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
-        as.data.frame()
-      
-      attr(ANL[, class_var], "label") <- teal.osprey:::label_aevar(class_var)
-      attr(ANL[, term_var], "label") <- teal.osprey:::label_aevar(term_var)
+      attr(ANL[, .(class_var)], "label") <- label_aevar(.(class_var))
+      attr(ANL[, .(term_var)], "label") <- label_aevar(.(term_var))
     }))
+    
     chunks_push_new_line()
     
     total <- if (isTRUE(all_p)) {
