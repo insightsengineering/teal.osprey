@@ -4,10 +4,9 @@
 \alias{tm_t_ae}
 \title{Adverse Events Table Teal Module}
 \usage{
-tm_t_ae(label, dataname, filter_var = NULL, filter_var_choices = NULL,
-  arm_var, arm_var_choices, class_var, class_var_choices, term_var,
-  term_var_choices, total_col = TRUE, pre_output = NULL,
-  post_output = NULL, code_data_processing = NULL)
+tm_t_ae(label, dataname, filter_var = NULL, arm_var, class_var, term_var,
+  total_col = TRUE, pre_output = NULL, post_output = NULL,
+  code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -15,26 +14,18 @@ tm_t_ae(label, dataname, filter_var = NULL, filter_var_choices = NULL,
 \item{dataname}{analysis data used in teal module, needs to be available in
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{filter_var}{variable name of data filter, please see details regarding
+\item{filter_var}{\code{\link[teal]{choices_selected}}
+variable name of data filter, please see details regarding 
 expected values, default is \code{NULL}}
 
-\item{filter_var_choices}{vector with \code{filter_var} choices, default is
-\code{NULL}}
-
-\item{arm_var}{single name of variable in analysis data that is used as
-\code{col_by} argument for the respective \code{tern} or \code{osprey}
+\item{arm_var}{\code{\link[teal]{choices_selected}}
+variable name in analysis data that is used as 
+\code{col_by} argument for the respective \code{tern} or \code{osprey} 
 function.}
 
-\item{arm_var_choices}{vector with variable names that can be used as
-\code{arm_var}}
+\item{class_var}{\code{\link[teal]{choices_selected}} class variables selected for display}
 
-\item{class_var}{class variables selected for display}
-
-\item{class_var_choices}{vector with \code{class_var} choices}
-
-\item{term_var}{term variables selected for display}
-
-\item{term_var_choices}{vector with \code{term_var} choices}
+\item{term_var}{\code{\link[teal]{choices_selected}} term variables selected for display}
 
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
@@ -69,9 +60,7 @@ This shiny module displays the adverse events table (AET02).
   used directly as filter.
 }
 \examples{
-
-\dontrun{
-#Example using stream (ADaM) dataset
+#Example using stream (ADaM) dataset 
 library(dplyr)
 
 data("rADSL")
@@ -79,31 +68,47 @@ data("rADAE")
 
 ASL <- rADSL
 AAE <- rADAE
-AAE <- AAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))
+AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
 
-x1 <- teal::init(
-  data = list(ASL = ASL, AAE = AAE),
+app <- init(
+  data = cdisc_data(
+    ASL = ASL, 
+    AAE = AAE,
+    code = paste0(c(
+      "ASL <- rADSL",
+      "AAE <- rADAE",
+      'AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))'),
+      collapse = ";"
+    ),
+    check = FALSE
+  ),
   modules = root_modules(
     tm_t_ae(
        label = "Adverse Events Table",
        dataname = "AAE",
-       filter_var = NULL,
-       filter_var_choices = c("DTHFL", "flag1"),
-       arm_var = "ARM",
-       arm_var_choices = c("ARM", "ARMCD"),
-       class_var = "AEBODSYS",
-       class_var_choices = c("AEBODSYS", "AEHLTCD"),
-       term_var = "AEDECOD",
-       term_var_choices = c("AEDECOD", "AETERM"),
+       filter_var = choices_selected(
+         choices = c("DTHFL", "flag1"),
+         selected = NULL
+       ),
+       arm_var = choices_selected(
+         choices = c("ARM", "ARMCD"),
+         selected = "ARM"
+       ),
+       class_var = choices_selected(
+         choices = c("AEBODSYS", "AEHLTCD"),
+         selected = "AEBODSYS"
+       ),
+       term_var = choices_selected(
+         choices = c("AEDECOD", "AETERM"),
+         selected = "AEDECOD"
+       ),
        total_col = TRUE
-   )
+    )
   )
 )
-
-shinyApp(x1$ui, x1$server)
-
+\dontrun{
+shinyApp(app$ui, app$server)
 }
-
 }
 \author{
 Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}
