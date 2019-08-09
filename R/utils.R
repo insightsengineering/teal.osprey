@@ -7,21 +7,26 @@
 #' @param ANL input dataset
 #'
 #' @return a filtered dataframe
-#'
+#' 
+#' @export
+#' 
 #' @template author_zhanc107
 #'
 
-quick_filter <- function(filter_opt, ANL) { # nolint
-
+quick_filter <- function(filter_opt, ANL){
   for (i in seq(1:length(filter_opt))) {
-    ANL <- ANL[ANL[, filter_opt[i]] == "Y", ] # nolint
+    ANL <- ANL[ANL[, filter_opt[i]] == "Y", ]
   }
 
   return(ANL)
 }
 
 
-#Automatically switch variable labels for standard AE variables in AE osprey functions
+#' Automatically switch variable labels for standard AE variables in AE osprey functions
+#' 
+#' @param x variable key
+#' 
+#' @export
 label_aevar <- function(x) {
   #Display full variable labels for standard AE variables
   ae_varlabel <- c(AEBODSYS = "MedDRA System Organ Class",
