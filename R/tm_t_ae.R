@@ -41,16 +41,16 @@
 #' #Example using stream (ADaM) dataset 
 #' library(dplyr)
 #' 
-#' ASL <- rADSL
-#' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
+#' ASL <- rADSL %>% mutate(USUBJID = SUBJID)
+#' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))  %>% mutate(USUBJID = SUBJID)
 #' 
 #' app <- init(
 #'   data = cdisc_data(
 #'     ASL = ASL, 
 #'     AAE = AAE,
 #'     code = paste0(c(
-#'       "ASL <- rADSL",
-#'       'AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))'),
+#'       "ASL <- rADSL %>% mutate(USUBJID = SUBJID)",
+#'       'AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>% mutate(USUBJID = SUBJID)'),
 #'       collapse = ";"
 #'     ),
 #'     check = FALSE
