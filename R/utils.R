@@ -7,9 +7,9 @@
 #' @param ANL input dataset
 #'
 #' @return a filtered dataframe
-#' 
+#'
 #' @export
-#' 
+#'
 #' @template author_zhanc107
 #'
 
@@ -21,11 +21,10 @@ quick_filter <- function(filter_opt, ANL){
   return(ANL)
 }
 
-
 #' Automatically switch variable labels for standard AE variables in AE osprey functions
-#' 
+#'
 #' @param x variable key
-#' 
+#'
 #' @export
 label_aevar <- function(x) {
   #Display full variable labels for standard AE variables

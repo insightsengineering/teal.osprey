@@ -18,6 +18,9 @@ variable name in analysis data that is used as
 \code{col_by} argument for the respective \code{tern} or \code{osprey} 
 function.}
 
+\item{arm_var_choices}{vector with variable names that can be used as
+\code{arm_var}}
+
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
 
@@ -28,13 +31,6 @@ output to put the output into context. For example the
 \item{post_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
-
-\item{code_data_processing}{string with data preprocessing before the teal
-app is initialized, default is NULL}
-
-\item{term_var}{term variables selected for display}
-
-\item{term_var_choices}{vector with \code{term_var} choices}
 }
 \value{
 an \code{\link[teal]{module}} object

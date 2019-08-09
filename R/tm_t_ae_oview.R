@@ -2,8 +2,10 @@
 #'
 #' Display AET01 Adverse Events Summary Table as a shiny Module
 #'
-#' @inheritParams teal::standard_layout
+#' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
+#' @param arm_var_choices vector with variable names that can be used as
+#'   \code{arm_var}
 #'
 #' @return an \code{\link[teal]{module}} object
 #' @export

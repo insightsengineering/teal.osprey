@@ -1,7 +1,7 @@
 
 #' Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 #'
-#' @inheritParams teal::standard_layout
+#' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
 #' @param toxgr_var variable name of AE toxicitiy grade
 #'
@@ -97,7 +97,7 @@ ui_t_ae_ctc <- function(id, ...) {
   standard_layout(
     output = whiteSmallWell(uiOutput(ns("table"))),
     encoding =  div(
-      tags$label("Encodings", class="text-primary"),
+      tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
       optionalSelectInput(ns("filter_var"),
                           label = div("Preset Data Filters", tags$br(), helpText("Observations with value of 'Y' for selected variable(s) will be used for analysis")),

@@ -39,9 +39,6 @@ output to put the output into context. For example the
 \item{post_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
-
-\item{code_data_processing}{string with data preprocessing before the teal
-app is initialized, default is NULL}
 }
 \value{
 an \code{\link[teal]{module}} object
@@ -55,7 +52,7 @@ Adverse Events Table by Highest NCI CTCAE Grade Teal Module
   hand side of the shiny app). It can be used as quick access to pre-defined
   subsets of the domain datasets (not subject-level dataset) to be used
   for analysis, denoted by an value of "Y". Each variable within the
-  \code{filter_var_choices} is expected to contain values of either "Y" or
+  \code{filter_var$choices} is expected to contain values of either "Y" or
   "N". If multiple variables are selected as \code{filter_var}, only
   observations with "Y" value in each and every selected variables will be
   used for subsequent analysis. Flag variables (from ADaM datasets) can be
