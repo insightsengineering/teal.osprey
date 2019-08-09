@@ -136,9 +136,11 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
 
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
     aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var, toxgr_var))
+    anl_vars <- c(asl_vars, aae_vars)
 
     chunks_push(bquote({
-      ANL <- .(as.name(aae_name))
+      ANL <- .(as.name(aae_name)) %>%
+          select(.(anl_vars))
     }))
 
     if (!is.null(filter_var)) {
