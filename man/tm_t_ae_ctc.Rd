@@ -4,11 +4,9 @@
 \alias{tm_t_ae_ctc}
 \title{Adverse Events Table by Highest NCI CTCAE Grade Teal Module}
 \usage{
-tm_t_ae_ctc(label, dataname, filter_var = NULL,
-  filter_var_choices = NULL, arm_var, arm_var_choices, class_var,
-  class_var_choices, term_var, term_var_choices, toxgr_var = "AETOXGR",
-  total_col = TRUE, pre_output = NULL, post_output = NULL,
-  code_data_processing = NULL)
+tm_t_ae_ctc(label, dataname, filter_var = NULL, arm_var, class_var,
+  term_var, toxgr_var = "AETOXGR", total_col = TRUE,
+  pre_output = NULL, post_output = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -16,26 +14,18 @@ tm_t_ae_ctc(label, dataname, filter_var = NULL,
 \item{dataname}{analysis data used in teal module, needs to be available in 
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{filter_var}{variable name of data filter, please see details regarding 
+\item{filter_var}{\code{\link[teal]{choices_selected}}
+variable name of data filter, please see details regarding 
 expected values, default is \code{NULL}}
 
-\item{filter_var_choices}{vector with \code{filter_var} choices, default is 
-\code{NULL}}
-
-\item{arm_var}{single name of variable in analysis data that is used as 
+\item{arm_var}{\code{\link[teal]{choices_selected}}
+variable name in analysis data that is used as 
 \code{col_by} argument for the respective \code{tern} or \code{osprey} 
 function.}
 
-\item{arm_var_choices}{vector with variable names that can be used as 
-\code{arm_var}}
+\item{class_var}{\code{\link[teal]{choices_selected}} class variables selected for display}
 
-\item{class_var}{class variables selected for display}
-
-\item{class_var_choices}{vector with \code{class_var} choices}
-
-\item{term_var}{term variables selected for display}
-
-\item{term_var_choices}{vector with \code{term_var} choices}
+\item{term_var}{\code{\link[teal]{choices_selected}} term variables selected for display}
 
 \item{toxgr_var}{variable name of AE toxicitiy grade}
 
@@ -49,9 +39,9 @@ an \code{\link[teal]{module}} object
 Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 }
 \details{
-\code{filter_var} option is designed to work in conjuction with 
-  filtering function provided by \code{teal} (encoding panel on the right 
-  hand side of the shiny app). It can be used as quick access to pre-defined 
+\code{filter_var} option is designed to work in conjuction with
+  filtering function provided by \code{teal} (encoding panel on the right
+  hand side of the shiny app). It can be used as quick access to pre-defined
   subsets of the domain datasets (not subject-level dataset) to be used
   for analysis, denoted by an value of "Y". Each variable within the
   \code{filter_var_choices} is expected to contain values of either "Y" or
@@ -62,37 +52,33 @@ Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 }
 \examples{
 
-\dontrun{
-#Example 
 library(dplyr)
 
-data("rADSL")
-data("rADAE")
-
-ASL <- rADSL
-AAE <- rADAE
-AAE <- AAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) 
+ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
+AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\% mutate(USUBJID = SUBJID)
 
 x1 <- teal::init(
-  data = list(ASL = ASL, AAE = AAE),
+  data = cdisc_data(ASL = ASL, AAE = AAE, code = '
+    ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
+    AAE <- rADAE \%>\%
+      mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\%
+      mutate(USUBJID = SUBJID)
+  '),
   modules = root_modules(
     tm_t_ae_ctc(
-       label = "Adverse Events Table By Highest NCI CTCAE Grade",
-       dataname = "AAE",
-       filter_var = NULL,
-       filter_var_choices = c("DTHFL", "flag1"), 
-       arm_var = "ARM",
-       arm_var_choices = c("ARM", "ARMCD"),
-       class_var = "AEBODSYS",
-       class_var_choices = c("AEBODSYS", "DEFAULT"),
-       term_var = "AEDECOD",
-       term_var_choices = c("AEDECOD", "DEFAULT"),
-       total_col = TRUE
+      label = "Adverse Events Table By Highest NCI CTCAE Grade",
+      dataname = "AAE",
+      filter_var = choices_selected(selected = "ARM", choices = c("DTHFL", "flag1")),
+      arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
+      class_var = choices_selected(selected = "AEBODSYS", choices = c("AEBODSYS", "DEFAULT")),
+      term_var = choices_selected(selected = "AEDECOD", choices = c("AEDECOD", "DEFAULT")),
+      total_col = TRUE
    )
   )
 )
-   
-shinyApp(x1$ui, x1$server)  
+
+\dontrun{
+shinyApp(x1$ui, x1$server)
 }
 
 
