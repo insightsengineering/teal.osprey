@@ -10,7 +10,7 @@
 #'   hand side of the shiny app). It can be used as quick access to pre-defined
 #'   subsets of the domain datasets (not subject-level dataset) to be used
 #'   for analysis, denoted by an value of "Y". Each variable within the
-#'   \code{filter_var_choices} is expected to contain values of either "Y" or
+#'   \code{filter_var$choices} is expected to contain values of either "Y" or
 #'   "N". If multiple variables are selected as \code{filter_var}, only
 #'   observations with "Y" value in each and every selected variables will be
 #'   used for subsequent analysis. Flag variables (from ADaM datasets) can be
@@ -30,7 +30,7 @@
 #' ASL <- rADSL %>% mutate(USUBJID = SUBJID)
 #' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>% mutate(USUBJID = SUBJID)
 #'
-#' x1 <- teal::init(
+#' app <- teal::init(
 #'   data = cdisc_data(ASL = ASL, AAE = AAE, code = '
 #'     ASL <- rADSL %>% mutate(USUBJID = SUBJID)
 #'     AAE <- rADAE %>%
@@ -41,7 +41,7 @@
 #'     tm_t_ae_ctc(
 #'       label = "Adverse Events Table By Highest NCI CTCAE Grade",
 #'       dataname = "AAE",
-#'       filter_var = choices_selected(selected = "ARM", choices = c("DTHFL", "flag1")),
+#'       filter_var = choices_selected(selected = NULL, choices = c("DTHFL", "flag1")),
 #'       arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
 #'       class_var = choices_selected(selected = "AEBODSYS", choices = c("AEBODSYS", "DEFAULT")),
 #'       term_var = choices_selected(selected = "AEDECOD", choices = c("AEDECOD", "DEFAULT")),
@@ -51,7 +51,7 @@
 #' )
 #'
 #' \dontrun{
-#' shinyApp(x1$ui, x1$server)
+#' shinyApp(app$ui, app$server)
 #' }
 #'
 #'
@@ -138,39 +138,41 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
     aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var, toxgr_var))
 
     chunks_push(bquote({
-        ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-        AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame()
+      ANL <- .(as.name(aae_name))
+    }))
 
-        {if(!("NULL" %in% .(filter_var)) && !is.null(.(filter_var))){
-          AAE <- teal.osprey:::quick_filter(.(filter_var), AAE) %>% droplevels() %>% as.data.frame()
-        }}
+    if (!is.null(filter_var)) {
+      chunks_push(bquote(
+          ANL <- quick_filter(.(filter_var), ANL) %>%
+              droplevels()
+      ))
+    }
 
-        ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
-          as.data.frame()
+    chunks_push(bquote({
+      ANL$TOXGR <- as.numeric(ANL[, .(toxgr_var)])
+      attr(ANL[, .(class_var)], "label") <- label_aevar(.(class_var))
+      attr(ANL[, .(term_var)], "label") <- label_aevar(.(term_var))
+      attr(ANL[, "TOXGR"], "label") <- label_aevar(.(toxgr_var))
+    }))
 
-        ANL$TOXGR <- as.numeric(ANL[, .(toxgr_var)])
+    chunks_push_new_line()
 
-        attr(ANL[, .(class_var)], "label") <- teal.osprey:::label_aevar(.(class_var))
-        attr(ANL[, .(term_var)], "label") <- teal.osprey:::label_aevar(.(term_var))
-        attr(ANL[, "TOXGR"], "label") <- teal.osprey:::label_aevar(.(toxgr_var))
-
-        {if(all_p == TRUE) {
-          total <- "All Patients"
+    total <- if (isTRUE(all_p)) {
+          "All Patients"
         } else {
-          total <- NULL
-        }}
-    })
-    )
+          NULL
+        }
+
     chunks_eval()
 
     chunks_push(call(
       "t_ae_ctc_v2",
-      class = bquote(ANL[,class_var]),
-      term = bquote(ANL[,term_var]),
+      class = bquote(ANL[,.(class_var)]),
+      term = bquote(ANL[,.(term_var)]),
       id = bquote(ANL$USUBJID),
       grade = bquote(ANL$TOXGR),
       col_by = bquote(droplevels(as.factor(ANL[[.(arm_var)]]))),
-      total = bquote(total)
+      total = total
     ))
 
     tbl <- chunks_eval()
