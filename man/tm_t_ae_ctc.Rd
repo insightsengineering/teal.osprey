@@ -16,26 +16,18 @@ tm_t_ae_ctc(label, dataname, filter_var = NULL,
 \item{dataname}{analysis data used in teal module, needs to be available in
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{filter_var}{variable name of data filter, please see details regarding
+\item{filter_var}{\code{\link[teal]{choices_selected}}
+variable name of data filter, please see details regarding 
 expected values, default is \code{NULL}}
 
-\item{filter_var_choices}{vector with \code{filter_var} choices, default is
-\code{NULL}}
-
-\item{arm_var}{single name of variable in analysis data that is used as
-\code{col_by} argument for the respective \code{tern} or \code{osprey}
+\item{arm_var}{\code{\link[teal]{choices_selected}}
+variable name in analysis data that is used as 
+\code{col_by} argument for the respective \code{tern} or \code{osprey} 
 function.}
 
-\item{arm_var_choices}{vector with variable names that can be used as
-\code{arm_var}}
+\item{class_var}{\code{\link[teal]{choices_selected}} class variables selected for display}
 
-\item{class_var}{class variables selected for display}
-
-\item{class_var_choices}{vector with \code{class_var} choices}
-
-\item{term_var}{term variables selected for display}
-
-\item{term_var_choices}{vector with \code{term_var} choices}
+\item{term_var}{\code{\link[teal]{choices_selected}} term variables selected for display}
 
 \item{toxgr_var}{variable name of AE toxicitiy grade}
 

@@ -1,3 +1,4 @@
+# nolint start
 # Example App Using Random ADaM Dataset
 # - to use, copy into a new R scrip file and uncomment scripts
 #
@@ -359,3 +360,4 @@
 #
 # ## Start Teal Shiny App ----
 # shinyApp(x$ui, x$server)
+# nolint stop

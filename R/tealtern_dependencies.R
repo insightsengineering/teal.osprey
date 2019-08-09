@@ -12,4 +12,4 @@ has_source_attribute <- function(x) {
 }
 
 #' @importFrom teal.devel white_small_well
-whiteSmallWell <- white_small_well
+whiteSmallWell <- white_small_well # nolint

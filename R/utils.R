@@ -11,14 +11,13 @@
 #' @template author_zhanc107
 #'
 
-quick_filter <- function(filter_opt, ANL){
+quick_filter <- function(filter_opt, ANL) { # nolint
 
-  for(i in seq(1:length(filter_opt))){
-    ANL <- ANL[ANL[, filter_opt[i]] == "Y", ]
+  for (i in seq(1:length(filter_opt))) {
+    ANL <- ANL[ANL[, filter_opt[i]] == "Y", ] # nolint
   }
 
   return(ANL)
-
 }
 
 
