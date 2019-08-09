@@ -1,28 +1,28 @@
 
 #' Disposition Table Teal Module
-#' 
+#'
 #' Display DST01 Patient Disposition Table as a shiny module
-#' 
+#'
 #' @inheritParams teal::standard_layout
 #' @inheritParams tm_t_ae
-#' 
+#'
 #' @return an \code{\link[teal]{module}} object
 #' @export
-#' 
+#'
 #' @template author_zhanc107
-#' 
+#'
 #' @examples
-#' 
+#'
 #' \dontrun{
-#' #Example using random dataset 
-#' 
+#' #Example using random dataset
+#'
 #' library(dplyr)
-#' 
+#'
 #' data("rADSL")
 #' ASL <- rADSL
-#' 
+#'
 #' x <- teal::init(
-#'   data = list(ASL = ASL), 
+#'   data = list(ASL = ASL),
 #'   modules = root_modules(
 #'     tm_t_ds(
 #'        label = "Patient Disposition Table",
@@ -37,42 +37,41 @@
 #'    )
 #'   )
 #' )
-#'    
-#' shinyApp(x$ui, x$server)  
+#'
+#' shinyApp(x$ui, x$server)
 #' }
-#'   
-#' 
-tm_t_ds <- function(label, 
-                    dataname, 
-                    arm_var, 
-                    arm_var_choices, 
+#'
+#'
+tm_t_ds <- function(label,
+                    dataname,
+                    arm_var,
+                    arm_var_choices,
                     class_var,
                     class_var_choices,
-                    term_var, 
-                    term_var_choices, 
-                    total_col = TRUE, 
-                    pre_output = NULL, 
-                    post_output = NULL, 
-                    code_data_processing = NULL) {
-  
+                    term_var,
+                    term_var_choices,
+                    total_col = TRUE,
+                    pre_output = NULL,
+                    post_output = NULL) {
+
   args <- as.list(environment())
-  
+
   module(
     label = label,
     server = srv_t_ds,
     ui = ui_t_ds,
     ui_args = args,
-    server_args = list(dataname = dataname, code_data_processing = code_data_processing),
+    server_args = list(dataname = dataname),
     filters = dataname
   )
-  
+
 }
 
 ui_t_ds <- function(id, ...) {
-  
+
   ns <- NS(id)
   a <- list(...)
-  
+
   standard_layout(
     output = whiteSmallWell(uiOutput(ns("table"))),
     encoding =  div(
@@ -87,35 +86,35 @@ ui_t_ds <- function(id, ...) {
     pre_output = a$pre_output,
     post_output = a$post_output
   )
-  
+
 }
 
-srv_t_ds <- function(input, output, session, datasets, dataname, code_data_processing) {
-  
+srv_t_ds <- function(input, output, session, datasets, dataname) {
+
   chunks <- list(
     vars = "# Not Calculated",
     data = "# Not Calculated",
     analysis = "# Not Calculated"
   )
-  
-  
+
+
   output$table <- renderUI({
-    
+
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    
+
     arm_var <- input$arm_var
     class_var <- input$class_var
     term_var <- input$term_var
     all_p <- input$All_Patients
-    
+
     # # validate your input values
     # validate_standard_inputs(
     #   ASL = ASL_FILTERED,
     #   aslvars = c("USUBJID", arm_var, class_var, term_var)
     # )
-    
+
     asl_vars <- unique(c("STUDYID","USUBJID", arm_var, class_var, term_var))
-    
+
     chunks$vars <<- bquote({
       arm_var <- .(arm_var)
       class_var <- .(class_var)
@@ -124,54 +123,54 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       asl_vars <- .(asl_vars)
 
     })
-    
+
     chunks$data <<- bquote({
       ASL_f <- ASL_FILTERED
-      
+
       {if(all_p == TRUE) {
         total = "All Patients"
       } else {
         total = NULL
       }}
-      
-      ASL_f <- ASL_f[, .(asl_vars)] %>% 
-        as.data.frame() 
-      
+
+      ASL_f <- ASL_f[, .(asl_vars)] %>%
+        as.data.frame()
+
     })
-    
+
     eval(chunks$data)
-    
+
     validate_has_data(ASL_f, min_nrow = 1)
     validate(need(ASL_f[[arm_var]], "Arm variable does not exist"))
     validate(need(!("" %in% ASL_f[[arm_var]]), "arm values can not contain empty strings ''"))
-    
+
     chunks$analysis <<- call(
       "t_ds",
       class = bquote(ASL_f[, class_var]),
-      term = bquote(ASL_f[, term_var]), 
+      term = bquote(ASL_f[, term_var]),
       id = bquote(ASL_f$USUBJID),
       col_by = bquote(droplevels(as.factor(ASL_f[[.(arm_var)]]))),
       total = total
     )
-    
+
     tbl <- try(eval(chunks$analysis))
-    
+
     if (is(tbl, "try-error")) validate(need(FALSE, paste0("could not calculate the table:\n\n", tbl)))
-    
+
     as_html(tbl)
   })
-  
-  
-  
+
+
+
   observeEvent(input$show_rcode, {
-    
+
     header <- get_rcode_header_osprey(
       title = "Patient Disposition Table",
       datanames = dataname,
       datasets = datasets,
-      code_data_processing
+      ""
     )
-    
+
     str_rcode <- paste(c(
       "",
       header,
@@ -182,7 +181,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       "",
       remove_enclosing_curly_braces(deparse(chunks$analysis, width.cutoff = 60))
     ), collapse = "\n")
-    
+
     # .log("show R code")
     showModal(modalDialog(
       title = "R Code for the Current Patient Disposition Table",
@@ -191,5 +190,5 @@ srv_t_ds <- function(input, output, session, datasets, dataname, code_data_proce
       size = "l"
     ))
   })
-  
+
 }
