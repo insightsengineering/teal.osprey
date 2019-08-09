@@ -1,2 +1,11 @@
+^\.CI-FORCE-RELEASE-VERSION$
+^\.drone\.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^_pkgdown\.yaml$
+^\.github$
+man-roxygen/*
+temp/*
+^docs/*
+test_full_example/*
+^Jenkinsfile$

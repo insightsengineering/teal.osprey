@@ -5,7 +5,10 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
-#'
+#' @param filter_var variable name of data filter, please see details regarding
+#'   expected values, default is \code{NULL}
+#' @param filter_var_choices vector with \code{filter_var} choices, default is
+#'   \code{NULL}
 #' @param right_var dichotomization variable for right side
 #' @param right_var_choices vector with dichotomization choices
 #' @param left_var dichotomization variable for left side

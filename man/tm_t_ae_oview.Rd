@@ -14,10 +14,12 @@ tm_t_ae_oview(label, dataname, arm_var, arm_var_choices,
 \item{dataname}{analysis data used in teal module, needs to be available in
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{arm_var}{\code{\link[teal]{choices_selected}}
-variable name in analysis data that is used as 
-\code{col_by} argument for the respective \code{tern} or \code{osprey} 
+\item{arm_var}{single name of variable in analysis data that is used as
+\code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
+
+\item{arm_var_choices}{vector with variable names that can be used as
+\code{arm_var}}
 
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
@@ -32,6 +34,10 @@ output to put the output into context. For example the
 
 \item{code_data_processing}{string with data preprocessing before the teal
 app is initialized, default is NULL}
+
+\item{term_var}{term variables selected for display}
+
+\item{term_var_choices}{vector with \code{term_var} choices}
 }
 \value{
 an \code{\link[teal]{module}} object

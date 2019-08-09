@@ -2,8 +2,27 @@
 #' Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 #'
 #' @inheritParams teal.devel::standard_layout
-#' @inheritParams tm_t_ae
+#' @param label menu item label of the module in the teal app
+#' @param dataname analysis data used in teal module, needs to be available in
+#'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
+#' @param filter_var variable name of data filter, please see details regarding
+#'   expected values, default is \code{NULL}
+#' @param filter_var_choices vector with \code{filter_var} choices, default is
+#'   \code{NULL}
+#' @param arm_var single name of variable in analysis data that is used as
+#'   \code{col_by} argument for the respective \code{tern} or \code{osprey}
+#'   function.
+#' @param arm_var_choices vector with variable names that can be used as
+#'   \code{arm_var}
+#' @param class_var class variables selected for display
+#' @param class_var_choices vector with \code{class_var} choices
+#' @param term_var term variables selected for display
+#' @param term_var_choices vector with \code{term_var} choices
+#' @param total_col argument for appearance of "All Patients" column (default is
+#'   \code{TRUE})
 #' @param toxgr_var variable name of AE toxicitiy grade
+#' @param code_data_processing string with data preprocessing before the teal
+#'   app is initialized, default is NULL
 #'
 #' @details \code{filter_var} option is designed to work in conjuction with
 #'   filtering function provided by \code{teal} (encoding panel on the right

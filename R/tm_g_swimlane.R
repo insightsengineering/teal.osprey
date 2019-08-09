@@ -328,8 +328,8 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       validate_has_variable(ASL_FILTERED, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
     } else {
       validate_standard_inputs(
-        adsl = ASL_FILTERED,
-        adslvars = c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var),
+        asl = ASL_FILTERED,
+        aslvars = c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var),
         anl = ANL_FILTERED,
         anlvars = unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var)),
         min_nrow = 3

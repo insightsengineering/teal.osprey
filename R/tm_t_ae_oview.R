@@ -1,10 +1,20 @@
-
 #' Adverse Events Summary Table Teal Module
 #'
 #' Display AET01 Adverse Events Summary Table as a shiny Module
 #'
 #' @inheritParams teal.devel::standard_layout
-#' @inheritParams tm_t_ae
+#' @param label menu item label of the module in the teal app
+#' @param dataname analysis data used in teal module, needs to be available in
+#'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
+#' @param arm_var single name of variable in analysis data that is used as
+#'   \code{col_by} argument for the respective \code{tern} or \code{osprey}
+#'   function.
+#' @param arm_var_choices vector with variable names that can be used as
+#'   \code{arm_var}
+#' @param total_col argument for appearance of "All Patients" column (default is
+#'   \code{TRUE})
+#' @param code_data_processing string with data preprocessing before the teal
+#'   app is initialized, default is NULL
 #'
 #' @return an \code{\link[teal]{module}} object
 #' @export
@@ -38,7 +48,6 @@
 #' )
 #'
 #' shinyApp(x1$ui, x1$server)
-#'
 #' }
 #'
 #'
