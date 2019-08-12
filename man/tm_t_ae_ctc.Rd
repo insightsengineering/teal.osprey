@@ -65,13 +65,13 @@ library(dplyr)
 ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
 AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\% mutate(USUBJID = SUBJID)
 
-app <- teal::init(
+app <- init(
   data = cdisc_data(ASL = ASL, AAE = AAE, code = '
-    ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
-    AAE <- rADAE \%>\%
-      mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\%
-      mutate(USUBJID = SUBJID)
-  '),
+ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
+AAE <- rADAE \%>\%
+mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\%
+mutate(USUBJID = SUBJID)
+'),
   modules = root_modules(
     tm_t_ae_ctc(
       label = "Adverse Events Table By Highest NCI CTCAE Grade",
@@ -81,14 +81,12 @@ app <- teal::init(
       class_var = choices_selected(selected = "AEBODSYS", choices = c("AEBODSYS", "DEFAULT")),
       term_var = choices_selected(selected = "AEDECOD", choices = c("AEDECOD", "DEFAULT")),
       total_col = TRUE
-   )
+    )
   )
 )
-
 \dontrun{
 shinyApp(app$ui, app$server)
 }
-
 
 }
 \author{
