@@ -9,29 +9,20 @@
 #' @param bar_var (\code{choices_selected})subject-level numeric variable from dataset to plot as the bar length
 #' @param bar_color_var (\code{choices_selected}) color by variable (subject-level)
 #' @param sort_var sort by variable (subject-level)
-#' @param sort_var_choices vector with variable names that can be used as \code{sort_var}
 #' @param marker_pos_var numeric variable for marker position from marker data (Note: make sure that marker
 #'      position has the same relative start day as bar length variable \code{bar_var})
-#' @param marker_pos_var_choices vector with variable names that can be used as \code{marker_pos_var}
 #' @param marker_shape_var marker shape variable from marker data
-#' @param marker_shape_var_choices vector with variable names that can be used as \code{marker_shape_var}
 #' @param marker_shape_opt aesthetic values to map shape values (named vector to map shape values to each name).
 #'      If not \code{NULL}, please make sure this contains all posible values for \code{marker_shape_var} values,
 #'      otherwise shape will be assigned by \code{ggplot} default
 #' @param marker_color_var marker color variable from marker data
-#' @param marker_color_var_choices vector with variable names that can be used as \code{marker_color_var}
 #' @param marker_color_opt aesthetic values to map color values (named vector to map color values to each name).
 #'      If not \code{NULL}, please make sure this contains all posible values for \code{marker_color_var} values,
 #'      otherwise color will be assigned by \code{ggplot} default
 #' @param vref_line vertical reference lines
 #' @param anno_txt_var character vector with subject-level variable names that are selected as annotation
-#' @param anno_txt_var_choices vector with variable names that can be selected as \code{anno_txt_var}
 #' @param plot_height plot height
-#' @inheritParams teal::standard_layout
-#' @param code_data_processing string with data preprocessing before the teal app is initialized
-#'
-#' @import grid
-#' @import utils.nest
+#' @inheritParams teal.devel::standard_layout
 #'
 #' @return a \code{\link[teal]{module}} object
 #'
@@ -83,12 +74,15 @@
 #'       marker_pos_var = choices_selected(selected = "ADY", choices = c("None", "ADY")),
 #'       marker_shape_var = choices_selected(selected = "AVALC", c("None", "AVALC", "AVISIT")),
 #'       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-#'       marker_color_var = choices_selected(selected = "AVALC", choices = c("None", "AVALC", "AVISIT")),
-#'       marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod", "PD" = "red", "Death" = "black"),
+#'       marker_color_var = choices_selected(selected = "AVALC",
+#'                                           choices = c("None", "AVALC", "AVISIT")),
+#'       marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod",
+#'                            "PD" = "red", "Death" = "black"),
 #'       vref_line = c(30, 60),
 #'       anno_txt_var = choices_selected(
 #'         selected = c("ACTARM", "SEX"),
-#'         choices = c("ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1", "SEX", "RACE", "COUNTRY", "DCSREAS", "DCSREASP")
+#'         choices = c("ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
+#'                     "SEX", "RACE", "COUNTRY", "DCSREAS", "DCSREASP")
 #'       )
 #'     )
 #'   )
@@ -295,7 +289,6 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     chunks_reset(envir = environment())
 
     # VARIABLE GETTERS
-
     # lookup bar variables
     bar_var <- input$bar_var
     bar_color_var <- if (input$bar_color_var == "None" | input$bar_color_var == "") NULL else input$bar_color_var

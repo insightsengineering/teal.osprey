@@ -18,12 +18,14 @@ tm_g_butterfly(label, dataname, filter_var = NULL,
 \arguments{
 \item{label}{menu item label of the module in the teal app}
 
-\item{dataname}{analysis data used in teal module, needs to be available in 
+\item{dataname}{analysis data used in teal module, needs to be available in
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{filter_var}{\code{\link[teal]{choices_selected}}
-variable name of data filter, please see details regarding 
+\item{filter_var}{variable name of data filter, please see details regarding
 expected values, default is \code{NULL}}
+
+\item{filter_var_choices}{vector with \code{filter_var} choices, default is
+\code{NULL}}
 
 \item{right_var}{dichotomization variable for right side}
 
@@ -49,7 +51,7 @@ expected values, default is \code{NULL}}
 
 \item{facet_var_choices}{vector with \code{facet_var} choices}
 
-\item{sort_by_var}{argument for order of class and term elements in table, 
+\item{sort_by_var}{argument for order of class and term elements in table,
 default here is "count"}
 
 \item{sort_by_var_choices}{vector with \code{sort_by_var} choices}
@@ -58,7 +60,15 @@ default here is "count"}
 
 \item{plot_height}{range of plot height}
 
-\item{code_data_processing}{string with data preprocessing before the teal 
+\item{pre_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
+
+\item{post_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
+
+\item{code_data_processing}{string with data preprocessing before the teal
 app is initialized, default is NULL}
 }
 \value{
@@ -68,15 +78,15 @@ an \code{\link[teal]{module}} object
 Display butterfly plot as a shiny module
 }
 \details{
-\code{filter_var} option is designed to work in conjuction with 
-  filtering function provided by \code{teal} (encoding panel on the right 
-  hand side of the shiny app). It can be used as quick access to pre-defined 
-  subsets of the domain datasets (not subject-level dataset) to be used for 
-  analysis, denoted by an value of "Y". Each variable within the 
-  \code{filter_var_choices} is expected to contain values of either "Y" or 
-  "N". If multiple variables are selected as \code{filter_var}, only 
-  observations with "Y" value in each and every selected variables will be 
-  used for subsequent analysis. Flag variables (from ADaM datasets) can be 
+\code{filter_var} option is designed to work in conjuction with
+  filtering function provided by \code{teal} (encoding panel on the right
+  hand side of the shiny app). It can be used as quick access to pre-defined
+  subsets of the domain datasets (not subject-level dataset) to be used for
+  analysis, denoted by an value of "Y". Each variable within the
+  \code{filter_var_choices} is expected to contain values of either "Y" or
+  "N". If multiple variables are selected as \code{filter_var}, only
+  observations with "Y" value in each and every selected variables will be
+  used for subsequent analysis. Flag variables (from ADaM datasets) can be
   used directly as filter.
 
 
@@ -89,12 +99,13 @@ library(dplyr)
 
 data("rADSL")
 data("rADAE")
-ASL <- rADSL \%>\% mutate(DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"))
+ASL <- mutate(rADSL, DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"))
 AAE <- rADAE
-AAE <- AAE \%>\% mutate(flag1 = ifelse(AETOXGR == 1, 1, 0)) \%>\% 
-               mutate(flag2 = ifelse(AETOXGR == 2, 1, 0)) \%>\% 
-               mutate(flag3 = ifelse(AETOXGR == 3, 1, 0)) 
-AAE <- AAE \%>\% mutate(flag1_filt = rep("Y", nrow(AAE))) 
+AAE <- AAE \%>\%
+  mutate(flag1 = ifelse(AETOXGR == 1, 1, 0),
+         flag2 = ifelse(AETOXGR == 2, 1, 0),
+         flag3 = ifelse(AETOXGR == 3, 1, 0))
+AAE <- AAE \%>\% mutate(flag1_filt = rep("Y", nrow(AAE)))
 
 x <- teal::init(
   data = list(ASL = ASL, AAE = AAE),
@@ -121,8 +132,8 @@ x <- teal::init(
    )
   )
 )
-   
-shinyApp(x$ui, x$server) 
+
+shinyApp(x$ui, x$server)
 
 }
 

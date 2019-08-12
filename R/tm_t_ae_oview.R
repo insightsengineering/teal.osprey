@@ -1,10 +1,11 @@
-
 #' Adverse Events Summary Table Teal Module
 #'
 #' Display AET01 Adverse Events Summary Table as a shiny Module
 #'
-#' @inheritParams teal::standard_layout
+#' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
+#' @param arm_var_choices vector with variable names that can be used as
+#'   \code{arm_var}
 #'
 #' @return an \code{\link[teal]{module}} object
 #' @export
@@ -69,7 +70,7 @@ ui_t_ae_oview <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = whiteSmallWell(uiOutput(ns("table"))),
+    output = white_small_well(uiOutput(ns("table"))),
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),

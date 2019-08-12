@@ -3,8 +3,12 @@
 #'
 #' Display DST01 Patient Disposition Table as a shiny module
 #'
-#' @inheritParams teal::standard_layout
+#' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
+#' @param arm_var_choices vector with variable names that can be used as
+#'   \code{arm_var}
+#' @param class_var_choices vector with \code{class_var} choices
+#' @param term_var_choices vector with \code{term_var} choices
 #'
 #' @return an \code{\link[teal]{module}} object
 #' @export
@@ -52,7 +56,8 @@ tm_t_ds <- function(label,
                     term_var_choices,
                     total_col = TRUE,
                     pre_output = NULL,
-                    post_output = NULL) {
+                    post_output = NULL,
+                    code_data_processing = NULL) {
 
   args <- as.list(environment())
 
@@ -73,7 +78,7 @@ ui_t_ds <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = whiteSmallWell(uiOutput(ns("table"))),
+    output = white_small_well(uiOutput(ns("table"))),
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
@@ -89,7 +94,7 @@ ui_t_ds <- function(id, ...) {
 
 }
 
-srv_t_ds <- function(input, output, session, datasets, dataname) {
+srv_t_ds <- function(input, output, session, datasets, dataname, code_data_processing) {
 
   chunks <- list(
     vars = "# Not Calculated",

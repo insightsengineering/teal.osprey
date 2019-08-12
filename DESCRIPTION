@@ -10,27 +10,30 @@ Description: Community efforts to collect teal modules for TLGs defined in the o
   The teal modules add an encoding panel to interactively change the encoding within teal.
 Depends:
   R (>= 3.3),
+  osprey,
   shiny,
   teal (>= 0.7.0),
   teal.devel (>= 0.1.0),
-  tern (>= 0.6.2),
-  osprey
+  tern (>= 0.6.2)
 Imports:
-  methods,
-  stats,
-  utils,
+  dplyr,
+  forcats,
   grid,
   gridExtra,
+  haven,
+  magrittr,
+  methods,
   rtables,
   survival,
-  forcats,
-  haven,
-  utils.nest (>= 0.1.0),
+  stats,
+  utils,
+  utils.nest (>= 0.1.0)
 Suggests:
-  testthat,
   knitr,
-  rmarkdown
-License: Copyright Roche, internal use only
+  rmarkdown,
+  test.nest,
+  testthat
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1

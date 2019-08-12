@@ -11,16 +11,16 @@ tm_t_ae(label, dataname, filter_var = NULL, arm_var, class_var, term_var,
 \arguments{
 \item{label}{menu item label of the module in the teal app}
 
-\item{dataname}{analysis data used in teal module, needs to be available in 
+\item{dataname}{analysis data used in teal module, needs to be available in
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
 \item{filter_var}{\code{\link[teal]{choices_selected}}
-variable name of data filter, please see details regarding 
+variable name of data filter, please see details regarding
 expected values, default is \code{NULL}}
 
 \item{arm_var}{\code{\link[teal]{choices_selected}}
-variable name in analysis data that is used as 
-\code{col_by} argument for the respective \code{tern} or \code{osprey} 
+variable name in analysis data that is used as
+\code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
 \item{class_var}{\code{\link[teal]{choices_selected}} class variables selected for display}
@@ -29,6 +29,17 @@ function.}
 
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
+
+\item{pre_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
+
+\item{post_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
+
+\item{code_data_processing}{string with data preprocessing before the teal
+app is initialized, default is NULL}
 }
 \value{
 an \code{\link[teal]{module}} object
@@ -37,9 +48,9 @@ an \code{\link[teal]{module}} object
 This shiny module displays the adverse events table (AET02).
 }
 \details{
-\code{filter_var} option is designed to work in conjuction with 
-  filtering function provided by \code{teal} (encoding panel on the right 
-  hand side of the shiny app). It can be used as quick access to pre-defined 
+\code{filter_var} option is designed to work in conjuction with
+  filtering function provided by \code{teal} (encoding panel on the right
+  hand side of the shiny app). It can be used as quick access to pre-defined
   subsets of the domain datasets (not subject-level dataset) to be used
   for analysis, denoted by an value of "Y". Each variable within the
   \code{filter_var_choices} is expected to contain values of either "Y" or
@@ -49,7 +60,7 @@ This shiny module displays the adverse events table (AET02).
   used directly as filter.
 }
 \examples{
-#Example using stream (ADaM) dataset 
+#Example using stream (ADaM) dataset
 library(dplyr)
 
 ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
@@ -57,7 +68,7 @@ AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))  \%>\% mutate(US
 
 app <- init(
   data = cdisc_data(
-    ASL = ASL, 
+    ASL = ASL,
     AAE = AAE,
     code = paste0(c(
       "ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)",

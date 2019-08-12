@@ -11,7 +11,7 @@ tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd,
   vref_line = NULL, href_line = NULL, anno_txt_var,
   legend_on = FALSE, xfacet_var = NULL,
   xfacet_var_choices = xfacet_var, yfacet_var = NULL,
-  yfacet_var_choices = y_facet_var, plot_height, pre_output = NULL,
+  yfacet_var_choices = yfacet_var, plot_height, pre_output = NULL,
   post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
@@ -60,6 +60,14 @@ Note that the data is expected to be in vertical form with the
 
 \item{plot_height}{range of plot height}
 
+\item{pre_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
+
+\item{post_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
+
 \item{code_data_processing}{string with data preprocessing before the teal
 app is initialized, default is NULL}
 }
@@ -76,7 +84,7 @@ Display spiderplot as a shiny module
 library(dplyr)
 
 data("rADSL")
-data("rADTR") 
+data("rADTR")
 
 ASL <- rADSL
 ATR <- rADTR
@@ -113,8 +121,8 @@ x <- teal::init(
    )
   )
 )
-   
-shinyApp(x$ui, x$server) 
+
+shinyApp(x$ui, x$server)
 }
 
 }

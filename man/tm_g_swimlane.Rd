@@ -45,17 +45,13 @@ otherwise color will be assigned by \code{ggplot} default}
 
 \item{plot_height}{plot height}
 
-\item{sort_var_choices}{vector with variable names that can be used as \code{sort_var}}
+\item{pre_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
 
-\item{marker_pos_var_choices}{vector with variable names that can be used as \code{marker_pos_var}}
-
-\item{marker_shape_var_choices}{vector with variable names that can be used as \code{marker_shape_var}}
-
-\item{marker_color_var_choices}{vector with variable names that can be used as \code{marker_color_var}}
-
-\item{anno_txt_var_choices}{vector with variable names that can be selected as \code{anno_txt_var}}
-
-\item{code_data_processing}{string with data preprocessing before the teal app is initialized}
+\item{post_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
 }
 \value{
 a \code{\link[teal]{module}} object
@@ -107,12 +103,15 @@ arrange(USUBJID)
       marker_pos_var = choices_selected(selected = "ADY", choices = c("None", "ADY")),
       marker_shape_var = choices_selected(selected = "AVALC", c("None", "AVALC", "AVISIT")),
       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-      marker_color_var = choices_selected(selected = "AVALC", choices = c("None", "AVALC", "AVISIT")),
-      marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod", "PD" = "red", "Death" = "black"),
+      marker_color_var = choices_selected(selected = "AVALC",
+                                          choices = c("None", "AVALC", "AVISIT")),
+      marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod",
+                           "PD" = "red", "Death" = "black"),
       vref_line = c(30, 60),
       anno_txt_var = choices_selected(
         selected = c("ACTARM", "SEX"),
-        choices = c("ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1", "SEX", "RACE", "COUNTRY", "DCSREAS", "DCSREASP")
+        choices = c("ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
+                    "SEX", "RACE", "COUNTRY", "DCSREAS", "DCSREASP")
       )
     )
   )

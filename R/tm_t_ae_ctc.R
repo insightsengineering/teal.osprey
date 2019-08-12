@@ -1,7 +1,7 @@
 
 #' Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 #'
-#' @inheritParams teal::standard_layout
+#' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
 #' @param toxgr_var variable name of AE toxicitiy grade
 #'
@@ -92,7 +92,7 @@ ui_t_ae_ctc <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = whiteSmallWell(uiOutput(ns("table"))),
+    output = white_small_well(uiOutput(ns("table"))),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
