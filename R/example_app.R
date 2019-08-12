@@ -360,4 +360,4 @@
 #
 # ## Start Teal Shiny App ----
 # shinyApp(x$ui, x$server)
-# nolint stop
+# nolint end
