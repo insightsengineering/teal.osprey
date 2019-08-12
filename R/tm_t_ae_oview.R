@@ -70,7 +70,7 @@ ui_t_ae_oview <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = whiteSmallWell(uiOutput(ns("table"))),
+    output = white_small_well(uiOutput(ns("table"))),
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),

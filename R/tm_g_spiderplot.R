@@ -127,7 +127,7 @@ ui_g_spider <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = whiteSmallWell(uiOutput(ns("plot_ui"))),
+    output = white_small_well(uiOutput(ns("plot_ui"))),
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),

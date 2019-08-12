@@ -15,12 +15,12 @@ tm_t_ae(label, dataname, filter_var = NULL, arm_var, class_var, term_var,
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
 \item{filter_var}{\code{\link[teal]{choices_selected}}
-variable name of data filter, please see details regarding 
+variable name of data filter, please see details regarding
 expected values, default is \code{NULL}}
 
 \item{arm_var}{\code{\link[teal]{choices_selected}}
-variable name in analysis data that is used as 
-\code{col_by} argument for the respective \code{tern} or \code{osprey} 
+variable name in analysis data that is used as
+\code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
 \item{class_var}{\code{\link[teal]{choices_selected}} class variables selected for display}
@@ -60,7 +60,7 @@ This shiny module displays the adverse events table (AET02).
   used directly as filter.
 }
 \examples{
-#Example using stream (ADaM) dataset 
+#Example using stream (ADaM) dataset
 library(dplyr)
 
 ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
@@ -68,7 +68,7 @@ AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))  \%>\% mutate(US
 
 app <- init(
   data = cdisc_data(
-    ASL = ASL, 
+    ASL = ASL,
     AAE = AAE,
     code = paste0(c(
       "ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)",

@@ -15,12 +15,12 @@ tm_t_ae_ctc(label, dataname, filter_var = NULL, arm_var, class_var,
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
 \item{filter_var}{\code{\link[teal]{choices_selected}}
-variable name of data filter, please see details regarding 
+variable name of data filter, please see details regarding
 expected values, default is \code{NULL}}
 
 \item{arm_var}{\code{\link[teal]{choices_selected}}
-variable name in analysis data that is used as 
-\code{col_by} argument for the respective \code{tern} or \code{osprey} 
+variable name in analysis data that is used as
+\code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
 \item{class_var}{\code{\link[teal]{choices_selected}} class variables selected for display}

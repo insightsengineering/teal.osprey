@@ -14,8 +14,8 @@ tm_t_ae_oview(label, dataname, arm_var, arm_var_choices,
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
 \item{arm_var}{\code{\link[teal]{choices_selected}}
-variable name in analysis data that is used as 
-\code{col_by} argument for the respective \code{tern} or \code{osprey} 
+variable name in analysis data that is used as
+\code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
 \item{arm_var_choices}{vector with variable names that can be used as

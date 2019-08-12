@@ -9,11 +9,11 @@
 #' @param dataname analysis data used in teal module, needs to be available in
 #'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 #' @param filter_var \code{\link[teal]{choices_selected}}
-#'   variable name of data filter, please see details regarding 
+#'   variable name of data filter, please see details regarding
 #'   expected values, default is \code{NULL}
 #' @param arm_var \code{\link[teal]{choices_selected}}
-#'   variable name in analysis data that is used as 
-#'   \code{col_by} argument for the respective \code{tern} or \code{osprey} 
+#'   variable name in analysis data that is used as
+#'   \code{col_by} argument for the respective \code{tern} or \code{osprey}
 #'   function.
 #' @param class_var \code{\link[teal]{choices_selected}} class variables selected for display
 #' @param term_var \code{\link[teal]{choices_selected}} term variables selected for display
@@ -38,17 +38,17 @@
 #'
 #' @template author_zhanc107
 #' @template author_liaoc10
-#'   
-#' @examples 
-#' #Example using stream (ADaM) dataset 
+#'
+#' @examples
+#' #Example using stream (ADaM) dataset
 #' library(dplyr)
-#' 
+#'
 #' ASL <- rADSL %>% mutate(USUBJID = SUBJID)
 #' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))  %>% mutate(USUBJID = SUBJID)
-#' 
+#'
 #' app <- init(
 #'   data = cdisc_data(
-#'     ASL = ASL, 
+#'     ASL = ASL,
 #'     AAE = AAE,
 #'     code = paste0(c(
 #'       "ASL <- rADSL %>% mutate(USUBJID = SUBJID)",
@@ -95,7 +95,7 @@ tm_t_ae <- function(label,
                     post_output = NULL,
                     code_data_processing = NULL) {
   args <- as.list(environment())
-  
+
   stopifnot(is.character.single(label))
   stopifnot(is.character.single(dataname))
   stopifnot(is.null(filter_var) || is.choices_selected(filter_var))
@@ -103,7 +103,7 @@ tm_t_ae <- function(label,
   stopifnot(is.choices_selected(class_var))
   stopifnot(is.choices_selected(term_var))
   stopifnot(is.logical.single(total_col))
-  
+
   module(
     label = label,
     server = srv_t_ae,
@@ -119,7 +119,7 @@ ui_t_ae <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = whiteSmallWell(uiOutput(ns("table"))),
+    output = white_small_well(uiOutput(ns("table"))),
     encoding =  div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
@@ -173,57 +173,57 @@ srv_t_ae <- function(input,
                      datasets,
                      dataname,
                      code_data_processing) {
-  
+
   init_chunks()
-  
+
   output$table <- renderUI({
-    
+
     filter_var <- input$filter_var
     arm_var <- input$arm_var
     class_var <- input$class_var
     term_var <- input$term_var
     all_p <- input$All_Patients
-    
+
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
     if (dataname != "ASL") {
       ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
       anl_name <- paste0(dataname, "_FILTERED")
       assign(anl_name, ANL_FILTERED)
     }
-    
+
     chunks_reset(envir = environment())
-    
+
     aae_name <- paste0(dataname, "_FILTERED")
-    
+
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
     aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var))
     anl_vars <- unique(c(asl_vars, aae_vars))
-    
+
     chunks_push(bquote({
-      ANL <- .(as.name(aae_name)) %>% 
+      ANL <- .(as.name(aae_name)) %>%
         select(.(anl_vars))
     }))
-    
+
     if (!is.null(filter_var)) {
       chunks_push(bquote(
         ANL <- quick_filter(.(filter_var), ANL) %>%
           droplevels()
       ))
     }
-    
+
     chunks_push(bquote({
       attr(ANL[[.(class_var)]], "label") <- label_aevar(.(class_var))
       attr(ANL[[.(term_var)]], "label") <- label_aevar(.(term_var))
     }))
-    
+
     chunks_push_new_line()
-    
+
     total <- if (isTRUE(all_p)) {
       "All Patients"
     } else {
       NULL
     }
-    
+
     chunks_push(bquote({
       tbl <- t_ae(
         class = ANL[[.(class_var)]],
@@ -234,15 +234,15 @@ srv_t_ae <- function(input,
       )
       tbl
     }))
-    
+
     chunks_eval()
 
     chunks_validate_all("tbl", "rtable", "Evaluation with tern t_ae failed.")
     tbl <- chunks_get_var("tbl")
-    
+
     as_html(tbl)
   })
-  
+
   observeEvent(input$show_rcode, {
     show_rcode_modal(
       title = "Adverse Events Table",
