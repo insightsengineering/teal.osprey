@@ -4,9 +4,8 @@
 \alias{tm_t_ds}
 \title{Disposition Table Teal Module}
 \usage{
-tm_t_ds(label, dataname, arm_var, arm_var_choices, class_var,
-  class_var_choices, term_var, term_var_choices, total_col = TRUE,
-  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
+tm_t_ds(label, dataname, arm_var, class_var, term_var, total_col = TRUE,
+  pre_output = NULL, post_output = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -19,16 +18,9 @@ variable name in analysis data that is used as
 \code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
-\item{arm_var_choices}{vector with variable names that can be used as
-\code{arm_var}}
-
 \item{class_var}{\code{\link[teal]{choices_selected}} class variables selected for display}
 
-\item{class_var_choices}{vector with \code{class_var} choices}
-
 \item{term_var}{\code{\link[teal]{choices_selected}} term variables selected for display}
-
-\item{term_var_choices}{vector with \code{term_var} choices}
 
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
@@ -41,8 +33,12 @@ output to put the output into context. For example the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 
-\item{code_data_processing}{string with data preprocessing before the teal
-app is initialized, default is NULL}
+\item{arm_var_choices}{vector with variable names that can be used as
+\code{arm_var}}
+
+\item{class_var_choices}{vector with \code{class_var} choices}
+
+\item{term_var_choices}{vector with \code{term_var} choices}
 }
 \value{
 an \code{\link[teal]{module}} object
@@ -53,27 +49,26 @@ Display DST01 Patient Disposition Table as a shiny module
 \examples{
 
 \dontrun{
-#Example using random dataset
-
+# Example using stream (ADaM) dataset
 library(dplyr)
 
-data("rADSL")
-ASL <- rADSL
+ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
 
-x <- teal::init(
-  data = list(ASL = ASL),
+app <- init(
+  data = cdisc_data(
+    ASL = ASL,
+    code = "ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)",
+    check = FALSE
+  ),
   modules = root_modules(
     tm_t_ds(
        label = "Patient Disposition Table",
        dataname = "ASL",
-       arm_var = "ARM",
-       arm_var_choices = c("ARM", "ARMCD"),
-       class_var = "EOSSTT",
-       class_var_choices = "EOSSTT",
-       term_var = "DCSREAS",
-       term_var_choices = c("DCSREAS", "DCSREASP"),
+       arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
+       class_var =  choices_selected(selected = "EOSSTT", choices = "EOSSTT"),
+       term_var = choices_selected(selected = "DCSREAS", choices = c("DCSREAS", "DCSREASP")),
        total_col = TRUE
-   )
+    )
   )
 )
 
