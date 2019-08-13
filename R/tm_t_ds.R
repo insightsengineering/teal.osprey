@@ -41,7 +41,7 @@
 #'   )
 #' )
 #'
-#' shinyApp(x$ui, x$server)
+#' shinyApp(app$ui, app$server)
 #' }
 #'
 tm_t_ds <- function(label,
