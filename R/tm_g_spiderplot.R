@@ -48,13 +48,9 @@
 #'
 #' ASL <- rADSL
 #' ATR <- rADTR
-#' #dat <- left_join(ATR, ASL) %>% filter(PARAMCD == "SUMTGLES") %>% as.data.frame()
-#'
-#' # test character vector as x axis labels
-#' #ATR$TUDY <- as.character(ATR$TUDY)
 #'
 #' x <- teal::init(
-#'   data = list(ASL = ASL, ATR = ATR),
+#'   data = cdisc_data(ASL = ASL, ATR = ATR),
 #'   modules = root_modules(
 #'     tm_g_spiderplot(
 #'        label = "Spiderplot",
@@ -127,52 +123,55 @@ ui_g_spider <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = white_small_well(uiOutput(ns("plot_ui"))),
+    output = white_small_well(plot_height_output(id = ns("spiderplot"))),
     encoding =  div(
       tags$label("Encodings", class="text-primary"),
-      helpText("Dataset is:", tags$code(a$dataname)),
-      optionalSelectInput(
-        ns("paramcd"),
-        "Parameter - from ATR",
-        a$paramcd_choices,
-        a$paramcd,
-        multiple = FALSE),
-      optionalSelectInput(
-        ns("x_var"),
-        "X-axis Variable",
-        a$x_var_choices,
-        a$x_var,
-        multiple = FALSE),
-      optionalSelectInput(
-        ns("y_var"),
-        "Y-axis Variable",
-        a$y_var_choices,
-        a$y_var,
-        multiple = FALSE),
-      optionalSelectInput(
-        ns("line_colorby_var"),
-        "Color By Variable (Line)",
-        a$line_colorby_var_choices,
-        a$line_colorby_var,
-        multiple = FALSE),
-      optionalSelectInput(
-        ns("marker_var"),
-        "Marker Symbol By Variable",
-        a$marker_var_choices,
-        a$marker_var,
-        multiple = FALSE),
-      optionalSelectInput(
-        ns("xfacet_var"),
-        "X-facet By Variable",
-        a$xfacet_var_choices,
-        a$xfacet_var,
-        multiple = TRUE),
-      optionalSelectInput(
-        ns("yfacet_var"),
-        "Y-facet By Variable",
-        a$yfacet_var_choices,
-        a$yfacet_var,
-        multiple = TRUE),
+      helpText("Analysis data:", tags$code(a$dataname)),
+      div(
+        style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
+        optionalSelectInput(
+          ns("paramcd"),
+          "Parameter - from ATR",
+          a$paramcd_choices,
+          a$paramcd,
+          multiple = FALSE),
+        optionalSelectInput(
+          ns("x_var"),
+          "X-axis Variable",
+          a$x_var_choices,
+          a$x_var,
+          multiple = FALSE),
+        optionalSelectInput(
+          ns("y_var"),
+          "Y-axis Variable",
+          a$y_var_choices,
+          a$y_var,
+          multiple = FALSE),
+        optionalSelectInput(
+          ns("line_colorby_var"),
+          "Color By Variable (Line)",
+          a$line_colorby_var_choices,
+          a$line_colorby_var,
+          multiple = FALSE),
+        optionalSelectInput(
+          ns("marker_var"),
+          "Marker Symbol By Variable",
+          a$marker_var_choices,
+          a$marker_var,
+          multiple = FALSE),
+        optionalSelectInput(
+          ns("xfacet_var"),
+          "X-facet By Variable",
+          a$xfacet_var_choices,
+          a$xfacet_var,
+          multiple = TRUE),
+        optionalSelectInput(
+          ns("yfacet_var"),
+          "Y-facet By Variable",
+          a$yfacet_var_choices,
+          a$yfacet_var,
+          multiple = TRUE)
+      ),
       checkboxInput(
         ns("anno_txt_var"),
         "Add subject ID label",
@@ -194,7 +193,7 @@ ui_g_spider <- function(id, ...) {
                     helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")),
         value = a$href_line),
       tags$label("Plot Settings", class="text-primary", style="margin-top: 15px;"),
-      optionalSliderInputValMinMax(ns("plot_height"), "plot height", a$plot_height, ticks = FALSE)
+      plot_height_input(id = ns("spiderplot"), value = a$plot_height)
     ),
     forms = tags$div(
       actionButton(ns("show_rcode"), "Show R Code", width = "100%")#,
@@ -210,13 +209,19 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
 
   vals <- reactiveValues(spiderplot=NULL)
 
-  # dynamic plot height
-  output$plot_ui <- renderUI({
-    plot_height <- input$plot_height
-    validate(need(plot_height, "need valid plot height"))
-    plotOutput(session$ns("spiderplot"), height=plot_height)
+  callModule(plot_with_height,
+             id = "spiderplot",
+             plot_height = reactive(input$spiderplot),
+             plot_id = session$ns("plot")
+  )
 
-  })
+  # # dynamic plot height
+  # output$plot_ui <- renderUI({
+  #   plot_height <- input$plot_height
+  #   validate(need(plot_height, "need valid plot height"))
+  #   plotOutput(session$ns("spiderplot"), height=plot_height)
+  #
+  # })
 
   chunks <- list(
     vars = "# Not Calculated",
@@ -224,7 +229,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     p_spiderplot = "# Not Calculated"
   )
 
-  output$spiderplot <- renderPlot({
+  # output$spiderplot <- renderPlot({
+  output$plot <- renderPlot({
 
     paramcd <- input$paramcd
     x_var <- input$x_var
