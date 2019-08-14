@@ -27,8 +27,6 @@
 #' @param yfacet_var variable for y facets
 #' @param yfacet_var_choices vector with \code{yfacet_var} choices
 #' @param plot_height range of plot height
-#' @param code_data_processing string with data preprocessing before the teal
-#'   app is initialized, default is NULL
 #' @inheritParams teal.devel::standard_layout
 #'
 #' @return an \code{\link[teal]{module}} object
@@ -49,7 +47,7 @@
 #' ASL <- rADSL
 #' ATR <- rADTR
 #'
-#' x <- teal::init(
+#' app <- teal::init(
 #'   data = cdisc_data(ASL = ASL, ATR = ATR),
 #'   modules = root_modules(
 #'     tm_g_spiderplot(
@@ -78,7 +76,7 @@
 #'   )
 #' )
 #'
-#' shinyApp(x$ui, x$server)
+#' shinyApp(app$ui, app$server)
 #' }
 #'
 tm_g_spiderplot <- function(label,
@@ -103,15 +101,14 @@ tm_g_spiderplot <- function(label,
                             yfacet_var_choices = yfacet_var,
                             plot_height,
                             pre_output = NULL,
-                            post_output = NULL,
-                            code_data_processing = NULL) {
+                            post_output = NULL) {
 
   args <- as.list(environment())
   module(
     label = label,
     filters = dataname,
     server = srv_g_spider,
-    server_args = list(dataname = dataname, code_data_processing = code_data_processing),
+    server_args = list(dataname = dataname, label = label),
     ui = ui_g_spider,
     ui_args = args
   )
@@ -184,7 +181,7 @@ ui_g_spider <- function(id, ...) {
         ns("vref_line"),
         label = div("Vertical Reference Line(s)",
                     tags$br(),
-                    helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")),
+                    helpText("Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)")),
         value = a$vref_line),
       textInput(
         ns("href_line"),
@@ -197,7 +194,6 @@ ui_g_spider <- function(id, ...) {
     ),
     forms = tags$div(
       actionButton(ns("show_rcode"), "Show R Code", width = "100%")#,
-      # downloadButton(ns("export_plot"), "Export Image", width = "100%")
     ),
     pre_output = a$pre_output,
     post_output = a$post_output
@@ -205,7 +201,7 @@ ui_g_spider <- function(id, ...) {
 
 }
 
-srv_g_spider <- function(input, output, session, datasets, dataname, code_data_processing) {
+srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
   vals <- reactiveValues(spiderplot=NULL)
 
@@ -215,22 +211,27 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
              plot_id = session$ns("plot")
   )
 
-  # # dynamic plot height
-  # output$plot_ui <- renderUI({
-  #   plot_height <- input$plot_height
-  #   validate(need(plot_height, "need valid plot height"))
-  #   plotOutput(session$ns("spiderplot"), height=plot_height)
-  #
-  # })
+  # initialize chunks
+  init_chunks()
 
-  chunks <- list(
-    vars = "# Not Calculated",
-    data = "#Not Calculated",
-    p_spiderplot = "# Not Calculated"
-  )
-
-  # output$spiderplot <- renderPlot({
+  # render plot
   output$plot <- renderPlot({
+
+    # get datasets ---
+
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+    ATR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+
+    atr_name <- paste0(dataname, "_FILTERED")
+    assign(atr_name, ATR_FILTERED) # so that we can refer to the 'correct' data name
+
+
+    # restart chunks & include current environment ---
+
+    chunks_reset(envir = environment())
+
+
+    # get inputs ---
 
     paramcd <- input$paramcd
     x_var <- input$x_var
@@ -245,21 +246,22 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
     vref_line <- input$vref_line
     href_line <- input$href_line
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    ATR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
 
-    #if variable is not in ASL, then take from domain VADs
+    # define variables ---
+
+    # if variable is not in ASL, then take from domain VADs
     varlist <- c(xfacet_var, yfacet_var, marker_var, line_colorby_var)
     varlist_from_asl <- varlist[varlist %in% names(ASL_FILTERED)]
     varlist_from_anl <- varlist[!varlist %in% names(ASL_FILTERED)]
 
-    atr_name <- paste0(dataname, "_FILTERED")
-    assign(atr_name, ATR_FILTERED) # so that we can refer to the 'correct' data name
-
     asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl))
     atr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
 
-    chunks$vars <<- bquote({
+
+
+    # variables and inputs to chunks ---
+
+    chunks_push(bquote({
       asl_vars <- .(asl_vars)
       atr_vars <- .(atr_vars)
 
@@ -274,120 +276,157 @@ srv_g_spider <- function(input, output, session, datasets, dataname, code_data_p
       legend_on <- .(legend_on)
       xfacet_var <- .(xfacet_var)
       yfacet_var <- .(yfacet_var)
-    })
+    }))
 
-    chunks$data <<- bquote({
+    chunks_push_new_line()
+
+
+    # preprocessing of datasets to chunks ---
+
+    # vars definition
+    chunks_push(bquote({
       atr_vars <- atr_vars[atr_vars != "None"]
       atr_vars <- atr_vars[!is.null(atr_vars)]
+    }))
 
-      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-      ATR <- .(as.name(atr_name))[, .(atr_vars)] %>% as.data.frame()
+    chunks_push_new_line()
+
+    # merge
+    chunks_push(bquote({
+      ASL <- ASL_FILTERED[, asl_vars] %>% as.data.frame()
+      ATR <- .(as.name(atr_name))[, atr_vars] %>% as.data.frame()
 
       ANL <- merge(ASL, ATR, by = c("USUBJID", "STUDYID"))
-      ANL <- ANL %>% group_by(USUBJID, PARAMCD) %>% arrange(ANL[,.(x_var)]) %>%
+      ANL <- ANL %>% group_by(USUBJID, PARAMCD) %>% arrange(ANL[,x_var]) %>%
         as.data.frame()
+    }))
 
-      #replace USUBJID with all text after id
+    chunks_push_new_line()
+
+    # format and filter
+    chunks_push(quote({
       ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, '-', fixed = TRUE), tail, 1))
 
-      ANL_f <- ANL %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame()
+      ANL_f <- ANL %>% filter(PARAMCD == paramcd) %>% as.data.frame()
+    }))
 
-      #If reference lines are requested
+    chunks_push_new_line()
+
+    # check
+    chunks_eval()
+    validate(need(chunks_is_ok(), "Data could not be constructed."))
+
+    # reference lines preprocessing - vertical
+    chunks_push(quote({
       {
-        if (vref_line != "" || is.null(vref_line)) {
-          vref_line <- unlist(strsplit(.(vref_line), ","))
-
-          if(is.numeric(ANL_f[,.(x_var)])){
-            vref_line <- as.numeric(vref_line)
-            validate(need(all(!is.na(vref_line)),
-                          "Not all values entered for reference line(s) were numeric"))
-          } else{
-            validate(need(all(href_line %in% unique(ANL_f[,.(x_var)])),
-                          "Not all values entered for reference line(s) are in the x-axis"))
-          }
-        } else{
+        # If reference lines are requested
+        if (!is.null(vref_line) || vref_line != "") {
+          vref_line <- as.numeric(unlist(strsplit(vref_line, ",")))
+        } else {
           vref_line <- NULL
         }
       }
+    }))
 
+    chunks_push_new_line()
+
+    # validate vref_line
+    chunks_eval()
+    vl <- chunks_get_var("vref_line")
+    validate(need(all(!is.na(vl)),
+                  "Not all values entered for reference line(s) were numeric"))
+    ANL_f <- chunks_get_var("ANL_f")
+    validate(need(chunks_is_ok(), "Data could not be constructed."))
+
+    # reference lines preprocessing - horizontal
+    chunks_push(quote({
       {
         if (!is.null(href_line) || href_line != "") {
-          href_line <- as.numeric(unlist(strsplit(.(href_line), ",")))
-          validate(need(all(!is.na(href_line)), "Not all values entered for reference line(s) were numeric"))
-        } else{
+          href_line <- as.numeric(unlist(strsplit(href_line, ",")))
+        } else {
           href_line <- NULL
         }
       }
+    }))
 
+    chunks_push_new_line()
 
+    # validate href_line
+    chunks_eval()
+    hl <- chunks_get_var("href_line")
+    validate(need(all(!is.na(hl)), "Not all values entered for reference line(s) were numeric"))
+
+    # check
+    validate(need(chunks_is_ok(), "Data could not be constructed."))
+
+    # label
+    chunks_push(quote({
       lbl <- NULL
-      if(.(anno_txt_var)){
+      if(anno_txt_var){
         lbl <- list(txt_ann = as.factor(ANL_f$USUBJID))
       }
+    }))
 
-    })
+    chunks_push_new_line()
 
-    eval(chunks$data)
+    # check
+    chunks_eval()
+    validate(need(chunks_is_ok(), "Data could not be constructed."))
 
-    chunks$p_spiderplot <<- call(
+
+
+    # plot code to chunks ---
+
+    chunks_push(call(
       "g_spiderplot",
-      marker_x = bquote(ANL_f[,x_var]),
-      marker_id = bquote(ANL_f$USUBJID),
-      marker_y = bquote(ANL_f[,y_var]),
-      line_colby = bquote(if(line_colorby_var != "None"){ANL_f[,line_colorby_var]}else{NULL}),
-      marker_shape = bquote(if(marker_var != "None"){ANL_f[,marker_var]}else{NULL}),
+      marker_x = quote(ANL_f[,x_var]),
+      marker_id = quote(ANL_f$USUBJID),
+      marker_y = quote(ANL_f[,y_var]),
+      line_colby = if (line_colorby_var != "None") {
+        quote(ANL_f[,line_colorby_var])
+      } else {
+        NULL
+      },
+      marker_shape = if (marker_var != "None") {
+        quote(ANL_f[,marker_var])
+      } else {
+        NULL
+      },
       marker_size = 4,
-      datalabel_txt = bquote(lbl),
-      facet_rows = bquote(if(!is.null(yfacet_var)){data.frame(ANL_f[,yfacet_var])}else{NULL}),
-      facet_columns = bquote(if(!is.null(xfacet_var))data.frame(ANL_f[,xfacet_var])else{NULL}),
-      vref_line = bquote(vref_line),
-      href_line = bquote(href_line),
+      datalabel_txt = quote(lbl),
+      facet_rows = if (!is.null(yfacet_var)) {
+        quote(data.frame(ANL_f[, yfacet_var]))
+      } else {
+        NULL
+      },
+      facet_columns = if (!is.null(xfacet_var)) {
+        quote(data.frame(ANL_f[, xfacet_var]))
+      } else {
+        NULL
+      },
+      vref_line = quote(vref_line),
+      href_line = quote(href_line),
       x_label = "Time (Days)",
       y_label = "Change (%) from Baseline",
-      show_legend = bquote(legend_on)
-    )
-     vals$spiderplot <- eval(chunks$p_spiderplot)
-     vals$spiderplot
+      show_legend = quote(legend_on)
+    ))
+
+    chunks_eval()
 
   })
+
+
 
   observeEvent(input$show_rcode, {
-
-    header <- get_rcode_header_osprey(
-      title = "Spiderplot",
-      datanames = dataname,
-      datasets = datasets,
-      code_data_processing
+    show_rcode_modal(
+      title = "Swimlane plot",
+      rcode = get_rcode(
+        datasets = datasets,
+        title = label
+      )
     )
-
-    str_rcode <- paste(c(
-      "",
-      header,
-      "",
-      remove_enclosing_curly_braces(deparse(chunks$vars, width.cutoff = 60)),
-      "",
-      remove_enclosing_curly_braces(deparse(chunks$data, width.cutoff = 60)),
-      "",
-      remove_enclosing_curly_braces(deparse(chunks$p_spiderplot, width.cutoff = 60))
-    ), collapse = "\n")
-
-    # .log("show R code")
-    showModal(modalDialog(
-      title = "R Code for the Current Spiderplot",
-      tags$pre(tags$code(class="R", str_rcode)),
-      easyClose = TRUE,
-      size = "l"
-    ))
   })
 
-  # #export plot as a pdf
-  # output$export_plot = downloadHandler(
-  # filename = "spiderplot.pdf",
-  # content = function(file) {
-  #    pdf(file)
-  #    print(vals$spiderplot)
-  #    dev.off()
-  # })
 
 }
 

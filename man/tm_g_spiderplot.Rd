@@ -12,7 +12,7 @@ tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd,
   legend_on = FALSE, xfacet_var = NULL,
   xfacet_var_choices = xfacet_var, yfacet_var = NULL,
   yfacet_var_choices = yfacet_var, plot_height, pre_output = NULL,
-  post_output = NULL, code_data_processing = NULL)
+  post_output = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -67,9 +67,6 @@ output to put the output into context. For example the
 \item{post_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
-
-\item{code_data_processing}{string with data preprocessing before the teal
-app is initialized, default is NULL}
 }
 \value{
 an \code{\link[teal]{module}} object
@@ -88,13 +85,9 @@ data("rADTR")
 
 ASL <- rADSL
 ATR <- rADTR
-#dat <- left_join(ATR, ASL) \%>\% filter(PARAMCD == "SUMTGLES") \%>\% as.data.frame()
 
-# test character vector as x axis labels
-#ATR$TUDY <- as.character(ATR$TUDY)
-
-x <- teal::init(
-  data = list(ASL = ASL, ATR = ATR),
+app <- teal::init(
+  data = cdisc_data(ASL = ASL, ATR = ATR),
   modules = root_modules(
     tm_g_spiderplot(
        label = "Spiderplot",
@@ -122,7 +115,7 @@ x <- teal::init(
   )
 )
 
-shinyApp(x$ui, x$server)
+shinyApp(app$ui, app$server)
 }
 
 }
