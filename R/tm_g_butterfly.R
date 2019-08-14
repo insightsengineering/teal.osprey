@@ -5,29 +5,20 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
-#' @param filter_var variable name of data filter, please see details regarding
-#'   expected values, default is \code{NULL}
-#' @param filter_var_choices vector with \code{filter_var} choices, default is
+#' @param filter_var (\code{choices_selected}) variable name of data filter, please see details regarding
+#'   expected values, default is \code{NULL}. \code{choices}
+#'   vector with \code{filter_var} choices, default is
 #'   \code{NULL}
-#' @param right_var dichotomization variable for right side
-#' @param right_var_choices vector with dichotomization choices
-#' @param left_var dichotomization variable for left side
-#' @param left_var_choices vector with dichotomization choices
-#' @param category_var category (y axis) variable
-#' @param category_var_choices vector of category choices
-#' @param color_by_var variable defines color blocks within each bar
-#' @param color_by_var_choices vector of choices for color_block_by
-#' @param count_by_var variable defines how x axis is calculated
-#' @param count_by_var_choices vector of choices for count_by_var
-#' @param facet_var variable for row facets
-#' @param facet_var_choices vector with \code{facet_var} choices
-#' @param sort_by_var argument for order of class and term elements in table,
+#' @param right_var (\code{choices_selected}) dichotomization variable for right side
+#' @param left_var (\code{choices_selected}) dichotomization variable for left side
+#' @param category_var (\code{choices_selected}) category (y axis) variable
+#' @param color_by_var (\code{choices_selected}) variable defines color blocks within each bar
+#' @param count_by_var (\code{choices_selected}) variable defines how x axis is calculated
+#' @param facet_var (\code{choices_selected}) variable for row facets
+#' @param sort_by_var (\code{choices_selected}) argument for order of class and term elements in table,
 #'   default here is "count"
-#' @param sort_by_var_choices vector with \code{sort_by_var} choices
-#' @param legend_on boolean value for whether legend is displayed
-#' @param plot_height range of plot height
-#' @param code_data_processing string with data preprocessing before the teal
-#'   app is initialized, default is NULL
+#' @param legend_on (\code{boolean}) value for whether legend is displayed
+#' @param plot_height (\code{numeric}) range of plot height - 3 values
 #'
 #' @details \code{filter_var} option is designed to work in conjuction with
 #'   filtering function provided by \code{teal} (encoding panel on the right
@@ -66,7 +57,8 @@
 #'
 #' app <- init(
 #'   data = cdisc_data(ASL = ASL, AAE = AAE, code = paste0(c(
-#'      'ASL <- mutate(rADSL, DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"), USUBJID = SUBJID)',
+#'      'ASL <- mutate(rADSL, DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"),
+#'         USUBJID = SUBJID)',
 #'      'AAE <- mutate(
 #'       rADAE,
 #'       flag1 = ifelse(AETOXGR == 1, 1, 0),
@@ -80,13 +72,14 @@
 #'     tm_g_butterfly(
 #'        label = "Butterfly Plot",
 #'        dataname = "AAE",
-#'        right_var = choices_selected(selected = "SEX", choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2",
-#'          "flag3")),
-#'        left_var = choices_selected(selected = "RACE", choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2",
-#'          "flag3")),
+#'        right_var = choices_selected(selected = "SEX", choices = c("DOSE", "SEX", "ARM",
+#'          "RACE", "flag1", "flag2","flag3")),
+#'        left_var = choices_selected(selected = "RACE", choices = c("DOSE", "SEX", "ARM",
+#'           "RACE", "flag1", "flag2", "flag3")),
 #'        category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
 #'        color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
-#'        count_by_var = choices_selected(selected = "# of patients", choices = c("# of patients", "# of AEs")),
+#'        count_by_var = choices_selected(selected = "# of patients",
+#'          choices = c("# of patients", "# of AEs")),
 #'        facet_var = choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
 #'        sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
 #'        legend_on = TRUE,

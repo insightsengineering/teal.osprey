@@ -16,27 +16,29 @@ tm_g_butterfly(label, dataname, filter_var = NULL, right_var, left_var,
 \item{dataname}{analysis data used in teal module, needs to be available in
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{filter_var}{variable name of data filter, please see details regarding
-expected values, default is \code{NULL}}
+\item{filter_var}{(\code{choices_selected}) variable name of data filter, please see details regarding
+expected values, default is \code{NULL}. \code{choices}
+vector with \code{filter_var} choices, default is
+\code{NULL}}
 
-\item{right_var}{dichotomization variable for right side}
+\item{right_var}{(\code{choices_selected}) dichotomization variable for right side}
 
-\item{left_var}{dichotomization variable for left side}
+\item{left_var}{(\code{choices_selected}) dichotomization variable for left side}
 
-\item{category_var}{category (y axis) variable}
+\item{category_var}{(\code{choices_selected}) category (y axis) variable}
 
-\item{color_by_var}{variable defines color blocks within each bar}
+\item{color_by_var}{(\code{choices_selected}) variable defines color blocks within each bar}
 
-\item{count_by_var}{variable defines how x axis is calculated}
+\item{count_by_var}{(\code{choices_selected}) variable defines how x axis is calculated}
 
-\item{facet_var}{variable for row facets}
+\item{facet_var}{(\code{choices_selected}) variable for row facets}
 
-\item{sort_by_var}{argument for order of class and term elements in table,
+\item{sort_by_var}{(\code{choices_selected}) argument for order of class and term elements in table,
 default here is "count"}
 
-\item{legend_on}{boolean value for whether legend is displayed}
+\item{legend_on}{(\code{boolean}) value for whether legend is displayed}
 
-\item{plot_height}{range of plot height}
+\item{plot_height}{(\code{numeric}) range of plot height - 3 values}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
@@ -45,26 +47,6 @@ output to put the output into context. For example the
 \item{post_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
-
-\item{filter_var_choices}{vector with \code{filter_var} choices, default is
-\code{NULL}}
-
-\item{right_var_choices}{vector with dichotomization choices}
-
-\item{left_var_choices}{vector with dichotomization choices}
-
-\item{category_var_choices}{vector of category choices}
-
-\item{color_by_var_choices}{vector of choices for color_block_by}
-
-\item{count_by_var_choices}{vector of choices for count_by_var}
-
-\item{facet_var_choices}{vector with \code{facet_var} choices}
-
-\item{sort_by_var_choices}{vector with \code{sort_by_var} choices}
-
-\item{code_data_processing}{string with data preprocessing before the teal
-app is initialized, default is NULL}
 }
 \value{
 an \code{\link[teal]{module}} object
@@ -104,7 +86,8 @@ AAE <- mutate(
 
 app <- init(
   data = cdisc_data(ASL = ASL, AAE = AAE, code = paste0(c(
-     'ASL <- mutate(rADSL, DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"), USUBJID = SUBJID)',
+     'ASL <- mutate(rADSL, DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"),
+        USUBJID = SUBJID)',
      'AAE <- mutate(
       rADAE,
       flag1 = ifelse(AETOXGR == 1, 1, 0),
@@ -118,13 +101,14 @@ app <- init(
     tm_g_butterfly(
        label = "Butterfly Plot",
        dataname = "AAE",
-       right_var = choices_selected(selected = "SEX", choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2",
-         "flag3")),
-       left_var = choices_selected(selected = "RACE", choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2",
-         "flag3")),
+       right_var = choices_selected(selected = "SEX", choices = c("DOSE", "SEX", "ARM",
+         "RACE", "flag1", "flag2","flag3")),
+       left_var = choices_selected(selected = "RACE", choices = c("DOSE", "SEX", "ARM",
+          "RACE", "flag1", "flag2", "flag3")),
        category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
        color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
-       count_by_var = choices_selected(selected = "# of patients", choices = c("# of patients", "# of AEs")),
+       count_by_var = choices_selected(selected = "# of patients",
+         choices = c("# of patients", "# of AEs")),
        facet_var = choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
        sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
        legend_on = TRUE,
