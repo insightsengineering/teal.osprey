@@ -50,11 +50,11 @@ data("rADAE")
 ASL <- rADSL
 AAE <- rADAE
 
-x1 <- teal::init(
+app <- teal::init(
   data = cdisc_data(
         ASL = ASL,
         AAE = AAE,
-        code = "ASL <- rADSL; AAE <- rADAE"
+        code = "ASL <- rADSL; AAE <- rADAE",
         check = FALSE
       ),
   modules = root_modules(
@@ -68,7 +68,7 @@ x1 <- teal::init(
   )
 )
 
-shinyApp(x1$ui, x1$server)
+shinyApp(app$ui, app$server)
 
 }
 

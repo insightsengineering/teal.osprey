@@ -23,11 +23,11 @@
 #' ASL <- rADSL
 #' AAE <- rADAE
 #'
-#' x1 <- teal::init(
+#' app <- teal::init(
 #'   data = cdisc_data(
 #'         ASL = ASL,
 #'         AAE = AAE,
-#'         code = "ASL <- rADSL; AAE <- rADAE"
+#'         code = "ASL <- rADSL; AAE <- rADAE",
 #'         check = FALSE
 #'       ),
 #'   modules = root_modules(
@@ -41,7 +41,7 @@
 #'   )
 #' )
 #'
-#' shinyApp(x1$ui, x1$server)
+#' shinyApp(app$ui, app$server)
 #'
 #' }
 #'
@@ -125,44 +125,38 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
     chunks_push(bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame() # nolint
       AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame() # nolint
-
       ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% # nolint
         as.data.frame()
-
-      flag <- data.frame(dthfl = ANL$DTHFL,
-                         dcsreas = ANL$DCSREAS,
-                         aesdth = ANL$AESDTH,
-                         aeser = ANL$AESER,
-                         aeacn = ANL$AEACN,
-                         aerel = ANL$AEREL,
-                         aetoxgr = ANL$AETOXGR)
-      display <- c("fatal", "ser", "serwd", "serdsm", "relser",
-                   "wd", "dsm", "rel", "relwd", "reldsm", "ctc35")
     }))
+    chunks_push_new_line()
 
     total <- if (isTRUE(all_p)) { # nolint
       "All Patients"
     } else {
       NULL
     }
-
-    chunks_push(bquote({
-      tbl <- t_ae_oview(
-        id = ANL$USUBJID,
-        class = ANL$AESOC,
-        term = ANL$AEDECOD,
-        flags = flag,
-        display_id = display,
-        col_by = droplevels(as.factor(ANL[[.(arm_var)]])),
-        total = .(total)
-      )
-      tbl
-    }))
-
-
     chunks_eval()
-    chunks_validate_all("tbl", "rtable", "Evaluation with tern t_ae failed.")
-    tbl <- chunks_get_var("tbl")
+
+
+    chunks_push(call(
+      "t_ae_oview",
+      id = bquote(ANL$USUBJID),
+      class = bquote(ANL$AESOC),
+      term = bquote(ANL$AEDECOD),
+      flags = bquote(data.frame(dthfl = ANL$DTHFL,
+                                dcsreas = ANL$DCSREAS,
+                                aesdth = ANL$AESDTH,
+                                aeser = ANL$AESER,
+                                aeacn = ANL$AEACN,
+                                aerel = ANL$AEREL,
+                                aetoxgr = ANL$AETOXGR)),
+      display_id = c("fatal", "ser", "serwd", "serdsm", "relser",
+                     "wd", "dsm", "rel", "relwd", "reldsm", "ctc35"),
+      col_by = bquote(droplevels(as.factor(ANL[[arm_var]]))),
+      total = total
+    ))
+
+    tbl <- chunks_eval()
     as_html(tbl)
   })
 
