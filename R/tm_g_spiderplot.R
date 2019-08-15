@@ -287,9 +287,9 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
     # reference lines preprocessing - vertical
     if (!is.null(vref_line) || vref_line != "") {
-      vref_line <- as.numeric(unlist(strsplit(vref_line, ",")))
+      chunks_push(bquote(vref_line <- as.numeric(unlist(strsplit(.(vref_line), ",")))))
     } else {
-      vref_line <- NULL
+      chunks_push(quote(vref_line <- NULL))
     }
 
     # validate vref_line
@@ -298,9 +298,9 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
     # reference lines preprocessing - horizontal
     if (!is.null(href_line) || href_line != "") {
-      href_line <- as.numeric(unlist(strsplit(href_line, ",")))
+      chunks_push(bquote(href_line <- as.numeric(unlist(strsplit(.(href_line), ",")))))
     } else {
-      href_line <- NULL
+      chunks_push(quote(href_line <- NULL))
     }
 
     # validate href_line
@@ -350,8 +350,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
       } else {
         NULL
       },
-      vref_line = bquote(.(vref_line)),
-      href_line = bquote(.(href_line)),
+      vref_line = quote(vref_line),
+      href_line = quote(href_line),
       x_label = "Time (Days)",
       y_label = "Change (%) from Baseline",
       show_legend = bquote(.(legend_on))
