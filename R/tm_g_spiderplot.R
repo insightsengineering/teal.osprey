@@ -50,13 +50,13 @@
 #'     tm_g_spiderplot(
 #'        label = "Spiderplot",
 #'        dataname = "ATR",
-#'        paramcd = choices_selected("SLDINV", "SLDINV"),
-#'        x_var = choices_selected("ADY", "ADY"),
-#'        y_var = choices_selected(c("PCHG", "CHG", "AVAL"), "PCHG"),
-#'        marker_var = choices_selected(c("SEX", "RACE", "USUBJID"), "SEX"),
-#'        line_colorby_var = choices_selected(c("SEX","USUBJID", "RACE"), "SEX"),
-#'        xfacet_var = choices_selected(c("SEX", "ARM"), "SEX"),
-#'        yfacet_var = choices_selected(c("SEX", "ARM"), "ARM"),
+#'        paramcd = choices_selected(choices = "SLDINV", selected = "SLDINV"),
+#'        x_var = choices_selected(choices = "ADY", selected = "ADY"),
+#'        y_var = choices_selected(choices = c("PCHG", "CHG", "AVAL"), selected = "PCHG"),
+#'        marker_var = choices_selected(choices = c("SEX", "RACE", "USUBJID"), selected = "SEX"),
+#'        line_colorby_var = choices_selected(choices = c("SEX","USUBJID", "RACE"), selected = "SEX"),
+#'        xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
+#'        yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
 #'        vref_line = "10, 37",
 #'        href_line = "-20, 0",
 #'        anno_txt_var = TRUE,
@@ -307,7 +307,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
     validate(need(all(!is.na(href_line)), "Not all values entered for reference line(s) were numeric"))
 
     # label
-    if (anno_txt_var){
+    if (anno_txt_var) {
       chunks_push(quote(lbl <- list(txt_ann = as.factor(ANL_f$USUBJID))))
     } else {
       chunks_push(quote(lbl <- NULL))
@@ -365,7 +365,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
   observeEvent(input$show_rcode, {
     show_rcode_modal(
-      title = "Swimlane plot",
+      title = "Spider Plot",
       rcode = get_rcode(
         datasets = datasets,
         title = label
