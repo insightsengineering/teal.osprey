@@ -41,36 +41,26 @@
 #' #Example spiderplot
 #' library(dplyr)
 #'
-#' data("rADSL")
-#' data("rADTR")
-#'
 #' ASL <- rADSL
 #' ATR <- rADTR
 #'
 #' app <- teal::init(
-#'   data = cdisc_data(ASL = ASL, ATR = ATR),
+#'   data = cdisc_data(ASL = ASL, ATR = ATR, code = 'ASL <- rADSL; ATR <- rADTR'),
 #'   modules = root_modules(
 #'     tm_g_spiderplot(
 #'        label = "Spiderplot",
 #'        dataname = "ATR",
-#'        paramcd = "SLDINV",
-#'        paramcd_choices = "SLDINV",
-#'        x_var = "ADY",
-#'        x_var_choices = "ADY",
-#'        y_var = "PCHG",
-#'        y_var_choices = c("PCHG", "CHG", "AVAL"),
-#'        marker_var = "SEX",
-#'        marker_var_choices = c("SEX", "RACE", "USUBJID"),
-#'        line_colorby_var = "SEX",
-#'        line_colorby_var_choices = c("SEX","USUBJID", "RACE"),
+#'        paramcd = choices_selected("SLDINV", "SLDINV"),
+#'        x_var = choices_selected("ADY", "ADY"),
+#'        y_var = choices_selected(c("PCHG", "CHG", "AVAL"), "PCHG"),
+#'        marker_var = choices_selected(c("SEX", "RACE", "USUBJID"), "SEX"),
+#'        line_colorby_var = choices_selected(c("SEX","USUBJID", "RACE"), "SEX"),
+#'        xfacet_var = choices_selected(c("SEX", "ARM"), "SEX"),
+#'        yfacet_var = choices_selected(c("SEX", "ARM"), "ARM"),
 #'        vref_line = "10, 37",
 #'        href_line = "-20, 0",
 #'        anno_txt_var = TRUE,
 #'        legend_on = FALSE,
-#'        xfacet_var = "SEX",
-#'        xfacet_var_choices = c("SEX", "ARM"),
-#'        yfacet_var = "ARM",
-#'        yfacet_var_choices = c("ARM", "SEX"),
 #'        plot_height = c(600, 200, 2000)
 #'    )
 #'   )
@@ -82,26 +72,32 @@
 tm_g_spiderplot <- function(label,
                             dataname,
                             paramcd,
-                            paramcd_choices = paramcd,
                             x_var,
-                            x_var_choices = x_var,
                             y_var,
-                            y_var_choices = y_var,
                             marker_var,
-                            marker_var_choices = marker_var,
                             line_colorby_var,
-                            line_colorby_var_choices = line_colorby_var_choices,
+                            xfacet_var = NULL,
+                            yfacet_var = NULL,
                             vref_line = NULL,
                             href_line = NULL,
-                            anno_txt_var,
+                            anno_txt_var = TRUE,
                             legend_on = FALSE,
-                            xfacet_var = NULL,
-                            xfacet_var_choices = xfacet_var,
-                            yfacet_var = NULL,
-                            yfacet_var_choices = yfacet_var,
-                            plot_height,
+                            plot_height = c(600, 200, 2000),
                             pre_output = NULL,
                             post_output = NULL) {
+
+  stopifnot(is.choices_selected(paramcd))
+  stopifnot(is.choices_selected(x_var))
+  stopifnot(is.choices_selected(y_var))
+  stopifnot(is.choices_selected(marker_var))
+  stopifnot(is.choices_selected(line_colorby_var))
+  stopifnot(is.choices_selected(xfacet_var))
+  stopifnot(is.choices_selected(yfacet_var))
+  stopifnot(is.character.single(vref_line))
+  stopifnot(is.character.single(href_line))
+  stopifnot(is.logical.single(anno_txt_var))
+  stopifnot(is.logical.single(legend_on))
+  stopifnot(is.numeric.vector(plot_height))
 
   args <- as.list(environment())
   module(
@@ -129,44 +125,44 @@ ui_g_spider <- function(id, ...) {
         optionalSelectInput(
           ns("paramcd"),
           "Parameter - from ATR",
-          a$paramcd_choices,
-          a$paramcd,
+          a$paramcd$choices,
+          a$paramcd$selected,
           multiple = FALSE),
         optionalSelectInput(
           ns("x_var"),
           "X-axis Variable",
-          a$x_var_choices,
-          a$x_var,
+          a$x_var$choices,
+          a$x_var$selected,
           multiple = FALSE),
         optionalSelectInput(
           ns("y_var"),
           "Y-axis Variable",
-          a$y_var_choices,
-          a$y_var,
+          a$y_var$choices,
+          a$y_var$selected,
           multiple = FALSE),
         optionalSelectInput(
           ns("line_colorby_var"),
           "Color By Variable (Line)",
-          a$line_colorby_var_choices,
-          a$line_colorby_var,
+          a$line_colorby_var$choices,
+          a$line_colorby_var$selected,
           multiple = FALSE),
         optionalSelectInput(
           ns("marker_var"),
           "Marker Symbol By Variable",
-          a$marker_var_choices,
-          a$marker_var,
+          a$marker_var$choices,
+          a$marker_var$selected,
           multiple = FALSE),
         optionalSelectInput(
           ns("xfacet_var"),
           "X-facet By Variable",
-          a$xfacet_var_choices,
-          a$xfacet_var,
+          a$xfacet_var$choices,
+          a$xfacet_var$selected,
           multiple = TRUE),
         optionalSelectInput(
           ns("yfacet_var"),
           "Y-facet By Variable",
-          a$yfacet_var_choices,
-          a$yfacet_var,
+          a$yfacet_var$choices,
+          a$yfacet_var$selected,
           multiple = TRUE)
       ),
       checkboxInput(
@@ -242,7 +238,6 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
     legend_on <- input$legend_on
     xfacet_var <- input$xfacet_var
     yfacet_var <- input$yfacet_var
-
     vref_line <- input$vref_line
     href_line <- input$href_line
 
@@ -259,55 +254,29 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
 
 
-    # variables and inputs to chunks ---
-
-    chunks_push(bquote({
-      asl_vars <- .(asl_vars)
-      atr_vars <- .(atr_vars)
-
-      paramcd <- .(paramcd)
-      x_var <- .(x_var)
-      y_var <- .(y_var)
-      marker_var <- .(marker_var)
-      line_colorby_var <- .(line_colorby_var)
-      vref_line <- .(vref_line)
-      href_line <- .(href_line)
-      anno_txt_var <- .(anno_txt_var)
-      legend_on <- .(legend_on)
-      xfacet_var <- .(xfacet_var)
-      yfacet_var <- .(yfacet_var)
-    }))
-
-    chunks_push_new_line()
-
-
     # preprocessing of datasets to chunks ---
 
     # vars definition
-    chunks_push(bquote({
-      atr_vars <- atr_vars[atr_vars != "None"]
-      atr_vars <- atr_vars[!is.null(atr_vars)]
-    }))
-
-    chunks_push_new_line()
+    atr_vars <- atr_vars[atr_vars != "None"]
+    atr_vars <- atr_vars[!is.null(atr_vars)]
 
     # merge
     chunks_push(bquote({
-      ASL <- ASL_FILTERED[, asl_vars] %>% as.data.frame()
-      ATR <- .(as.name(atr_name))[, atr_vars] %>% as.data.frame()
+      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
+      ATR <- .(as.name(atr_name))[, .(atr_vars)] %>% as.data.frame()
 
       ANL <- merge(ASL, ATR, by = c("USUBJID", "STUDYID"))
-      ANL <- ANL %>% group_by(USUBJID, PARAMCD) %>% arrange(ANL[,x_var]) %>%
+      ANL <- ANL %>% group_by(USUBJID, PARAMCD) %>% arrange(ANL[,.(x_var)]) %>%
         as.data.frame()
     }))
 
     chunks_push_new_line()
 
     # format and filter
-    chunks_push(quote({
+    chunks_push(bquote({
       ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, '-', fixed = TRUE), tail, 1))
 
-      ANL_f <- ANL %>% filter(PARAMCD == paramcd) %>% as.data.frame()
+      ANL_f <- ANL %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame()
     }))
 
     chunks_push_new_line()
@@ -317,55 +286,32 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
     validate(need(chunks_is_ok(), "Data could not be constructed."))
 
     # reference lines preprocessing - vertical
-    chunks_push(quote({
-      {
-        # If reference lines are requested
-        if (!is.null(vref_line) || vref_line != "") {
-          vref_line <- as.numeric(unlist(strsplit(vref_line, ",")))
-        } else {
-          vref_line <- NULL
-        }
-      }
-    }))
-
-    chunks_push_new_line()
+    if (!is.null(vref_line) || vref_line != "") {
+      vref_line <- as.numeric(unlist(strsplit(vref_line, ",")))
+    } else {
+      vref_line <- NULL
+    }
 
     # validate vref_line
-    chunks_eval()
-    vl <- chunks_get_var("vref_line")
-    validate(need(all(!is.na(vl)),
+    validate(need(all(!is.na(vref_line)),
                   "Not all values entered for reference line(s) were numeric"))
-    ANL_f <- chunks_get_var("ANL_f")
-    validate(need(chunks_is_ok(), "Data could not be constructed."))
 
     # reference lines preprocessing - horizontal
-    chunks_push(quote({
-      {
-        if (!is.null(href_line) || href_line != "") {
-          href_line <- as.numeric(unlist(strsplit(href_line, ",")))
-        } else {
-          href_line <- NULL
-        }
-      }
-    }))
-
-    chunks_push_new_line()
+    if (!is.null(href_line) || href_line != "") {
+      href_line <- as.numeric(unlist(strsplit(href_line, ",")))
+    } else {
+      href_line <- NULL
+    }
 
     # validate href_line
-    chunks_eval()
-    hl <- chunks_get_var("href_line")
-    validate(need(all(!is.na(hl)), "Not all values entered for reference line(s) were numeric"))
-
-    # check
-    validate(need(chunks_is_ok(), "Data could not be constructed."))
+    validate(need(all(!is.na(href_line)), "Not all values entered for reference line(s) were numeric"))
 
     # label
-    chunks_push(quote({
-      lbl <- NULL
-      if(anno_txt_var){
-        lbl <- list(txt_ann = as.factor(ANL_f$USUBJID))
-      }
-    }))
+    if (anno_txt_var){
+      chunks_push(quote(lbl <- list(txt_ann = as.factor(ANL_f$USUBJID))))
+    } else {
+      chunks_push(quote(lbl <- NULL))
+    }
 
     chunks_push_new_line()
 
@@ -379,36 +325,36 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
     chunks_push(call(
       "g_spiderplot",
-      marker_x = quote(ANL_f[,x_var]),
+      marker_x = bquote(ANL_f[, .(x_var)]),
       marker_id = quote(ANL_f$USUBJID),
-      marker_y = quote(ANL_f[,y_var]),
+      marker_y = bquote(ANL_f[, .(y_var)]),
       line_colby = if (line_colorby_var != "None") {
-        quote(ANL_f[,line_colorby_var])
+        bquote(ANL_f[, .(line_colorby_var)])
       } else {
         NULL
       },
       marker_shape = if (marker_var != "None") {
-        quote(ANL_f[,marker_var])
+        bquote(ANL_f[, .(marker_var)])
       } else {
         NULL
       },
       marker_size = 4,
       datalabel_txt = quote(lbl),
       facet_rows = if (!is.null(yfacet_var)) {
-        quote(data.frame(ANL_f[, yfacet_var]))
+        bquote(data.frame(ANL_f[, .(yfacet_var)]))
       } else {
         NULL
       },
       facet_columns = if (!is.null(xfacet_var)) {
-        quote(data.frame(ANL_f[, xfacet_var]))
+        bquote(data.frame(ANL_f[, .(xfacet_var)]))
       } else {
         NULL
       },
-      vref_line = quote(vref_line),
-      href_line = quote(href_line),
+      vref_line = bquote(.(vref_line)),
+      href_line = bquote(.(href_line)),
       x_label = "Time (Days)",
       y_label = "Change (%) from Baseline",
-      show_legend = quote(legend_on)
+      show_legend = bquote(.(legend_on))
     ))
 
     chunks_eval()
