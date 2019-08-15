@@ -4,15 +4,11 @@
 \alias{tm_g_spiderplot}
 \title{Spiderplot Teal Module}
 \usage{
-tm_g_spiderplot(label, dataname, paramcd, paramcd_choices = paramcd,
-  x_var, x_var_choices = x_var, y_var, y_var_choices = y_var,
-  marker_var, marker_var_choices = marker_var, line_colorby_var,
-  line_colorby_var_choices = line_colorby_var_choices,
-  vref_line = NULL, href_line = NULL, anno_txt_var,
-  legend_on = FALSE, xfacet_var = NULL,
-  xfacet_var_choices = xfacet_var, yfacet_var = NULL,
-  yfacet_var_choices = yfacet_var, plot_height, pre_output = NULL,
-  post_output = NULL, code_data_processing = NULL)
+tm_g_spiderplot(label, dataname, paramcd, x_var, y_var, marker_var,
+  line_colorby_var, xfacet_var = NULL, yfacet_var = NULL,
+  vref_line = NULL, href_line = NULL, anno_txt_var = TRUE,
+  legend_on = FALSE, plot_height = c(600, 200, 2000),
+  pre_output = NULL, post_output = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -24,23 +20,17 @@ Note that the data is expected to be in vertical form with the
 
 \item{paramcd}{single selected endpoint filtered with \code{PARAMCD} variable}
 
-\item{paramcd_choices}{vector with \code{paramcd} choices}
-
 \item{x_var}{x-axis variables}
-
-\item{x_var_choices}{vector with \code{x_var} choices}
 
 \item{y_var}{y-axis variables}
 
-\item{y_var_choices}{vector with \code{y_var} choices}
-
 \item{marker_var}{variable dictates marker symbol}
-
-\item{marker_var_choices}{vector with \code{marker_var} choices}
 
 \item{line_colorby_var}{variable dictates line color}
 
-\item{line_colorby_var_choices}{vector with \code{line_colorby_var} choices}
+\item{xfacet_var}{variable for x facets}
+
+\item{yfacet_var}{variable for y facets}
 
 \item{vref_line}{vertical reference lines}
 
@@ -49,14 +39,6 @@ Note that the data is expected to be in vertical form with the
 \item{anno_txt_var}{annotation text}
 
 \item{legend_on}{boolean value for whether legend is displayed}
-
-\item{xfacet_var}{variable for x facets}
-
-\item{xfacet_var_choices}{vector with \code{xfacet_var} choices}
-
-\item{yfacet_var}{variable for y facets}
-
-\item{yfacet_var_choices}{vector with \code{yfacet_var} choices}
 
 \item{plot_height}{range of plot height}
 
@@ -68,8 +50,19 @@ output to put the output into context. For example the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 
-\item{code_data_processing}{string with data preprocessing before the teal
-app is initialized, default is NULL}
+\item{paramcd_choices}{vector with \code{paramcd} choices}
+
+\item{x_var_choices}{vector with \code{x_var} choices}
+
+\item{y_var_choices}{vector with \code{y_var} choices}
+
+\item{marker_var_choices}{vector with \code{marker_var} choices}
+
+\item{line_colorby_var_choices}{vector with \code{line_colorby_var} choices}
+
+\item{xfacet_var_choices}{vector with \code{xfacet_var} choices}
+
+\item{yfacet_var_choices}{vector with \code{yfacet_var} choices}
 }
 \value{
 an \code{\link[teal]{module}} object
@@ -83,46 +76,32 @@ Display spiderplot as a shiny module
 #Example spiderplot
 library(dplyr)
 
-data("rADSL")
-data("rADTR")
-
 ASL <- rADSL
 ATR <- rADTR
-#dat <- left_join(ATR, ASL) \%>\% filter(PARAMCD == "SUMTGLES") \%>\% as.data.frame()
 
-# test character vector as x axis labels
-#ATR$TUDY <- as.character(ATR$TUDY)
-
-x <- teal::init(
-  data = list(ASL = ASL, ATR = ATR),
+app <- teal::init(
+  data = cdisc_data(ASL = ASL, ATR = ATR, code = 'ASL <- rADSL; ATR <- rADTR'),
   modules = root_modules(
     tm_g_spiderplot(
        label = "Spiderplot",
        dataname = "ATR",
-       paramcd = "SLDINV",
-       paramcd_choices = "SLDINV",
-       x_var = "ADY",
-       x_var_choices = "ADY",
-       y_var = "PCHG",
-       y_var_choices = c("PCHG", "CHG", "AVAL"),
-       marker_var = "SEX",
-       marker_var_choices = c("SEX", "RACE", "USUBJID"),
-       line_colorby_var = "SEX",
-       line_colorby_var_choices = c("SEX","USUBJID", "RACE"),
+       paramcd = choices_selected(choices = "SLDINV", selected = "SLDINV"),
+       x_var = choices_selected(choices = "ADY", selected = "ADY"),
+       y_var = choices_selected(choices = c("PCHG", "CHG", "AVAL"), selected = "PCHG"),
+       marker_var = choices_selected(choices = c("SEX", "RACE", "USUBJID"), selected = "SEX"),
+       line_colorby_var = choices_selected(choices = c("SEX","USUBJID", "RACE"), selected = "SEX"),
+       xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
+       yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
        vref_line = "10, 37",
        href_line = "-20, 0",
        anno_txt_var = TRUE,
        legend_on = FALSE,
-       xfacet_var = "SEX",
-       xfacet_var_choices = c("SEX", "ARM"),
-       yfacet_var = "ARM",
-       yfacet_var_choices = c("ARM", "SEX"),
        plot_height = c(600, 200, 2000)
    )
   )
 )
 
-shinyApp(x$ui, x$server)
+shinyApp(app$ui, app$server)
 }
 
 }
