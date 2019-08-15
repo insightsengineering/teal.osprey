@@ -17,9 +17,6 @@
 #' #Example using stream (adam) dataset
 #' library(dplyr)
 #'
-#' data("rADSL")
-#' data("rADAE")
-#'
 #' ASL <- rADSL
 #' AAE <- rADAE
 #'
@@ -118,15 +115,9 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
     chunks_reset(envir = environment())
 
     chunks_push(bquote({
-      arm_var <- .(arm_var)
-      all_p <- .(all_p)
-    }))
-
-    chunks_push(bquote({
       ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame() # nolint
       AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame() # nolint
-      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% # nolint
-        as.data.frame()
+      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
     }))
     chunks_push_new_line()
 
@@ -152,7 +143,7 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
                                 aetoxgr = ANL$AETOXGR)),
       display_id = c("fatal", "ser", "serwd", "serdsm", "relser",
                      "wd", "dsm", "rel", "relwd", "reldsm", "ctc35"),
-      col_by = bquote(droplevels(as.factor(ANL[[arm_var]]))),
+      col_by = bquote(droplevels(as.factor(ANL[[.(arm_var)]]))),
       total = total
     ))
 
