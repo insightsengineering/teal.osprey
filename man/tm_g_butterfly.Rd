@@ -74,26 +74,26 @@ Display butterfly plot as a shiny module
 #Example butterfly plot
 library(dplyr)
 
-ASL <- mutate(rADSL, DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"), USUBJID = SUBJID)
+ASL <- mutate(rADSL, DOSE = paste(sample(1:3, n(), replace = T), "UG"), USUBJID = SUBJID)
 AAE <- mutate(
   rADAE,
   flag1 = ifelse(AETOXGR == 1, 1, 0),
   flag2 = ifelse(AETOXGR == 2, 1, 0),
   flag3 = ifelse(AETOXGR == 3, 1, 0),
-  flag1_filt = rep("Y", nrow(AAE)),
+  flag1_filt = rep("Y", n()),
   USUBJID = SUBJID
 )
 
 app <- init(
   data = cdisc_data(ASL = ASL, AAE = AAE, code = paste0(c(
-     'ASL <- mutate(rADSL, DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"),
+     'ASL <- mutate(rADSL, DOSE = paste(sample(1:3, n(), replace = T), "UG"),
         USUBJID = SUBJID)',
      'AAE <- mutate(
       rADAE,
       flag1 = ifelse(AETOXGR == 1, 1, 0),
       flag2 = ifelse(AETOXGR == 2, 1, 0),
       flag3 = ifelse(AETOXGR == 3, 1, 0),
-      flag1_filt = rep("Y", nrow(AAE)),
+      flag1_filt = rep("Y", n()),
       USUBJID = SUBJID
      )'), collapse = ";")
   ),

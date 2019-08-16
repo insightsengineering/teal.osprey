@@ -45,26 +45,26 @@
 #' #Example butterfly plot
 #' library(dplyr)
 #'
-#' ASL <- mutate(rADSL, DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"), USUBJID = SUBJID)
+#' ASL <- mutate(rADSL, DOSE = paste(sample(1:3, n(), replace = T), "UG"), USUBJID = SUBJID)
 #' AAE <- mutate(
 #'   rADAE,
 #'   flag1 = ifelse(AETOXGR == 1, 1, 0),
 #'   flag2 = ifelse(AETOXGR == 2, 1, 0),
 #'   flag3 = ifelse(AETOXGR == 3, 1, 0),
-#'   flag1_filt = rep("Y", nrow(AAE)),
+#'   flag1_filt = rep("Y", n()),
 #'   USUBJID = SUBJID
 #' )
 #'
 #' app <- init(
 #'   data = cdisc_data(ASL = ASL, AAE = AAE, code = paste0(c(
-#'      'ASL <- mutate(rADSL, DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"),
+#'      'ASL <- mutate(rADSL, DOSE = paste(sample(1:3, n(), replace = T), "UG"),
 #'         USUBJID = SUBJID)',
 #'      'AAE <- mutate(
 #'       rADAE,
 #'       flag1 = ifelse(AETOXGR == 1, 1, 0),
 #'       flag2 = ifelse(AETOXGR == 2, 1, 0),
 #'       flag3 = ifelse(AETOXGR == 3, 1, 0),
-#'       flag1_filt = rep("Y", nrow(AAE)),
+#'       flag1_filt = rep("Y", n()),
 #'       USUBJID = SUBJID
 #'      )'), collapse = ";")
 #'   ),
@@ -141,7 +141,7 @@ ui_g_butterfly <- function(id, ...) {
   standard_layout(
     output = white_small_well(plot_height_output(id = ns("butterflyplot"))),
     encoding =  div(
-      tags$label("Encodings", class="text-primary"),
+      tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
       optionalSelectInput(
         ns("filter_var"),
@@ -286,8 +286,10 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
 
     if(!("NULL" %in% filter_var) && !is.null(filter_var)){
         chunks_push(bquote(
-      AAE <- quick_filter(.(filter_var), AAE) %>% droplevels() %>% as.data.frame()
-                ))
+          AAE <- quick_filter(.(filter_var), AAE) %>%
+            droplevels() %>%
+            as.data.frame()
+        ))
     }
 
     chunks_push_new_line()
@@ -355,7 +357,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
         },
         id = bquote(ANL_f$USUBJID),
         facet_rows = if(!is.null(facet_var)){
-          bquote(ANL_f[,facet_var])
+          bquote(ANL_f[, .(facet_var)])
         } else {
           NULL
         },
