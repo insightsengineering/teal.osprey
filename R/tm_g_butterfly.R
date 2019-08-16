@@ -284,7 +284,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
     }))
 
 
-    if(!("NULL" %in% filter_var) && !is.null(filter_var)){
+    if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
         chunks_push(bquote(
           AAE <- quick_filter(.(filter_var), AAE) %>%
             droplevels() %>%
@@ -304,8 +304,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
     chunks_push_new_line()
 
 
-    if(!is.null(right_v) && !is.null(left_v)){
-      if(!(all(right_v %in% c(0, 1)))){
+    if (!is.null(right_v) && !is.null(left_v)) {
+      if (!(all(right_v %in% c(0, 1)))) {
         chunks_push(bquote({
           right <- as.character(ANL_f[, .(right_ch)])
           right <- replace(right, !(right %in% .(input$right_v)), 0)
@@ -321,14 +321,14 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
 
       chunks_push_new_line()
 
-      if(!(all(left_v %in% c(0, 1)))){
+      if (!(all(left_v %in% c(0, 1)))) {
         chunks_push(bquote({
           left <- as.character(ANL_f[, .(left_ch)])
           left <- replace(left, !(left %in% .(input$left_v)), 0)
           left <- replace(left, left %in% .(input$left_v), 1)
           left_name <- paste(left_v, collapse = " - ")
         }))
-      } else{
+      } else {
         chunks_push(bquote({
           left <- ANL_f[, .(left_ch)]
           left_name <- left_ch
@@ -336,13 +336,14 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
       }
 
     }
+
     chunks_push_new_line()
 
     chunks_eval()
 
     validate(need(chunks_is_ok(), "Data could not be processed."))
 
-    if(!is.null(right_v) && !is.null(left_v)){
+    if (!is.null(right_v) && !is.null(left_v)) {
       chunks_push(call(
         "g_butterfly",
         category = bquote(ANL_f[, .(category_var)]),
@@ -350,13 +351,13 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
         leftFlag = bquote(left),
         group_names = bquote(c(right_name, left_name)),
         block_count = count_by_var,
-        block_color = if(color_by_var != "None"){
+        block_color = if (color_by_var != "None") {
           bquote(ANL_f[, .(color_by_var)])
         } else {
           NULL
         },
         id = bquote(ANL_f$USUBJID),
-        facet_rows = if(!is.null(facet_var)){
+        facet_rows = if (!is.null(facet_var)) {
           bquote(ANL_f[, .(facet_var)])
         } else {
           NULL
