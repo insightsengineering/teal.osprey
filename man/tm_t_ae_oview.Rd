@@ -4,8 +4,8 @@
 \alias{tm_t_ae_oview}
 \title{Adverse Events Summary Table Teal Module}
 \usage{
-tm_t_ae_oview(label, dataname, arm_var, arm_var_choices,
-  total_col = TRUE, pre_output = NULL, post_output = NULL)
+tm_t_ae_oview(label, dataname, arm_var, total_col = TRUE,
+  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -18,9 +18,6 @@ variable name in analysis data that is used as
 \code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
-\item{arm_var_choices}{vector with variable names that can be used as
-\code{arm_var}}
-
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
 
@@ -31,6 +28,9 @@ output to put the output into context. For example the
 \item{post_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
+
+\item{code_data_processing}{string with data preprocessing before the teal
+app is initialized, default is NULL}
 }
 \value{
 an \code{\link[teal]{module}} object
@@ -50,20 +50,25 @@ data("rADAE")
 ASL <- rADSL
 AAE <- rADAE
 
-x1 <- teal::init(
-  data = list(ASL = ASL, AAE = AAE),
+app <- teal::init(
+  data = cdisc_data(
+        ASL = ASL,
+        AAE = AAE,
+        code = "ASL <- rADSL; AAE <- rADAE",
+        check = FALSE
+      ),
   modules = root_modules(
     tm_t_ae_oview(
        label = "AE Overview Summary Table",
        dataname = "AAE",
-       arm_var = "ARM",
-       arm_var_choices = c("ARM", "ARMCD"),
+       arm_var = choices_selected(choices = c("ARM", "ARMCD"),
+                                  selected = "ARM"),
        total_col = FALSE
-   )
+    )
   )
 )
 
-shinyApp(x1$ui, x1$server)
+shinyApp(app$ui, app$server)
 
 }
 

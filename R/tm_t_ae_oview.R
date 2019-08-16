@@ -4,8 +4,6 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
-#' @param arm_var_choices vector with variable names that can be used as
-#'   \code{arm_var}
 #'
 #' @return an \code{\link[teal]{module}} object
 #' @export
@@ -19,26 +17,28 @@
 #' #Example using stream (adam) dataset
 #' library(dplyr)
 #'
-#' data("rADSL")
-#' data("rADAE")
-#'
 #' ASL <- rADSL
 #' AAE <- rADAE
 #'
-#' x1 <- teal::init(
-#'   data = list(ASL = ASL, AAE = AAE),
+#' app <- teal::init(
+#'   data = cdisc_data(
+#'         ASL = ASL,
+#'         AAE = AAE,
+#'         code = "ASL <- rADSL; AAE <- rADAE",
+#'         check = FALSE
+#'       ),
 #'   modules = root_modules(
 #'     tm_t_ae_oview(
 #'        label = "AE Overview Summary Table",
 #'        dataname = "AAE",
-#'        arm_var = "ARM",
-#'        arm_var_choices = c("ARM", "ARMCD"),
+#'        arm_var = choices_selected(choices = c("ARM", "ARMCD"),
+#'                                   selected = "ARM"),
 #'        total_col = FALSE
-#'    )
+#'     )
 #'   )
 #' )
 #'
-#' shinyApp(x1$ui, x1$server)
+#' shinyApp(app$ui, app$server)
 #'
 #' }
 #'
@@ -46,10 +46,15 @@
 tm_t_ae_oview <- function(label,
                           dataname,
                           arm_var,
-                          arm_var_choices,
                           total_col = TRUE,
                           pre_output = NULL,
-                          post_output = NULL) {
+                          post_output = NULL,
+                          code_data_processing = NULL) {
+
+  stopifnot(is.character.single(label))
+  stopifnot(is.character.single(dataname))
+  stopifnot(is.choices_selected(arm_var))
+  stopifnot(is.logical.single(total_col))
 
   args <- as.list(environment())
 
@@ -72,9 +77,15 @@ ui_t_ae_oview <- function(id, ...) {
   standard_layout(
     output = white_small_well(uiOutput(ns("table"))),
     encoding =  div(
-      tags$label("Encodings", class="text-primary"),
+      tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
-      optionalSelectInput(ns("arm_var"), "Arm Variable", a$arm_var_choices, a$arm_var, multiple = FALSE),
+      optionalSelectInput(
+        ns("arm_var"),
+        "Select arm variable:",
+        a$arm_var$choices,
+        a$arm_var$selected,
+        multiple = FALSE
+      ),
       checkboxInput(ns("All_Patients"), "Add All Patients", value = a$total_col)
     ),
     forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
@@ -85,16 +96,11 @@ ui_t_ae_oview <- function(id, ...) {
 }
 
 srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
-
-  chunks <- list(
-    vars = "# Not Calculated",
-    data = "# Not Calculated",
-    analysis = "# Not Calculated"
-  )
+  init_chunks()
 
   output$table <- renderUI({
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
+    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
 
     arm_var <- input$arm_var
     all_p <- input$All_Patients
@@ -102,98 +108,59 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
     aae_name <- paste0(dataname, "_FILTERED")
     assign(aae_name, AAE_FILTERED) # so that we can refer to the 'correct' data name
 
-    asl_vars <- unique(c("USUBJID", "STUDYID", arm_var, "DTHFL", "DCSREAS"))
+    asl_vars <- unique(c("USUBJID", "STUDYID", arm_var, "DTHFL", "DCSREAS")) # nolint
     aae_vars <- unique(c("USUBJID", "STUDYID", "AESOC", "AEDECOD",
                          "AESDTH", "AESER", "AEACN", "AEREL", "AETOXGR")) ## add column name of extra flage here
 
-    chunks$vars <<- bquote({
-      arm_var <- .(arm_var)
-      all_p <- .(all_p)
-    })
+    chunks_reset(envir = environment())
 
-    chunks$data <<- bquote({
-      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame()
+    chunks_push(bquote({
+      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame() # nolint
+      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame() # nolint
+      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
+    }))
+    chunks_push_new_line()
 
-      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
-        as.data.frame()
+    total <- if (isTRUE(all_p)) { # nolint
+      "All Patients"
+    } else {
+      NULL
+    }
+    chunks_eval()
 
-      flag <- data.frame(dthfl = ANL$DTHFL,
-                         dcsreas = ANL$DCSREAS,
-                         aesdth = ANL$AESDTH,
-                         aeser = ANL$AESER,
-                         aeacn = ANL$AEACN,
-                         aerel = ANL$AEREL,
-                         aetoxgr = ANL$AETOXGR)
-      display <- c("fatal", "ser", "serwd", "serdsm", "relser",
-                   "wd", "dsm", "rel", "relwd", "reldsm", "ctc35")
 
-      {if(all_p == TRUE) {
-        total = "All Patients"
-      } else {
-        total = NULL
-      }}
-
-    })
-    eval(chunks$data)
-
-    validate_has_data(ANL, min_nrow = 1)
-    validate(need(ANL[[arm_var]], "Arm variable does not exist"))
-    validate(need(!("" %in% ANL[[arm_var]]), "arm values can not contain empty strings ''"))
-
-    chunks$analysis <<- call(
+    chunks_push(call(
       "t_ae_oview",
       id = bquote(ANL$USUBJID),
       class = bquote(ANL$AESOC),
       term = bquote(ANL$AEDECOD),
-      flags = bquote(flag),
-      ####--------------------------------
-      #
-      # add extra_flag variables here
-      # example: extra_flag = data.frame(NAME_DISPALYED_IN_TABLE = VECTOR),
-      #
-      ####--------------------------------
-      display_id = bquote(display),
+      flags = bquote(data.frame(dthfl = ANL$DTHFL,
+                                dcsreas = ANL$DCSREAS,
+                                aesdth = ANL$AESDTH,
+                                aeser = ANL$AESER,
+                                aeacn = ANL$AEACN,
+                                aerel = ANL$AEREL,
+                                aetoxgr = ANL$AETOXGR)),
+      display_id = c("fatal", "ser", "serwd", "serdsm", "relser",
+                     "wd", "dsm", "rel", "relwd", "reldsm", "ctc35"),
       col_by = bquote(droplevels(as.factor(ANL[[.(arm_var)]]))),
       total = total
-    )
+    ))
 
-    tbl <- try(eval(chunks$analysis))
-
-    if (is(tbl, "try-error")) validate(need(FALSE, paste0("could not calculate the table:\n\n", tbl)))
-
+    tbl <- chunks_eval()
     as_html(tbl)
   })
 
 
 
   observeEvent(input$show_rcode, {
-
-    header <- get_rcode_header_osprey(
-      title = "AE Overview Summary Table",
-      datanames = dataname,
-      datasets = datasets,
-      ""
+    show_rcode_modal(
+      title = "Adverse Events Table",
+      rcode = get_rcode(
+        datasets = datasets,
+        title = "R Code for the Current AE Overview Table"
+      )
     )
-
-    str_rcode <- paste(c(
-      "",
-      header,
-      "",
-      remove_enclosing_curly_braces(deparse(chunks$vars, width.cutoff = 60)),
-      "",
-      remove_enclosing_curly_braces(deparse(chunks$data, width.cutoff = 60)),
-      "",
-      remove_enclosing_curly_braces(deparse(chunks$analysis, width.cutoff = 60))
-    ), collapse = "\n")
-
-    # .log("show R code")
-    showModal(modalDialog(
-      title = "R Code for the Current AE Overview Table",
-      tags$pre(tags$code(class="R", str_rcode)),
-      easyClose = TRUE,
-      size = "l"
-    ))
   })
 
 }
