@@ -3,11 +3,11 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
-#' @param toxgr_var variable name of AE toxicitiy grade
+#' @param toxgr_var variable name of AE toxicity grade
 #'
-#' @details \code{filter_var} option is designed to work in conjuction with
+#' @details \code{filter_var} option is designed to work in conjunction with
 #'   filtering function provided by \code{teal} (encoding panel on the right
-#'   hand side of the shiny app). It can be used as quick access to pre-defined
+#'   hand side of the shiny app). It can be used as quick access to predefined
 #'   subsets of the domain datasets (not subject-level dataset) to be used
 #'   for analysis, denoted by an value of "Y". Each variable within the
 #'   \code{filter_var$choices} is expected to contain values of either "Y" or
@@ -31,12 +31,12 @@
 #' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>% mutate(USUBJID = SUBJID)
 #'
 #' app <- init(
-#'   data = cdisc_data(ASL = ASL, AAE = AAE, code = '
-#' ASL <- rADSL %>% mutate(USUBJID = SUBJID)
-#' AAE <- rADAE %>%
-#' mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>%
-#' mutate(USUBJID = SUBJID)
-#' '),
+#'   data = cdisc_data(ASL = ASL,
+#'                     AAE = AAE,
+#'                     code = "ASL <- rADSL %>% mutate(USUBJID = SUBJID)
+#'                     AAE <- rADAE %>%
+#'                     mutate(flag1 = ifelse(SEX == 'F', 'Y', 'N')) %>%
+#'                     mutate(USUBJID = SUBJID)"),
 #'   modules = root_modules(
 #'     tm_t_ae_ctc(
 #'       label = "Adverse Events Table By Highest NCI CTCAE Grade",
@@ -48,7 +48,7 @@
 #'       total_col = TRUE
 #'     )
 #'   )
-#' )
+#'   )
 #' \dontrun{
 #' shinyApp(app$ui, app$server)
 #' }
@@ -97,13 +97,29 @@ ui_t_ae_ctc <- function(id, ...) {
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
       optionalSelectInput(ns("filter_var"),
-        label = div("Preset Data Filters", tags$br(), helpText("Observations with value of 'Y' for selected variable(s) will be used for analysis")),
+        label = div("Preset Data Filters",
+                    tags$br(),
+                    helpText("Observations with value of 'Y' for selected variable(s) will be used for analysis")),
         choices = a$filter_var$choices, selected = a$filter_var$selected, multiple = TRUE
       ),
-      optionalSelectInput(ns("arm_var"), "Arm Variable", a$arm_var$choices, a$arm_var$selected, multiple = FALSE),
-      optionalSelectInput(ns("class_var"), "Class Variables", a$class_var$choices, a$class_var$selected, multiple = FALSE),
-      optionalSelectInput(ns("term_var"), "Term Variables", a$term_var$choices, a$term_var$selected, multiple = FALSE),
-      checkboxInput(ns("All_Patients"), "Add All Patients", value = a$total_col)
+      optionalSelectInput(ns("arm_var"),
+                          "Arm Variable",
+                          a$arm_var$choices,
+                          a$arm_var$selected,
+                          multiple = FALSE),
+      optionalSelectInput(ns("class_var"),
+                          "Class Variables",
+                          a$class_var$choices,
+                          a$class_var$selected,
+                          multiple = FALSE),
+      optionalSelectInput(ns("term_var"),
+                          "Term Variables",
+                          a$term_var$choices,
+                          a$term_var$selected,
+                          multiple = FALSE),
+      checkboxInput(ns("All_Patients"),
+                    "Add All Patients",
+                    value = a$total_col)
     ),
     forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
     pre_output = a$pre_output,
@@ -116,8 +132,8 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
   init_chunks()
 
   output$table <- renderUI({
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
+    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
 
     arm_var <- input$arm_var
     class_var <- input$class_var
@@ -132,22 +148,20 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
 
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
     aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var, toxgr_var))
-    anl_vars <- c(asl_vars, aae_vars)
+    anl_vars <- c(asl_vars, aae_vars) # nolint
 
     chunks_push(bquote({
-      ANL <- .(as.name(aae_name)) %>%
-        select(.(anl_vars))
+      ANL <- .(as.name(aae_name)) %>% select(.(anl_vars)) # nolint
     }))
 
     if (!is.null(filter_var)) {
       chunks_push(bquote(
-        ANL <- quick_filter(.(filter_var), ANL) %>%
-          droplevels()
+        ANL <- quick_filter(.(filter_var), ANL) %>% droplevels() # nolint
       ))
     }
 
     chunks_push(bquote({
-      ANL$TOXGR <- as.numeric(ANL[, .(toxgr_var)])
+      ANL$TOXGR <- as.numeric(ANL[, .(toxgr_var)]) # nolint
       attr(ANL[, .(class_var)], "label") <- label_aevar(.(class_var))
       attr(ANL[, .(term_var)], "label") <- label_aevar(.(term_var))
       attr(ANL[, "TOXGR"], "label") <- label_aevar(.(toxgr_var))

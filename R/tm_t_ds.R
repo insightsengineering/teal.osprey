@@ -5,11 +5,6 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
-#' @param arm_var_choices vector with variable names that can be used as
-#'   \code{arm_var}
-#' @param class_var_choices vector with \code{class_var} choices
-#' @param term_var_choices vector with \code{term_var} choices
-#'
 #' @return an \code{\link[teal]{module}} object
 #' @export
 #'
@@ -74,7 +69,7 @@ ui_t_ds <- function(id, ...) {
   standard_layout(
     output = white_small_well(uiOutput(ns("table"))),
     encoding =  div(
-      tags$label("Encodings", class="text-primary"),
+      tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
       optionalSelectInput(ns("arm_var"), "Arm Variable", a$arm_var$choices, a$arm_var$selected, multiple = FALSE),
       optionalSelectInput(ns("class_var"), "Class Variable", a$class_var$choices, a$class_var$selected,
@@ -96,7 +91,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
 
   output$table <- renderUI({
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
 
     chunks_reset(envir = environment())
 
@@ -105,15 +100,15 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
     term_var <- input$term_var
     all_p <- input$All_Patients
 
-    asl_vars <- unique(c("STUDYID","USUBJID", arm_var, class_var, term_var))
+    asl_vars <- unique(c("STUDYID", "USUBJID", arm_var, class_var, term_var)) # nolint
 
-    if(all_p == TRUE){
+    if (all_p == TRUE) {
       total <- "All Patients"
     } else {
       total <- NULL
     }
     chunks_push(bquote({
-      ASL_f <- as.data.frame(ASL_FILTERED[, .(asl_vars)])
+      ASL_f <- as.data.frame(ASL_FILTERED[, .(asl_vars)]) # nolint
     }))
 
     chunks_eval()

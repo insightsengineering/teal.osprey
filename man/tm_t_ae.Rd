@@ -48,9 +48,9 @@ an \code{\link[teal]{module}} object
 This shiny module displays the adverse events table (AET02).
 }
 \details{
-\code{filter_var} option is designed to work in conjuction with
+\code{filter_var} option is designed to work in conjunction with
   filtering function provided by \code{teal} (encoding panel on the right
-  hand side of the shiny app). It can be used as quick access to pre-defined
+  hand side of the shiny app). It can be used as quick access to predefined
   subsets of the domain datasets (not subject-level dataset) to be used
   for analysis, denoted by an value of "Y". Each variable within the
   \code{filter_var_choices} is expected to contain values of either "Y" or
@@ -79,25 +79,25 @@ app <- init(
   ),
   modules = root_modules(
     tm_t_ae(
-       label = "Adverse Events Table",
-       dataname = "AAE",
-       filter_var = choices_selected(
-         choices = c("DTHFL", "flag1"),
-         selected = NULL
-       ),
-       arm_var = choices_selected(
-         choices = c("ARM", "ARMCD"),
-         selected = "ARM"
-       ),
-       class_var = choices_selected(
-         choices = c("AEBODSYS", "AEHLTCD"),
-         selected = "AEBODSYS"
-       ),
-       term_var = choices_selected(
-         choices = c("AEDECOD", "AETERM"),
-         selected = "AEDECOD"
-       ),
-       total_col = TRUE
+      label = "Adverse Events Table",
+      dataname = "AAE",
+      filter_var = choices_selected(
+        choices = c("DTHFL", "flag1"),
+        selected = NULL
+      ),
+      arm_var = choices_selected(
+        choices = c("ARM", "ARMCD"),
+        selected = "ARM"
+      ),
+      class_var = choices_selected(
+        choices = c("AEBODSYS", "AEHLTCD"),
+        selected = "AEBODSYS"
+      ),
+      term_var = choices_selected(
+        choices = c("AEDECOD", "AETERM"),
+        selected = "AEDECOD"
+      ),
+      total_col = TRUE
     )
   )
 )

@@ -22,9 +22,9 @@
 #' @param code_data_processing string with data preprocessing before the teal
 #'   app is initialized, default is NULL
 #'
-#' @details \code{filter_var} option is designed to work in conjuction with
+#' @details \code{filter_var} option is designed to work in conjunction with
 #'   filtering function provided by \code{teal} (encoding panel on the right
-#'   hand side of the shiny app). It can be used as quick access to pre-defined
+#'   hand side of the shiny app). It can be used as quick access to predefined
 #'   subsets of the domain datasets (not subject-level dataset) to be used
 #'   for analysis, denoted by an value of "Y". Each variable within the
 #'   \code{filter_var_choices} is expected to contain values of either "Y" or
@@ -59,25 +59,25 @@
 #'   ),
 #'   modules = root_modules(
 #'     tm_t_ae(
-#'        label = "Adverse Events Table",
-#'        dataname = "AAE",
-#'        filter_var = choices_selected(
-#'          choices = c("DTHFL", "flag1"),
-#'          selected = NULL
-#'        ),
-#'        arm_var = choices_selected(
-#'          choices = c("ARM", "ARMCD"),
-#'          selected = "ARM"
-#'        ),
-#'        class_var = choices_selected(
-#'          choices = c("AEBODSYS", "AEHLTCD"),
-#'          selected = "AEBODSYS"
-#'        ),
-#'        term_var = choices_selected(
-#'          choices = c("AEDECOD", "AETERM"),
-#'          selected = "AEDECOD"
-#'        ),
-#'        total_col = TRUE
+#'       label = "Adverse Events Table",
+#'       dataname = "AAE",
+#'       filter_var = choices_selected(
+#'         choices = c("DTHFL", "flag1"),
+#'         selected = NULL
+#'       ),
+#'       arm_var = choices_selected(
+#'         choices = c("ARM", "ARMCD"),
+#'         selected = "ARM"
+#'       ),
+#'       class_var = choices_selected(
+#'         choices = c("AEBODSYS", "AEHLTCD"),
+#'         selected = "AEBODSYS"
+#'       ),
+#'       term_var = choices_selected(
+#'         choices = c("AEDECOD", "AETERM"),
+#'         selected = "AEDECOD"
+#'       ),
+#'       total_col = TRUE
 #'     )
 #'   )
 #' )
@@ -184,30 +184,28 @@ srv_t_ae <- function(input,
     term_var <- input$term_var
     all_p <- input$All_Patients
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
     if (dataname != "ASL") {
-      ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+      ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
       anl_name <- paste0(dataname, "_FILTERED")
       assign(anl_name, ANL_FILTERED)
     }
 
     chunks_reset(envir = environment())
 
-    aae_name <- paste0(dataname, "_FILTERED")
+    aae_name <- paste0(dataname, "_FILTERED") # nolint
 
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
     aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var))
-    anl_vars <- unique(c(asl_vars, aae_vars))
+    anl_vars <- unique(c(asl_vars, aae_vars)) # nolint
 
     chunks_push(bquote({
-      ANL <- .(as.name(aae_name)) %>%
-        select(.(anl_vars))
+      ANL <- .(as.name(aae_name)) %>% select(.(anl_vars)) # nolint
     }))
 
     if (!is.null(filter_var)) {
       chunks_push(bquote(
-        ANL <- quick_filter(.(filter_var), ANL) %>%
-          droplevels()
+        ANL <- quick_filter(.(filter_var), ANL) %>% droplevels() # nolint
       ))
     }
 

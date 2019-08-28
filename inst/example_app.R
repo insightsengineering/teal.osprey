@@ -1,57 +1,3 @@
-# teal.osprey
-The `teal.osprey` R package contains interactive `teal` modules for the outputs
-(TLGs) in [`osprey`](https://github.roche.com/Rpackages/osprey).
-
-
-# Installation
-
-Please install the package dependencies as follows:
-
-### Stable Release
-
-[Web Manual](https://pages.github.roche.com/Rpackages/teal.osprey/)
-
-``` r
-install.packages(c( "colorspace", "ggplot2",  "scales",  "gridExtra",  "tibble",  "dplyr", "testthat",  "knitr",  "rmarkdown",  "forcats",  "lattice"), repos = "http://cran.rstudio.com")
-
-install_nest <- function(pkgnames, ref = "master") {
-  lapply(pkgnames, function(x) {
-    devtools::install_github(
-      repo = paste0("NEST/", x),
-      ref = ref,
-      host = "https://github.roche.com/api/v3",
-      upgrade = "never"
-    )
-  })
-}
-
-
-devtools::install_github("Roche/rtables", ref = "v0.1.2")
-install_nest("test.nest", ref = "v0.1.0")
-install_nest("utils.nest", ref = "v0.1.0")
-install_nest("tern", ref = "v0.6.2")
-install.packages("shinyWidgets")
-install_nest("teal", ref = "v0.7.0")
-install_nest("teal.devel", ref = "v0.1.0")
-install_nest("teal.modules.clinical", ref = "v0.7.0")
-install_nest("teal.modules.general", ref = "v0.1.0")
-
-devtools::install_github(
-  repo = "Rpackages/teal.osprey",
-  ref = "v0.1.0",
-  host = "https://github.roche.com/api/v3",
-  upgrade_dependencies = FALSE
-)
-```
-
-# Getting Started
-
-Here is an example app that shows all modules using random data. If you save
-this code into a file named `app.R` then it is a valid [single-file shiny
-application](https://shiny.rstudio.com/articles/app-formats.html).
-
-## App setup with all available modules
-```r
 # Example App Using Random ADaM Dataset
 # - to use, copy into a new R scrip file and uncomment scripts
 
@@ -64,6 +10,7 @@ library(dplyr)
 
 options(teal_logging = FALSE)
 
+# code>
 ASL <- rADSL
 ATE <- rADTTE
 AAE <- rADAE
@@ -91,6 +38,7 @@ ATR <- ATR %>% mutate(PCHG = ifelse(is.na(PCHG), 0, PCHG),
                       AVAL = ifelse(is.na(AVAL), BASE, AVAL),
                       AVALC = ifelse(is.na(AVALC), as.character(BASE), AVALC))
 
+# <code
 ## Create front page for app ----
 srv_front_page <- function(input, output, session, datasets) {
   observeEvent(input$show_data_generation_rcode, {
@@ -135,7 +83,11 @@ ui_front_page <- function(id) {
 ## Setup App
 ## Need to add ADSL to validation
 x <- teal::init(
-  data = cdisc_data(ASL = ASL, ARS = ARS, ARS_SWIM = ARS_SWIM, ATE = ATE, AAE = AAE, ATR = ATR),
+  data = cdisc_data(ASL = ASL, ARS = ARS, ARS_SWIM = ARS_SWIM, ATE = ATE, AAE = AAE, ATR = ATR,
+                    code = get_code(system.file("example_app.R", package = "teal.osprey"),
+                                    exclude_comments = TRUE,
+                                    read_sources = TRUE),
+                    check = FALSE),
   modules = root_modules(
     module(
       label = "App Information",
@@ -347,7 +299,3 @@ body(x$server)[[length(body(x$server)) + 1]] <- quote(
 
 ## Start Teal Shiny App ----
 shinyApp(x$ui, x$server)
-```
-
-
-[ghs]: http://pages.github.roche.com/Rpackages/teal.osprey

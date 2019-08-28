@@ -44,9 +44,6 @@ Display AET01 Adverse Events Summary Table as a shiny Module
 #Example using stream (adam) dataset
 library(dplyr)
 
-data("rADSL")
-data("rADAE")
-
 ASL <- rADSL
 AAE <- rADAE
 

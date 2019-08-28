@@ -55,9 +55,9 @@ an \code{\link[teal]{module}} object
 Display butterfly plot as a shiny module
 }
 \details{
-\code{filter_var} option is designed to work in conjuction with
+\code{filter_var} option is designed to work in conjunction with
   filtering function provided by \code{teal} (encoding panel on the right
-  hand side of the shiny app). It can be used as quick access to pre-defined
+  hand side of the shiny app). It can be used as quick access to predefined
   subsets of the domain datasets (not subject-level dataset) to be used for
   analysis, denoted by an value of "Y". Each variable within the
   \code{filter_var_choices} is expected to contain values of either "Y" or

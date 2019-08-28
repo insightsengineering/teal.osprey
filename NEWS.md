@@ -9,4 +9,4 @@ Seven new functions to create `teal` modules for analysis functions in `osprey` 
 - Teal module for Disposition table
 - Teal module for AE butterfly plot
 - Teal module for Swimlane plot
-- Teal module for Spiderplot
+- Teal module for Spider plot

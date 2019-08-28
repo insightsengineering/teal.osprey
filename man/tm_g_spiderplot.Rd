@@ -2,7 +2,7 @@
 % Please edit documentation in R/tm_g_spiderplot.R
 \name{tm_g_spiderplot}
 \alias{tm_g_spiderplot}
-\title{Spiderplot Teal Module}
+\title{Spider plot Teal Module}
 \usage{
 tm_g_spiderplot(label, dataname, paramcd, x_var, y_var, marker_var,
   line_colorby_var, xfacet_var = NULL, yfacet_var = NULL,
@@ -49,31 +49,17 @@ output to put the output into context. For example the
 \item{post_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
-
-\item{paramcd_choices}{vector with \code{paramcd} choices}
-
-\item{x_var_choices}{vector with \code{x_var} choices}
-
-\item{y_var_choices}{vector with \code{y_var} choices}
-
-\item{marker_var_choices}{vector with \code{marker_var} choices}
-
-\item{line_colorby_var_choices}{vector with \code{line_colorby_var} choices}
-
-\item{xfacet_var_choices}{vector with \code{xfacet_var} choices}
-
-\item{yfacet_var_choices}{vector with \code{yfacet_var} choices}
 }
 \value{
 an \code{\link[teal]{module}} object
 }
 \description{
-Display spiderplot as a shiny module
+Display spider plot as a shiny module
 }
 \examples{
 
 \dontrun{
-#Example spiderplot
+#Example spider plot
 library(dplyr)
 
 ASL <- rADSL
@@ -83,7 +69,7 @@ app <- teal::init(
   data = cdisc_data(ASL = ASL, ATR = ATR, code = 'ASL <- rADSL; ATR <- rADTR'),
   modules = root_modules(
     tm_g_spiderplot(
-       label = "Spiderplot",
+       label = "Spider plot",
        dataname = "ATR",
        paramcd = choices_selected(choices = "SLDINV", selected = "SLDINV"),
        x_var = choices_selected(choices = "ADY", selected = "ADY"),

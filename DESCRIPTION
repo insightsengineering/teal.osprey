@@ -16,14 +16,9 @@ Depends:
   tern (>= 0.6.2)
 Imports:
   dplyr,
-  forcats,
-  grid,
-  gridExtra,
-  haven,
   magrittr,
   methods,
   rtables,
-  survival,
   stats,
   teal.devel (>= 0.1.0),
   utils,

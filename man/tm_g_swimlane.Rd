@@ -30,13 +30,13 @@ position has the same relative start day as bar length variable \code{bar_var})}
 \item{marker_shape_var}{marker shape variable from marker data}
 
 \item{marker_shape_opt}{aesthetic values to map shape values (named vector to map shape values to each name).
-If not \code{NULL}, please make sure this contains all posible values for \code{marker_shape_var} values,
+If not \code{NULL}, please make sure this contains all possible values for \code{marker_shape_var} values,
 otherwise shape will be assigned by \code{ggplot} default}
 
 \item{marker_color_var}{marker color variable from marker data}
 
 \item{marker_color_opt}{aesthetic values to map color values (named vector to map color values to each name).
-If not \code{NULL}, please make sure this contains all posible values for \code{marker_color_var} values,
+If not \code{NULL}, please make sure this contains all possible values for \code{marker_color_var} values,
 otherwise color will be assigned by \code{ggplot} default}
 
 \item{anno_txt_var}{character vector with subject-level variable names that are selected as annotation}
@@ -72,21 +72,19 @@ ARS <- rADRS
 
 ARS <- ARS \%>\%
   filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
-  mutate(
-    AVALC = DCSREAS,
-    ADY = EOSDY
-  ) \%>\%
+  mutate(AVALC = DCSREAS,
+         ADY = EOSDY) \%>\%
   rbind(ARS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
   arrange(USUBJID)
 
 x <- init(
   data = cdisc_data(ASL = ASL, ARS = ARS, code = 'ASL <- rADSL
-ARS <- rADRS
-ARS <- ARS \%>\% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
-mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
-rbind (ARS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
-arrange(USUBJID)
-', check = FALSE),
+                    ARS <- rADRS
+                    ARS <- ARS \%>\% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
+                    mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
+                    rbind (ARS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+                    arrange(USUBJID)
+                    ', check = FALSE),
   modules = root_modules(
     tm_g_swimlane(
       label = "Swimlane Plot",
@@ -115,7 +113,7 @@ arrange(USUBJID)
       )
     )
   )
-)
+  )
 
 shinyApp(x$ui, x$server)
 }

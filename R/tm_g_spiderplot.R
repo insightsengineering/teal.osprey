@@ -1,7 +1,7 @@
 
-#' Spiderplot Teal Module
+#' Spider plot Teal Module
 #'
-#' Display spiderplot as a shiny module
+#' Display spider plot as a shiny module
 #'
 #' @param label menu item label of the module in the teal app
 #' @param dataname analysis data used in teal module, needs to be available in
@@ -9,23 +9,16 @@
 #'   Note that the data is expected to be in vertical form with the
 #'   \code{PARAMCD} variable filtering to one observation per patient.
 #' @param paramcd single selected endpoint filtered with \code{PARAMCD} variable
-#' @param paramcd_choices vector with \code{paramcd} choices
 #' @param x_var x-axis variables
-#' @param x_var_choices vector with \code{x_var} choices
 #' @param y_var y-axis variables
-#' @param y_var_choices vector with \code{y_var} choices
 #' @param marker_var variable dictates marker symbol
-#' @param marker_var_choices vector with \code{marker_var} choices
 #' @param line_colorby_var variable dictates line color
-#' @param line_colorby_var_choices vector with \code{line_colorby_var} choices
 #' @param vref_line vertical reference lines
 #' @param href_line horizontal reference lines
 #' @param anno_txt_var annotation text
 #' @param legend_on boolean value for whether legend is displayed
 #' @param xfacet_var variable for x facets
-#' @param xfacet_var_choices vector with \code{xfacet_var} choices
 #' @param yfacet_var variable for y facets
-#' @param yfacet_var_choices vector with \code{yfacet_var} choices
 #' @param plot_height range of plot height
 #' @inheritParams teal.devel::standard_layout
 #'
@@ -38,7 +31,7 @@
 #' @examples
 #'
 #' \dontrun{
-#' #Example spiderplot
+#' #Example spider plot
 #' library(dplyr)
 #'
 #' ASL <- rADSL
@@ -48,7 +41,7 @@
 #'   data = cdisc_data(ASL = ASL, ATR = ATR, code = 'ASL <- rADSL; ATR <- rADTR'),
 #'   modules = root_modules(
 #'     tm_g_spiderplot(
-#'        label = "Spiderplot",
+#'        label = "Spider plot",
 #'        dataname = "ATR",
 #'        paramcd = choices_selected(choices = "SLDINV", selected = "SLDINV"),
 #'        x_var = choices_selected(choices = "ADY", selected = "ADY"),
@@ -118,7 +111,7 @@ ui_g_spider <- function(id, ...) {
   standard_layout(
     output = white_small_well(plot_height_output(id = ns("spiderplot"))),
     encoding =  div(
-      tags$label("Encodings", class="text-primary"),
+      tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
       div(
         style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
@@ -185,7 +178,7 @@ ui_g_spider <- function(id, ...) {
                     tags$br(),
                     helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")),
         value = a$href_line),
-      tags$label("Plot Settings", class="text-primary", style="margin-top: 15px;"),
+      tags$label("Plot Settings", class = "text-primary", style = "margin-top: 15px;"),
       plot_height_input(id = ns("spiderplot"), value = a$plot_height)
     ),
     forms = tags$div(
@@ -199,7 +192,7 @@ ui_g_spider <- function(id, ...) {
 
 srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
-  vals <- reactiveValues(spiderplot=NULL)
+  vals <- reactiveValues(spiderplot = NULL) # nolint
 
   callModule(plot_with_height,
              id = "spiderplot",
@@ -215,8 +208,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
     # get datasets ---
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    ATR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
+    ATR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
 
     atr_name <- paste0(dataname, "_FILTERED")
     assign(atr_name, ATR_FILTERED) # so that we can refer to the 'correct' data name
@@ -229,13 +222,13 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
     # get inputs ---
 
-    paramcd <- input$paramcd
+    paramcd <- input$paramcd # nolint
     x_var <- input$x_var
     y_var <- input$y_var
     marker_var <- input$marker_var
     line_colorby_var <- input$line_colorby_var
     anno_txt_var <- input$anno_txt_var
-    legend_on <- input$legend_on
+    legend_on <- input$legend_on # nolint
     xfacet_var <- input$xfacet_var
     yfacet_var <- input$yfacet_var
     vref_line <- input$vref_line
@@ -249,10 +242,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
     varlist_from_asl <- varlist[varlist %in% names(ASL_FILTERED)]
     varlist_from_anl <- varlist[!varlist %in% names(ASL_FILTERED)]
 
-    asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl))
+    asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl)) # nolint
     atr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
-
-
 
     # preprocessing of datasets to chunks ---
 
@@ -262,21 +253,19 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
     # merge
     chunks_push(bquote({
-      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-      ATR <- .(as.name(atr_name))[, .(atr_vars)] %>% as.data.frame()
+      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame() # nolint
+      ATR <- .(as.name(atr_name))[, .(atr_vars)] %>% as.data.frame() # nolint
 
-      ANL <- merge(ASL, ATR, by = c("USUBJID", "STUDYID"))
-      ANL <- ANL %>% group_by(USUBJID, PARAMCD) %>% arrange(ANL[,.(x_var)]) %>%
-        as.data.frame()
+      ANL <- merge(ASL, ATR, by = c("USUBJID", "STUDYID")) # nolint
+      ANL <- ANL %>% group_by(USUBJID, PARAMCD) %>% arrange(ANL[, .(x_var)]) %>% as.data.frame() # nolint
     }))
 
     chunks_push_new_line()
 
     # format and filter
     chunks_push(bquote({
-      ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, '-', fixed = TRUE), tail, 1))
-
-      ANL_f <- ANL %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame()
+      ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+      ANL_f <- ANL %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame() # nolint
     }))
 
     chunks_push_new_line()
@@ -372,7 +361,4 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
       )
     )
   })
-
-
 }
-

@@ -20,9 +20,9 @@
 #' @param legend_on (\code{boolean}) value for whether legend is displayed
 #' @param plot_height (\code{numeric}) range of plot height - 3 values
 #'
-#' @details \code{filter_var} option is designed to work in conjuction with
+#' @details \code{filter_var} option is designed to work in conjunction with
 #'   filtering function provided by \code{teal} (encoding panel on the right
-#'   hand side of the shiny app). It can be used as quick access to pre-defined
+#'   hand side of the shiny app). It can be used as quick access to predefined
 #'   subsets of the domain datasets (not subject-level dataset) to be used for
 #'   analysis, denoted by an value of "Y". Each variable within the
 #'   \code{filter_var_choices} is expected to contain values of either "Y" or
@@ -205,8 +205,8 @@ ui_g_butterfly <- function(id, ...) {
         value = a$legend_on),
       tags$label(
         "Plot Settings",
-        class="text-primary",
-        style="margin-top: 15px;"),
+        class = "text-primary",
+        style = "margin-top: 15px;"),
       plot_height_input(id = ns("butterflyplot"), value = a$plot_height)
     ),
     forms = tags$div(
@@ -214,7 +214,7 @@ ui_g_butterfly <- function(id, ...) {
         ns("show_rcode"),
         "Show R Code",
         width = "100%")#,
-      # downloadButton(ns("export_plot"), "Export Image", width = "100%")
+      # download button downloadButton(ns("export_plot"), "Export Image", width = "100%")
     ),
     pre_output = a$pre_output,
     post_output = a$post_output
@@ -231,11 +231,11 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
     right_ch <- input$right_ch
     left_ch <- input$left_ch
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
+    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
 
-    ASL_df <- ASL_FILTERED %>% as.data.frame()
-    AAE_df <- AAE_FILTERED %>% as.data.frame()
+    ASL_df <- ASL_FILTERED %>% as.data.frame() # nolint
+    AAE_df <- AAE_FILTERED %>% as.data.frame() # nolint
 
     options_r <- if (right_ch %in% names(ASL_df)) unique(ASL_df[, right_ch]) else unique(AAE_df[, right_ch])
     options_l <- if (left_ch %in% names(ASL_df)) unique(ASL_df[, left_ch]) else unique(AAE_df[, left_ch])
@@ -246,8 +246,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
 
   output$plot <- renderPlot({
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
+    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
 
     right_v <- input$right_v
     left_v <- input$left_v
@@ -266,8 +266,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
     varlist_from_asl <- varlist[varlist %in% names(ASL_FILTERED)]
     varlist_from_anl <- varlist[!varlist %in% names(ASL_FILTERED)]
 
-    asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl))
-    aae_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl))
+    asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl)) # nolint
+    aae_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
 
     aae_name <- paste0(dataname, "_FILTERED")
     assign(aae_name, AAE_FILTERED) # so that we can refer to the 'correct' data name
@@ -275,18 +275,13 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
     chunks_reset(envir = environment())
 
     chunks_push(bquote({
-
-      # aae_vars <- aae_vars[aae_vars %in% names(AAE_FILTERED)]
-      # aae_vars <- aae_vars[!is.null(aae_vars)]
-
-      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame()
-      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame()
+      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame() # nolint
+      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame() # nolint
     }))
-
 
     if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
         chunks_push(bquote(
-          AAE <- quick_filter(.(filter_var), AAE) %>%
+          AAE <- quick_filter(.(filter_var), AAE) %>% # nolint
             droplevels() %>%
             as.data.frame()
         ))
@@ -295,9 +290,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
     chunks_push_new_line()
 
     chunks_push(bquote({
-      ANL_f  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>%
-        as.data.frame()
-      ANL_f <- na.omit(ANL_f)
+      ANL_f  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
+      ANL_f <- na.omit(ANL_f) # nolint
     }))
 
     chunks_push_new_line()
@@ -391,4 +385,3 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
     )
   })
 }
-

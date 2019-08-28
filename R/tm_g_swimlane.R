@@ -13,11 +13,11 @@
 #'      position has the same relative start day as bar length variable \code{bar_var})
 #' @param marker_shape_var marker shape variable from marker data
 #' @param marker_shape_opt aesthetic values to map shape values (named vector to map shape values to each name).
-#'      If not \code{NULL}, please make sure this contains all posible values for \code{marker_shape_var} values,
+#'      If not \code{NULL}, please make sure this contains all possible values for \code{marker_shape_var} values,
 #'      otherwise shape will be assigned by \code{ggplot} default
 #' @param marker_color_var marker color variable from marker data
 #' @param marker_color_opt aesthetic values to map color values (named vector to map color values to each name).
-#'      If not \code{NULL}, please make sure this contains all posible values for \code{marker_color_var} values,
+#'      If not \code{NULL}, please make sure this contains all possible values for \code{marker_color_var} values,
 #'      otherwise color will be assigned by \code{ggplot} default
 #' @param vref_line vertical reference lines
 #' @param anno_txt_var character vector with subject-level variable names that are selected as annotation
@@ -43,21 +43,19 @@
 #'
 #' ARS <- ARS %>%
 #'   filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-#'   mutate(
-#'     AVALC = DCSREAS,
-#'     ADY = EOSDY
-#'   ) %>%
+#'   mutate(AVALC = DCSREAS,
+#'          ADY = EOSDY) %>%
 #'   rbind(ARS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
 #'   arrange(USUBJID)
 #'
 #' x <- init(
 #'   data = cdisc_data(ASL = ASL, ARS = ARS, code = 'ASL <- rADSL
-#' ARS <- rADRS
-#' ARS <- ARS %>% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-#' mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-#' rbind (ARS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-#' arrange(USUBJID)
-#' ', check = FALSE),
+#'                     ARS <- rADRS
+#'                     ARS <- ARS %>% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+#'                     mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+#'                     rbind (ARS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+#'                     arrange(USUBJID)
+#'                     ', check = FALSE),
 #'   modules = root_modules(
 #'     tm_g_swimlane(
 #'       label = "Swimlane Plot",
@@ -86,7 +84,7 @@
 #'       )
 #'     )
 #'   )
-#' )
+#'   )
 #'
 #' shinyApp(x$ui, x$server)
 #' }
@@ -273,14 +271,14 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     validate(need("ASL" %in% datasets$datanames(), "ASL needs to be defined in datasets"))
     validate(need(
       (length(datasets$datanames()) == 1 && dataname == "ASL") ||
-        (length(datasets$datanames()) == 2 && dataname != "ASL"),
+        (length(datasets$datanames()) >= 2 && dataname != "ASL"),
       "Please either add just 'ASL' as dataname when just ASL is available
-       In case 2 datasetsare available ASL is not supposed to be the dataname."
+       In case 2 datasets are available ASL is not supposed to be the dataname."
     ))
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE)
+    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
     if (dataname != "ASL") {
-      ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE)
+      ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
       anl_name <- paste0(dataname, "_FILTERED")
       assign(anl_name, ANL_FILTERED)
     }
@@ -300,7 +298,13 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       marker_shape_var <- NULL
       marker_color_var <- NULL
     } else {
-      marker_pos_var <- if (is.null(marker_pos_var)) NULL else if (input$marker_pos_var == "None") NULL else input$marker_pos_var
+      marker_pos_var <- if (is.null(marker_pos_var)) {
+        NULL
+        } else if (input$marker_pos_var == "None") {
+          NULL
+        } else {
+          input$marker_pos_var
+        }
       marker_shape_var <- if (is.null(marker_shape_var) | is.null(input$marker_shape_var)) {
         NULL
       } else if (input$marker_shape_var == "None") NULL else input$marker_shape_var
@@ -341,7 +345,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     asl_vars <- unique(c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
 
     if (dataname != "ASL") {
-      anl_vars <- unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
+      anl_vars <- unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var)) # nolint
       validate(need(
         !any(c(marker_pos_var, marker_shape_var, marker_color_var) %in% asl_vars),
         "marker-related variables need to come from marker data"
@@ -365,27 +369,27 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
 
     if (dataname == "ASL") {
       chunks_push(bquote({
-        ASL_p <- ASL_FILTERED
-        ASL <- ASL_p[, .(asl_vars)]
+        ASL_p <- ASL_FILTERED # nolint
+        ASL <- ASL_p[, .(asl_vars)] # nolint
         # only take last part of USUBJID
-        ASL$USUBJID <- unlist(lapply(strsplit(ASL$USUBJID, "-", fixed = TRUE), tail, 1))
+        ASL$USUBJID <- unlist(lapply(strsplit(ASL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
       }))
     } else {
       anl_name <- paste0(dataname, "_FILTERED")
       chunks_push(bquote({
-        ASL_p <- ASL_FILTERED
-        ANL_p <- .(as.name(anl_name))
+        ASL_p <- ASL_FILTERED # nolint
+        ANL_p <- .(as.name(anl_name)) # nolint
 
-        ASL <- ASL_p[, .(asl_vars)]
-        ANL <- merge(
+        ASL <- ASL_p[, .(asl_vars)] # nolint
+        ANL <- merge( # nolint
           x = ASL,
           y = ANL_p[, .(anl_vars)],
           all.x = FALSE, all.y = FALSE,
           by = c("USUBJID", "STUDYID")
         )
         # only take last part of USUBJID
-        ASL$USUBJID <- unlist(lapply(strsplit(ASL$USUBJID, "-", fixed = TRUE), tail, 1))
-        ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1))
+        ASL$USUBJID <- unlist(lapply(strsplit(ASL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+        ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
       }))
     }
     chunks_push_new_line() # empty line for pretty code
@@ -394,8 +398,8 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     # WRITE PLOTTING CODE TO CHUNKS
 
     validate(need(chunks_is_ok(), "Data could not be constructed."))
-    ASL <- chunks_get_var("ASL")
-    ANL <- chunks_get_var("ANL")
+    ASL <- chunks_get_var("ASL") # nolint
+    ANL <- chunks_get_var("ANL") # nolint
     if (dataname == "ASL") {
       chunks_push(call(
         "g_swimlane",

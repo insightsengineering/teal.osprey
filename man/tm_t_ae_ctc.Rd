@@ -27,7 +27,7 @@ function.}
 
 \item{term_var}{\code{\link[teal]{choices_selected}} term variables selected for display}
 
-\item{toxgr_var}{variable name of AE toxicitiy grade}
+\item{toxgr_var}{variable name of AE toxicity grade}
 
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
@@ -47,9 +47,9 @@ an \code{\link[teal]{module}} object
 Adverse Events Table by Highest NCI CTCAE Grade Teal Module
 }
 \details{
-\code{filter_var} option is designed to work in conjuction with
+\code{filter_var} option is designed to work in conjunction with
   filtering function provided by \code{teal} (encoding panel on the right
-  hand side of the shiny app). It can be used as quick access to pre-defined
+  hand side of the shiny app). It can be used as quick access to predefined
   subsets of the domain datasets (not subject-level dataset) to be used
   for analysis, denoted by an value of "Y". Each variable within the
   \code{filter_var$choices} is expected to contain values of either "Y" or
@@ -66,12 +66,12 @@ ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
 AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\% mutate(USUBJID = SUBJID)
 
 app <- init(
-  data = cdisc_data(ASL = ASL, AAE = AAE, code = '
-ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
-AAE <- rADAE \%>\%
-mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\%
-mutate(USUBJID = SUBJID)
-'),
+  data = cdisc_data(ASL = ASL,
+                    AAE = AAE,
+                    code = "ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
+                    AAE <- rADAE \%>\%
+                    mutate(flag1 = ifelse(SEX == 'F', 'Y', 'N')) \%>\%
+                    mutate(USUBJID = SUBJID)"),
   modules = root_modules(
     tm_t_ae_ctc(
       label = "Adverse Events Table By Highest NCI CTCAE Grade",
@@ -83,7 +83,7 @@ mutate(USUBJID = SUBJID)
       total_col = TRUE
     )
   )
-)
+  )
 \dontrun{
 shinyApp(app$ui, app$server)
 }

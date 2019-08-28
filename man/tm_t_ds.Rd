@@ -32,13 +32,6 @@ output to put the output into context. For example the
 \item{post_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
-
-\item{arm_var_choices}{vector with variable names that can be used as
-\code{arm_var}}
-
-\item{class_var_choices}{vector with \code{class_var} choices}
-
-\item{term_var_choices}{vector with \code{term_var} choices}
 }
 \value{
 an \code{\link[teal]{module}} object
