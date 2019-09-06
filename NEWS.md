@@ -1,3 +1,10 @@
+# teal.osprey current release
+Refactoring package according to the NEST standards.
+- included test.nest tests
+- fixed outdated modules according to current teal functionality
+- fixed documentation examples and example_app.R
+- simplified dependencies
+
 # teal.osprey 0.1.0
 
 First versioned release of teal.osprey package, which include the following functions:
