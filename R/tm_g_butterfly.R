@@ -341,8 +341,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
       chunks_push(call(
         "g_butterfly",
         category = bquote(ANL_f[, .(category_var)]),
-        rightFlag = bquote(right),
-        leftFlag = bquote(left),
+        right_flag = bquote(right),
+        left_flag = bquote(left),
         group_names = bquote(c(right_name, left_name)),
         block_count = count_by_var,
         block_color = if (color_by_var != "None") {
