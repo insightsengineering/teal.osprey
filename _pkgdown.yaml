@@ -15,6 +15,9 @@ navbar:
 
 
 reference:
+  - title: Package
+    contents:
+      - teal.osprey
   - title: Table Modules
     desc: "Teal table modules including Disposition table and Adverse Event tables"
     contents:
@@ -23,3 +26,8 @@ reference:
     desc: "Teal graph modules"
     contents:
       - starts_with("tm_g_")
+  - title: Utility
+    contents:
+      - label_aevar
+      - quick_filter
+
