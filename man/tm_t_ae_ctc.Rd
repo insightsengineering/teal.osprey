@@ -76,7 +76,7 @@ app <- init(
     tm_t_ae_ctc(
       label = "Adverse Events Table By Highest NCI CTCAE Grade",
       dataname = "AAE",
-      filter_var = choices_selected(selected = NULL, choices = c("DTHFL", "flag1")),
+      filter_var = choices_selected(selected = NULL, choices = c("AESER", "flag1")),
       arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
       class_var = choices_selected(selected = "AEBODSYS", choices = c("AEBODSYS", "DEFAULT")),
       term_var = choices_selected(selected = "AEDECOD", choices = c("AEDECOD", "DEFAULT")),

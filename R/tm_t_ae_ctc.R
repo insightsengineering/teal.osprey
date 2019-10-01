@@ -28,7 +28,8 @@
 #' library(dplyr)
 #'
 #' ASL <- rADSL %>% mutate(USUBJID = SUBJID)
-#' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>% mutate(USUBJID = SUBJID)
+#' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>%
+#'                  mutate(USUBJID = SUBJID)
 #'
 #' app <- init(
 #'   data = cdisc_data(ASL = ASL,
@@ -41,7 +42,7 @@
 #'     tm_t_ae_ctc(
 #'       label = "Adverse Events Table By Highest NCI CTCAE Grade",
 #'       dataname = "AAE",
-#'       filter_var = choices_selected(selected = NULL, choices = c("DTHFL", "flag1")),
+#'       filter_var = choices_selected(selected = NULL, choices = c("AESER", "flag1")),
 #'       arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
 #'       class_var = choices_selected(selected = "AEBODSYS", choices = c("AEBODSYS", "DEFAULT")),
 #'       term_var = choices_selected(selected = "AEDECOD", choices = c("AEDECOD", "DEFAULT")),
@@ -97,10 +98,10 @@ ui_t_ae_ctc <- function(id, ...) {
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
       optionalSelectInput(ns("filter_var"),
-        label = div("Preset Data Filters",
-                    tags$br(),
-                    helpText("Observations with value of 'Y' for selected variable(s) will be used for analysis")),
-        choices = a$filter_var$choices, selected = a$filter_var$selected, multiple = TRUE
+                          label = div("Preset Data Filters",
+                                      tags$br(),
+                                      helpText("Observations with value of 'Y' for selected variable(s) will be used for analysis")),
+                          choices = a$filter_var$choices, selected = a$filter_var$selected, multiple = TRUE
       ),
       optionalSelectInput(ns("arm_var"),
                           "Arm Variable",
@@ -133,7 +134,11 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
 
   output$table <- renderUI({
     ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
+    if (dataname != "ASL") {
+      ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
+      anl_name <- paste0(dataname, "_FILTERED")
+      assign(anl_name, ANL_FILTERED)
+    }
 
     arm_var <- input$arm_var
     class_var <- input$class_var
@@ -144,14 +149,13 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
     chunks_reset(envir = environment())
 
     aae_name <- paste0(dataname, "_FILTERED")
-    assign(aae_name, AAE_FILTERED) # so that we can refer to the 'correct' data name
 
     asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
     aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var, toxgr_var))
     anl_vars <- c(asl_vars, aae_vars) # nolint
 
     chunks_push(bquote({
-      ANL <- .(as.name(aae_name)) %>% select(.(anl_vars)) # nolint
+      ANL <- .(as.name(aae_name)) %>% select(.(aae_vars)) # nolint
     }))
 
     if (!is.null(filter_var)) {
@@ -161,10 +165,17 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
     }
 
     chunks_push(bquote({
-      ANL$TOXGR <- as.numeric(ANL[, .(toxgr_var)]) # nolint
-      attr(ANL[, .(class_var)], "label") <- label_aevar(.(class_var))
-      attr(ANL[, .(term_var)], "label") <- label_aevar(.(term_var))
-      attr(ANL[, "TOXGR"], "label") <- label_aevar(.(toxgr_var))
+      ANL <- ASL_FILTERED %>%  # nolint
+        select(.(asl_vars)) %>%
+        left_join(ANL) %>%
+        select(.(anl_vars))
+    }))
+
+    chunks_push(bquote({
+      ANL$TOXGR <- as.numeric(ANL[[.(toxgr_var)]]) # nolint
+      attr(ANL[[.(class_var)]], "label") <- label_aevar(.(class_var))
+      attr(ANL[[.(term_var)]], "label") <- label_aevar(.(term_var))
+      attr(ANL[["TOXGR"]], "label") <- label_aevar(.(toxgr_var))
     }))
 
     chunks_push_new_line()
@@ -179,8 +190,8 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
 
     chunks_push(call(
       "t_ae_ctc_v2",
-      class = bquote(ANL[, .(class_var)]),
-      term = bquote(ANL[, .(term_var)]),
+      class = bquote(ANL[[.(class_var)]]),
+      term = bquote(ANL[[.(term_var)]]),
       id = bquote(ANL$USUBJID),
       grade = bquote(ANL$TOXGR),
       col_by = bquote(droplevels(as.factor(ANL[[.(arm_var)]]))),

@@ -82,7 +82,7 @@ app <- init(
       label = "Adverse Events Table",
       dataname = "AAE",
       filter_var = choices_selected(
-        choices = c("DTHFL", "flag1"),
+        choices = c("AESER", "flag1"),
         selected = NULL
       ),
       arm_var = choices_selected(

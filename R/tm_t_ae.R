@@ -15,8 +15,10 @@
 #'   variable name in analysis data that is used as
 #'   \code{col_by} argument for the respective \code{tern} or \code{osprey}
 #'   function.
-#' @param class_var \code{\link[teal]{choices_selected}} class variables selected for display
-#' @param term_var \code{\link[teal]{choices_selected}} term variables selected for display
+#' @param class_var \code{\link[teal]{choices_selected}} class variables selected
+#'   for display
+#' @param term_var \code{\link[teal]{choices_selected}} term variables selected
+#'   for display
 #' @param total_col argument for appearance of "All Patients" column (default is
 #'   \code{TRUE})
 #' @param code_data_processing string with data preprocessing before the teal
@@ -44,7 +46,8 @@
 #' library(dplyr)
 #'
 #' ASL <- rADSL %>% mutate(USUBJID = SUBJID)
-#' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))  %>% mutate(USUBJID = SUBJID)
+#' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>%
+#'                  mutate(USUBJID = SUBJID)
 #'
 #' app <- init(
 #'   data = cdisc_data(
@@ -52,7 +55,8 @@
 #'     AAE = AAE,
 #'     code = paste0(c(
 #'       "ASL <- rADSL %>% mutate(USUBJID = SUBJID)",
-#'       'AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>% mutate(USUBJID = SUBJID)'),
+#'       'AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>%
+#'                         mutate(USUBJID = SUBJID)'),
 #'       collapse = ";"
 #'     ),
 #'     check = FALSE
@@ -62,7 +66,7 @@
 #'       label = "Adverse Events Table",
 #'       dataname = "AAE",
 #'       filter_var = choices_selected(
-#'         choices = c("DTHFL", "flag1"),
+#'         choices = c("AESER", "flag1"),
 #'         selected = NULL
 #'       ),
 #'       arm_var = choices_selected(
@@ -200,7 +204,7 @@ srv_t_ae <- function(input,
     anl_vars <- unique(c(asl_vars, aae_vars)) # nolint
 
     chunks_push(bquote({
-      ANL <- .(as.name(aae_name)) %>% select(.(anl_vars)) # nolint
+      ANL <- .(as.name(aae_name)) %>% select(.(aae_vars)) # nolint
     }))
 
     if (!is.null(filter_var)) {
@@ -208,6 +212,13 @@ srv_t_ae <- function(input,
         ANL <- quick_filter(.(filter_var), ANL) %>% droplevels() # nolint
       ))
     }
+
+    chunks_push(bquote({
+      ANL <- ASL_FILTERED %>%  # nolint
+        select(.(asl_vars)) %>%
+        left_join(ANL) %>%
+        select(.(anl_vars))
+    }))
 
     chunks_push(bquote({
       attr(ANL[[.(class_var)]], "label") <- label_aevar(.(class_var))
