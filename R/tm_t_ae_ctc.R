@@ -24,24 +24,23 @@
 #'
 #'
 #' @examples
-#'
+#' #Example using stream (ADaM) dataset
 #' library(dplyr)
+#' library(random.cdisc.data)
 #'
-#' ASL <- rADSL %>% mutate(USUBJID = SUBJID)
-#' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>%
-#'                  mutate(USUBJID = SUBJID)
+#' ADSL <- radsl(cached = TRUE)
+#' ADAE <- radae(cached = TRUE) %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))
 #'
 #' app <- init(
-#'   data = cdisc_data(ASL = ASL,
-#'                     AAE = AAE,
-#'                     code = "ASL <- rADSL %>% mutate(USUBJID = SUBJID)
-#'                     AAE <- rADAE %>%
-#'                     mutate(flag1 = ifelse(SEX == 'F', 'Y', 'N')) %>%
-#'                     mutate(USUBJID = SUBJID)"),
+#'   data = cdisc_data(
+#'     cdisc_dataset("ADSL", ADSL),
+#'     cdisc_dataset("ADAE", ADAE),
+#'     code = 'ADSL <- radsl(cached = TRUE)
+#'             ADAE <- radae(cached = TRUE) %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))'),
 #'   modules = root_modules(
 #'     tm_t_ae_ctc(
 #'       label = "Adverse Events Table By Highest NCI CTCAE Grade",
-#'       dataname = "AAE",
+#'       dataname = "ADAE",
 #'       filter_var = choices_selected(selected = NULL, choices = c("AESER", "flag1")),
 #'       arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
 #'       class_var = choices_selected(selected = "AEBODSYS", choices = c("AEBODSYS", "DEFAULT")),
@@ -97,11 +96,13 @@ ui_t_ae_ctc <- function(id, ...) {
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
-      optionalSelectInput(ns("filter_var"),
-                          label = div("Preset Data Filters",
-                                      tags$br(),
-                                      helpText("Observations with value of 'Y' for selected variable(s) will be used for analysis")),
-                          choices = a$filter_var$choices, selected = a$filter_var$selected, multiple = TRUE
+      optionalSelectInput(
+        ns("filter_var"),
+        label = div("Preset Data Filters",
+        tags$br(),
+        helpText("Observations with value of 'Y' for selected variable(s)
+                 will be used for analysis")),
+        choices = a$filter_var$choices, selected = a$filter_var$selected, multiple = TRUE
       ),
       optionalSelectInput(ns("arm_var"),
                           "Arm Variable",
@@ -133,8 +134,8 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
   init_chunks()
 
   output$table <- renderUI({
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
-    if (dataname != "ASL") {
+    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
+    if (dataname != "ADSL") {
       ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
       anl_name <- paste0(dataname, "_FILTERED")
       assign(anl_name, ANL_FILTERED)
@@ -148,14 +149,14 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
 
     chunks_reset(envir = environment())
 
-    aae_name <- paste0(dataname, "_FILTERED")
+    adae_name <- paste0(dataname, "_FILTERED") #nolint
 
-    asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
-    aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var, toxgr_var))
-    anl_vars <- c(asl_vars, aae_vars) # nolint
+    adsl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
+    adae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var, toxgr_var))
+    anl_vars <- c(adsl_vars, adae_vars) # nolint
 
     chunks_push(bquote({
-      ANL <- .(as.name(aae_name)) %>% select(.(aae_vars)) # nolint
+      ANL <- .(as.name(adae_name)) %>% select(.(adae_vars)) # nolint
     }))
 
     if (!is.null(filter_var)) {
@@ -165,8 +166,8 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
     }
 
     chunks_push(bquote({
-      ANL <- ASL_FILTERED %>%  # nolint
-        select(.(asl_vars)) %>%
+      ANL <- ADSL_FILTERED %>%  # nolint
+        select(.(adsl_vars)) %>%
         left_join(ANL) %>%
         select(.(anl_vars))
     }))

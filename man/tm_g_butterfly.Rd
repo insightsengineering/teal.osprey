@@ -70,53 +70,54 @@ Display butterfly plot as a shiny module
 }
 \examples{
 
-\dontrun{
-#Example butterfly plot
+#Example using stream (ADaM) dataset
 library(dplyr)
-
-ASL <- mutate(rADSL, DOSE = paste(sample(1:3, n(), replace = T), "UG"), USUBJID = SUBJID)
-AAE <- mutate(
-  rADAE,
+library(random.cdisc.data)
+ADSL <- radsl(cached = TRUE)
+ADAE <- radae(cached = TRUE)
+ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
+ADAE <- mutate(
+  ADAE,
   flag1 = ifelse(AETOXGR == 1, 1, 0),
   flag2 = ifelse(AETOXGR == 2, 1, 0),
   flag3 = ifelse(AETOXGR == 3, 1, 0),
-  flag1_filt = rep("Y", n()),
-  USUBJID = SUBJID
+  flag1_filt = rep("Y", n())
 )
 
 app <- init(
-  data = cdisc_data(ASL = ASL, AAE = AAE, code = paste0(c(
-     'ASL <- mutate(rADSL, DOSE = paste(sample(1:3, n(), replace = T), "UG"),
-        USUBJID = SUBJID)',
-     'AAE <- mutate(
-      rADAE,
-      flag1 = ifelse(AETOXGR == 1, 1, 0),
-      flag2 = ifelse(AETOXGR == 2, 1, 0),
-      flag3 = ifelse(AETOXGR == 3, 1, 0),
-      flag1_filt = rep("Y", n()),
-      USUBJID = SUBJID
-     )'), collapse = ";")
-  ),
+  data = cdisc_data(
+    cdisc_dataset("ADSL", ADSL),
+    cdisc_dataset("ADAE", ADAE),
+    code = 'ADSL <- radsl(cached = TRUE)
+    ADAE <- radae(cached = TRUE)
+    ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
+    ADAE <- mutate(
+    ADAE,
+    flag1 = ifelse(AETOXGR == 1, 1, 0),
+    flag2 = ifelse(AETOXGR == 2, 1, 0),
+    flag3 = ifelse(AETOXGR == 3, 1, 0),
+    flag1_filt = rep("Y", n()))'),
   modules = root_modules(
     tm_g_butterfly(
-       label = "Butterfly Plot",
-       dataname = "AAE",
-       right_var = choices_selected(selected = "SEX", choices = c("DOSE", "SEX", "ARM",
-         "RACE", "flag1", "flag2","flag3")),
-       left_var = choices_selected(selected = "RACE", choices = c("DOSE", "SEX", "ARM",
-          "RACE", "flag1", "flag2", "flag3")),
-       category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
-       color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
-       count_by_var = choices_selected(selected = "# of patients",
-         choices = c("# of patients", "# of AEs")),
-       facet_var = choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
-       sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
-       legend_on = TRUE,
-       plot_height = c(600, 200, 2000)
-   )
+      label = "Butterfly Plot",
+      dataname = "ADAE",
+      right_var = choices_selected(selected = "SEX",
+        choices = c("DOSE", "SEX", "ARM","RACE", "flag1", "flag2","flag3")),
+      left_var = choices_selected(selected = "RACE",
+        choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")),
+      category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
+      color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
+      count_by_var = choices_selected(selected = "# of patients",
+                                      choices = c("# of patients", "# of AEs")),
+      facet_var = choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
+      sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
+      legend_on = TRUE,
+      plot_height = c(600, 200, 2000)
+    )
   )
-)
+  )
 
+\dontrun{
 shinyApp(app$ui, app$server)
 
 }

@@ -13,24 +13,25 @@
 #'
 #' @examples
 #'
-#' \dontrun{
-#' #Example using stream (adam) dataset
+#' #Example using stream (ADaM) dataset
 #' library(dplyr)
 #'
-#' ASL <- rADSL
-#' AAE <- rADAE
+#' ADSL <- rADSL
+#' ADAE <- rADAE
 #'
 #' app <- teal::init(
 #'   data = cdisc_data(
-#'         ASL = ASL,
-#'         AAE = AAE,
-#'         code = "ASL <- rADSL; AAE <- rADAE",
-#'         check = FALSE
-#'       ),
+#'     cdisc_dataset("ADSL", ADSL),
+#'     cdisc_dataset("ADAE", ADAE,
+#'                   keys = keys(primary = c("STUDYID", "USUBJID", "AETERM", "AESEQ"),
+#'                               foreign = c("STUDYID", "USUBJID"),
+#'                               parent = "ADSL")),
+#'     code = "ADSL <- rADSL; ADAE <- rADAE",
+#'     check = FALSE),
 #'   modules = root_modules(
 #'     tm_t_ae_oview(
 #'        label = "AE Overview Summary Table",
-#'        dataname = "AAE",
+#'        dataname = "ADAE",
 #'        arm_var = choices_selected(choices = c("ARM", "ARMCD"),
 #'                                   selected = "ARM"),
 #'        total_col = FALSE
@@ -38,6 +39,7 @@
 #'   )
 #' )
 #'
+#' \dontrun{
 #' shinyApp(app$ui, app$server)
 #'
 #' }
@@ -99,25 +101,25 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
   init_chunks()
 
   output$table <- renderUI({
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
+    ADAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
 
     arm_var <- input$arm_var
     all_p <- input$All_Patients
 
-    aae_name <- paste0(dataname, "_FILTERED")
-    assign(aae_name, AAE_FILTERED) # so that we can refer to the 'correct' data name
+    adae_name <- paste0(dataname, "_FILTERED")
+    assign(adae_name, ADAE_FILTERED)
 
-    asl_vars <- unique(c("USUBJID", "STUDYID", arm_var, "DTHFL", "DCSREAS")) # nolint
-    aae_vars <- unique(c("USUBJID", "STUDYID", "AESOC", "AEDECOD",
+    adsl_vars <- unique(c("USUBJID", "STUDYID", arm_var, "DTHFL", "DCSREAS")) # nolint
+    adae_vars <- unique(c("USUBJID", "STUDYID", "AESOC", "AEDECOD",
                          "AESDTH", "AESER", "AEACN", "AEREL", "AETOXGR")) ## add column name of extra flage here
 
     chunks_reset(envir = environment())
 
     chunks_push(bquote({
-      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame() # nolint
-      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame() # nolint
-      ANL  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
+      ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
+      ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
+      ANL  <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
     }))
     chunks_push_new_line()
 
@@ -127,7 +129,6 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
       NULL
     }
     chunks_eval()
-
 
     chunks_push(call(
       "t_ae_oview",

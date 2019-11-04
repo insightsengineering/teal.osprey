@@ -30,35 +30,42 @@
 #'
 #' @examples
 #'
-#' \dontrun{
-#' #Example spider plot
+#' #Example using stream (ADaM) dataset
 #' library(dplyr)
+#' library(random.cdisc.data)
 #'
-#' ASL <- rADSL
-#' ATR <- rADTR
+#' ADSL <- rADSL
+#' ADTR <- rADTR
 #'
 #' app <- teal::init(
-#'   data = cdisc_data(ASL = ASL, ATR = ATR, code = 'ASL <- rADSL; ATR <- rADTR'),
+#'   data = cdisc_data(
+#'     cdisc_dataset("ADSL", ADSL),
+#'     cdisc_dataset("ADTR",  ADTR,
+#'                   keys = keys(primary = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT"),
+#'                               foreign = c("STUDYID", "USUBJID"),
+#'                               parent = "ADSL")),
+#'     code = 'ADSL <- rADSL; ADTR <- rADTR'),
 #'   modules = root_modules(
 #'     tm_g_spiderplot(
-#'        label = "Spider plot",
-#'        dataname = "ATR",
-#'        paramcd = choices_selected(choices = "SLDINV", selected = "SLDINV"),
-#'        x_var = choices_selected(choices = "ADY", selected = "ADY"),
-#'        y_var = choices_selected(choices = c("PCHG", "CHG", "AVAL"), selected = "PCHG"),
-#'        marker_var = choices_selected(choices = c("SEX", "RACE", "USUBJID"), selected = "SEX"),
-#'        line_colorby_var = choices_selected(choices = c("SEX","USUBJID", "RACE"), selected = "SEX"),
-#'        xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
-#'        yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
-#'        vref_line = "10, 37",
-#'        href_line = "-20, 0",
-#'        anno_txt_var = TRUE,
-#'        legend_on = FALSE,
-#'        plot_height = c(600, 200, 2000)
-#'    )
+#'       label = "Spider plot",
+#'       dataname = "ADTR",
+#'       paramcd = choices_selected(choices = "SLDINV", selected = "SLDINV"),
+#'       x_var = choices_selected(choices = "ADY", selected = "ADY"),
+#'       y_var = choices_selected(choices = c("PCHG", "CHG", "AVAL"), selected = "PCHG"),
+#'       marker_var = choices_selected(choices = c("SEX", "RACE", "USUBJID"), selected = "SEX"),
+#'       line_colorby_var = choices_selected(choices = c("SEX","USUBJID", "RACE"), selected = "SEX"),
+#'       xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
+#'       yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
+#'       vref_line = "10, 37",
+#'       href_line = "-20, 0",
+#'       anno_txt_var = TRUE,
+#'       legend_on = FALSE,
+#'       plot_height = c(600, 200, 2000)
+#'     )
 #'   )
 #' )
 #'
+#' \dontrun{
 #' shinyApp(app$ui, app$server)
 #' }
 #'
@@ -117,7 +124,7 @@ ui_g_spider <- function(id, ...) {
         style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
         optionalSelectInput(
           ns("paramcd"),
-          "Parameter - from ATR",
+          "Parameter - from ADTR",
           a$paramcd$choices,
           a$paramcd$selected,
           multiple = FALSE),
@@ -208,11 +215,11 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
     # get datasets ---
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
-    ATR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
+    ADTR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
 
-    atr_name <- paste0(dataname, "_FILTERED")
-    assign(atr_name, ATR_FILTERED) # so that we can refer to the 'correct' data name
+    adtr_name <- paste0(dataname, "_FILTERED")
+    assign(adtr_name, ADTR_FILTERED) # so that we can refer to the 'correct' data name
 
 
     # restart chunks & include current environment ---
@@ -237,26 +244,26 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
     # define variables ---
 
-    # if variable is not in ASL, then take from domain VADs
+    # if variable is not in ADSL, then take from domain VADs
     varlist <- c(xfacet_var, yfacet_var, marker_var, line_colorby_var)
-    varlist_from_asl <- varlist[varlist %in% names(ASL_FILTERED)]
-    varlist_from_anl <- varlist[!varlist %in% names(ASL_FILTERED)]
+    varlist_from_adsl <- varlist[varlist %in% names(ADSL_FILTERED)]
+    varlist_from_anl <- varlist[!varlist %in% names(ADSL_FILTERED)]
 
-    asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl)) # nolint
-    atr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
+    adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
+    adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
 
     # preprocessing of datasets to chunks ---
 
     # vars definition
-    atr_vars <- atr_vars[atr_vars != "None"]
-    atr_vars <- atr_vars[!is.null(atr_vars)]
+    adtr_vars <- adtr_vars[adtr_vars != "None"]
+    adtr_vars <- adtr_vars[!is.null(adtr_vars)]
 
     # merge
     chunks_push(bquote({
-      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame() # nolint
-      ATR <- .(as.name(atr_name))[, .(atr_vars)] %>% as.data.frame() # nolint
+      ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
+      ADTR <- .(as.name(adtr_name))[, .(adtr_vars)] %>% as.data.frame() # nolint
 
-      ANL <- merge(ASL, ATR, by = c("USUBJID", "STUDYID")) # nolint
+      ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID")) # nolint
       ANL <- ANL %>% group_by(USUBJID, PARAMCD) %>% arrange(ANL[, .(x_var)]) %>% as.data.frame() # nolint
     }))
 
@@ -349,7 +356,6 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
     chunks_eval()
 
   })
-
 
 
   observeEvent(input$show_rcode, {

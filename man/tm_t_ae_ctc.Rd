@@ -23,9 +23,11 @@ variable name in analysis data that is used as
 \code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
-\item{class_var}{\code{\link[teal]{choices_selected}} class variables selected for display}
+\item{class_var}{\code{\link[teal]{choices_selected}} class variables selected
+for display}
 
-\item{term_var}{\code{\link[teal]{choices_selected}} term variables selected for display}
+\item{term_var}{\code{\link[teal]{choices_selected}} term variables selected
+for display}
 
 \item{toxgr_var}{variable name of AE toxicity grade}
 
@@ -59,23 +61,23 @@ Adverse Events Table by Highest NCI CTCAE Grade Teal Module
   used directly as filter.
 }
 \examples{
-
+#Example using stream (ADaM) dataset
 library(dplyr)
+library(random.cdisc.data)
 
-ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
-AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\% mutate(USUBJID = SUBJID)
+ADSL <- radsl(cached = TRUE)
+ADAE <- radae(cached = TRUE) \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))
 
 app <- init(
-  data = cdisc_data(ASL = ASL,
-                    AAE = AAE,
-                    code = "ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
-                    AAE <- rADAE \%>\%
-                    mutate(flag1 = ifelse(SEX == 'F', 'Y', 'N')) \%>\%
-                    mutate(USUBJID = SUBJID)"),
+  data = cdisc_data(
+    cdisc_dataset("ADSL", ADSL),
+    cdisc_dataset("ADAE", ADAE),
+    code = 'ADSL <- radsl(cached = TRUE)
+            ADAE <- radae(cached = TRUE) \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))'),
   modules = root_modules(
     tm_t_ae_ctc(
       label = "Adverse Events Table By Highest NCI CTCAE Grade",
-      dataname = "AAE",
+      dataname = "ADAE",
       filter_var = choices_selected(selected = NULL, choices = c("AESER", "flag1")),
       arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
       class_var = choices_selected(selected = "AEBODSYS", choices = c("AEBODSYS", "DEFAULT")),

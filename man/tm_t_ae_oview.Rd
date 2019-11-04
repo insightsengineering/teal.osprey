@@ -40,24 +40,25 @@ Display AET01 Adverse Events Summary Table as a shiny Module
 }
 \examples{
 
-\dontrun{
-#Example using stream (adam) dataset
+#Example using stream (ADaM) dataset
 library(dplyr)
 
-ASL <- rADSL
-AAE <- rADAE
+ADSL <- rADSL
+ADAE <- rADAE
 
 app <- teal::init(
   data = cdisc_data(
-        ASL = ASL,
-        AAE = AAE,
-        code = "ASL <- rADSL; AAE <- rADAE",
-        check = FALSE
-      ),
+    cdisc_dataset("ADSL", ADSL),
+    cdisc_dataset("ADAE", ADAE,
+                  keys = keys(primary = c("STUDYID", "USUBJID", "AETERM", "AESEQ"),
+                              foreign = c("STUDYID", "USUBJID"),
+                              parent = "ADSL")),
+    code = "ADSL <- rADSL; ADAE <- rADAE",
+    check = FALSE),
   modules = root_modules(
     tm_t_ae_oview(
        label = "AE Overview Summary Table",
-       dataname = "AAE",
+       dataname = "ADAE",
        arm_var = choices_selected(choices = c("ARM", "ARMCD"),
                                   selected = "ARM"),
        total_col = FALSE
@@ -65,6 +66,7 @@ app <- teal::init(
   )
 )
 
+\dontrun{
 shinyApp(app$ui, app$server)
 
 }

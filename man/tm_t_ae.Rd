@@ -23,9 +23,11 @@ variable name in analysis data that is used as
 \code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
-\item{class_var}{\code{\link[teal]{choices_selected}} class variables selected for display}
+\item{class_var}{\code{\link[teal]{choices_selected}} class variables selected
+for display}
 
-\item{term_var}{\code{\link[teal]{choices_selected}} term variables selected for display}
+\item{term_var}{\code{\link[teal]{choices_selected}} term variables selected
+for display}
 
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
@@ -62,25 +64,23 @@ This shiny module displays the adverse events table (AET02).
 \examples{
 #Example using stream (ADaM) dataset
 library(dplyr)
+library(random.cdisc.data)
 
-ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
-AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))  \%>\% mutate(USUBJID = SUBJID)
+ADSL <- radsl(cached = TRUE)
+ADAE <- radae(cached = TRUE) \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))
 
 app <- init(
   data = cdisc_data(
-    ASL = ASL,
-    AAE = AAE,
-    code = paste0(c(
-      "ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)",
-      'AAE <- rADAE \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) \%>\% mutate(USUBJID = SUBJID)'),
-      collapse = ";"
-    ),
+    cdisc_dataset("ADSL", ADSL),
+    cdisc_dataset("ADAE", ADAE),
+    code = 'ADSL <- radsl(cached = TRUE)
+            ADAE <- radae(cached = TRUE) \%>\% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))',
     check = FALSE
   ),
   modules = root_modules(
     tm_t_ae(
       label = "Adverse Events Table",
-      dataname = "AAE",
+      dataname = "ADAE",
       filter_var = choices_selected(
         choices = c("AESER", "flag1"),
         selected = NULL

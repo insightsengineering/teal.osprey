@@ -12,22 +12,21 @@
 #'
 #' @examples
 #'
-#' \dontrun{
 #' # Example using stream (ADaM) dataset
 #' library(dplyr)
 #'
-#' ASL <- rADSL %>% mutate(USUBJID = SUBJID)
+#' ADSL <- rADSL
 #'
 #' app <- init(
 #'   data = cdisc_data(
-#'     ASL = ASL,
-#'     code = "ASL <- rADSL %>% mutate(USUBJID = SUBJID)",
+#'     cdisc_dataset("ADSL", ADSL),
+#'     code = "ADSL <- rADSL",
 #'     check = FALSE
 #'   ),
 #'   modules = root_modules(
 #'     tm_t_ds(
 #'        label = "Patient Disposition Table",
-#'        dataname = "ASL",
+#'        dataname = "ADSL",
 #'        arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
 #'        class_var =  choices_selected(selected = "EOSSTT", choices = "EOSSTT"),
 #'        term_var = choices_selected(selected = "DCSREAS", choices = c("DCSREAS", "DCSREASP")),
@@ -36,6 +35,7 @@
 #'   )
 #' )
 #'
+#' \dontrun{
 #' shinyApp(app$ui, app$server)
 #' }
 #'
@@ -91,7 +91,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
 
   output$table <- renderUI({
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
 
     chunks_reset(envir = environment())
 
@@ -100,7 +100,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
     term_var <- input$term_var
     all_p <- input$All_Patients
 
-    asl_vars <- unique(c("STUDYID", "USUBJID", arm_var, class_var, term_var)) # nolint
+    adsl_vars <- unique(c("STUDYID", "USUBJID", arm_var, class_var, term_var)) # nolint
 
     if (all_p == TRUE) {
       total <- "All Patients"
@@ -108,22 +108,22 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
       total <- NULL
     }
     chunks_push(bquote({
-      ASL_f <- as.data.frame(ASL_FILTERED[, .(asl_vars)]) # nolint
+      ADSL_f <- as.data.frame(ADSL_FILTERED[, .(adsl_vars)]) # nolint
     }))
 
     chunks_eval()
 
     # check dataset
-    validate_has_data(chunks_get_var("ASL_f"), min_nrow = 1)
-    validate(need(chunks_get_var("ASL_f")[[arm_var]], "Arm variable does not exist"))
-    validate(need(!("" %in% chunks_get_var("ASL_f")[[arm_var]]), "arm values can not contain empty strings ''"))
+    validate_has_data(chunks_get_var("ADSL_f"), min_nrow = 1)
+    validate(need(chunks_get_var("ADSL_f")[[arm_var]], "Arm variable does not exist"))
+    validate(need(!("" %in% chunks_get_var("ADSL_f")[[arm_var]]), "arm values can not contain empty strings ''"))
 
     chunks_push(call(
       "t_ds",
-      class = bquote(ASL_f[, .(class_var)]),
-      term = bquote(ASL_f[, .(term_var)]),
-      id = bquote(ASL_f$USUBJID),
-      col_by = bquote(droplevels(as.factor(ASL_f[[.(arm_var)]]))),
+      class = bquote(ADSL_f[, .(class_var)]),
+      term = bquote(ADSL_f[, .(term_var)]),
+      id = bquote(ADSL_f$USUBJID),
+      col_by = bquote(droplevels(as.factor(ADSL_f[[.(arm_var)]]))),
       total = total
     ))
 

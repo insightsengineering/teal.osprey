@@ -41,53 +41,54 @@
 #'
 #' @examples
 #'
-#' \dontrun{
-#' #Example butterfly plot
+#' #Example using stream (ADaM) dataset
 #' library(dplyr)
-#'
-#' ASL <- mutate(rADSL, DOSE = paste(sample(1:3, n(), replace = T), "UG"), USUBJID = SUBJID)
-#' AAE <- mutate(
-#'   rADAE,
+#' library(random.cdisc.data)
+#' ADSL <- radsl(cached = TRUE)
+#' ADAE <- radae(cached = TRUE)
+#' ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
+#' ADAE <- mutate(
+#'   ADAE,
 #'   flag1 = ifelse(AETOXGR == 1, 1, 0),
 #'   flag2 = ifelse(AETOXGR == 2, 1, 0),
 #'   flag3 = ifelse(AETOXGR == 3, 1, 0),
-#'   flag1_filt = rep("Y", n()),
-#'   USUBJID = SUBJID
+#'   flag1_filt = rep("Y", n())
 #' )
 #'
 #' app <- init(
-#'   data = cdisc_data(ASL = ASL, AAE = AAE, code = paste0(c(
-#'      'ASL <- mutate(rADSL, DOSE = paste(sample(1:3, n(), replace = T), "UG"),
-#'         USUBJID = SUBJID)',
-#'      'AAE <- mutate(
-#'       rADAE,
-#'       flag1 = ifelse(AETOXGR == 1, 1, 0),
-#'       flag2 = ifelse(AETOXGR == 2, 1, 0),
-#'       flag3 = ifelse(AETOXGR == 3, 1, 0),
-#'       flag1_filt = rep("Y", n()),
-#'       USUBJID = SUBJID
-#'      )'), collapse = ";")
-#'   ),
+#'   data = cdisc_data(
+#'     cdisc_dataset("ADSL", ADSL),
+#'     cdisc_dataset("ADAE", ADAE),
+#'     code = 'ADSL <- radsl(cached = TRUE)
+#'     ADAE <- radae(cached = TRUE)
+#'     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
+#'     ADAE <- mutate(
+#'     ADAE,
+#'     flag1 = ifelse(AETOXGR == 1, 1, 0),
+#'     flag2 = ifelse(AETOXGR == 2, 1, 0),
+#'     flag3 = ifelse(AETOXGR == 3, 1, 0),
+#'     flag1_filt = rep("Y", n()))'),
 #'   modules = root_modules(
 #'     tm_g_butterfly(
-#'        label = "Butterfly Plot",
-#'        dataname = "AAE",
-#'        right_var = choices_selected(selected = "SEX", choices = c("DOSE", "SEX", "ARM",
-#'          "RACE", "flag1", "flag2","flag3")),
-#'        left_var = choices_selected(selected = "RACE", choices = c("DOSE", "SEX", "ARM",
-#'           "RACE", "flag1", "flag2", "flag3")),
-#'        category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
-#'        color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
-#'        count_by_var = choices_selected(selected = "# of patients",
-#'          choices = c("# of patients", "# of AEs")),
-#'        facet_var = choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
-#'        sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
-#'        legend_on = TRUE,
-#'        plot_height = c(600, 200, 2000)
-#'    )
+#'       label = "Butterfly Plot",
+#'       dataname = "ADAE",
+#'       right_var = choices_selected(selected = "SEX",
+#'         choices = c("DOSE", "SEX", "ARM","RACE", "flag1", "flag2","flag3")),
+#'       left_var = choices_selected(selected = "RACE",
+#'         choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")),
+#'       category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
+#'       color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
+#'       count_by_var = choices_selected(selected = "# of patients",
+#'                                       choices = c("# of patients", "# of AEs")),
+#'       facet_var = choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
+#'       sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
+#'       legend_on = TRUE,
+#'       plot_height = c(600, 200, 2000)
+#'     )
 #'   )
-#' )
+#'   )
 #'
+#' \dontrun{
 #' shinyApp(app$ui, app$server)
 #'
 #' }
@@ -101,7 +102,8 @@ tm_g_butterfly <- function(label,
                            color_by_var,
                            count_by_var,
                            facet_var = NULL,
-                           sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
+                           sort_by_var = choices_selected(selected = "count",
+                                                          choices = c("count", "alphabetical")),
                            legend_on = TRUE,
                            plot_height = c(600, 200, 2000),
                            pre_output = NULL,
@@ -146,29 +148,29 @@ ui_g_butterfly <- function(id, ...) {
       optionalSelectInput(
         ns("filter_var"),
         label = div("Preset Data Filters",
-        tags$br(),
-        helpText("Observations with value of 'Y' for selected variable(s) will be used for analysis")),
+                    tags$br(),
+                    helpText("Observations with value of 'Y' for selected variable(s) will be used for analysis")),
         choices = a$filter_var$choices,
         selected = a$filter_var$selected, multiple = TRUE),
       optionalSelectInput(
-        ns("right_ch"),
+        ns("right_var"),
         "Right Dichotomization Variable",
         a$right_var$choices,
         a$right_var$selected,
         multiple = FALSE),
       checkboxGroupInput(
-        ns("right_v"),
+        ns("right_val"),
         "Choose one",
         a$right_var$choices,
         a$right_var$selected),
       optionalSelectInput(
-        ns("left_ch"),
+        ns("left_var"),
         "Left Dichotomization Variable",
         a$left_var$choices,
         a$left_var$selected,
         multiple = FALSE),
       checkboxGroupInput(
-        ns("left_v"),
+        ns("left_val"),
         "Choose one",
         a$left_var$choices,
         a$left_var$selected),
@@ -228,31 +230,31 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
 
   #dynamic options for dichotomization variable
   observe({
-    right_ch <- input$right_ch
-    left_ch <- input$left_ch
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
+    right_var <- input$right_var
+    left_var <- input$left_var
 
-    ASL_df <- ASL_FILTERED %>% as.data.frame() # nolint
-    AAE_df <- AAE_FILTERED %>% as.data.frame() # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
+    ADAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
 
-    options_r <- if (right_ch %in% names(ASL_df)) unique(ASL_df[, right_ch]) else unique(AAE_df[, right_ch])
-    options_l <- if (left_ch %in% names(ASL_df)) unique(ASL_df[, left_ch]) else unique(AAE_df[, left_ch])
+    ADSL_df <- ADSL_FILTERED %>% as.data.frame() # nolint
+    ADAE_df <- ADAE_FILTERED %>% as.data.frame() # nolint
 
-    updateCheckboxGroupInput(session, "right_v", choices = options_r, selected = options_r[1])
-    updateCheckboxGroupInput(session, "left_v", choices = options_l, selected = options_l[1])
+    options_r <- if (right_var %in% names(ADSL_df)) unique(ADSL_df[, right_var]) else unique(ADAE_df[, right_var])
+    options_l <- if (left_var %in% names(ADSL_df)) unique(ADSL_df[, left_var]) else unique(ADAE_df[, left_var])
+
+    updateCheckboxGroupInput(session, "right_val", choices = options_r, selected = options_r[1])
+    updateCheckboxGroupInput(session, "left_val", choices = options_l, selected = options_l[1])
   })
 
   output$plot <- renderPlot({
+    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
+    ADAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
-    AAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
-
-    right_v <- input$right_v
-    left_v <- input$left_v
-    right_ch <- input$right_ch
-    left_ch <- input$left_ch
+    right_var <- isolate(input$right_var)
+    left_var <- isolate(input$left_var)
+    right_val <- input$right_val
+    left_val <- input$left_val
     category_var <- input$category_var
     color_by_var <- input$color_by_var
     count_by_var <- input$count_by_var
@@ -261,83 +263,56 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
     sort_by_var <- input$sort_by_var
     filter_var <- input$filter_var
 
-    #if variable is not in ASL, then take from domain VADs
-    varlist <- c(category_var, color_by_var, facet_var, filter_var, right_ch, left_ch)
-    varlist_from_asl <- varlist[varlist %in% names(ASL_FILTERED)]
-    varlist_from_anl <- varlist[!varlist %in% names(ASL_FILTERED)]
+    #if variable is not in ADSL, then take from domain VADs
 
-    asl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_asl)) # nolint
-    aae_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
+    varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)
+    varlist_from_adsl <- intersect(varlist, names(ADSL_FILTERED))
+    varlist_from_anl <- intersect(varlist, setdiff(names(ADAE_FILTERED), names(ADSL_FILTERED)))
 
-    aae_name <- paste0(dataname, "_FILTERED")
-    assign(aae_name, AAE_FILTERED) # so that we can refer to the 'correct' data name
+    adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
+    adae_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
+
+    adae_name <- paste0(dataname, "_FILTERED")
+    assign(adae_name, ADAE_FILTERED) # so that we can refer to the 'correct' data name
 
     chunks_reset(envir = environment())
 
     chunks_push(bquote({
-      ASL <- ASL_FILTERED[, .(asl_vars)] %>% as.data.frame() # nolint
-      AAE <- .(as.name(aae_name))[, .(aae_vars)] %>% as.data.frame() # nolint
+      ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
+      ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
     }))
 
+    chunks_push_new_line()
     if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
-        chunks_push(bquote(
-          AAE <- quick_filter(.(filter_var), AAE) %>% # nolint
-            droplevels() %>%
-            as.data.frame()
-        ))
+      chunks_push(bquote(
+        ADAE <- quick_filter(.(filter_var), ADAE) %>% # nolint
+          droplevels() %>%
+          as.data.frame()
+      ))
     }
-
     chunks_push_new_line()
 
     chunks_push(bquote({
-      ANL_f  <- left_join(ASL, AAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
+      ANL_f  <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
       ANL_f <- na.omit(ANL_f) # nolint
     }))
 
     chunks_push_new_line()
     chunks_push_new_line()
 
-
-    if (!is.null(right_v) && !is.null(left_v)) {
-      if (!(all(right_v %in% c(0, 1)))) {
-        chunks_push(bquote({
-          right <- as.character(ANL_f[, .(right_ch)])
-          right <- replace(right, !(right %in% .(input$right_v)), 0)
-          right <- replace(right, right %in% .(input$right_v), 1)
-          right_name <- paste(right_v, collapse = " - ")
-        }))
-      } else{
-        chunks_push(bquote({
-          right <- ANL_f[, .(right_ch)]
-          right_name <- right_ch
-        }))
-      }
-
-      chunks_push_new_line()
-
-      if (!(all(left_v %in% c(0, 1)))) {
-        chunks_push(bquote({
-          left <- as.character(ANL_f[, .(left_ch)])
-          left <- replace(left, !(left %in% .(input$left_v)), 0)
-          left <- replace(left, left %in% .(input$left_v), 1)
-          left_name <- paste(left_v, collapse = " - ")
-        }))
-      } else {
-        chunks_push(bquote({
-          left <- ANL_f[, .(left_ch)]
-          left_name <- left_ch
-        }))
-      }
-
+    if (!is.null(right_val) && !is.null(right_val)) {
+      chunks_push(bquote({
+        right <- ANL_f[, .(right_var)] %in% .(right_val)
+        right_name <- paste(.(right_val), collapse = " - ")
+        left <- ANL_f[, .(left_var)] %in% .(left_val)
+        left_name <- paste(.(left_val), collapse = " - ")
+      }))
     }
 
     chunks_push_new_line()
+    chunks_safe_eval()
 
-    chunks_eval()
-
-    validate(need(chunks_is_ok(), "Data could not be processed."))
-
-    if (!is.null(right_v) && !is.null(left_v)) {
+    if (!is.null(right_val) && !is.null(left_val)) {
       chunks_push(call(
         "g_butterfly",
         category = bquote(ANL_f[, .(category_var)]),
@@ -364,24 +339,23 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
       ))
     }
 
-    chunks_eval()
+    chunks_safe_eval()
 
   })
 
   # Insert the plot into a plot_height module from teal.devel
   callModule(plot_with_height,
-      id = "butterflyplot",
-      plot_height = reactive(input$butterflyplot),
-      plot_id = session$ns("plot")
-  )
+             id = "butterflyplot",
+             plot_height = reactive(input$butterflyplot),
+             plot_id = session$ns("plot"))
 
   observeEvent(input$show_rcode, {
     show_rcode_modal(
-        title = "Butterfly plot",
-        rcode = get_rcode(
-            datasets = datasets,
-            title = "Butterfly plot"
-        )
+      title = "Butterfly plot",
+      rcode = get_rcode(
+        datasets = datasets,
+        title = "Butterfly plot"
+      )
     )
   })
 }

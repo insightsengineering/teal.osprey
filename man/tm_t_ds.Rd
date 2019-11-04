@@ -18,9 +18,11 @@ variable name in analysis data that is used as
 \code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
-\item{class_var}{\code{\link[teal]{choices_selected}} class variables selected for display}
+\item{class_var}{\code{\link[teal]{choices_selected}} class variables selected
+for display}
 
-\item{term_var}{\code{\link[teal]{choices_selected}} term variables selected for display}
+\item{term_var}{\code{\link[teal]{choices_selected}} term variables selected
+for display}
 
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
@@ -41,22 +43,21 @@ Display DST01 Patient Disposition Table as a shiny module
 }
 \examples{
 
-\dontrun{
 # Example using stream (ADaM) dataset
 library(dplyr)
 
-ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)
+ADSL <- rADSL
 
 app <- init(
   data = cdisc_data(
-    ASL = ASL,
-    code = "ASL <- rADSL \%>\% mutate(USUBJID = SUBJID)",
+    cdisc_dataset("ADSL", ADSL),
+    code = "ADSL <- rADSL",
     check = FALSE
   ),
   modules = root_modules(
     tm_t_ds(
        label = "Patient Disposition Table",
-       dataname = "ASL",
+       dataname = "ADSL",
        arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
        class_var =  choices_selected(selected = "EOSSTT", choices = "EOSSTT"),
        term_var = choices_selected(selected = "DCSREAS", choices = c("DCSREAS", "DCSREASP")),
@@ -65,6 +66,7 @@ app <- init(
   )
 )
 
+\dontrun{
 shinyApp(app$ui, app$server)
 }
 

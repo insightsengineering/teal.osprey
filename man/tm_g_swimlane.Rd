@@ -15,7 +15,7 @@ tm_g_swimlane(label, dataname, bar_var, bar_color_var = NULL,
 \item{label}{item label of the module in the teal app}
 
 \item{dataname}{analysis data used for plotting, needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ASL" should be
+argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ADSL" should be
 the input. If markers are to be plotted, data name for the marker data should be the input}
 
 \item{bar_var}{(\code{choices_selected})subject-level numeric variable from dataset to plot as the bar length}
@@ -61,34 +61,34 @@ This is teal module that generates a swimlane plot (bar plot with markers) for A
 }
 \examples{
 
-\dontrun{
+#Example using stream (ADaM) dataset
 library(dplyr)
+library(random.cdisc.data)
 
-data("rADSL")
-data("rADRS")
+ADSL <- rADSL
+ADRS <- rADRS
 
-ASL <- rADSL
-ARS <- rADRS
-
-ARS <- ARS \%>\%
-  filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
+ADRS <- ADRS \%>\%
+  dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
   mutate(AVALC = DCSREAS,
          ADY = EOSDY) \%>\%
-  rbind(ARS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+  rbind(ADRS \%>\% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
   arrange(USUBJID)
 
 x <- init(
-  data = cdisc_data(ASL = ASL, ARS = ARS, code = 'ASL <- rADSL
-                    ARS <- rADRS
-                    ARS <- ARS \%>\% filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
-                    mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
-                    rbind (ARS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
-                    arrange(USUBJID)
-                    ', check = FALSE),
+  data = cdisc_data(
+    cdisc_dataset("ADSL", ADSL),
+    cdisc_dataset("ADRS", ADRS),
+    code = 'ADSL <- rADSL
+    ADRS <- rADRS
+    ADRS <- ADRS \%>\% dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
+    mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
+    rbind (ADRS \%>\% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+    arrange(USUBJID)', check = FALSE),
   modules = root_modules(
     tm_g_swimlane(
       label = "Swimlane Plot",
-      dataname = "ARS",
+      dataname = "ADRS",
       bar_var = choices_selected(selected = "TRTDURD", choices = c("TRTDURD", "EOSDY")),
       bar_color_var = choices_selected(
         selected = "EOSSTT",
@@ -115,7 +115,9 @@ x <- init(
   )
   )
 
+\dontrun{
 shinyApp(x$ui, x$server)
+
 }
 
 }

@@ -58,35 +58,42 @@ Display spider plot as a shiny module
 }
 \examples{
 
-\dontrun{
-#Example spider plot
+#Example using stream (ADaM) dataset
 library(dplyr)
+library(random.cdisc.data)
 
-ASL <- rADSL
-ATR <- rADTR
+ADSL <- rADSL
+ADTR <- rADTR
 
 app <- teal::init(
-  data = cdisc_data(ASL = ASL, ATR = ATR, code = 'ASL <- rADSL; ATR <- rADTR'),
+  data = cdisc_data(
+    cdisc_dataset("ADSL", ADSL),
+    cdisc_dataset("ADTR",  ADTR,
+                  keys = keys(primary = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT"),
+                              foreign = c("STUDYID", "USUBJID"),
+                              parent = "ADSL")),
+    code = 'ADSL <- rADSL; ADTR <- rADTR'),
   modules = root_modules(
     tm_g_spiderplot(
-       label = "Spider plot",
-       dataname = "ATR",
-       paramcd = choices_selected(choices = "SLDINV", selected = "SLDINV"),
-       x_var = choices_selected(choices = "ADY", selected = "ADY"),
-       y_var = choices_selected(choices = c("PCHG", "CHG", "AVAL"), selected = "PCHG"),
-       marker_var = choices_selected(choices = c("SEX", "RACE", "USUBJID"), selected = "SEX"),
-       line_colorby_var = choices_selected(choices = c("SEX","USUBJID", "RACE"), selected = "SEX"),
-       xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
-       yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
-       vref_line = "10, 37",
-       href_line = "-20, 0",
-       anno_txt_var = TRUE,
-       legend_on = FALSE,
-       plot_height = c(600, 200, 2000)
-   )
+      label = "Spider plot",
+      dataname = "ADTR",
+      paramcd = choices_selected(choices = "SLDINV", selected = "SLDINV"),
+      x_var = choices_selected(choices = "ADY", selected = "ADY"),
+      y_var = choices_selected(choices = c("PCHG", "CHG", "AVAL"), selected = "PCHG"),
+      marker_var = choices_selected(choices = c("SEX", "RACE", "USUBJID"), selected = "SEX"),
+      line_colorby_var = choices_selected(choices = c("SEX","USUBJID", "RACE"), selected = "SEX"),
+      xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
+      yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
+      vref_line = "10, 37",
+      href_line = "-20, 0",
+      anno_txt_var = TRUE,
+      legend_on = FALSE,
+      plot_height = c(600, 200, 2000)
+    )
   )
 )
 
+\dontrun{
 shinyApp(app$ui, app$server)
 }
 

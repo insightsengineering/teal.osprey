@@ -44,27 +44,23 @@
 #' @examples
 #' #Example using stream (ADaM) dataset
 #' library(dplyr)
+#' library(random.cdisc.data)
 #'
-#' ASL <- rADSL %>% mutate(USUBJID = SUBJID)
-#' AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>%
-#'                  mutate(USUBJID = SUBJID)
+#' ADSL <- radsl(cached = TRUE)
+#' ADAE <- radae(cached = TRUE) %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))
 #'
 #' app <- init(
 #'   data = cdisc_data(
-#'     ASL = ASL,
-#'     AAE = AAE,
-#'     code = paste0(c(
-#'       "ASL <- rADSL %>% mutate(USUBJID = SUBJID)",
-#'       'AAE <- rADAE %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N")) %>%
-#'                         mutate(USUBJID = SUBJID)'),
-#'       collapse = ";"
-#'     ),
+#'     cdisc_dataset("ADSL", ADSL),
+#'     cdisc_dataset("ADAE", ADAE),
+#'     code = 'ADSL <- radsl(cached = TRUE)
+#'             ADAE <- radae(cached = TRUE) %>% mutate(flag1 = ifelse(SEX == "F", "Y", "N"))',
 #'     check = FALSE
 #'   ),
 #'   modules = root_modules(
 #'     tm_t_ae(
 #'       label = "Adverse Events Table",
-#'       dataname = "AAE",
+#'       dataname = "ADAE",
 #'       filter_var = choices_selected(
 #'         choices = c("AESER", "flag1"),
 #'         selected = NULL
@@ -188,8 +184,8 @@ srv_t_ae <- function(input,
     term_var <- input$term_var
     all_p <- input$All_Patients
 
-    ASL_FILTERED <- datasets$get_data("ASL", reactive = TRUE, filtered = TRUE) # nolint
-    if (dataname != "ASL") {
+    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
+    if (dataname != "ADSL") {
       ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
       anl_name <- paste0(dataname, "_FILTERED")
       assign(anl_name, ANL_FILTERED)
@@ -197,14 +193,14 @@ srv_t_ae <- function(input,
 
     chunks_reset(envir = environment())
 
-    aae_name <- paste0(dataname, "_FILTERED") # nolint
+    adae_name <- paste0(dataname, "_FILTERED") # nolint
 
-    asl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
-    aae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var))
-    anl_vars <- unique(c(asl_vars, aae_vars)) # nolint
+    adsl_vars <- unique(c("USUBJID", "STUDYID", arm_var))
+    adae_vars <- unique(c("USUBJID", "STUDYID", class_var, term_var, filter_var))
+    anl_vars <- unique(c(adsl_vars, adae_vars)) # nolint
 
     chunks_push(bquote({
-      ANL <- .(as.name(aae_name)) %>% select(.(aae_vars)) # nolint
+      ANL <- .(as.name(adae_name)) %>% select(.(adae_vars)) # nolint
     }))
 
     if (!is.null(filter_var)) {
@@ -214,8 +210,8 @@ srv_t_ae <- function(input,
     }
 
     chunks_push(bquote({
-      ANL <- ASL_FILTERED %>%  # nolint
-        select(.(asl_vars)) %>%
+      ANL <- ADSL_FILTERED %>%  # nolint
+        select(.(adsl_vars)) %>%
         left_join(ANL) %>%
         select(.(anl_vars))
     }))
