@@ -4,30 +4,25 @@
 \alias{tm_t_ds}
 \title{Disposition Table Teal Module}
 \usage{
-tm_t_ds(label, dataname, arm_var, arm_var_choices, class_var,
-  class_var_choices, term_var, term_var_choices, total_col = TRUE,
-  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
+tm_t_ds(label, dataname, arm_var, class_var, term_var, total_col = TRUE,
+  pre_output = NULL, post_output = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
 
-\item{dataname}{analysis data used in teal module, needs to be available in 
+\item{dataname}{analysis data used in teal module, needs to be available in
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{arm_var}{single name of variable in analysis data that is used as 
-\code{col_by} argument for the respective \code{tern} or \code{osprey} 
+\item{arm_var}{\code{\link[teal]{choices_selected}}
+variable name in analysis data that is used as
+\code{col_by} argument for the respective \code{tern} or \code{osprey}
 function.}
 
-\item{arm_var_choices}{vector with variable names that can be used as 
-\code{arm_var}}
+\item{class_var}{\code{\link[teal]{choices_selected}} class variables selected
+for display}
 
-\item{class_var}{class variables selected for display}
-
-\item{class_var_choices}{vector with \code{class_var} choices}
-
-\item{term_var}{term variables selected for display}
-
-\item{term_var_choices}{vector with \code{term_var} choices}
+\item{term_var}{\code{\link[teal]{choices_selected}} term variables selected
+for display}
 
 \item{total_col}{argument for appearance of "All Patients" column (default is
 \code{TRUE})}
@@ -48,34 +43,32 @@ Display DST01 Patient Disposition Table as a shiny module
 }
 \examples{
 
-\dontrun{
-#Example using random dataset 
-
+# Example using stream (ADaM) dataset
 library(dplyr)
 
-data("rADSL")
-ASL <- rADSL
+ADSL <- rADSL
 
-x <- teal::init(
-  data = list(ASL = ASL), 
+app <- init(
+  data = cdisc_data(
+    cdisc_dataset("ADSL", ADSL),
+    code = "ADSL <- rADSL",
+    check = FALSE
+  ),
   modules = root_modules(
     tm_t_ds(
        label = "Patient Disposition Table",
-       dataname = "ASL",
-       arm_var = "ARM",
-       arm_var_choices = c("ARM", "ARMCD"),
-       class_var = "EOSSTT",
-       class_var_choices = "EOSSTT",
-       term_var = "DCSREAS",
-       term_var_choices = c("DCSREAS", "DCSREASP"),
+       dataname = "ADSL",
+       arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
+       class_var =  choices_selected(selected = "EOSSTT", choices = "EOSSTT"),
+       term_var = choices_selected(selected = "DCSREAS", choices = c("DCSREAS", "DCSREASP")),
        total_col = TRUE
-   )
+    )
   )
 )
-   
-shinyApp(x$ui, x$server)  
+
+\dontrun{
+shinyApp(app$ui, app$server)
 }
-  
 
 }
 \author{

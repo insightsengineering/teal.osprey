@@ -1,47 +1,45 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
-  person("Mika", "Maekinen", email = "mika.maekinen@roche.com", role = c("aut", "cre")),
+  person("Nina", "Qi", email = "qit3@gene.com", role = c("aut", "cre")),
   person("Chendi", "Liao", email = "chendi.liao@roche.com", role = c("aut")),
-  person("Nina", "Qi", email = "qit3@gene.com", role = c("aut")),
+  person("Mahdi", "About", email = "mahdi.about@roche.com", role = c("aut")),
+  person("Fei", "Wang", email = "fei.wang.fw6@roche.com", role = c("aut")),
+  person("Mika", "Maekinen", email = "mika.maekinen@roche.com", role = c("aut")),
   person("Carolyn", "Zhang", email = "zhang.carolyn@gene.com", role = c("aut")))
 Description: Community efforts to collect teal modules for TLGs defined in the osprey package.
   The teal modules add an encoding panel to interactively change the encoding within teal.
-Depends: 
+Depends:
   R (>= 3.3),
+  osprey (>= 0.1.1),
   shiny,
-  teal (>= 0.0.4),
-  tern (>= 0.5.0.1),
-  teal.tern (>= 0.5.0.1),
-  osprey
+  teal (>= 0.8.1)
 Imports:
+  dplyr,
   methods,
-  stats,
-  utils,
-  grid,
-  gridExtra,
-  rtables,
-  survival,
-  forcats,
-  haven
+  rtables (>= 0.1.3),
+  teal.devel (>= 0.2.2),
+  utils.nest (>= 0.2.0)
 Suggests:
-  testthat,
   knitr,
-  rmarkdown
-License: Copyright Roche, internal use only
+  random.cdisc.data (>= 0.2.1),
+  rmarkdown,
+  test.nest (>= 0.2.0),
+  testthat
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr
-URL: 
-  https://pages.github.roche.com/Rpackages/teal.osprey/, 
+URL:
+  https://pages.github.roche.com/Rpackages/teal.osprey/,
   https://github.roche.com/Rpackages/teal.osprey/
-BugReports: 
+BugReports:
   https://github.roche.com/Rpackages/teal.osprey/issues
-Additional_repositories: 
-  https://github.roche.com/Rpackages/teal,
-  https://github.roche.com/Rpackages/tern,
-  https://github.roche.com/Rpackages/teal.tern,
+Additional_repositories:
+  https://github.roche.com/NEST/teal,
+  https://github.roche.com/NEST/tern,
+  https://github.roche.com/NEST/teal.modules.clinical,
   https://github.roche.com/Rpackages/osprey,
-  https://github.com/Roche/rtables
+  https://github.roche.com/NEST/rtables

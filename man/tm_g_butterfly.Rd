@@ -4,61 +4,41 @@
 \alias{tm_g_butterfly}
 \title{Butterfly plot Teal Module}
 \usage{
-tm_g_butterfly(label, dataname, filter_var = NULL,
-  filter_var_choices = NULL, right_var, right_var_choices = right_var,
-  left_var, left_var_choices = left_var, category_var,
-  category_var_choices = category_var, color_by_var,
-  color_by_var_choices = color_by_var, count_by_var,
-  count_by_var_choices = count_by_var, facet_var = NULL,
-  facet_var_choices = facet_var, sort_by_var = "count",
-  sort_by_var_choices = c("count", "alphabetical"), legend_on = TRUE,
-  plot_height, pre_output = NULL, post_output = NULL,
-  code_data_processing = NULL)
+tm_g_butterfly(label, dataname, filter_var = NULL, right_var, left_var,
+  category_var, color_by_var, count_by_var, facet_var = NULL,
+  sort_by_var = choices_selected(selected = "count", choices = c("count",
+  "alphabetical")), legend_on = TRUE, plot_height = c(600, 200, 2000),
+  pre_output = NULL, post_output = NULL)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
 
-\item{dataname}{analysis data used in teal module, needs to be available in 
+\item{dataname}{analysis data used in teal module, needs to be available in
 the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
-\item{filter_var}{variable name of data filter, please see details regarding 
-expected values, default is \code{NULL}}
-
-\item{filter_var_choices}{vector with \code{filter_var} choices, default is 
+\item{filter_var}{(\code{choices_selected}) variable name of data filter, please see details regarding
+expected values, default is \code{NULL}. \code{choices}
+vector with \code{filter_var} choices, default is
 \code{NULL}}
 
-\item{right_var}{dichotomization variable for right side}
+\item{right_var}{(\code{choices_selected}) dichotomization variable for right side}
 
-\item{right_var_choices}{vector with dichotomization choices}
+\item{left_var}{(\code{choices_selected}) dichotomization variable for left side}
 
-\item{left_var}{dichotomization variable for left side}
+\item{category_var}{(\code{choices_selected}) category (y axis) variable}
 
-\item{left_var_choices}{vector with dichotomization choices}
+\item{color_by_var}{(\code{choices_selected}) variable defines color blocks within each bar}
 
-\item{category_var}{category (y axis) variable}
+\item{count_by_var}{(\code{choices_selected}) variable defines how x axis is calculated}
 
-\item{category_var_choices}{vector of category choices}
+\item{facet_var}{(\code{choices_selected}) variable for row facets}
 
-\item{color_by_var}{variable defines color blocks within each bar}
-
-\item{color_by_var_choices}{vector of choices for color_block_by}
-
-\item{count_by_var}{variable defines how x axis is calculated}
-
-\item{count_by_var_choices}{vector of choices for count_by_var}
-
-\item{facet_var}{variable for row facets}
-
-\item{facet_var_choices}{vector with \code{facet_var} choices}
-
-\item{sort_by_var}{argument for order of class and term elements in table, 
+\item{sort_by_var}{(\code{choices_selected}) argument for order of class and term elements in table,
 default here is "count"}
 
-\item{sort_by_var_choices}{vector with \code{sort_by_var} choices}
+\item{legend_on}{(\code{boolean}) value for whether legend is displayed}
 
-\item{legend_on}{boolean value for whether legend is displayed}
-
-\item{plot_height}{range of plot height}
+\item{plot_height}{(\code{numeric}) range of plot height - 3 values}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
@@ -67,9 +47,6 @@ output to put the output into context. For example the
 \item{post_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
-
-\item{code_data_processing}{string with data preprocessing before the teal 
-app is initialized, default is NULL}
 }
 \value{
 an \code{\link[teal]{module}} object
@@ -78,61 +55,70 @@ an \code{\link[teal]{module}} object
 Display butterfly plot as a shiny module
 }
 \details{
-\code{filter_var} option is designed to work in conjuction with 
-  filtering function provided by \code{teal} (encoding panel on the right 
-  hand side of the shiny app). It can be used as quick access to pre-defined 
-  subsets of the domain datasets (not subject-level dataset) to be used for 
-  analysis, denoted by an value of "Y". Each variable within the 
-  \code{filter_var_choices} is expected to contain values of either "Y" or 
-  "N". If multiple variables are selected as \code{filter_var}, only 
-  observations with "Y" value in each and every selected variables will be 
-  used for subsequent analysis. Flag variables (from ADaM datasets) can be 
+\code{filter_var} option is designed to work in conjunction with
+  filtering function provided by \code{teal} (encoding panel on the right
+  hand side of the shiny app). It can be used as quick access to predefined
+  subsets of the domain datasets (not subject-level dataset) to be used for
+  analysis, denoted by an value of "Y". Each variable within the
+  \code{filter_var_choices} is expected to contain values of either "Y" or
+  "N". If multiple variables are selected as \code{filter_var}, only
+  observations with "Y" value in each and every selected variables will be
+  used for subsequent analysis. Flag variables (from ADaM datasets) can be
   used directly as filter.
 
 
 }
 \examples{
 
-\dontrun{
-#Example butterfly plot
+#Example using stream (ADaM) dataset
 library(dplyr)
+library(random.cdisc.data)
+ADSL <- radsl(cached = TRUE)
+ADAE <- radae(cached = TRUE)
+ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
+ADAE <- mutate(
+  ADAE,
+  flag1 = ifelse(AETOXGR == 1, 1, 0),
+  flag2 = ifelse(AETOXGR == 2, 1, 0),
+  flag3 = ifelse(AETOXGR == 3, 1, 0),
+  flag1_filt = rep("Y", n())
+)
 
-data("rADSL")
-data("rADAE")
-ASL <- rADSL \%>\% mutate(DOSE = paste(sample(1:3, nrow(rADSL), replace = T), "UG"))
-AAE <- rADAE
-AAE <- AAE \%>\% mutate(flag1 = ifelse(AETOXGR == 1, 1, 0)) \%>\% 
-               mutate(flag2 = ifelse(AETOXGR == 2, 1, 0)) \%>\% 
-               mutate(flag3 = ifelse(AETOXGR == 3, 1, 0)) 
-AAE <- AAE \%>\% mutate(flag1_filt = rep("Y", nrow(AAE))) 
-
-x <- teal::init(
-  data = list(ASL = ASL, AAE = AAE),
+app <- init(
+  data = cdisc_data(
+    cdisc_dataset("ADSL", ADSL),
+    cdisc_dataset("ADAE", ADAE),
+    code = 'ADSL <- radsl(cached = TRUE)
+    ADAE <- radae(cached = TRUE)
+    ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
+    ADAE <- mutate(
+    ADAE,
+    flag1 = ifelse(AETOXGR == 1, 1, 0),
+    flag2 = ifelse(AETOXGR == 2, 1, 0),
+    flag3 = ifelse(AETOXGR == 3, 1, 0),
+    flag1_filt = rep("Y", n()))'),
   modules = root_modules(
     tm_g_butterfly(
-       label = "Butterfly Plot",
-       dataname = "AAE",
-       right_var = "SEX",
-       right_var_choices = c("DOSE","SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
-       left_var = "RACE",
-       left_var_choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3"),
-       category_var = "AEBODSYS",
-       category_var_choices = c("AEDECOD", "AEBODSYS"),
-       color_by_var = "AETOXGR",
-       color_by_var_choices = c("AETOXGR", "None"),
-       count_by_var = "# of patients",
-       count_by_var_choices = c("# of patients", "# of AEs"),
-       facet_var = NULL,
-       facet_var_choices = c("RACE", "SEX", "ARM"),
-       sort_by_var = "count",
-       sort_by_var_choices = c("count", "alphabetical"),
-       legend_on = TRUE,
-       plot_height = c(600, 200, 2000)
-   )
+      label = "Butterfly Plot",
+      dataname = "ADAE",
+      right_var = choices_selected(selected = "SEX",
+        choices = c("DOSE", "SEX", "ARM","RACE", "flag1", "flag2","flag3")),
+      left_var = choices_selected(selected = "RACE",
+        choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")),
+      category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
+      color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
+      count_by_var = choices_selected(selected = "# of patients",
+                                      choices = c("# of patients", "# of AEs")),
+      facet_var = choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
+      sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
+      legend_on = TRUE,
+      plot_height = c(600, 200, 2000)
+    )
   )
-)
-   
-shinyApp(x$ui, x$server) 
+  )
+
+\dontrun{
+shinyApp(app$ui, app$server)
 
 }
 
