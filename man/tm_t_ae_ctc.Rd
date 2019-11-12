@@ -80,8 +80,8 @@ app <- init(
       dataname = "ADAE",
       filter_var = choices_selected(selected = NULL, choices = c("AESER", "flag1")),
       arm_var = choices_selected(selected = "ARM", choices = c("ARM", "ARMCD")),
-      class_var = choices_selected(selected = "AEBODSYS", choices = c("AEBODSYS", "DEFAULT")),
-      term_var = choices_selected(selected = "AEDECOD", choices = c("AEDECOD", "DEFAULT")),
+      class_var = choices_selected(selected = "AEBODSYS", choices = c("AEBODSYS", "AEHLT")),
+      term_var = choices_selected(selected = "AEDECOD", choices = c("AEDECOD", "AETERM")),
       total_col = TRUE
     )
   )

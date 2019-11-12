@@ -1,4 +1,7 @@
-# teal.osprey current release
+# teal.osprey development version
+- to edit
+
+# teal.osprey 0.1.1
 Refactoring package according to the NEST standards.
 - included test.nest tests
 - fixed outdated modules according to current teal functionality

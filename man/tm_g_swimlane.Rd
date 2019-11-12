@@ -63,15 +63,13 @@ This is teal module that generates a swimlane plot (bar plot with markers) for A
 
 #Example using stream (ADaM) dataset
 library(dplyr)
-library(random.cdisc.data)
 
 ADSL <- rADSL
 ADRS <- rADRS
 
 ADRS <- ADRS \%>\%
   dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
-  mutate(AVALC = DCSREAS,
-         ADY = EOSDY) \%>\%
+  mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
   rbind(ADRS \%>\% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
   arrange(USUBJID)
 

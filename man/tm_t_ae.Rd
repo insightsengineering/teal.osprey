@@ -90,7 +90,7 @@ app <- init(
         selected = "ARM"
       ),
       class_var = choices_selected(
-        choices = c("AEBODSYS", "AEHLTCD"),
+        choices = c("AEBODSYS", "AEHLT"),
         selected = "AEBODSYS"
       ),
       term_var = choices_selected(
