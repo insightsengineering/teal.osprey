@@ -106,18 +106,18 @@ tm_g_swimlane <- function(label,
                           post_output = NULL) {
   args <- as.list(environment())
 
-  stopifnot(is.character.single(label))
-  stopifnot(is.character.single(dataname))
+  stopifnot(is_character_single(label))
+  stopifnot(is_character_single(dataname))
   stopifnot(is.choices_selected(bar_var))
   stopifnot(is.choices_selected(bar_color_var))
   stopifnot(is.choices_selected(marker_pos_var))
   stopifnot(is.choices_selected(marker_shape_var))
-  stopifnot(is.numeric.vector(marker_shape_opt))
+  stopifnot(is_numeric_vector(marker_shape_opt))
   stopifnot(is.choices_selected(marker_color_var))
-  stopifnot(is.character.vector(marker_color_opt))
+  stopifnot(is_character_vector(marker_color_opt))
   stopifnot(is.choices_selected(anno_txt_var))
-  stopifnot(is.numeric.vector(vref_line))
-  stopifnot(is.integer.vector(plot_height))
+  stopifnot(is_numeric_vector(vref_line))
+  stopifnot(is_integer_vector(plot_height))
 
   module(
     label = label,

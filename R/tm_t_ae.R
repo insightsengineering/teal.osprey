@@ -96,13 +96,13 @@ tm_t_ae <- function(label,
                     code_data_processing = NULL) {
   args <- as.list(environment())
 
-  stopifnot(is.character.single(label))
-  stopifnot(is.character.single(dataname))
+  stopifnot(is_character_single(label))
+  stopifnot(is_character_single(dataname))
   stopifnot(is.null(filter_var) || is.choices_selected(filter_var))
   stopifnot(is.choices_selected(arm_var))
   stopifnot(is.choices_selected(class_var))
   stopifnot(is.choices_selected(term_var))
-  stopifnot(is.logical.single(total_col))
+  stopifnot(is_logical_single(total_col))
 
   module(
     label = label,

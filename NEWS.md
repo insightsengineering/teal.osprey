@@ -1,3 +1,7 @@
+# teal.osprey 0.1.2
+- New waterfall module
+- Refactored due to recent changes in `utils.nest`
+
 # teal.osprey 0.1.1
 Refactoring package according to the NEST standards.
 - included test.nest tests

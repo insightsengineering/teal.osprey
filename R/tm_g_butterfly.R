@@ -109,8 +109,8 @@ tm_g_butterfly <- function(label,
                            pre_output = NULL,
                            post_output = NULL) {
 
-  stopifnot(is.character.single(label))
-  stopifnot(is.character.single(dataname))
+  stopifnot(is_character_single(label))
+  stopifnot(is_character_single(dataname))
   stopifnot(is.choices_selected(filter_var) || is.null(filter_var))
   stopifnot(is.choices_selected(right_var))
   stopifnot(is.choices_selected(left_var))
@@ -119,8 +119,8 @@ tm_g_butterfly <- function(label,
   stopifnot(is.choices_selected(count_by_var))
   stopifnot(is.choices_selected(facet_var) || is.null(facet_var))
   stopifnot(is.choices_selected(sort_by_var))
-  stopifnot(is.logical.single(legend_on))
-  stopifnot(is.numeric.vector(plot_height))
+  stopifnot(is_logical_single(legend_on))
+  stopifnot(is_numeric_vector(plot_height))
 
   args <- as.list(environment())
 

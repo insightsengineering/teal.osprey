@@ -92,11 +92,11 @@ tm_g_spiderplot <- function(label,
   stopifnot(is.choices_selected(line_colorby_var))
   stopifnot(is.choices_selected(xfacet_var))
   stopifnot(is.choices_selected(yfacet_var))
-  stopifnot(is.character.single(vref_line))
-  stopifnot(is.character.single(href_line))
-  stopifnot(is.logical.single(anno_txt_var))
-  stopifnot(is.logical.single(legend_on))
-  stopifnot(is.numeric.vector(plot_height))
+  stopifnot(is_character_single(vref_line))
+  stopifnot(is_character_single(href_line))
+  stopifnot(is_logical_single(anno_txt_var))
+  stopifnot(is_logical_single(legend_on))
+  stopifnot(is_numeric_vector(plot_height))
 
   args <- as.list(environment())
   module(

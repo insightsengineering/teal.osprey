@@ -53,10 +53,10 @@ tm_t_ae_oview <- function(label,
                           post_output = NULL,
                           code_data_processing = NULL) {
 
-  stopifnot(is.character.single(label))
-  stopifnot(is.character.single(dataname))
+  stopifnot(is_character_single(label))
+  stopifnot(is_character_single(dataname))
   stopifnot(is.choices_selected(arm_var))
-  stopifnot(is.logical.single(total_col))
+  stopifnot(is_logical_single(total_col))
 
   args <- as.list(environment())
 

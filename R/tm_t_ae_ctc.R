@@ -63,14 +63,14 @@ tm_t_ae_ctc <- function(label,
                         total_col = TRUE,
                         pre_output = NULL,
                         post_output = NULL) {
-  stopifnot(is.character.single(label))
-  stopifnot(is.character.single(dataname))
+  stopifnot(is_character_single(label))
+  stopifnot(is_character_single(dataname))
   stopifnot(is.null(filter_var) || is.choices_selected(filter_var))
   stopifnot(is.choices_selected(arm_var))
   stopifnot(is.choices_selected(class_var))
   stopifnot(is.choices_selected(term_var))
-  stopifnot(is.character.single(toxgr_var))
-  stopifnot(is.logical.single(total_col))
+  stopifnot(is_character_single(toxgr_var))
+  stopifnot(is_logical_single(total_col))
 
   args <- as.list(environment())
 
