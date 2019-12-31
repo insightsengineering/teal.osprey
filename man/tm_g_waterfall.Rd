@@ -4,28 +4,12 @@
 \alias{tm_g_waterfall}
 \title{Teal Module for Waterfall Plot}
 \usage{
-tm_g_waterfall(
-  label,
-  dataname_tr = "ADTR",
-  dataname_rs = "ADRS",
-  bar_paramcd,
-  bar_var,
-  bar_color_var,
-  bar_color_opt = NULL,
-  sort_var,
-  add_label_var_sl,
-  add_label_paramcd_rs,
-  anno_txt_var_sl,
-  anno_txt_paramcd_rs,
-  facet_var,
-  ytick_at = 20,
-  href_line = NULL,
-  gap_point_val = NULL,
-  show_value = TRUE,
-  plot_height = c(1200, 400, 5000),
-  pre_output = NULL,
-  post_output = NULL
-)
+tm_g_waterfall(label, dataname_tr = "ADTR", dataname_rs = "ADRS",
+  bar_paramcd, bar_var, bar_color_var, bar_color_opt = NULL, sort_var,
+  add_label_var_sl, add_label_paramcd_rs, anno_txt_var_sl,
+  anno_txt_paramcd_rs, facet_var, ytick_at = 20, href_line = NULL,
+  gap_point_val = NULL, show_value = TRUE, plot_height = c(1200, 400,
+  5000), pre_output = NULL, post_output = NULL)
 }
 \arguments{
 \item{label}{module label in the teal app}
@@ -94,11 +78,6 @@ a \code{\link[teal]{module}} object
 This is teal module that generates a waterfall plot for ADaM data
 }
 \examples{
-\dontrun{
-
-library(dplyr)
-library(tidyr)
-
 ADSL <- rADSL
 ADRS <- rADRS
 ADTR <- rADTR
@@ -142,6 +121,7 @@ x <- teal::init(
   )
 )
 
+\dontrun{
 shinyApp(x$ui, x$server)
 }
 }
