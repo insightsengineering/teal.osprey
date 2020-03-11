@@ -7,8 +7,7 @@ Authors@R: c(
   person("Chendi", "Liao", email = "chendi.liao@roche.com", role = c("aut")),
   person("Mahdi", "About", email = "mahdi.about@roche.com", role = c("aut")),
   person("Fei", "Wang", email = "fei.wang.fw6@roche.com", role = c("aut")),
-  person("Mika", "Maekinen", email = "mika.maekinen@roche.com", role = c("aut")),
-  person("Carolyn", "Zhang", email = "zhang.carolyn@gene.com", role = c("aut")))
+  person("Mika", "Maekinen", email = "mika.maekinen@roche.com", role = c("aut")))
 Description: Community efforts to collect teal modules for TLGs defined in the osprey package.
   The teal modules add an encoding panel to interactively change the encoding within teal.
 Depends:
