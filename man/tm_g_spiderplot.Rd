@@ -60,6 +60,7 @@ Display spider plot as a shiny module
 
 #Example using stream (ADaM) dataset
 library(dplyr)
+library(random.cdisc.data)
 
 ADSL <- rADSL
 ADTR <- rADTR

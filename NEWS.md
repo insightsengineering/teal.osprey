@@ -1,3 +1,6 @@
+# teal.osprey 0.1.3
+* add safety graph teal modules
+ 
 # teal.osprey 0.1.2
 - New waterfall module
 - Refactored due to recent changes in `utils.nest`
