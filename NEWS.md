@@ -1,5 +1,5 @@
 # teal.osprey 0.1.3
-* add safety graph teal modules
+* technical release with updated dependencies
  
 # teal.osprey 0.1.2
 - New waterfall module
