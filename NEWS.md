@@ -1,5 +1,9 @@
-# teal.osprey 0.1.2.9000
+# teal.osprey 0.1.3.9000
 
+
+# teal.osprey 0.1.3
+* technical release with updated dependencies
+ 
 # teal.osprey 0.1.2
 - New waterfall module
 - Refactored due to recent changes in `utils.nest`
