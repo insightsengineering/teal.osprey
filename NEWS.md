@@ -1,5 +1,6 @@
-# teal.osprey 0.1.3.9000
+# teal.osprey 0.1.4
 
+* Minor changes in tests
 
 # teal.osprey 0.1.3
 * technical release with updated dependencies
