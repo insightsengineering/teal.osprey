@@ -59,7 +59,7 @@
 #'                   keys(primary = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT"),
 #'                        foreign = c("STUDYID", "USUBJID"),
 #'                        parent = "ADSL")),
-#'     code = "code for data",
+#'     code = "ADSL <- rADSL; ADRS <- rADRS; ADTR <- rADTR",
 #'     check = FALSE
 #'  ),
 #'   modules = root_modules(
@@ -288,6 +288,11 @@ srv_g_waterfall <- function(input,
     gap_point_val <- input$gap_point_val
     show_value <- input$show_value # nolint
 
+    # validate data rows
+    validate_has_data(adsl_filtered, min_nrow = 2)
+    validate_has_data(adtr_filtered, min_nrow = 2)
+    validate_has_data(adrs_filtered, min_nrow = 2)
+
     validate_in(bar_paramcd, adtr_filtered$PARAMCD, "Tumor burden parameter cannot be found in ADTR PARAMCD.")
     if (!is.null(add_label_paramcd_rs)) {
       validate_in(add_label_paramcd_rs, adrs_filtered$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
@@ -345,22 +350,19 @@ srv_g_waterfall <- function(input,
     adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
     adrs_paramcd <- unique(c(add_label_paramcd_rs, anno_txt_paramcd_rs))
 
-    # validate input values
-    validate_has_data(adsl_filtered, min_nrow = 2)
-    validate_has_variable(adsl_filtered, adsl_vars)
-    validate_has_data(adtr_filtered, min_nrow = 2)
-    validate_has_variable(adtr_filtered, adtr_vars)
-    validate_has_data(adrs_filtered, min_nrow = 2)
-    validate_has_variable(adrs_filtered, adrs_vars)
-
     # write data selection to chunks
-    adsl_name <- "adsl_filtered"
-    adtr_name <- paste0(dataname_tr, "_filtered")
-    adrs_name <- paste0(dataname_rs, "_filtered")
+    adsl_name <- "ADSL_FILTERED"
+    adtr_name <- paste0(dataname_tr, "_FILTERED")
+    adrs_name <- paste0(dataname_rs, "_FILTERED")
 
     assign(adsl_name, adsl_filtered)
     assign(adtr_name, adtr_filtered)
     assign(adrs_name, adrs_filtered)
+
+    # validate data input
+    validate_has_variable(adsl_filtered, adsl_vars)
+    validate_has_variable(adrs_filtered, adrs_vars)
+    validate_has_variable(adtr_filtered, adtr_vars)
 
     # restart the chunks for showing code
     chunks_reset(envir = environment())
