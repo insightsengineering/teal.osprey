@@ -101,6 +101,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
     all_p <- input$All_Patients
 
     adsl_vars <- unique(c("STUDYID", "USUBJID", arm_var, class_var, term_var)) # nolint
+    validate_has_variable(ADSL_FILTERED, adsl_vars)
 
     if (all_p == TRUE) {
       total <- "All Patients"
