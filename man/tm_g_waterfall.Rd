@@ -4,12 +4,28 @@
 \alias{tm_g_waterfall}
 \title{Teal Module for Waterfall Plot}
 \usage{
-tm_g_waterfall(label, dataname_tr = "ADTR", dataname_rs = "ADRS",
-  bar_paramcd, bar_var, bar_color_var, bar_color_opt = NULL, sort_var,
-  add_label_var_sl, add_label_paramcd_rs, anno_txt_var_sl,
-  anno_txt_paramcd_rs, facet_var, ytick_at = 20, href_line = NULL,
-  gap_point_val = NULL, show_value = TRUE, plot_height = c(1200, 400,
-  5000), pre_output = NULL, post_output = NULL)
+tm_g_waterfall(
+  label,
+  dataname_tr = "ADTR",
+  dataname_rs = "ADRS",
+  bar_paramcd,
+  bar_var,
+  bar_color_var,
+  bar_color_opt = NULL,
+  sort_var,
+  add_label_var_sl,
+  add_label_paramcd_rs,
+  anno_txt_var_sl,
+  anno_txt_paramcd_rs,
+  facet_var,
+  ytick_at = 20,
+  href_line = NULL,
+  gap_point_val = NULL,
+  show_value = TRUE,
+  plot_height = c(1200, 400, 5000),
+  pre_output = NULL,
+  post_output = NULL
+)
 }
 \arguments{
 \item{label}{module label in the teal app}
@@ -64,10 +80,9 @@ than others, default is \code{NULL}}
 \item{plot_height}{plot height}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
+output to put the output into context. For example a title.}
 
-\item{post_output}{optional, \code{shiny.tag} with text placed before the
+\item{post_output}{optional, \code{shiny.tag} with text placed after the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 }
@@ -92,7 +107,7 @@ x <- teal::init(
                   keys(primary = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT"),
                        foreign = c("STUDYID", "USUBJID"),
                        parent = "ADSL")),
-    code = "code for data",
+    code = "ADSL <- rADSL; ADRS <- rADRS; ADTR <- rADTR",
     check = FALSE
  ),
   modules = root_modules(

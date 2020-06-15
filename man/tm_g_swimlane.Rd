@@ -4,12 +4,23 @@
 \alias{tm_g_swimlane}
 \title{Teal Module for Swimlane Plot}
 \usage{
-tm_g_swimlane(label, dataname, bar_var, bar_color_var = NULL,
-  sort_var = NULL, marker_pos_var = NULL, marker_shape_var = NULL,
-  marker_shape_opt = NULL, marker_color_var = NULL,
-  marker_color_opt = NULL, anno_txt_var = NULL, vref_line = NULL,
-  plot_height = c(1200L, 400L, 5000L), pre_output = NULL,
-  post_output = NULL)
+tm_g_swimlane(
+  label,
+  dataname,
+  bar_var,
+  bar_color_var = NULL,
+  sort_var = NULL,
+  marker_pos_var = NULL,
+  marker_shape_var = NULL,
+  marker_shape_opt = NULL,
+  marker_color_var = NULL,
+  marker_color_opt = NULL,
+  anno_txt_var = NULL,
+  vref_line = NULL,
+  plot_height = c(1200L, 400L, 5000L),
+  pre_output = NULL,
+  post_output = NULL
+)
 }
 \arguments{
 \item{label}{item label of the module in the teal app}
@@ -46,10 +57,9 @@ otherwise color will be assigned by \code{ggplot} default}
 \item{plot_height}{plot height}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
+output to put the output into context. For example a title.}
 
-\item{post_output}{optional, \code{shiny.tag} with text placed before the
+\item{post_output}{optional, \code{shiny.tag} with text placed after the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 }

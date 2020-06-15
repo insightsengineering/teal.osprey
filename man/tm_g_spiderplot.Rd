@@ -4,11 +4,24 @@
 \alias{tm_g_spiderplot}
 \title{Spider plot Teal Module}
 \usage{
-tm_g_spiderplot(label, dataname, paramcd, x_var, y_var, marker_var,
-  line_colorby_var, xfacet_var = NULL, yfacet_var = NULL,
-  vref_line = NULL, href_line = NULL, anno_txt_var = TRUE,
-  legend_on = FALSE, plot_height = c(600, 200, 2000),
-  pre_output = NULL, post_output = NULL)
+tm_g_spiderplot(
+  label,
+  dataname,
+  paramcd,
+  x_var,
+  y_var,
+  marker_var,
+  line_colorby_var,
+  xfacet_var = NULL,
+  yfacet_var = NULL,
+  vref_line = NULL,
+  href_line = NULL,
+  anno_txt_var = TRUE,
+  legend_on = FALSE,
+  plot_height = c(600, 200, 2000),
+  pre_output = NULL,
+  post_output = NULL
+)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -43,10 +56,9 @@ Note that the data is expected to be in vertical form with the
 \item{plot_height}{range of plot height}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
+output to put the output into context. For example a title.}
 
-\item{post_output}{optional, \code{shiny.tag} with text placed before the
+\item{post_output}{optional, \code{shiny.tag} with text placed after the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 }

@@ -4,11 +4,23 @@
 \alias{tm_g_butterfly}
 \title{Butterfly plot Teal Module}
 \usage{
-tm_g_butterfly(label, dataname, filter_var = NULL, right_var, left_var,
-  category_var, color_by_var, count_by_var, facet_var = NULL,
+tm_g_butterfly(
+  label,
+  dataname,
+  filter_var = NULL,
+  right_var,
+  left_var,
+  category_var,
+  color_by_var,
+  count_by_var,
+  facet_var = NULL,
   sort_by_var = choices_selected(selected = "count", choices = c("count",
-  "alphabetical")), legend_on = TRUE, plot_height = c(600, 200, 2000),
-  pre_output = NULL, post_output = NULL)
+    "alphabetical")),
+  legend_on = TRUE,
+  plot_height = c(600, 200, 2000),
+  pre_output = NULL,
+  post_output = NULL
+)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -41,10 +53,9 @@ default here is "count"}
 \item{plot_height}{(\code{numeric}) range of plot height - 3 values}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
+output to put the output into context. For example a title.}
 
-\item{post_output}{optional, \code{shiny.tag} with text placed before the
+\item{post_output}{optional, \code{shiny.tag} with text placed after the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 }

@@ -4,8 +4,15 @@
 \alias{tm_t_ae_oview}
 \title{Adverse Events Summary Table Teal Module}
 \usage{
-tm_t_ae_oview(label, dataname, arm_var, total_col = TRUE,
-  pre_output = NULL, post_output = NULL, code_data_processing = NULL)
+tm_t_ae_oview(
+  label,
+  dataname,
+  arm_var,
+  total_col = TRUE,
+  pre_output = NULL,
+  post_output = NULL,
+  code_data_processing = NULL
+)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -22,10 +29,9 @@ function.}
 \code{TRUE})}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
+output to put the output into context. For example a title.}
 
-\item{post_output}{optional, \code{shiny.tag} with text placed before the
+\item{post_output}{optional, \code{shiny.tag} with text placed after the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 

@@ -3,7 +3,6 @@
 \docType{package}
 \name{teal.osprey}
 \alias{teal.osprey}
-\alias{teal.osprey-package}
 \title{teal.osprey: Enabling you to write modules in teal}
 \description{
 The \code{teal.osprey} R package contains interactive \code{\link{teal}} modules for the outputs
