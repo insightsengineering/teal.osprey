@@ -4,8 +4,16 @@
 \alias{tm_t_ds}
 \title{Disposition Table Teal Module}
 \usage{
-tm_t_ds(label, dataname, arm_var, class_var, term_var, total_col = TRUE,
-  pre_output = NULL, post_output = NULL)
+tm_t_ds(
+  label,
+  dataname,
+  arm_var,
+  class_var,
+  term_var,
+  total_col = TRUE,
+  pre_output = NULL,
+  post_output = NULL
+)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -28,10 +36,9 @@ for display}
 \code{TRUE})}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
+output to put the output into context. For example a title.}
 
-\item{post_output}{optional, \code{shiny.tag} with text placed before the
+\item{post_output}{optional, \code{shiny.tag} with text placed after the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 }

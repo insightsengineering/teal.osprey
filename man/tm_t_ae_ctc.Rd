@@ -4,9 +4,18 @@
 \alias{tm_t_ae_ctc}
 \title{Adverse Events Table by Highest NCI CTCAE Grade Teal Module}
 \usage{
-tm_t_ae_ctc(label, dataname, filter_var = NULL, arm_var, class_var,
-  term_var, toxgr_var = "AETOXGR", total_col = TRUE,
-  pre_output = NULL, post_output = NULL)
+tm_t_ae_ctc(
+  label,
+  dataname,
+  filter_var = NULL,
+  arm_var,
+  class_var,
+  term_var,
+  toxgr_var = "AETOXGR",
+  total_col = TRUE,
+  pre_output = NULL,
+  post_output = NULL
+)
 }
 \arguments{
 \item{label}{menu item label of the module in the teal app}
@@ -35,10 +44,9 @@ for display}
 \code{TRUE})}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
+output to put the output into context. For example a title.}
 
-\item{post_output}{optional, \code{shiny.tag} with text placed before the
+\item{post_output}{optional, \code{shiny.tag} with text placed after the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 }
