@@ -134,9 +134,9 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
   init_chunks()
 
   output$table <- renderUI({
-    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     if (dataname != "ADSL") {
-      ANL_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
+      ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
       anl_name <- paste0(dataname, "_FILTERED")
       assign(anl_name, ANL_FILTERED)
     }

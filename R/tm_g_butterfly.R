@@ -230,11 +230,13 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
   #dynamic options for dichotomization variable
   observe({
 
+    req(!is.null(input$right_var) && !is.null(input$left_var))
+
     right_var <- input$right_var
     left_var <- input$left_var
 
-    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
-    ADAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+    ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
     ADSL_df <- ADSL_FILTERED %>% as.data.frame() # nolint
     ADAE_df <- ADAE_FILTERED %>% as.data.frame() # nolint
@@ -247,8 +249,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
   })
 
   output$plot <- renderPlot({
-    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
-    ADAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+    ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
     right_var <- isolate(input$right_var)
     left_var <- isolate(input$left_var)

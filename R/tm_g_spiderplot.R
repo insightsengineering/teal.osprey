@@ -215,8 +215,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label) {
 
     # get datasets ---
 
-    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
-    ADTR_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+    ADTR_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
     adtr_name <- paste0(dataname, "_FILTERED")
     assign(adtr_name, ADTR_FILTERED) # so that we can refer to the 'correct' data name

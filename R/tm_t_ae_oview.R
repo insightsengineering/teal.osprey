@@ -101,8 +101,8 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
   init_chunks()
 
   output$table <- renderUI({
-    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
-    ADAE_FILTERED <- datasets$get_data(dataname, reactive = TRUE, filtered = TRUE) # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+    ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
     arm_var <- input$arm_var
     all_p <- input$All_Patients

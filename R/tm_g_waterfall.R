@@ -273,9 +273,9 @@ srv_g_waterfall <- function(input,
 
   output$plot <- renderPlot({
 
-    adsl_filtered <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE)
-    adtr_filtered <- datasets$get_data(dataname_tr, reactive = TRUE, filtered = TRUE)
-    adrs_filtered <- datasets$get_data(dataname_rs, reactive = TRUE, filtered = TRUE)
+    adsl_filtered <- datasets$get_data("ADSL", filtered = TRUE)
+    adtr_filtered <- datasets$get_data(dataname_tr, filtered = TRUE)
+    adrs_filtered <- datasets$get_data(dataname_rs, filtered = TRUE)
 
     bar_var <- input$bar_var
     bar_paramcd <- input$bar_paramcd

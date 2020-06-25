@@ -91,7 +91,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
 
   output$table <- renderUI({
 
-    ADSL_FILTERED <- datasets$get_data("ADSL", reactive = TRUE, filtered = TRUE) # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
 
     chunks_reset(envir = environment())
 
