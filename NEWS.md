@@ -1,6 +1,8 @@
 # teal.osprey 0.1.4.9000
 
-*  issues with no news:
+*  Added new `teal` modules:
+  - Teal module for events by term summary plot.
+  - Teal module for AE overview summary plot.
 
 # teal.osprey 0.1.4
 

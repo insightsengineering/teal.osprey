@@ -23,11 +23,12 @@ reference:
     contents:
       - starts_with("tm_t_")
   - title: Graph Modules
-    desc: "Teal graph modules"
+    desc: "Teal graph modules including safety and early efficacy graphs"
     contents:
       - starts_with("tm_g_")
   - title: Utility
     contents:
       - label_aevar
       - quick_filter
-
+      - ui_g_decorate
+      - srv_g_decorate

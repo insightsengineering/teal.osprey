@@ -2,13 +2,13 @@
 % Please edit documentation in R/tm_g_decorate.R
 \name{plot_decorate_output}
 \alias{plot_decorate_output}
-\title{plot decorated output ui}
+\title{Helper function to plot decorated output ui}
 \usage{
 plot_decorate_output(id)
 }
 \arguments{
-\item{id}{id of this element}
+\item{id}{(\code{string}) id of this element}
 }
 \description{
-plot decorated output ui
+Helper function to plot decorated output ui
 }

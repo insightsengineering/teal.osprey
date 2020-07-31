@@ -16,6 +16,7 @@ Depends:
   shiny,
   teal (>= 0.8.4)
 Imports:
+  ggplot2,
   dplyr,
   methods,
   rtables (>= 0.1.6),

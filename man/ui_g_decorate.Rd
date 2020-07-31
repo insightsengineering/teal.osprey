@@ -2,7 +2,7 @@
 % Please edit documentation in R/tm_g_decorate.R
 \name{ui_g_decorate}
 \alias{ui_g_decorate}
-\title{decorate plot output ui}
+\title{Helper UI function to decorate plot output UI}
 \usage{
 ui_g_decorate(
   id,
@@ -13,17 +13,19 @@ ui_g_decorate(
 )
 }
 \arguments{
-\item{id}{id of this module. set to `NULL` if you want to make it identical
+\item{id}{(\code{string}) id of this module. set to `NULL` if you want to make it identical
 to the module who called it.}
 
-\item{plot_height}{plot height control value min max.}
+\item{plot_height}{vector with three \code{integer} elements defining selected,
+min and max plot height, default is \code{c(600, 200, 2000)}}
 
-\item{titles}{default title}
+\item{titles}{(\code{string}) default titles}
 
-\item{footnotes}{default footnotes}
+\item{footnotes}{(\code{string}) default footnotes}
 
-\item{fontsize}{font size of title/footnotes}
+\item{fontsize}{a numeric vector with 3 values, selected font size and font size range,
+default is \code{c(5, 3, 7)}}
 }
 \description{
-decorate plot output ui
+This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.
 }

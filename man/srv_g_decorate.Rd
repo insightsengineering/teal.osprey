@@ -2,21 +2,22 @@
 % Please edit documentation in R/tm_g_decorate.R
 \name{srv_g_decorate}
 \alias{srv_g_decorate}
-\title{server side function of decorate module}
+\title{Helper server function to decorate plot output}
 \usage{
 srv_g_decorate(input, output, session, plot_id = "plot", plt = reactive(NULL))
 }
 \arguments{
-\item{input}{shiny input}
+\item{input}{the session's \code{input} object}
 
-\item{output}{shiny output}
+\item{output}{the session's \code{output} object}
 
-\item{session}{shiny session}
+\item{session}{session object is an environment that can be used to access information
+and functionality relating to the session}
 
-\item{plot_id}{plot output id}
+\item{plot_id}{(\code{string}) id for plot output}
 
-\item{plt}{reactive object of graph object}
+\item{plt}{a reactive object of graph object}
 }
 \description{
-server side function of decorate module
+This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.
 }

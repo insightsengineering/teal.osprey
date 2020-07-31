@@ -307,14 +307,13 @@ srv_g_events_term_id <- function(input,
     chunks_push(bquote({
       do.call(g_events_term_id, args = args)
     }))
-    do.call(g_events_term_id, args = args)
+    do.call(g_events_term_id, args = args) # nolint
   })
 
   observeEvent(input$show_rcode, {
     show_rcode_modal(title = label,
                      rcode = get_rcode(
                        datasets = datasets,
-                       datanames = dataname,
                        title = sprintf("R Code for %s", label)
                      ))
   })

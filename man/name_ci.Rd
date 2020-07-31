@@ -4,7 +4,7 @@
 \alias{name_ci}
 \title{retrieve name of ci method}
 \usage{
-name_ci(x)
+name_ci(x = ci_choices)
 }
 \arguments{
 \item{x}{ci method to retrieve its name}

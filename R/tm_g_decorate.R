@@ -1,10 +1,15 @@
-#' decorate plot output ui
-#' @param id id of this module. set to `NULL` if you want to make it identical
+#' Helper UI function to decorate plot output UI
+#'
+#' This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.
+#'
+#' @param id (\code{string}) id of this module. set to `NULL` if you want to make it identical
 #' to the module who called it.
-#' @param plot_height plot height control value min max.
-#' @param titles default title
-#' @param footnotes default footnotes
-#' @param fontsize font size of title/footnotes
+#' @param plot_height vector with three \code{integer} elements defining selected,
+#' min and max plot height, default is \code{c(600, 200, 2000)}
+#' @param titles (\code{string}) default titles
+#' @param footnotes (\code{string}) default footnotes
+#' @param fontsize a numeric vector with 3 values, selected font size and font size range,
+#' default is \code{c(5, 3, 7)}
 #' @importFrom teal optionalSliderInputValMinMax
 #' @importFrom shiny textInput textAreaInput NS
 #' @importFrom teal.devel plot_height_input
@@ -29,15 +34,21 @@ ui_g_decorate <- function(id,
     )
   }
 
-#' server side function of decorate module
-#' @param input shiny input
-#' @param output shiny output
-#' @param session shiny session
-#' @param plot_id plot output id
-#' @param plt reactive object of graph object
+#' Helper server function to decorate plot output
+#'
+#' This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.
+#'
+#' @param input the session's \code{input} object
+#' @param output the session's \code{output} object
+#' @param session session object is an environment that can be used to access information
+#' and functionality relating to the session
+#' @param plot_id (\code{string}) id for plot output
+#' @param plt a reactive object of graph object
+#'
 #' @importFrom shiny renderUI req plotOutput renderPlot reactive
 #' @importFrom grid grid.draw gpar
 #' @importFrom tern decorate_grob
+#' @importFrom ggplot2 .pt
 #' @export
 srv_g_decorate <- function(input,
                            output,
@@ -64,11 +75,11 @@ srv_g_decorate <- function(input,
       )
     })
     return(reactive(input$fontsize))
-
   }
 
-#' plot decorated output ui
-#' @param id id of this element
+#' Helper function to plot decorated output ui
+#'
+#' @param id (\code{string}) id of this element
 #' @export
 plot_decorate_output <- function(id) {
   ns <- NS(id)
