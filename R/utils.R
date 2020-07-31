@@ -43,3 +43,15 @@ label_aevar <- function(x) {
   out_label <- ifelse(is.na(which_aevar), x, ae_varlabel[which_aevar])
   return(out_label)
 }
+
+
+ci_choices <- setNames(c("wald", "waldcc", "ac", "scorecc", "score", "mn", "mee", "blj", "ha"),
+                       c("Wald", "Corrected Wald", "Agresti-Caffo", "Newcombe",
+                         "Score", "Miettinen and Nurminen", "Mee",
+                         "Brown, Li's Jeffreys", "Hauck-Anderson"))
+
+#' retrieve name of ci method
+#' @param x ci method to retrieve its name
+name_ci <- function(x) {
+  names(ci_choices)[which(ci_choices == x)]
+}
