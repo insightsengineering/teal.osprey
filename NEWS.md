@@ -1,4 +1,4 @@
-# teal.osprey 0.1.4.9000
+# teal.osprey 0.1.5
 
 *  Added new `teal` modules:
   - Teal module for events by term summary plot.
