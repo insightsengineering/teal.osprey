@@ -259,6 +259,8 @@ ui_g_waterfall <- function(id, ...){
   )
 }
 
+#' @importFrom dplyr filter group_by inner_join left_join select slice
+#' @importFrom tidyr pivot_wider
 srv_g_waterfall <- function(input,
                             output,
                             session,
@@ -389,10 +391,10 @@ srv_g_waterfall <- function(input,
       adrs <- .(as.name(adrs_name))[, .(adrs_vars)] # nolint
 
       bar_tr <- adtr %>%
-        select(USUBJID, .(as.name(bar_var))) %>%
-        group_by(USUBJID) %>%
-        slice(which.min(.(as.name(bar_var))))
-      bar_data <- adsl %>% inner_join(bar_tr, "USUBJID")
+        dplyr::select(USUBJID, .(as.name(bar_var))) %>%
+        dplyr::group_by(USUBJID) %>%
+        dplyr::slice(which.min(.(as.name(bar_var))))
+      bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
     }))
     chunks_push_new_line()
     chunks_eval()
@@ -406,7 +408,7 @@ srv_g_waterfall <- function(input,
     } else{
       chunks_push(bquote({
         rs_sub <- adrs %>%
-          filter(PARAMCD %in% .(adrs_paramcd))
+          dplyr::filter(PARAMCD %in% .(adrs_paramcd))
       }))
       chunks_push_new_line()
       chunks_eval()
@@ -416,9 +418,9 @@ srv_g_waterfall <- function(input,
 
       chunks_push(bquote({
         rs_label <- rs_sub %>%
-          select(USUBJID, PARAMCD, AVALC) %>%
-          spread(PARAMCD, AVALC)
-        anl <- bar_data %>% left_join(rs_label)
+          dplyr::select(USUBJID, PARAMCD, AVALC) %>%
+          tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
+        anl <- bar_data %>% dplyr::left_join(rs_label)
         anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
       }))
     }

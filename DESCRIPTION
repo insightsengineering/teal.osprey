@@ -21,6 +21,7 @@ Imports:
   methods,
   rtables (>= 0.1.6),
   teal.devel (>= 0.2.5),
+  tidyr,
   utils.nest (>= 0.2.4),
   tern (>= 0.6.7)
 Suggests:
