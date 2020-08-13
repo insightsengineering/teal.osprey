@@ -18,6 +18,7 @@ Depends:
 Imports:
   ggplot2,
   dplyr,
+  purrr,
   methods,
   rtables (>= 0.1.6),
   teal.devel (>= 0.2.5),

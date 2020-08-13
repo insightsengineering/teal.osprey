@@ -3,6 +3,7 @@
 *  Added new `teal` modules:
   - Teal module for events by term summary plot.
   - Teal module for AE overview summary plot.
+  - Teal module for patient profile plot
 
 # teal.osprey 0.1.4
 
