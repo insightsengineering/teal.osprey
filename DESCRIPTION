@@ -12,24 +12,24 @@ Description: Community efforts to collect teal modules for TLGs defined in the o
   The teal modules add an encoding panel to interactively change the encoding within teal.
 Depends:
   R (>= 3.3),
-  osprey (>= 0.1.4),
+  osprey (>= 0.1.5),
   shiny,
-  teal (>= 0.8.4)
+  teal (>= 0.9.0)
 Imports:
   ggplot2,
   dplyr,
   purrr,
   methods,
-  rtables (>= 0.1.6),
-  teal.devel (>= 0.2.5),
+  rtables (>= 0.1.7),
+  teal.devel (>= 0.2.6),
   tidyr,
-  utils.nest (>= 0.2.4),
-  tern (>= 0.6.7)
+  utils.nest (>= 0.2.5),
+  tern (>= 0.6.8)
 Suggests:
   knitr,
-  random.cdisc.data (>= 0.3.4),
+  random.cdisc.data (>= 0.3.5),
   rmarkdown,
-  test.nest (>= 0.2.3),
+  test.nest (>= 0.2.4),
   testthat (>= 2.0)
 License: file LICENSE
 Encoding: UTF-8
