@@ -375,6 +375,7 @@ srv_g_waterfall <- function(input,
       bar_color_var <- .(bar_color_var)
       sort_var <- .(sort_var)
       add_label_var_sl <- .(add_label_var_sl)
+      add_label_paramcd_rs <- .(add_label_paramcd_rs)
       anno_txt_var_sl <- .(anno_txt_var_sl)
       anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs)
       facet_var <- .(facet_var)
