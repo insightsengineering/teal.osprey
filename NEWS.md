@@ -1,3 +1,7 @@
+# teal.osprey 0.1.5.9000
+
+* issues with no news:
+
 # teal.osprey 0.1.5
 
 *  Added new `teal` modules:
