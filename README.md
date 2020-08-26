@@ -6,6 +6,19 @@
 
 Please see the [agile-R](http://go.roche.com/agile-R) website. In particular the [osprey example app](http://go.roche.com/agile-R/teal/sample_apps/sample-app-osprey/) configuration.
 
+# Installation
+
+Please refer to the quick start section in agile-R [here](https://pages.github.roche.com/NEST/docs/hugo/NEST/agile-R/master/quick_start/install-nest-environment/)
+
+The latest version of `teal.osprey` can be installed locally with:
+```r
+devtools::install_github(
+  repo = "NEST/teal.osprey",
+  host = "https://github.roche.com/api/v3",
+  upgrade_dependencies = FALSE
+)
+```
+
 # Contributors:
 
 - **Nina Qi (qit3@gene.com)**
