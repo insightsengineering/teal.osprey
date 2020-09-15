@@ -80,7 +80,7 @@ ADRS <- rADRS
 ADRS <- ADRS \%>\%
   dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
   mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
-  rbind(ADRS \%>\% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+  base::rbind(ADRS \%>\% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
   arrange(USUBJID)
 
 x <- init(
@@ -125,7 +125,6 @@ x <- init(
 
 \dontrun{
 shinyApp(x$ui, x$server)
-
 }
 
 }
