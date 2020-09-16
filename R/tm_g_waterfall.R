@@ -136,7 +136,8 @@ tm_g_waterfall <- function(label,
     server_args = list(
       dataname_tr = dataname_tr,
       dataname_rs = dataname_rs,
-      bar_color_opt = bar_color_opt
+      bar_color_opt = bar_color_opt,
+      plot_height = plot_height
     ),
     filters = "all"
   )
@@ -147,7 +148,7 @@ ui_g_waterfall <- function(id, ...){
   ns <- NS(id)
 
   standard_layout(
-    output = white_small_well(plot_height_output(id = ns("waterfallplot"))),
+    output = white_small_well(plot_with_settings_ui(id = ns("waterfallplot"), height = a$plot_height)),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis Data: ", tags$code(a$dataname_tr), tags$code(a$dataname_rs)),
@@ -250,8 +251,7 @@ ui_g_waterfall <- function(id, ...){
           helpText("Enter a numeric value to break very high bars")
         ),
         value = a$gap_point_val
-      ),
-      plot_height_input(id = ns("waterfallplot"), value = a$plot_height)
+      )
     ),
     forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
     pre_output = a$pre_output,
@@ -268,12 +268,13 @@ srv_g_waterfall <- function(input,
                             dataname_tr,
                             dataname_rs,
                             bar_color_opt,
-                            label) {
+                            label,
+                            plot_height) {
 
   # use teal.devel code chunks
   init_chunks()
 
-  output$plot <- renderPlot({
+  plot_r <- reactive({
 
     adsl_filtered <- datasets$get_data("ADSL", filtered = TRUE)
     adtr_filtered <- datasets$get_data(dataname_tr, filtered = TRUE)
@@ -489,11 +490,11 @@ srv_g_waterfall <- function(input,
 
   })
 
-  # Insert the plot into a plot_height module from teal.devel
-  callModule(plot_with_height,
+  # Insert the plot into a plot_with_settings module from teal.devel
+  callModule(plot_with_settings_srv,
              id = "waterfallplot",
-             plot_height = reactive(input$waterfallplot),
-             plot_id = session$ns("plot")
+             plot_r = plot_r,
+             height = plot_height
   )
 
   # show R code

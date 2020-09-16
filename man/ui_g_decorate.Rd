@@ -6,7 +6,6 @@
 \usage{
 ui_g_decorate(
   id,
-  plot_height = c(600, 200, 2000),
   titles = "Titles",
   footnotes = "footnotes",
   fontsize = c(5, 4, 11)
@@ -15,9 +14,6 @@ ui_g_decorate(
 \arguments{
 \item{id}{(\code{string}) id of this module. set to `NULL` if you want to make it identical
 to the module who called it.}
-
-\item{plot_height}{vector with three \code{integer} elements defining selected,
-min and max plot height, default is \code{c(600, 200, 2000)}}
 
 \item{titles}{(\code{string}) default titles}
 

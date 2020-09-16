@@ -130,7 +130,8 @@ tm_g_swimlane <- function(label,
       marker_shape_opt = marker_shape_opt,
       marker_color_var,
       marker_color_opt = marker_color_opt,
-      label = label
+      label = label,
+      plot_height = plot_height
     ),
     filters = dataname
   )
@@ -142,7 +143,7 @@ ui_g_swimlane <- function(id, ...) {
   ns <- NS(id)
 
   standard_layout(
-    output = white_small_well(plot_height_output(id = ns("swimlaneplot"))),
+    output = white_small_well(plot_with_settings_ui(id = ns("swimlaneplot"), height = a$plot_height)),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
@@ -191,8 +192,7 @@ ui_g_swimlane <- function(id, ...) {
                   helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
                 ),
                 value = paste(a$vref_line, collapse = ", ")
-      ),
-      plot_height_input(id = ns("swimlaneplot"), value = a$plot_height)
+      )
     ),
     forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
     pre_output = a$pre_output,
@@ -206,17 +206,11 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
                            marker_shape_opt,
                            marker_color_var,
                            marker_color_opt,
-                           label) {
+                           label,
+                           plot_height) {
 
   # use teal.devel code chunks
   init_chunks()
-
-  ## dynamic plot height
-  output$plot_ui <- renderUI({
-    plot_height <- input$plot_height
-    validate(need(plot_height, "need valid plot height"))
-    plotOutput(session$ns("kmplot"), height = plot_height)
-  })
 
   observe({
     # if marker position is "None", then hide options for marker shape and color
@@ -259,7 +253,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
   })
 
   # create plot
-  output$plot <- renderPlot({
+  plot_r <- reactive({
 
     # DATA GETTERS
     validate(need("ADSL" %in% datasets$datanames(), "ADSL needs to be defined in datasets"))
@@ -481,11 +475,11 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     chunks_eval()
   })
 
-  # Insert the plot into a plot_height module from teal.devel
-  callModule(plot_with_height,
+  # Insert the plot into a plot_with_settings module from teal.devel
+  callModule(plot_with_settings_srv,
              id = "swimlaneplot",
-             plot_height = reactive(input$swimlaneplot),
-             plot_id = session$ns("plot")
+             plot_r = plot_r,
+             height = plot_height
   )
 
   observeEvent(input$show_rcode, {

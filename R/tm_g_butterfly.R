@@ -128,7 +128,7 @@ tm_g_butterfly <- function(label,
     label = label,
     filters = dataname,
     server = srv_g_butterfly,
-    server_args = list(dataname = dataname),
+    server_args = list(dataname = dataname, plot_height = plot_height),
     ui = ui_g_butterfly,
     ui_args = args
   )
@@ -141,7 +141,7 @@ ui_g_butterfly <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = white_small_well(plot_height_output(id = ns("butterflyplot"))),
+    output = white_small_well(plot_with_settings_ui(id = ns("butterflyplot"), height = a$plot_height)),
     encoding =  div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
@@ -203,12 +203,7 @@ ui_g_butterfly <- function(id, ...) {
       checkboxInput(
         ns("legend_on"),
         "Add legend",
-        value = a$legend_on),
-      tags$label(
-        "Plot Settings",
-        class = "text-primary",
-        style = "margin-top: 15px;"),
-      plot_height_input(id = ns("butterflyplot"), value = a$plot_height)
+        value = a$legend_on)
     ),
     forms = tags$div(
       actionButton(
@@ -223,7 +218,7 @@ ui_g_butterfly <- function(id, ...) {
 
 }
 
-srv_g_butterfly <- function(input, output, session, datasets, dataname) {
+srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_height) {
 
   init_chunks()
 
@@ -248,7 +243,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
     updateCheckboxGroupInput(session, "left_val", choices = options_l, selected = options_l[1])
   })
 
-  output$plot <- renderPlot({
+  plot_r <- reactive({
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
@@ -344,11 +339,11 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname) {
 
   })
 
-  # Insert the plot into a plot_height module from teal.devel
-  callModule(plot_with_height,
+  # Insert the plot into a plot_with_settings module from teal.devel
+  callModule(plot_with_settings_srv,
              id = "butterflyplot",
-             plot_height = reactive(input$butterflyplot),
-             plot_id = session$ns("plot"))
+             plot_r = plot_r,
+             height = plot_height)
 
   observeEvent(input$show_rcode, {
     show_rcode_modal(

@@ -4,18 +4,14 @@
 #'
 #' @param id (\code{string}) id of this module. set to `NULL` if you want to make it identical
 #' to the module who called it.
-#' @param plot_height vector with three \code{integer} elements defining selected,
-#' min and max plot height, default is \code{c(600, 200, 2000)}
 #' @param titles (\code{string}) default titles
 #' @param footnotes (\code{string}) default footnotes
 #' @param fontsize a numeric vector with 3 values, selected font size and font size range,
 #' default is \code{c(5, 3, 7)}
 #' @importFrom teal optionalSliderInputValMinMax
 #' @importFrom shiny textInput textAreaInput NS
-#' @importFrom teal.devel plot_height_input
 #' @export
 ui_g_decorate <- function(id,
-                          plot_height = c(600, 200, 2000),
                           titles = "Titles",
                           footnotes = "footnotes",
                           fontsize = c(5, 4, 11)) {
@@ -28,9 +24,7 @@ ui_g_decorate <- function(id,
         step = 0.1
       ),
       textInput(ns("title"), "Title", value = titles),
-      textAreaInput(ns("foot"), "Footnote", value = footnotes, resize = "none"),
-      plot_height_input(id = ns("plot_height"),
-                        value = plot_height)
+      textAreaInput(ns("foot"), "Footnote", value = footnotes, resize = "none")
     )
   }
 
@@ -44,6 +38,8 @@ ui_g_decorate <- function(id,
 #' and functionality relating to the session
 #' @param plot_id (\code{string}) id for plot output
 #' @param plt a reactive object of graph object
+#' @param height vector with three \code{integer} elements defining selected,
+#' min and max plot height
 #'
 #' @importFrom shiny renderUI req plotOutput renderPlot reactive
 #' @importFrom grid grid.draw gpar
@@ -53,13 +49,11 @@ ui_g_decorate <- function(id,
 srv_g_decorate <- function(input,
                            output,
                            session,
-                           plot_id = "plot",
-                           plt = reactive(NULL)) {
-    output$out <- renderUI({
-      req(input$plot_height)
-      plotOutput(session$ns(plot_id), height = input$plot_height)
-    })
-    output[[plot_id]] <- renderPlot({
+                           plot_id = "out",
+                           plt = reactive(NULL),
+                           height) {
+
+    plot_r <- reactive({
       grid.draw(
         decorate_grob(
           plt(),
@@ -74,14 +68,22 @@ srv_g_decorate <- function(input,
         )
       )
     })
+
+    callModule(plot_with_settings_srv,
+               id = plot_id,
+               plot_r = plot_r,
+               height = height)
+
     return(reactive(input$fontsize))
   }
 
 #' Helper function to plot decorated output ui
 #'
 #' @param id (\code{string}) id of this element
+#' @param plot_height vector with three \code{integer} elements defining selected,
+#' min and max plot height, default is \code{c(600, 200, 2000)}
 #' @export
-plot_decorate_output <- function(id) {
+plot_decorate_output <- function(id, plot_height = c(600, 200, 2000)) {
   ns <- NS(id)
-  uiOutput(ns("out"))
+  plot_with_settings_ui(id = ns("out"), height = plot_height)
 }

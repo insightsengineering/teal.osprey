@@ -1,5 +1,6 @@
 # teal.osprey 0.1.5.9000
 
+* Replaced `plot_with_height` with `plot_with_settings` module throughout package.
 * issues with no news:
 
 # teal.osprey 0.1.5

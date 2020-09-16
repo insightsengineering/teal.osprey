@@ -66,7 +66,7 @@ tm_g_events_term_id <- function(label,
   module(
     label = label,
     server = srv_g_events_term_id,
-    server_args = list(label = label, dataname = dataname),
+    server_args = list(label = label, dataname = dataname, plot_height = plot_height),
     ui = ui_g_events_term_id,
     ui_args = args,
     filters = dataname
@@ -77,7 +77,7 @@ ui_g_events_term_id <- function(id, ...) {
   ns <- NS(id)
   args <- list(...)
   standard_layout(
-    output = white_small_well(plot_decorate_output(id = ns(NULL))),
+    output = white_small_well(plot_decorate_output(id = ns(NULL), plot_height = args$plot_height)),
     encoding = div(
       optionalSelectInput(
         ns("term"),
@@ -160,7 +160,6 @@ ui_g_events_term_id <- function(id, ...) {
       ),
       ui_g_decorate(
         ns(NULL),
-        plot_height = args$plot_height,
         fontsize = args$fontsize,
         titles = "Common AEs",
         footnotes = ""
@@ -177,9 +176,10 @@ srv_g_events_term_id <- function(input,
                                  session,
                                  datasets,
                                  dataname,
-                                 label) {
+                                 label,
+                                 plot_height) {
 
-  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt) # nolint
+  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, height = plot_height) # nolint
 
   init_chunks()
 

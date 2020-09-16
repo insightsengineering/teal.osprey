@@ -4,10 +4,13 @@
 \alias{plot_decorate_output}
 \title{Helper function to plot decorated output ui}
 \usage{
-plot_decorate_output(id)
+plot_decorate_output(id, plot_height = c(600, 200, 2000))
 }
 \arguments{
 \item{id}{(\code{string}) id of this element}
+
+\item{plot_height}{vector with three \code{integer} elements defining selected,
+min and max plot height, default is \code{c(600, 200, 2000)}}
 }
 \description{
 Helper function to plot decorated output ui

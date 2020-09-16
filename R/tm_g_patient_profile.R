@@ -237,7 +237,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
                        cm_dataname = cm_dataname,
                        lb_dataname = lb_dataname,
                        ae_line_col_opt = ae_line_col_opt,
-                       label = label),
+                       label = label,
+                       plot_height = plot_height),
     filters = "all"
   )
 }
@@ -248,8 +249,8 @@ ui_g_patient_profile <- function(id, ...) {
 
   standard_layout(
     output = white_small_well(
-      plot_height_output(
-        id = ns("patientprofileplot"))),
+      plot_with_settings_ui(
+        id = ns("patientprofileplot"), height = a$plot_height)),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       selectizeInput(
@@ -342,8 +343,7 @@ ui_g_patient_profile <- function(id, ...) {
           helpText("Enter TWO numeric values of study days range,
                    separated by comma (eg. -28, 750)")),
         value = a$x_limit
-        ),
-      plot_height_input(id = ns("patientprofileplot"), value = a$plot_height)
+        )
     ),
     forms = tags$div(actionButton(
       ns("show_rcode"),
@@ -365,14 +365,15 @@ srv_g_patient_profile <- function(input,
                                   lb_dataname,
                                   cm_dataname,
                                   label,
-                                  ae_line_col_opt
+                                  ae_line_col_opt,
+                                  plot_height
 ) {
 
   callModule(
-    plot_with_height,
+    plot_with_settings_srv,
     id = "patientprofileplot",
-    plot_height = reactive(input$patientprofileplot),
-    plot_id = session$ns("plot")
+    plot_r = plot_r,
+    height = plot_height
   )
 
   # initialize chunks
@@ -441,7 +442,7 @@ srv_g_patient_profile <- function(input,
   })
 
   # render plot
-  output$plot <- renderPlot({
+  plot_r <- reactive({
 
     # get inputs ---
     patient_id <- input$patient_id # nolint

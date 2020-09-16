@@ -4,7 +4,14 @@
 \alias{srv_g_decorate}
 \title{Helper server function to decorate plot output}
 \usage{
-srv_g_decorate(input, output, session, plot_id = "plot", plt = reactive(NULL))
+srv_g_decorate(
+  input,
+  output,
+  session,
+  plot_id = "out",
+  plt = reactive(NULL),
+  height
+)
 }
 \arguments{
 \item{input}{the session's \code{input} object}
@@ -17,6 +24,9 @@ and functionality relating to the session}
 \item{plot_id}{(\code{string}) id for plot output}
 
 \item{plt}{a reactive object of graph object}
+
+\item{height}{vector with three \code{integer} elements defining selected,
+min and max plot height}
 }
 \description{
 This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.

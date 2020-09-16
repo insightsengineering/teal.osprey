@@ -104,7 +104,7 @@ tm_g_spiderplot <- function(label,
     label = label,
     filters = dataname,
     server = srv_g_spider,
-    server_args = list(dataname = dataname, label = label),
+    server_args = list(dataname = dataname, label = label, plot_height = plot_height),
     ui = ui_g_spider,
     ui_args = args
   )
@@ -116,7 +116,7 @@ ui_g_spider <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = white_small_well(plot_height_output(id = ns("spiderplot"))),
+    output = white_small_well(plot_with_settings_ui(id = ns("spiderplot"), height = a$plot_height)),
     encoding =  div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
@@ -184,9 +184,7 @@ ui_g_spider <- function(id, ...) {
         label = div("Hortizontal Reference Line(s)",
                     tags$br(),
                     helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")),
-        value = a$href_line),
-      tags$label("Plot Settings", class = "text-primary", style = "margin-top: 15px;"),
-      plot_height_input(id = ns("spiderplot"), value = a$plot_height)
+        value = a$href_line)
     ),
     forms = tags$div(
       actionButton(ns("show_rcode"), "Show R Code", width = "100%")#,
@@ -197,21 +195,21 @@ ui_g_spider <- function(id, ...) {
 
 }
 
-srv_g_spider <- function(input, output, session, datasets, dataname, label) {
+srv_g_spider <- function(input, output, session, datasets, dataname, label, plot_height) {
 
   vals <- reactiveValues(spiderplot = NULL) # nolint
 
-  callModule(plot_with_height,
+  callModule(plot_with_settings_srv,
              id = "spiderplot",
-             plot_height = reactive(input$spiderplot),
-             plot_id = session$ns("plot")
+             plot_r = plot_r,
+             height = plot_height
   )
 
   # initialize chunks
   init_chunks()
 
   # render plot
-  output$plot <- renderPlot({
+  plot_r <- reactive({
 
     # get datasets ---
 
