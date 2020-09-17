@@ -507,5 +507,4 @@ srv_g_waterfall <- function(input,
       )
     )
   })
-
 }

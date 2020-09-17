@@ -41,7 +41,7 @@ ui_g_decorate <- function(id,
 #' @param height vector with three \code{integer} elements defining selected,
 #' min and max plot height
 #'
-#' @importFrom shiny renderUI req plotOutput renderPlot reactive
+#' @importFrom shiny renderUI req reactive
 #' @importFrom grid grid.draw gpar
 #' @importFrom tern decorate_grob
 #' @importFrom ggplot2 .pt
