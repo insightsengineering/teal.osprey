@@ -13,13 +13,15 @@
 #' default is \code{c(5, 3, 7)}
 #' @param plot_height vector with three \code{integer} elements defining selected,
 #' min and max plot height, default is \code{c(600, 200, 2000)}
-#' @import shiny
 #' @return a \code{\link[teal]{module}} object
+#' @importFrom rtables var_labels
+#'
 #' @export
 #'
 #' @examples
 #' library(random.cdisc.data)
 #' library(teal.osprey)
+#' library(rtables)
 #'
 #' ADSL <- radsl(cached = TRUE)
 #' ADAE <- radae(cached = TRUE)
@@ -225,7 +227,7 @@ srv_g_ae_oview <- function(input,
     ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
     # assign labels back to the data
-    anl_labels <- var_labels(datasets$get_data(dataname, filtered = FALSE))
+    anl_labels <- rtables::var_labels(datasets$get_data(dataname, filtered = FALSE))
     if (!is.null(input$add_flags)) {
       add_flag_labels <- anl_labels[names(anl_labels) == input$add_flags] # nolint
     }

@@ -69,7 +69,6 @@
 #' @template author_qit3
 #'
 #' @return plot object
-#' @import dplyr
 #' @importFrom rtables var_labels "var_labels<-"
 #' @importFrom purrr map_lgl map2_lgl
 #'
@@ -504,7 +503,7 @@ srv_g_patient_profile <- function(input,
         ADAE_FILTERED <- NULL # nolint
       } else {
         ADAE_FILTERED <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
-        var_labels(ADAE_FILTERED) <- var_labels(
+        rtables::var_labels(ADAE_FILTERED) <- rtables::var_labels(
           datasets$get_data(ae_dataname, filtered = FALSE)
         )
         validate_has_variable(ADAE_FILTERED, adae_vars)
@@ -642,7 +641,7 @@ srv_g_patient_profile <- function(input,
                          as.character(eval(parse(
                            text = .(sl_start_date)))), 1, 10)), units = "days")) + 1) %>%
             select(c(.(adae_vars), ASTDY, AENDY))
-          var_labels(ADAE)[.(ae_line_col_var)] <- var_labels(ADAE_FILTERED)[.(ae_line_col_var)]
+          rtables::var_labels(ADAE)[.(ae_line_col_var)] <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]
         })
         )
         chunks_eval()

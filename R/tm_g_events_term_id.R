@@ -13,6 +13,8 @@
 #' @param plot_height (\code{numeric}) range of plot height - 3 values
 #'
 #' @return an \code{\link[teal]{module}} object
+#' @importFrom rtables var_labels "var_labels<-"
+#'
 #' @export
 #'
 #' @author Liming Li (lil128) \email{liming.li@roche.com}
@@ -238,7 +240,7 @@ srv_g_events_term_id <- function(input,
 
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-    var_labels(ANL_FILTERED) <- var_labels(datasets$get_data(dataname, filtered = FALSE)) # nolint
+    rtables::var_labels(ANL_FILTERED) <- rtables::var_labels(datasets$get_data(dataname, filtered = FALSE)) # nolint
 
     anl_name <- paste0(dataname, "_FILTERED")
     assign(anl_name, ANL_FILTERED)

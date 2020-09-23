@@ -6,6 +6,8 @@
 #' @inheritParams tm_t_ae
 #'
 #' @return an \code{\link[teal]{module}} object
+#' @importFrom rtables as_html
+#'
 #' @export
 #'
 #' @template author_zhanc107
@@ -149,7 +151,7 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
     ))
 
     tbl <- chunks_eval()
-    as_html(tbl)
+    rtables::as_html(tbl)
   })
 
 

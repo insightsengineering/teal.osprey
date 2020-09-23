@@ -5,7 +5,10 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams tm_t_ae
+#'
 #' @return an \code{\link[teal]{module}} object
+#' @importFrom rtables as_html
+#'
 #' @export
 #'
 #' @template author_zhanc107
@@ -132,7 +135,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
 
     if (!chunks_is_ok()) validate(need(FALSE, paste0("could not calculate the table:\n\n", tbl)))
 
-    as_html(tbl)
+    rtables::as_html(tbl)
   })
 
 

@@ -8,8 +8,6 @@
 #' @param footnotes (\code{string}) default footnotes
 #' @param fontsize a numeric vector with 3 values, selected font size and font size range,
 #' default is \code{c(5, 3, 7)}
-#' @importFrom teal optionalSliderInputValMinMax
-#' @importFrom shiny textInput textAreaInput NS
 #' @export
 ui_g_decorate <- function(id,
                           titles = "Titles",
@@ -41,7 +39,6 @@ ui_g_decorate <- function(id,
 #' @param height vector with three \code{integer} elements defining selected,
 #' min and max plot height
 #'
-#' @importFrom shiny renderUI req reactive
 #' @importFrom grid grid.draw gpar
 #' @importFrom tern decorate_grob
 #' @importFrom ggplot2 .pt

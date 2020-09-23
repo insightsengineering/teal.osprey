@@ -40,6 +40,7 @@ Display AE overview plot as a shiny module
 \examples{
 library(random.cdisc.data)
 library(teal.osprey)
+library(rtables)
 
 ADSL <- radsl(cached = TRUE)
 ADAE <- radae(cached = TRUE)

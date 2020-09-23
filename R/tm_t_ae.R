@@ -36,6 +36,7 @@
 #'   used directly as filter.
 #'
 #' @return an \code{\link[teal]{module}} object
+#' @importFrom rtables as_html
 #' @export
 #'
 #' @template author_zhanc107
@@ -245,7 +246,7 @@ srv_t_ae <- function(input,
     chunks_validate_all("tbl", "rtable", "Evaluation with tern t_ae failed.")
     tbl <- chunks_get_var("tbl")
 
-    as_html(tbl)
+    rtables::as_html(tbl)
   })
 
   observeEvent(input$show_rcode, {

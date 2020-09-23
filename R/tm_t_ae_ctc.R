@@ -17,6 +17,7 @@
 #'   used directly as filter.
 #'
 #' @return an \code{\link[teal]{module}} object
+#' @importFrom rtables as_html
 #' @export
 #'
 #' @template author_zhanc107
@@ -203,7 +204,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
 
     validate(need(chunks_is_ok(), paste0("could not calculate the table:\n\n", tbl)))
 
-    as_html(tbl)
+    rtables::as_html(tbl)
   })
 
 

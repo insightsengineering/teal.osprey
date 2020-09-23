@@ -259,7 +259,6 @@ ui_g_waterfall <- function(id, ...){
   )
 }
 
-#' @importFrom dplyr filter group_by inner_join left_join select slice
 #' @importFrom tidyr pivot_wider
 srv_g_waterfall <- function(input,
                             output,
