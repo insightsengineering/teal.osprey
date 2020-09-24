@@ -365,16 +365,7 @@ srv_g_patient_profile <- function(input,
                                   cm_dataname,
                                   label,
                                   ae_line_col_opt,
-                                  plot_height
-) {
-
-  callModule(
-    plot_with_settings_srv,
-    id = "patientprofileplot",
-    plot_r = plot_r,
-    height = plot_height
-  )
-
+                                  plot_height) {
   # initialize chunks
   init_chunks()
 
@@ -942,6 +933,13 @@ srv_g_patient_profile <- function(input,
     chunks_eval()
 
   })
+
+  callModule(
+    plot_with_settings_srv,
+    id = "patientprofileplot",
+    plot_r = plot_r,
+    height = plot_height
+  )
 
   observeEvent(input$show_rcode, {
     show_rcode_modal(

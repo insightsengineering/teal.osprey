@@ -199,12 +199,6 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
 
   vals <- reactiveValues(spiderplot = NULL) # nolint
 
-  callModule(plot_with_settings_srv,
-             id = "spiderplot",
-             plot_r = plot_r,
-             height = plot_height
-  )
-
   # initialize chunks
   init_chunks()
 
@@ -355,6 +349,12 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
 
   })
 
+  callModule(
+    plot_with_settings_srv,
+    id = "spiderplot",
+    plot_r = plot_r,
+    height = plot_height
+  )
 
   observeEvent(input$show_rcode, {
     show_rcode_modal(
