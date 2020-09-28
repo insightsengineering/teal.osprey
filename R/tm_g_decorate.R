@@ -66,10 +66,11 @@ srv_g_decorate <- function(input,
       )
     })
 
-    callModule(plot_with_settings_srv,
-               id = plot_id,
-               plot_r = plot_r,
-               height = height)
+    callModule(
+      plot_with_settings_srv,
+      id = plot_id,
+      plot_r = plot_r,
+      height = height)
 
     return(reactive(input$fontsize))
   }

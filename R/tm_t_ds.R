@@ -141,11 +141,11 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
 
   observeEvent(input$show_rcode, {
     show_rcode_modal(
-        title = "Disposition table",
-        rcode = get_rcode(
-            datasets = datasets,
-            title = "R Code for the Current AE Overview Table"
-        )
+      title = "Disposition table",
+      rcode = get_rcode(
+        datasets = datasets,
+        title = "R Code for the Current AE Overview Table"
+      )
     )
   })
 

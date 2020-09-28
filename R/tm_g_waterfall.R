@@ -110,7 +110,7 @@ tm_g_waterfall <- function(label,
                            show_value = TRUE,
                            plot_height = c(1200, 400, 5000),
                            pre_output = NULL,
-                           post_output = NULL){
+                           post_output = NULL) {
 
   stopifnot(is_character_single(label))
   stopifnot(is_character_single(dataname_tr))

@@ -113,8 +113,8 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
     assign(adae_name, ADAE_FILTERED)
 
     adsl_vars <- unique(c("USUBJID", "STUDYID", arm_var, "DTHFL", "DCSREAS")) # nolint
-    adae_vars <- unique(c("USUBJID", "STUDYID", "AESOC", "AEDECOD",
-                         "AESDTH", "AESER", "AEACN", "AEREL", "AETOXGR")) ## add column name of extra flage here
+    adae_vars <- unique(## add column name of extra flage here
+      c("USUBJID", "STUDYID", "AESOC", "AEDECOD", "AESDTH", "AESER", "AEACN", "AEREL", "AETOXGR"))
 
     chunks_reset(envir = environment())
 
@@ -137,15 +137,15 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
       id = bquote(ANL$USUBJID),
       class = bquote(ANL$AESOC),
       term = bquote(ANL$AEDECOD),
-      flags = bquote(data.frame(dthfl = ANL$DTHFL,
-                                dcsreas = ANL$DCSREAS,
-                                aesdth = ANL$AESDTH,
-                                aeser = ANL$AESER,
-                                aeacn = ANL$AEACN,
-                                aerel = ANL$AEREL,
-                                aetoxgr = ANL$AETOXGR)),
-      display_id = c("fatal", "ser", "serwd", "serdsm", "relser",
-                     "wd", "dsm", "rel", "relwd", "reldsm", "ctc35"),
+      flags = bquote(data.frame(
+        dthfl = ANL$DTHFL,
+        dcsreas = ANL$DCSREAS,
+        aesdth = ANL$AESDTH,
+        aeser = ANL$AESER,
+        aeacn = ANL$AEACN,
+        aerel = ANL$AEREL,
+        aetoxgr = ANL$AETOXGR)),
+      display_id = c("fatal", "ser", "serwd", "serdsm", "relser", "wd", "dsm", "rel", "relwd", "reldsm", "ctc35"),
       col_by = bquote(droplevels(as.factor(ANL[[.(arm_var)]]))),
       total = total
     ))

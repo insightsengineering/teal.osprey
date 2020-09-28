@@ -136,8 +136,7 @@ ui_g_events_term_id <- function(id, ...) {
         optionalSelectInput(
           ns("axis"),
           "Axis Side",
-          choices = c("Left" = "left",
-                      "Right" = "right"),
+          choices = c("Left" = "left", "Right" = "right"),
           selected = "left"
         ),
         sliderInput(
@@ -226,14 +225,16 @@ srv_g_events_term_id <- function(input,
       trt_index <- 2
     }
 
-    updateSelectInput(session,
-                      "arm_ref",
-                      selected = choices[1],
-                      choices = choices)
-    updateSelectInput(session,
-                      "arm_trt",
-                      selected = choices[trt_index],
-                      choices = choices)
+    updateSelectInput(
+      session,
+      "arm_ref",
+      selected = choices[1],
+      choices = choices)
+    updateSelectInput(
+      session,
+      "arm_trt",
+      selected = choices[trt_index],
+      choices = choices)
   })
 
   plt <- reactive({

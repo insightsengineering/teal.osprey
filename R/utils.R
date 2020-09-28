@@ -44,10 +44,12 @@ label_aevar <- function(x) {
   return(out_label)
 }
 
-ci_choices <- setNames(c("wald", "waldcc", "ac", "scorecc", "score", "mn", "mee", "blj", "ha"),
-                       c("Wald", "Corrected Wald", "Agresti-Caffo", "Newcombe",
-                         "Score", "Miettinen and Nurminen", "Mee",
-                         "Brown, Li's Jeffreys", "Hauck-Anderson"))
+ci_choices <- setNames(
+  c("wald", "waldcc", "ac", "scorecc", "score", "mn", "mee", "blj", "ha"),
+  c("Wald", "Corrected Wald", "Agresti-Caffo", "Newcombe",
+    "Score", "Miettinen and Nurminen", "Mee",
+    "Brown, Li's Jeffreys", "Hauck-Anderson")
+  )
 
 #' retrieve name of ci method
 #' @param x ci method to retrieve its name

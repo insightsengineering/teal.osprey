@@ -81,10 +81,11 @@ tm_g_ae_oview <- function(label,
   module(
     label = label,
     server = srv_g_ae_oview,
-    server_args = list(label = label,
-                       dataname = dataname,
-                       add_flag = add_flag,
-                       plot_height = plot_height),
+    server_args = list(
+      label = label,
+      dataname = dataname,
+      add_flag = add_flag,
+      plot_height = plot_height),
     ui = ui_g_ae_oview,
     ui_args = args,
     filters = dataname
@@ -205,21 +206,24 @@ srv_g_ae_oview <- function(input,
       trt_index <- 2
     }
 
-    updateSelectInput(session,
-                      "arm_ref",
-                      selected = choices[1],
-                      choices = choices)
-    updateSelectInput(session,
-                      "arm_trt",
-                      selected = choices[trt_index],
-                      choices = choices)
+    updateSelectInput(
+      session,
+      "arm_ref",
+      selected = choices[1],
+      choices = choices)
+    updateSelectInput(
+      session,
+      "arm_trt",
+      selected = choices[trt_index],
+      choices = choices)
 
     flags <- osprey::create_flag_vars(ANL_FILTERED)
 
-    updateSelectInput(session,
-                      "flags_select",
-                      selected = names(flags),
-                      choices = names(flags))
+    updateSelectInput(
+      session,
+      "flags_select",
+      selected = names(flags),
+      choices = names(flags))
   })
 
   plt <- reactive({

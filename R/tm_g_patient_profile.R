@@ -229,15 +229,16 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     ui = ui_g_patient_profile,
     ui_args = args,
     server = srv_g_patient_profile,
-    server_args = list(sl_dataname = sl_dataname,
-                       ex_dataname = ex_dataname,
-                       ae_dataname = ae_dataname,
-                       rs_dataname = rs_dataname,
-                       cm_dataname = cm_dataname,
-                       lb_dataname = lb_dataname,
-                       ae_line_col_opt = ae_line_col_opt,
-                       label = label,
-                       plot_height = plot_height),
+    server_args = list(
+      sl_dataname = sl_dataname,
+      ex_dataname = ex_dataname,
+      ae_dataname = ae_dataname,
+      rs_dataname = rs_dataname,
+      cm_dataname = cm_dataname,
+      lb_dataname = lb_dataname,
+      ae_line_col_opt = ae_line_col_opt,
+      label = label,
+      plot_height = plot_height),
     filters = "all"
   )
 }
@@ -248,8 +249,7 @@ ui_g_patient_profile <- function(id, ...) {
 
   standard_layout(
     output = white_small_well(
-      plot_with_settings_ui(
-        id = ns("patientprofileplot"), height = a$plot_height)),
+      plot_with_settings_ui(id = ns("patientprofileplot"), height = a$plot_height)),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       selectizeInput(
@@ -260,10 +260,11 @@ ui_g_patient_profile <- function(id, ...) {
         ),
       helpText("Select", tags$code("ADaM"), "Domains"),
       div(
-      style = "border-left: 3px solid #e3e3e3;
-               padding-left: 0.6em;
-               border-radius: 5px;
-               margin-left: -0.6m;",
+      style =
+        "border-left: 3px solid #e3e3e3;
+        padding-left: 0.6em;
+        border-radius: 5px;
+        margin-left: -0.6m;",
       uiOutput(ns("select_ae_output")),
       uiOutput(ns("select_ex_output")),
       uiOutput(ns("select_rs_output")),
@@ -287,7 +288,8 @@ ui_g_patient_profile <- function(id, ...) {
           "Exposure variable",
           choices = a$ex_var$choices,
           selected = a$ex_var$selected,
-          multiple = FALSE)),
+          multiple = FALSE)
+        ),
       conditionalPanel(
         paste0("input['", ns("select_ae"), "']"),
         optionalSelectInput(
@@ -301,7 +303,8 @@ ui_g_patient_profile <- function(id, ...) {
           "Adverse Event line color variable",
           choices = a$ae_line_col_var$choices,
           selected = a$ae_line_col_var$selected,
-          multiple = FALSE)),
+          multiple = FALSE)
+        ),
       conditionalPanel(
         paste0("input['", ns("select_rs"), "']"),
         optionalSelectInput(
@@ -309,7 +312,8 @@ ui_g_patient_profile <- function(id, ...) {
           "Tumor response variable",
           choices = a$rs_var$choices,
           selected = a$rs_var$selected,
-          multiple = FALSE)),
+          multiple = FALSE)
+        ),
       conditionalPanel(
         paste0("input['", ns("select_cm"), "']"),
         optionalSelectInput(
@@ -317,7 +321,8 @@ ui_g_patient_profile <- function(id, ...) {
           "Concomittant medicine variable",
           choices = a$cm_var$choices,
           selected = a$cm_var$selected,
-          multiple = FALSE)),
+          multiple = FALSE)
+        ),
       conditionalPanel(
         paste0("input['", ns("select_lb"), "']"),
         optionalSelectInput(
@@ -339,8 +344,7 @@ ui_g_patient_profile <- function(id, ...) {
         label = div(
           "Study Days Range",
           tags$br(),
-          helpText("Enter TWO numeric values of study days range,
-                   separated by comma (eg. -28, 750)")),
+          helpText("Enter TWO numeric values of study days range, separated by comma (eg. -28, 750)")),
         value = a$x_limit
         )
     ),
@@ -562,7 +566,7 @@ srv_g_patient_profile <- function(input,
       ~ if (!.x) {
         input[[paste("select", .y, sep = "_")]]
       } else {
-          FALSE
+        FALSE
         }
       )
 
@@ -588,7 +592,8 @@ srv_g_patient_profile <- function(input,
         mutate(
           max_day = as.numeric(
             as.Date(.data$max_date) - as.Date(
-              eval(parse(text = .(sl_start_date))), "%d%b%Y")) + 1) %>%
+              eval(parse(text = .(sl_start_date))), "%d%b%Y")) + 1
+          ) %>%
         filter(USUBJID == .(patient_id))
     }))
 
@@ -621,16 +626,20 @@ srv_g_patient_profile <- function(input,
             as.data.frame() %>%
             filter(!is.na(ASTDT)) %>%
             mutate(ASTDY = as.numeric(
-              difftime(ASTDT,
-                       as.Date(substr(
-                         as.character(eval(parse(
-                           text = .(sl_start_date)))), 1, 10)), units = "days")) + 1) %>%
+              difftime(
+                ASTDT,
+                as.Date(substr(
+                  as.character(eval(parse(
+                    text = .(sl_start_date)))), 1, 10)), units = "days")) + 1
+              ) %>%
             filter(!is.na(AENDT)) %>%
             mutate(AENDY = as.numeric(
-              difftime(AENDT,
-                       as.Date(substr(
-                         as.character(eval(parse(
-                           text = .(sl_start_date)))), 1, 10)), units = "days")) + 1) %>%
+              difftime(
+                AENDT,
+                as.Date(substr(
+                  as.character(eval(parse(
+                    text = .(sl_start_date)))), 1, 10)), units = "days")) + 1
+              ) %>%
             select(c(.(adae_vars), ASTDY, AENDY))
           rtables::var_labels(ADAE)[.(ae_line_col_var)] <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]
         })
@@ -689,11 +698,13 @@ srv_g_patient_profile <- function(input,
           ADRS <- ADSL %>% # nolint
             left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
             as.data.frame() %>%
-            mutate(ADY = as.numeric(difftime(
+            mutate(
+              ADY = as.numeric(difftime(
               ADT,
               as.Date(substr(
                 as.character(eval(parse(
-                  text = .(sl_start_date)))), 1, 10)), units = "days")) + 1) %>%
+                  text = .(sl_start_date)))), 1, 10)), units = "days")) + 1
+              ) %>%
             select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
             filter(is.na(ADY) == FALSE)
           rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, .(rs_var)]))
@@ -777,7 +788,8 @@ srv_g_patient_profile <- function(input,
             filter(!is.na(ASTDT)) %>%
             select(
               USUBJID, ASTDT, PARCAT2,
-              AVAL, AVALU, PARAMCD, !!quo(.(sl_start_date)))
+              AVAL, AVALU, PARAMCD, !!quo(.(sl_start_date))
+            )
           ADEX <- split(ADEX, ADEX$USUBJID) %>% # nolint
             lapply(function(pinfo) {
               pinfo %>%
@@ -785,9 +797,11 @@ srv_g_patient_profile <- function(input,
                 ungroup %>%
                 mutate(diff = c(0, diff(AVAL, lag = 1))) %>%
                 mutate(
-                  Modification = case_when(diff < 0 ~ "Decrease",
-                                           diff > 0 ~ "Increase",
-                                           diff == 0 ~ "None")) %>%
+                  Modification = case_when(
+                    diff < 0 ~ "Decrease",
+                    diff > 0 ~ "Increase",
+                    diff == 0 ~ "None")
+                  ) %>%
                 mutate(ASTDT_dur = as.numeric(
                   as.Date(substr(as.character(ASTDT), 1, 10)) -
                     as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))) + 1
@@ -838,7 +852,8 @@ srv_g_patient_profile <- function(input,
             as.data.frame() %>%
             select(
               USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, !!quo(.(sl_start_date)),
-              LBTESTCD, ANRIND, !!quo(.(lb_var)))
+              LBTESTCD, ANRIND, !!quo(.(lb_var))
+            )
 
           ADLB <- ADLB %>%  # nolint
             mutate(ADY = as.numeric(difftime(
@@ -896,8 +911,7 @@ srv_g_patient_profile <- function(input,
 
     # Convert x_limit to numeric vector
     if (!is.null(x_limit) || x_limit != "") {
-      chunks_push(bquote(x_limit <-
-                           as.numeric(unlist(strsplit(.(x_limit), ",")))))
+      chunks_push(bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit), ",")))))
       chunks_eval()
       x_limit <- chunks_get_var("x_limit")
     }

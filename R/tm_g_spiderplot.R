@@ -175,15 +175,17 @@ ui_g_spider <- function(id, ...) {
         value = a$legend_on),
       textInput(
         ns("vref_line"),
-        label = div("Vertical Reference Line(s)",
-                    tags$br(),
-                    helpText("Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)")),
+        label = div(
+          "Vertical Reference Line(s)",
+          tags$br(),
+          helpText("Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)")),
         value = a$vref_line),
       textInput(
         ns("href_line"),
-        label = div("Hortizontal Reference Line(s)",
-                    tags$br(),
-                    helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")),
+        label = div(
+          "Hortizontal Reference Line(s)",
+          tags$br(),
+          helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")),
         value = a$href_line)
     ),
     forms = tags$div(
@@ -281,8 +283,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     }
 
     # validate vref_line
-    validate(need(all(!is.na(vref_line)),
-                  "Not all values entered for reference line(s) were numeric"))
+    validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
 
     # reference lines preprocessing - horizontal
     if (!is.null(href_line) || href_line != "") {

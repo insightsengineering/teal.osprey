@@ -102,8 +102,7 @@ tm_g_butterfly <- function(label,
                            color_by_var,
                            count_by_var,
                            facet_var = NULL,
-                           sort_by_var = choices_selected(selected = "count",
-                                                          choices = c("count", "alphabetical")),
+                           sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
                            legend_on = TRUE,
                            plot_height = c(600, 200, 2000),
                            pre_output = NULL,
@@ -147,8 +146,8 @@ ui_g_butterfly <- function(id, ...) {
       helpText("Dataset is:", tags$code(a$dataname)),
       optionalSelectInput(
         ns("filter_var"),
-        label = "Preset Data Filters \n Observations with value of 'Y'
-                for selected variable(s) will be used for analysis",
+        label =
+          "Preset Data Filters Observations with value of 'Y' for selected variable(s) will be used for analysis",
         choices = a$filter_var$choices,
         selected = a$filter_var$selected, multiple = TRUE),
       optionalSelectInput(
@@ -340,10 +339,11 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
   })
 
   # Insert the plot into a plot_with_settings module from teal.devel
-  callModule(plot_with_settings_srv,
-             id = "butterflyplot",
-             plot_r = plot_r,
-             height = plot_height)
+  callModule(
+    plot_with_settings_srv,
+    id = "butterflyplot",
+    plot_r = plot_r,
+    height = plot_height)
 
   observeEvent(input$show_rcode, {
     show_rcode_modal(
