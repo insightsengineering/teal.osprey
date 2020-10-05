@@ -1,7 +1,7 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Date: 2020-08-17
-Version: 0.1.5.9000
+Date: 2020-10-05
+Version: 0.1.6
 Authors@R: c(
   person("Nina", "Qi", email = "qit3@gene.com", role = c("aut", "cre")),
   person("Chendi", "Liao", email = "chendi.liao@roche.com", role = c("aut")),
@@ -12,23 +12,23 @@ Description: Community efforts to collect teal modules for TLGs defined in the o
   The teal modules add an encoding panel to interactively change the encoding within teal.
 Depends:
   R (>= 3.3),
-  osprey (>= 0.1.5),
+  osprey (>= 0.1.6),
   shiny,
-  teal (>= 0.9.0)
+  teal (>= 0.9.1)
 Imports:
   ggplot2,
   dplyr,
   purrr,
   rtables (>= 0.1.7),
-  teal.devel (>= 0.2.6),
+  teal.devel (>= 0.2.7),
   tidyr,
-  utils.nest (>= 0.2.5),
-  tern (>= 0.6.8)
+  utils.nest (>= 0.2.6),
+  tern (>= 0.6.9)
 Suggests:
   knitr,
-  random.cdisc.data (>= 0.3.5),
+  random.cdisc.data (>= 0.3.6),
   rmarkdown,
-  test.nest (>= 0.2.4),
+  test.nest (>= 0.2.5),
   testthat (>= 2.0)
 License: file LICENSE
 Encoding: UTF-8
