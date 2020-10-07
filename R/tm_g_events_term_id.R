@@ -2,15 +2,16 @@
 #'
 #' Display Events by Term plot as a shiny module
 #'
-#' @param label menu item label of the module in the teal app
-#' @param dataname (\code{string}) analysis data used in teal module, needs to be
+#' @inheritParams shared_params
+#' @param dataname (\code{character}) analysis data used in teal module, needs to be
 #' available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 #' @param term_var \code{\link[teal]{choices_selected}} object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
 #' @param arm_var \code{\link[teal]{choices_selected}} object with all available choices
 #' and pre-selected option for variable names that can be used as \code{arm_var}
 #' @param fontsize (\code{numeric}) vector of choices for font size
-#' @param plot_height (\code{numeric}) range of plot height - 3 values
+#' @param plot_height optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+#'   the height of the main plot. Default is \code{c(600, 200, 2000)}.
 #'
 #' @return an \code{\link[teal]{module}} object
 #' @importFrom rtables var_labels "var_labels<-"
@@ -55,12 +56,14 @@ tm_g_events_term_id <- function(label,
                                 term_var,
                                 arm_var,
                                 fontsize = c(5, 3, 7),
-                                plot_height = c(600, 200, 2000)
+                                plot_height = c(600L, 200L, 2000L),
+                                plot_width = NULL
                                 ) {
   stopifnot(is_character_single(label))
   stopifnot(is.choices_selected(term_var))
   stopifnot(is.choices_selected(arm_var))
-  stopifnot(is_numeric_vector(plot_height))
+  check_slider_input(plot_height, allow_null = FALSE)
+  check_slider_input(plot_width)
   stopifnot(is_numeric_vector(fontsize))
 
   args <- as.list(environment())
@@ -68,7 +71,7 @@ tm_g_events_term_id <- function(label,
   module(
     label = label,
     server = srv_g_events_term_id,
-    server_args = list(label = label, dataname = dataname, plot_height = plot_height),
+    server_args = list(label = label, dataname = dataname, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_events_term_id,
     ui_args = args,
     filters = dataname
@@ -79,7 +82,9 @@ ui_g_events_term_id <- function(id, ...) {
   ns <- NS(id)
   args <- list(...)
   standard_layout(
-    output = white_small_well(plot_decorate_output(id = ns(NULL), plot_height = args$plot_height)),
+    output = white_small_well(
+      plot_decorate_output(id = ns(NULL), plot_height = args$plot_height, plot_width = args$plot_width)
+      ),
     encoding = div(
       optionalSelectInput(
         ns("term"),
@@ -178,9 +183,10 @@ srv_g_events_term_id <- function(input,
                                  datasets,
                                  dataname,
                                  label,
-                                 plot_height) {
+                                 plot_height,
+                                 plot_width) {
 
-  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, height = plot_height) # nolint
+  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
   init_chunks()
 

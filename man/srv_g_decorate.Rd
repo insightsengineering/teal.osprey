@@ -10,7 +10,8 @@ srv_g_decorate(
   session,
   plot_id = "out",
   plt = reactive(NULL),
-  height
+  plot_height,
+  plot_width
 )
 }
 \arguments{
@@ -21,12 +22,15 @@ srv_g_decorate(
 \item{session}{session object is an environment that can be used to access information
 and functionality relating to the session}
 
-\item{plot_id}{(\code{string}) id for plot output}
+\item{plot_id}{(\code{character}) id for plot output}
 
-\item{plt}{a reactive object of graph object}
+\item{plt}{(\code{reactive}) a reactive object of graph object}
 
-\item{height}{vector with three \code{integer} elements defining selected,
-min and max plot height}
+\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the height of the main plot.}
+
+\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 }
 \description{
 This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.

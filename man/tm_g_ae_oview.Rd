@@ -10,13 +10,15 @@ tm_g_ae_oview(
   arm_var,
   add_flag = NULL,
   fontsize = c(5, 3, 7),
-  plot_height = c(600, 200, 2000)
+  plot_height = c(600L, 200L, 2000L),
+  plot_width = NULL
 )
 }
 \arguments{
-\item{label}{(\code{string}) menu item label of the module in the teal app}
+\item{label}{(\code{character}) module label in the teal app. Please note that this module is developed based on
+ADaM data structure and ADaM variables.}
 
-\item{dataname}{(\code{string}) analysis data used in teal module, needs to be
+\item{dataname}{(\code{character}) analysis data used in teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
 \item{arm_var}{\code{\link[teal]{choices_selected}} object with all available choices
@@ -28,8 +30,11 @@ additional flags, default is \code{NULL} (i.e. no additional flags will be added
 \item{fontsize}{a numeric vector with 3 values, selected font size and font size range,
 default is \code{c(5, 3, 7)}}
 
-\item{plot_height}{vector with three \code{integer} elements defining selected,
-min and max plot height, default is \code{c(600, 200, 2000)}}
+\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the height of the main plot. Default is \code{c(600, 200, 2000)}.}
+
+\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 }
 \value{
 a \code{\link[teal]{module}} object

@@ -12,12 +12,12 @@ ui_g_decorate(
 )
 }
 \arguments{
-\item{id}{(\code{string}) id of this module. set to `NULL` if you want to make it identical
+\item{id}{(\code{character}) id of this module. set to `NULL` if you want to make it identical
 to the module who called it.}
 
-\item{titles}{(\code{string}) default titles}
+\item{titles}{(\code{character}) default titles}
 
-\item{footnotes}{(\code{string}) default footnotes}
+\item{footnotes}{(\code{character}) default footnotes}
 
 \item{fontsize}{a numeric vector with 3 values, selected font size and font size range,
 default is \code{c(5, 3, 7)}}

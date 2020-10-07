@@ -18,7 +18,8 @@ tm_g_spiderplot(
   href_line = NULL,
   anno_txt_var = TRUE,
   legend_on = FALSE,
-  plot_height = c(600, 200, 2000),
+  plot_height = c(600L, 200L, 2000L),
+  plot_width = NULL,
   pre_output = NULL,
   post_output = NULL
 )
@@ -53,7 +54,11 @@ Note that the data is expected to be in vertical form with the
 
 \item{legend_on}{boolean value for whether legend is displayed}
 
-\item{plot_height}{range of plot height}
+\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the height of the main plot.}
+
+\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example a title.}
@@ -97,10 +102,7 @@ app <- teal::init(
       xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
       yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
       vref_line = "10, 37",
-      href_line = "-20, 0",
-      anno_txt_var = TRUE,
-      legend_on = FALSE,
-      plot_height = c(600, 200, 2000)
+      href_line = "-20, 0"
     )
   )
 )

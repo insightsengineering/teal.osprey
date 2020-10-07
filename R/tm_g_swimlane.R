@@ -2,7 +2,8 @@
 #'
 #' This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data
 #'
-#' @param label item label of the module in the teal app
+#' @inheritParams teal.devel::standard_layout
+#' @inheritParams shared_params
 #' @param dataname analysis data used for plotting, needs to be available in the list passed to the \code{data}
 #'     argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ADSL" should be
 #'     the input. If markers are to be plotted, data name for the marker data should be the input
@@ -21,8 +22,6 @@
 #'      otherwise color will be assigned by \code{ggplot} default
 #' @param vref_line vertical reference lines
 #' @param anno_txt_var character vector with subject-level variable names that are selected as annotation
-#' @param plot_height plot height
-#' @inheritParams teal.devel::standard_layout
 #'
 #' @return a \code{\link[teal]{module}} object
 #'
@@ -101,6 +100,7 @@ tm_g_swimlane <- function(label,
                           anno_txt_var = NULL,
                           vref_line = NULL,
                           plot_height = c(1200L, 400L, 5000L),
+                          plot_width = NULL,
                           pre_output = NULL,
                           post_output = NULL) {
   args <- as.list(environment())
@@ -116,7 +116,8 @@ tm_g_swimlane <- function(label,
   stopifnot(is_character_vector(marker_color_opt))
   stopifnot(is.choices_selected(anno_txt_var))
   stopifnot(is_numeric_vector(vref_line))
-  stopifnot(is_integer_vector(plot_height))
+  check_slider_input(plot_height, allow_null = FALSE)
+  check_slider_input(plot_width)
 
   module(
     label = label,
@@ -131,7 +132,8 @@ tm_g_swimlane <- function(label,
       marker_color_var,
       marker_color_opt = marker_color_opt,
       label = label,
-      plot_height = plot_height
+      plot_height = plot_height,
+      plot_width = plot_width
     ),
     filters = dataname
   )
@@ -143,7 +145,9 @@ ui_g_swimlane <- function(id, ...) {
   ns <- NS(id)
 
   standard_layout(
-    output = white_small_well(plot_with_settings_ui(id = ns("swimlaneplot"), height = a$plot_height)),
+    output = white_small_well(
+      plot_with_settings_ui(id = ns("swimlaneplot"), height = a$plot_height, width = a$plot_width)
+      ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
@@ -207,7 +211,8 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
                            marker_color_var,
                            marker_color_opt,
                            label,
-                           plot_height) {
+                           plot_height,
+                           plot_width) {
 
   # use teal.devel code chunks
   init_chunks()
@@ -479,7 +484,8 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
   callModule(plot_with_settings_srv,
              id = "swimlaneplot",
              plot_r = plot_r,
-             height = plot_height
+             height = plot_height,
+             width = plot_width
   )
 
   observeEvent(input$show_rcode, {

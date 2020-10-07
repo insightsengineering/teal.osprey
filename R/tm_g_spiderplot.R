@@ -3,6 +3,8 @@
 #'
 #' Display spider plot as a shiny module
 #'
+#' @inheritParams teal.devel::standard_layout
+#' @inheritParams shared_params
 #' @param label menu item label of the module in the teal app
 #' @param dataname analysis data used in teal module, needs to be available in
 #'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
@@ -19,8 +21,6 @@
 #' @param legend_on boolean value for whether legend is displayed
 #' @param xfacet_var variable for x facets
 #' @param yfacet_var variable for y facets
-#' @param plot_height range of plot height
-#' @inheritParams teal.devel::standard_layout
 #'
 #' @return an \code{\link[teal]{module}} object
 #' @export
@@ -57,10 +57,7 @@
 #'       xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
 #'       yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
 #'       vref_line = "10, 37",
-#'       href_line = "-20, 0",
-#'       anno_txt_var = TRUE,
-#'       legend_on = FALSE,
-#'       plot_height = c(600, 200, 2000)
+#'       href_line = "-20, 0"
 #'     )
 #'   )
 #' )
@@ -82,7 +79,8 @@ tm_g_spiderplot <- function(label,
                             href_line = NULL,
                             anno_txt_var = TRUE,
                             legend_on = FALSE,
-                            plot_height = c(600, 200, 2000),
+                            plot_height = c(600L, 200L, 2000L),
+                            plot_width = NULL,
                             pre_output = NULL,
                             post_output = NULL) {
 
@@ -97,14 +95,15 @@ tm_g_spiderplot <- function(label,
   stopifnot(is_character_single(href_line))
   stopifnot(is_logical_single(anno_txt_var))
   stopifnot(is_logical_single(legend_on))
-  stopifnot(is_numeric_vector(plot_height))
+  check_slider_input(plot_height, allow_null = FALSE)
+  check_slider_input(plot_width)
 
   args <- as.list(environment())
   module(
     label = label,
     filters = dataname,
     server = srv_g_spider,
-    server_args = list(dataname = dataname, label = label, plot_height = plot_height),
+    server_args = list(dataname = dataname, label = label, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_spider,
     ui_args = args
   )
@@ -116,7 +115,9 @@ ui_g_spider <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = white_small_well(plot_with_settings_ui(id = ns("spiderplot"), height = a$plot_height)),
+    output = white_small_well(
+      plot_with_settings_ui(id = ns("spiderplot"), height = a$plot_height, width = a$plot_width)
+      ),
     encoding =  div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
@@ -197,7 +198,7 @@ ui_g_spider <- function(id, ...) {
 
 }
 
-srv_g_spider <- function(input, output, session, datasets, dataname, label, plot_height) {
+srv_g_spider <- function(input, output, session, datasets, dataname, label, plot_height, plot_width) {
 
   vals <- reactiveValues(spiderplot = NULL) # nolint
 
@@ -354,7 +355,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     plot_with_settings_srv,
     id = "spiderplot",
     plot_r = plot_r,
-    height = plot_height
+    height = plot_height,
+    width = plot_width
   )
 
   observeEvent(input$show_rcode, {

@@ -22,13 +22,15 @@ tm_g_waterfall(
   href_line = NULL,
   gap_point_val = NULL,
   show_value = TRUE,
-  plot_height = c(1200, 400, 5000),
+  plot_height = c(1200L, 400L, 5000L),
+  plot_width = NULL,
   pre_output = NULL,
   post_output = NULL
 )
 }
 \arguments{
-\item{label}{module label in the teal app}
+\item{label}{(\code{character}) module label in the teal app. Please note that this module is developed based on
+ADaM data structure and ADaM variables.}
 
 \item{dataname_tr}{tumor burden analysis data used in teal module to plot as bar height, needs to
 be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}}
@@ -77,7 +79,11 @@ than others, default is \code{NULL}}
 
 \item{show_value}{boolean of whether value of bar height is shown, default is \code{TRUE}}
 
-\item{plot_height}{plot height}
+\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the height of the main plot.}
+
+\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example a title.}
@@ -125,13 +131,7 @@ x <- teal::init(
       anno_txt_var_sl = choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
       anno_txt_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
       facet_var = choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
-      ytick_at = 20,
-      href_line = "-30, 20",
-      gap_point_val = NULL,
-      show_value = TRUE,
-      plot_height = c(1200L, 400L, 5000L),
-      pre_output = NULL,
-      post_output = NULL
+      href_line = "-30, 20"
     )
   )
 )

@@ -2,8 +2,8 @@
 #'
 #' Display AE overview plot as a shiny module
 #'
-#' @param label (\code{string}) menu item label of the module in the teal app
-#' @param dataname (\code{string}) analysis data used in teal module, needs to be
+#' @inheritParams shared_params
+#' @param dataname (\code{character}) analysis data used in teal module, needs to be
 #' available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 #' @param arm_var \code{\link[teal]{choices_selected}} object with all available choices
 #' and pre-selected option for variable names that can be used as \code{arm_var}
@@ -11,8 +11,9 @@
 #' additional flags, default is \code{NULL} (i.e. no additional flags will be added)
 #' @param fontsize a numeric vector with 3 values, selected font size and font size range,
 #' default is \code{c(5, 3, 7)}
-#' @param plot_height vector with three \code{integer} elements defining selected,
-#' min and max plot height, default is \code{c(600, 200, 2000)}
+#' @param plot_height optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+#'   the height of the main plot. Default is \code{c(600, 200, 2000)}.
+#'
 #' @return a \code{\link[teal]{module}} object
 #' @importFrom rtables var_labels
 #'
@@ -70,11 +71,13 @@ tm_g_ae_oview <- function(label,
                           arm_var,
                           add_flag = NULL,
                           fontsize = c(5, 3, 7),
-                          plot_height = c(600, 200, 2000)
-) {
+                          plot_height = c(600L, 200L, 2000L),
+                          plot_width = NULL
+                          ) {
   stopifnot(is.choices_selected(arm_var))
   stopifnot(is.choices_selected(add_flag))
-  stopifnot(is_numeric_vector(plot_height))
+  check_slider_input(plot_height, allow_null = FALSE)
+  check_slider_input(plot_width)
 
   args <- as.list(environment())
 
@@ -85,7 +88,8 @@ tm_g_ae_oview <- function(label,
       label = label,
       dataname = dataname,
       add_flag = add_flag,
-      plot_height = plot_height),
+      plot_height = plot_height,
+      plot_width = plot_width),
     ui = ui_g_ae_oview,
     ui_args = args,
     filters = dataname
@@ -96,7 +100,9 @@ ui_g_ae_oview <- function(id, ...) {
   ns <- NS(id)
   args <- list(...)
   standard_layout(
-    output = white_small_well(plot_decorate_output(id = ns(NULL), plot_height = args$plot_height)),
+    output = white_small_well(
+      plot_decorate_output(id = ns(NULL), plot_height = args$plot_height, plot_width = args$plot_width)
+      ),
     encoding = div(
       optionalSelectInput(
         ns("arm_var"),
@@ -173,9 +179,10 @@ srv_g_ae_oview <- function(input,
                            dataname,
                            label,
                            add_flag,
-                           plot_height) {
+                           plot_height,
+                           plot_width) {
   init_chunks()
-  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, height = plot_height) # nolint
+  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
   observe({
     req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))

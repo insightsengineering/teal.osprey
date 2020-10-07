@@ -10,13 +10,15 @@ tm_g_events_term_id(
   term_var,
   arm_var,
   fontsize = c(5, 3, 7),
-  plot_height = c(600, 200, 2000)
+  plot_height = c(600L, 200L, 2000L),
+  plot_width = NULL
 )
 }
 \arguments{
-\item{label}{menu item label of the module in the teal app}
+\item{label}{(\code{character}) module label in the teal app. Please note that this module is developed based on
+ADaM data structure and ADaM variables.}
 
-\item{dataname}{(\code{string}) analysis data used in teal module, needs to be
+\item{dataname}{(\code{character}) analysis data used in teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
 \item{term_var}{\code{\link[teal]{choices_selected}} object with all available choices
@@ -27,7 +29,11 @@ and pre-selected option for variable names that can be used as \code{arm_var}}
 
 \item{fontsize}{(\code{numeric}) vector of choices for font size}
 
-\item{plot_height}{(\code{numeric}) range of plot height - 3 values}
+\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the height of the main plot. Default is \code{c(600, 200, 2000)}.}
+
+\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 }
 \value{
 an \code{\link[teal]{module}} object

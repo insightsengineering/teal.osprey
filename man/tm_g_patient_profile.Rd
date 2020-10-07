@@ -27,13 +27,14 @@ tm_g_patient_profile(
   cm_var = NULL,
   lb_var = NULL,
   x_limit = "-28, 365",
-  plot_height = c(1200, 400, 5000),
+  plot_height = c(1200L, 400L, 5000L),
+  plot_width = NULL,
   pre_output = NULL,
   post_output = NULL
 )
 }
 \arguments{
-\item{label}{module label in the teal app, please be noted that this module is developed based on
+\item{label}{(\code{character}) module label in the teal app. Please note that this module is developed based on
 ADaM data structure and ADaM variables.}
 
 \item{patient_id}{(\code{choices_seleced}) unique subject ID variable}
@@ -112,11 +113,18 @@ leave unspecified or set to \code{NULL} if labs data is not available}
 separated by a comma indicating the x-axis limit,
 default is \code{"-28, 365"}}
 
-\item{plot_height}{plot height, default is \code{c(1200, 400, 5000)}}
+\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the height of the main plot.}
 
-\item{pre_output}{default is \code{NULL}}
+\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 
-\item{post_output}{default is \code{NULL}}
+\item{pre_output}{optional, \code{shiny.tag} with text placed before the
+output to put the output into context. For example a title.}
+
+\item{post_output}{optional, \code{shiny.tag} with text placed after the
+output to put the output into context. For example the
+\code{\link[shiny]{helpText}} elements are useful.}
 }
 \value{
 plot object

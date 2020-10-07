@@ -2,10 +2,10 @@
 #'
 #' This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.
 #'
-#' @param id (\code{string}) id of this module. set to `NULL` if you want to make it identical
+#' @param id (\code{character}) id of this module. set to `NULL` if you want to make it identical
 #' to the module who called it.
-#' @param titles (\code{string}) default titles
-#' @param footnotes (\code{string}) default footnotes
+#' @param titles (\code{character}) default titles
+#' @param footnotes (\code{character}) default footnotes
 #' @param fontsize a numeric vector with 3 values, selected font size and font size range,
 #' default is \code{c(5, 3, 7)}
 #' @export
@@ -30,14 +30,13 @@ ui_g_decorate <- function(id,
 #'
 #' This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.
 #'
+#' @inheritParams shared_params
 #' @param input the session's \code{input} object
 #' @param output the session's \code{output} object
 #' @param session session object is an environment that can be used to access information
 #' and functionality relating to the session
-#' @param plot_id (\code{string}) id for plot output
-#' @param plt a reactive object of graph object
-#' @param height vector with three \code{integer} elements defining selected,
-#' min and max plot height
+#' @param plot_id (\code{character}) id for plot output
+#' @param plt (\code{reactive}) a reactive object of graph object
 #'
 #' @importFrom grid grid.draw gpar
 #' @importFrom tern decorate_grob
@@ -48,7 +47,8 @@ srv_g_decorate <- function(input,
                            session,
                            plot_id = "out",
                            plt = reactive(NULL),
-                           height) {
+                           plot_height,
+                           plot_width) {
 
     plot_r <- reactive({
       grid.draw(
@@ -70,18 +70,19 @@ srv_g_decorate <- function(input,
       plot_with_settings_srv,
       id = plot_id,
       plot_r = plot_r,
-      height = height)
+      height = plot_height,
+      width = plot_width)
 
     return(reactive(input$fontsize))
   }
 
 #' Helper function to plot decorated output ui
 #'
-#' @param id (\code{string}) id of this element
-#' @param plot_height vector with three \code{integer} elements defining selected,
-#' min and max plot height, default is \code{c(600, 200, 2000)}
+#' @inheritParams shared_params
+#' @param id (\code{character}) id of this element
+#'
 #' @export
-plot_decorate_output <- function(id, plot_height = c(600, 200, 2000)) {
+plot_decorate_output <- function(id, plot_height = c(600, 200, 2000), plot_width = NULL) {
   ns <- NS(id)
-  plot_with_settings_ui(id = ns("out"), height = plot_height)
+  plot_with_settings_ui(id = ns("out"), height = plot_height, width = plot_width)
 }

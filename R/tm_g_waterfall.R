@@ -2,7 +2,8 @@
 #'
 #' This is teal module that generates a waterfall plot for ADaM data
 #'
-#' @param label module label in the teal app
+#' @inheritParams teal.devel::standard_layout
+#' @inheritParams shared_params
 #' @param dataname_tr tumor burden analysis data used in teal module to plot as bar height, needs to
 #' be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}
 #' @param dataname_rs response analysis data used in teal module to label response parameters, needs to
@@ -34,8 +35,6 @@
 #' @param gap_point_val singular numeric value for adding bar break when some bars are significantly higher
 #' than others, default is \code{NULL}
 #' @param show_value boolean of whether value of bar height is shown, default is \code{TRUE}
-#' @param plot_height plot height
-#' @inheritParams teal.devel::standard_layout
 #'
 #' @return a \code{\link[teal]{module}} object
 #'
@@ -77,13 +76,7 @@
 #'       anno_txt_var_sl = choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
 #'       anno_txt_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
 #'       facet_var = choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
-#'       ytick_at = 20,
-#'       href_line = "-30, 20",
-#'       gap_point_val = NULL,
-#'       show_value = TRUE,
-#'       plot_height = c(1200L, 400L, 5000L),
-#'       pre_output = NULL,
-#'       post_output = NULL
+#'       href_line = "-30, 20"
 #'     )
 #'   )
 #' )
@@ -108,7 +101,8 @@ tm_g_waterfall <- function(label,
                            href_line = NULL,
                            gap_point_val = NULL,
                            show_value = TRUE,
-                           plot_height = c(1200, 400, 5000),
+                           plot_height = c(1200L, 400L, 5000L),
+                           plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
 
@@ -125,6 +119,8 @@ tm_g_waterfall <- function(label,
   stopifnot(is.choices_selected(facet_var))
   stopifnot(is.choices_selected(add_label_var_sl))
   stopifnot(is.choices_selected(add_label_paramcd_rs))
+  check_slider_input(plot_height, allow_null = FALSE)
+  check_slider_input(plot_width)
 
   args <- as.list(environment())
 
@@ -137,7 +133,8 @@ tm_g_waterfall <- function(label,
       dataname_tr = dataname_tr,
       dataname_rs = dataname_rs,
       bar_color_opt = bar_color_opt,
-      plot_height = plot_height
+      plot_height = plot_height,
+      plot_width = plot_width
     ),
     filters = "all"
   )
@@ -148,7 +145,9 @@ ui_g_waterfall <- function(id, ...){
   ns <- NS(id)
 
   standard_layout(
-    output = white_small_well(plot_with_settings_ui(id = ns("waterfallplot"), height = a$plot_height)),
+    output = white_small_well(
+      plot_with_settings_ui(id = ns("waterfallplot"), height = a$plot_height, width = a$plot_width)
+      ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis Data: ", tags$code(a$dataname_tr), tags$code(a$dataname_rs)),
@@ -268,7 +267,8 @@ srv_g_waterfall <- function(input,
                             dataname_rs,
                             bar_color_opt,
                             label,
-                            plot_height) {
+                            plot_height,
+                            plot_width) {
 
   # use teal.devel code chunks
   init_chunks()
@@ -493,7 +493,8 @@ srv_g_waterfall <- function(input,
   callModule(plot_with_settings_srv,
              id = "waterfallplot",
              plot_r = plot_r,
-             height = plot_height
+             height = plot_height,
+             width = plot_width
   )
 
   # show R code

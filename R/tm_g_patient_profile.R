@@ -2,8 +2,8 @@
 #'
 #' Display patient profile plot as a shiny module
 #'
-#' @param label module label in the teal app, please be noted that this module is developed based on
-#' ADaM data structure and ADaM variables.
+#' @inheritParams teal.devel::standard_layout
+#' @inheritParams shared_params
 #' @param patient_id (\code{choices_seleced}) unique subject ID variable
 #' @param sl_dataname (\code{character}) subject level dataset name,
 #' needs to be available in the list passed to the \code{data}
@@ -59,9 +59,6 @@
 #' @param x_limit a single \code{character} string with two numbers
 #' separated by a comma indicating the x-axis limit,
 #' default is \code{"-28, 365"}
-#' @param plot_height plot height, default is \code{c(1200, 400, 5000)}
-#' @param pre_output default is \code{NULL}
-#' @param post_output default is \code{NULL}
 #'
 #' @author Xuefeng Hou (houx14) \email{houx14@gene.com}
 #' @author Tina Cho (chot) \email{tina.cho@roche.com}
@@ -201,7 +198,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
                                  cm_var = NULL,
                                  lb_var = NULL,
                                  x_limit = "-28, 365",
-                                 plot_height =c(1200, 400, 5000),
+                                 plot_height = c(1200L, 400L, 5000L),
+                                 plot_width = NULL,
                                  pre_output = NULL,
                                  post_output = NULL) {
 
@@ -221,8 +219,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
   stopifnot(is.null(cm_var) | is.choices_selected(cm_var))
   stopifnot(is.null(lb_var) | is.choices_selected(lb_var))
   stopifnot(is_character_single(x_limit))
-  stopifnot(is_numeric_vector(plot_height))
-
+  check_slider_input(plot_height, allow_null = FALSE)
+  check_slider_input(plot_width)
 
   module(
     label = label,
@@ -238,7 +236,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
       lb_dataname = lb_dataname,
       ae_line_col_opt = ae_line_col_opt,
       label = label,
-      plot_height = plot_height),
+      plot_height = plot_height,
+      plot_width = plot_width),
     filters = "all"
   )
 }
@@ -249,7 +248,8 @@ ui_g_patient_profile <- function(id, ...) {
 
   standard_layout(
     output = white_small_well(
-      plot_with_settings_ui(id = ns("patientprofileplot"), height = a$plot_height)),
+      plot_with_settings_ui(id = ns("patientprofileplot"), height = a$plot_height, width = a$plot_width)
+      ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       selectizeInput(
@@ -369,7 +369,8 @@ srv_g_patient_profile <- function(input,
                                   cm_dataname,
                                   label,
                                   ae_line_col_opt,
-                                  plot_height) {
+                                  plot_height,
+                                  plot_width) {
   # initialize chunks
   init_chunks()
 
@@ -952,7 +953,8 @@ srv_g_patient_profile <- function(input,
     plot_with_settings_srv,
     id = "patientprofileplot",
     plot_r = plot_r,
-    height = plot_height
+    height = plot_height,
+    width = plot_width
   )
 
   observeEvent(input$show_rcode, {

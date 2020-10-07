@@ -4,6 +4,7 @@
 #' Display butterfly plot as a shiny module
 #'
 #' @inheritParams teal.devel::standard_layout
+#' @inheritParams shared_params
 #' @inheritParams tm_t_ae
 #' @param filter_var (\code{choices_selected}) variable name of data filter, please see details regarding
 #'   expected values, default is \code{NULL}. \code{choices}
@@ -18,7 +19,6 @@
 #' @param sort_by_var (\code{choices_selected}) argument for order of class and term elements in table,
 #'   default here is "count"
 #' @param legend_on (\code{boolean}) value for whether legend is displayed
-#' @param plot_height (\code{numeric}) range of plot height - 3 values
 #'
 #' @details \code{filter_var} option is designed to work in conjunction with
 #'   filtering function provided by \code{teal} (encoding panel on the right
@@ -104,7 +104,8 @@ tm_g_butterfly <- function(label,
                            facet_var = NULL,
                            sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
                            legend_on = TRUE,
-                           plot_height = c(600, 200, 2000),
+                           plot_height = c(600L, 200L, 2000L),
+                           plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
 
@@ -119,7 +120,8 @@ tm_g_butterfly <- function(label,
   stopifnot(is.choices_selected(facet_var) || is.null(facet_var))
   stopifnot(is.choices_selected(sort_by_var))
   stopifnot(is_logical_single(legend_on))
-  stopifnot(is_numeric_vector(plot_height))
+  check_slider_input(plot_height, allow_null = FALSE)
+  check_slider_input(plot_width)
 
   args <- as.list(environment())
 
@@ -127,7 +129,7 @@ tm_g_butterfly <- function(label,
     label = label,
     filters = dataname,
     server = srv_g_butterfly,
-    server_args = list(dataname = dataname, plot_height = plot_height),
+    server_args = list(dataname = dataname, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_butterfly,
     ui_args = args
   )
@@ -140,7 +142,9 @@ ui_g_butterfly <- function(id, ...) {
   a <- list(...)
 
   standard_layout(
-    output = white_small_well(plot_with_settings_ui(id = ns("butterflyplot"), height = a$plot_height)),
+    output = white_small_well(
+      plot_with_settings_ui(id = ns("butterflyplot"), height = a$plot_height, width = a$plot_width)
+      ),
     encoding =  div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
@@ -217,7 +221,7 @@ ui_g_butterfly <- function(id, ...) {
 
 }
 
-srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_height) {
+srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_height, plot_width) {
 
   init_chunks()
 
@@ -343,7 +347,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     plot_with_settings_srv,
     id = "butterflyplot",
     plot_r = plot_r,
-    height = plot_height)
+    height = plot_height,
+    width = plot_width)
 
   observeEvent(input$show_rcode, {
     show_rcode_modal(
