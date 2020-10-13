@@ -51,19 +51,19 @@ srv_g_decorate <- function(input,
                            plot_width) {
 
     plot_r <- reactive({
-      grid.draw(
-        decorate_grob(
-          plt(),
-          titles = input$title,
-          footnotes = input$foot,
-          gp_titles = gpar(
-            fontsize = input$fontsize * .pt,
-            col = "black",
-            fontface = "bold"
-          ),
-          gp_footnotes = gpar(fontsize = input$fontsize * .pt, col = "black")
-        )
+      g <- decorate_grob(
+        plt(),
+        titles = input$title,
+        footnotes = input$foot,
+        gp_titles = gpar(
+          fontsize = input$fontsize * .pt,
+          col = "black",
+          fontface = "bold"
+        ),
+        gp_footnotes = gpar(fontsize = input$fontsize * .pt, col = "black")
       )
+      grid.draw(g)
+      g
     })
 
     callModule(
