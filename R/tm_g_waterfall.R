@@ -290,6 +290,11 @@ srv_g_waterfall <- function(input,
     gap_point_val <- input$gap_point_val
     show_value <- input$show_value # nolint
 
+    validate(need(bar_var, "'Bar Height' field is empty"))
+    validate(need(
+      length(add_label_paramcd_rs) == 0 || length(add_label_var_sl) == 0,
+      "`Add ADSL Label to Bars` and `Add ADRS Label to Bars` fields cannot both have values simultaneously."))
+
     # validate data rows
     validate_has_data(adsl_filtered, min_nrow = 2)
     validate_has_data(adtr_filtered, min_nrow = 2)
@@ -474,8 +479,6 @@ srv_g_waterfall <- function(input,
         bquote(anl[[add_label_var_sl]])
       } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) == 0) {
         bquote(anl[[add_label_paramcd_rs]])
-      } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) > 0) {
-        validate(need(FALSE, "Please only select one label from either ADSL or ADRS to add to the bars"))
       } else {
         NULL
       },
