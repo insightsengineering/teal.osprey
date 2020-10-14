@@ -475,7 +475,7 @@ srv_g_waterfall <- function(input,
       } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) == 0) {
         bquote(anl[[add_label_paramcd_rs]])
       } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) > 0) {
-        stop("Please only select one label from either ADSL or ADRS to add to the bars")
+        validate(need(FALSE, "Please only select one label from either ADSL or ADRS to add to the bars"))
       } else {
         NULL
       },
