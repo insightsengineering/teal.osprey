@@ -250,6 +250,7 @@ srv_g_ae_oview <- function(input,
 
     validate(need(nlevels(ANL_FILTERED[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
     validate_has_data(ANL_FILTERED, min_nrow = 10)
+    validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])), "Plot loading"))
 
     chunks_push(bquote({
       id <- .(as.name(anl_name))[["USUBJID"]]
@@ -262,7 +263,7 @@ srv_g_ae_oview <- function(input,
         select(.(input$flags_select))
     }))
 
-    if (!is.null(input$add_flags)){
+    if (!is.null(input$add_flags)) {
       chunks_push(bquote({
         add_flag_df <- data.frame(.(as.name(anl_name))[, .(input$add_flags)])
         names(add_flag_df) <- .(add_flag_labels)

@@ -252,6 +252,8 @@ srv_g_events_term_id <- function(input,
     anl_name <- paste0(dataname, "_FILTERED")
     assign(anl_name, ANL_FILTERED)
 
+    validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])), "Plot loading"))
+
     chunks_reset(envir = environment())
 
     adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint

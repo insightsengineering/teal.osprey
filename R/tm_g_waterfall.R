@@ -140,7 +140,7 @@ tm_g_waterfall <- function(label,
   )
 }
 
-ui_g_waterfall <- function(id, ...){
+ui_g_waterfall <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
 

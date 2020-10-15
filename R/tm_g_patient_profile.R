@@ -483,7 +483,7 @@ srv_g_patient_profile <- function(input,
     # get ADSL dataset ---
     ADSL_FILTERED <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
 
-    if (!is.null(input$select_ex)){
+    if (!is.null(input$select_ex)) {
       if (input$select_ex == FALSE | is.na(ex_dataname)) {
         ADEX_FILTERED <- NULL # nolint
       } else {
@@ -494,7 +494,7 @@ srv_g_patient_profile <- function(input,
       ADEX_FILTERED <- NULL # nolint
     }
 
-    if (!is.null(input$select_ae)){
+    if (!is.null(input$select_ae)) {
       if (input$select_ae == FALSE | is.na(ae_dataname)) {
         ADAE_FILTERED <- NULL # nolint
       } else {
@@ -617,7 +617,7 @@ srv_g_patient_profile <- function(input,
       validate(
         need(!is.null(input$ae_var), "Please select an adverse event variable.")
       )
-      if (ADSL$USUBJID %in% ADAE_FILTERED$USUBJID){
+      if (ADSL$USUBJID %in% ADAE_FILTERED$USUBJID) {
         chunks_push(bquote({
           # ADAE
           ADAE <- ADAE_FILTERED[, .(adae_vars)] # nolint
@@ -693,7 +693,7 @@ srv_g_patient_profile <- function(input,
       validate(
         need(!is.null(rs_var), "Please select a tumor response variable.")
       )
-      if (ADSL$USUBJID %in% ADRS_FILTERED$USUBJID){
+      if (ADSL$USUBJID %in% ADRS_FILTERED$USUBJID) {
         chunks_push(bquote({
           ADRS <- ADRS_FILTERED[, .(adrs_vars)] # nolint
           ADRS <- ADSL %>% # nolint
