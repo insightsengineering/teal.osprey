@@ -150,7 +150,8 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
       total = total
     ))
 
-    tbl <- chunks_eval()
+    tbl <- chunks_safe_eval()
+
     rtables::as_html(tbl)
   })
 
