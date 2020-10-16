@@ -280,8 +280,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     chunks_push_new_line()
 
     # check
-    chunks_eval()
-    validate(need(chunks_is_ok(), "Data could not be constructed."))
+    chunks_safe_eval()
 
     # reference lines preprocessing - vertical
     if (!is.null(vref_line) || vref_line != "") {
@@ -313,10 +312,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     chunks_push_new_line()
 
     # check
-    chunks_eval()
-    validate(need(chunks_is_ok(), "Data could not be constructed."))
-
-
+    chunks_safe_eval()
 
     # plot code to chunks ---
 
@@ -354,7 +350,7 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
       show_legend = bquote(.(legend_on))
     ))
 
-    chunks_eval()
+    chunks_safe_eval()
 
   })
 

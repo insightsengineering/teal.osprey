@@ -598,7 +598,7 @@ srv_g_patient_profile <- function(input,
     chunks_push_new_line()
 
     # check
-    chunks_eval()
+    chunks_safe_eval()
 
     #ADSL with single subject
     ADSL <- chunks_get_var("ADSL") # nolint
@@ -642,7 +642,7 @@ srv_g_patient_profile <- function(input,
           rtables::var_labels(ADAE)[.(ae_line_col_var)] <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]
         })
         )
-        chunks_eval()
+        chunks_safe_eval()
 
 
         chunks_push(
@@ -684,7 +684,7 @@ srv_g_patient_profile <- function(input,
     }
 
     chunks_push_new_line()
-    chunks_eval()
+    chunks_safe_eval()
 
     if (select_plot["rs"]) {
       validate(
@@ -708,7 +708,7 @@ srv_g_patient_profile <- function(input,
           rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, .(rs_var)]))
         })
         )
-        chunks_eval()
+        chunks_safe_eval()
         ADRS <- chunks_get_var("ADRS") # nolint
         if (is.null(ADRS) | nrow(ADRS) == 0) {
           empty_rs <- TRUE
@@ -724,7 +724,7 @@ srv_g_patient_profile <- function(input,
     chunks_push_new_line()
 
     # check
-    chunks_eval()
+    chunks_safe_eval()
     if (select_plot["cm"]) {
       validate(
         need(!is.null(cm_var), "Please select a concomittant medicine variable.")
@@ -754,7 +754,7 @@ srv_g_patient_profile <- function(input,
           cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, .(cm_var)]))
         })
         )
-        chunks_eval()
+        chunks_safe_eval()
         ADCM <- chunks_get_var("ADCM") # nolint
         if (is.null(ADCM) | nrow(ADCM) == 0) {
           empty_cm <- TRUE
@@ -770,7 +770,7 @@ srv_g_patient_profile <- function(input,
     chunks_push_new_line()
 
     # check
-    chunks_eval()
+    chunks_safe_eval()
     if (select_plot["ex"]) {
       validate(
         need(!is.null(ex_var), "Please select an exposure variable.")
@@ -811,7 +811,7 @@ srv_g_patient_profile <- function(input,
           ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, .(ex_var)]))
         })
         )
-        chunks_eval()
+        chunks_safe_eval()
         ADEX <- chunks_get_var("ADEX") # nolint
         if (is.null(ADEX) | nrow(ADEX) == 0) {
           empty_ex <- TRUE
@@ -827,7 +827,7 @@ srv_g_patient_profile <- function(input,
     chunks_push_new_line()
 
     # check
-    chunks_eval()
+    chunks_safe_eval()
 
 
     if (select_plot["lb"]) {
@@ -862,7 +862,7 @@ srv_g_patient_profile <- function(input,
           lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
         })
         )
-        chunks_eval()
+        chunks_safe_eval()
         ADLB <- chunks_get_var("ADLB") # nolint
         if (is.null(ADLB) | nrow(ADLB) == 0) {
           empty_lb <- TRUE
@@ -878,7 +878,7 @@ srv_g_patient_profile <- function(input,
 
     chunks_push_new_line()
     # check
-    chunks_eval()
+    chunks_safe_eval()
 
     # Check that at least 1 dataset is selected
 
@@ -910,7 +910,7 @@ srv_g_patient_profile <- function(input,
     # Convert x_limit to numeric vector
     if (!is.null(x_limit) || x_limit != "") {
       chunks_push(bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit), ",")))))
-      chunks_eval()
+      chunks_safe_eval()
       x_limit <- chunks_get_var("x_limit")
     }
 
@@ -925,8 +925,7 @@ srv_g_patient_profile <- function(input,
     chunks_push_new_line()
 
     # check
-    chunks_eval()
-    validate(need(chunks_is_ok(), "Data could not be constructed."))
+    chunks_safe_eval()
 
     chunks_push(call(
       "g_patient_profile",
@@ -942,7 +941,7 @@ srv_g_patient_profile <- function(input,
 
     ))
 
-    chunks_eval()
+    chunks_safe_eval()
 
   })
 

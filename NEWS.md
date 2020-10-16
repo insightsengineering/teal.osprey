@@ -2,8 +2,8 @@
 
 * All graph modules now accept a `plot_width` argument which specifies the plot width and renders a slider to adjust the width interactively in the module.
 * Replaced `plot_with_height` with `plot_with_settings` module throughout package.
-* Show R Code now produces code generating only the datasets needed for the current module, not all datasets
-included in the data argument of `teal::init`
+* Show R Code now produces code generating only the datasets needed for the current module, not all datasets included in the data argument of `teal::init`.
+* Evaluate chunks with `chunks_safe_eval` rather than `chunks_eval`.
 
 # teal.osprey 0.1.5
 

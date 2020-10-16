@@ -130,7 +130,7 @@ srv_t_ae_oview <- function(input, output, session, datasets, dataname) {
     } else {
       NULL
     }
-    chunks_eval()
+    chunks_safe_eval()
 
     chunks_push(call(
       "t_ae_oview",

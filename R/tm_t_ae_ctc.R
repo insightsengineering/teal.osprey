@@ -191,7 +191,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
       NULL
     }
 
-    chunks_eval()
+    chunks_safe_eval()
 
     chunks_push(call(
       "t_ae_ctc_v2",
@@ -203,9 +203,7 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
       total = total
     ))
 
-    tbl <- chunks_eval()
-
-    validate(need(chunks_is_ok(), paste0("could not calculate the table:\n\n", tbl)))
+    tbl <- chunks_safe_eval()
 
     rtables::as_html(tbl)
   })

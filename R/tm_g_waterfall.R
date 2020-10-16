@@ -403,7 +403,7 @@ srv_g_waterfall <- function(input,
       bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
     }))
     chunks_push_new_line()
-    chunks_eval()
+    chunks_safe_eval()
     bar_data <- chunks_get_var("bar_data") # nolint
 
     if (is.null(adrs_paramcd)) {
@@ -417,7 +417,7 @@ srv_g_waterfall <- function(input,
           dplyr::filter(PARAMCD %in% .(adrs_paramcd))
       }))
       chunks_push_new_line()
-      chunks_eval()
+      chunks_safe_eval()
 
       rs_sub <- chunks_get_var("rs_sub")
       validate_one_row_per_id(rs_sub, key = c("STUDYID", "USUBJID"))
@@ -432,8 +432,8 @@ srv_g_waterfall <- function(input,
     }
     chunks_push_new_line()
 
-    chunks_eval()
-    validate(need(chunks_is_ok(), "Data could not be constructed."))
+    chunks_safe_eval()
+
 
     # write plotting code to chunks
     anl <- chunks_get_var("anl") # nolint

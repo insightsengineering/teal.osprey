@@ -393,11 +393,10 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       }))
     }
     chunks_push_new_line() # empty line for pretty code
-    chunks_eval()
+    chunks_safe_eval()
 
     # WRITE PLOTTING CODE TO CHUNKS
 
-    validate(need(chunks_is_ok(), "Data could not be constructed."))
     ADSL <- chunks_get_var("ADSL") # nolint
     ANL <- chunks_get_var("ANL") # nolint
     if (dataname == "ADSL") {
@@ -478,7 +477,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       ))
     }
 
-    chunks_eval()
+    chunks_safe_eval()
   })
 
   # Insert the plot into a plot_with_settings module from teal.devel

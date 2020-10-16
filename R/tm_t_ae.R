@@ -241,7 +241,7 @@ srv_t_ae <- function(input,
       tbl
     }))
 
-    chunks_eval()
+    chunks_safe_eval()
 
     chunks_validate_all("tbl", "rtable", "Evaluation with tern t_ae failed.")
     tbl <- chunks_get_var("tbl")

@@ -271,7 +271,7 @@ srv_g_ae_oview <- function(input,
 
     chunks_push_new_line()
 
-    chunks_eval()
+    chunks_safe_eval()
 
     validate(need((
       length(input$flags_select) + length(input$add_flags)) > 0,
@@ -302,9 +302,7 @@ srv_g_ae_oview <- function(input,
 
     chunks_push_new_line()
 
-    chunks_eval()
-
-    validate(need(chunks_is_ok(), "Data could not be constructed."))
+    chunks_safe_eval()
 
     args <- chunks_get_var("args")
     args$draw <- FALSE

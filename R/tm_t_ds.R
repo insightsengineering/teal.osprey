@@ -115,7 +115,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
       ADSL_f <- as.data.frame(ADSL_FILTERED[, .(adsl_vars)]) # nolint
     }))
 
-    chunks_eval()
+    chunks_safe_eval()
 
     # check dataset
     validate_has_data(chunks_get_var("ADSL_f"), min_nrow = 1)
@@ -131,9 +131,7 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
       total = total
     ))
 
-    tbl <- chunks_eval()
-
-    if (!chunks_is_ok()) validate(need(FALSE, paste0("could not calculate the table:\n\n", tbl)))
+    tbl <- chunks_safe_eval()
 
     rtables::as_html(tbl)
   })

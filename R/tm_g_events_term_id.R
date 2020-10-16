@@ -299,7 +299,7 @@ srv_g_events_term_id <- function(input,
 
     chunks_push_new_line()
 
-    chunks_eval()
+    chunks_safe_eval()
 
     validate(need(
       input$arm_trt != input$arm_ref,
@@ -307,8 +307,6 @@ srv_g_events_term_id <- function(input,
             "Please select a different treatment arm or control arm",
             sep = "\n")
     ))
-
-    validate(need(chunks_is_ok(), "Data could not be constructed."))
 
     args <- chunks_get_var("args")
     args$draw <- FALSE
