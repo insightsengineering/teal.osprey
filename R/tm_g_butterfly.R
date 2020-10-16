@@ -241,6 +241,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
   })
 
   plot_r <- reactive({
+    validate(need(input$category_var, "Please select a category variable."))
+
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
