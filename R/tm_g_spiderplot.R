@@ -234,15 +234,13 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     vref_line <- input$vref_line
     href_line <- input$href_line
 
-    validate(
-      need(paramcd, "`Parameter - from ADTR` field is empty"),
-      need(x_var, "`X-axis Variable` field is empty"),
-      need(y_var, "`Y-axis Variable` field is empty"),
-      need(marker_var, "`Marker Symbol By Variable` field is empty"),
-      need(line_colorby_var, "`Color By Variable (Line)` field is empty"),
-      need(nrow(ADSL_FILTERED) > 0, "ADSL data has zero rows"),
-      need(nrow(ADTR_FILTERED) > 0, "ADTR data has zero rows")
-    )
+    validate(need(paramcd, "`Parameter - from ADTR` field is empty"))
+    validate(need(x_var, "`X-axis Variable` field is empty"))
+    validate(need(y_var, "`Y-axis Variable` field is empty"))
+    validate(need(marker_var, "`Marker Symbol By Variable` field is empty"))
+    validate(need(line_colorby_var, "`Color By Variable (Line)` field is empty"))
+    validate(need(nrow(ADSL_FILTERED) > 0, "ADSL data has zero rows"))
+    validate(need(nrow(ADTR_FILTERED) > 0, "ADTR data has zero rows"))
 
     # define variables ---
 

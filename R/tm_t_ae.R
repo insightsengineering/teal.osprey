@@ -178,11 +178,9 @@ srv_t_ae <- function(input,
   init_chunks()
 
   output$table <- renderUI({
-    validate(
-      need(input$arm_var, "Please select an arm variable."),
-      need(input$class_var, "Please select a class variable."),
-      need(input$term_var, "Please select a term variable.")
-    )
+    validate(need(input$arm_var, "Please select an arm variable."))
+    validate(need(input$class_var, "Please select a class variable."))
+    validate(need(input$term_var, "Please select a term variable."))
 
     filter_var <- input$filter_var
     arm_var <- input$arm_var
