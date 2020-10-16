@@ -162,7 +162,7 @@ ui_t_ae <- function(id, ...) {
         value = a$total_col
       )
     ),
-    forms = actionButton(ns("show_rcode"), "Show R code", width = "100%"),
+    forms = get_rcode_ui(ns("rcode")),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
@@ -249,13 +249,11 @@ srv_t_ae <- function(input,
     rtables::as_html(tbl)
   })
 
-  observeEvent(input$show_rcode, {
-    show_rcode_modal(
-      title = "Adverse Events Table",
-      rcode = get_rcode(
-        datasets = datasets,
-        title = "R Code for the Current AE Overview Table"
-      )
-    )
-  })
+  callModule(
+    module = get_rcode_srv,
+    id = "rcode",
+    datasets = datasets,
+    datanames = dataname,
+    modal_title = "R Code for the Current AE Overview Table"
+  )
 }

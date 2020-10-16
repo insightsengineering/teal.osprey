@@ -81,7 +81,7 @@ ui_t_ds <- function(id, ...) {
         multiple = FALSE),
       checkboxInput(ns("All_Patients"), "Add All Patients", value = a$total_col)
     ),
-    forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
+    forms = get_rcode_ui(ns("rcode")),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
@@ -139,14 +139,12 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
   })
 
 
-  observeEvent(input$show_rcode, {
-    show_rcode_modal(
-      title = "Disposition table",
-      rcode = get_rcode(
-        datasets = datasets,
-        title = "R Code for the Current AE Overview Table"
-      )
-    )
-  })
+  callModule(
+    module = get_rcode_srv,
+    id = "rcode",
+    datasets = datasets,
+    datanames = dataname,
+    modal_title = "Disposition table"
+  )
 
 }

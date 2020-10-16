@@ -2,7 +2,7 @@
 % Please edit documentation in R/tm_g_ae_oview.R
 \name{tm_g_ae_oview}
 \alias{tm_g_ae_oview}
-\title{Teal module for ae overview}
+\title{Teal module for the AE overview}
 \usage{
 tm_g_ae_oview(
   label,
@@ -18,14 +18,15 @@ tm_g_ae_oview(
 \item{label}{(\code{character}) module label in the teal app. Please note that this module is developed based on
 ADaM data structure and ADaM variables.}
 
-\item{dataname}{(\code{character}) analysis data used in teal module, needs to be
+\item{dataname}{(\code{character}) analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
 \item{arm_var}{\code{\link[teal]{choices_selected}} object with all available choices
-and pre-selected option for variable names that can be used as \code{arm_var}}
+and the pre-selected option for variable names that can be used as \code{arm_var}}
 
-\item{add_flag}{a string or a vector of characters including variable name(s) for
-additional flags, default is \code{NULL} (i.e. no additional flags will be added)}
+\item{add_flag}{\code{\link[teal]{choices_selected}}, a string or a vector of characters
+including variable name(s) for additional flags, default is \code{NULL} (i.e. no additional
+flags will be added)}
 
 \item{fontsize}{a numeric vector with 3 values, selected font size and font size range,
 default is \code{c(5, 3, 7)}}
@@ -40,12 +41,11 @@ the width of the main plot and renders a slider on the plot to interactively adj
 a \code{\link[teal]{module}} object
 }
 \description{
-Display AE overview plot as a shiny module
+Display the AE overview plot as a shiny module
 }
 \examples{
 library(random.cdisc.data)
 library(teal.osprey)
-library(rtables)
 
 ADSL <- radsl(cached = TRUE)
 ADAE <- radae(cached = TRUE)

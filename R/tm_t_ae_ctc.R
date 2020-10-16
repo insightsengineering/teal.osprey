@@ -127,7 +127,7 @@ ui_t_ae_ctc <- function(id, ...) {
         "Add All Patients",
         value = a$total_col)
     ),
-    forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
+    forms = get_rcode_ui(ns("rcode")),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
@@ -211,13 +211,11 @@ srv_t_ae_ctc <- function(input, output, session, datasets, dataname, toxgr_var) 
   })
 
 
-  observeEvent(input$show_rcode, {
-    show_rcode_modal(
-      title = "Adverse Events Table By Highest NCI CTCAE Grade",
-      rcode = get_rcode(
-        datasets = datasets,
-        title = "Adverse Events Table By Highest NCI CTCAE Grade"
-      )
-    )
-  })
+  callModule(
+    module = get_rcode_srv,
+    id = "rcode",
+    datasets = datasets,
+    datanames = dataname,
+    modal_title = "Adverse Events Table By Highest NCI CTCAE Grade"
+  )
 }

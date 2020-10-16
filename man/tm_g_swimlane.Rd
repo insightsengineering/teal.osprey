@@ -31,16 +31,17 @@ ADaM data structure and ADaM variables.}
 argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ADSL" should be
 the input. If markers are to be plotted, data name for the marker data should be the input}
 
-\item{bar_var}{(\code{choices_selected})subject-level numeric variable from dataset to plot as the bar length}
+\item{bar_var}{(\code{\link[teal]{choices_selected}}) subject-level numeric variable from dataset
+to plot as the bar length}
 
-\item{bar_color_var}{(\code{choices_selected}) color by variable (subject-level)}
+\item{bar_color_var}{(\code{\link[teal]{choices_selected}}) color by variable (subject-level)}
 
-\item{sort_var}{sort by variable (subject-level)}
+\item{sort_var}{(\code{choices_selected}) sort by variable (subject-level)}
 
-\item{marker_pos_var}{numeric variable for marker position from marker data (Note: make sure that marker
-position has the same relative start day as bar length variable \code{bar_var})}
+\item{marker_pos_var}{(\code{\link[teal]{choices_selected}}) variable for marker position from marker data
+(Note: make sure that marker position has the same relative start day as bar length variable \code{bar_var})}
 
-\item{marker_shape_var}{marker shape variable from marker data}
+\item{marker_shape_var}{(\code{\link[teal]{choices_selected}}) marker shape variable from marker data}
 
 \item{marker_shape_opt}{aesthetic values to map shape values (named vector to map shape values to each name).
 If not \code{NULL}, please make sure this contains all possible values for \code{marker_shape_var} values,

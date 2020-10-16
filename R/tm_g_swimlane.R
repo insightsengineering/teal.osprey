@@ -5,21 +5,22 @@
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams shared_params
 #' @param dataname analysis data used for plotting, needs to be available in the list passed to the \code{data}
-#'     argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ADSL" should be
-#'     the input. If markers are to be plotted, data name for the marker data should be the input
-#' @param bar_var (\code{choices_selected})subject-level numeric variable from dataset to plot as the bar length
-#' @param bar_color_var (\code{choices_selected}) color by variable (subject-level)
-#' @param sort_var sort by variable (subject-level)
-#' @param marker_pos_var numeric variable for marker position from marker data (Note: make sure that marker
-#'      position has the same relative start day as bar length variable \code{bar_var})
-#' @param marker_shape_var marker shape variable from marker data
+#' argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ADSL" should be
+#' the input. If markers are to be plotted, data name for the marker data should be the input
+#' @param bar_var (\code{\link[teal]{choices_selected}}) subject-level numeric variable from dataset
+#' to plot as the bar length
+#' @param bar_color_var (\code{\link[teal]{choices_selected}}) color by variable (subject-level)
+#' @param sort_var (\code{choices_selected}) sort by variable (subject-level)
+#' @param marker_pos_var (\code{\link[teal]{choices_selected}}) variable for marker position from marker data
+#' (Note: make sure that marker position has the same relative start day as bar length variable \code{bar_var})
+#' @param marker_shape_var (\code{\link[teal]{choices_selected}}) marker shape variable from marker data
 #' @param marker_shape_opt aesthetic values to map shape values (named vector to map shape values to each name).
-#'      If not \code{NULL}, please make sure this contains all possible values for \code{marker_shape_var} values,
-#'      otherwise shape will be assigned by \code{ggplot} default
+#' If not \code{NULL}, please make sure this contains all possible values for \code{marker_shape_var} values,
+#' otherwise shape will be assigned by \code{ggplot} default
 #' @param marker_color_var marker color variable from marker data
 #' @param marker_color_opt aesthetic values to map color values (named vector to map color values to each name).
-#'      If not \code{NULL}, please make sure this contains all possible values for \code{marker_color_var} values,
-#'      otherwise color will be assigned by \code{ggplot} default
+#' If not \code{NULL}, please make sure this contains all possible values for \code{marker_color_var} values,
+#' otherwise color will be assigned by \code{ggplot} default
 #' @param vref_line vertical reference lines
 #' @param anno_txt_var character vector with subject-level variable names that are selected as annotation
 #'
@@ -198,7 +199,7 @@ ui_g_swimlane <- function(id, ...) {
                 value = paste(a$vref_line, collapse = ", ")
       )
     ),
-    forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
+    forms = get_rcode_ui(ns("rcode")),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
@@ -488,13 +489,11 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
              width = plot_width
   )
 
-  observeEvent(input$show_rcode, {
-    show_rcode_modal(
-      title = "Swimlane plot",
-      rcode = get_rcode(
-        datasets = datasets,
-        title = label
-      )
-    )
-  })
+  callModule(
+    module = get_rcode_srv,
+    id = "rcode",
+    datasets = datasets,
+    datanames = dataname,
+    modal_title = label
+  )
 }

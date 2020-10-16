@@ -348,10 +348,7 @@ ui_g_patient_profile <- function(id, ...) {
         value = a$x_limit
         )
     ),
-    forms = tags$div(actionButton(
-      ns("show_rcode"),
-      "Show R Code",
-      width = "100%")),
+    forms = get_rcode_ui(ns("rcode")),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
@@ -957,14 +954,12 @@ srv_g_patient_profile <- function(input,
     width = plot_width
   )
 
-  observeEvent(input$show_rcode, {
-    show_rcode_modal(
-      title = "Patient profile Plot",
-      rcode = get_rcode(
-        datasets = datasets,
-        title = label
-      )
-    )
-  })
+  callModule(
+    module = get_rcode_srv,
+    id = "rcode",
+    datasets = datasets,
+    datanames = datasets$datanames(),
+    modal_title = "Patient profile Plot"
+  )
 
 }

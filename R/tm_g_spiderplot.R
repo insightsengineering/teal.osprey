@@ -189,9 +189,7 @@ ui_g_spider <- function(id, ...) {
           helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")),
         value = a$href_line)
     ),
-    forms = tags$div(
-      actionButton(ns("show_rcode"), "Show R Code", width = "100%")#,
-    ),
+    forms = get_rcode_ui(ns("rcode")),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
@@ -236,6 +234,15 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     vref_line <- input$vref_line
     href_line <- input$href_line
 
+    validate(
+      need(paramcd, "`Parameter - from ADTR` field is empty"),
+      need(x_var, "`X-axis Variable` field is empty"),
+      need(y_var, "`Y-axis Variable` field is empty"),
+      need(marker_var, "`Marker Symbol By Variable` field is empty"),
+      need(line_colorby_var, "`Color By Variable (Line)` field is empty"),
+      need(nrow(ADSL_FILTERED) > 0, "ADSL data has zero rows"),
+      need(nrow(ADTR_FILTERED) > 0, "ADTR data has zero rows")
+    )
 
     # define variables ---
 
@@ -359,13 +366,11 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     width = plot_width
   )
 
-  observeEvent(input$show_rcode, {
-    show_rcode_modal(
-      title = "Spider Plot",
-      rcode = get_rcode(
-        datasets = datasets,
-        title = label
-      )
-    )
-  })
+  callModule(
+    module = get_rcode_srv,
+    id = "rcode",
+    datasets = datasets,
+    datanames = dataname,
+    modal_title = label
+  )
 }

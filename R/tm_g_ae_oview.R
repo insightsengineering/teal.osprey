@@ -1,14 +1,15 @@
-#' Teal module for ae overview
+#' Teal module for the AE overview
 #'
-#' Display AE overview plot as a shiny module
+#' Display the AE overview plot as a shiny module
 #'
 #' @inheritParams shared_params
-#' @param dataname (\code{character}) analysis data used in teal module, needs to be
+#' @param dataname (\code{character}) analysis data used in the teal module, needs to be
 #' available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.
 #' @param arm_var \code{\link[teal]{choices_selected}} object with all available choices
-#' and pre-selected option for variable names that can be used as \code{arm_var}
-#' @param add_flag a string or a vector of characters including variable name(s) for
-#' additional flags, default is \code{NULL} (i.e. no additional flags will be added)
+#' and the pre-selected option for variable names that can be used as \code{arm_var}
+#' @param add_flag \code{\link[teal]{choices_selected}}, a string or a vector of characters
+#' including variable name(s) for additional flags, default is \code{NULL} (i.e. no additional
+#' flags will be added)
 #' @param fontsize a numeric vector with 3 values, selected font size and font size range,
 #' default is \code{c(5, 3, 7)}
 #' @param plot_height optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
@@ -22,7 +23,6 @@
 #' @examples
 #' library(random.cdisc.data)
 #' library(teal.osprey)
-#' library(rtables)
 #'
 #' ADSL <- radsl(cached = TRUE)
 #' ADAE <- radae(cached = TRUE)
@@ -166,9 +166,7 @@ ui_g_ae_oview <- function(id, ...) {
         footnotes = ""
       )
     ),
-    forms = tags$div(actionButton(ns("show_rcode"),
-                                  "Show R Code",
-                                  width = "100%"))
+    forms = get_rcode_ui(ns("rcode"))
   )
 }
 
@@ -317,11 +315,11 @@ srv_g_ae_oview <- function(input,
     do.call(g_events_term_id, args = args) # nolint
   })
 
-  observeEvent(input$show_rcode, {
-    show_rcode_modal(title = label,
-                     rcode = get_rcode(
-                       datasets = datasets,
-                       title = sprintf("R Code for %s", label)
-                     ))
-  })
+  callModule(
+    module = get_rcode_srv,
+    id = "rcode",
+    datasets = datasets,
+    datanames = dataname,
+    modal_title = label
+  )
 }

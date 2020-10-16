@@ -171,9 +171,7 @@ ui_g_events_term_id <- function(id, ...) {
         footnotes = ""
       )
     ),
-    forms = actionButton(ns("show_rcode"),
-                         "Show R Code",
-                         width = "100%")
+    forms = get_rcode_ui(ns("rcode"))
   )
 }
 
@@ -321,11 +319,11 @@ srv_g_events_term_id <- function(input,
     do.call(g_events_term_id, args = args) # nolint
   })
 
-  observeEvent(input$show_rcode, {
-    show_rcode_modal(title = label,
-                     rcode = get_rcode(
-                       datasets = datasets,
-                       title = sprintf("R Code for %s", label)
-                     ))
-  })
+  callModule(
+    module = get_rcode_srv,
+    id = "rcode",
+    datasets = datasets,
+    datanames = dataname,
+    modal_title = paste0("R code for ", label)
+  )
 }

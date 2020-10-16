@@ -252,7 +252,7 @@ ui_g_waterfall <- function(id, ...) {
         value = a$gap_point_val
       )
     ),
-    forms = actionButton(ns("show_rcode"), "Show R Code", width = "100%"),
+    forms = get_rcode_ui(ns("rcode")),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
@@ -500,14 +500,12 @@ srv_g_waterfall <- function(input,
              width = plot_width
   )
 
-  # show R code
-  observeEvent(input$show_rcode, {
-    show_rcode_modal(
-      title = "R Code for Current Waterfall Plot",
-      rcode = get_rcode(
-        datasets = datasets,
-        title = "Waterfall Plot"
-      )
-    )
-  })
+  # Show R Code
+  callModule(
+    module = get_rcode_srv,
+    id = "rcode",
+    datasets = datasets,
+    datanames = datasets$datanames(),
+    modal_title = "Waterfall plot"
+  )
 }

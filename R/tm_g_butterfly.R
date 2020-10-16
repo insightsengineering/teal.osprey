@@ -208,13 +208,7 @@ ui_g_butterfly <- function(id, ...) {
         "Add legend",
         value = a$legend_on)
     ),
-    forms = tags$div(
-      actionButton(
-        ns("show_rcode"),
-        "Show R Code",
-        width = "100%")#,
-      # download button downloadButton(ns("export_plot"), "Export Image", width = "100%")
-    ),
+    forms = get_rcode_ui(ns("rcode")),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
@@ -350,13 +344,11 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     height = plot_height,
     width = plot_width)
 
-  observeEvent(input$show_rcode, {
-    show_rcode_modal(
-      title = "Butterfly plot",
-      rcode = get_rcode(
-        datasets = datasets,
-        title = "Butterfly plot"
-      )
-    )
-  })
+  callModule(
+    module = get_rcode_srv,
+    id = "rcode",
+    datasets = datasets,
+    datanames = dataname,
+    modal_title = "Butterfly plot"
+  )
 }
