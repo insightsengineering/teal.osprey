@@ -232,6 +232,8 @@ srv_g_ae_oview <- function(input,
   })
 
   plt <- reactive({
+    validate(need(input$arm_var, "Please select an arm variable."))
+
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 

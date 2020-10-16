@@ -93,6 +93,9 @@ srv_t_ds <- function(input, output, session, datasets, dataname) {
   init_chunks()
 
   output$table <- renderUI({
+    validate(need(input$arm_var, "Please select an arm variable."))
+    validate(need(input$class_var, "Please select a class variable."))
+    validate(need(input$term_var, "Please select a term variable."))
 
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
 
