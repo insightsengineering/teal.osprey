@@ -1,3 +1,7 @@
+# teal.osprey 0.1.6.9000
+
+* issues with no news:
+
 # teal.osprey 0.1.6
 
 * All graph modules now accept a `plot_width` argument which specifies the plot width and renders a slider to adjust the width interactively in the module.
