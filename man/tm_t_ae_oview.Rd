@@ -54,13 +54,12 @@ ADAE <- rADAE
 
 app <- teal::init(
   data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL),
-    cdisc_dataset("ADAE", ADAE,
+    cdisc_dataset("ADSL", ADSL, code = "ADSL <- rADSL"),
+    cdisc_dataset("ADAE", ADAE, code = "ADAE <- rADAE",
                   keys = keys(primary = c("STUDYID", "USUBJID", "AETERM", "AESEQ"),
                               foreign = c("STUDYID", "USUBJID"),
                               parent = "ADSL")),
-    code = "ADSL <- rADSL; ADAE <- rADAE",
-    check = FALSE),
+    check = TRUE),
   modules = root_modules(
     tm_t_ae_oview(
        label = "AE Overview Summary Table",
@@ -74,7 +73,6 @@ app <- teal::init(
 
 \dontrun{
 shinyApp(app$ui, app$server)
-
 }
 
 

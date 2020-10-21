@@ -90,6 +90,8 @@ Display butterfly plot as a shiny module
 #Example using stream (ADaM) dataset
 library(dplyr)
 library(random.cdisc.data)
+
+set.seed(23)
 ADSL <- radsl(cached = TRUE)
 ADAE <- radae(cached = TRUE)
 ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
@@ -103,17 +105,19 @@ ADAE <- mutate(
 
 app <- init(
   data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL),
-    cdisc_dataset("ADAE", ADAE),
-    code = 'ADSL <- radsl(cached = TRUE)
-    ADAE <- radae(cached = TRUE)
-    ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
-    ADAE <- mutate(
-    ADAE,
-    flag1 = ifelse(AETOXGR == 1, 1, 0),
-    flag2 = ifelse(AETOXGR == 2, 1, 0),
-    flag3 = ifelse(AETOXGR == 3, 1, 0),
-    flag1_filt = rep("Y", n()))'),
+    cdisc_dataset("ADSL", ADSL,
+      code = "ADSL <- radsl(cached = TRUE)
+              set.seed(23)
+              ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), 'UG'))"),
+    cdisc_dataset("ADAE", ADAE,
+      code = "ADAE <- radae(cached = TRUE)
+              ADAE <- mutate(ADAE,
+              flag1 = ifelse(AETOXGR == 1, 1, 0),
+              flag2 = ifelse(AETOXGR == 2, 1, 0),
+              flag3 = ifelse(AETOXGR == 3, 1, 0),
+              flag1_filt = rep('Y', n()))"),
+    check = TRUE
+  ),
   modules = root_modules(
     tm_g_butterfly(
       label = "Butterfly Plot",

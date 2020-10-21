@@ -1,5 +1,7 @@
 # teal.osprey 0.1.6.9000
 
+* Move `code` argument to `cdisc_dataset` (from `cdisc_data`) in examples.
+
 * issues with no news:
 
 # teal.osprey 0.1.6

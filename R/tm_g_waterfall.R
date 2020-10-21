@@ -52,15 +52,16 @@
 #'
 #' x <- teal::init(
 #'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL),
-#'     cdisc_dataset("ADRS", ADRS),
-#'     cdisc_dataset("ADTR", ADTR,
+#'     cdisc_dataset("ADSL", ADSL,
+#'       code = "ADSL <- rADSL
+#'               ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))"),
+#'     cdisc_dataset("ADRS", ADRS, code = "ADRS <- rADRS"),
+#'     cdisc_dataset("ADTR", ADTR, code = " ADTR <- rADTR",
 #'                   keys(primary = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT"),
 #'                        foreign = c("STUDYID", "USUBJID"),
 #'                        parent = "ADSL")),
-#'     code = "ADSL <- rADSL; ADRS <- rADRS; ADTR <- rADTR",
-#'     check = FALSE
-#'  ),
+#'     check = TRUE
+#'   ),
 #'   modules = root_modules(
 #'     tm_g_waterfall(
 #'       label = "Waterfall",

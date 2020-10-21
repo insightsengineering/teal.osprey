@@ -84,12 +84,13 @@ ADTR <- rADTR
 
 app <- teal::init(
   data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL),
-    cdisc_dataset("ADTR",  ADTR,
+    cdisc_dataset("ADSL", ADSL, code = "ADSL <- rADSL"),
+    cdisc_dataset("ADTR",  ADTR, code = "ADTR <- rADTR",
                   keys = keys(primary = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT"),
                               foreign = c("STUDYID", "USUBJID"),
                               parent = "ADSL")),
-    code = 'ADSL <- rADSL; ADTR <- rADTR'),
+    check = TRUE
+  ),
   modules = root_modules(
     tm_g_spiderplot(
       label = "Spider plot",

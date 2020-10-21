@@ -30,10 +30,10 @@
 #'
 #' app <- init(
 #'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL),
-#'     cdisc_dataset("ADAE", ADAE),
-#'     code = 'ADSL <- radsl(cached = TRUE)
-#'             ADAE <- radae(cached = TRUE)'),
+#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- radsl(cached = TRUE)"),
+#'     cdisc_dataset("ADAE", ADAE, code = "ADAE <- radae(cached = TRUE)"),
+#'     check = TRUE
+#'   ),
 #'   modules = root_modules(
 #'     tm_g_events_term_id(
 #'       label = "Common AE",

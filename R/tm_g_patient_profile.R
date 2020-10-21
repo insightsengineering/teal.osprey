@@ -105,27 +105,29 @@
 #'
 #' x <- init(
 #'   data = cdisc_data(
-#'    cdisc_dataset("ADSL", ADSL),
-#'     cdisc_dataset("ADRS", ADRS),
-#'     cdisc_dataset("ADAE", ADAE),
-#'     cdisc_dataset("ADCM", ADCM),
-#'     cdisc_dataset("ADLB", ADLB),
-#'     cdisc_dataset("ADEX", ADEX),
-#'     code = 'ADSL <- radsl(cached = TRUE)
-#'             ADAE <- radae(cached = TRUE) %>%
+#'     cdisc_dataset("ADSL", ADSL,
+#'       code = "ADSL <- radsl(cached = TRUE)"),
+#'     cdisc_dataset("ADRS", ADRS,
+#'       code = "ADRS <- radrs(cached = TRUE) %>%
+#'               mutate(ADT = as.Date(ADTM))"),
+#'     cdisc_dataset("ADAE", ADAE,
+#'       code = "ADAE <- radae(cached = TRUE) %>%
 #'               mutate(ASTDT = as.Date(ASTDTM),
-#'                      AENDT = as.Date(AENDTM))
-#'             ADCM <- radcm(cached = TRUE) %>%
+#'                      AENDT = as.Date(AENDTM))"),
+#'     cdisc_dataset("ADCM", ADCM,
+#'       code = "ADCM <- radcm(cached = TRUE) %>%
 #'               mutate(ASTDT = as.Date(ASTDTM),
-#'                      AENDT = as.Date(AENDTM))
-#'             ADRS <- radrs(cached = TRUE) %>%
-#'               mutate(ADT = as.Date(ADTM))
-#'             ADEX <- radex(cached = TRUE) %>%
-#'               mutate(ASTDT = as.Date(ASTDTM),
-#'                      AENDT = as.Date(AENDTM))
-#'             ADLB <- radlb(cached = TRUE) %>%
+#'                      AENDT = as.Date(AENDTM))"),
+#'     cdisc_dataset("ADLB", ADLB,
+#'       code = "ADLB <- radlb(cached = TRUE) %>%
 #'               mutate(ADT = as.Date(ADTM),
-#'                      LBSTRESN = as.numeric(LBSTRESC))'),
+#'                      LBSTRESN = as.numeric(LBSTRESC))"),
+#'     cdisc_dataset("ADEX", ADEX,
+#'       code = "ADEX <- radex(cached = TRUE) %>%
+#'               mutate(ASTDT = as.Date(ASTDTM),
+#'                      AENDT = as.Date(AENDTM))"),
+#'     check = TRUE
+#'   ),
 #'   modules = root_modules(
 #'     tm_g_patient_profile(
 #'       label = "Patient Profile Plot",

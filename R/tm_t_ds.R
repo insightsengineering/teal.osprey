@@ -22,9 +22,8 @@
 #'
 #' app <- init(
 #'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL),
-#'     code = "ADSL <- rADSL",
-#'     check = FALSE
+#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- rADSL"),
+#'     check = TRUE
 #'   ),
 #'   modules = root_modules(
 #'     tm_t_ds(

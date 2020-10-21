@@ -46,14 +46,15 @@
 #'
 #' x <- init(
 #'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL),
-#'     cdisc_dataset("ADRS", ADRS),
-#'     code = 'ADSL <- rADSL
-#'     ADRS <- rADRS
-#'     ADRS <- ADRS %>% dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-#'     mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-#'     rbind (ADRS %>% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-#'     arrange(USUBJID)', check = FALSE),
+#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- rADSL"),
+#'     cdisc_dataset("ADRS", ADRS,
+#'       code = "ADRS <- rADRS
+#'               ADRS <- ADRS %>% dplyr::filter(PARAMCD == 'LSTASDI' & DCSREAS == 'Death') %>%
+#'                       mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+#'               rbind(ADRS %>% dplyr::filter(PARAMCD == 'OVRINV' & AVALC != 'NE')) %>%
+#'               arrange(USUBJID)"),
+#'     check = TRUE
+#'   ),
 #'   modules = root_modules(
 #'     tm_g_swimlane(
 #'       label = "Swimlane Plot",

@@ -38,18 +38,19 @@
 #'
 #' app <- init(
 #'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL),
-#'     cdisc_dataset("ADAE", ADAE),
-#'     code = 'ADSL <- radsl(cached = TRUE)
-#'             ADAE <- radae(cached = TRUE)
-#'             # Add additional dummy causality flags.
-#'             ADAE <- ADAE %>%
-#'               mutate(AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X")) %>%
-#'               mutate(AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")) %>%
-#'               rtables::var_relabel(
-#'                 AEREL1 = "AE related to A: Drug X",
-#'                 AEREL2 = "AE related to B: Placebo"
-#'               )'),
+#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- radsl(cached = TRUE)"),
+#'     cdisc_dataset("ADAE", ADAE,
+#'       code = "ADAE <- radae(cached = TRUE)
+#'               # Add additional dummy causality flags.
+#'               ADAE <- ADAE %>%
+#'                 mutate(AEREL1 = (AEREL == 'Y' & ACTARM == 'A: Drug X')) %>%
+#'                 mutate(AEREL2 = (AEREL == 'Y' & ACTARM == 'B: Placebo')) %>%
+#'                 rtables::var_relabel(
+#'                   AEREL1 = 'AE related to A: Drug X',
+#'                   AEREL2 = 'AE related to B: Placebo'
+#'                 )"),
+#'     check = TRUE
+#'   ),
 #'   modules = root_modules(
 #'     tm_g_ae_oview(
 #'       label = "AE Overview",
