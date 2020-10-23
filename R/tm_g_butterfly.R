@@ -164,22 +164,30 @@ ui_g_butterfly <- function(id, ...) {
         a$right_var$choices,
         a$right_var$selected,
         multiple = FALSE),
-      checkboxGroupInput(
+      optionalSelectInput(
         ns("right_val"),
-        "Choose one",
-        a$right_var$choices,
-        a$right_var$selected),
+        "Choose Up To 2:",
+        multiple = TRUE,
+        options = list(
+          `max-options` = 2L,
+          `max-options-text` = "no more than 2",
+          `actions-box` = FALSE)
+        ),
       optionalSelectInput(
         ns("left_var"),
         "Left Dichotomization Variable",
         a$left_var$choices,
         a$left_var$selected,
         multiple = FALSE),
-      checkboxGroupInput(
+      optionalSelectInput(
         ns("left_val"),
-        "Choose one",
-        a$left_var$choices,
-        a$left_var$selected),
+        "Choose Up To 2:",
+        multiple = TRUE,
+        options = list(
+          `max-options` = 2L,
+          `max-options-text` = "no more than 2",
+          `actions-box` = FALSE)
+        ),
       optionalSelectInput(
         ns("category_var"),
         "Category Variable",
@@ -223,26 +231,82 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
 
   init_chunks()
 
-  #dynamic options for dichotomization variable
-  observe({
+  options <- reactiveValues(r = NULL, l = NULL)
+  vars <- reactiveValues(r = NULL, l = NULL)
 
-    req(!is.null(input$right_var) && !is.null(input$left_var))
-
-    right_var <- input$right_var
-    left_var <- input$left_var
-
+  reactive_data <- reactive({
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
     ADSL_df <- ADSL_FILTERED %>% as.data.frame() # nolint
     ADAE_df <- ADAE_FILTERED %>% as.data.frame() # nolint
 
-    options_r <- if (right_var %in% names(ADSL_df)) unique(ADSL_df[, right_var]) else unique(ADAE_df[, right_var])
-    options_l <- if (left_var %in% names(ADSL_df)) unique(ADSL_df[, left_var]) else unique(ADAE_df[, left_var])
-
-    updateCheckboxGroupInput(session, "right_val", choices = options_r, selected = options_r[1])
-    updateCheckboxGroupInput(session, "left_val", choices = options_l, selected = options_l[1])
+    list(ADSL_df = ADSL_df, ADAE_df = ADAE_df)
   })
+
+  #dynamic options for dichotomization variable
+  observe({
+    right_var <- input$right_var
+    right_val <- isolate(input$right_val)
+    current_r_var <- isolate(vars$r)
+    if (is.null(right_var)) {
+      updateOptionalSelectInput(session, "right_val", choices = character(0), selected = character(0))
+    } else {
+      data <- reactive_data()
+      options$r <- if (right_var %in% names(data$ADSL_df)) {
+        sort(unique(data$ADSL_df[, right_var]))
+      } else {
+        sort(unique(data$ADAE_df[, right_var]))
+      }
+
+      selected <- if (length(right_val) > 0) {
+        left_over <- right_val[right_val %in% options$r]
+        if (length(left_over) > 0 && !is.null(current_r_var) && current_r_var == right_var) {
+          left_over
+        } else {
+          options$r[1]
+        }
+      } else {
+        options$r[1]
+      }
+      updateOptionalSelectInput(
+        session, "right_val", choices = as.character(options$r), selected = selected, label = "Choose Up To 2:")
+    }
+    vars$r <- right_var
+  })
+
+  observe({
+    left_var <- input$left_var
+    left_val <- isolate(input$left_val)
+    current_l_var <- isolate(vars$l)
+    if (is.null(left_var)) {
+      updateOptionalSelectInput(session, "left_val", choices = character(0), selected = character(0))
+    } else {
+      data <- reactive_data()
+      options$l <- if (left_var %in% names(data$ADSL_df)) {
+        sort(unique(data$ADSL_df[, left_var]))
+      } else {
+        sort(unique(data$ADAE_df[, left_var]))
+      }
+
+      selected <- if (length(left_val) > 0) {
+        left_over <- left_val[left_val %in% options$l]
+        if (length(left_over) > 0 && !is.null(current_l_var) && current_l_var == left_var) {
+          left_over
+        } else {
+          options$l[1]
+        }
+      } else {
+        options$l[1]
+      }
+
+      updateOptionalSelectInput(
+        session, "left_val", choices = as.character(options$l), selected = selected, label = "Choose Up To 2:")
+    }
+    vars$l <- left_var
+  })
+
+
 
   plot_r <- reactive({
     validate(need(input$category_var, "Please select a category variable."))
@@ -262,8 +326,17 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     sort_by_var <- input$sort_by_var
     filter_var <- input$filter_var
 
-    #if variable is not in ADSL, then take from domain VADs
+    validate(
+      need(nrow(ADSL_FILTERED) > 0, "ADSL Data has no rows"),
+      need(nrow(ADAE_FILTERED) > 0, "ADAE Data has no rows"))
+    validate(
+      need(right_var, "'Right Dichotomization Variable' not selected"),
+      need(left_var, "'Left Dichotomization Variable' not selected"))
+    validate(
+      need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
+      need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked"))
 
+    #if variable is not in ADSL, then take from domain VADs
     varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)
     varlist_from_adsl <- intersect(varlist, names(ADSL_FILTERED))
     varlist_from_anl <- intersect(varlist, setdiff(names(ADAE_FILTERED), names(ADSL_FILTERED)))
