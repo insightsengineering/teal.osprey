@@ -65,9 +65,9 @@ ci_choices <- setNames(
     "Brown, Li's Jeffreys", "Hauck-Anderson")
   )
 
-#' retrieve name of ci method
+#' retrieve detailed name of ci method
 #' @param x ci method to retrieve its name
 name_ci <- function(x = ci_choices) {
   x <- match.arg(x)
-  return(x)
+  return(paste0(names(x), " (", x, ")"))
 }
