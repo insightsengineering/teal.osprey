@@ -1,17 +1,17 @@
-url: https://pages.github.roche.com/Rpackages/teal.osprey/dev
+url: https://nest-docs.kubemea.science.roche.com/releases/devel/api-reference/teal.osprey/
+
 
 template:
   params:
     bootswatch: cerulean
 
 development:
-  mode: devel
-
+  mode: auto
 
 navbar:
   right:
     - icon: fa-github
-      href: https://github.roche.com/Rpackages/teal.osprey
+      href: https://github.roche.com/NEST/teal.osprey
 
 
 reference:
