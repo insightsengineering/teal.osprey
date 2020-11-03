@@ -247,6 +247,11 @@ srv_g_events_term_id <- function(input,
     ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
     rtables::var_labels(ANL_FILTERED) <- rtables::var_labels(datasets$get_data(dataname, filtered = FALSE)) # nolint
 
+    validate(
+      need(input$term, "'Term Variable' field is missing"),
+      need(input$arm_var, "'Arm Variable' field is missing")
+    )
+
     anl_name <- paste0(dataname, "_FILTERED")
     assign(anl_name, ANL_FILTERED)
 
