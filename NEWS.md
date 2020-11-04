@@ -1,6 +1,7 @@
 # teal.osprey 0.1.6.9000
 
 * Move `code` argument to `cdisc_dataset` (from `cdisc_data`) in examples.
+* Fix `tm_g_patient_profile` when adverse event line color variable not selected.
 
 * issues with no news:
 

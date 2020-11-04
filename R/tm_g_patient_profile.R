@@ -453,6 +453,10 @@ srv_g_patient_profile <- function(input,
       need(!is.null(sl_start_date), "Please select a start date variable.")
     )
 
+    validate(
+      need(!is.null(ae_line_col_var), "Please select an adverse event line color.")
+    )
+
     adrs_vars <- unique(c(
       "USUBJID", "STUDYID", "PARAMCD",
       "PARAM", "AVALC", "AVAL", "ADY",
@@ -544,7 +548,7 @@ srv_g_patient_profile <- function(input,
     #check color assignment
     if (!is.null(ae_line_col_opt)) {
       validate(need(
-        length(levels(ADAE_FILTERED[[input$ae_line_var]])) <= length(ae_line_col_opt),
+        is.null(ae_line_col_var) || length(levels(ADAE_FILTERED[[ae_line_col_var]])) <= length(ae_line_col_opt),
         paste(
           "Please check ae_line_col_opt contains all possible values for ae_line_col_var values.",
           "Or specify ae_line_col_opt as NULL.",
@@ -606,7 +610,7 @@ srv_g_patient_profile <- function(input,
     ADSL <- chunks_get_var("ADSL") # nolint
 
     # name for ae_line_col
-    if (!is.null(ae_line_col_var) & is.data.frame(ADAE_FILTERED)) {
+    if (!is.null(ae_line_col_var) && is.data.frame(ADAE_FILTERED)) {
       chunks_push(bquote(ae_line_col_name <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]))
     } else {
       chunks_push(quote(ae_line_col_name <- NULL))
