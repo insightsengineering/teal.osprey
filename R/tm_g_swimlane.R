@@ -68,11 +68,11 @@
 #'         selected = "ACTARMCD",
 #'         choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD")
 #'       ),
-#'       marker_pos_var = choices_selected(selected = "ADY", choices = c("None", "ADY")),
-#'       marker_shape_var = choices_selected(selected = "AVALC", c("None", "AVALC", "AVISIT")),
+#'       marker_pos_var = choices_selected(selected = "ADY", choices = c("ADY")),
+#'       marker_shape_var = choices_selected(selected = "AVALC", c("AVALC", "AVISIT")),
 #'       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
 #'       marker_color_var = choices_selected(selected = "AVALC",
-#'                                           choices = c("None", "AVALC", "AVISIT")),
+#'                                           choices = c("AVALC", "AVISIT")),
 #'       marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod",
 #'                            "PD" = "red", "Death" = "black"),
 #'       vref_line = c(30, 60),
@@ -107,17 +107,19 @@ tm_g_swimlane <- function(label,
                           post_output = NULL) {
   args <- as.list(environment())
 
-  stopifnot(is_character_single(label))
-  stopifnot(is_character_single(dataname))
-  stopifnot(is.choices_selected(bar_var))
-  stopifnot(is.choices_selected(bar_color_var))
-  stopifnot(is.choices_selected(marker_pos_var))
-  stopifnot(is.choices_selected(marker_shape_var))
-  stopifnot(is_numeric_vector(marker_shape_opt))
-  stopifnot(is.choices_selected(marker_color_var))
-  stopifnot(is_character_vector(marker_color_opt))
-  stopifnot(is.choices_selected(anno_txt_var))
-  stopifnot(is_numeric_vector(vref_line))
+  stopifnot(
+    is_character_single(label),
+    is_character_single(dataname),
+    is.choices_selected(bar_var),
+    is.choices_selected(bar_color_var),
+    is.choices_selected(marker_pos_var),
+    is.choices_selected(marker_shape_var),
+    is_numeric_vector(marker_shape_opt),
+    is.choices_selected(marker_color_var),
+    is_character_vector(marker_color_opt),
+    is.choices_selected(anno_txt_var),
+    is_numeric_vector(vref_line) || is.null(vref_line)
+    )
   check_slider_input(plot_height, allow_null = FALSE)
   check_slider_input(plot_width)
 
@@ -152,24 +154,33 @@ ui_g_swimlane <- function(id, ...) {
       ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
-      helpText("Analysis data:", tags$code(a$dataname)),
+      helpText("Analysis data:", code(a$dataname)),
       div(
         style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
-        optionalSelectInput(ns("bar_var"), "Bar Length",
-                            choices = a$bar_var$choices,
-                            selected = a$bar_var$selected, multiple = FALSE,
-                            label_help = helpText("from ", tags$code("ADSL"))
+        optionalSelectInput(
+          ns("bar_var"),
+          "Bar Length",
+          choices = a$bar_var$choices,
+          selected = a$bar_var$selected,
+          multiple = FALSE,
+          label_help = helpText("from ", code("ADSL"))
         ),
-        optionalSelectInput(ns("bar_color_var"), "Bar Color",
-                            choices = a$bar_color_var$choices,
-                            selected = a$bar_color_var$selected, multiple = FALSE,
-                            label_help = helpText("from ", tags$code("ADSL"))
+        optionalSelectInput(
+          ns("bar_color_var"),
+          "Bar Color",
+          choices = a$bar_color_var$choices,
+          selected = a$bar_color_var$selected,
+          multiple = FALSE,
+          label_help = helpText("from ", code("ADSL"))
         )
       ),
-      optionalSelectInput(ns("sort_var"), "Sort by",
-                          choices = a$sort_var$choices,
-                          selected = a$sort_var$selected, multiple = FALSE,
-                          label_help = helpText("from ", tags$code("ADSL"))
+      optionalSelectInput(
+        ns("sort_var"),
+        "Sort by",
+        choices = a$sort_var$choices,
+        selected = a$sort_var$selected,
+        multiple = FALSE,
+        label_help = helpText("from ", code("ADSL"))
       ),
       div(
         style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
@@ -178,26 +189,34 @@ ui_g_swimlane <- function(id, ...) {
         } else if (is.null(a$marker_pos_var)) {
           NULL
         } else {
-          optionalSelectInput(ns("marker_pos_var"), "Marker Position",
-                              choices = a$marker_pos_var$choices,
-                              selected = a$marker_pos_var$selected, multiple = FALSE,
-                              label_help = helpText("from ", tags$code(a$dataname))
+          optionalSelectInput(
+            ns("marker_pos_var"),
+            "Marker Position",
+            choices = a$marker_pos_var$choices,
+            selected = a$marker_pos_var$selected,
+            multiple = FALSE,
+            label_help = helpText("from ", code(a$dataname))
           )
         },
         uiOutput(ns("marker_shape_sel")),
         uiOutput(ns("marker_color_sel"))
       ),
-      optionalSelectInput(ns("anno_txt_var"), "Annotation Variables",
-                          choices = a$anno_txt_var$choices,
-                          selected = a$anno_txt_var$selected, multiple = TRUE,
-                          label_help = helpText("from ", tags$code("ADSL"))
+      optionalSelectInput(
+        ns("anno_txt_var"),
+        "Annotation Variables",
+        choices = a$anno_txt_var$choices,
+        selected = a$anno_txt_var$selected,
+        multiple = TRUE,
+        label_help = helpText("from ", code("ADSL"))
       ),
-      textInput(ns("vref_line"),
-                label = div(
-                  "Vertical Reference Line(s)", tags$br(),
-                  helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
-                ),
-                value = paste(a$vref_line, collapse = ", ")
+      textInput(
+        ns("vref_line"),
+        label = div(
+          "Vertical Reference Line(s)",
+          tags$br(),
+          helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
+          ),
+        value = paste(a$vref_line, collapse = ", ")
       )
     ),
     forms = get_rcode_ui(ns("rcode")),
@@ -219,45 +238,33 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
   # use teal.devel code chunks
   init_chunks()
 
-  observe({
-    # if marker position is "None", then hide options for marker shape and color
-    output$marker_shape_sel <- renderUI({
-      if (dataname == "ADSL" | is.null(marker_shape_var)) {
-        NULL
-      } else if (is.null(input$marker_pos_var)) {
-        NULL
-      } else {
-        ns <- session$ns
-        if (input$marker_pos_var == "None") {
-          NULL
-        } else {
-          optionalSelectInput(ns("marker_shape_var"), "Marker Shape",
-                              choices = marker_shape_var$choices,
-                              selected = marker_shape_var$selected, multiple = FALSE,
-                              label_help = helpText("from ", tags$code(dataname))
-          )
-        }
+  # if marker position is NULL, then hide options for marker shape and color
+  output$marker_shape_sel <- renderUI({
+    if (dataname == "ADSL" || is.null(marker_shape_var) || is.null(input$marker_pos_var)) {
+      NULL
+    } else {
+      ns <- session$ns
+      optionalSelectInput(
+        ns("marker_shape_var"), "Marker Shape",
+        choices = marker_shape_var$choices,
+        selected = marker_shape_var$selected, multiple = FALSE,
+        label_help = helpText("from ", code(dataname))
+        )
       }
     })
-    output$marker_color_sel <- renderUI({
-      if (dataname == "ADSL" | is.null(marker_color_var)) {
-        NULL
-      } else if (is.null(input$marker_pos_var)) {
-        NULL
-      } else {
-        ns <- session$ns
-        if (input$marker_pos_var == "None") {
-          NULL
-        } else {
-          optionalSelectInput(ns("marker_color_var"), "Marker Color",
-                              choices = marker_color_var$choices,
-                              selected = marker_color_var$selected, multiple = FALSE,
-                              label_help = helpText("from ", tags$code(dataname))
-          )
-        }
+  output$marker_color_sel <- renderUI({
+    if (dataname == "ADSL" || is.null(marker_color_var) || is.null(input$marker_pos_var)) {
+      NULL
+    } else {
+      ns <- session$ns
+      optionalSelectInput(
+        ns("marker_color_var"), "Marker Color",
+        choices = marker_color_var$choices,
+        selected = marker_color_var$selected, multiple = FALSE,
+        label_help = helpText("from ", code(dataname))
+        )
       }
     })
-  })
 
   # create plot
   plot_r <- reactive({
@@ -270,6 +277,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       "Please either add just 'ADSL' as dataname when just ADSL is available
       In case 2 datasets are available ADSL is not supposed to be the dataname."
     ))
+    validate(need(input$bar_var, "Please select a variable to map to the bar length."))
 
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     if (dataname != "ADSL") {
@@ -284,48 +292,30 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     # VARIABLE GETTERS
     # lookup bar variables
     bar_var <- input$bar_var
-    bar_color_var <- if (input$bar_color_var == "None" | input$bar_color_var == "") NULL else input$bar_color_var
-    sort_var <- if (input$sort_var == "None" | input$sort_var == "") NULL else input$sort_var
+    bar_color_var <- input$bar_color_var
+    sort_var <- input$sort_var
 
     # Check if marker inputs can be used
-    if (dataname == "ADSL" || is.null(input$marker_pos_var)) {
+    if (dataname == "ADSL") {
       marker_pos_var <- NULL
       marker_shape_var <- NULL
       marker_color_var <- NULL
     } else {
-      marker_pos_var <- if (input$marker_pos_var == "None") {
-        NULL
-      } else {
-        input$marker_pos_var
-      }
-      marker_shape_var <- if (!is.null(marker_shape_var) && is.null(input$marker_shape_var)) {
-        return(NULL)
-      } else if (input$marker_shape_var == "None") {
-        NULL
-      } else {
-        input$marker_shape_var
-      }
-      marker_color_var <- if (!is.null(marker_color_var) && is.null(input$marker_color_var)) {
-        return(NULL)
-      } else if (input$marker_color_var == "None") {
-        NULL
-      } else {
-        input$marker_color_var
-      }
+      marker_pos_var <- input$marker_pos_var
+      marker_shape_var <- input$marker_shape_var
+      marker_color_var <- input$marker_color_var
     }
 
     anno_txt_var <- input$anno_txt_var
-    vref_line <- input$vref_line
-
-    if (length(anno_txt_var) == 0) anno_txt_var <- NULL
 
     # If reference lines are requested
-    if (vref_line != "" || is.null(vref_line)) {
-      vref_line <- unlist(strsplit(vref_line, ","))
+    vref_line <- if (!is.null(input$vref_line) && input$vref_line != "") {
+      vref_line <- unlist(strsplit(input$vref_line, ","))
       vref_line <- as.numeric(vref_line)
       validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
+      vref_line
     } else {
-      vref_line <- NULL
+      NULL
     }
 
     # validate input values
@@ -413,7 +403,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
         marker_shape_opt = NULL,
         marker_color = NULL,
         marker_color_opt = NULL,
-        anno_txt = if (length(anno_txt_var) > 0) bquote(ADSL[, anno_txt_var]) else data.frame(),
+        anno_txt = if (length(anno_txt_var) > 0) bquote(ADSL[, anno_txt_var]) else NULL,
         yref_line = bquote(.(vref_line)),
         ytick_at = bquote(waiver()),
         ylab = "Time from First Treatment (Day)",
@@ -469,7 +459,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
         anno_txt = if (length(anno_txt_var) > 0) {
           bquote(ADSL[, anno_txt_var])
         } else {
-          data.frame()
+          NULL
         },
         yref_line = bquote(.(vref_line)),
         ytick_at = bquote(waiver()),
@@ -482,11 +472,12 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
   })
 
   # Insert the plot into a plot_with_settings module from teal.devel
-  callModule(plot_with_settings_srv,
-             id = "swimlaneplot",
-             plot_r = plot_r,
-             height = plot_height,
-             width = plot_width
+  callModule(
+    plot_with_settings_srv,
+    id = "swimlaneplot",
+    plot_r = plot_r,
+    height = plot_height,
+    width = plot_width
   )
 
   callModule(
