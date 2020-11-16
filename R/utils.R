@@ -71,3 +71,20 @@ name_ci <- function(x = ci_choices) {
   x <- match.arg(x)
   return(paste0(names(x), " (", x, ")"))
 }
+
+
+#' takes input_string, splits by ","  and returns a numeric vector
+#' with NAs where the split-strings are not numeric.
+#' e.g. as_numeric_from_comma_separated_string("4  ,hello,5,, 3")
+#' is c(4, NA, 5, NA, 3).
+#' If input argument is NULL or just whitespace then NULL is returned
+#' @param input_string string to be split into numeric vector
+as_numeric_from_comma_sep_str <- function(input_string) {
+  if (!is.null(input_string) && trimws(input_string) != "") {
+    ref_line <- unlist(strsplit(trimws(input_string), ","))
+    ref_line <- as.numeric(ref_line)
+  } else {
+    ref_line <- NULL
+  }
+  return(ref_line)
+}

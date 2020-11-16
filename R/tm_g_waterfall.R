@@ -327,14 +327,9 @@ srv_g_waterfall <- function(input,
     }
 
     #If reference lines are requested
-    if (href_line != "" || is.null(href_line)) {
-      href_line <- unlist(strsplit(href_line, ","))
-      href_line <- as.numeric(href_line)
-      validate(need(!anyNA(href_line),
-                    "Not all values entered for reference line(s) were numeric"))
-    } else {
-      href_line <- NULL
-    }
+    href_line <- as_numeric_from_comma_sep_str(href_line)
+    validate(need(all(!is.na(href_line)),
+      "Please enter a comma separated set of numeric values for the reference line(s)"))
 
     #If gap point is requested
     if (gap_point_val != "" || is.null(gap_point_val)) {

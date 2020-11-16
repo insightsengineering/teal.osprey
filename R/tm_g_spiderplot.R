@@ -282,24 +282,14 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     chunks_safe_eval()
 
     # reference lines preprocessing - vertical
-    if (!is.null(vref_line) || vref_line != "") {
-      chunks_push(bquote(vref_line <- as.numeric(unlist(strsplit(.(vref_line), ",")))))
-    } else {
-      chunks_push(quote(vref_line <- NULL))
-    }
-
-    # validate vref_line
-    validate(need(all(!is.na(vref_line)), "Not all values entered for reference line(s) were numeric"))
+    vref_line <- as_numeric_from_comma_sep_str(vref_line)
+    validate(need(all(!is.na(vref_line)),
+      "Please enter a comma separated set of numeric values for the vertical reference line(s)"))
 
     # reference lines preprocessing - horizontal
-    if (!is.null(href_line) || href_line != "") {
-      chunks_push(bquote(href_line <- as.numeric(unlist(strsplit(.(href_line), ",")))))
-    } else {
-      chunks_push(quote(href_line <- NULL))
-    }
-
-    # validate href_line
-    validate(need(all(!is.na(href_line)), "Not all values entered for reference line(s) were numeric"))
+    href_line <- as_numeric_from_comma_sep_str(href_line)
+    validate(need(all(!is.na(href_line)),
+      "Please enter a comma separated set of numeric values for the horizontal reference line(s)"))
 
     # label
     if (anno_txt_var) {
@@ -342,8 +332,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
       } else {
         NULL
       },
-      vref_line = quote(vref_line),
-      href_line = quote(href_line),
+      vref_line = bquote(.(vref_line)),
+      href_line = bquote(.(href_line)),
       x_label = "Time (Days)",
       y_label = "Change (%) from Baseline",
       show_legend = bquote(.(legend_on))
