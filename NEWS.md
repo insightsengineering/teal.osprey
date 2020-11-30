@@ -1,10 +1,8 @@
-# teal.osprey 0.1.6.9000
+# teal.osprey 0.1.7
 
 * Move `code` argument to `cdisc_dataset` (from `cdisc_data`) in examples.
 * Fix `tm_g_patient_profile` when adverse event line color variable not selected.
 * Add additional validation for horizontal and vertical reference lines in `tm_g_spider_plot`.
-
-* issues with no news:
 
 # teal.osprey 0.1.6
 
