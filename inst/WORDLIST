@@ -52,6 +52,7 @@ ggplot
 github
 houx
 https
+inheritParams
 inputId
 javascript
 lexicographically
@@ -68,6 +69,7 @@ rcode
 recurse
 reproducibility
 roche
+roxygen
 shiny's
 shinyServer
 songy

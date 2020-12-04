@@ -3,7 +3,7 @@
 #' Display patient profile plot as a shiny module
 #'
 #' @inheritParams teal.devel::standard_layout
-#' @inheritParams shared_params
+#' @inheritParams argument_convention
 #' @param patient_id (\code{choices_seleced}) unique subject ID variable
 #' @param sl_dataname (\code{character}) subject level dataset name,
 #' needs to be available in the list passed to the \code{data}

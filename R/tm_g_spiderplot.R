@@ -4,13 +4,7 @@
 #' Display spider plot as a shiny module
 #'
 #' @inheritParams teal.devel::standard_layout
-#' @inheritParams shared_params
-#' @param label menu item label of the module in the teal app
-#' @param dataname analysis data used in teal module, needs to be available in
-#'   the list passed to the \code{data} argument of \code{\link[teal]{init}}.
-#'   Note that the data is expected to be in vertical form with the
-#'   \code{PARAMCD} variable filtering to one observation per patient.
-#' @param paramcd single selected endpoint filtered with \code{PARAMCD} variable
+#' @inheritParams argument_convention
 #' @param x_var x-axis variables
 #' @param y_var y-axis variables
 #' @param marker_var variable dictates marker symbol

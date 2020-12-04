@@ -4,8 +4,7 @@
 #' Display butterfly plot as a shiny module
 #'
 #' @inheritParams teal.devel::standard_layout
-#' @inheritParams shared_params
-#' @inheritParams tm_t_ae
+#' @inheritParams argument_convention
 #' @param filter_var (\code{choices_selected}) variable name of data filter, please see details regarding
 #'   expected values, default is \code{NULL}. \code{choices}
 #'   vector with \code{filter_var} choices, default is
@@ -31,7 +30,6 @@
 #'   used for subsequent analysis. Flag variables (from ADaM datasets) can be
 #'   used directly as filter.
 #' @details
-#'
 #'
 #' @return an \code{\link[teal]{module}} object
 #' @export

@@ -2,18 +2,13 @@
 #'
 #' Display the AE overview plot as a shiny module
 #'
-#' @inheritParams shared_params
-#' @param dataname (\code{character}) analysis data used in the teal module, needs to be
-#' available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.
-#' @param arm_var \code{\link[teal]{choices_selected}} object with all available choices
-#' and the pre-selected option for variable names that can be used as \code{arm_var}
+#' @inheritParams teal.devel::standard_layout
+#' @inheritParams argument_convention
 #' @param add_flag \code{\link[teal]{choices_selected}}, a string or a vector of characters
 #' including variable name(s) for additional flags, default is \code{NULL} (i.e. no additional
 #' flags will be added)
 #' @param fontsize a numeric vector with 3 values, selected font size and font size range,
 #' default is \code{c(5, 3, 7)}
-#' @param plot_height optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
-#'   the height of the main plot. Default is \code{c(600, 200, 2000)}.
 #'
 #' @return a \code{\link[teal]{module}} object
 #' @importFrom rtables var_labels

@@ -1,5 +1,10 @@
 # teal.osprey 0.1.7
 
+* Retire `teal` modules due to duplication in `teal.modules.clinical`:
+  - Teal module for AE overview summary table - can be replaced with `teal.modules.clinical::tm_t_events_summary`.
+  - Teal module for AE summary table by preferred terms - can be replaced with `teal.modules.clinical::tm_t_events`.
+  - Teal module for AE summary table by highest NCI-CTCAE grade - can be replaced with `teal.modules.clinical::tm_t_events_by_grade`.
+  - Teal module for Disposition table - can be replaced with `teal.modules.clinical::tm_t_summary`.
 * Move `code` argument to `cdisc_dataset` (from `cdisc_data`) in examples.
 * Fix `tm_g_patient_profile` when adverse event line color variable not selected.
 * Add additional validation for horizontal and vertical reference lines in `tm_g_spider_plot`.

@@ -2,16 +2,11 @@
 #'
 #' Display Events by Term plot as a shiny module
 #'
-#' @inheritParams shared_params
-#' @param dataname (\code{character}) analysis data used in teal module, needs to be
-#' available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.
+#' @inheritParams teal.devel::standard_layout
+#' @inheritParams argument_convention
 #' @param term_var \code{\link[teal]{choices_selected}} object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
-#' @param arm_var \code{\link[teal]{choices_selected}} object with all available choices
-#' and pre-selected option for variable names that can be used as \code{arm_var}
 #' @param fontsize (\code{numeric}) vector of choices for font size
-#' @param plot_height optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
-#'   the height of the main plot. Default is \code{c(600, 200, 2000)}.
 #'
 #' @return an \code{\link[teal]{module}} object
 #' @importFrom rtables var_labels "var_labels<-"

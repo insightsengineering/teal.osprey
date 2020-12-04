@@ -3,7 +3,7 @@
 #' This is teal module that generates a waterfall plot for ADaM data
 #'
 #' @inheritParams teal.devel::standard_layout
-#' @inheritParams shared_params
+#' @inheritParams argument_convention
 #' @param dataname_tr tumor burden analysis data used in teal module to plot as bar height, needs to
 #' be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}
 #' @param dataname_rs response analysis data used in teal module to label response parameters, needs to

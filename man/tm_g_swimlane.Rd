@@ -24,8 +24,7 @@ tm_g_swimlane(
 )
 }
 \arguments{
-\item{label}{(\code{character}) module label in the teal app. Please note that this module is developed based on
-ADaM data structure and ADaM variables.}
+\item{label}{(\code{character})\cr menu item label of the module in the teal app}
 
 \item{dataname}{analysis data used for plotting, needs to be available in the list passed to the \code{data}
 argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ADSL" should be
@@ -57,11 +56,9 @@ otherwise color will be assigned by \code{ggplot} default}
 
 \item{vref_line}{vertical reference lines}
 
-\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
-the height of the main plot.}
+\item{plot_height}{`numeric` vector to indicate default value, minimum and maximum values.}
 
-\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
-the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
+\item{plot_width}{`numeric` vector to indicate default value, minimum and maximum values.}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example a title.}

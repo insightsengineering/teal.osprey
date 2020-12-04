@@ -15,25 +15,22 @@ tm_g_events_term_id(
 )
 }
 \arguments{
-\item{label}{(\code{character}) module label in the teal app. Please note that this module is developed based on
-ADaM data structure and ADaM variables.}
+\item{label}{(\code{character})\cr menu item label of the module in the teal app}
 
-\item{dataname}{(\code{character}) analysis data used in teal module, needs to be
+\item{dataname}{(\code{character}) analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
 
 \item{term_var}{\code{\link[teal]{choices_selected}} object with all available choices
 and pre-selected option names that can be used to specify the term for events}
 
 \item{arm_var}{\code{\link[teal]{choices_selected}} object with all available choices
-and pre-selected option for variable names that can be used as \code{arm_var}}
+and the pre-selected option for variable names that can be used as \code{arm_var}.}
 
 \item{fontsize}{(\code{numeric}) vector of choices for font size}
 
-\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
-the height of the main plot. Default is \code{c(600, 200, 2000)}.}
+\item{plot_height}{`numeric` vector to indicate default value, minimum and maximum values.}
 
-\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
-the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
+\item{plot_width}{`numeric` vector to indicate default value, minimum and maximum values.}
 }
 \value{
 an \code{\link[teal]{module}} object

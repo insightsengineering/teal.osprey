@@ -3,7 +3,7 @@
 #' This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data
 #'
 #' @inheritParams teal.devel::standard_layout
-#' @inheritParams shared_params
+#' @inheritParams argument_convention
 #' @param dataname analysis data used for plotting, needs to be available in the list passed to the \code{data}
 #' argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ADSL" should be
 #' the input. If markers are to be plotted, data name for the marker data should be the input
