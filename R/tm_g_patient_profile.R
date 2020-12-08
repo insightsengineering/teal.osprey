@@ -83,9 +83,7 @@
 #' @export
 #'
 #' @examples
-#' # Example using random.cdisc.data dataset
 #' library(random.cdisc.data)
-#' library(teal.osprey)
 #'
 #' ADSL <- radsl(cached = TRUE)
 #' ADAE <- radae(cached = TRUE) %>%

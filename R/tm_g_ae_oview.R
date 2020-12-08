@@ -17,7 +17,6 @@
 #'
 #' @examples
 #' library(random.cdisc.data)
-#' library(teal.osprey)
 #'
 #' ADSL <- radsl(cached = TRUE)
 #' ADAE <- radae(cached = TRUE)
@@ -230,6 +229,19 @@ srv_g_ae_oview <- function(input,
   plt <- reactive({
     validate(need(input$arm_var, "Please select an arm variable."))
 
+    validate(need((
+      length(input$flags_select) + length(input$add_flags)) > 0,
+      "Please select at least one flag."))
+
+    validate(need(
+      input$arm_trt != input$arm_ref,
+      paste(
+        "Treatment arm and control arm cannot be the same.",
+        "Please select a different treatment arm or control arm",
+        sep = "\n"
+      )
+    ))
+
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
@@ -271,19 +283,8 @@ srv_g_ae_oview <- function(input,
 
     chunks_safe_eval()
 
-    validate(need((
-      length(input$flags_select) + length(input$add_flags)) > 0,
-      "Please select at least one flag."))
-    validate(need(
-      input$arm_trt != input$arm_ref,
-      paste(
-        "Treatment arm and control arm cannot be the same.",
-        "Please select a different treatment arm or control arm",
-        sep = "\n"
-      )
-    ))
     chunks_push(bquote({
-      args <- list(
+      g_events_term_id(
         term = flags,
         id = id,
         arm = arm,
@@ -298,17 +299,7 @@ srv_g_ae_oview <- function(input,
       )
     }))
 
-    chunks_push_new_line()
-
     chunks_safe_eval()
-
-    args <- chunks_get_var("args")
-    args$draw <- FALSE
-
-    chunks_push(bquote({
-      do.call(g_events_term_id, args = args)
-    }))
-    do.call(g_events_term_id, args = args) # nolint
   })
 
   callModule(

@@ -38,7 +38,7 @@ ui_g_decorate <- function(id,
 #' @param plot_id (\code{character}) id for plot output
 #' @param plt (\code{reactive}) a reactive object of graph object
 #'
-#' @importFrom grid grid.draw gpar
+#' @importFrom grid  gpar grid.draw grid.newpage
 #' @importFrom tern decorate_grob
 #' @importFrom ggplot2 .pt
 #' @export
@@ -62,6 +62,7 @@ srv_g_decorate <- function(input,
         ),
         gp_footnotes = gpar(fontsize = input$fontsize * .pt, col = "black")
       )
+      grid.newpage()
       grid.draw(g)
       g
     })

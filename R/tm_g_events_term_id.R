@@ -18,7 +18,6 @@
 #'
 #' @examples
 #' library(random.cdisc.data)
-#' library(teal.osprey)
 #'
 #' ADSL <- radsl(cached = TRUE)
 #' ADAE <- radae(cached = TRUE)
@@ -178,7 +177,6 @@ srv_g_events_term_id <- function(input,
                                  label,
                                  plot_height,
                                  plot_width) {
-
   font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
   init_chunks()
@@ -237,15 +235,21 @@ srv_g_events_term_id <- function(input,
   })
 
   plt <- reactive({
-
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-    ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-    rtables::var_labels(ANL_FILTERED) <- rtables::var_labels(datasets$get_data(dataname, filtered = FALSE)) # nolint
-
     validate(
       need(input$term, "'Term Variable' field is missing"),
       need(input$arm_var, "'Arm Variable' field is missing")
     )
+
+    validate(need(
+      input$arm_trt != input$arm_ref,
+      paste("Treatment arm and control arm cannot be the same.",
+            "Please select a different treatment arm or control arm",
+            sep = "\n")
+    ))
+
+    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+    ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+    rtables::var_labels(ANL_FILTERED) <- rtables::var_labels(datasets$get_data(dataname, filtered = FALSE)) # nolint
 
     anl_name <- paste0(dataname, "_FILTERED")
     assign(anl_name, ANL_FILTERED)
@@ -278,7 +282,7 @@ srv_g_events_term_id <- function(input,
       ref <- .(input$arm_ref)
       trt <- .(input$arm_trt)
 
-      args <- list(
+      g_events_term_id(
         term = term,
         id = id,
         arm = arm,
@@ -297,24 +301,7 @@ srv_g_events_term_id <- function(input,
       )
     }))
 
-    chunks_push_new_line()
-
     chunks_safe_eval()
-
-    validate(need(
-      input$arm_trt != input$arm_ref,
-      paste("Treatment arm and control arm cannot be the same.",
-            "Please select a different treatment arm or control arm",
-            sep = "\n")
-    ))
-
-    args <- chunks_get_var("args")
-    args$draw <- FALSE
-
-    chunks_push(bquote({
-      do.call(g_events_term_id, args = args)
-    }))
-    do.call(g_events_term_id, args = args) # nolint
   })
 
   callModule(

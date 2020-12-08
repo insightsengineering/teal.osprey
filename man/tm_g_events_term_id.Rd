@@ -40,7 +40,6 @@ Display Events by Term plot as a shiny module
 }
 \examples{
 library(random.cdisc.data)
-library(teal.osprey)
 
 ADSL <- radsl(cached = TRUE)
 ADAE <- radae(cached = TRUE)
