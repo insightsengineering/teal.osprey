@@ -446,13 +446,13 @@ srv_g_patient_profile <- function(input,
     ex_var <- input$ex_var
     lb_var <- input$lb_var
     x_limit <- input$x_limit
+    lb_var_show <- input$lb_var_show
+
 
     validate(
-      need(!is.null(sl_start_date), "Please select a start date variable.")
-    )
-
-    validate(
-      need(!is.null(ae_line_col_var), "Please select an adverse event line color.")
+      need(sl_start_date, "Please select a start date variable."),
+      need(ae_line_col_var, "Please select an adverse event line color."),
+      need(lb_var_show, "`Lab values` field is empty.")
     )
 
     adrs_vars <- unique(c(
@@ -839,7 +839,7 @@ srv_g_patient_profile <- function(input,
         need(!is.null(lb_var), "Please select a lab variable.")
       )
       if (ADSL$USUBJID %in% ADLB_FILTERED$USUBJID) {
-        req(input$lb_var_show != input$lb_var)
+        req(lb_var_show != lb_var)
         chunks_push(bquote({
           ADLB <- ADLB_FILTERED[, .(adlb_vars)] # nolint
           ADLB <- ADSL %>% # nolint
@@ -862,7 +862,7 @@ srv_g_patient_profile <- function(input,
               .data$ADT,
               as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)),
               units = "days")) + 1) %>%
-            filter(.data[[.(lb_var)]] %in% .(input$lb_var_show))
+            filter(.data[[.(lb_var)]] %in% .(lb_var_show))
           lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
         })
         )
