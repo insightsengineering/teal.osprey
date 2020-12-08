@@ -416,7 +416,7 @@ srv_g_waterfall <- function(input,
       chunks_safe_eval()
 
       rs_sub <- chunks_get_var("rs_sub")
-      validate_one_row_per_id(rs_sub, key = c("STUDYID", "USUBJID"))
+      validate_one_row_per_id(rs_sub, key = c("STUDYID", "USUBJID", "PARAMCD"))
 
       chunks_push(bquote({
         rs_label <- rs_sub %>%
