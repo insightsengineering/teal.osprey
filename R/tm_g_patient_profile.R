@@ -435,7 +435,6 @@ srv_g_patient_profile <- function(input,
 
   # render plot
   plot_r <- reactive({
-
     # get inputs ---
     patient_id <- input$patient_id # nolint
     sl_start_date <- input$sl_start_date # nolint
@@ -588,13 +587,13 @@ srv_g_patient_profile <- function(input,
       ADSL <- ADSL_FILTERED %>% # nolint
         group_by(.data$USUBJID)
       ADSL$max_date <- pmax(
-        as.Date(ADSL$LSTALVDT, "%d%b%Y"),
-        as.Date(ADSL$DTHDT, "%d%b%Y"), na.rm = TRUE)
+        as.Date(ADSL$LSTALVDT),
+        as.Date(ADSL$DTHDT), na.rm = TRUE)
       ADSL <- ADSL %>% # nolint
         mutate(
           max_day = as.numeric(
             as.Date(.data$max_date) - as.Date(
-              eval(parse(text = .(sl_start_date))), "%d%b%Y")) + 1
+              eval(parse(text = .(sl_start_date))))) + 1
           ) %>%
         filter(USUBJID == .(patient_id))
     }))
@@ -606,6 +605,8 @@ srv_g_patient_profile <- function(input,
 
     #ADSL with single subject
     ADSL <- chunks_get_var("ADSL") # nolint
+
+    validate_has_data(ADSL, min_nrow = 1L)
 
     # name for ae_line_col
     if (!is.null(ae_line_col_var) && is.data.frame(ADAE_FILTERED)) {
