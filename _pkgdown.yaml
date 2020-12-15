@@ -27,8 +27,16 @@ reference:
     contents:
       - starts_with("tm_g_")
   - title: Utility
+    desc: "Utilities fuctions used in the package"
     contents:
       - label_aevar
+      - plot_decorate_output
       - quick_filter
-      - ui_g_decorate
       - srv_g_decorate
+      - ui_g_decorate
+  - title: "Unexported functions"
+    contents:
+      - argument_convention
+      - as_numeric_from_comma_sep_str
+      - name_ci
+      - shared_params
