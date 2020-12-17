@@ -1,3 +1,7 @@
+# teal.osprey 0.1.7.9000
+
+* Issues with no news:
+
 # teal.osprey 0.1.7
 
 ### Enhancements
