@@ -111,7 +111,7 @@ ui_g_spider <- function(id, ...) {
 
   standard_layout(
     output = white_small_well(
-      plot_with_settings_ui(id = ns("spiderplot"), height = a$plot_height, width = a$plot_width)
+      plot_with_settings_ui(id = ns("spiderplot"))
       ),
     encoding =  div(
       tags$label("Encodings", class = "text-primary"),

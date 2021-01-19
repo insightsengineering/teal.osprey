@@ -150,7 +150,7 @@ ui_g_swimlane <- function(id, ...) {
 
   standard_layout(
     output = white_small_well(
-      plot_with_settings_ui(id = ns("swimlaneplot"), height = a$plot_height, width = a$plot_width)
+      plot_with_settings_ui(id = ns("swimlaneplot"))
       ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),

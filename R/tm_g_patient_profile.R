@@ -248,7 +248,7 @@ ui_g_patient_profile <- function(id, ...) {
 
   standard_layout(
     output = white_small_well(
-      plot_with_settings_ui(id = ns("patientprofileplot"), height = a$plot_height, width = a$plot_width)
+      plot_with_settings_ui(id = ns("patientprofileplot"))
       ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),

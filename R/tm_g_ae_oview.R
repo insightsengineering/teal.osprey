@@ -96,7 +96,7 @@ ui_g_ae_oview <- function(id, ...) {
   args <- list(...)
   standard_layout(
     output = white_small_well(
-      plot_decorate_output(id = ns(NULL), plot_height = args$plot_height, plot_width = args$plot_width)
+      plot_decorate_output(id = ns(NULL))
       ),
     encoding = div(
       optionalSelectInput(

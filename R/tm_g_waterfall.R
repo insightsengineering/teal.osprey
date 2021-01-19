@@ -147,7 +147,7 @@ ui_g_waterfall <- function(id, ...) {
 
   standard_layout(
     output = white_small_well(
-      plot_with_settings_ui(id = ns("waterfallplot"), height = a$plot_height, width = a$plot_width)
+      plot_with_settings_ui(id = ns("waterfallplot"))
       ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),

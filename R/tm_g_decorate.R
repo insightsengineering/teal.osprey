@@ -79,11 +79,10 @@ srv_g_decorate <- function(input,
 
 #' Helper function to plot decorated output ui
 #'
-#' @inheritParams shared_params
 #' @param id (\code{character}) id of this element
 #'
 #' @export
-plot_decorate_output <- function(id, plot_height = c(600, 200, 2000), plot_width = NULL) {
+plot_decorate_output <- function(id) {
   ns <- NS(id)
-  plot_with_settings_ui(id = ns("out"), height = plot_height, width = plot_width)
+  plot_with_settings_ui(id = ns("out"))
 }

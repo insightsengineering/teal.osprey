@@ -4,16 +4,10 @@
 \alias{plot_decorate_output}
 \title{Helper function to plot decorated output ui}
 \usage{
-plot_decorate_output(id, plot_height = c(600, 200, 2000), plot_width = NULL)
+plot_decorate_output(id)
 }
 \arguments{
 \item{id}{(\code{character}) id of this element}
-
-\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
-the height of the main plot.}
-
-\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
-the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 }
 \description{
 Helper function to plot decorated output ui

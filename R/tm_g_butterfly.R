@@ -145,7 +145,7 @@ ui_g_butterfly <- function(id, ...) {
 
   standard_layout(
     output = white_small_well(
-      plot_with_settings_ui(id = ns("butterflyplot"), height = a$plot_height, width = a$plot_width)
+      plot_with_settings_ui(id = ns("butterflyplot"))
       ),
     encoding =  div(
       tags$label("Encodings", class = "text-primary"),
