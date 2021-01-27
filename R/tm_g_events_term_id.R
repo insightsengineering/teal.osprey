@@ -254,7 +254,8 @@ srv_g_events_term_id <- function(input,
     anl_name <- paste0(dataname, "_FILTERED")
     assign(anl_name, ANL_FILTERED)
 
-    validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])), "Plot loading"))
+    validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])),
+      "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."))
 
     chunks_reset(envir = environment())
 
