@@ -1,9 +1,7 @@
-# teal.osprey 0.1.7.9000
+# teal.osprey 0.1.8
 
 * Added validation message if the dataset does not contain subjects from both the control and treatment arms in `tm_g_events_term_id`.
 * Fixed modules due to changes to `plot_with_settings` in latest `teal.devel` release.
-
-* Issues with no news:
 
 # teal.osprey 0.1.7
 
