@@ -112,7 +112,7 @@ ui_g_events_term_id <- function(id, ...) {
           "Risk Difference" = "riskdiff",
           "Mean Risk" = "meanrisk"
         ),
-        selected = "term"
+        selected = NULL
       ),
       panel_item(
         "Confidence interval settings",
@@ -161,7 +161,7 @@ ui_g_events_term_id <- function(id, ...) {
       ui_g_decorate(
         ns(NULL),
         fontsize = args$fontsize,
-        titles = "Common AEs",
+        titles = "Common AE Table",
         footnotes = ""
       )
     ),
@@ -185,26 +185,29 @@ srv_g_events_term_id <- function(input,
     req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
     diff_ci_method <- input$diff_ci_method
     conf_level <- input$conf_level
-    updateTextAreaInput(session,
-                        "foot",
-                        value = sprintf(
-                          "Note: %d%% CI is calculated using %s",
-                          round(conf_level * 100),
-                          name_ci(diff_ci_method)
-                        ))
+    updateTextAreaInput(
+      session,
+      "foot",
+      value = sprintf(
+        "Note: %d%% CI is calculated using %s",
+        round(conf_level * 100),
+        name_ci(diff_ci_method)
+      ))
   })
+
+
   observe({
-    req(input$sort)
-    updateTextInput(session,
-                    "title",
-                    value = sprintf(
-                      "Common AE Table Sorted by %s",
-                      c(
-                        "term" = "Term",
-                        "riskdiff" = "Risk Difference",
-                        "meanrisk" = "Mean Risk"
-                      )[input$sort]
-                    ))
+    updateTextInput(
+      session,
+      "title",
+      value = sprintf(
+        "Common AE Table %s",
+        c("term" = "Sorted by Term",
+          "riskdiff" = "Sorted by Risk Difference",
+          "meanrisk" = "Sorted by Mean Risk",
+          " " = ""
+        )[if_null(input$sort, " ")]
+      ))
   })
 
   observe({
