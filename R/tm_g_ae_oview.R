@@ -248,7 +248,7 @@ srv_g_ae_oview <- function(input,
     # assign labels back to the data
     anl_labels <- rtables::var_labels(datasets$get_data(dataname, filtered = FALSE))
     if (!is.null(input$add_flags)) {
-      add_flag_labels <- anl_labels[names(anl_labels) == input$add_flags] # nolint
+      add_flag_labels <- anl_labels[names(anl_labels) %in% input$add_flags] # nolint
     }
 
     anl_name <- paste0(dataname, "_FILTERED")
