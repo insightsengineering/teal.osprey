@@ -306,7 +306,8 @@ srv_g_ae_oview <- function(input,
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = dataname,
+    datanames = unique(
+      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))),
     modal_title = label
   )
 }
