@@ -606,7 +606,16 @@ srv_g_patient_profile <- function(input,
     #ADSL with single subject
     ADSL <- chunks_get_var("ADSL") # nolint
 
-    validate_has_data(ADSL, min_nrow = 1L)
+    validate(
+      need(
+        nrow(ADSL) >= 1,
+        paste(
+          "Subject",
+          patient_id,
+          "not found in the dataset. Have they been filtered out by filtering in the filter panel?"
+        )
+      )
+    )
 
     # name for ae_line_col
     if (!is.null(ae_line_col_var) && is.data.frame(ADAE_FILTERED)) {

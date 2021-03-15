@@ -1,6 +1,7 @@
 # teal.osprey 0.1.8
 
 * Added validation message if the dataset does not contain subjects from both the control and treatment arms in `tm_g_events_term_id`.
+* Improved validation message if subject has been filtered out of dataset when used with `tm_g_patient_profile`.
 * Fixed modules due to changes to `plot_with_settings` in latest `teal.devel` release.
 
 # teal.osprey 0.1.7
