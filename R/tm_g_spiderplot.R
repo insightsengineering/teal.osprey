@@ -328,8 +328,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
       },
       vref_line = bquote(.(vref_line)),
       href_line = bquote(.(href_line)),
-      x_label = bquote(if_null(rtables::var_labels(ADTR_FILTERED[.(x_var)]), .(x_var))),
-      y_label = bquote(if_null(rtables::var_labels(ADTR_FILTERED[.(y_var)]), .(y_var))),
+      x_label = bquote(utils.nest::if_null(rtables::var_labels(ADTR_FILTERED[.(x_var)]), .(x_var))),
+      y_label = bquote(utils.nest::if_null(rtables::var_labels(ADTR_FILTERED[.(y_var)]), .(y_var))),
       show_legend = bquote(.(legend_on))
     ))
 
