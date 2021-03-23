@@ -181,7 +181,7 @@ srv_g_events_term_id <- function(input,
 
   init_chunks()
 
-  observe({
+  observeEvent(list(input$diff_ci_method, input$conf_level), {
     req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
     diff_ci_method <- input$diff_ci_method
     conf_level <- input$conf_level
@@ -196,7 +196,7 @@ srv_g_events_term_id <- function(input,
   })
 
 
-  observe({
+  observeEvent(input$sort, {
     updateTextInput(
       session,
       "title",
@@ -208,12 +208,10 @@ srv_g_events_term_id <- function(input,
           " " = ""
         )[if_null(input$sort, " ")]
       ))
-  })
+  }, ignoreNULL = FALSE)
 
-  observe({
-    req(!is.null(input$arm_var))
+  observeEvent(input$arm_var, {
     arm_var <- input$arm_var
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
     choices <- levels(ANL_FILTERED[[arm_var]])
@@ -235,7 +233,7 @@ srv_g_events_term_id <- function(input,
       "arm_trt",
       selected = choices[trt_index],
       choices = choices)
-  })
+  }, ignoreNULL = TRUE)
 
   plt <- reactive({
     validate(

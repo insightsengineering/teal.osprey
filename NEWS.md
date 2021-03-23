@@ -1,4 +1,5 @@
 # teal.osprey 0.1.8.9000
+* Improved reactivity dependencies across modules.
 Issues with no news:
 
 # teal.osprey 0.1.8

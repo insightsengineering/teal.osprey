@@ -177,7 +177,7 @@ srv_g_ae_oview <- function(input,
   init_chunks()
   font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
-  observe({
+  observeEvent(list(input$diff_ci_method, input$conf_level), {
     req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
     diff_ci_method <- input$diff_ci_method
     conf_level <- input$conf_level
@@ -190,8 +190,7 @@ srv_g_ae_oview <- function(input,
                         ))
   })
 
-  observe({
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+  observeEvent(input$arm_var, {
     ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
     req(!is.null(input$arm_var))

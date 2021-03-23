@@ -372,7 +372,7 @@ srv_g_patient_profile <- function(input,
   init_chunks()
 
   #only show the check box when domain data is available
-  observe({
+  observeEvent(ae_dataname, {
     if (!is.na(ae_dataname)) {
       output$select_ae_output <- renderUI({
         checkboxInput(
@@ -381,7 +381,9 @@ srv_g_patient_profile <- function(input,
           value = !is.na(ae_dataname))
       })
     }
+  })
 
+  observeEvent(ex_dataname, {
     if (!is.na(ex_dataname)) {
       output$select_ex_output <- renderUI({
         checkboxInput(
@@ -390,7 +392,9 @@ srv_g_patient_profile <- function(input,
           value = !is.na(ex_dataname))
       })
     }
+  })
 
+  observeEvent(rs_dataname, {
     if (!is.na(rs_dataname)) {
       output$select_rs_output <- renderUI({
         checkboxInput(
@@ -399,7 +403,9 @@ srv_g_patient_profile <- function(input,
           value = !is.na(rs_dataname))
       })
     }
+  })
 
+  observeEvent(cm_dataname, {
     if (!is.na(cm_dataname)) {
       output$select_cm_output <- renderUI({
         checkboxInput(
@@ -408,7 +414,9 @@ srv_g_patient_profile <- function(input,
           value = !is.na(cm_dataname))
       })
     }
+  })
 
+  observeEvent(lb_dataname, {
     if (!is.na(lb_dataname)) {
       output$select_lb_output <- renderUI({
         checkboxInput(
@@ -417,10 +425,9 @@ srv_g_patient_profile <- function(input,
           value = !is.na(lb_dataname))
       })
     }
-
   })
 
-  observe({
+  observeEvent(input$select_lb, {
     req(input$select_lb == TRUE && !is.null(input$lb_var))
     ADLB_FILTERED <- datasets$get_data(lb_dataname, filtered = TRUE) #nolint
     choices <- unique(ADLB_FILTERED[[input$lb_var]])

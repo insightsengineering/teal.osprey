@@ -243,7 +243,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
   })
 
   #dynamic options for dichotomization variable
-  observe({
+  observeEvent(input$right_var, {
     right_var <- input$right_var
     right_val <- isolate(input$right_val)
     current_r_var <- isolate(vars$r)
@@ -271,9 +271,9 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
         session, "right_val", choices = as.character(options$r), selected = selected, label = "Choose Up To 2:")
     }
     vars$r <- right_var
-  })
+  }, ignoreNULL = FALSE)
 
-  observe({
+  observeEvent(input$left_var, {
     left_var <- input$left_var
     left_val <- isolate(input$left_val)
     current_l_var <- isolate(vars$l)
@@ -302,7 +302,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
         session, "left_val", choices = as.character(options$l), selected = selected, label = "Choose Up To 2:")
     }
     vars$l <- left_var
-  })
+  }, ignoreNULL = FALSE)
 
 
 
