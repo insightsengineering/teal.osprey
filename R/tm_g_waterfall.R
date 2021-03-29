@@ -422,7 +422,7 @@ srv_g_waterfall <- function(input,
         rs_label <- rs_sub %>%
           dplyr::select(USUBJID, PARAMCD, AVALC) %>%
           tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
-        anl <- bar_data %>% dplyr::left_join(rs_label)
+        anl <- bar_data %>% dplyr::left_join(rs_label, by = c("USUBJID"))
         anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
       }))
     }
