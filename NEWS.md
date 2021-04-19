@@ -1,6 +1,6 @@
 # teal.osprey 0.1.8.9000
+* Added new `teal` module `tm_g_ae_sub` for an AE by subgroups plot.
 * Improved reactivity dependencies across modules.
-Issues with no news:
 
 # teal.osprey 0.1.8
 

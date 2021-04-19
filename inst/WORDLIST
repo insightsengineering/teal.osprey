@@ -11,6 +11,7 @@ ADTTE
 ADVS
 ADaM
 AE
+ae
 AET
 BCE
 CDISC
@@ -44,6 +45,8 @@ cdisc
 chot
 ci
 covr
+CTCAE
+ci
 dataname
 datanames
 dichotomization
@@ -57,6 +60,7 @@ inputId
 javascript
 lexicographically
 liaoc
+Lil
 lil
 linters
 lintr

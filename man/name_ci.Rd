@@ -2,13 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{name_ci}
 \alias{name_ci}
-\title{retrieve detailed name of ci method}
+\title{retrieve name of ci method}
 \usage{
+name_ci(x = ci_choices)
+
 name_ci(x = ci_choices)
 }
 \arguments{
 \item{x}{ci method to retrieve its name}
 }
 \description{
+retrieve name of ci method
+
 retrieve detailed name of ci method
 }
