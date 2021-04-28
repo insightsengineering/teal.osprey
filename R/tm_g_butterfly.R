@@ -333,6 +333,11 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     validate(
       need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
       need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked"))
+    validate(
+      need(
+        any(c(ADSL_FILTERED[[right_var]] %in% right_val, ADSL_FILTERED[[left_var]] %in% left_val)),
+        "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)")
+      )
 
     #if variable is not in ADSL, then take from domain VADs
     varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)

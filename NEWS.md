@@ -1,6 +1,11 @@
 # teal.osprey 0.1.9
+
+### Enhancements
 * Added new `teal` module `tm_g_ae_sub` for an AE by subgroups plot.
 * Improved reactivity dependencies across modules.
+
+### Bug fixes
+* Added a validate statement to output a better error message when both the left and right dichotomization values are filtered out of data.
 
 # teal.osprey 0.1.8
 
