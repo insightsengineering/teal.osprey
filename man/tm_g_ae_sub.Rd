@@ -7,7 +7,6 @@
 tm_g_ae_sub(
   label,
   dataname,
-  term_var,
   arm_var,
   group_var,
   plot_height = c(600L, 200L, 2000L),
@@ -20,8 +19,6 @@ tm_g_ae_sub(
 
 \item{dataname}{(\code{character}) analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
-
-\item{term_var}{\code{\link[teal]{choices_selected}} term variables}
 
 \item{arm_var}{\code{\link[teal]{choices_selected}} object with all available choices
 and the pre-selected option for variable names that can be used as \code{arm_var}.}
@@ -58,9 +55,6 @@ app <- init(
     tm_g_ae_sub(
       label = "AE by Subgroup",
       dataname = "ADAE",
-      term_var = choices_selected(
-        selected = "AEDECOD",
-        choices = c("AEDECOD", "AETERM", "AEHLT", "AELLT","AEBODSYS")),
       arm_var = choices_selected(
         selected = "ACTARMCD",
         choices = c("ACTARM", "ACTARMCD")),

@@ -4,7 +4,6 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams argument_convention
-#' @param term_var \code{\link[teal]{choices_selected}} term variables
 #' @param group_var \code{\link[teal]{choices_selected}} subgroups variables
 #' @param fontsize a numeric vector with 3 values, selected font size and font size range,
 #' default is \code{c(5, 3, 7)}
@@ -32,9 +31,6 @@
 #'     tm_g_ae_sub(
 #'       label = "AE by Subgroup",
 #'       dataname = "ADAE",
-#'       term_var = choices_selected(
-#'         selected = "AEDECOD",
-#'         choices = c("AEDECOD", "AETERM", "AEHLT", "AELLT","AEBODSYS")),
 #'       arm_var = choices_selected(
 #'         selected = "ACTARMCD",
 #'         choices = c("ACTARM", "ACTARMCD")),
@@ -52,13 +48,11 @@
 #'
 tm_g_ae_sub <- function(label,
                         dataname,
-                        term_var,
                         arm_var,
                         group_var,
                         plot_height = c(600L, 200L, 2000L),
                         plot_width = c(1000L, 200L, 2000L),
                         fontsize = c(5, 3, 7)) {
-    stopifnot(is.choices_selected(term_var))
     stopifnot(is.choices_selected(arm_var))
     stopifnot(is.choices_selected(group_var))
     check_slider_input(plot_height, allow_null = FALSE)
@@ -75,7 +69,6 @@ tm_g_ae_sub <- function(label,
         ),
       ui = ui_g_ae_sub,
       ui_args = list(
-        term_var = term_var,
         arm_var = arm_var,
         group_var = group_var,
         fontsize = fontsize
@@ -94,12 +87,6 @@ ui_g_ae_sub <- function(id, ...) {
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code("ADAE")),
-      optionalSelectInput(
-        ns("term"),
-        "Term Variable",
-        choices = args$term_var$choices,
-        selected = args$term_var$selected
-      ),
       optionalSelectInput(
         ns("arm_var"),
         "Arm Variable",
@@ -172,8 +159,8 @@ srv_g_ae_sub <- function(input,
     plot_height = plot_height,
     plot_width = plot_width
   )
-  observeEvent(list(input$arm_var, input$term), {
-    req(!is.null(input$arm_var) && !is.null(input$term))
+  observeEvent(input$arm_var, {
+    req(!is.null(input$arm_var))
     arm_var <- input$arm_var
     ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
@@ -293,7 +280,6 @@ srv_g_ae_sub <- function(input,
     chunks_reset(envir = environment())
 
     chunks_push(bquote({
-      term <- ADAE_FILTERED[[.(input$term)]]
       id <- ADAE_FILTERED$USUBJID
       arm <- as.factor(ADAE_FILTERED[[.(input$arm_var)]])
       arm_sl <- as.character(ADSL_FILTERED[[.(input$arm_var)]])
@@ -334,7 +320,6 @@ srv_g_ae_sub <- function(input,
 
     chunks_push(bquote({
       g_ae_sub(
-        term = term,
         id = id,
         arm = arm,
         arm_sl = arm_sl,
