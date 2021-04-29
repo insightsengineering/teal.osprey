@@ -318,7 +318,7 @@ ui_g_patient_profile <- function(id, ...) {
         paste0("input['", ns("select_cm"), "']"),
         optionalSelectInput(
           ns("cm_var"),
-          "Concomittant medicine variable",
+          "Concomitant medicine variable",
           choices = a$cm_var$choices,
           selected = a$cm_var$selected,
           multiple = FALSE)
@@ -748,7 +748,7 @@ srv_g_patient_profile <- function(input,
     chunks_safe_eval()
     if (select_plot["cm"]) {
       validate(
-        need(!is.null(cm_var), "Please select a concomittant medicine variable.")
+        need(!is.null(cm_var), "Please select a concomitant medicine variable.")
       )
       if (ADSL$USUBJID %in% ADCM_FILTERED$USUBJID) {
         chunks_push(bquote({
