@@ -69,7 +69,6 @@ app <- init(
 \dontrun{
 shinyApp(app$ui, app$server)
 }
-
 }
 \author{
 Liming Li (Lil128) \email{liming.li@roche.com}

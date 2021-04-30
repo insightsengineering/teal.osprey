@@ -45,7 +45,6 @@
 #' \dontrun{
 #' shinyApp(app$ui, app$server)
 #' }
-#'
 tm_g_ae_sub <- function(label,
                         dataname,
                         arm_var,
@@ -104,6 +103,11 @@ ui_g_ae_sub <- function(id, ...) {
         "Control",
         choices = args$arm_var$choices,
         selected = args$arm_var$selected
+      ),
+      checkboxInput(
+        ns("arm_n"),
+        "Show N in each arm",
+        value = args$arm_n
       ),
       optionalSelectInput(
         ns("groups"),
@@ -186,6 +190,7 @@ srv_g_ae_sub <- function(input,
       "arm_ref",
       selected = choices[ref_index],
       choices = choices)
+
   })
 
   observeEvent(list(input$ci, input$conf_level, input$arm_trt, input$arm_ref), {
@@ -331,6 +336,7 @@ srv_g_ae_sub <- function(input,
         conf_level = .(input$conf_level),
         diff_ci_method = .(input$ci),
         fontsize = .(font_size()),
+        arm_n = .(input$arm_n),
         draw = TRUE
       )
     }))
