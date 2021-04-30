@@ -4,11 +4,11 @@
 
 # Getting Started
 
-Please see the [agile-R](http://go.roche.com/agile-R) website. In particular the [osprey example app](http://go.roche.com/agile-R/teal/sample_apps/sample-app-osprey/) configuration.
+Please see the [agile-R](https://go.roche.com/agile-R) website and refer to Teal/Sample Teal Apps/Osprey (ED) for Osprey example app configuration.
 
 # Installation
 
-Please refer to the quick start section in agile-R [here](https://pages.github.roche.com/NEST/docs/hugo/NEST/agile-R/master/quick_start/install-nest-environment/)
+Please refer to the quick start section in agile-R [here](https://go.roche.com/agile-R).
 
 The latest version of `teal.osprey` can be installed locally with:
 ```r
