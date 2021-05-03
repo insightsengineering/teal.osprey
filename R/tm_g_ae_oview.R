@@ -191,12 +191,13 @@ srv_g_ae_oview <- function(input,
   })
 
   observeEvent(input$arm_var, {
+    ANL <- datasets$get_data(dataname, filtered = FALSE) # nolint
     ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
     req(!is.null(input$arm_var))
     arm_var <- input$arm_var
 
-    choices <- unique(ANL_FILTERED[[arm_var]])
+    choices <- unique(ANL[[arm_var]])
 
     validate(need(length(choices) > 0, "Please include multiple treatment"))
     if (length(choices) == 1) {
@@ -241,11 +242,12 @@ srv_g_ae_oview <- function(input,
       )
     ))
 
+    ANL <- datasets$get_data(dataname, filtered = FALSE) # nolint
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
     # assign labels back to the data
-    anl_labels <- rtables::var_labels(datasets$get_data(dataname, filtered = FALSE))
+    anl_labels <- rtables::var_labels(ANL)
     if (!is.null(input$add_flags)) {
       add_flag_labels <- anl_labels[names(anl_labels) %in% input$add_flags] # nolint
     }
@@ -257,6 +259,17 @@ srv_g_ae_oview <- function(input,
 
     validate(need(nlevels(ANL_FILTERED[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
     validate_has_data(ANL_FILTERED, min_nrow = 10)
+    if (all(c(input$arm_trt, input$arm_ref) %in% ANL[[input$arm_var]])) {
+      validate(
+        need(
+          input$arm_ref %in% ANL_FILTERED[[input$arm_var]],
+          paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")),
+        need(
+          input$arm_trt %in% ANL_FILTERED[[input$arm_var]],
+          paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
+        )
+      )
+    }
     validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])), "Plot loading"))
 
     chunks_push(bquote({

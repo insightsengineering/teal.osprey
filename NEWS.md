@@ -2,6 +2,11 @@
 
 ### Enhancements
 * Added new `teal` module `tm_g_ae_sub` for an AE by subgroups plot.
+
+### Bug fixes
+* Fixed misleading validate message in `tm_g_ae_oview` when either Control or Treatment variable is filtered out.
+
+### Miscellaneous
 * Improved reactivity dependencies across modules.
 
 ### Bug fixes
