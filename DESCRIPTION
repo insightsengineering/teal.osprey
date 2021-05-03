@@ -28,7 +28,7 @@ Suggests:
   knitr,
   random.cdisc.data (>= 0.3.10),
   rmarkdown,
-  test.nest (>= 0.2.7),
+  test.nest (>= 0.2.8),
   testthat (>= 2.0)
 License: file LICENSE
 Encoding: UTF-8
