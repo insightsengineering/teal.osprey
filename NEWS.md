@@ -1,15 +1,15 @@
 # teal.osprey 0.1.9
+
+### New feeatures
 * Added new `teal` module `tm_g_heat_bygrade` for a heatmap by grade plot.
 * Added new `teal` module `tm_g_ae_sub` for an AE by subgroups plot.
 
 ### Bug fixes
 * Fixed misleading validate message in `tm_g_ae_oview` when either Control or Treatment variable is filtered out.
+* Added a validate statement to output a better error message when both the left and right dichotomization values are filtered out of data.
 
 ### Miscellaneous
 * Improved reactivity dependencies across modules.
-
-### Bug fixes
-* Added a validate statement to output a better error message when both the left and right dichotomization values are filtered out of data.
 
 # teal.osprey 0.1.8
 
@@ -54,13 +54,16 @@
 * Minor changes in tests.
 
 # teal.osprey 0.1.3
+
 * Technical release with updated dependencies.
  
 # teal.osprey 0.1.2
+
 * New waterfall module.
 * Refactored due to recent changes in `utils.nest`.
 
 # teal.osprey 0.1.1
+
 * Refactoring package according to the NEST standards:
   - Included test.nest tests.
   - Fixed outdated modules according to current teal functionality.
