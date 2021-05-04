@@ -10,7 +10,7 @@ tm_g_ae_sub(
   arm_var,
   group_var,
   plot_height = c(600L, 200L, 2000L),
-  plot_width = c(1000L, 200L, 2000L),
+  plot_width = NULL,
   fontsize = c(5, 3, 7)
 )
 }

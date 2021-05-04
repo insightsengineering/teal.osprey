@@ -50,7 +50,7 @@ tm_g_ae_sub <- function(label,
                         arm_var,
                         group_var,
                         plot_height = c(600L, 200L, 2000L),
-                        plot_width = c(1000L, 200L, 2000L),
+                        plot_width = NULL,
                         fontsize = c(5, 3, 7)) {
     stopifnot(is.choices_selected(arm_var))
     stopifnot(is.choices_selected(group_var))
