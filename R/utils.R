@@ -28,7 +28,7 @@ NULL
 #'
 
 quick_filter <- function(filter_opt, ANL) { # nolint
-  for (i in seq(1:length(filter_opt))) {
+  for (i in seq_along(filter_opt)) {
     ANL <- ANL[ANL[, filter_opt[i]] == "Y", ] # nolint
   }
   return(ANL)
