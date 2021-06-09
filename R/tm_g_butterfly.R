@@ -233,8 +233,8 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
   vars <- reactiveValues(r = NULL, l = NULL)
 
   reactive_data <- reactive({
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-    ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = FALSE) # nolint
+    ADAE_FILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
 
     ADSL_df <- ADSL_FILTERED %>% as.data.frame() # nolint
     ADAE_df <- ADAE_FILTERED %>% as.data.frame() # nolint
