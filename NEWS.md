@@ -1,5 +1,6 @@
 # teal.osprey 0.1.9.9000
-* Altered the `Choose Up To 2:` inputs widget from the Encoding Panel to be independent of the Filtering Panel, i.e. all choices from the original dataset will still appear even when filtered out.
+
+* Altered the `Choose Up To 2:` inputs widget from the Encoding Panel to be independent of the Filtering Panel in `tm_g_butterfly`.
 
 # teal.osprey 0.1.9
 
