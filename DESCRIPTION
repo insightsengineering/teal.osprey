@@ -19,7 +19,7 @@ Imports:
   ggplot2,
   dplyr,
   purrr,
-  rtables (>= 0.3.7),
+  rtables (>= 0.3.8),
   teal.devel (>= 0.2.11),
   tidyr,
   utils.nest (>= 0.2.9),
