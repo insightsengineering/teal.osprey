@@ -1,6 +1,7 @@
 # teal.osprey 0.1.10
 
 * Altered the `Choose Up To 2:` inputs widget from the Encoding Panel to be independent of the Filtering Panel in `tm_g_butterfly`.
+* Updated warning message when Tumor Burden Parameter is not selected in `tm_g_waterfall`.
 
 # teal.osprey 0.1.9
 

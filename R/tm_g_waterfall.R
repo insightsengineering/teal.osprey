@@ -301,7 +301,11 @@ srv_g_waterfall <- function(input,
     validate_has_data(adtr_filtered, min_nrow = 2)
     validate_has_data(adrs_filtered, min_nrow = 2)
 
-    validate_in(bar_paramcd, adtr_filtered$PARAMCD, "Tumor burden parameter cannot be found in ADTR PARAMCD.")
+    validate_in(
+      bar_paramcd,
+      adtr_filtered$PARAMCD,
+      "Tumor burden parameter is not selected or is not found in ADTR PARAMCD."
+    )
     if (!is.null(add_label_paramcd_rs)) {
       validate_in(add_label_paramcd_rs, adrs_filtered$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
     }
