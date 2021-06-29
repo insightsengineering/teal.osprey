@@ -150,12 +150,15 @@ ui_g_butterfly <- function(id, ...) {
     encoding =  div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
-      optionalSelectInput(
-        ns("filter_var"),
-        label =
-          "Preset Data Filters Observations with value of 'Y' for selected variable(s) will be used for analysis",
-        choices = a$filter_var$choices,
-        selected = a$filter_var$selected, multiple = TRUE),
+      if (!is.null(a$filter_var)) {
+        optionalSelectInput(
+          ns("filter_var"),
+          label =
+            "Preset Data Filters Observations with value of 'Y' for selected variable(s) will be used for analysis",
+          choices = a$filter_var$choices,
+          selected = a$filter_var$selected,
+          multiple = TRUE)
+      },
       optionalSelectInput(
         ns("right_var"),
         "Right Dichotomization Variable",
@@ -202,12 +205,14 @@ ui_g_butterfly <- function(id, ...) {
         "Count By Variable",
         a$count_by_var$choices,
         a$count_by_var$selected),
-      optionalSelectInput(
-        ns("facet_var"),
-        "Facet By Variable",
-        a$facet_var$choices,
-        a$facet_var$selected,
-        multiple = TRUE),
+      if (!is.null(a$facet_var)) {
+        optionalSelectInput(
+          ns("facet_var"),
+          "Facet By Variable",
+          a$facet_var$choices,
+          a$facet_var$selected,
+          multiple = TRUE)
+      },
       radioButtons(
         ns("sort_by_var"),
         "Sort By Variable",
