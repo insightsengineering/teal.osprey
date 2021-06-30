@@ -309,7 +309,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     anno_txt_var <- input$anno_txt_var
 
     # If reference lines are requested
-    vref_line <- as_numeric_from_comma_sep_str(input$vref_line)
+    vref_line <- as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)())
     validate(need(all(!is.na(vref_line)),
       "Please enter a comma separated set of numeric values for the reference line(s)"))
 

@@ -1,5 +1,8 @@
 # teal.osprey 0.1.10
 
+### Enhancements
+* Added a Shiny feature to `tm_g_swimlane` that will prevent needless re-render of the output when the user has not completely provided inputs to the vertical lines widget.
+
 ### Miscellaneous
 * Altered the `Choose Up To 2:` inputs widget from the Encoding Panel to be independent of the Filtering Panel in `tm_g_butterfly`.
 * Updated warning message when Tumor Burden Parameter is not selected in `tm_g_waterfall`.
