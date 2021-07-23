@@ -1,15 +1,13 @@
 
 ---
-upstream_repos:
-- repo: insightsengineering/osprey
-  host: https://github.com
-- repo: insightsengineering/test.nest
-  host: https://github.com
-
-downstream_repos:
-- repo: insightsengineering/random.cdisc.data
-  host: https://github.com
-
 current_repo:
   repo: insightsengineering/teal.osprey
   host: https://github.com
+
+upstream_repos:
+- repo: insightsengineering/osprey
+  host: https://github.com
+- repo: insightsengineering/teal.devel
+  host: https://github.com
+
+downstream_repos:
