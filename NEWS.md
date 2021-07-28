@@ -1,4 +1,5 @@
 # teal.osprey 0.1.10.9000
+* Updated document and tests with `scda` synthetic data to replace `random.cdisc.data`.
 
 # teal.osprey 0.1.10
 

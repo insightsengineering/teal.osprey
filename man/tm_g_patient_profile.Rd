@@ -141,45 +141,51 @@ is derived for consistency based the start date of user's choice in the app (for
 }
 }
 \examples{
-library(random.cdisc.data)
+library(scda)
 
-ADSL <- radsl(cached = TRUE)
-ADAE <- radae(cached = TRUE) \%>\%
+ADSL <- synthetic_cdisc_data("latest")$adsl
+ADAE <- synthetic_cdisc_data("latest")$adae \%>\%
   mutate(ASTDT = as.Date(ASTDTM),
          AENDT = as.Date(AENDTM))
-ADCM <- radcm(cached = TRUE) \%>\%
+ADCM <- synthetic_cdisc_data("latest")$adcm \%>\%
   mutate(ASTDT = as.Date(ASTDTM),
          AENDT = as.Date(AENDTM))
-ADRS <- radrs(cached = TRUE) \%>\%
+
+# The step below is to pre-process ADCM to legacy standard
+ADCM <- ADCM \%>\% select(-starts_with("ATC")) \%>\% unique()
+
+ADRS <- synthetic_cdisc_data("latest")$adrs \%>\%
   mutate(ADT = as.Date(ADTM))
-ADEX <- radex(cached = TRUE) \%>\%
+ADEX <- synthetic_cdisc_data("latest")$adex \%>\%
   mutate(ASTDT = as.Date(ASTDTM),
          AENDT = as.Date(AENDTM))
-ADLB <- radlb(cached = TRUE) \%>\%
+ADLB <- synthetic_cdisc_data("latest")$adlb \%>\%
   mutate(ADT = as.Date(ADTM),
          LBSTRESN = as.numeric(LBSTRESC))
 
 x <- init(
   data = cdisc_data(
     cdisc_dataset("ADSL", ADSL,
-      code = "ADSL <- radsl(cached = TRUE)"),
+      code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
     cdisc_dataset("ADRS", ADRS,
-      code = "ADRS <- radrs(cached = TRUE) \%>\%
+      code = "ADRS <- synthetic_cdisc_data(\"latest\")$adrs \%>\%
               mutate(ADT = as.Date(ADTM))"),
     cdisc_dataset("ADAE", ADAE,
-      code = "ADAE <- radae(cached = TRUE) \%>\%
+      code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae \%>\%
               mutate(ASTDT = as.Date(ASTDTM),
                      AENDT = as.Date(AENDTM))"),
     cdisc_dataset("ADCM", ADCM,
-      code = "ADCM <- radcm(cached = TRUE) \%>\%
+      code = "ADCM <- synthetic_cdisc_data(\"latest\")$adcm \%>\%
               mutate(ASTDT = as.Date(ASTDTM),
-                     AENDT = as.Date(AENDTM))"),
+                     AENDT = as.Date(AENDTM))
+              ADCM <- ADCM \%>\% select(-starts_with(\"ATC\")) \%>\% unique()",
+      keys = c('STUDYID','USUBJID', 'ASTDTM', 'CMSEQ', 'CMDECOD')),
     cdisc_dataset("ADLB", ADLB,
-      code = "ADLB <- radlb(cached = TRUE) \%>\%
+      code = "ADLB <- synthetic_cdisc_data(\"latest\")$adlb \%>\%
               mutate(ADT = as.Date(ADTM),
                      LBSTRESN = as.numeric(LBSTRESC))"),
     cdisc_dataset("ADEX", ADEX,
-      code = "ADEX <- radex(cached = TRUE) \%>\%
+      code = "ADEX <- synthetic_cdisc_data(\"latest\")$adex \%>\%
               mutate(ASTDT = as.Date(ASTDTM),
                      AENDT = as.Date(AENDTM))"),
     check = TRUE
