@@ -39,15 +39,15 @@ an \code{\link[teal]{module}} object
 Display Events by Term plot as a shiny module
 }
 \examples{
-library(random.cdisc.data)
+library(scda)
 
-ADSL <- radsl(cached = TRUE)
-ADAE <- radae(cached = TRUE)
+ADSL <- synthetic_cdisc_data("latest")$adsl
+ADAE <- synthetic_cdisc_data("latest")$adae
 
 app <- init(
   data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL, code = "ADSL <- radsl(cached = TRUE)"),
-    cdisc_dataset("ADAE", ADAE, code = "ADAE <- radae(cached = TRUE)"),
+    cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
+    cdisc_dataset("ADAE", ADAE, code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae"),
     check = TRUE
   ),
   modules = root_modules(

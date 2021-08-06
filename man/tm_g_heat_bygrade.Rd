@@ -69,11 +69,16 @@ a \code{\link[teal]{module}} object
 Display the heatmap by grade as a shiny module
 }
 \examples{
-library(random.cdisc.data)
-ADSL <- radsl(N = 30, seed = 1)
-ADEX <- radex(ADSL)
-ADAE <- radae(ADSL)
-ADCM <- radcm(ADSL)
+library(scda)
+library(dplyr)
+ADSL <- synthetic_cdisc_data("latest")$adsl \%>\% slice(1:30)
+ADEX <- synthetic_cdisc_data("latest")$adex \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+ADAE <- synthetic_cdisc_data("latest")$adae \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+ADCM <- synthetic_cdisc_data("latest")$adcm \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+
+# This preprocess is only to force legacy standard on ADCM
+ADCM <- ADCM \%>\% select(-starts_with("ATC")) \%>\% unique()
+
 # function to derive AVISIT from ADEX
 add_visit <- function(data_need_visit) {
   visit_dates <- ADEX \%>\%
@@ -103,12 +108,13 @@ app <- init(
     cdisc_dataset("ADSL", ADSL),
     cdisc_dataset("ADEX", ADEX),
     cdisc_dataset("ADAE", ADAE),
-    cdisc_dataset("ADCM", ADCM),
+    cdisc_dataset("ADCM", ADCM, keys = c('STUDYID','USUBJID', 'ASTDTM', 'CMSEQ', 'CMDECOD')),
     code = "
-    ADSL <- radsl(N = 30, seed = 1)
-    ADEX <- radex(ADSL)
-    ADAE <- radae(ADSL)
-    ADCM <- radcm(ADSL)
+    ADSL <- synthetic_cdisc_data(\"latest\")$adsl \%>\% slice(1:30)
+    ADEX <- synthetic_cdisc_data(\"latest\")$adex \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+    ADAE <- synthetic_cdisc_data(\"latest\")$adae \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+    ADCM <- synthetic_cdisc_data(\"latest\")$adcm \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+    ADCM <- ADCM \%>\% select(-starts_with(\"ATC\")) \%>\% unique()
     ADEX  <- ADEX \%>\%
       filter(PARCAT1 == 'INDIVIDUAL') \%>\%
       mutate(ongo_status = (EOSSTT == 'ONGOING'))

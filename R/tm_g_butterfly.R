@@ -41,11 +41,11 @@
 #'
 #' #Example using stream (ADaM) dataset
 #' library(dplyr)
-#' library(random.cdisc.data)
+#' library(scda)
 #'
 #' set.seed(23)
-#' ADSL <- radsl(cached = TRUE)
-#' ADAE <- radae(cached = TRUE)
+#' ADSL <- synthetic_cdisc_data("latest")$adsl
+#' ADAE <- synthetic_cdisc_data("latest")$adae
 #' ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
 #' ADAE <- mutate(
 #'   ADAE,
@@ -58,11 +58,11 @@
 #' app <- init(
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL,
-#'       code = "ADSL <- radsl(cached = TRUE)
+#'       code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl
 #'               set.seed(23)
 #'               ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), 'UG'))"),
 #'     cdisc_dataset("ADAE", ADAE,
-#'       code = "ADAE <- radae(cached = TRUE)
+#'       code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae
 #'               ADAE <- mutate(ADAE,
 #'               flag1 = ifelse(AETOXGR == 1, 1, 0),
 #'               flag2 = ifelse(AETOXGR == 2, 1, 0),

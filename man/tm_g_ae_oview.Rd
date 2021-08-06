@@ -41,10 +41,10 @@ a \code{\link[teal]{module}} object
 Display the AE overview plot as a shiny module
 }
 \examples{
-library(random.cdisc.data)
+library(scda)
 
-ADSL <- radsl(cached = TRUE)
-ADAE <- radae(cached = TRUE)
+ADSL <- synthetic_cdisc_data("latest")$adsl
+ADAE <- synthetic_cdisc_data("latest")$adae
 
 # Add additional dummy causality flags.
 ADAE <- ADAE \%>\%
@@ -57,9 +57,9 @@ ADAE <- ADAE \%>\%
 
 app <- init(
   data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL, code = "ADSL <- radsl(cached = TRUE)"),
+    cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
     cdisc_dataset("ADAE", ADAE,
-      code = "ADAE <- radae(cached = TRUE)
+      code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae
               # Add additional dummy causality flags.
               ADAE <- ADAE \%>\%
                 mutate(AEREL1 = (AEREL == 'Y' & ACTARM == 'A: Drug X')) \%>\%
