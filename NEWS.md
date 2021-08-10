@@ -1,5 +1,6 @@
 # teal.osprey 0.1.10.9000
 * Updated document and tests with `scda` synthetic data to replace `random.cdisc.data`.
+* Removed mentions of Roche internal services from the README file.
 
 # teal.osprey 0.1.10
 

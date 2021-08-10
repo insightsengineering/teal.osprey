@@ -9,7 +9,7 @@ template:
 navbar:
   right:
     - icon: fa-github
-      href: https://github.roche.com/NEST/teal.osprey
+      href: https://github.com/insightsengineering/teal.osprey
 
 
 reference:
