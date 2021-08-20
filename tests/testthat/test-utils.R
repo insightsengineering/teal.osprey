@@ -1,11 +1,9 @@
 test_that("as_numeric_from_comma_sep_str converts comma sep string into numeric vector", {
-  test.nest::skip_if_too_deep(depth = 0)
   expect_equal(as_numeric_from_comma_sep_str("5.65"), 5.65)
   expect_equal(as_numeric_from_comma_sep_str("5,-6, 0"), c(5, -6, 0))
 })
 
 test_that("as_numeric_from_comma_sep_str throws warning if any entries are not numeric and converts those to NAs", {
-  test.nest::skip_if_too_deep(depth = 0)
   warning_msg <- "NAs introduced by coercion"
   expect_warning(result <- as_numeric_from_comma_sep_str("hello"), warning_msg)
   expect_equal(result, as.numeric(NA))
@@ -16,14 +14,12 @@ test_that("as_numeric_from_comma_sep_str throws warning if any entries are not n
 })
 
 test_that("as_numeric_from_comma_sep_str returns NULL if input is NULL or whitespace", {
-  test.nest::skip_if_too_deep(depth = 0)
   expect_null(as_numeric_from_comma_sep_str(NULL))
   expect_null(as_numeric_from_comma_sep_str("  "))
   expect_null(as_numeric_from_comma_sep_str(""))
 })
 
 test_that("as_numeric_from_comma_sep_str ignores empty values at end of string", {
-  test.nest::skip_if_too_deep(depth = 0)
   expect_equal(as_numeric_from_comma_sep_str("5.65,"), 5.65)
   expect_equal(as_numeric_from_comma_sep_str("5.65, "), 5.65)
 })
