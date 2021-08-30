@@ -1,6 +1,7 @@
 # teal.osprey 0.1.10.9000
 * Updated document and tests with `scda` synthetic data to replace `random.cdisc.data`.
 * Removed mentions of Roche internal services from the README file.
+* Added `error_on_lint: TRUE` to `.lintr`.
 
 # teal.osprey 0.1.10
 
@@ -72,7 +73,7 @@
 # teal.osprey 0.1.3
 
 * Technical release with updated dependencies.
- 
+
 # teal.osprey 0.1.2
 
 * New waterfall module.
