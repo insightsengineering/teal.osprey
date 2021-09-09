@@ -9,7 +9,6 @@
 #' @param fontsize (\code{numeric}) vector of choices for font size
 #'
 #' @return an \code{\link[teal]{module}} object
-#' @importFrom rtables var_labels "var_labels<-"
 #'
 #' @export
 #'

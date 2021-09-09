@@ -66,7 +66,6 @@
 #' @template author_qit3
 #'
 #' @return plot object
-#' @importFrom rtables var_labels "var_labels<-"
 #' @importFrom purrr map_lgl map2_lgl
 #'
 #' @details
