@@ -29,7 +29,6 @@
 #' default is \code{c(5, 3, 7)}
 #'
 #' @return a \code{\link[teal]{module}} object
-#' @importFrom rtables var_labels
 #'
 #' @export
 #'

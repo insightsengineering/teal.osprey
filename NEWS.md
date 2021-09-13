@@ -2,6 +2,7 @@
 * Updated document and tests with `scda` synthetic data to replace `random.cdisc.data`.
 * Removed mentions of Roche internal services from the README file.
 * Added `error_on_lint: TRUE` to `.lintr`.
+* Removed unnecessary `importFrom` statements.
 
 # teal.osprey 0.1.10
 
