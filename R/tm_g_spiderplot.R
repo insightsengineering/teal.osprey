@@ -299,39 +299,40 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
 
     # plot code to chunks ---
 
-    chunks_push(call(
-      "g_spiderplot",
-      marker_x = bquote(ANL_f[, .(x_var)]),
-      marker_id = quote(ANL_f$USUBJID),
-      marker_y = bquote(ANL_f[, .(y_var)]),
-      line_colby = if (line_colorby_var != "None") {
-        bquote(ANL_f[, .(line_colorby_var)])
-      } else {
-        NULL
-      },
-      marker_shape = if (marker_var != "None") {
-        bquote(ANL_f[, .(marker_var)])
-      } else {
-        NULL
-      },
-      marker_size = 4,
-      datalabel_txt = quote(lbl),
-      facet_rows = if (!is.null(yfacet_var)) {
-        bquote(data.frame(ANL_f[, .(yfacet_var)]))
-      } else {
-        NULL
-      },
-      facet_columns = if (!is.null(xfacet_var)) {
-        bquote(data.frame(ANL_f[, .(xfacet_var)]))
-      } else {
-        NULL
-      },
-      vref_line = bquote(.(vref_line)),
-      href_line = bquote(.(href_line)),
-      x_label = bquote(utils.nest::if_null(rtables::var_labels(ADTR_FILTERED[.(x_var)]), .(x_var))),
-      y_label = bquote(utils.nest::if_null(rtables::var_labels(ADTR_FILTERED[.(y_var)]), .(y_var))),
-      show_legend = bquote(.(legend_on))
-    ))
+    chunks_push(bquote({
+      osprey::g_spiderplot(
+        marker_x = ANL_f[, .(x_var)],
+        marker_id = ANL_f$USUBJID,
+        marker_y = ANL_f[, .(y_var)],
+        line_colby = .(if (line_colorby_var != "None") {
+          bquote(ANL_f[, .(line_colorby_var)])
+        } else {
+          NULL
+        }),
+        marker_shape = .(if (marker_var != "None") {
+          bquote(ANL_f[, .(marker_var)])
+        } else {
+          NULL
+        }),
+        marker_size = 4,
+        datalabel_txt = lbl,
+        facet_rows = .(if (!is.null(yfacet_var)) {
+          bquote(data.frame(ANL_f[, .(yfacet_var)]))
+        } else {
+          NULL
+        }),
+        facet_columns = .(if (!is.null(xfacet_var)) {
+          bquote(data.frame(ANL_f[, .(xfacet_var)]))
+        } else {
+          NULL
+        }),
+        vref_line = .(vref_line),
+        href_line = .(href_line),
+        x_label = utils.nest::if_null(rtables::var_labels(ADTR_FILTERED[.(x_var)]), .(x_var)),
+        y_label = utils.nest::if_null(rtables::var_labels(ADTR_FILTERED[.(y_var)]), .(y_var)),
+        show_legend = .(legend_on)
+      )
+    }))
 
     chunks_safe_eval()
 

@@ -438,55 +438,56 @@ srv_g_waterfall <- function(input,
     # write plotting code to chunks
     anl <- chunks_get_var("anl") # nolint
 
-    chunks_push(call(
-      "g_waterfall",
-      bar_id = bquote(anl[["USUBJID"]]),
-      bar_height = bquote(anl[[bar_var]]),
-      sort_by = if (length(sort_var) > 0) {
-        bquote(anl[[sort_var]])
-      } else {
-        NULL
-      },
-      col_by = if (length(bar_color_var) > 0) {
-        bquote(anl[[bar_color_var]])
-      } else {
-        NULL
-      },
-      bar_color_opt = if (length(bar_color_var) == 0) {
-        NULL
-      } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt)) == T) {
-        bquote(.(bar_color_opt))
-      } else {
-        NULL
-      },
-      anno_txt = if (length(anno_txt_var_sl) == 0 & length(anno_txt_paramcd_rs) == 0) {
-        NULL
-      } else if (length(anno_txt_var_sl) >= 1 & length(anno_txt_paramcd_rs) == 0) {
-        bquote(data.frame(anl[anno_txt_var_sl]))
-      } else if (length(anno_txt_paramcd_rs) >= 1 & length(anno_txt_var_sl) == 0) {
-        bquote(data.frame(anl[anno_txt_paramcd_rs]))
-      } else {
-        bquote(cbind(anl[anno_txt_var_sl], anl[anno_txt_paramcd_rs]))
-      },
-      href_line = bquote(.(href_line)),
-      facet_by = if (length(facet_var) > 0) {
-        bquote(as.factor(anl[[facet_var]]))
-      } else {
-        NULL
-      },
-      show_datavalue = bquote(.(show_value)),
-      add_label = if (length(add_label_var_sl) > 0 & length(add_label_paramcd_rs) == 0) {
-        bquote(anl[[add_label_var_sl]])
-      } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) == 0) {
-        bquote(anl[[add_label_paramcd_rs]])
-      } else {
-        NULL
-      },
-      gap_point = bquote(.(gap_point_val)),
-      ytick_at = bquote(.(ytick_at)),
-      y_label = "Tumor Burden Change from Baseline",
-      title = "Waterfall Plot"
-    ))
+    chunks_push(bquote({
+      osprey::g_waterfall(
+        bar_id = anl[["USUBJID"]],
+        bar_height = anl[[bar_var]],
+        sort_by = .(if (length(sort_var) > 0) {
+          quote(anl[[sort_var]])
+        } else {
+          NULL
+        }),
+        col_by = .(if (length(bar_color_var) > 0) {
+          quote(anl[[bar_color_var]])
+        } else {
+          NULL
+        }),
+        bar_color_opt = .(if (length(bar_color_var) == 0) {
+          NULL
+        } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt)) == T) {
+          .(bar_color_opt)
+        } else {
+          NULL
+        }),
+        anno_txt = .(if (length(anno_txt_var_sl) == 0 & length(anno_txt_paramcd_rs) == 0) {
+          NULL
+        } else if (length(anno_txt_var_sl) >= 1 & length(anno_txt_paramcd_rs) == 0) {
+          quote(data.frame(anl[anno_txt_var_sl]))
+        } else if (length(anno_txt_paramcd_rs) >= 1 & length(anno_txt_var_sl) == 0) {
+          quote(data.frame(anl[anno_txt_paramcd_rs]))
+        } else {
+          quote(cbind(anl[anno_txt_var_sl], anl[anno_txt_paramcd_rs]))
+        }),
+        href_line = .(href_line),
+        facet_by = .(if (length(facet_var) > 0) {
+          quote(as.factor(anl[[facet_var]]))
+        } else {
+          NULL
+        }),
+        show_datavalue = .(show_value),
+        add_label = .(if (length(add_label_var_sl) > 0 & length(add_label_paramcd_rs) == 0) {
+          quote(anl[[add_label_var_sl]])
+        } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) == 0) {
+          quote(anl[[add_label_paramcd_rs]])
+        } else {
+          NULL
+        }),
+        gap_point = .(gap_point_val),
+        ytick_at = .(ytick_at),
+        y_label = "Tumor Burden Change from Baseline",
+        title = "Waterfall Plot"
+      )
+    }))
 
     chunks_safe_eval()
 

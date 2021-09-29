@@ -386,81 +386,83 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     ADSL <- chunks_get_var("ADSL") # nolint
     ANL <- chunks_get_var("ANL") # nolint
     if (dataname == "ADSL") {
-      chunks_push(call(
-        "g_swimlane",
-        bar_id = bquote(ADSL[["USUBJID"]]),
-        bar_length = bquote(ADSL[[bar_var]]),
-        sort_by = if (length(sort_var) > 0) bquote(ADSL[[sort_var]]) else NULL,
-        col_by = if (length(bar_color_var) > 0) bquote(ADSL[[bar_color_var]]) else NULL,
-        marker_id = NULL,
-        marker_pos = NULL,
-        marker_shape = NULL,
-        marker_shape_opt = NULL,
-        marker_color = NULL,
-        marker_color_opt = NULL,
-        anno_txt = if (length(anno_txt_var) > 0) bquote(ADSL[, anno_txt_var]) else NULL,
-        yref_line = bquote(.(vref_line)),
-        ytick_at = bquote(waiver()),
-        ylab = "Time from First Treatment (Day)",
-        title = "Swimlane Plot"
-      ))
+      chunks_push(bquote({
+        osprey::g_swimlane(
+          bar_id = ADSL[["USUBJID"]],
+          bar_length = ADSL[[bar_var]],
+          sort_by = .(if (length(sort_var) > 0) quote(ADSL[[sort_var]]) else NULL),
+          col_by = .(if (length(bar_color_var) > 0) quote(ADSL[[bar_color_var]]) else NULL),
+          marker_id = NULL,
+          marker_pos = NULL,
+          marker_shape = NULL,
+          marker_shape_opt = NULL,
+          marker_color = NULL,
+          marker_color_opt = NULL,
+          anno_txt = .(if (length(anno_txt_var) > 0) quote(ADSL[, anno_txt_var]) else NULL),
+          yref_line = .(vref_line),
+          ytick_at = waiver(),
+          ylab = "Time from First Treatment (Day)",
+          title = "Swimlane Plot"
+        )
+      }))
     } else {
-      chunks_push(call(
-        "g_swimlane",
-        bar_id = bquote(ADSL[["USUBJID"]]),
-        bar_length = bquote(ADSL[[bar_var]]),
-        sort_by = if (length(sort_var) > 0) {
-          bquote(ADSL[[sort_var]])
-        } else {
-          NULL
-        },
-        col_by = if (length(bar_color_var) > 0) {
-          bquote(ADSL[[bar_color_var]])
-        } else {
-          NULL
-        },
-        marker_id = bquote(ANL[["USUBJID"]]),
-        marker_pos = if (length(marker_pos_var) > 0) {
-          bquote(ANL[[marker_pos_var]])
-        } else {
-          NULL
-        },
-        marker_shape = if (length(marker_shape_var) > 0) {
-          bquote(ANL[[marker_shape_var]])
-        } else {
-          NULL
-        },
-        marker_shape_opt = if (length(marker_shape_var) == 0) {
-          NULL
-        } else if (length(marker_shape_var) > 0 &
-                   all(unique(ANL[[marker_shape_var]]) %in% names(marker_shape_opt)) == T) {
-          bquote(.(marker_shape_opt))
-        } else {
-          NULL
-        },
-        marker_color = if (length(marker_color_var) > 0) {
-          bquote(ANL[[marker_color_var]])
-        } else {
-          NULL
-        },
-        marker_color_opt = if (length(marker_color_var) == 0) {
-          NULL
-        } else if (length(marker_color_var) > 0 &
-                   all(unique(ANL[[marker_color_var]]) %in% names(marker_color_opt)) == T) {
-          bquote(.(marker_color_opt))
-        } else {
-          NULL
-        },
-        anno_txt = if (length(anno_txt_var) > 0) {
-          bquote(ADSL[, anno_txt_var])
-        } else {
-          NULL
-        },
-        yref_line = bquote(.(vref_line)),
-        ytick_at = bquote(waiver()),
-        ylab = "Time from First Treatment (Day)",
-        title = "Swimlane Plot"
-      ))
+      chunks_push(bquote({
+        osprey::g_swimlane(
+          bar_id = ADSL[["USUBJID"]],
+          bar_length = ADSL[[bar_var]],
+          sort_by = .(if (length(sort_var) > 0) {
+            quote(ADSL[[sort_var]])
+          } else {
+            NULL
+          }),
+          col_by = .(if (length(bar_color_var) > 0) {
+            quote(ADSL[[bar_color_var]])
+          } else {
+            NULL
+          }),
+          marker_id = ANL[["USUBJID"]],
+          marker_pos = .(if (length(marker_pos_var) > 0) {
+            quote(ANL[[marker_pos_var]])
+          } else {
+            NULL
+          }),
+          marker_shape = .(if (length(marker_shape_var) > 0) {
+            quote(ANL[[marker_shape_var]])
+          } else {
+            NULL
+          }),
+          marker_shape_opt = .(if (length(marker_shape_var) == 0) {
+            NULL
+          } else if (length(marker_shape_var) > 0 &
+                     all(unique(ANL[[marker_shape_var]]) %in% names(marker_shape_opt)) == T) {
+            bquote(.(marker_shape_opt))
+          } else {
+            NULL
+          }),
+          marker_color = .(if (length(marker_color_var) > 0) {
+            quote(ANL[[marker_color_var]])
+          } else {
+            NULL
+          }),
+          marker_color_opt = .(if (length(marker_color_var) == 0) {
+            NULL
+          } else if (length(marker_color_var) > 0 &
+                     all(unique(ANL[[marker_color_var]]) %in% names(marker_color_opt)) == T) {
+            bquote(.(marker_color_opt))
+          } else {
+            NULL
+          }),
+          anno_txt = .(if (length(anno_txt_var) > 0) {
+            quote(ADSL[, anno_txt_var])
+          } else {
+            NULL
+          }),
+          yref_line = .(vref_line),
+          ytick_at = waiver(),
+          ylab = "Time from First Treatment (Day)",
+          title = "Swimlane Plot"
+        )
+      }))
     }
 
     chunks_safe_eval()
