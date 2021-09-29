@@ -283,7 +283,7 @@ srv_g_events_term_id <- function(input,
       ref <- .(input$arm_ref)
       trt <- .(input$arm_trt)
 
-      g_events_term_id(
+      osprey::g_events_term_id(
         term = term,
         id = id,
         arm = arm,

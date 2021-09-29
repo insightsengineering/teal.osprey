@@ -379,7 +379,7 @@ srv_g_heatmap_bygrade <- function(input,
       exp_data <- ADEX_FILTERED %>%
         filter(PARCAT1 == "INDIVIDUAL")
 
-      g_heat_bygrade(
+      osprey::g_heat_bygrade(
         id_var = .(input$id_var),
         exp_data = exp_data,
         visit_var = .(input$visit_var),
