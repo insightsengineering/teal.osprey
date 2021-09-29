@@ -962,19 +962,19 @@ srv_g_patient_profile <- function(input,
     # check
     chunks_safe_eval()
 
-    chunks_push(call(
-      "g_patient_profile",
-      ex = bquote(ex),
-      ae = bquote(ae),
-      rs = bquote(rs),
-      cm = bquote(cm),
-      lb = bquote(lb),
-      arrow_end_day = quote(ADSL$max_day),
-      xlim = quote(x_limit),
-      xlab = "Study Day",
-      title = paste("Patient Profile: ", bquote(.(patient_id)))
-
-    ))
+    chunks_push(bquote({
+      osprey::g_patient_profile(
+        ex = ex,
+        ae = ae,
+        rs = rs,
+        cm = cm,
+        lb = lb,
+        arrow_end_day = ADSL$max_day,
+        xlim = x_limit,
+        xlab = "Study Day",
+        title = paste("Patient Profile: ", .(patient_id))
+      )
+    }))
 
     chunks_safe_eval()
 

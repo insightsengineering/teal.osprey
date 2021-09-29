@@ -296,7 +296,7 @@ srv_g_ae_oview <- function(input,
     chunks_safe_eval()
 
     chunks_push(bquote({
-      g_events_term_id(
+      osprey::g_events_term_id(
         term = flags,
         id = id,
         arm = arm,
