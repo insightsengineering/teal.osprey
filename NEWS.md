@@ -4,6 +4,7 @@
 * Updated document and tests with `scda` synthetic data to replace `random.cdisc.data`.
 * Added `error_on_lint: TRUE` to `.lintr`.
 * Removed unnecessary `importFrom` statements.
+* Updated `tm_g_patient_profile` module's study days range to not accept infinite values.
 
 # teal.osprey 0.1.10
 

@@ -950,7 +950,7 @@ srv_g_patient_profile <- function(input,
     }
 
     validate(need(
-      all(!is.na(x_limit)),
+      all(!is.na(x_limit)) & all(!is.infinite(x_limit)),
       "Not all values entered for study days range were numeric."))
     validate(need(
       x_limit[1] < x_limit[2],
