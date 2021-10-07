@@ -393,30 +393,31 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     chunks_safe_eval()
 
     if (!is.null(right_val) && !is.null(left_val)) {
-      chunks_push(call(
-        "g_butterfly",
-        category = bquote(ANL_f[, .(category_var)]),
-        right_flag = bquote(right),
-        left_flag = bquote(left),
-        group_names = bquote(c(right_name, left_name)),
-        block_count = count_by_var,
-        block_color = if (color_by_var != "None") {
-          bquote(ANL_f[, .(color_by_var)])
-        } else {
-          NULL
-        },
-        id = bquote(ANL_f$USUBJID),
-        facet_rows = if (!is.null(facet_var)) {
-          bquote(ANL_f[, .(facet_var)])
-        } else {
-          NULL
-        },
-        x_label = count_by_var,
-        y_label = category_var,
-        legend_label = color_by_var,
-        sort_by = sort_by_var,
-        show_legend = legend_on
-      ))
+      chunks_push(bquote({
+        osprey::g_butterfly(
+          category = ANL_f[, .(category_var)],
+          right_flag = right,
+          left_flag = left,
+          group_names = c(right_name, left_name),
+          block_count = .(count_by_var),
+          block_color = .(if (color_by_var != "None") {
+            bquote(ANL_f[, .(color_by_var)])
+          } else {
+            NULL
+          }),
+          id = ANL_f$USUBJID,
+          facet_rows = .(if (!is.null(facet_var)) {
+            bquote(ANL_f[, .(facet_var)])
+          } else {
+            NULL
+          }),
+          x_label = .(count_by_var),
+          y_label = .(category_var),
+          legend_label = .(color_by_var),
+          sort_by = .(sort_by_var),
+          show_legend = .(legend_on)
+        )
+      }))
     }
 
     chunks_safe_eval()

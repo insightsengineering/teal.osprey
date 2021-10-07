@@ -1,8 +1,10 @@
-# teal.osprey 0.1.10.9000
+# teal.osprey 0.1.11
+
+* Updated `LICENCE` and `README` with new package references.
 * Updated document and tests with `scda` synthetic data to replace `random.cdisc.data`.
-* Removed mentions of Roche internal services from the README file.
 * Added `error_on_lint: TRUE` to `.lintr`.
 * Removed unnecessary `importFrom` statements.
+* Updated `tm_g_patient_profile` module's study days range to not accept infinite values.
 
 # teal.osprey 0.1.10
 

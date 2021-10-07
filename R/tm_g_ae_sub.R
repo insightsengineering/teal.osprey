@@ -324,7 +324,7 @@ srv_g_ae_sub <- function(input,
     chunks_safe_eval()
 
     chunks_push(bquote({
-      g_ae_sub(
+      osprey::g_ae_sub(
         id = id,
         arm = arm,
         arm_sl = arm_sl,

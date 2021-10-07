@@ -950,7 +950,7 @@ srv_g_patient_profile <- function(input,
     }
 
     validate(need(
-      all(!is.na(x_limit)),
+      all(!is.na(x_limit)) & all(!is.infinite(x_limit)),
       "Not all values entered for study days range were numeric."))
     validate(need(
       x_limit[1] < x_limit[2],
@@ -962,19 +962,19 @@ srv_g_patient_profile <- function(input,
     # check
     chunks_safe_eval()
 
-    chunks_push(call(
-      "g_patient_profile",
-      ex = bquote(ex),
-      ae = bquote(ae),
-      rs = bquote(rs),
-      cm = bquote(cm),
-      lb = bquote(lb),
-      arrow_end_day = quote(ADSL$max_day),
-      xlim = quote(x_limit),
-      xlab = "Study Day",
-      title = paste("Patient Profile: ", bquote(.(patient_id)))
-
-    ))
+    chunks_push(bquote({
+      osprey::g_patient_profile(
+        ex = ex,
+        ae = ae,
+        rs = rs,
+        cm = cm,
+        lb = lb,
+        arrow_end_day = ADSL$max_day,
+        xlim = x_limit,
+        xlab = "Study Day",
+        title = paste("Patient Profile: ", .(patient_id))
+      )
+    }))
 
     chunks_safe_eval()
 
