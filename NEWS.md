@@ -5,6 +5,7 @@
 * Added `error_on_lint: TRUE` to `.lintr`.
 * Removed unnecessary `importFrom` statements.
 * Updated `tm_g_patient_profile` module's study days range to not accept infinite values.
+* Fixed disappearing plots when webpage is zoom in/out.
 
 # teal.osprey 0.1.10
 
