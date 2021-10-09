@@ -50,7 +50,7 @@ srv_g_decorate <- function(input,
                            plot_height,
                            plot_width) {
 
-    plot_r <- reactive({
+    plot_g <- reactive({
       g <- decorate_grob(
         plt(),
         titles = input$title,
@@ -62,10 +62,15 @@ srv_g_decorate <- function(input,
         ),
         gp_footnotes = gpar(fontsize = input$fontsize * .pt, col = "black")
       )
-      grid.newpage()
-      grid.draw(g)
-      g
     })
+
+    plot_r <- function() {
+      grid.newpage()
+      grid.draw(plot_g())
+      plot_g()
+    }
+
+    class(plot_r) <- c(class(plot_r), "reactive")
 
     callModule(
       plot_with_settings_srv,
