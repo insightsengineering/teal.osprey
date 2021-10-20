@@ -11,8 +11,8 @@ Authors@R: c(
 Description: Community efforts to collect teal modules for TLGs defined in the osprey package.
   The teal modules add an encoding panel to interactively change the encoding within teal.
 Depends:
-  R (>= 3.3),
   osprey (>= 0.1.11),
+  R (>= 3.6),
   shiny,
   teal (>= 0.10.0)
 Imports:
