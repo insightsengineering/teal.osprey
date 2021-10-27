@@ -1,42 +1,43 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
+Version: 0.1.11.9001
 Date: 2021-10-13
-Version: 0.1.11.9000
 Authors@R: c(
-  person("Nina", "Qi", email = "qit3@gene.com", role = c("aut", "cre")),
-  person("Chendi", "Liao", email = "chendi.liao@roche.com", role = c("aut")),
-  person("Mahdi", "About", email = "mahdi.about@roche.com", role = c("aut")),
-  person("Fei", "Wang", email = "fei.wang.fw6@roche.com", role = c("aut")),
-  person("Mika", "Maekinen", email = "mika.maekinen@roche.com", role = c("aut")))
-Description: Community efforts to collect teal modules for TLGs defined in the osprey package.
-  The teal modules add an encoding panel to interactively change the encoding within teal.
-Depends:
-  osprey (>= 0.1.11),
-  R (>= 3.6),
-  shiny,
-  teal (>= 0.10.0)
-Imports:
-  ggplot2,
-  dplyr,
-  purrr,
-  rtables (>= 0.3.8),
-  teal.devel (>= 0.2.12),
-  tidyr,
-  utils.nest (>= 0.2.11),
-  tern (>= 0.7.5)
-Suggests:
-  knitr,
-  scda(>= 0.1.1),
-  scda.2021(>= 0.1.1),
-  rmarkdown,
-  test.nest (>= 0.2.11),
-  testthat (>= 2.0)
+    person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
+    person("Chendi", "Liao", , "chendi.liao@roche.com", role = "aut"),
+    person("Mahdi", "About", , "mahdi.about@roche.com", role = "aut"),
+    person("Fei", "Wang", , "fei.wang.fw6@roche.com", role = "aut"),
+    person("Mika", "Maekinen", , "mika.maekinen@roche.com", role = "aut")
+  )
+Description: Community efforts to collect teal modules for TLGs defined in
+    the osprey package.  The teal modules add an encoding panel to
+    interactively change the encoding within teal.
 License: Apache License 2.0 | file LICENSE
+URL:https://github.com/insightsengineering/teal.osprey/
+BugReports:https://github.com/insightsengineering/teal.osprey/issues
+Depends:
+    osprey (>= 0.1.11),
+    R (>= 3.6),
+    shiny,
+    teal (>= 0.10.0)
+Imports:
+    dplyr,
+    ggplot2,
+    purrr,
+    rtables (>= 0.3.8),
+    teal.devel (>= 0.2.12),
+    tern (>= 0.7.5),
+    tidyr,
+    utils.nest (>= 0.2.11)
+Suggests:
+    knitr,
+    rmarkdown,
+    scda.2021(>= 0.1.1),
+    scda(>= 0.1.1),
+    test.nest (>= 0.2.11),
+    testthat (>= 2.0)
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
-VignetteBuilder: knitr
-URL:
-  https://github.com/insightsengineering/teal.osprey/
-BugReports:
-  https://github.com/insightsengineering/teal.osprey/issues
