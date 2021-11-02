@@ -1,6 +1,6 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Version: 0.1.11.9001
+Version: 0.1.11.9002
 Date: 2021-10-13
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
@@ -13,8 +13,8 @@ Description: Community efforts to collect teal modules for TLGs defined in
     the osprey package.  The teal modules add an encoding panel to
     interactively change the encoding within teal.
 License: Apache License 2.0 | file LICENSE
-URL:https://github.com/insightsengineering/teal.osprey/
-BugReports:https://github.com/insightsengineering/teal.osprey/issues
+URL: https://github.com/insightsengineering/teal.osprey/
+BugReports: https://github.com/insightsengineering/teal.osprey/issues
 Depends:
     osprey (>= 0.1.11),
     R (>= 3.6),
