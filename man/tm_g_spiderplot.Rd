@@ -83,9 +83,7 @@ app <- teal::init(
   data = cdisc_data(
     cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
     cdisc_dataset("ADTR",  ADTR, code = "ADTR <- synthetic_cdisc_data(\"latest\")$adtr",
-                  keys = keys(primary = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT"),
-                              foreign = c("STUDYID", "USUBJID"),
-                              parent = "ADSL")),
+      keys = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")),
     check = TRUE
   ),
   modules = root_modules(
