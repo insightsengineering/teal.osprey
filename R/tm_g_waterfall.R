@@ -57,9 +57,7 @@
 #'               ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))"),
 #'     cdisc_dataset("ADRS", ADRS, code = "ADRS <- rADRS"),
 #'     cdisc_dataset("ADTR", ADTR, code = " ADTR <- rADTR",
-#'                   keys(primary = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT"),
-#'                        foreign = c("STUDYID", "USUBJID"),
-#'                        parent = "ADSL")),
+#'       c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")),
 #'     check = TRUE
 #'   ),
 #'   modules = root_modules(
