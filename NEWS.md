@@ -4,6 +4,7 @@
 
 ### Miscellaneous
 * Refactored out the use of the removed `teal::keys` in examples of some modules.
+
 # teal.osprey 0.1.11
 
 * Updated `LICENCE` and `README` with new package references.
