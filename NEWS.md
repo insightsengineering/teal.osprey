@@ -1,4 +1,4 @@
-# teal.osprey 0.1.11.9006
+# teal.osprey 0.1.11.9007
 
 * Updated R version requirement to >= 3.6.
 
