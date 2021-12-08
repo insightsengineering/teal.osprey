@@ -54,9 +54,14 @@ tm_g_ae_sub <- function(label,
                         fontsize = c(5, 3, 7)) {
     stopifnot(is.choices_selected(arm_var))
     stopifnot(is.choices_selected(group_var))
-    check_slider_input(plot_height, allow_null = FALSE)
-    check_slider_input(plot_width)
-    check_slider_input(fontsize)
+    checkmate::assert_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE)
+    checkmate::assert_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3], .var.name = "fontsize")
+    checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
+    checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
+    checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
+    checkmate::assert_numeric(plot_width[1], lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
+                              .var.name = "plot_width")
+
     module(
       label = label,
       server = srv_g_ae_sub,

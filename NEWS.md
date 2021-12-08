@@ -4,6 +4,7 @@
 
 ### Miscellaneous
 * Refactored out the use of the removed `teal::keys` in examples of some modules.
+* Replaced calls to `utils.nest::check_slider_input` with `checkmate::assert_numeric`.
 
 # teal.osprey 0.1.11
 

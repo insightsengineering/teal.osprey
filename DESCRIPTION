@@ -21,6 +21,7 @@ Depends:
     shiny,
     teal (>= 0.10.0)
 Imports:
+    checkmate,
     dplyr,
     ggplot2,
     purrr,
