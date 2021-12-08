@@ -71,8 +71,10 @@ tm_g_ae_oview <- function(label,
                           ) {
   stopifnot(is.choices_selected(arm_var))
   stopifnot(is.choices_selected(add_flag))
-  check_slider_input(plot_height, allow_null = FALSE)
-  check_slider_input(plot_width)
+  checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
+  checkmate::assert_numeric(plot_height[c(2, 1, 3)], sorted = TRUE, .var.name = "plot_height")
+  checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
+  checkmate::assert_numeric(plot_width[c(2, 1, 3)], sorted = TRUE, null.ok = TRUE, .var.name = "plot_width")
 
   args <- as.list(environment())
 
