@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">teal.osprey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.11.9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.11.9007</span>
       </span>
     </div>
 
@@ -208,7 +208,7 @@ specify to <code>NA</code> if no concomitant medications data is available</p></
     <tr>
       <th>fontsize</th>
       <td><p>a numeric vector with 3 values, selected font size and font size range,
-default is <code><a href='https://rdrr.io/r/base/c.html'>c(5, 3, 7)</a></code></p></td>
+default is <code>c(5, 3, 7)</code></p></td>
     </tr>
     <tr>
       <th>plot_height</th>
@@ -225,76 +225,80 @@ default is <code><a href='https://rdrr.io/r/base/c.html'>c(5, 3, 7)</a></code></
     <p>a <code><a href='https://rdrr.io/pkg/teal/man/module.html'>module</a></code> object</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>scda</span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='va'>ADSL</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adsl</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>30</span><span class='op'>)</span>
-<span class='va'>ADEX</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adex</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>USUBJID</span> <span class='op'>%in%</span> <span class='va'>ADSL</span><span class='op'>$</span><span class='va'>USUBJID</span><span class='op'>)</span>
-<span class='va'>ADAE</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adae</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>USUBJID</span> <span class='op'>%in%</span> <span class='va'>ADSL</span><span class='op'>$</span><span class='va'>USUBJID</span><span class='op'>)</span>
-<span class='va'>ADCM</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adcm</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>USUBJID</span> <span class='op'>%in%</span> <span class='va'>ADSL</span><span class='op'>$</span><span class='va'>USUBJID</span><span class='op'>)</span>
-
-<span class='co'># This preprocess is only to force legacy standard on ADCM</span>
-<span class='va'>ADCM</span> <span class='op'>&lt;-</span> <span class='va'>ADCM</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>starts_with</a></span><span class='op'>(</span><span class='st'>"ATC"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='co'># function to derive AVISIT from ADEX</span>
-<span class='va'>add_visit</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>data_need_visit</span><span class='op'>)</span> <span class='op'>{</span>
-  <span class='va'>visit_dates</span> <span class='op'>&lt;-</span> <span class='va'>ADEX</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>PARAMCD</span> <span class='op'>==</span> <span class='st'>"DOSE"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/distinct.html'>distinct</a></span><span class='op'>(</span><span class='va'>USUBJID</span>, <span class='va'>AVISIT</span>, <span class='va'>ASTDTM</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>USUBJID</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span><span class='op'>(</span><span class='va'>ASTDTM</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>next_vis <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/lead-lag.html'>lead</a></span><span class='op'>(</span><span class='va'>ASTDTM</span><span class='op'>)</span>, is_last <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>next_vis</span><span class='op'>)</span>, <span class='cn'>TRUE</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>this_vis <span class='op'>=</span> <span class='va'>ASTDTM</span><span class='op'>)</span>
-  <span class='va'>data_visit</span> <span class='op'>&lt;-</span> <span class='va'>data_need_visit</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>USUBJID</span>, <span class='va'>ASTDTM</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>left_join</a></span><span class='op'>(</span><span class='va'>visit_dates</span>, by <span class='op'>=</span> <span class='st'>"USUBJID"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>ASTDTM</span> <span class='op'>&gt;</span> <span class='va'>this_vis</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>ASTDTM</span> <span class='op'>&lt;</span> <span class='va'>next_vis</span> <span class='op'>|</span> <span class='va'>is_last</span> <span class='op'>==</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>left_join</a></span><span class='op'>(</span><span class='va'>data_need_visit</span><span class='op'>)</span>
-  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>data_visit</span><span class='op'>)</span>
-  <span class='op'>}</span>
-<span class='co'># derive AVISIT for ADAE and ADCM</span>
-<span class='va'>ADAE</span> <span class='op'>&lt;-</span> <span class='fu'>add_visit</span><span class='op'>(</span><span class='va'>ADAE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Joining, by = c("USUBJID", "ASTDTM")</span></div><div class='input'><span class='va'>ADCM</span> <span class='op'>&lt;-</span> <span class='fu'>add_visit</span><span class='op'>(</span><span class='va'>ADCM</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Joining, by = c("USUBJID", "ASTDTM")</span></div><div class='input'><span class='co'># derive ongoing status variable for ADEX</span>
-<span class='va'>ADEX</span>  <span class='op'>&lt;-</span> <span class='va'>ADEX</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>PARCAT1</span> <span class='op'>==</span> <span class='st'>"INDIVIDUAL"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ongo_status <span class='op'>=</span> <span class='op'>(</span><span class='va'>EOSSTT</span> <span class='op'>==</span> <span class='st'>"ONGOING"</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='va'>app</span> <span class='op'>&lt;-</span> <span class='fu'>init</span><span class='op'>(</span>
-  data <span class='op'>=</span> <span class='fu'>cdisc_data</span><span class='op'>(</span>
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADSL"</span>, <span class='va'>ADSL</span><span class='op'>)</span>,
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADEX"</span>, <span class='va'>ADEX</span><span class='op'>)</span>,
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADAE"</span>, <span class='va'>ADAE</span><span class='op'>)</span>,
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADCM"</span>, <span class='va'>ADCM</span>, keys <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'STUDYID'</span>,<span class='st'>'USUBJID'</span>, <span class='st'>'ASTDTM'</span>, <span class='st'>'CMSEQ'</span>, <span class='st'>'CMDECOD'</span><span class='op'>)</span><span class='op'>)</span>,
-    code <span class='op'>=</span> <span class='st'>[1173 chars quoted with '"']</span>,
-    check <span class='op'>=</span> <span class='cn'>TRUE</span>
-  <span class='op'>)</span>,
-  modules <span class='op'>=</span> <span class='fu'>root_modules</span><span class='op'>(</span>
-    <span class='fu'>tm_g_heat_bygrade</span><span class='op'>(</span>
-      label <span class='op'>=</span> <span class='st'>"Heatmap by grade"</span>,
-      sl_dataname <span class='op'>=</span> <span class='st'>"ADSL"</span>,
-      ex_dataname <span class='op'>=</span> <span class='st'>"ADEX"</span>,
-      ae_dataname <span class='op'>=</span> <span class='st'>"ADAE"</span>,
-      cm_dataname <span class='op'>=</span> <span class='st'>"ADCM"</span>,
-      id_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='st'>"USUBJID"</span>,
-                               choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"USUBJID"</span>, <span class='st'>"SUBJID"</span><span class='op'>)</span><span class='op'>)</span>,
-      visit_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='st'>"AVISIT"</span>,
-                                 choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AVISIT"</span><span class='op'>)</span><span class='op'>)</span>,
-      ongo_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='st'>"ongo_status"</span>,
-                                 choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ongo_status"</span><span class='op'>)</span><span class='op'>)</span>,
-      anno_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>, <span class='st'>"COUNTRY"</span><span class='op'>)</span>,
-                                 choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>, <span class='st'>"COUNTRY"</span>, <span class='st'>"USUBJID"</span><span class='op'>)</span><span class='op'>)</span>,
-      heat_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='st'>"AETOXGR"</span>,
-                                 choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AETOXGR"</span><span class='op'>)</span><span class='op'>)</span>,
-      conmed_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='st'>"CMDECOD"</span>,
-                                    choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"CMDECOD"</span><span class='op'>)</span><span class='op'>)</span>,
-      plot_height <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>600</span>, <span class='fl'>200</span>, <span class='fl'>2000</span><span class='op'>)</span>
-    <span class='op'>)</span>
-  <span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Joining, by = c("USUBJID", "ASTDTM")</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("USUBJID", "ASTDTM")</span></div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'>shinyApp</span><span class='op'>(</span><span class='va'>app</span><span class='op'>$</span><span class='va'>ui</span>, <span class='va'>app</span><span class='op'>$</span><span class='va'>server</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>scda</span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ADSL</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adsl</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>30</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ADEX</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adex</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>USUBJID</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>ADSL</span><span class='op'>$</span><span class='va'>USUBJID</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ADAE</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adae</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>USUBJID</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>ADSL</span><span class='op'>$</span><span class='va'>USUBJID</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ADCM</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adcm</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>USUBJID</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>ADSL</span><span class='op'>$</span><span class='va'>USUBJID</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># This preprocess is only to force legacy standard on ADCM</span></span>
+<span class='r-in'><span class='va'>ADCM</span> <span class='op'>&lt;-</span> <span class='va'>ADCM</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>starts_with</a></span><span class='op'>(</span><span class='st'>"ATC"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># function to derive AVISIT from ADEX</span></span>
+<span class='r-in'><span class='va'>add_visit</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>data_need_visit</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'>  <span class='va'>visit_dates</span> <span class='op'>&lt;-</span> <span class='va'>ADEX</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>PARAMCD</span> <span class='op'>==</span> <span class='st'>"DOSE"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/distinct.html'>distinct</a></span><span class='op'>(</span><span class='va'>USUBJID</span>, <span class='va'>AVISIT</span>, <span class='va'>ASTDTM</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>USUBJID</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span><span class='op'>(</span><span class='va'>ASTDTM</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>next_vis <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/lead-lag.html'>lead</a></span><span class='op'>(</span><span class='va'>ASTDTM</span><span class='op'>)</span>, is_last <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>next_vis</span><span class='op'>)</span>, <span class='cn'>TRUE</span>, <span class='cn'>FALSE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>this_vis <span class='op'>=</span> <span class='va'>ASTDTM</span><span class='op'>)</span></span>
+<span class='r-in'>  <span class='va'>data_visit</span> <span class='op'>&lt;-</span> <span class='va'>data_need_visit</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>USUBJID</span>, <span class='va'>ASTDTM</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>left_join</a></span><span class='op'>(</span><span class='va'>visit_dates</span>, by <span class='op'>=</span> <span class='st'>"USUBJID"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>ASTDTM</span> <span class='op'>&gt;</span> <span class='va'>this_vis</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>ASTDTM</span> <span class='op'>&lt;</span> <span class='va'>next_vis</span> <span class='op'>|</span> <span class='va'>is_last</span> <span class='op'>==</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>left_join</a></span><span class='op'>(</span><span class='va'>data_need_visit</span><span class='op'>)</span></span>
+<span class='r-in'>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>data_visit</span><span class='op'>)</span></span>
+<span class='r-in'>  <span class='op'>}</span></span>
+<span class='r-in'><span class='co'># derive AVISIT for ADAE and ADCM</span></span>
+<span class='r-in'><span class='va'>ADAE</span> <span class='op'>&lt;-</span> <span class='fu'>add_visit</span><span class='op'>(</span><span class='va'>ADAE</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Joining, by = c("USUBJID", "ASTDTM")</span>
+<span class='r-in'><span class='va'>ADCM</span> <span class='op'>&lt;-</span> <span class='fu'>add_visit</span><span class='op'>(</span><span class='va'>ADCM</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Joining, by = c("USUBJID", "ASTDTM")</span>
+<span class='r-in'><span class='co'># derive ongoing status variable for ADEX</span></span>
+<span class='r-in'><span class='va'>ADEX</span>  <span class='op'>&lt;-</span> <span class='va'>ADEX</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>PARCAT1</span> <span class='op'>==</span> <span class='st'>"INDIVIDUAL"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ongo_status <span class='op'>=</span> <span class='op'>(</span><span class='va'>EOSSTT</span> <span class='op'>==</span> <span class='st'>"ONGOING"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>app</span> <span class='op'>&lt;-</span> <span class='fu'>init</span><span class='op'>(</span></span>
+<span class='r-in'>  data <span class='op'>=</span> <span class='fu'>cdisc_data</span><span class='op'>(</span></span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADSL"</span>, <span class='va'>ADSL</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADEX"</span>, <span class='va'>ADEX</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADAE"</span>, <span class='va'>ADAE</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADCM"</span>, <span class='va'>ADCM</span>, keys <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'STUDYID'</span>,<span class='st'>'USUBJID'</span>, <span class='st'>'ASTDTM'</span>, <span class='st'>'CMSEQ'</span>, <span class='st'>'CMDECOD'</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>    code <span class='op'>=</span> <span class='st'>[1173 chars quoted with '"']</span>,</span>
+<span class='r-in'>    check <span class='op'>=</span> <span class='cn'>TRUE</span></span>
+<span class='r-in'>  <span class='op'>)</span>,</span>
+<span class='r-in'>  modules <span class='op'>=</span> <span class='fu'>root_modules</span><span class='op'>(</span></span>
+<span class='r-in'>    <span class='fu'>tm_g_heat_bygrade</span><span class='op'>(</span></span>
+<span class='r-in'>      label <span class='op'>=</span> <span class='st'>"Heatmap by grade"</span>,</span>
+<span class='r-in'>      sl_dataname <span class='op'>=</span> <span class='st'>"ADSL"</span>,</span>
+<span class='r-in'>      ex_dataname <span class='op'>=</span> <span class='st'>"ADEX"</span>,</span>
+<span class='r-in'>      ae_dataname <span class='op'>=</span> <span class='st'>"ADAE"</span>,</span>
+<span class='r-in'>      cm_dataname <span class='op'>=</span> <span class='st'>"ADCM"</span>,</span>
+<span class='r-in'>      id_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='st'>"USUBJID"</span>,</span>
+<span class='r-in'>                               choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"USUBJID"</span>, <span class='st'>"SUBJID"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      visit_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='st'>"AVISIT"</span>,</span>
+<span class='r-in'>                                 choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AVISIT"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      ongo_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='st'>"ongo_status"</span>,</span>
+<span class='r-in'>                                 choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ongo_status"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      anno_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>, <span class='st'>"COUNTRY"</span><span class='op'>)</span>,</span>
+<span class='r-in'>                                 choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>, <span class='st'>"COUNTRY"</span>, <span class='st'>"USUBJID"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      heat_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='st'>"AETOXGR"</span>,</span>
+<span class='r-in'>                                 choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AETOXGR"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      conmed_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>selected <span class='op'>=</span> <span class='st'>"CMDECOD"</span>,</span>
+<span class='r-in'>                                    choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"CMDECOD"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      plot_height <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>600</span>, <span class='fl'>200</span>, <span class='fl'>2000</span><span class='op'>)</span></span>
+<span class='r-in'>    <span class='op'>)</span></span>
+<span class='r-in'>  <span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Joining, by = c("USUBJID", "ASTDTM")</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Joining, by = c("USUBJID", "ASTDTM")</span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='fu'>shinyApp</span><span class='op'>(</span><span class='va'>app</span><span class='op'>$</span><span class='va'>ui</span>, <span class='va'>app</span><span class='op'>$</span><span class='va'>server</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

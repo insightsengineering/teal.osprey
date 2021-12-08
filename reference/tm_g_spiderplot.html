@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">teal.osprey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.11.9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.11.9007</span>
       </span>
     </div>
 
@@ -237,43 +237,43 @@ output to put the output into context. For example the
 <p>Chendi Liao (liaoc10) <a href='mailto:chendi.liao@roche.com'>chendi.liao@roche.com</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'>#Example using stream (ADaM) dataset</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>scda</span><span class='op'>)</span>
-
-<span class='va'>ADSL</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adsl</span>
-<span class='va'>ADTR</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adtr</span>
-
-<span class='va'>app</span> <span class='op'>&lt;-</span> <span class='fu'>teal</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/teal/man/init.html'>init</a></span><span class='op'>(</span>
-  data <span class='op'>=</span> <span class='fu'>cdisc_data</span><span class='op'>(</span>
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADSL"</span>, <span class='va'>ADSL</span>, code <span class='op'>=</span> <span class='st'>"ADSL &lt;- synthetic_cdisc_data(\"latest\")$adsl"</span><span class='op'>)</span>,
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADTR"</span>,  <span class='va'>ADTR</span>, code <span class='op'>=</span> <span class='st'>"ADTR &lt;- synthetic_cdisc_data(\"latest\")$adtr"</span>,
-      keys <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"STUDYID"</span>, <span class='st'>"USUBJID"</span>, <span class='st'>"PARAMCD"</span>, <span class='st'>"AVISIT"</span><span class='op'>)</span><span class='op'>)</span>,
-    check <span class='op'>=</span> <span class='cn'>TRUE</span>
-  <span class='op'>)</span>,
-  modules <span class='op'>=</span> <span class='fu'>root_modules</span><span class='op'>(</span>
-    <span class='fu'>tm_g_spiderplot</span><span class='op'>(</span>
-      label <span class='op'>=</span> <span class='st'>"Spider plot"</span>,
-      dataname <span class='op'>=</span> <span class='st'>"ADTR"</span>,
-      paramcd <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='st'>"SLDINV"</span>, selected <span class='op'>=</span> <span class='st'>"SLDINV"</span><span class='op'>)</span>,
-      x_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='st'>"ADY"</span>, selected <span class='op'>=</span> <span class='st'>"ADY"</span><span class='op'>)</span>,
-      y_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"PCHG"</span>, <span class='st'>"CHG"</span>, <span class='st'>"AVAL"</span><span class='op'>)</span>, selected <span class='op'>=</span> <span class='st'>"PCHG"</span><span class='op'>)</span>,
-      marker_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>, <span class='st'>"RACE"</span>, <span class='st'>"USUBJID"</span><span class='op'>)</span>, selected <span class='op'>=</span> <span class='st'>"SEX"</span><span class='op'>)</span>,
-      line_colorby_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>,<span class='st'>"USUBJID"</span>, <span class='st'>"RACE"</span><span class='op'>)</span>, selected <span class='op'>=</span> <span class='st'>"SEX"</span><span class='op'>)</span>,
-      xfacet_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>, <span class='st'>"ARM"</span><span class='op'>)</span>, selected <span class='op'>=</span> <span class='st'>"SEX"</span><span class='op'>)</span>,
-      yfacet_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>, <span class='st'>"ARM"</span><span class='op'>)</span>, selected <span class='op'>=</span> <span class='st'>"ARM"</span><span class='op'>)</span>,
-      vref_line <span class='op'>=</span> <span class='st'>"10, 37"</span>,
-      href_line <span class='op'>=</span> <span class='st'>"-20, 0"</span>
-    <span class='op'>)</span>
-  <span class='op'>)</span>
-<span class='op'>)</span>
-
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'>shinyApp</span><span class='op'>(</span><span class='va'>app</span><span class='op'>$</span><span class='va'>ui</span>, <span class='va'>app</span><span class='op'>$</span><span class='va'>server</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='co'>#Example using stream (ADaM) dataset</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>scda</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>ADSL</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adsl</span></span>
+<span class='r-in'><span class='va'>ADTR</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adtr</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>app</span> <span class='op'>&lt;-</span> <span class='fu'>teal</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/teal/man/init.html'>init</a></span><span class='op'>(</span></span>
+<span class='r-in'>  data <span class='op'>=</span> <span class='fu'>cdisc_data</span><span class='op'>(</span></span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADSL"</span>, <span class='va'>ADSL</span>, code <span class='op'>=</span> <span class='st'>"ADSL &lt;- synthetic_cdisc_data(\"latest\")$adsl"</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADTR"</span>,  <span class='va'>ADTR</span>, code <span class='op'>=</span> <span class='st'>"ADTR &lt;- synthetic_cdisc_data(\"latest\")$adtr"</span>,</span>
+<span class='r-in'>      keys <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"STUDYID"</span>, <span class='st'>"USUBJID"</span>, <span class='st'>"PARAMCD"</span>, <span class='st'>"AVISIT"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>    check <span class='op'>=</span> <span class='cn'>TRUE</span></span>
+<span class='r-in'>  <span class='op'>)</span>,</span>
+<span class='r-in'>  modules <span class='op'>=</span> <span class='fu'>root_modules</span><span class='op'>(</span></span>
+<span class='r-in'>    <span class='fu'>tm_g_spiderplot</span><span class='op'>(</span></span>
+<span class='r-in'>      label <span class='op'>=</span> <span class='st'>"Spider plot"</span>,</span>
+<span class='r-in'>      dataname <span class='op'>=</span> <span class='st'>"ADTR"</span>,</span>
+<span class='r-in'>      paramcd <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='st'>"SLDINV"</span>, selected <span class='op'>=</span> <span class='st'>"SLDINV"</span><span class='op'>)</span>,</span>
+<span class='r-in'>      x_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='st'>"ADY"</span>, selected <span class='op'>=</span> <span class='st'>"ADY"</span><span class='op'>)</span>,</span>
+<span class='r-in'>      y_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"PCHG"</span>, <span class='st'>"CHG"</span>, <span class='st'>"AVAL"</span><span class='op'>)</span>, selected <span class='op'>=</span> <span class='st'>"PCHG"</span><span class='op'>)</span>,</span>
+<span class='r-in'>      marker_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>, <span class='st'>"RACE"</span>, <span class='st'>"USUBJID"</span><span class='op'>)</span>, selected <span class='op'>=</span> <span class='st'>"SEX"</span><span class='op'>)</span>,</span>
+<span class='r-in'>      line_colorby_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>,<span class='st'>"USUBJID"</span>, <span class='st'>"RACE"</span><span class='op'>)</span>, selected <span class='op'>=</span> <span class='st'>"SEX"</span><span class='op'>)</span>,</span>
+<span class='r-in'>      xfacet_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>, <span class='st'>"ARM"</span><span class='op'>)</span>, selected <span class='op'>=</span> <span class='st'>"SEX"</span><span class='op'>)</span>,</span>
+<span class='r-in'>      yfacet_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SEX"</span>, <span class='st'>"ARM"</span><span class='op'>)</span>, selected <span class='op'>=</span> <span class='st'>"ARM"</span><span class='op'>)</span>,</span>
+<span class='r-in'>      vref_line <span class='op'>=</span> <span class='st'>"10, 37"</span>,</span>
+<span class='r-in'>      href_line <span class='op'>=</span> <span class='st'>"-20, 0"</span></span>
+<span class='r-in'>    <span class='op'>)</span></span>
+<span class='r-in'>  <span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='fu'>shinyApp</span><span class='op'>(</span><span class='va'>app</span><span class='op'>$</span><span class='va'>ui</span>, <span class='va'>app</span><span class='op'>$</span><span class='va'>server</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">teal.osprey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.11.9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.11.9007</span>
       </span>
     </div>
 
@@ -327,106 +327,106 @@ is derived for consistency based the start date of user's choice in the app (for
 <p>Ting Qi (qit3) <a href='mailto:qit3@gene.com'>qit3@gene.com</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>scda</span><span class='op'>)</span>
-
-<span class='va'>ADSL</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adsl</span>
-<span class='va'>ADAE</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adae</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ASTDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>ASTDTM</span><span class='op'>)</span>,
-         AENDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>AENDTM</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>ADCM</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adcm</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ASTDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>ASTDTM</span><span class='op'>)</span>,
-         AENDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>AENDTM</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'># The step below is to pre-process ADCM to legacy standard</span>
-<span class='va'>ADCM</span> <span class='op'>&lt;-</span> <span class='va'>ADCM</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>starts_with</a></span><span class='op'>(</span><span class='st'>"ATC"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='va'>ADRS</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adrs</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ADT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>ADTM</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>ADEX</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adex</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ASTDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>ASTDTM</span><span class='op'>)</span>,
-         AENDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>AENDTM</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>ADLB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adlb</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ADT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>ADTM</span><span class='op'>)</span>,
-         LBSTRESN <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>LBSTRESC</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>init</span><span class='op'>(</span>
-  data <span class='op'>=</span> <span class='fu'>cdisc_data</span><span class='op'>(</span>
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADSL"</span>, <span class='va'>ADSL</span>,
-      code <span class='op'>=</span> <span class='st'>"ADSL &lt;- synthetic_cdisc_data(\"latest\")$adsl"</span><span class='op'>)</span>,
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADRS"</span>, <span class='va'>ADRS</span>,
-      code <span class='op'>=</span> <span class='st'>"ADRS &lt;- synthetic_cdisc_data(\"latest\")$adrs %&gt;%
-              mutate(ADT = as.Date(ADTM))"</span><span class='op'>)</span>,
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADAE"</span>, <span class='va'>ADAE</span>,
-      code <span class='op'>=</span> <span class='st'>"ADAE &lt;- synthetic_cdisc_data(\"latest\")$adae %&gt;%
-              mutate(ASTDT = as.Date(ASTDTM),
-                     AENDT = as.Date(AENDTM))"</span><span class='op'>)</span>,
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADCM"</span>, <span class='va'>ADCM</span>,
-      code <span class='op'>=</span> <span class='st'>"ADCM &lt;- synthetic_cdisc_data(\"latest\")$adcm %&gt;%
-              mutate(ASTDT = as.Date(ASTDTM),
-                     AENDT = as.Date(AENDTM))
-              ADCM &lt;- ADCM %&gt;% select(-starts_with(\"ATC\")) %&gt;% unique()"</span>,
-      keys <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'STUDYID'</span>,<span class='st'>'USUBJID'</span>, <span class='st'>'ASTDTM'</span>, <span class='st'>'CMSEQ'</span>, <span class='st'>'CMDECOD'</span><span class='op'>)</span><span class='op'>)</span>,
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADLB"</span>, <span class='va'>ADLB</span>,
-      code <span class='op'>=</span> <span class='st'>"ADLB &lt;- synthetic_cdisc_data(\"latest\")$adlb %&gt;%
-              mutate(ADT = as.Date(ADTM),
-                     LBSTRESN = as.numeric(LBSTRESC))"</span><span class='op'>)</span>,
-    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADEX"</span>, <span class='va'>ADEX</span>,
-      code <span class='op'>=</span> <span class='st'>"ADEX &lt;- synthetic_cdisc_data(\"latest\")$adex %&gt;%
-              mutate(ASTDT = as.Date(ASTDTM),
-                     AENDT = as.Date(AENDTM))"</span><span class='op'>)</span>,
-    check <span class='op'>=</span> <span class='cn'>TRUE</span>
-  <span class='op'>)</span>,
-  modules <span class='op'>=</span> <span class='fu'>root_modules</span><span class='op'>(</span>
-    <span class='fu'>tm_g_patient_profile</span><span class='op'>(</span>
-      label <span class='op'>=</span> <span class='st'>"Patient Profile Plot"</span>,
-     patient_id <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>
-       choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>ADSL</span><span class='op'>$</span><span class='va'>USUBJID</span><span class='op'>)</span>,
-       selected <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>ADSL</span><span class='op'>$</span><span class='va'>USUBJID</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>
-       <span class='op'>)</span>,
-      sl_dataname <span class='op'>=</span> <span class='st'>"ADSL"</span>,
-      ex_dataname <span class='op'>=</span> <span class='st'>"ADEX"</span>,
-      ae_dataname <span class='op'>=</span> <span class='st'>"ADAE"</span>,
-      rs_dataname <span class='op'>=</span> <span class='st'>"ADRS"</span>,
-      cm_dataname <span class='op'>=</span> <span class='st'>"ADCM"</span>,
-      lb_dataname <span class='op'>=</span> <span class='st'>"ADLB"</span>,
-      show_ex_plot <span class='op'>=</span> <span class='cn'>TRUE</span>,
-      show_ae_plot <span class='op'>=</span> <span class='cn'>TRUE</span>,
-      show_rs_plot <span class='op'>=</span> <span class='cn'>TRUE</span>,
-      show_cm_plot <span class='op'>=</span> <span class='cn'>FALSE</span>,
-      show_lb_plot <span class='op'>=</span> <span class='cn'>TRUE</span>,
-      sl_start_date <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>
-        selected <span class='op'>=</span> <span class='st'>"TRTSDTM"</span>,
-        choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"TRTSDTM"</span>, <span class='st'>"RANDDT"</span><span class='op'>)</span><span class='op'>)</span>,
-      ex_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>
-        selected <span class='op'>=</span> <span class='st'>"PARCAT2"</span>,
-        choices <span class='op'>=</span> <span class='st'>"PARCAT2"</span><span class='op'>)</span>,
-      ae_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>
-        selected <span class='op'>=</span> <span class='st'>"AEDECOD"</span>,
-        choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AEDECOD"</span>, <span class='st'>"AESOC"</span><span class='op'>)</span><span class='op'>)</span>,
-      ae_line_col_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>
-        selected <span class='op'>=</span> <span class='st'>"AESER"</span>,
-        choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AESER"</span>, <span class='st'>"AEREL"</span><span class='op'>)</span><span class='op'>)</span>,
-      ae_line_col_opt <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Y"</span> <span class='op'>=</span> <span class='st'>"red"</span>,<span class='st'>"N"</span> <span class='op'>=</span> <span class='st'>"blue"</span><span class='op'>)</span>,
-      rs_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>
-        selected <span class='op'>=</span> <span class='st'>"PARAMCD"</span>,
-        choices <span class='op'>=</span> <span class='st'>"PARAMCD"</span><span class='op'>)</span>,
-      cm_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>
-        selected <span class='op'>=</span> <span class='st'>"CMDECOD"</span>,
-        choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"CMDECOD"</span>, <span class='st'>"CMCAT"</span><span class='op'>)</span><span class='op'>)</span>,
-      lb_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span>
-        selected <span class='op'>=</span> <span class='st'>"LBTESTCD"</span>,
-        choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"LBTESTCD"</span>, <span class='st'>"LBCAT"</span><span class='op'>)</span><span class='op'>)</span>,
-      x_limit <span class='op'>=</span> <span class='st'>"-28, 750"</span>,
-      plot_height <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1200</span>, <span class='fl'>400</span>, <span class='fl'>5000</span><span class='op'>)</span>
-    <span class='op'>)</span>
-  <span class='op'>)</span>
-<span class='op'>)</span>
-
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'>shinyApp</span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>ui</span>, <span class='va'>x</span><span class='op'>$</span><span class='va'>server</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>scda</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>ADSL</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adsl</span></span>
+<span class='r-in'><span class='va'>ADAE</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adae</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ASTDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>ASTDTM</span><span class='op'>)</span>,</span>
+<span class='r-in'>         AENDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>AENDTM</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ADCM</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adcm</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ASTDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>ASTDTM</span><span class='op'>)</span>,</span>
+<span class='r-in'>         AENDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>AENDTM</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># The step below is to pre-process ADCM to legacy standard</span></span>
+<span class='r-in'><span class='va'>ADCM</span> <span class='op'>&lt;-</span> <span class='va'>ADCM</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>starts_with</a></span><span class='op'>(</span><span class='st'>"ATC"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>ADRS</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adrs</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ADT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>ADTM</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ADEX</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adex</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ASTDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>ASTDTM</span><span class='op'>)</span>,</span>
+<span class='r-in'>         AENDT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>AENDTM</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ADLB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html'>synthetic_cdisc_data</a></span><span class='op'>(</span><span class='st'>"latest"</span><span class='op'>)</span><span class='op'>$</span><span class='va'>adlb</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ADT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>ADTM</span><span class='op'>)</span>,</span>
+<span class='r-in'>         LBSTRESN <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>LBSTRESC</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'>init</span><span class='op'>(</span></span>
+<span class='r-in'>  data <span class='op'>=</span> <span class='fu'>cdisc_data</span><span class='op'>(</span></span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADSL"</span>, <span class='va'>ADSL</span>,</span>
+<span class='r-in'>      code <span class='op'>=</span> <span class='st'>"ADSL &lt;- synthetic_cdisc_data(\"latest\")$adsl"</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADRS"</span>, <span class='va'>ADRS</span>,</span>
+<span class='r-in'>      code <span class='op'>=</span> <span class='st'>"ADRS &lt;- synthetic_cdisc_data(\"latest\")$adrs %&gt;%</span>
+<span class='r-in'>              mutate(ADT = as.Date(ADTM))"</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADAE"</span>, <span class='va'>ADAE</span>,</span>
+<span class='r-in'>      code <span class='op'>=</span> <span class='st'>"ADAE &lt;- synthetic_cdisc_data(\"latest\")$adae %&gt;%</span>
+<span class='r-in'>              mutate(ASTDT = as.Date(ASTDTM),</span>
+<span class='r-in'>                     AENDT = as.Date(AENDTM))"</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADCM"</span>, <span class='va'>ADCM</span>,</span>
+<span class='r-in'>      code <span class='op'>=</span> <span class='st'>"ADCM &lt;- synthetic_cdisc_data(\"latest\")$adcm %&gt;%</span>
+<span class='r-in'>              mutate(ASTDT = as.Date(ASTDTM),</span>
+<span class='r-in'>                     AENDT = as.Date(AENDTM))</span>
+<span class='r-in'>              ADCM &lt;- ADCM %&gt;% select(-starts_with(\"ATC\")) %&gt;% unique()"</span>,</span>
+<span class='r-in'>      keys <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'STUDYID'</span>,<span class='st'>'USUBJID'</span>, <span class='st'>'ASTDTM'</span>, <span class='st'>'CMSEQ'</span>, <span class='st'>'CMDECOD'</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADLB"</span>, <span class='va'>ADLB</span>,</span>
+<span class='r-in'>      code <span class='op'>=</span> <span class='st'>"ADLB &lt;- synthetic_cdisc_data(\"latest\")$adlb %&gt;%</span>
+<span class='r-in'>              mutate(ADT = as.Date(ADTM),</span>
+<span class='r-in'>                     LBSTRESN = as.numeric(LBSTRESC))"</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'>cdisc_dataset</span><span class='op'>(</span><span class='st'>"ADEX"</span>, <span class='va'>ADEX</span>,</span>
+<span class='r-in'>      code <span class='op'>=</span> <span class='st'>"ADEX &lt;- synthetic_cdisc_data(\"latest\")$adex %&gt;%</span>
+<span class='r-in'>              mutate(ASTDT = as.Date(ASTDTM),</span>
+<span class='r-in'>                     AENDT = as.Date(AENDTM))"</span><span class='op'>)</span>,</span>
+<span class='r-in'>    check <span class='op'>=</span> <span class='cn'>TRUE</span></span>
+<span class='r-in'>  <span class='op'>)</span>,</span>
+<span class='r-in'>  modules <span class='op'>=</span> <span class='fu'>root_modules</span><span class='op'>(</span></span>
+<span class='r-in'>    <span class='fu'>tm_g_patient_profile</span><span class='op'>(</span></span>
+<span class='r-in'>      label <span class='op'>=</span> <span class='st'>"Patient Profile Plot"</span>,</span>
+<span class='r-in'>     patient_id <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span></span>
+<span class='r-in'>       choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>ADSL</span><span class='op'>$</span><span class='va'>USUBJID</span><span class='op'>)</span>,</span>
+<span class='r-in'>       selected <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>ADSL</span><span class='op'>$</span><span class='va'>USUBJID</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span></span>
+<span class='r-in'>       <span class='op'>)</span>,</span>
+<span class='r-in'>      sl_dataname <span class='op'>=</span> <span class='st'>"ADSL"</span>,</span>
+<span class='r-in'>      ex_dataname <span class='op'>=</span> <span class='st'>"ADEX"</span>,</span>
+<span class='r-in'>      ae_dataname <span class='op'>=</span> <span class='st'>"ADAE"</span>,</span>
+<span class='r-in'>      rs_dataname <span class='op'>=</span> <span class='st'>"ADRS"</span>,</span>
+<span class='r-in'>      cm_dataname <span class='op'>=</span> <span class='st'>"ADCM"</span>,</span>
+<span class='r-in'>      lb_dataname <span class='op'>=</span> <span class='st'>"ADLB"</span>,</span>
+<span class='r-in'>      show_ex_plot <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span class='r-in'>      show_ae_plot <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span class='r-in'>      show_rs_plot <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span class='r-in'>      show_cm_plot <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span class='r-in'>      show_lb_plot <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span class='r-in'>      sl_start_date <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span></span>
+<span class='r-in'>        selected <span class='op'>=</span> <span class='st'>"TRTSDTM"</span>,</span>
+<span class='r-in'>        choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"TRTSDTM"</span>, <span class='st'>"RANDDT"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      ex_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span></span>
+<span class='r-in'>        selected <span class='op'>=</span> <span class='st'>"PARCAT2"</span>,</span>
+<span class='r-in'>        choices <span class='op'>=</span> <span class='st'>"PARCAT2"</span><span class='op'>)</span>,</span>
+<span class='r-in'>      ae_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span></span>
+<span class='r-in'>        selected <span class='op'>=</span> <span class='st'>"AEDECOD"</span>,</span>
+<span class='r-in'>        choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AEDECOD"</span>, <span class='st'>"AESOC"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      ae_line_col_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span></span>
+<span class='r-in'>        selected <span class='op'>=</span> <span class='st'>"AESER"</span>,</span>
+<span class='r-in'>        choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AESER"</span>, <span class='st'>"AEREL"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      ae_line_col_opt <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Y"</span> <span class='op'>=</span> <span class='st'>"red"</span>,<span class='st'>"N"</span> <span class='op'>=</span> <span class='st'>"blue"</span><span class='op'>)</span>,</span>
+<span class='r-in'>      rs_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span></span>
+<span class='r-in'>        selected <span class='op'>=</span> <span class='st'>"PARAMCD"</span>,</span>
+<span class='r-in'>        choices <span class='op'>=</span> <span class='st'>"PARAMCD"</span><span class='op'>)</span>,</span>
+<span class='r-in'>      cm_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span></span>
+<span class='r-in'>        selected <span class='op'>=</span> <span class='st'>"CMDECOD"</span>,</span>
+<span class='r-in'>        choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"CMDECOD"</span>, <span class='st'>"CMCAT"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      lb_var <span class='op'>=</span> <span class='fu'>choices_selected</span><span class='op'>(</span></span>
+<span class='r-in'>        selected <span class='op'>=</span> <span class='st'>"LBTESTCD"</span>,</span>
+<span class='r-in'>        choices <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"LBTESTCD"</span>, <span class='st'>"LBCAT"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      x_limit <span class='op'>=</span> <span class='st'>"-28, 750"</span>,</span>
+<span class='r-in'>      plot_height <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1200</span>, <span class='fl'>400</span>, <span class='fl'>5000</span><span class='op'>)</span></span>
+<span class='r-in'>    <span class='op'>)</span></span>
+<span class='r-in'>  <span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='fu'>shinyApp</span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>ui</span>, <span class='va'>x</span><span class='op'>$</span><span class='va'>server</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
