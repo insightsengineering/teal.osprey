@@ -398,6 +398,7 @@ srv_g_waterfall <- function(input,
       adrs <- .(as.name(adrs_name))[, .(adrs_vars)] # nolint
 
       bar_tr <- adtr %>%
+        dplyr::filter(PARAMCD == .(bar_paramcd)) %>%
         dplyr::select(USUBJID, .(as.name(bar_var))) %>%
         dplyr::group_by(USUBJID) %>%
         dplyr::slice(which.min(.(as.name(bar_var))))
