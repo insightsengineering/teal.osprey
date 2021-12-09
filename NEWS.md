@@ -2,6 +2,9 @@
 
 * Updated R version requirement to >= 3.6.
 
+### Bug fixes
+* `tm_g_waterfall` now respects the `Tumor Burden Parameter` UI dropdown.
+
 ### Miscellaneous
 * Refactored out the use of the removed `teal::keys` in examples of some modules.
 * Replaced calls to `utils.nest::check_slider_input` with `checkmate::assert_numeric`.
