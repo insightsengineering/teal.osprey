@@ -609,8 +609,8 @@ srv_g_patient_profile <- function(input,
         mutate(
           max_day = as.numeric(
             as.Date(.data$max_date) - as.Date(
-              eval(parse(text = .(sl_start_date)))))
-              + (as.Date(.data$max_date) >= as.Date(eval(parse(text = .(sl_start_date)))))
+              eval(parse(text = .(sl_start_date), keep.source = FALSE))))
+              + (as.Date(.data$max_date) >= as.Date(eval(parse(text = .(sl_start_date), keep.source = FALSE))))
           ) %>%
         filter(USUBJID == .(patient_id))
     }))
@@ -659,8 +659,9 @@ srv_g_patient_profile <- function(input,
                 ASTDT,
                 as.Date(substr(
                   as.character(eval(parse(
-                    text = .(sl_start_date)))), 1, 10)), units = "days"))
-                    + (ASTDT >= as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)))
+                    text = .(sl_start_date), keep.source = FALSE))), 1, 10)), units = "days"))
+                    + (ASTDT >= as.Date(substr(
+                        as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))
               ) %>%
             filter(!is.na(AENDT)) %>%
             mutate(AENDY = as.numeric(
@@ -668,8 +669,9 @@ srv_g_patient_profile <- function(input,
                 AENDT,
                 as.Date(substr(
                   as.character(eval(parse(
-                    text = .(sl_start_date)))), 1, 10)), units = "days"))
-                    + (AENDT >= as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)))
+                    text = .(sl_start_date), keep.source = FALSE))), 1, 10)), units = "days"))
+                    + (AENDT >= as.Date(substr(
+                        as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))
               ) %>%
             select(c(.(adae_vars), ASTDY, AENDY))
           rtables::var_labels(ADAE)[.(ae_line_col_var)] <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]
@@ -733,9 +735,9 @@ srv_g_patient_profile <- function(input,
               ADY = as.numeric(difftime(
               ADT,
               as.Date(substr(
-                as.character(eval(parse(
-                  text = .(sl_start_date)))), 1, 10)), units = "days"))
-                + (ADT >= as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)))
+                as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)), units = "days"))
+                + (ADT >= as.Date(substr(
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))
               ) %>%
             select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
             filter(is.na(ADY) == FALSE)
@@ -773,15 +775,17 @@ srv_g_patient_profile <- function(input,
             filter(!is.na(ASTDT)) %>%
             mutate(ASTDY = as.numeric(difftime(
               ASTDT,
-              as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)),
+              as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
               units = "days"))
-              + (ASTDT >= as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)))) %>%
+              + (ASTDT >= as.Date(substr(
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))) %>%
             filter(!is.na(AENDT)) %>%
             mutate(AENDY = as.numeric(difftime(
               AENDT,
-              as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)),
+              as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
               units = "days"))
-              + (AENDT >= as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)))) %>%
+              + (AENDT >= as.Date(substr(
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))) %>%
             select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(.(cm_var)))
           if (length(unique(ADCM$USUBJID)) > 0) {
             ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
@@ -838,9 +842,9 @@ srv_g_patient_profile <- function(input,
                   ) %>%
                 mutate(ASTDT_dur = as.numeric(
                   as.Date(substr(as.character(ASTDT), 1, 10)) -
-                    as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)))
+                    as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))
                     + (as.Date(substr(as.character(ASTDT), 1, 10)) >=
-                    as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)))
+                    as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))
                 )
             }) %>%
             Reduce(rbind, .) %>%
@@ -894,9 +898,10 @@ srv_g_patient_profile <- function(input,
           ADLB <- ADLB %>%  # nolint
             mutate(ADY = as.numeric(difftime(
               .data$ADT,
-              as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)),
+              as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
               units = "days"))
-              + (ADT >= as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10)))) %>%
+              + (ADT >= as.Date(substr(
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))) %>%
             filter(.data[[.(lb_var)]] %in% .(lb_var_show))
           lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
         })
