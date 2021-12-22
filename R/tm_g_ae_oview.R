@@ -42,22 +42,26 @@
 #'                 rtables::var_relabel(
 #'                   AEREL1 = 'AE related to A: Drug X',
 #'                   AEREL2 = 'AE related to B: Placebo'
-#'                 )"),
+#'                 )"
+#'     ),
 #'     check = TRUE
 #'   ),
 #'   modules = root_modules(
 #'     tm_g_ae_oview(
 #'       label = "AE Overview",
 #'       dataname = "ADAE",
-#'       arm_var = choices_selected(selected = "ACTARM",
-#'                                  choices = c("ACTARM", "ACTARMCD")),
-#'       add_flag = choices_selected(choices = variable_choices(ADAE,  c("AEREL1", "AEREL2")),
-#'                                   selected = NULL),
+#'       arm_var = choices_selected(
+#'         selected = "ACTARM",
+#'         choices = c("ACTARM", "ACTARMCD")
+#'       ),
+#'       add_flag = choices_selected(
+#'         choices = variable_choices(ADAE, c("AEREL1", "AEREL2")),
+#'         selected = NULL
+#'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
 #'   )
 #' )
-#'
 #' \dontrun{
 #' shinyApp(app$ui, app$server)
 #' }
@@ -67,16 +71,17 @@ tm_g_ae_oview <- function(label,
                           add_flag = NULL,
                           fontsize = c(5, 3, 7),
                           plot_height = c(600L, 200L, 2000L),
-                          plot_width = NULL
-                          ) {
+                          plot_width = NULL) {
   stopifnot(is.choices_selected(arm_var))
   stopifnot(is.choices_selected(add_flag))
 
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
-  checkmate::assert_numeric(plot_width[1], lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
-                            .var.name = "plot_width")
+  checkmate::assert_numeric(plot_width[1],
+    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
+    .var.name = "plot_width"
+  )
 
   args <- as.list(environment())
 
@@ -88,7 +93,8 @@ tm_g_ae_oview <- function(label,
       dataname = dataname,
       add_flag = add_flag,
       plot_height = plot_height,
-      plot_width = plot_width),
+      plot_width = plot_width
+    ),
     ui = ui_g_ae_oview,
     ui_args = args,
     filters = dataname
@@ -101,7 +107,7 @@ ui_g_ae_oview <- function(id, ...) {
   standard_layout(
     output = white_small_well(
       plot_decorate_output(id = ns(NULL))
-      ),
+    ),
     encoding = div(
       optionalSelectInput(
         ns("arm_var"),
@@ -186,12 +192,13 @@ srv_g_ae_oview <- function(input,
     diff_ci_method <- input$diff_ci_method
     conf_level <- input$conf_level
     updateTextAreaInput(session,
-                        "foot",
-                        value = sprintf(
-                          "Note: %d%% CI is calculated using %s",
-                          round(conf_level * 100),
-                          name_ci(diff_ci_method)
-                        ))
+      "foot",
+      value = sprintf(
+        "Note: %d%% CI is calculated using %s",
+        round(conf_level * 100),
+        name_ci(diff_ci_method)
+      )
+    )
   })
 
   observeEvent(input$arm_var, {
@@ -214,12 +221,14 @@ srv_g_ae_oview <- function(input,
       session,
       "arm_ref",
       selected = choices[1],
-      choices = choices)
+      choices = choices
+    )
     updateSelectInput(
       session,
       "arm_trt",
       selected = choices[trt_index],
-      choices = choices)
+      choices = choices
+    )
 
     flags <- osprey::create_flag_vars(ANL_FILTERED)
 
@@ -227,15 +236,18 @@ srv_g_ae_oview <- function(input,
       session,
       "flags_select",
       selected = names(flags),
-      choices = names(flags))
+      choices = names(flags)
+    )
   })
 
   plt <- reactive({
     validate(need(input$arm_var, "Please select an arm variable."))
 
-    validate(need((
-      length(input$flags_select) + length(input$add_flags)) > 0,
-      "Please select at least one flag."))
+    validate(need(
+      (
+        length(input$flags_select) + length(input$add_flags)) > 0,
+      "Please select at least one flag."
+    ))
 
     validate(need(
       input$arm_trt != input$arm_ref,
@@ -267,7 +279,8 @@ srv_g_ae_oview <- function(input,
       validate(
         need(
           input$arm_ref %in% ANL_FILTERED[[input$arm_var]],
-          paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")),
+          paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
+        ),
         need(
           input$arm_trt %in% ANL_FILTERED[[input$arm_var]],
           paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
@@ -323,7 +336,8 @@ srv_g_ae_oview <- function(input,
     id = "rcode",
     datasets = datasets,
     datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))),
+      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
+    ),
     modal_title = label
   )
 }

@@ -50,22 +50,23 @@ app <- init(
     cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
     cdisc_dataset("ADAE", ADAE, code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae"),
     check = TRUE
-    ),
+  ),
   modules = root_modules(
     tm_g_ae_sub(
       label = "AE by Subgroup",
       dataname = "ADAE",
       arm_var = choices_selected(
         selected = "ACTARMCD",
-        choices = c("ACTARM", "ACTARMCD")),
+        choices = c("ACTARM", "ACTARMCD")
+      ),
       group_var = choices_selected(
         selected = c("SEX", "REGION1", "RACE"),
-        choices = c("SEX", "REGION1", "RACE")),
+        choices = c("SEX", "REGION1", "RACE")
+      ),
       plot_height = c(600, 200, 2000)
     )
   )
-  )
-
+)
 \dontrun{
 shinyApp(app$ui, app$server)
 }

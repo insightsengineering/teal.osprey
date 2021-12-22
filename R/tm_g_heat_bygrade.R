@@ -41,7 +41,9 @@
 #' ADCM <- synthetic_cdisc_data("latest")$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
 #'
 #' # This preprocess is only to force legacy standard on ADCM
-#' ADCM <- ADCM %>% select(-starts_with("ATC")) %>% unique()
+#' ADCM <- ADCM %>%
+#'   select(-starts_with("ATC")) %>%
+#'   unique()
 #'
 #' # function to derive AVISIT from ADEX
 #' add_visit <- function(data_need_visit) {
@@ -58,12 +60,12 @@
 #'     filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) %>%
 #'     left_join(data_need_visit)
 #'   return(data_visit)
-#'   }
+#' }
 #' # derive AVISIT for ADAE and ADCM
 #' ADAE <- add_visit(ADAE)
 #' ADCM <- add_visit(ADCM)
 #' # derive ongoing status variable for ADEX
-#' ADEX  <- ADEX %>%
+#' ADEX <- ADEX %>%
 #'   filter(PARCAT1 == "INDIVIDUAL") %>%
 #'   mutate(ongo_status = (EOSSTT == "ONGOING"))
 #'
@@ -72,7 +74,7 @@
 #'     cdisc_dataset("ADSL", ADSL),
 #'     cdisc_dataset("ADEX", ADEX),
 #'     cdisc_dataset("ADAE", ADAE),
-#'     cdisc_dataset("ADCM", ADCM, keys = c('STUDYID','USUBJID', 'ASTDTM', 'CMSEQ', 'CMDECOD')),
+#'     cdisc_dataset("ADCM", ADCM, keys = c("STUDYID", "USUBJID", "ASTDTM", "CMSEQ", "CMDECOD")),
 #'     code = "
 #'     ADSL <- synthetic_cdisc_data(\"latest\")$adsl %>% slice(1:30)
 #'     ADEX <- synthetic_cdisc_data(\"latest\")$adex %>% filter(USUBJID %in% ADSL$USUBJID)
@@ -109,18 +111,30 @@
 #'       ex_dataname = "ADEX",
 #'       ae_dataname = "ADAE",
 #'       cm_dataname = "ADCM",
-#'       id_var = choices_selected(selected = "USUBJID",
-#'                                choices = c("USUBJID", "SUBJID")),
-#'       visit_var = choices_selected(selected = "AVISIT",
-#'                                  choices = c("AVISIT")),
-#'       ongo_var = choices_selected(selected = "ongo_status",
-#'                                  choices = c("ongo_status")),
-#'       anno_var = choices_selected(selected = c("SEX", "COUNTRY"),
-#'                                  choices = c("SEX", "COUNTRY", "USUBJID")),
-#'       heat_var = choices_selected(selected = "AETOXGR",
-#'                                  choices = c("AETOXGR")),
-#'       conmed_var = choices_selected(selected = "CMDECOD",
-#'                                     choices = c("CMDECOD")),
+#'       id_var = choices_selected(
+#'         selected = "USUBJID",
+#'         choices = c("USUBJID", "SUBJID")
+#'       ),
+#'       visit_var = choices_selected(
+#'         selected = "AVISIT",
+#'         choices = c("AVISIT")
+#'       ),
+#'       ongo_var = choices_selected(
+#'         selected = "ongo_status",
+#'         choices = c("ongo_status")
+#'       ),
+#'       anno_var = choices_selected(
+#'         selected = c("SEX", "COUNTRY"),
+#'         choices = c("SEX", "COUNTRY", "USUBJID")
+#'       ),
+#'       heat_var = choices_selected(
+#'         selected = "AETOXGR",
+#'         choices = c("AETOXGR")
+#'       ),
+#'       conmed_var = choices_selected(
+#'         selected = "CMDECOD",
+#'         choices = c("CMDECOD")
+#'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
 #'   )
@@ -161,8 +175,10 @@ tm_g_heat_bygrade <- function(label,
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
-  checkmate::assert_numeric(plot_width[1], lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
-                            .var.name = "plot_width")
+  checkmate::assert_numeric(plot_width[1],
+    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
+    .var.name = "plot_width"
+  )
 
   module(
     label = label,
@@ -175,7 +191,7 @@ tm_g_heat_bygrade <- function(label,
       cm_dataname = cm_dataname,
       plot_height = plot_height,
       plot_width = plot_width
-      ),
+    ),
     ui = ui_g_heatmap_bygrade,
     ui_args = args,
     filters = "all"
@@ -282,7 +298,8 @@ srv_g_heatmap_bygrade <- function(input,
         checkboxInput(
           session$ns("plot_cm"),
           "Yes",
-          value = !is.na(cm_dataname))
+          value = !is.na(cm_dataname)
+        )
       })
     }
   })
@@ -297,7 +314,8 @@ srv_g_heatmap_bygrade <- function(input,
       session,
       "conmed_level",
       selected = choices[1:3],
-      choices = choices)
+      choices = choices
+    )
   })
 
   plt <- reactive({
@@ -323,18 +341,18 @@ srv_g_heatmap_bygrade <- function(input,
 
     validate(need(
       input$ongo_var %in% names(ADEX_FILTERED),
-      paste("Study Ongoing Status must be a variable in", ex_dataname, sep = " "))
-      )
+      paste("Study Ongoing Status must be a variable in", ex_dataname, sep = " ")
+    ))
 
     validate(need(
       is_logical_vector(ADEX_FILTERED[[input$ongo_var]]),
-      "Study Ongoing Status must be a logical variable")
-    )
+      "Study Ongoing Status must be a logical variable"
+    ))
 
     validate(need(
       all(input$anno_var %in% names(ADSL_FILTERED)),
-      paste("Please only select annotation variable(s) in", sl_dataname, sep = " "))
-      )
+      paste("Please only select annotation variable(s) in", sl_dataname, sep = " ")
+    ))
 
     validate(need(
       !(input$id_var %in% input$anno_var),
@@ -348,11 +366,13 @@ srv_g_heatmap_bygrade <- function(input,
       validate(
         need(
           input$conmed_var %in% names(ADCM_FILTERED),
-          paste("Please select a Conmed Variable in", cm_dataname, sep = " "))
+          paste("Please select a Conmed Variable in", cm_dataname, sep = " ")
+        )
       )
       validate(need(
         all(input$conmed_level %in% levels(ADCM_FILTERED[[input$conmed_var]])),
-        "Updating Conmed Levels"))
+        "Updating Conmed Levels"
+      ))
     }
 
     chunks_reset(envir = environment())
@@ -367,7 +387,6 @@ srv_g_heatmap_bygrade <- function(input,
           factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
         rtables::var_labels(conmed_data)[conmed_var] <- rtables::var_labels(ADCM_FILTERED)[conmed_var]
       }))
-
     } else {
       chunks_push(bquote({
         conmed_data <- conmed_var <- NULL

@@ -31,11 +31,17 @@
 #'     tm_g_events_term_id(
 #'       label = "Common AE",
 #'       dataname = "ADAE",
-#'       term_var = choices_selected(selected = "AEDECOD",
-#'                                   choices = c("AEDECOD", "AETERM",
-#'                                               "AEHLT", "AELLT","AEBODSYS")),
-#'       arm_var = choices_selected(selected = "ACTARMCD",
-#'                                  choices = c("ACTARM", "ACTARMCD")),
+#'       term_var = choices_selected(
+#'         selected = "AEDECOD",
+#'         choices = c(
+#'           "AEDECOD", "AETERM",
+#'           "AEHLT", "AELLT", "AEBODSYS"
+#'         )
+#'       ),
+#'       arm_var = choices_selected(
+#'         selected = "ACTARMCD",
+#'         choices = c("ACTARM", "ACTARMCD")
+#'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
 #'   )
@@ -50,16 +56,17 @@ tm_g_events_term_id <- function(label,
                                 arm_var,
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
-                                plot_width = NULL
-                                ) {
+                                plot_width = NULL) {
   stopifnot(is_character_single(label))
   stopifnot(is.choices_selected(term_var))
   stopifnot(is.choices_selected(arm_var))
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
-  checkmate::assert_numeric(plot_width[1], lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
-                            .var.name = "plot_width")
+  checkmate::assert_numeric(plot_width[1],
+    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
+    .var.name = "plot_width"
+  )
   stopifnot(is_numeric_vector(fontsize))
 
   args <- as.list(environment())
@@ -80,7 +87,7 @@ ui_g_events_term_id <- function(id, ...) {
   standard_layout(
     output = white_small_well(
       plot_decorate_output(id = ns(NULL))
-      ),
+    ),
     encoding = div(
       optionalSelectInput(
         ns("term"),
@@ -157,8 +164,9 @@ ui_g_events_term_id <- function(id, ...) {
           step = 0.01
         ),
         checkboxInput(ns("reverse"),
-                      "Reverse Order",
-                      value = FALSE)
+          "Reverse Order",
+          value = FALSE
+        )
       ),
       ui_g_decorate(
         ns(NULL),
@@ -194,48 +202,59 @@ srv_g_events_term_id <- function(input,
         "Note: %d%% CI is calculated using %s",
         round(conf_level * 100),
         name_ci(diff_ci_method)
-      ))
+      )
+    )
   })
 
 
-  observeEvent(input$sort, {
-    updateTextInput(
-      session,
-      "title",
-      value = sprintf(
-        "Common AE Table %s",
-        c("term" = "Sorted by Term",
-          "riskdiff" = "Sorted by Risk Difference",
-          "meanrisk" = "Sorted by Mean Risk",
-          " " = ""
-        )[if_null(input$sort, " ")]
-      ))
-  }, ignoreNULL = FALSE)
+  observeEvent(input$sort,
+    {
+      updateTextInput(
+        session,
+        "title",
+        value = sprintf(
+          "Common AE Table %s",
+          c(
+            "term" = "Sorted by Term",
+            "riskdiff" = "Sorted by Risk Difference",
+            "meanrisk" = "Sorted by Mean Risk",
+            " " = ""
+          )[if_null(input$sort, " ")]
+        )
+      )
+    },
+    ignoreNULL = FALSE
+  )
 
-  observeEvent(input$arm_var, {
-    arm_var <- input$arm_var
-    ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+  observeEvent(input$arm_var,
+    {
+      arm_var <- input$arm_var
+      ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
-    choices <- levels(ANL_FILTERED[[arm_var]])
+      choices <- levels(ANL_FILTERED[[arm_var]])
 
-    validate(need(length(choices) > 0, "Please include multiple treatment"))
-    if (length(choices) == 1) {
-      trt_index <- 1
-    } else {
-      trt_index <- 2
-    }
+      validate(need(length(choices) > 0, "Please include multiple treatment"))
+      if (length(choices) == 1) {
+        trt_index <- 1
+      } else {
+        trt_index <- 2
+      }
 
-    updateSelectInput(
-      session,
-      "arm_ref",
-      selected = choices[1],
-      choices = choices)
-    updateSelectInput(
-      session,
-      "arm_trt",
-      selected = choices[trt_index],
-      choices = choices)
-  }, ignoreNULL = TRUE)
+      updateSelectInput(
+        session,
+        "arm_ref",
+        selected = choices[1],
+        choices = choices
+      )
+      updateSelectInput(
+        session,
+        "arm_trt",
+        selected = choices[trt_index],
+        choices = choices
+      )
+    },
+    ignoreNULL = TRUE
+  )
 
   plt <- reactive({
     validate(
@@ -246,8 +265,9 @@ srv_g_events_term_id <- function(input,
     validate(need(
       input$arm_trt != input$arm_ref,
       paste("Treatment arm and control arm cannot be the same.",
-            "Please select a different treatment arm or control arm",
-            sep = "\n")
+        "Please select a different treatment arm or control arm",
+        sep = "\n"
+      )
     ))
 
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
@@ -257,8 +277,10 @@ srv_g_events_term_id <- function(input,
     anl_name <- paste0(dataname, "_FILTERED")
     assign(anl_name, ANL_FILTERED)
 
-    validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])),
-      "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."))
+    validate(need(
+      all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])),
+      "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
+    ))
 
     chunks_reset(envir = environment())
 
@@ -313,7 +335,8 @@ srv_g_events_term_id <- function(input,
     id = "rcode",
     datasets = datasets,
     datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))),
+      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
+    ),
     modal_title = paste0("R code for ", label)
   )
 }

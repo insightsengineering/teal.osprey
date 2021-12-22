@@ -54,11 +54,17 @@ app <- init(
     tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
-      term_var = choices_selected(selected = "AEDECOD",
-                                  choices = c("AEDECOD", "AETERM",
-                                              "AEHLT", "AELLT","AEBODSYS")),
-      arm_var = choices_selected(selected = "ACTARMCD",
-                                 choices = c("ACTARM", "ACTARMCD")),
+      term_var = choices_selected(
+        selected = "AEDECOD",
+        choices = c(
+          "AEDECOD", "AETERM",
+          "AEHLT", "AELLT", "AEBODSYS"
+        )
+      ),
+      arm_var = choices_selected(
+        selected = "ACTARMCD",
+        choices = c("ACTARM", "ACTARMCD")
+      ),
       plot_height = c(600, 200, 2000)
     )
   )

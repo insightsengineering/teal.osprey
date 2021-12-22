@@ -145,58 +145,74 @@ library(scda)
 
 ADSL <- synthetic_cdisc_data("latest")$adsl
 ADAE <- synthetic_cdisc_data("latest")$adae \%>\%
-  mutate(ASTDT = as.Date(ASTDTM),
-         AENDT = as.Date(AENDTM))
+  mutate(
+    ASTDT = as.Date(ASTDTM),
+    AENDT = as.Date(AENDTM)
+  )
 ADCM <- synthetic_cdisc_data("latest")$adcm \%>\%
-  mutate(ASTDT = as.Date(ASTDTM),
-         AENDT = as.Date(AENDTM))
+  mutate(
+    ASTDT = as.Date(ASTDTM),
+    AENDT = as.Date(AENDTM)
+  )
 
 # The step below is to pre-process ADCM to legacy standard
-ADCM <- ADCM \%>\% select(-starts_with("ATC")) \%>\% unique()
+ADCM <- ADCM \%>\%
+  select(-starts_with("ATC")) \%>\%
+  unique()
 
 ADRS <- synthetic_cdisc_data("latest")$adrs \%>\%
   mutate(ADT = as.Date(ADTM))
 ADEX <- synthetic_cdisc_data("latest")$adex \%>\%
-  mutate(ASTDT = as.Date(ASTDTM),
-         AENDT = as.Date(AENDTM))
+  mutate(
+    ASTDT = as.Date(ASTDTM),
+    AENDT = as.Date(AENDTM)
+  )
 ADLB <- synthetic_cdisc_data("latest")$adlb \%>\%
-  mutate(ADT = as.Date(ADTM),
-         LBSTRESN = as.numeric(LBSTRESC))
+  mutate(
+    ADT = as.Date(ADTM),
+    LBSTRESN = as.numeric(LBSTRESC)
+  )
 
 x <- init(
   data = cdisc_data(
     cdisc_dataset("ADSL", ADSL,
-      code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
+      code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"
+    ),
     cdisc_dataset("ADRS", ADRS,
       code = "ADRS <- synthetic_cdisc_data(\"latest\")$adrs \%>\%
-              mutate(ADT = as.Date(ADTM))"),
+              mutate(ADT = as.Date(ADTM))"
+    ),
     cdisc_dataset("ADAE", ADAE,
       code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae \%>\%
               mutate(ASTDT = as.Date(ASTDTM),
-                     AENDT = as.Date(AENDTM))"),
+                     AENDT = as.Date(AENDTM))"
+    ),
     cdisc_dataset("ADCM", ADCM,
       code = "ADCM <- synthetic_cdisc_data(\"latest\")$adcm \%>\%
               mutate(ASTDT = as.Date(ASTDTM),
                      AENDT = as.Date(AENDTM))
               ADCM <- ADCM \%>\% select(-starts_with(\"ATC\")) \%>\% unique()",
-      keys = c('STUDYID','USUBJID', 'ASTDTM', 'CMSEQ', 'CMDECOD')),
+      keys = c("STUDYID", "USUBJID", "ASTDTM", "CMSEQ", "CMDECOD")
+    ),
     cdisc_dataset("ADLB", ADLB,
       code = "ADLB <- synthetic_cdisc_data(\"latest\")$adlb \%>\%
               mutate(ADT = as.Date(ADTM),
-                     LBSTRESN = as.numeric(LBSTRESC))"),
+                     LBSTRESN = as.numeric(LBSTRESC))"
+    ),
     cdisc_dataset("ADEX", ADEX,
       code = "ADEX <- synthetic_cdisc_data(\"latest\")$adex \%>\%
               mutate(ASTDT = as.Date(ASTDTM),
-                     AENDT = as.Date(AENDTM))"),
+                     AENDT = as.Date(AENDTM))"
+    ),
     check = TRUE
   ),
   modules = root_modules(
     tm_g_patient_profile(
       label = "Patient Profile Plot",
-     patient_id = choices_selected(
-       choices = unique(ADSL$USUBJID),
-       selected = unique(ADSL$USUBJID)[1]
-       ),
+      patient_id = choices_selected(
+        choices = unique(ADSL$USUBJID),
+        selected = unique(ADSL$USUBJID)[1]
+      ),
       sl_dataname = "ADSL",
       ex_dataname = "ADEX",
       ae_dataname = "ADAE",
@@ -210,32 +226,38 @@ x <- init(
       show_lb_plot = TRUE,
       sl_start_date = choices_selected(
         selected = "TRTSDTM",
-        choices = c("TRTSDTM", "RANDDT")),
+        choices = c("TRTSDTM", "RANDDT")
+      ),
       ex_var = choices_selected(
         selected = "PARCAT2",
-        choices = "PARCAT2"),
+        choices = "PARCAT2"
+      ),
       ae_var = choices_selected(
         selected = "AEDECOD",
-        choices = c("AEDECOD", "AESOC")),
+        choices = c("AEDECOD", "AESOC")
+      ),
       ae_line_col_var = choices_selected(
         selected = "AESER",
-        choices = c("AESER", "AEREL")),
-      ae_line_col_opt = c("Y" = "red","N" = "blue"),
+        choices = c("AESER", "AEREL")
+      ),
+      ae_line_col_opt = c("Y" = "red", "N" = "blue"),
       rs_var = choices_selected(
         selected = "PARAMCD",
-        choices = "PARAMCD"),
+        choices = "PARAMCD"
+      ),
       cm_var = choices_selected(
         selected = "CMDECOD",
-        choices = c("CMDECOD", "CMCAT")),
+        choices = c("CMDECOD", "CMCAT")
+      ),
       lb_var = choices_selected(
         selected = "LBTESTCD",
-        choices = c("LBTESTCD", "LBCAT")),
+        choices = c("LBTESTCD", "LBCAT")
+      ),
       x_limit = "-28, 750",
       plot_height = c(1200, 400, 5000)
     )
   )
 )
-
 \dontrun{
 shinyApp(x$ui, x$server)
 }

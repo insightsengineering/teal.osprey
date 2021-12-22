@@ -24,7 +24,7 @@
 #'
 #' @examples
 #'
-#' #Example using stream (ADaM) dataset
+#' # Example using stream (ADaM) dataset
 #' library(dplyr)
 #' library(scda)
 #'
@@ -34,8 +34,10 @@
 #' app <- teal::init(
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
-#'     cdisc_dataset("ADTR",  ADTR, code = "ADTR <- synthetic_cdisc_data(\"latest\")$adtr",
-#'       keys = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")),
+#'     cdisc_dataset("ADTR", ADTR,
+#'       code = "ADTR <- synthetic_cdisc_data(\"latest\")$adtr",
+#'       keys = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
+#'     ),
 #'     check = TRUE
 #'   ),
 #'   modules = root_modules(
@@ -46,7 +48,7 @@
 #'       x_var = choices_selected(choices = "ADY", selected = "ADY"),
 #'       y_var = choices_selected(choices = c("PCHG", "CHG", "AVAL"), selected = "PCHG"),
 #'       marker_var = choices_selected(choices = c("SEX", "RACE", "USUBJID"), selected = "SEX"),
-#'       line_colorby_var = choices_selected(choices = c("SEX","USUBJID", "RACE"), selected = "SEX"),
+#'       line_colorby_var = choices_selected(choices = c("SEX", "USUBJID", "RACE"), selected = "SEX"),
 #'       xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
 #'       yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
 #'       vref_line = "10, 37",
@@ -54,7 +56,6 @@
 #'     )
 #'   )
 #' )
-#'
 #' \dontrun{
 #' shinyApp(app$ui, app$server)
 #' }
@@ -76,7 +77,6 @@ tm_g_spiderplot <- function(label,
                             plot_width = NULL,
                             pre_output = NULL,
                             post_output = NULL) {
-
   stopifnot(is.choices_selected(paramcd))
   stopifnot(is.choices_selected(x_var))
   stopifnot(is.choices_selected(y_var))
@@ -91,8 +91,10 @@ tm_g_spiderplot <- function(label,
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
-  checkmate::assert_numeric(plot_width[1], lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
-                            .var.name = "plot_width")
+  checkmate::assert_numeric(plot_width[1],
+    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
+    .var.name = "plot_width"
+  )
 
   args <- as.list(environment())
   module(
@@ -106,15 +108,14 @@ tm_g_spiderplot <- function(label,
 }
 
 ui_g_spider <- function(id, ...) {
-
   ns <- NS(id)
   a <- list(...)
 
   standard_layout(
     output = white_small_well(
       plot_with_settings_ui(id = ns("spiderplot"))
-      ),
-    encoding =  div(
+    ),
+    encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
       div(
@@ -124,76 +125,87 @@ ui_g_spider <- function(id, ...) {
           "Parameter - from ADTR",
           a$paramcd$choices,
           a$paramcd$selected,
-          multiple = FALSE),
+          multiple = FALSE
+        ),
         optionalSelectInput(
           ns("x_var"),
           "X-axis Variable",
           a$x_var$choices,
           a$x_var$selected,
-          multiple = FALSE),
+          multiple = FALSE
+        ),
         optionalSelectInput(
           ns("y_var"),
           "Y-axis Variable",
           a$y_var$choices,
           a$y_var$selected,
-          multiple = FALSE),
+          multiple = FALSE
+        ),
         optionalSelectInput(
           ns("line_colorby_var"),
           "Color By Variable (Line)",
           a$line_colorby_var$choices,
           a$line_colorby_var$selected,
-          multiple = FALSE),
+          multiple = FALSE
+        ),
         optionalSelectInput(
           ns("marker_var"),
           "Marker Symbol By Variable",
           a$marker_var$choices,
           a$marker_var$selected,
-          multiple = FALSE),
+          multiple = FALSE
+        ),
         optionalSelectInput(
           ns("xfacet_var"),
           "X-facet By Variable",
           a$xfacet_var$choices,
           a$xfacet_var$selected,
-          multiple = TRUE),
+          multiple = TRUE
+        ),
         optionalSelectInput(
           ns("yfacet_var"),
           "Y-facet By Variable",
           a$yfacet_var$choices,
           a$yfacet_var$selected,
-          multiple = TRUE)
+          multiple = TRUE
+        )
       ),
       checkboxInput(
         ns("anno_txt_var"),
         "Add subject ID label",
-        value = a$anno_txt_var),
+        value = a$anno_txt_var
+      ),
       checkboxInput(
         ns("legend_on"),
         "Add legend",
-        value = a$legend_on),
+        value = a$legend_on
+      ),
       textInput(
         ns("vref_line"),
         label = div(
           "Vertical Reference Line(s)",
           tags$br(),
-          helpText("Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)")),
-        value = a$vref_line),
+          helpText("Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)")
+        ),
+        value = a$vref_line
+      ),
       textInput(
         ns("href_line"),
         label = div(
           "Hortizontal Reference Line(s)",
           tags$br(),
-          helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")),
-        value = a$href_line)
+          helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")
+        ),
+        value = a$href_line
+      )
     ),
     forms = get_rcode_ui(ns("rcode")),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
-
 }
 
 srv_g_spider <- function(input, output, session, datasets, dataname, label, plot_height, plot_width) {
-
   vals <- reactiveValues(spiderplot = NULL) # nolint
 
   # initialize chunks
@@ -260,7 +272,10 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
       ADTR <- .(as.name(adtr_name))[, .(adtr_vars)] %>% as.data.frame() # nolint
 
       ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID")) # nolint
-      ANL <- ANL %>% group_by(USUBJID, PARAMCD) %>% arrange(ANL[, .(x_var)]) %>% as.data.frame() # nolint
+      ANL <- ANL %>%
+        group_by(USUBJID, PARAMCD) %>%
+        arrange(ANL[, .(x_var)]) %>%
+        as.data.frame() # nolint
     }))
 
     chunks_push_new_line()
@@ -268,7 +283,9 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     # format and filter
     chunks_push(bquote({
       ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-      ANL_f <- ANL %>% filter(PARAMCD == .(paramcd)) %>% as.data.frame() # nolint
+      ANL_f <- ANL %>%
+        filter(PARAMCD == .(paramcd)) %>%
+        as.data.frame() # nolint
     }))
 
     chunks_push_new_line()
@@ -278,13 +295,17 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
 
     # reference lines preprocessing - vertical
     vref_line <- as_numeric_from_comma_sep_str(vref_line)
-    validate(need(all(!is.na(vref_line)),
-      "Please enter a comma separated set of numeric values for the vertical reference line(s)"))
+    validate(need(
+      all(!is.na(vref_line)),
+      "Please enter a comma separated set of numeric values for the vertical reference line(s)"
+    ))
 
     # reference lines preprocessing - horizontal
     href_line <- as_numeric_from_comma_sep_str(href_line)
-    validate(need(all(!is.na(href_line)),
-      "Please enter a comma separated set of numeric values for the horizontal reference line(s)"))
+    validate(need(
+      all(!is.na(href_line)),
+      "Please enter a comma separated set of numeric values for the horizontal reference line(s)"
+    ))
 
     # label
     if (anno_txt_var) {
@@ -336,7 +357,6 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     }))
 
     chunks_safe_eval()
-
   })
 
   callModule(
@@ -352,7 +372,8 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     id = "rcode",
     datasets = datasets,
     datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))),
+      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
+    ),
     modal_title = label
   )
 }
