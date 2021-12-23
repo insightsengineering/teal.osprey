@@ -32,7 +32,7 @@
 #'
 #' @examples
 #'
-#' #Example using stream (ADaM) dataset
+#' # Example using stream (ADaM) dataset
 #' library(dplyr)
 #'
 #' ADSL <- rADSL
@@ -52,7 +52,8 @@
 #'               ADRS <- ADRS %>% dplyr::filter(PARAMCD == 'LSTASDI' & DCSREAS == 'Death') %>%
 #'                       mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
 #'               rbind(ADRS %>% dplyr::filter(PARAMCD == 'OVRINV' & AVALC != 'NE')) %>%
-#'               arrange(USUBJID)"),
+#'               arrange(USUBJID)"
+#'     ),
 #'     check = TRUE
 #'   ),
 #'   modules = root_modules(
@@ -71,20 +72,25 @@
 #'       marker_pos_var = choices_selected(selected = "ADY", choices = c("ADY")),
 #'       marker_shape_var = choices_selected(selected = "AVALC", c("AVALC", "AVISIT")),
 #'       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-#'       marker_color_var = choices_selected(selected = "AVALC",
-#'                                           choices = c("AVALC", "AVISIT")),
-#'       marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod",
-#'                            "PD" = "red", "Death" = "black"),
+#'       marker_color_var = choices_selected(
+#'         selected = "AVALC",
+#'         choices = c("AVALC", "AVISIT")
+#'       ),
+#'       marker_color_opt = c(
+#'         "CR" = "green", "PR" = "blue", "SD" = "goldenrod",
+#'         "PD" = "red", "Death" = "black"
+#'       ),
 #'       vref_line = c(30, 60),
 #'       anno_txt_var = choices_selected(
 #'         selected = c("ACTARM", "SEX"),
-#'         choices = c("ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
-#'                     "SEX", "RACE", "COUNTRY", "DCSREAS", "DCSREASP")
+#'         choices = c(
+#'           "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
+#'           "SEX", "RACE", "COUNTRY", "DCSREAS", "DCSREASP"
+#'         )
 #'       )
 #'     )
 #'   )
-#'   )
-#'
+#' )
 #' \dontrun{
 #' shinyApp(x$ui, x$server)
 #' }
@@ -123,8 +129,13 @@ tm_g_swimlane <- function(label,
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
-  checkmate::assert_numeric(plot_width[1], lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
-                            .var.name = "plot_width")
+  checkmate::assert_numeric(
+    plot_width[1],
+    lower = plot_width[2],
+    upper = plot_width[3],
+    null.ok = TRUE,
+    .var.name = "plot_width"
+  )
 
   module(
     label = label,
@@ -154,7 +165,7 @@ ui_g_swimlane <- function(id, ...) {
   standard_layout(
     output = white_small_well(
       plot_with_settings_ui(id = ns("swimlaneplot"))
-      ),
+    ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", code(a$dataname)),
@@ -218,7 +229,7 @@ ui_g_swimlane <- function(id, ...) {
           "Vertical Reference Line(s)",
           tags$br(),
           helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
-          ),
+        ),
         value = paste(a$vref_line, collapse = ", ")
       )
     ),
@@ -252,9 +263,9 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
         choices = marker_shape_var$choices,
         selected = marker_shape_var$selected, multiple = FALSE,
         label_help = helpText("from ", code(dataname))
-        )
-      }
-    })
+      )
+    }
+  })
   output$marker_color_sel <- renderUI({
     if (dataname == "ADSL" || is.null(marker_color_var) || is.null(input$marker_pos_var)) {
       NULL
@@ -265,9 +276,9 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
         choices = marker_color_var$choices,
         selected = marker_color_var$selected, multiple = FALSE,
         label_help = helpText("from ", code(dataname))
-        )
-      }
-    })
+      )
+    }
+  })
 
   # create plot
   plot_r <- reactive({
@@ -313,8 +324,10 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
 
     # If reference lines are requested
     vref_line <- as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)())
-    validate(need(all(!is.na(vref_line)),
-      "Please enter a comma separated set of numeric values for the reference line(s)"))
+    validate(need(
+      all(!is.na(vref_line)),
+      "Please enter a comma separated set of numeric values for the reference line(s)"
+    ))
 
     # validate input values
     if (dataname == "ADSL") {
@@ -325,8 +338,10 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
       validate_has_variable(ADSL_FILTERED, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
 
       validate_has_data(ANL_FILTERED, min_nrow = 3)
-      validate_has_variable(ANL_FILTERED,
-                            unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var)))
+      validate_has_variable(
+        ANL_FILTERED,
+        unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
+      )
     }
 
     # DATA / VARIABLE VALIDATIONS
@@ -437,7 +452,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           marker_shape_opt = .(if (length(marker_shape_var) == 0) {
             NULL
           } else if (length(marker_shape_var) > 0 &
-                     all(unique(ANL[[marker_shape_var]]) %in% names(marker_shape_opt)) == T) {
+            all(unique(ANL[[marker_shape_var]]) %in% names(marker_shape_opt)) == T) {
             bquote(.(marker_shape_opt))
           } else {
             NULL
@@ -450,7 +465,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           marker_color_opt = .(if (length(marker_color_var) == 0) {
             NULL
           } else if (length(marker_color_var) > 0 &
-                     all(unique(ANL[[marker_color_var]]) %in% names(marker_color_opt)) == T) {
+            all(unique(ANL[[marker_color_var]]) %in% names(marker_color_opt)) == T) {
             bquote(.(marker_color_opt))
           } else {
             NULL
@@ -485,7 +500,8 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     id = "rcode",
     datasets = datasets,
     datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))),
+      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
+    ),
     modal_title = label
   )
 }

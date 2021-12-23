@@ -13,18 +13,18 @@ ui_g_decorate <- function(id,
                           titles = "Titles",
                           footnotes = "footnotes",
                           fontsize = c(5, 4, 11)) {
-    ns <- NS(id)
-    tagList(
-      optionalSliderInputValMinMax(
-        ns("fontsize"),
-        "Font Size",
-        value_min_max = fontsize,
-        step = 0.1
-      ),
-      textInput(ns("title"), "Title", value = titles),
-      textAreaInput(ns("foot"), "Footnote", value = footnotes, resize = "none")
-    )
-  }
+  ns <- NS(id)
+  tagList(
+    optionalSliderInputValMinMax(
+      ns("fontsize"),
+      "Font Size",
+      value_min_max = fontsize,
+      step = 0.1
+    ),
+    textInput(ns("title"), "Title", value = titles),
+    textAreaInput(ns("foot"), "Footnote", value = footnotes, resize = "none")
+  )
+}
 
 #' Helper server function to decorate plot output
 #'
@@ -49,38 +49,38 @@ srv_g_decorate <- function(input,
                            plt = reactive(NULL),
                            plot_height,
                            plot_width) {
+  plot_g <- reactive({
+    g <- decorate_grob(
+      plt(),
+      titles = input$title,
+      footnotes = input$foot,
+      gp_titles = gpar(
+        fontsize = input$fontsize * .pt,
+        col = "black",
+        fontface = "bold"
+      ),
+      gp_footnotes = gpar(fontsize = input$fontsize * .pt, col = "black")
+    )
+  })
 
-    plot_g <- reactive({
-      g <- decorate_grob(
-        plt(),
-        titles = input$title,
-        footnotes = input$foot,
-        gp_titles = gpar(
-          fontsize = input$fontsize * .pt,
-          col = "black",
-          fontface = "bold"
-        ),
-        gp_footnotes = gpar(fontsize = input$fontsize * .pt, col = "black")
-      )
-    })
-
-    plot_r <- function() {
-      grid.newpage()
-      grid.draw(plot_g())
-      plot_g()
-    }
-
-    class(plot_r) <- c(class(plot_r), "reactive")
-
-    callModule(
-      plot_with_settings_srv,
-      id = plot_id,
-      plot_r = plot_r,
-      height = plot_height,
-      width = plot_width)
-
-    return(reactive(input$fontsize))
+  plot_r <- function() {
+    grid.newpage()
+    grid.draw(plot_g())
+    plot_g()
   }
+
+  class(plot_r) <- c(class(plot_r), "reactive")
+
+  callModule(
+    plot_with_settings_srv,
+    id = plot_id,
+    plot_r = plot_r,
+    height = plot_height,
+    width = plot_width
+  )
+
+  return(reactive(input$fontsize))
+}
 
 #' Helper function to plot decorated output ui
 #'

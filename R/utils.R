@@ -40,17 +40,18 @@ quick_filter <- function(filter_opt, ANL) { # nolint
 #'
 #' @export
 label_aevar <- function(x) {
-  #Display full variable labels for standard AE variables
-  ae_varlabel <- c(AEBODSYS = "MedDRA System Organ Class",
-                   AESOC    = "MedDRA Primary System Organ Class",
-                   AEHLGT   = "MedDRA High Level Group Term",
-                   AEHLT    = "MedDRA High Level Term",
-                   AELLT    = "MedDRA Lowest Level Term",
-                   AEDECOD  = "MedDRA Preferred Term",
-                   AETERM   = "Reported Adverse Event Term",
-                   AEMODIFY = "Modified Reported Term",
-                   AETOXGR  = "NCI-CTCAE Grade",
-                   AEITOXGR = "Initial Toxicity Grade"
+  # Display full variable labels for standard AE variables
+  ae_varlabel <- c(
+    AEBODSYS = "MedDRA System Organ Class",
+    AESOC = "MedDRA Primary System Organ Class",
+    AEHLGT = "MedDRA High Level Group Term",
+    AEHLT = "MedDRA High Level Term",
+    AELLT = "MedDRA Lowest Level Term",
+    AEDECOD = "MedDRA Preferred Term",
+    AETERM = "Reported Adverse Event Term",
+    AEMODIFY = "Modified Reported Term",
+    AETOXGR = "NCI-CTCAE Grade",
+    AEITOXGR = "Initial Toxicity Grade"
   )
 
   which_aevar <- match(x, names(ae_varlabel))
@@ -70,8 +71,8 @@ ci_choices <- setNames(
     "Wald", "Corrected Wald", "Agresti-Caffo", "Newcombe",
     "Score", "Miettinen and Nurminen", "Mee",
     "Brown, Li's Jeffreys", "Hauck-Anderson"
-    )
   )
+)
 
 #' retrieve detailed name of ci method
 #' @param x ci method to retrieve its name
