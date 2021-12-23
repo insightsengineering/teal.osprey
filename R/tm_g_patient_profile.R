@@ -714,7 +714,8 @@ srv_g_patient_profile <- function(input,
                 units = "days"
               )
             )
-            + (ASTDT >= as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))) %>%
+            + (ASTDT >= as.Date(substr(
+              as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))) %>%
             filter(!is.na(AENDT)) %>%
             mutate(AENDY = as.numeric(
               difftime(
