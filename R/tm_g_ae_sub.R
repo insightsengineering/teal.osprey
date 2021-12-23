@@ -26,22 +26,23 @@
 #'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
 #'     cdisc_dataset("ADAE", ADAE, code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae"),
 #'     check = TRUE
-#'     ),
+#'   ),
 #'   modules = root_modules(
 #'     tm_g_ae_sub(
 #'       label = "AE by Subgroup",
 #'       dataname = "ADAE",
 #'       arm_var = choices_selected(
 #'         selected = "ACTARMCD",
-#'         choices = c("ACTARM", "ACTARMCD")),
+#'         choices = c("ACTARM", "ACTARMCD")
+#'       ),
 #'       group_var = choices_selected(
 #'         selected = c("SEX", "REGION1", "RACE"),
-#'         choices = c("SEX", "REGION1", "RACE")),
+#'         choices = c("SEX", "REGION1", "RACE")
+#'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
 #'   )
-#'   )
-#'
+#' )
 #' \dontrun{
 #' shinyApp(app$ui, app$server)
 #' }
@@ -52,34 +53,36 @@ tm_g_ae_sub <- function(label,
                         plot_height = c(600L, 200L, 2000L),
                         plot_width = NULL,
                         fontsize = c(5, 3, 7)) {
-    stopifnot(is.choices_selected(arm_var))
-    stopifnot(is.choices_selected(group_var))
-    checkmate::assert_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE)
-    checkmate::assert_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3], .var.name = "fontsize")
-    checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
-    checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
-    checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
-    checkmate::assert_numeric(plot_width[1], lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
-                              .var.name = "plot_width")
+  stopifnot(is.choices_selected(arm_var))
+  stopifnot(is.choices_selected(group_var))
+  checkmate::assert_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE)
+  checkmate::assert_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3], .var.name = "fontsize")
+  checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
+  checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
+  checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
+  checkmate::assert_numeric(plot_width[1],
+    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
+    .var.name = "plot_width"
+  )
 
-    module(
+  module(
+    label = label,
+    server = srv_g_ae_sub,
+    server_args = list(
       label = label,
-      server = srv_g_ae_sub,
-      server_args = list(
-        label = label,
-        dataname = dataname,
-        plot_height = plot_height,
-        plot_width = plot_width
-        ),
-      ui = ui_g_ae_sub,
-      ui_args = list(
-        arm_var = arm_var,
-        group_var = group_var,
-        fontsize = fontsize
-      ),
-      filters = dataname
-    )
-  }
+      dataname = dataname,
+      plot_height = plot_height,
+      plot_width = plot_width
+    ),
+    ui = ui_g_ae_sub,
+    ui_args = list(
+      arm_var = arm_var,
+      group_var = group_var,
+      fontsize = fontsize
+    ),
+    filters = dataname
+  )
+}
 
 ui_g_ae_sub <- function(id, ...) {
   ns <- NS(id)
@@ -87,7 +90,7 @@ ui_g_ae_sub <- function(id, ...) {
   standard_layout(
     output = white_small_well(
       plot_decorate_output(id = ns(NULL))
-      ),
+    ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code("ADAE")),
@@ -178,7 +181,7 @@ srv_g_ae_sub <- function(input,
 
     validate(need(
       length(choices) > 0, "Please include multiple treatment"
-      ))
+    ))
     if (length(choices) == 1) {
       ref_index <- 1
     } else {
@@ -189,13 +192,14 @@ srv_g_ae_sub <- function(input,
       session,
       "arm_trt",
       selected = choices[1],
-      choices = choices)
+      choices = choices
+    )
     updateSelectInput(
       session,
       "arm_ref",
       selected = choices[ref_index],
-      choices = choices)
-
+      choices = choices
+    )
   })
 
   observeEvent(list(input$ci, input$conf_level, input$arm_trt, input$arm_ref), {
@@ -230,24 +234,28 @@ srv_g_ae_sub <- function(input,
           choices,
           multiple = TRUE,
           selected = choices
-          )
+        )
         textname <- sprintf("text_%s_out", index)
         txt <- uiOutput(session$ns(textname))
         observeEvent(
-          input[[sprintf("groups__%s", index)]], {
-          output[[textname]] <- renderUI({
-            l <- input[[sprintf("groups__%s", index)]]
-            l2 <- lapply(seq_along(l), function(i) {
-              nm <- sprintf("groups__%s__level__%s", index, i)
-              label <- sprintf("Label for %s, Level %s", grp, l[i])
-              textInput(session$ns(nm), label, l[i])
+          eventExpr = input[[sprintf("groups__%s", index)]],
+          handlerExpr = {
+            output[[textname]] <- renderUI({
+              l <- input[[sprintf("groups__%s", index)]]
+              l2 <- lapply(seq_along(l), function(i) {
+                nm <- sprintf("groups__%s__level__%s", index, i)
+                label <- sprintf("Label for %s, Level %s", grp, l[i])
+                textInput(session$ns(nm), label, l[i])
+              })
+              tagList(textInput(
+                session$ns(
+                  sprintf("groups__%s__level__%s", index, "all")
+                ),
+                sprintf("Label for %s", grp), grp
+              ), l2)
             })
-            tagList(textInput(session$ns(
-              sprintf("groups__%s__level__%s", index, "all")
-            ),
-            sprintf("Label for %s", grp), grp), l2)
-          })
-        })
+          }
+        )
         tagList(sel, txt)
       })
       ret <- tagList(lo)
@@ -263,8 +271,8 @@ srv_g_ae_sub <- function(input,
 
     validate(need(
       is.factor(ADSL_FILTERED[[input$arm_var]]),
-      "Selected arm variable needs to be a factor.")
-    )
+      "Selected arm variable needs to be a factor."
+    ))
     validate(
       need(
         all(c(input$arm_trt, input$arm_ref) %in% levels(ADSL_FILTERED[[input$arm_var]])),
@@ -280,11 +288,11 @@ srv_g_ae_sub <- function(input,
         all(input$groups %in% names(ADAE_FILTERED)) &
           all(input$groups %in% names(ADSL_FILTERED)),
         "Check all selected subgroups are columns in ADAE and ADSL."
-        ),
+      ),
       need(
         input$arm_trt != input$arm_ref,
         "Treatment and Reference can not be identical."
-        )
+      )
     )
 
     chunks_reset(envir = environment())
@@ -298,8 +306,7 @@ srv_g_ae_sub <- function(input,
       subgroups_sl <- ADSL_FILTERED[grps]
       trt <- .(input$arm_trt)
       ref <- .(input$arm_ref)
-    })
-    )
+    }))
     chunks_push_new_line()
 
     chunks_safe_eval()
@@ -347,7 +354,6 @@ srv_g_ae_sub <- function(input,
     }))
 
     chunks_safe_eval()
-
   })
 
   callModule(
@@ -355,8 +361,8 @@ srv_g_ae_sub <- function(input,
     id = "rcode",
     datasets = datasets,
     datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))),
+      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
+    ),
     modal_title = label
   )
-
 }
