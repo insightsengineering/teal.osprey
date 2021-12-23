@@ -39,7 +39,7 @@
 #'
 #' @examples
 #'
-#' #Example using stream (ADaM) dataset
+#' # Example using stream (ADaM) dataset
 #' library(dplyr)
 #' library(scda)
 #'
@@ -60,39 +60,45 @@
 #'     cdisc_dataset("ADSL", ADSL,
 #'       code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl
 #'               set.seed(23)
-#'               ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), 'UG'))"),
+#'               ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), 'UG'))"
+#'     ),
 #'     cdisc_dataset("ADAE", ADAE,
 #'       code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae
 #'               ADAE <- mutate(ADAE,
 #'               flag1 = ifelse(AETOXGR == 1, 1, 0),
 #'               flag2 = ifelse(AETOXGR == 2, 1, 0),
 #'               flag3 = ifelse(AETOXGR == 3, 1, 0),
-#'               flag1_filt = rep('Y', n()))"),
+#'               flag1_filt = rep('Y', n()))"
+#'     ),
 #'     check = TRUE
 #'   ),
 #'   modules = root_modules(
 #'     tm_g_butterfly(
 #'       label = "Butterfly Plot",
 #'       dataname = "ADAE",
-#'       right_var = choices_selected(selected = "SEX",
-#'         choices = c("DOSE", "SEX", "ARM","RACE", "flag1", "flag2","flag3")),
-#'       left_var = choices_selected(selected = "RACE",
-#'         choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")),
+#'       right_var = choices_selected(
+#'         selected = "SEX",
+#'         choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")
+#'       ),
+#'       left_var = choices_selected(
+#'         selected = "RACE",
+#'         choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")
+#'       ),
 #'       category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
 #'       color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
-#'       count_by_var = choices_selected(selected = "# of patients",
-#'                                       choices = c("# of patients", "# of AEs")),
+#'       count_by_var = choices_selected(
+#'         selected = "# of patients",
+#'         choices = c("# of patients", "# of AEs")
+#'       ),
 #'       facet_var = choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
 #'       sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
 #'       legend_on = TRUE,
 #'       plot_height = c(600, 200, 2000)
 #'     )
 #'   )
-#'   )
-#'
+#' )
 #' \dontrun{
 #' shinyApp(app$ui, app$server)
-#'
 #' }
 #'
 tm_g_butterfly <- function(label,
@@ -110,7 +116,6 @@ tm_g_butterfly <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
-
   stopifnot(is_character_single(label))
   stopifnot(is_character_single(dataname))
   stopifnot(is.choices_selected(filter_var) || is.null(filter_var))
@@ -126,8 +131,13 @@ tm_g_butterfly <- function(label,
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
-  checkmate::assert_numeric(plot_width[1], lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
-                            .var.name = "plot_width")
+  checkmate::assert_numeric(
+    plot_width[1],
+    lower = plot_width[2],
+    upper = plot_width[3],
+    null.ok = TRUE,
+    .var.name = "plot_width"
+  )
 
   args <- as.list(environment())
 
@@ -139,19 +149,17 @@ tm_g_butterfly <- function(label,
     ui = ui_g_butterfly,
     ui_args = args
   )
-
 }
 
 ui_g_butterfly <- function(id, ...) {
-
   ns <- NS(id)
   a <- list(...)
 
   standard_layout(
     output = white_small_well(
       plot_with_settings_ui(id = ns("butterflyplot"))
-      ),
-    encoding =  div(
+    ),
+    encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
       if (!is.null(a$filter_var)) {
@@ -161,14 +169,16 @@ ui_g_butterfly <- function(id, ...) {
             "Preset Data Filters Observations with value of 'Y' for selected variable(s) will be used for analysis",
           choices = a$filter_var$choices,
           selected = a$filter_var$selected,
-          multiple = TRUE)
+          multiple = TRUE
+        )
       },
       optionalSelectInput(
         ns("right_var"),
         "Right Dichotomization Variable",
         a$right_var$choices,
         a$right_var$selected,
-        multiple = FALSE),
+        multiple = FALSE
+      ),
       optionalSelectInput(
         ns("right_val"),
         "Choose Up To 2:",
@@ -176,14 +186,16 @@ ui_g_butterfly <- function(id, ...) {
         options = list(
           `max-options` = 2L,
           `max-options-text` = "no more than 2",
-          `actions-box` = FALSE)
-        ),
+          `actions-box` = FALSE
+        )
+      ),
       optionalSelectInput(
         ns("left_var"),
         "Left Dichotomization Variable",
         a$left_var$choices,
         a$left_var$selected,
-        multiple = FALSE),
+        multiple = FALSE
+      ),
       optionalSelectInput(
         ns("left_val"),
         "Choose Up To 2:",
@@ -191,51 +203,56 @@ ui_g_butterfly <- function(id, ...) {
         options = list(
           `max-options` = 2L,
           `max-options-text` = "no more than 2",
-          `actions-box` = FALSE)
-        ),
+          `actions-box` = FALSE
+        )
+      ),
       optionalSelectInput(
         ns("category_var"),
         "Category Variable",
         a$category_var$choices,
         a$category_var$selected,
-        multiple = FALSE),
+        multiple = FALSE
+      ),
       radioButtons(
         ns("color_by_var"),
         "Color Block By Variable",
         a$color_by_var$choices,
-        a$color_by_var$selected),
+        a$color_by_var$selected
+      ),
       radioButtons(
         ns("count_by_var"),
         "Count By Variable",
         a$count_by_var$choices,
-        a$count_by_var$selected),
+        a$count_by_var$selected
+      ),
       if (!is.null(a$facet_var)) {
         optionalSelectInput(
           ns("facet_var"),
           "Facet By Variable",
           a$facet_var$choices,
           a$facet_var$selected,
-          multiple = TRUE)
+          multiple = TRUE
+        )
       },
       radioButtons(
         ns("sort_by_var"),
         "Sort By Variable",
         a$sort_by_var$choices,
-        a$sort_by_var$selected),
+        a$sort_by_var$selected
+      ),
       checkboxInput(
         ns("legend_on"),
         "Add legend",
-        value = a$legend_on)
+        value = a$legend_on
+      )
     ),
     forms = get_rcode_ui(ns("rcode")),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
-
 }
 
 srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_height, plot_width) {
-
   init_chunks()
 
   options <- reactiveValues(r = NULL, l = NULL)
@@ -251,67 +268,77 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     list(ADSL_df = ADSL_df, ADAE_df = ADAE_df)
   })
 
-  #dynamic options for dichotomization variable
-  observeEvent(input$right_var, {
-    right_var <- input$right_var
-    right_val <- isolate(input$right_val)
-    current_r_var <- isolate(vars$r)
-    if (is.null(right_var)) {
-      updateOptionalSelectInput(session, "right_val", choices = character(0), selected = character(0))
-    } else {
-      data <- reactive_data()
-      options$r <- if (right_var %in% names(data$ADSL_df)) {
-        sort(unique(data$ADSL_df[, right_var]))
+  # dynamic options for dichotomization variable
+  observeEvent(input$right_var,
+    handlerExpr = {
+      right_var <- input$right_var
+      right_val <- isolate(input$right_val)
+      current_r_var <- isolate(vars$r)
+      if (is.null(right_var)) {
+        updateOptionalSelectInput(session, "right_val", choices = character(0), selected = character(0))
       } else {
-        sort(unique(data$ADAE_df[, right_var]))
-      }
+        data <- reactive_data()
+        options$r <- if (right_var %in% names(data$ADSL_df)) {
+          sort(unique(data$ADSL_df[, right_var]))
+        } else {
+          sort(unique(data$ADAE_df[, right_var]))
+        }
 
-      selected <- if (length(right_val) > 0) {
-        left_over <- right_val[right_val %in% options$r]
-        if (length(left_over) > 0 && !is.null(current_r_var) && current_r_var == right_var) {
-          left_over
+        selected <- if (length(right_val) > 0) {
+          left_over <- right_val[right_val %in% options$r]
+          if (length(left_over) > 0 && !is.null(current_r_var) && current_r_var == right_var) {
+            left_over
+          } else {
+            options$r[1]
+          }
         } else {
           options$r[1]
         }
-      } else {
-        options$r[1]
+        updateOptionalSelectInput(
+          session, "right_val",
+          choices = as.character(options$r), selected = selected, label = "Choose Up To 2:"
+        )
       }
-      updateOptionalSelectInput(
-        session, "right_val", choices = as.character(options$r), selected = selected, label = "Choose Up To 2:")
-    }
-    vars$r <- right_var
-  }, ignoreNULL = FALSE)
+      vars$r <- right_var
+    },
+    ignoreNULL = FALSE
+  )
 
-  observeEvent(input$left_var, {
-    left_var <- input$left_var
-    left_val <- isolate(input$left_val)
-    current_l_var <- isolate(vars$l)
-    if (is.null(left_var)) {
-      updateOptionalSelectInput(session, "left_val", choices = character(0), selected = character(0))
-    } else {
-      data <- reactive_data()
-      options$l <- if (left_var %in% names(data$ADSL_df)) {
-        sort(unique(data$ADSL_df[, left_var]))
+  observeEvent(input$left_var,
+    handlerExpr = {
+      left_var <- input$left_var
+      left_val <- isolate(input$left_val)
+      current_l_var <- isolate(vars$l)
+      if (is.null(left_var)) {
+        updateOptionalSelectInput(session, "left_val", choices = character(0), selected = character(0))
       } else {
-        sort(unique(data$ADAE_df[, left_var]))
-      }
+        data <- reactive_data()
+        options$l <- if (left_var %in% names(data$ADSL_df)) {
+          sort(unique(data$ADSL_df[, left_var]))
+        } else {
+          sort(unique(data$ADAE_df[, left_var]))
+        }
 
-      selected <- if (length(left_val) > 0) {
-        left_over <- left_val[left_val %in% options$l]
-        if (length(left_over) > 0 && !is.null(current_l_var) && current_l_var == left_var) {
-          left_over
+        selected <- if (length(left_val) > 0) {
+          left_over <- left_val[left_val %in% options$l]
+          if (length(left_over) > 0 && !is.null(current_l_var) && current_l_var == left_var) {
+            left_over
+          } else {
+            options$l[1]
+          }
         } else {
           options$l[1]
         }
-      } else {
-        options$l[1]
-      }
 
-      updateOptionalSelectInput(
-        session, "left_val", choices = as.character(options$l), selected = selected, label = "Choose Up To 2:")
-    }
-    vars$l <- left_var
-  }, ignoreNULL = FALSE)
+        updateOptionalSelectInput(
+          session, "left_val",
+          choices = as.character(options$l), selected = selected, label = "Choose Up To 2:"
+        )
+      }
+      vars$l <- left_var
+    },
+    ignoreNULL = FALSE
+  )
 
 
 
@@ -335,20 +362,22 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
 
     validate(
       need(nrow(ADSL_FILTERED) > 0, "ADSL Data has no rows"),
-      need(nrow(ADAE_FILTERED) > 0, "ADAE Data has no rows"))
+      need(nrow(ADAE_FILTERED) > 0, "ADAE Data has no rows")
+    )
     validate(
       need(right_var, "'Right Dichotomization Variable' not selected"),
-      need(left_var, "'Left Dichotomization Variable' not selected"))
+      need(left_var, "'Left Dichotomization Variable' not selected")
+    )
     validate(
       need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
-      need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked"))
-    validate(
-      need(
-        any(c(ADSL_FILTERED[[right_var]] %in% right_val, ADSL_FILTERED[[left_var]] %in% left_val)),
-        "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)")
-      )
+      need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked")
+    )
+    validate(need(
+      any(c(ADSL_FILTERED[[right_var]] %in% right_val, ADSL_FILTERED[[left_var]] %in% left_val)),
+      "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)"
+    ))
 
-    #if variable is not in ADSL, then take from domain VADs
+    # if variable is not in ADSL, then take from domain VADs
     varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)
     varlist_from_adsl <- intersect(varlist, names(ADSL_FILTERED))
     varlist_from_anl <- intersect(varlist, setdiff(names(ADAE_FILTERED), names(ADSL_FILTERED)))
@@ -377,7 +406,7 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     chunks_push_new_line()
 
     chunks_push(bquote({
-      ANL_f  <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
+      ANL_f <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
       ANL_f <- na.omit(ANL_f) # nolint
     }))
 
@@ -425,7 +454,6 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     }
 
     chunks_safe_eval()
-
   })
 
   # Insert the plot into a plot_with_settings module from teal.devel
@@ -434,14 +462,16 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     id = "butterflyplot",
     plot_r = plot_r,
     height = plot_height,
-    width = plot_width)
+    width = plot_width
+  )
 
   callModule(
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
     datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))),
+      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
+    ),
     modal_title = "Butterfly plot"
   )
 }

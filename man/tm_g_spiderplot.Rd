@@ -72,7 +72,7 @@ Display spider plot as a shiny module
 }
 \examples{
 
-#Example using stream (ADaM) dataset
+# Example using stream (ADaM) dataset
 library(dplyr)
 library(scda)
 
@@ -82,8 +82,10 @@ ADTR <- synthetic_cdisc_data("latest")$adtr
 app <- teal::init(
   data = cdisc_data(
     cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
-    cdisc_dataset("ADTR",  ADTR, code = "ADTR <- synthetic_cdisc_data(\"latest\")$adtr",
-      keys = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")),
+    cdisc_dataset("ADTR", ADTR,
+      code = "ADTR <- synthetic_cdisc_data(\"latest\")$adtr",
+      keys = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
+    ),
     check = TRUE
   ),
   modules = root_modules(
@@ -94,7 +96,7 @@ app <- teal::init(
       x_var = choices_selected(choices = "ADY", selected = "ADY"),
       y_var = choices_selected(choices = c("PCHG", "CHG", "AVAL"), selected = "PCHG"),
       marker_var = choices_selected(choices = c("SEX", "RACE", "USUBJID"), selected = "SEX"),
-      line_colorby_var = choices_selected(choices = c("SEX","USUBJID", "RACE"), selected = "SEX"),
+      line_colorby_var = choices_selected(choices = c("SEX", "USUBJID", "RACE"), selected = "SEX"),
       xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
       yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
       vref_line = "10, 37",
@@ -102,7 +104,6 @@ app <- teal::init(
     )
   )
 )
-
 \dontrun{
 shinyApp(app$ui, app$server)
 }

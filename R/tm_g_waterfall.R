@@ -54,10 +54,13 @@
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL,
 #'       code = "ADSL <- rADSL
-#'               ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))"),
+#'               ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))"
+#'     ),
 #'     cdisc_dataset("ADRS", ADRS, code = "ADRS <- rADRS"),
-#'     cdisc_dataset("ADTR", ADTR, code = " ADTR <- rADTR",
-#'       c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")),
+#'     cdisc_dataset("ADTR", ADTR,
+#'       code = " ADTR <- rADTR",
+#'       c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
+#'     ),
 #'     check = TRUE
 #'   ),
 #'   modules = root_modules(
@@ -79,7 +82,6 @@
 #'     )
 #'   )
 #' )
-#'
 #' \dontrun{
 #' shinyApp(x$ui, x$server)
 #' }
@@ -104,7 +106,6 @@ tm_g_waterfall <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
-
   stopifnot(is_character_single(label))
   stopifnot(is_character_single(dataname_tr))
   stopifnot(is_character_single(dataname_rs))
@@ -121,8 +122,13 @@ tm_g_waterfall <- function(label,
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
-  checkmate::assert_numeric(plot_width[1], lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
-                            .var.name = "plot_width")
+  checkmate::assert_numeric(
+    plot_width[1],
+    lower = plot_width[2],
+    upper = plot_width[3],
+    null.ok = TRUE,
+    .var.name = "plot_width"
+  )
 
   args <- as.list(environment())
 
@@ -149,7 +155,7 @@ ui_g_waterfall <- function(id, ...) {
   standard_layout(
     output = white_small_well(
       plot_with_settings_ui(id = ns("waterfallplot"))
-      ),
+    ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis Data: ", tags$code(a$dataname_tr), tags$code(a$dataname_rs)),
@@ -276,7 +282,6 @@ srv_g_waterfall <- function(input,
   init_chunks()
 
   plot_r <- reactive({
-
     adsl_filtered <- datasets$get_data("ADSL", filtered = TRUE)
     adtr_filtered <- datasets$get_data(dataname_tr, filtered = TRUE)
     adrs_filtered <- datasets$get_data(dataname_rs, filtered = TRUE)
@@ -295,7 +300,8 @@ srv_g_waterfall <- function(input,
     validate(need(bar_var, "'Bar Height' field is empty"))
     validate(need(
       length(add_label_paramcd_rs) == 0 || length(add_label_var_sl) == 0,
-      "`Add ADSL Label to Bars` and `Add ADRS Label to Bars` fields cannot both have values simultaneously."))
+      "`Add ADSL Label to Bars` and `Add ADRS Label to Bars` fields cannot both have values simultaneously."
+    ))
 
     # validate data rows
     validate_has_data(adsl_filtered, min_nrow = 2)
@@ -331,21 +337,25 @@ srv_g_waterfall <- function(input,
       NULL
     }
 
-    #If reference lines are requested
+    # If reference lines are requested
     href_line <- as_numeric_from_comma_sep_str(href_line)
-    validate(need(all(!is.na(href_line)),
-      "Please enter a comma separated set of numeric values for the reference line(s)"))
+    validate(need(
+      all(!is.na(href_line)),
+      "Please enter a comma separated set of numeric values for the reference line(s)"
+    ))
 
-    #If gap point is requested
+    # If gap point is requested
     if (gap_point_val != "" || is.null(gap_point_val)) {
       gap_point_val <- as.numeric(gap_point_val)
-      validate(need(!anyNA(gap_point_val),
-                    "Value entered for break point was not numeric"))
+      validate(need(
+        !anyNA(gap_point_val),
+        "Value entered for break point was not numeric"
+      ))
     } else {
       gap_point_val <- NULL
     }
 
-    #If y tick is requested
+    # If y tick is requested
     if (ytick_at != "" || is.null(ytick_at)) {
       ytick_at <- as.numeric(ytick_at)
       validate(need(!anyNA(ytick_at), "Value entered for Y-axis interval was not numeric"))
@@ -413,7 +423,7 @@ srv_g_waterfall <- function(input,
         anl <- bar_data
         anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
       }))
-    } else{
+    } else {
       chunks_push(bquote({
         rs_sub <- adrs %>%
           dplyr::filter(PARAMCD %in% .(adrs_paramcd))
@@ -492,15 +502,14 @@ srv_g_waterfall <- function(input,
     }))
 
     chunks_safe_eval()
-
   })
 
   # Insert the plot into a plot_with_settings module from teal.devel
   callModule(plot_with_settings_srv,
-             id = "waterfallplot",
-             plot_r = plot_r,
-             height = plot_height,
-             width = plot_width
+    id = "waterfallplot",
+    plot_r = plot_r,
+    height = plot_height,
+    width = plot_width
   )
 
   # Show R Code

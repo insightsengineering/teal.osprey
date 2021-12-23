@@ -75,7 +75,7 @@ This is teal module that generates a swimlane plot (bar plot with markers) for A
 }
 \examples{
 
-#Example using stream (ADaM) dataset
+# Example using stream (ADaM) dataset
 library(dplyr)
 
 ADSL <- rADSL
@@ -95,7 +95,8 @@ x <- init(
               ADRS <- ADRS \%>\% dplyr::filter(PARAMCD == 'LSTASDI' & DCSREAS == 'Death') \%>\%
                       mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
               rbind(ADRS \%>\% dplyr::filter(PARAMCD == 'OVRINV' & AVALC != 'NE')) \%>\%
-              arrange(USUBJID)"),
+              arrange(USUBJID)"
+    ),
     check = TRUE
   ),
   modules = root_modules(
@@ -114,20 +115,25 @@ x <- init(
       marker_pos_var = choices_selected(selected = "ADY", choices = c("ADY")),
       marker_shape_var = choices_selected(selected = "AVALC", c("AVALC", "AVISIT")),
       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-      marker_color_var = choices_selected(selected = "AVALC",
-                                          choices = c("AVALC", "AVISIT")),
-      marker_color_opt = c("CR" = "green", "PR" = "blue", "SD" = "goldenrod",
-                           "PD" = "red", "Death" = "black"),
+      marker_color_var = choices_selected(
+        selected = "AVALC",
+        choices = c("AVALC", "AVISIT")
+      ),
+      marker_color_opt = c(
+        "CR" = "green", "PR" = "blue", "SD" = "goldenrod",
+        "PD" = "red", "Death" = "black"
+      ),
       vref_line = c(30, 60),
       anno_txt_var = choices_selected(
         selected = c("ACTARM", "SEX"),
-        choices = c("ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
-                    "SEX", "RACE", "COUNTRY", "DCSREAS", "DCSREASP")
+        choices = c(
+          "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
+          "SEX", "RACE", "COUNTRY", "DCSREAS", "DCSREASP"
+        )
       )
     )
   )
-  )
-
+)
 \dontrun{
 shinyApp(x$ui, x$server)
 }

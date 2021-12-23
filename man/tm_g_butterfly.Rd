@@ -84,7 +84,7 @@ Display butterfly plot as a shiny module
 }
 \examples{
 
-#Example using stream (ADaM) dataset
+# Example using stream (ADaM) dataset
 library(dplyr)
 library(scda)
 
@@ -105,39 +105,45 @@ app <- init(
     cdisc_dataset("ADSL", ADSL,
       code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl
               set.seed(23)
-              ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), 'UG'))"),
+              ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), 'UG'))"
+    ),
     cdisc_dataset("ADAE", ADAE,
       code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae
               ADAE <- mutate(ADAE,
               flag1 = ifelse(AETOXGR == 1, 1, 0),
               flag2 = ifelse(AETOXGR == 2, 1, 0),
               flag3 = ifelse(AETOXGR == 3, 1, 0),
-              flag1_filt = rep('Y', n()))"),
+              flag1_filt = rep('Y', n()))"
+    ),
     check = TRUE
   ),
   modules = root_modules(
     tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
-      right_var = choices_selected(selected = "SEX",
-        choices = c("DOSE", "SEX", "ARM","RACE", "flag1", "flag2","flag3")),
-      left_var = choices_selected(selected = "RACE",
-        choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")),
+      right_var = choices_selected(
+        selected = "SEX",
+        choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")
+      ),
+      left_var = choices_selected(
+        selected = "RACE",
+        choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")
+      ),
       category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
       color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
-      count_by_var = choices_selected(selected = "# of patients",
-                                      choices = c("# of patients", "# of AEs")),
+      count_by_var = choices_selected(
+        selected = "# of patients",
+        choices = c("# of patients", "# of AEs")
+      ),
       facet_var = choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
       sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
       legend_on = TRUE,
       plot_height = c(600, 200, 2000)
     )
   )
-  )
-
+)
 \dontrun{
 shinyApp(app$ui, app$server)
-
 }
 
 }
