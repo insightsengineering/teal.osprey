@@ -797,7 +797,8 @@ srv_g_patient_profile <- function(input,
                 )),
                 units = "days"
               ))
-              + (ADT >= as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))
+              + (ADT >= as.Date(substr(
+                as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))
             ) %>%
             select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
             filter(is.na(ADY) == FALSE)
