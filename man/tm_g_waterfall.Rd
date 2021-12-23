@@ -106,10 +106,13 @@ x <- teal::init(
   data = cdisc_data(
     cdisc_dataset("ADSL", ADSL,
       code = "ADSL <- rADSL
-              ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))"),
+              ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))"
+    ),
     cdisc_dataset("ADRS", ADRS, code = "ADRS <- rADRS"),
-    cdisc_dataset("ADTR", ADTR, code = " ADTR <- rADTR",
-      c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")),
+    cdisc_dataset("ADTR", ADTR,
+      code = " ADTR <- rADTR",
+      c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
+    ),
     check = TRUE
   ),
   modules = root_modules(
@@ -131,7 +134,6 @@ x <- teal::init(
     )
   )
 )
-
 \dontrun{
 shinyApp(x$ui, x$server)
 }

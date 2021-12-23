@@ -67,22 +67,26 @@ app <- init(
                 rtables::var_relabel(
                   AEREL1 = 'AE related to A: Drug X',
                   AEREL2 = 'AE related to B: Placebo'
-                )"),
+                )"
+    ),
     check = TRUE
   ),
   modules = root_modules(
     tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
-      arm_var = choices_selected(selected = "ACTARM",
-                                 choices = c("ACTARM", "ACTARMCD")),
-      add_flag = choices_selected(choices = variable_choices(ADAE,  c("AEREL1", "AEREL2")),
-                                  selected = NULL),
+      arm_var = choices_selected(
+        selected = "ACTARM",
+        choices = c("ACTARM", "ACTARMCD")
+      ),
+      add_flag = choices_selected(
+        choices = variable_choices(ADAE, c("AEREL1", "AEREL2")),
+        selected = NULL
+      ),
       plot_height = c(600, 200, 2000)
     )
   )
 )
-
 \dontrun{
 shinyApp(app$ui, app$server)
 }
