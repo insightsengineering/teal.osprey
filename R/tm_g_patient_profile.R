@@ -961,7 +961,8 @@ srv_g_patient_profile <- function(input,
               as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
               units = "days"
             ))
-            + (ADT >= as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))) %>%
+            + (ADT >= as.Date(substr(
+              as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))) %>%
             filter(.data[[.(lb_var)]] %in% .(lb_var_show))
           lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
         }))
