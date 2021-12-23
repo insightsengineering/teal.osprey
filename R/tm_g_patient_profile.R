@@ -728,7 +728,8 @@ srv_g_patient_profile <- function(input,
                 units = "days"
               )
             )
-            + (AENDT >= as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))) %>%
+            + (AENDT >= as.Date(substr(
+              as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)))) %>%
             select(c(.(adae_vars), ASTDY, AENDY))
           rtables::var_labels(ADAE)[.(ae_line_col_var)] <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]
         }))
