@@ -20,7 +20,8 @@ tm_g_swimlane(
   plot_height = c(1200L, 400L, 5000L),
   plot_width = NULL,
   pre_output = NULL,
-  post_output = NULL
+  post_output = NULL,
+  y_label = "Time from First Treatment (Day)"
 )
 }
 \arguments{
@@ -66,6 +67,8 @@ output to put the output into context. For example a title.}
 \item{post_output}{optional, \code{shiny.tag} with text placed after the
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
+
+\item{y_label}{the label of the y axis}
 }
 \value{
 a \code{\link[teal]{module}} object

@@ -2,6 +2,9 @@
 
 * Updated R version requirement to >= 3.6.
 
+### Enhancements
+* Added a new parameter to `tm_g_swimlane` - `y_label` allowing to change the label of the `y` axis on the module plot.
+
 ### Bug fixes
 * `tm_g_waterfall` now respects the `Tumor Burden Parameter` UI element.
 
