@@ -23,6 +23,7 @@
 #' otherwise color will be assigned by \code{ggplot} default
 #' @param vref_line vertical reference lines
 #' @param anno_txt_var character vector with subject-level variable names that are selected as annotation
+#' @param y_label the label of the y axis
 #'
 #' @return a \code{\link[teal]{module}} object
 #'
@@ -110,7 +111,8 @@ tm_g_swimlane <- function(label,
                           plot_height = c(1200L, 400L, 5000L),
                           plot_width = NULL,
                           pre_output = NULL,
-                          post_output = NULL) {
+                          post_output = NULL,
+                          y_label = "Time from First Treatment (Day)") {
   args <- as.list(environment())
 
   stopifnot(
@@ -136,6 +138,8 @@ tm_g_swimlane <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  checkmate::assert_character(y_label, len = 1)
+
 
   module(
     label = label,
@@ -151,7 +155,8 @@ tm_g_swimlane <- function(label,
       marker_color_opt = marker_color_opt,
       label = label,
       plot_height = plot_height,
-      plot_width = plot_width
+      plot_width = plot_width,
+      y_label = y_label
     ),
     filters = dataname
   )
@@ -247,7 +252,8 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
                            marker_color_opt,
                            label,
                            plot_height,
-                           plot_width) {
+                           plot_width,
+                           y_label) {
 
   # use teal.devel code chunks
   init_chunks()
@@ -282,7 +288,6 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
 
   # create plot
   plot_r <- reactive({
-
     # DATA GETTERS
     validate(need("ADSL" %in% datasets$datanames(), "ADSL needs to be defined in datasets"))
     validate(need(
@@ -399,12 +404,10 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     chunks_push_new_line() # empty line for pretty code
     chunks_safe_eval()
 
-    # WRITE PLOTTING CODE TO CHUNKS
 
-    ADSL <- chunks_get_var("ADSL") # nolint
-    ANL <- chunks_get_var("ANL") # nolint
-    if (dataname == "ADSL") {
-      chunks_push(bquote({
+    anl <- chunks_get_var("ANL")
+    plot_call <- if (dataname == "ADSL") {
+      bquote({
         osprey::g_swimlane(
           bar_id = ADSL[["USUBJID"]],
           bar_length = ADSL[[bar_var]],
@@ -419,12 +422,12 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           anno_txt = .(if (length(anno_txt_var) > 0) quote(ADSL[, anno_txt_var]) else NULL),
           yref_line = .(vref_line),
           ytick_at = waiver(),
-          ylab = "Time from First Treatment (Day)",
+          ylab = .(y_label),
           title = "Swimlane Plot"
         )
-      }))
+      })
     } else {
-      chunks_push(bquote({
+      bquote({
         osprey::g_swimlane(
           bar_id = ADSL[["USUBJID"]],
           bar_length = ADSL[[bar_var]],
@@ -452,7 +455,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           marker_shape_opt = .(if (length(marker_shape_var) == 0) {
             NULL
           } else if (length(marker_shape_var) > 0 &
-            all(unique(ANL[[marker_shape_var]]) %in% names(marker_shape_opt)) == T) {
+            all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt)) == TRUE) {
             bquote(.(marker_shape_opt))
           } else {
             NULL
@@ -465,7 +468,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           marker_color_opt = .(if (length(marker_color_var) == 0) {
             NULL
           } else if (length(marker_color_var) > 0 &
-            all(unique(ANL[[marker_color_var]]) %in% names(marker_color_opt)) == T) {
+            all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt)) == TRUE) {
             bquote(.(marker_color_opt))
           } else {
             NULL
@@ -477,12 +480,13 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           }),
           yref_line = .(vref_line),
           ytick_at = waiver(),
-          ylab = "Time from First Treatment (Day)",
+          ylab = .(y_label),
           title = "Swimlane Plot"
         )
-      }))
+      })
     }
 
+    chunks_push(plot_call)
     chunks_safe_eval()
   })
 
