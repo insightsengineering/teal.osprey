@@ -138,7 +138,7 @@ tm_g_swimlane <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
-  stopifnot("y_label argument to tm_g_swimlane must be a string" = checkmate::check_character(y_label, len = 1))
+  checkmate::assert_character(y_label, len = 1)
 
 
   module(
@@ -407,7 +407,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
 
     anl <- chunks_get_var("ANL")
     plot_call <- if (dataname == "ADSL") {
-     bquote({
+      bquote({
         osprey::g_swimlane(
           bar_id = ADSL[["USUBJID"]],
           bar_length = ADSL[[bar_var]],
@@ -427,7 +427,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
         )
       })
     } else {
-     bquote({
+      bquote({
         osprey::g_swimlane(
           bar_id = ADSL[["USUBJID"]],
           bar_length = ADSL[[bar_var]],
@@ -455,7 +455,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           marker_shape_opt = .(if (length(marker_shape_var) == 0) {
             NULL
           } else if (length(marker_shape_var) > 0 &
-            all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt)) == T) {
+            all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt)) == TRUE) {
             bquote(.(marker_shape_opt))
           } else {
             NULL
@@ -468,7 +468,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           marker_color_opt = .(if (length(marker_color_var) == 0) {
             NULL
           } else if (length(marker_color_var) > 0 &
-            all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt)) == T) {
+            all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt)) == TRUE) {
             bquote(.(marker_color_opt))
           } else {
             NULL
