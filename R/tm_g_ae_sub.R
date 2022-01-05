@@ -241,18 +241,20 @@ srv_g_ae_sub <- function(input,
           eventExpr = input[[sprintf("groups__%s", index)]],
           handlerExpr = {
             output[[textname]] <- renderUI({
+              if (!is.null(input[[sprintf("groups__%s", index)]])) {
               l <- input[[sprintf("groups__%s", index)]]
               l2 <- lapply(seq_along(l), function(i) {
                 nm <- sprintf("groups__%s__level__%s", index, i)
                 label <- sprintf("Label for %s, Level %s", grp, l[i])
                 textInput(session$ns(nm), label, l[i])
               })
-              tagList(textInput(
-                session$ns(
-                  sprintf("groups__%s__level__%s", index, "all")
-                ),
-                sprintf("Label for %s", grp), grp
-              ), l2)
+                tagList(textInput(
+                  session$ns(
+                    sprintf("groups__%s__level__%s", index, "all")
+                  ),
+                  sprintf("Label for %s", grp), grp
+                ), l2)
+              }
             })
           }
         )
