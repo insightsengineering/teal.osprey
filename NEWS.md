@@ -1,6 +1,7 @@
 # teal.osprey 0.1.11.9013
 
 * Updated R version requirement to >= 3.6.
+* Replaced calls to `utils.nest::is_<class>_...`, `utils.nest::if_<class>_...` with `checkmate` equivalents.
 
 ### Enhancements
 * Added a new parameter to `tm_g_swimlane` - `y_label` allowing to change the label of the `y` axis on the module plot.
