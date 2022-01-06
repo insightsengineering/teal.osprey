@@ -4,14 +4,14 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams argument_convention
-#' @param group_var \code{\link[teal]{choices_selected}} subgroups variables
-#' @param fontsize a numeric vector with 3 values, selected font size and font size range,
-#' default is \code{c(5, 3, 7)}
+#' @param group_var (`character(1)` or `choices_selected`)\cr
+#'  subgroups variables. See [teal::choices_selected()] for details.
 #'
 #' @author Liming Li (Lil128) \email{liming.li@roche.com}
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
-#' @return an \code{\link[teal]{module}} object
+#' @inheritSection return
+#'
 #' @export
 #'
 #' @examples
@@ -55,8 +55,14 @@ tm_g_ae_sub <- function(label,
                         fontsize = c(5, 3, 7)) {
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(group_var, classes = "choices_selected")
-  checkmate::assert_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE)
-  checkmate::assert_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3], .var.name = "fontsize")
+  checkmate::assert(
+    checkmate::check_number(fontsize, finite = TRUE),
+    checkmate::assert(
+      combine = "and",
+      checkmate::assert_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
+      checkmate::assert_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3], .var.name = "fontsize")
+    )
+  )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)

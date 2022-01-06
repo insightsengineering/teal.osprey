@@ -25,10 +25,8 @@
 #' @param heat_var (\code{choices_seleced}) heatmap variable
 #' @param conmed_var (\code{choices_seleced}) concomitant medications variable,
 #' specify to \code{NA} if no concomitant medications data is available
-#' @param fontsize a numeric vector with 3 values, selected font size and font size range,
-#' default is \code{c(5, 3, 7)}
 #'
-#' @return a \code{\link[teal]{module}} object
+#' @inheritSection return
 #'
 #' @export
 #'
@@ -169,6 +167,14 @@ tm_g_heat_bygrade <- function(label,
   checkmate::assert_class(anno_var, classes = "choices_selected")
   checkmate::assert_class(heat_var, classes = "choices_selected")
   checkmate::assert_class(conmed_var, classes = "choices_selected", null.ok = TRUE)
+  checkmate::assert(
+    checkmate::check_number(fontsize, finite = TRUE),
+    checkmate::assert(
+      combine = "and",
+      checkmate::assert_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
+      checkmate::assert_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3], .var.name = "fontsize")
+    )
+  )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)

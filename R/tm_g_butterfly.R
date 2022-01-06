@@ -31,7 +31,8 @@
 #'   used directly as filter.
 #' @details
 #'
-#' @return an \code{\link[teal]{module}} object
+#' @inheritSection return
+#'
 #' @export
 #'
 #' @template author_zhanc107

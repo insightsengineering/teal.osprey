@@ -4,13 +4,13 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams argument_convention
-#' @param add_flag \code{\link[teal]{choices_selected}}, a string or a vector of characters
-#' including variable name(s) for additional flags, default is \code{NULL} (i.e. no additional
-#' flags will be added)
-#' @param fontsize a numeric vector with 3 values, selected font size and font size range,
-#' default is \code{c(5, 3, 7)}
+#' @param add_flag (`character` or `choices_selected`)\cr
+#'  including variable name(s) for additional flags. See details
+#'  By default, `NULL` (i.e. no additional flags will be added).
+#'  See [teal::choices_selected()] for details.
 #'
-#' @return a \code{\link[teal]{module}} object
+#' @inheritSection return
+#'
 #' @importFrom rtables var_labels
 #'
 #' @export
@@ -74,6 +74,14 @@ tm_g_ae_oview <- function(label,
                           plot_width = NULL) {
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(add_flag, classes = "choices_selected")
+  checkmate::assert(
+    checkmate::check_number(fontsize, finite = TRUE),
+    checkmate::assert(
+      combine = "and",
+      checkmate::assert_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
+      checkmate::assert_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3], .var.name = "fontsize")
+    )
+  )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)

@@ -65,8 +65,7 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #' @template author_qit3
 #'
-#' @return plot object
-#' @importFrom purrr map_lgl map2_lgl
+#' @inheritSection return
 #'
 #' @details
 #' As the patient profile module plots different domains in one plot, the study day (x-axis)
@@ -623,8 +622,8 @@ srv_g_patient_profile <- function(input,
       cm_dataname,
       lb_dataname
     )
-    input_select <- map_lgl(datanames, is.na)
-    select_plot <- map2_lgl(
+    input_select <- purrr::map_lgl(datanames, is.na)
+    select_plot <- purrr::map2_lgl(
       input_select, possible_plot,
       ~ if (!.x) {
         input[[paste("select", .y, sep = "_")]]

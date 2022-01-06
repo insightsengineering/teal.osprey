@@ -6,9 +6,8 @@
 #' @inheritParams argument_convention
 #' @param term_var \code{\link[teal]{choices_selected}} object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
-#' @param fontsize (\code{numeric}) vector of choices for font size
 #'
-#' @return an \code{\link[teal]{module}} object
+#' @inheritSection return
 #'
 #' @export
 #'
@@ -60,6 +59,14 @@ tm_g_events_term_id <- function(label,
   checkmate::assert_string(label)
   checkmate::assert_class(term_var, classes = "choices_selected")
   checkmate::assert_class(arm_var, classes = "choices_selected")
+  checkmate::assert(
+    checkmate::check_number(fontsize, finite = TRUE),
+    checkmate::assert(
+      combine = "and",
+      checkmate::assert_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
+      checkmate::assert_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3], .var.name = "fontsize")
+    )
+  )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
@@ -70,7 +77,6 @@ tm_g_events_term_id <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
-  stopifnot(is_numeric_vector(fontsize))
 
   args <- as.list(environment())
 
