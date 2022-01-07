@@ -315,7 +315,7 @@ srv_g_ae_sub <- function(input,
 
     group_labels <- lapply(seq_along(input$groups), function(x) {
       items <- input[[sprintf("groups__%s", x)]]
-      if (!is_empty(items)) {
+      if (length(items) > 0) {
         l <- lapply(seq_along(items), function(y) {
           input[[sprintf("groups__%s__level__%s", x, y)]]
         })
@@ -325,7 +325,7 @@ srv_g_ae_sub <- function(input,
       }
     })
 
-    if (is_empty(unlist(group_labels))) {
+    if (length(unlist(group_labels)) == 0) {
       chunks_push(bquote({
         group_labels <- NULL
       }))
