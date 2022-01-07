@@ -1,6 +1,7 @@
 # teal.osprey 0.1.11.9013
 
 * Updated R version requirement to >= 3.6.
+* `tm_g_ae_sub` no longer displays label inputs for group variables with no values selected.
 
 ### Enhancements
 * Added a new parameter to `tm_g_swimlane` - `y_label` allowing to change the label of the `y` axis on the module plot.
