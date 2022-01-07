@@ -4,13 +4,13 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams argument_convention
-#' @param add_flag \code{\link[teal]{choices_selected}}, a string or a vector of characters
-#' including variable name(s) for additional flags, default is \code{NULL} (i.e. no additional
-#' flags will be added)
-#' @param fontsize a numeric vector with 3 values, selected font size and font size range,
+#' @param flag_var_anl ([teal::choices_selected()])
+#'   `choices_selected` object with variables used to count adverse event
+#'   sub-groups (e.g. Serious events, Related events, etc.)
+#' @param fontsize (`numeric`) vector with 3 values, selected font size and font size range,
 #' default is \code{c(5, 3, 7)}
 #'
-#' @return a \code{\link[teal]{module}} object
+#' @return [teal::teal_module] object
 #' @importFrom rtables var_labels
 #'
 #' @export
@@ -22,29 +22,51 @@
 #' ADAE <- synthetic_cdisc_data("latest")$adae
 #'
 #' # Add additional dummy causality flags.
-#' ADAE <- ADAE %>%
-#'   mutate(AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X")) %>%
-#'   mutate(AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")) %>%
-#'   rtables::var_relabel(
-#'     AEREL1 = "AE related to A: Drug X",
-#'     AEREL2 = "AE related to B: Placebo"
-#'   )
+#' add_event_flags <- function(dat) {
+#'   dat %>%
+#'     dplyr::mutate(
+#'       TMPFL_SER = AESER == "Y",
+#'       TMPFL_REL = AEREL == "Y",
+#'       TMPFL_GR5 = AETOXGR == "5",
+#'       AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
+#'       AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
+#'     ) %>%
+#'     rtables::var_relabel(
+#'       TMPFL_SER = "Serious AE",
+#'       TMPFL_REL = "Related AE",
+#'       TMPFL_GR5 = "Grade 5 AE",
+#'       AEREL1 = "AE related to A: Drug X",
+#'       AEREL2 = "AE related to B: Placebo"
+#'     )
+#' }
+#' ADAE <- ADAE %>% add_event_flags()
 #'
 #' app <- init(
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
 #'     cdisc_dataset("ADAE", ADAE,
-#'       code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae
-#'               # Add additional dummy causality flags.
-#'               ADAE <- ADAE %>%
-#'                 mutate(AEREL1 = (AEREL == 'Y' & ACTARM == 'A: Drug X')) %>%
-#'                 mutate(AEREL2 = (AEREL == 'Y' & ACTARM == 'B: Placebo')) %>%
-#'                 rtables::var_relabel(
-#'                   AEREL1 = 'AE related to A: Drug X',
-#'                   AEREL2 = 'AE related to B: Placebo'
-#'                 )"
-#'     ),
-#'     check = TRUE
+#'       code =
+#'         "ADAE <- synthetic_cdisc_data('latest')$adae
+#'           add_event_flags <- function(dat) {
+#'             dat %>%
+#'               dplyr::mutate(
+#'                 TMPFL_SER = AESER == 'Y',
+#'                 TMPFL_REL = AEREL == 'Y',
+#'                 TMPFL_GR5 = AETOXGR == '5',
+#'                 AEREL1 = (AEREL == 'Y' & ACTARM == 'A: Drug X'),
+#'                 AEREL2 = (AEREL == 'Y' & ACTARM == 'B: Placebo')
+#'               ) %>%
+#'               rtables::var_relabel(
+#'                 TMPFL_SER = 'Serious AE',
+#'                 TMPFL_REL = 'Related AE',
+#'                 TMPFL_GR5 = 'Grade 5 AE',
+#'                 AEREL1 = 'AE related to A: Drug X',
+#'                 AEREL2 = 'AE related to B: Placebo'
+#'               )
+#'           }
+#'           # Generating user-defined event flags.
+#'           ADAE <- ADAE %>% add_event_flags()"
+#'     )
 #'   ),
 #'   modules = root_modules(
 #'     tm_g_ae_oview(
@@ -54,9 +76,9 @@
 #'         selected = "ACTARM",
 #'         choices = c("ACTARM", "ACTARMCD")
 #'       ),
-#'       add_flag = choices_selected(
-#'         choices = variable_choices(ADAE, c("AEREL1", "AEREL2")),
-#'         selected = NULL
+#'       flag_var_anl = choices_selected(
+#'         selected = "AEREL1",
+#'         choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
 #'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
@@ -68,12 +90,11 @@
 tm_g_ae_oview <- function(label,
                           dataname,
                           arm_var,
-                          add_flag = NULL,
+                          flag_var_anl,
                           fontsize = c(5, 3, 7),
                           plot_height = c(600L, 200L, 2000L),
                           plot_width = NULL) {
   stopifnot(is.choices_selected(arm_var))
-  stopifnot(is.choices_selected(add_flag))
 
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
@@ -91,7 +112,6 @@ tm_g_ae_oview <- function(label,
     server_args = list(
       label = label,
       dataname = dataname,
-      add_flag = add_flag,
       plot_height = plot_height,
       plot_width = plot_width
     ),
@@ -129,15 +149,10 @@ ui_g_ae_oview <- function(id, ...) {
         selected = args$arm_var$selected
       ),
       selectInput(
-        ns("flags_select"),
+        ns("flag_var_anl"),
         "Flags",
-        choices = NULL,
-        multiple = TRUE
-      ),
-      optionalSelectInput(
-        ns("add_flags"),
-        "Additional Flags",
-        choices = args$add_flag$choices,
+        choices = args$flag_var_anl$choices,
+        selected = args$flag_var_anl$selected,
         multiple = TRUE
       ),
       panel_item(
@@ -181,11 +196,10 @@ srv_g_ae_oview <- function(input,
                            datasets,
                            dataname,
                            label,
-                           add_flag,
                            plot_height,
                            plot_width) {
   init_chunks()
-  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width)
 
   observeEvent(list(input$diff_ci_method, input$conf_level), {
     req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
@@ -229,25 +243,11 @@ srv_g_ae_oview <- function(input,
       selected = choices[trt_index],
       choices = choices
     )
-
-    flags <- osprey::create_flag_vars(ANL_FILTERED)
-
-    updateSelectInput(
-      session,
-      "flags_select",
-      selected = names(flags),
-      choices = names(flags)
-    )
   })
 
   plt <- reactive({
     validate(need(input$arm_var, "Please select an arm variable."))
-
-    validate(need(
-      length(input$flags_select) + length(input$add_flags) > 0,
-      "Please select at least one flag."
-    ))
-
+    validate(need(input$flag_var_anl, "Please select at least one flag."))
     validate(need(
       input$arm_trt != input$arm_ref,
       paste(
@@ -263,9 +263,6 @@ srv_g_ae_oview <- function(input,
 
     # assign labels back to the data
     anl_labels <- rtables::var_labels(ANL)
-    if (!is.null(input$add_flags)) {
-      add_flag_labels <- anl_labels[names(anl_labels) %in% input$add_flags] # nolint
-    }
 
     anl_name <- paste0(dataname, "_FILTERED")
     assign(anl_name, ANL_FILTERED)
@@ -295,17 +292,8 @@ srv_g_ae_oview <- function(input,
       trt <- .(input$arm_trt)
       ref <- .(input$arm_ref)
       flags <- .(as.name(anl_name)) %>%
-        osprey::create_flag_vars() %>%
-        select(.(input$flags_select))
+        select(all_of(.(input$flag_var_anl)))
     }))
-
-    if (!is.null(input$add_flags)) {
-      chunks_push(bquote({
-        add_flag_df <- data.frame(.(as.name(anl_name))[, .(input$add_flags)])
-        names(add_flag_df) <- .(add_flag_labels)
-        flags <- do.call(bind_cols, c(flags, add_flag_df))
-      }))
-    }
 
     chunks_push_new_line()
 

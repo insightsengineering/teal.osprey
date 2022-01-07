@@ -8,7 +8,7 @@ tm_g_ae_oview(
   label,
   dataname,
   arm_var,
-  add_flag = NULL,
+  flag_var_anl,
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL
@@ -23,11 +23,11 @@ available in the list passed to the \code{data} argument of \code{\link[teal]{in
 \item{arm_var}{\code{\link[teal]{choices_selected}} object with all available choices
 and the pre-selected option for variable names that can be used as \code{arm_var}.}
 
-\item{add_flag}{\code{\link[teal]{choices_selected}}, a string or a vector of characters
-including variable name(s) for additional flags, default is \code{NULL} (i.e. no additional
-flags will be added)}
+\item{flag_var_anl}{([teal::choices_selected()])
+`choices_selected` object with variables used to count adverse event
+sub-groups (e.g. Serious events, Related events, etc.)}
 
-\item{fontsize}{a numeric vector with 3 values, selected font size and font size range,
+\item{fontsize}{(`numeric`) vector with 3 values, selected font size and font size range,
 default is \code{c(5, 3, 7)}}
 
 \item{plot_height}{`numeric` vector to indicate default value, minimum and maximum values.}
@@ -35,7 +35,7 @@ default is \code{c(5, 3, 7)}}
 \item{plot_width}{`numeric` vector to indicate default value, minimum and maximum values.}
 }
 \value{
-a \code{\link[teal]{module}} object
+[teal::teal_module] object
 }
 \description{
 Display the AE overview plot as a shiny module
@@ -47,29 +47,51 @@ ADSL <- synthetic_cdisc_data("latest")$adsl
 ADAE <- synthetic_cdisc_data("latest")$adae
 
 # Add additional dummy causality flags.
-ADAE <- ADAE \%>\%
-  mutate(AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X")) \%>\%
-  mutate(AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")) \%>\%
-  rtables::var_relabel(
-    AEREL1 = "AE related to A: Drug X",
-    AEREL2 = "AE related to B: Placebo"
-  )
+add_event_flags <- function(dat) {
+  dat \%>\%
+    dplyr::mutate(
+      TMPFL_SER = AESER == "Y",
+      TMPFL_REL = AEREL == "Y",
+      TMPFL_GR5 = AETOXGR == "5",
+      AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
+      AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
+    ) \%>\%
+    rtables::var_relabel(
+      TMPFL_SER = "Serious AE",
+      TMPFL_REL = "Related AE",
+      TMPFL_GR5 = "Grade 5 AE",
+      AEREL1 = "AE related to A: Drug X",
+      AEREL2 = "AE related to B: Placebo"
+    )
+}
+ADAE <- ADAE \%>\% add_event_flags()
 
 app <- init(
   data = cdisc_data(
     cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
     cdisc_dataset("ADAE", ADAE,
-      code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae
-              # Add additional dummy causality flags.
-              ADAE <- ADAE \%>\%
-                mutate(AEREL1 = (AEREL == 'Y' & ACTARM == 'A: Drug X')) \%>\%
-                mutate(AEREL2 = (AEREL == 'Y' & ACTARM == 'B: Placebo')) \%>\%
-                rtables::var_relabel(
-                  AEREL1 = 'AE related to A: Drug X',
-                  AEREL2 = 'AE related to B: Placebo'
-                )"
-    ),
-    check = TRUE
+      code =
+        "ADAE <- synthetic_cdisc_data('latest')$adae
+          add_event_flags <- function(dat) {
+            dat \%>\%
+              dplyr::mutate(
+                TMPFL_SER = AESER == 'Y',
+                TMPFL_REL = AEREL == 'Y',
+                TMPFL_GR5 = AETOXGR == '5',
+                AEREL1 = (AEREL == 'Y' & ACTARM == 'A: Drug X'),
+                AEREL2 = (AEREL == 'Y' & ACTARM == 'B: Placebo')
+              ) \%>\%
+              rtables::var_relabel(
+                TMPFL_SER = 'Serious AE',
+                TMPFL_REL = 'Related AE',
+                TMPFL_GR5 = 'Grade 5 AE',
+                AEREL1 = 'AE related to A: Drug X',
+                AEREL2 = 'AE related to B: Placebo'
+              )
+          }
+          # Generating user-defined event flags.
+          ADAE <- ADAE \%>\% add_event_flags()"
+    )
   ),
   modules = root_modules(
     tm_g_ae_oview(
@@ -79,9 +101,9 @@ app <- init(
         selected = "ACTARM",
         choices = c("ACTARM", "ACTARMCD")
       ),
-      add_flag = choices_selected(
-        choices = variable_choices(ADAE, c("AEREL1", "AEREL2")),
-        selected = NULL
+      flag_var_anl = choices_selected(
+        selected = "AEREL1",
+        choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
       ),
       plot_height = c(600, 200, 2000)
     )
