@@ -4,13 +4,13 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams argument_convention
-#' @param flag_var_anl ([teal::choices_selected()])
+#' @param flag_var_anl ([`teal::choices_selected`])
 #'   `choices_selected` object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
 #' @param fontsize (`numeric`) vector with 3 values, selected font size and font size range,
 #' default is \code{c(5, 3, 7)}
 #'
-#' @return [teal::teal_module] object
+#' @return object returned by the [teal::module()] function.
 #' @importFrom rtables var_labels
 #'
 #' @export
@@ -95,6 +95,7 @@ tm_g_ae_oview <- function(label,
                           plot_height = c(600L, 200L, 2000L),
                           plot_width = NULL) {
   stopifnot(is.choices_selected(arm_var))
+  stopifnot(is.choices_selected(flag_var_anl))
 
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
