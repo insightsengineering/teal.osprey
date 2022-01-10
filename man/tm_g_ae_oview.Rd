@@ -23,7 +23,7 @@ available in the list passed to the \code{data} argument of \code{\link[teal]{in
 \item{arm_var}{\code{\link[teal]{choices_selected}} object with all available choices
 and the pre-selected option for variable names that can be used as \code{arm_var}.}
 
-\item{flag_var_anl}{([teal::choices_selected()])
+\item{flag_var_anl}{([`teal::choices_selected`])
 `choices_selected` object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)}
 
@@ -35,7 +35,7 @@ default is \code{c(5, 3, 7)}}
 \item{plot_width}{`numeric` vector to indicate default value, minimum and maximum values.}
 }
 \value{
-[teal::teal_module] object
+object returned by the [teal::module()] function.
 }
 \description{
 Display the AE overview plot as a shiny module
