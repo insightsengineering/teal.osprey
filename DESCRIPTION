@@ -28,8 +28,7 @@ Imports:
     rtables (>= 0.3.8),
     teal.devel (>= 0.2.12),
     tern (>= 0.7.5),
-    tidyr,
-    utils.nest (>= 0.2.11)
+    tidyr
 Suggests:
     knitr,
     rmarkdown,

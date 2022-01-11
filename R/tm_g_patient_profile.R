@@ -231,7 +231,6 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
   args <- as.list(environment())
   checkmate::assert_string(label)
   checkmate::assert_string(sl_dataname)
-
   checkmate::assert_string(ex_dataname, null.ok = TRUE)
   checkmate::assert_string(ae_dataname, null.ok = TRUE)
   checkmate::assert_string(rs_dataname, null.ok = TRUE)

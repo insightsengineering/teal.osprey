@@ -78,8 +78,9 @@ tm_g_ae_oview <- function(label,
     checkmate::check_number(fontsize, finite = TRUE),
     checkmate::assert(
       combine = "and",
-      checkmate::assert_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
-      checkmate::assert_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3], .var.name = "fontsize")
+      .var.name = "fontsize",
+      checkmate::check_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
+      checkmate::check_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3])
     )
   )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
