@@ -25,7 +25,8 @@ tm_g_swimlane(
 )
 }
 \arguments{
-\item{label}{(\code{character})\cr menu item label of the module in the teal app}
+\item{label}{(\code{character(1)})\cr
+menu item label of the module in the teal app}
 
 \item{dataname}{analysis data used for plotting, needs to be available in the list passed to the \code{data}
 argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ADSL" should be
@@ -57,9 +58,11 @@ otherwise color will be assigned by \code{ggplot} default}
 
 \item{vref_line}{vertical reference lines}
 
-\item{plot_height}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_height}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
 
-\item{plot_width}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_width}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example a title.}
@@ -71,7 +74,7 @@ output to put the output into context. For example the
 \item{y_label}{the label of the y axis}
 }
 \value{
-a \code{\link[teal]{module}} object
+the \code{\link[teal:module]{teal::module()}} object
 }
 \description{
 This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data

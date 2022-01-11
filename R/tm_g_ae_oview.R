@@ -9,7 +9,7 @@
 #'  By default, `NULL` (i.e. no additional flags will be added).
 #'  See [teal::choices_selected()] for details.
 #'
-#' @inheritSection return
+#' @inherit argument_convention return
 #'
 #' @importFrom rtables var_labels
 #'

@@ -36,7 +36,7 @@
 #' @param plot_width (`numeric(3)`)\cr
 #'  vector to indicate default value, minimum and maximum values.
 #'
-#' @return an [teal::module()] object
+#' @return the [teal::module()] object
 #'
 #' @name argument_convention
 #'

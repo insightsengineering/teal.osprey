@@ -16,7 +16,7 @@
 #' @param xfacet_var variable for x facets
 #' @param yfacet_var variable for y facets
 #'
-#' @return an \code{\link[teal]{module}} object
+#' @inherit argument_convention return
 #' @export
 #'
 #' @template author_zhanc107

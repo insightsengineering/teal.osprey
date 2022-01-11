@@ -7,7 +7,7 @@
 #' @param term_var \code{\link[teal]{choices_selected}} object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
 #'
-#' @inheritSection return
+#' @inherit argument_convention return
 #'
 #' @export
 #'

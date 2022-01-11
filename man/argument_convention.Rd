@@ -4,29 +4,44 @@
 \alias{argument_convention}
 \title{Standard Arguments}
 \arguments{
-\item{label}{(\code{character})\cr menu item label of the module in the teal app}
+\item{label}{(\code{character(1)})\cr
+menu item label of the module in the teal app}
 
-\item{dataname}{(\code{character}) analysis data used in the teal module, needs to be
-available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
+\item{dataname}{(\code{character(1)})\cr
+analysis data used in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{arm_var}{\code{\link[teal]{choices_selected}} object with all available choices
-and the pre-selected option for variable names that can be used as \code{arm_var}.}
+\item{arm_var}{(\code{choices_selected})\cr
+object with all available choices and the pre-selected option for variable
+names that can be used as \code{arm_var}. See \code{\link[teal:choices_selected]{teal::choices_selected()}} for
+details.}
 
-\item{paramcd}{(`string` or `choices_selected` with teal module)\cr
-variable value designating the studied parameter.}
+\item{paramcd}{(\code{character(1)} or \code{choices_selected})\cr
+variable value designating the studied parameter.
+See \code{\link[teal:choices_selected]{teal::choices_selected()}} for details.}
 
-\item{plot_height}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
+Defines initial font-size it's possible range. \code{fontsize} is set for
+\code{\link[teal:optionalSliderInputValMinMax]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
+plot.}
 
-\item{plot_width}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_height}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
+
+\item{plot_width}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
+}
+\value{
+the \code{\link[teal:module]{teal::module()}} object
 }
 \description{
 The documentation to this function lists all the arguments in teal modules
 that are used repeatedly to express an analysis.
 }
 \details{
-Although this function just returns `NULL` it has two uses, for
+Although this function just returns \code{NULL} it has two uses, for
 the teal module users it provides a documentation of arguments that are
 commonly and consistently used in the framework. For the developer it adds a
-single reference point to import the `roxygen` argument description with:
-`@inheritParams argument_convention`
+single reference point to import the \code{roxygen} argument description with:
+\verb{@inheritParams argument_convention}
 }

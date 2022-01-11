@@ -25,7 +25,7 @@
 #' @param anno_txt_var character vector with subject-level variable names that are selected as annotation
 #' @param y_label the label of the y axis
 #'
-#' @return a \code{\link[teal]{module}} object
+#' @inherit argument_convention return
 #'
 #' @export
 #'

@@ -26,7 +26,7 @@
 #' @param conmed_var (\code{choices_seleced}) concomitant medications variable,
 #' specify to \code{NA} if no concomitant medications data is available
 #'
-#' @inheritSection return
+#' @inherit argument_convention return
 #'
 #' @export
 #'

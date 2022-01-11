@@ -10,7 +10,7 @@
 #' @author Liming Li (Lil128) \email{liming.li@roche.com}
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
-#' @inheritSection return
+#' @inherit argument_convention return
 #'
 #' @export
 #'

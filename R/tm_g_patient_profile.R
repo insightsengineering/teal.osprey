@@ -65,7 +65,7 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #' @template author_qit3
 #'
-#' @inheritSection return
+#' @inherit argument_convention return
 #'
 #' @details
 #' As the patient profile module plots different domains in one plot, the study day (x-axis)

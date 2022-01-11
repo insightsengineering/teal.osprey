@@ -31,7 +31,7 @@
 #'   used directly as filter.
 #' @details
 #'
-#' @inheritSection return
+#' @inherit argument_convention return
 #'
 #' @export
 #'

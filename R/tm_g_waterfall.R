@@ -36,7 +36,7 @@
 #' than others, default is \code{NULL}
 #' @param show_value boolean of whether value of bar height is shown, default is \code{TRUE}
 #'
-#' @return a \code{\link[teal]{module}} object
+#' @inherit argument_convention return
 #'
 #' @export
 #'
