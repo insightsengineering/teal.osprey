@@ -470,9 +470,12 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
-    ),
-    modal_title = "Butterfly plot"
+    modal_title = paste("R code for", label),
+    datanames = unique(c(
+      dataname,
+      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+      })
+    ))
   )
 }

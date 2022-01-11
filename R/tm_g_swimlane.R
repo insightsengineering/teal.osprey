@@ -501,9 +501,12 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
-    ),
-    modal_title = label
+    modal_title = paste("R code for", label),
+    datanames = unique(c(
+      dataname,
+      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+      })
+    ))
   )
 }

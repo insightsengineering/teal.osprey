@@ -425,11 +425,17 @@ srv_g_heatmap_bygrade <- function(input,
     chunks_safe_eval()
   })
 
+
   callModule(
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = datasets$datanames(),
-    modal_title = label
+    modal_title = paste("R code for", label),
+    datanames = unique(c(
+      dataname,
+      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+      })
+    ))
   )
 }

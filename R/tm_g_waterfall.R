@@ -516,7 +516,12 @@ srv_g_waterfall <- function(input,
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = datasets$datanames(),
-    modal_title = "Waterfall plot"
+    modal_title = paste("R code for", label),
+    datanames = unique(c(
+      dataname,
+      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+      })
+    ))
   )
 }
