@@ -353,8 +353,16 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
         }),
         vref_line = .(vref_line),
         href_line = .(href_line),
-        x_label = utils.nest::if_null(rtables::var_labels(ADTR_FILTERED[.(x_var)]), .(x_var)),
-        y_label = utils.nest::if_null(rtables::var_labels(ADTR_FILTERED[.(y_var)]), .(y_var)),
+        x_label = if (is.null(rtables::var_labels(ADTR_FILTERED[.(x_var)]))) {
+          .(x_var)
+        } else {
+          rtables::var_labels(ADTR_FILTERED[.(x_var)])
+        },
+        y_label = if (is.null(rtables::var_labels(ADTR_FILTERED[.(y_var)]))) {
+          .(y_var)
+        } else {
+          rtables::var_labels(ADTR_FILTERED[.(y_var)])
+        },
         show_legend = .(legend_on)
       )
     }))

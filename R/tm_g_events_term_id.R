@@ -218,6 +218,7 @@ srv_g_events_term_id <- function(input,
 
   observeEvent(input$sort,
     handlerExpr = {
+      sort <- if (is.null(input$sort)) " " else input$sort
       updateTextInput(
         session,
         "title",
@@ -228,7 +229,7 @@ srv_g_events_term_id <- function(input,
             "riskdiff" = "Sorted by Risk Difference",
             "meanrisk" = "Sorted by Mean Risk",
             " " = ""
-          )[if_null(input$sort, " ")]
+          )[sort]
         )
       )
     },
