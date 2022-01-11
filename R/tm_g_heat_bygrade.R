@@ -351,7 +351,7 @@ srv_g_heatmap_bygrade <- function(input,
     ))
 
     validate(need(
-      is_logical_vector(ADEX_FILTERED[[input$ongo_var]]),
+      checkmate::test_logical(ADEX_FILTERED[[input$ongo_var]], min.len = 1),
       "Study Ongoing Status must be a logical variable"
     ))
 
