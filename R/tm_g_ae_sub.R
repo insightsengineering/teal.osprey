@@ -246,18 +246,20 @@ srv_g_ae_sub <- function(input,
           eventExpr = input[[sprintf("groups__%s", index)]],
           handlerExpr = {
             output[[textname]] <- renderUI({
-              l <- input[[sprintf("groups__%s", index)]]
-              l2 <- lapply(seq_along(l), function(i) {
-                nm <- sprintf("groups__%s__level__%s", index, i)
-                label <- sprintf("Label for %s, Level %s", grp, l[i])
-                textInput(session$ns(nm), label, l[i])
-              })
-              tagList(textInput(
-                session$ns(
-                  sprintf("groups__%s__level__%s", index, "all")
-                ),
-                sprintf("Label for %s", grp), grp
-              ), l2)
+              if (!is.null(input[[sprintf("groups__%s", index)]])) {
+                l <- input[[sprintf("groups__%s", index)]]
+                l2 <- lapply(seq_along(l), function(i) {
+                  nm <- sprintf("groups__%s__level__%s", index, i)
+                  label <- sprintf("Label for %s, Level %s", grp, l[i])
+                  textInput(session$ns(nm), label, l[i])
+                })
+                tagList(textInput(
+                  session$ns(
+                    sprintf("groups__%s__level__%s", index, "all")
+                  ),
+                  sprintf("Label for %s", grp), grp
+                ), l2)
+              }
             })
           }
         )
@@ -318,15 +320,17 @@ srv_g_ae_sub <- function(input,
 
     group_labels <- lapply(seq_along(input$groups), function(x) {
       items <- input[[sprintf("groups__%s", x)]]
-      l <- lapply(seq_along(items), function(y) {
-        input[[sprintf("groups__%s__level__%s", x, y)]]
-      })
-      names(l) <- items
-      l[["Total"]] <-
-        input[[sprintf("groups__%s__level__%s", x, "all")]]
-      l
+      if (length(items) > 0) {
+        l <- lapply(seq_along(items), function(y) {
+          input[[sprintf("groups__%s__level__%s", x, y)]]
+        })
+        names(l) <- items
+        l[["Total"]] <- input[[sprintf("groups__%s__level__%s", x, "all")]]
+        l
+      }
     })
-    if (is_empty(unlist(group_labels))) {
+
+    if (length(unlist(group_labels)) == 0) {
       chunks_push(bquote({
         group_labels <- NULL
       }))
@@ -336,10 +340,9 @@ srv_g_ae_sub <- function(input,
         names(group_labels) <- .(input$groups)
       }))
     }
+
     chunks_push_new_line()
-
     chunks_safe_eval()
-
     chunks_push(bquote({
       osprey::g_ae_sub(
         id = id,
