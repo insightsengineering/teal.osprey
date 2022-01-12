@@ -96,7 +96,7 @@ tm_g_ae_oview <- function(label,
                           plot_height = c(600L, 200L, 2000L),
                           plot_width = NULL) {
   checkmate::assert_class(arm_var, classes = "choices_selected")
-  checkmate::assert_class(add_flag, classes = "choices_selected")
+  checkmate::assert_class(flag_var_anl, classes = "choices_selected")
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
     checkmate::assert(
