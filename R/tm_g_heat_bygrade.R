@@ -160,7 +160,7 @@ tm_g_heat_bygrade <- function(label,
   checkmate::assert_string(sl_dataname)
   checkmate::assert_string(ex_dataname)
   checkmate::assert_string(ae_dataname)
-  checkmate::assert_string(cm_dataname, null.ok = TRUE)
+  checkmate::assert_string(cm_dataname, na.ok = TRUE)
   checkmate::assert_class(id_var, classes = "choices_selected")
   checkmate::assert_class(visit_var, classes = "choices_selected")
   checkmate::assert_class(ongo_var, classes = "choices_selected")
@@ -352,7 +352,7 @@ srv_g_heatmap_bygrade <- function(input,
     ))
 
     validate(need(
-      checkmate::test_logical(ADEX_FILTERED[[input$ongo_var]], min.len = 1),
+      checkmate::test_logical(ADEX_FILTERED[[input$ongo_var]], min.len = 1, any.missing = FALSE),
       "Study Ongoing Status must be a logical variable"
     ))
 
