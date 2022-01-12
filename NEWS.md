@@ -2,7 +2,7 @@
 
 * Updated R version requirement to >= 3.6.
 * `tm_g_ae_sub` no longer displays label inputs for group variables with no values selected.
- Removed dependency on `utils.nest` and replaced those function with equivalents from the `checkmate` package`.
+ Removed dependency on `utils.nest` and replaced those function with equivalents from the `checkmate` package.
 
 ### Enhancements
 * Added a new parameter to `tm_g_swimlane` - `y_label` allowing to change the label of the `y` axis on the module plot.
