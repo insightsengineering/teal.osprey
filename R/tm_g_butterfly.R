@@ -146,7 +146,7 @@ tm_g_butterfly <- function(label,
     label = label,
     filters = dataname,
     server = srv_g_butterfly,
-    server_args = list(dataname = dataname, plot_height = plot_height, plot_width = plot_width),
+    server_args = list(dataname = dataname, label = label, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_butterfly,
     ui_args = args
   )
@@ -253,7 +253,7 @@ ui_g_butterfly <- function(id, ...) {
   )
 }
 
-srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_height, plot_width) {
+srv_g_butterfly <- function(input, output, session, datasets, dataname, label, plot_height, plot_width) {
   init_chunks()
 
   options <- reactiveValues(r = NULL, l = NULL)

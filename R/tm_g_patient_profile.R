@@ -1064,11 +1064,6 @@ srv_g_patient_profile <- function(input,
     id = "rcode",
     datasets = datasets,
     modal_title = paste("R code for", label),
-    datanames = unique(c(
-      dataname,
-      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-      })
-    ))
+    datanames = datasets$datanames() 
   )
 }

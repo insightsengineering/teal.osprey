@@ -139,6 +139,7 @@ tm_g_waterfall <- function(label,
     server_args = list(
       dataname_tr = dataname_tr,
       dataname_rs = dataname_rs,
+      label = label,
       bar_color_opt = bar_color_opt,
       plot_height = plot_height,
       plot_width = plot_width
@@ -517,11 +518,6 @@ srv_g_waterfall <- function(input,
     id = "rcode",
     datasets = datasets,
     modal_title = paste("R code for", label),
-    datanames = unique(c(
-      dataname,
-      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-      })
-    ))
+    datanames = datasets$datanames()
   )
 }
