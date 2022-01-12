@@ -432,6 +432,6 @@ srv_g_heatmap_bygrade <- function(input,
     id = "rcode",
     datasets = datasets,
     modal_title = paste("R code for", label),
-    datanames = datasets$datanames() 
+    datanames = datasets$datanames()
   )
 }

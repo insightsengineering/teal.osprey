@@ -1064,6 +1064,6 @@ srv_g_patient_profile <- function(input,
     id = "rcode",
     datasets = datasets,
     modal_title = paste("R code for", label),
-    datanames = datasets$datanames() 
+    datanames = datasets$datanames()
   )
 }
