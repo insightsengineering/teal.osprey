@@ -25,10 +25,8 @@
 #' @param heat_var (\code{choices_seleced}) heatmap variable
 #' @param conmed_var (\code{choices_seleced}) concomitant medications variable,
 #' specify to \code{NA} if no concomitant medications data is available
-#' @param fontsize a numeric vector with 3 values, selected font size and font size range,
-#' default is \code{c(5, 3, 7)}
 #'
-#' @return a \code{\link[teal]{module}} object
+#' @inherit argument_convention return
 #'
 #' @export
 #'
@@ -158,20 +156,26 @@ tm_g_heat_bygrade <- function(label,
                               plot_width = NULL) {
   args <- as.list(environment())
 
-  stopifnot(is_character_single(label))
-  stopifnot(is.choices_selected(heat_var))
-  stopifnot(is.choices_selected(conmed_var))
-  stopifnot(is_character_single(sl_dataname))
-  stopifnot(is_character_single(ex_dataname))
-  stopifnot(is_character_single(ae_dataname))
-  stopifnot(is.na(cm_dataname) | is_character_single(cm_dataname))
-  stopifnot(is.choices_selected(id_var))
-  stopifnot(is.choices_selected(visit_var))
-  stopifnot(is.choices_selected(ongo_var))
-  stopifnot(is.choices_selected(anno_var))
-  stopifnot(is.choices_selected(heat_var))
-  stopifnot(is.null(conmed_var) | is.choices_selected(conmed_var))
-
+  checkmate::assert_string(label)
+  checkmate::assert_string(sl_dataname)
+  checkmate::assert_string(ex_dataname)
+  checkmate::assert_string(ae_dataname)
+  checkmate::assert_string(cm_dataname, na.ok = TRUE)
+  checkmate::assert_class(id_var, classes = "choices_selected")
+  checkmate::assert_class(visit_var, classes = "choices_selected")
+  checkmate::assert_class(ongo_var, classes = "choices_selected")
+  checkmate::assert_class(anno_var, classes = "choices_selected")
+  checkmate::assert_class(heat_var, classes = "choices_selected")
+  checkmate::assert_class(conmed_var, classes = "choices_selected", null.ok = TRUE)
+  checkmate::assert(
+    checkmate::check_number(fontsize, finite = TRUE),
+    checkmate::assert(
+      combine = "and",
+      .var.name = "fontsize",
+      checkmate::check_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
+      checkmate::check_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3])
+    )
+  )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
@@ -348,7 +352,7 @@ srv_g_heatmap_bygrade <- function(input,
     ))
 
     validate(need(
-      is_logical_vector(ADEX_FILTERED[[input$ongo_var]]),
+      checkmate::test_logical(ADEX_FILTERED[[input$ongo_var]], min.len = 1, any.missing = FALSE),
       "Study Ongoing Status must be a logical variable"
     ))
 
@@ -422,11 +426,12 @@ srv_g_heatmap_bygrade <- function(input,
     chunks_safe_eval()
   })
 
+
   callModule(
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = datasets$datanames(),
-    modal_title = label
+    modal_title = paste("R code for", label),
+    datanames = datasets$datanames()
   )
 }

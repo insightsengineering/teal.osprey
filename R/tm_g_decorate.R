@@ -6,8 +6,7 @@
 #' to the module who called it.
 #' @param titles (\code{character}) default titles
 #' @param footnotes (\code{character}) default footnotes
-#' @param fontsize a numeric vector with 3 values, selected font size and font size range,
-#' default is \code{c(5, 3, 7)}
+#' @inheritParams argument_convention
 #' @export
 ui_g_decorate <- function(id,
                           titles = "Titles",

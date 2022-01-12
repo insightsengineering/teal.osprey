@@ -34,7 +34,8 @@ tm_g_patient_profile(
 )
 }
 \arguments{
-\item{label}{(\code{character})\cr menu item label of the module in the teal app}
+\item{label}{(\code{character(1)})\cr
+menu item label of the module in the teal app}
 
 \item{patient_id}{(\code{choices_seleced}) unique subject ID variable}
 
@@ -95,7 +96,7 @@ leave unspecified or set to \code{NULL} if adverse events data is not available}
 leave unspecified or set to \code{NULL} if adverse events data is not available}
 
 \item{ae_line_col_opt}{aesthetic values to map color values (named vector to map color values to each name).
-     If not \code{NULL}, please make sure this contains all possible values for \code{ae_line_col_var} values. \cr
+If not \code{NULL}, please make sure this contains all possible values for \code{ae_line_col_var} values. \cr
 leave unspecified or set to \code{NULL} if adverse events data is not available}
 
 \item{rs_var}{(\code{choices_selected}) response variable to plot as each line \cr
@@ -112,9 +113,11 @@ leave unspecified or set to \code{NULL} if labs data is not available}
 separated by a comma indicating the x-axis limit,
 default is \code{"-28, 365"}}
 
-\item{plot_height}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_height}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
 
-\item{plot_width}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_width}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example a title.}
@@ -124,7 +127,7 @@ output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 }
 \value{
-plot object
+the \code{\link[teal:module]{teal::module()}} object
 }
 \description{
 Display patient profile plot as a shiny module
@@ -135,9 +138,9 @@ is derived for consistency based the start date of user's choice in the app (for
 \code{ADSL.RANDDT} or \code{ADSL.TRTSDT}):
 \itemize{
 \item In \code{ADAE}, \code{ADEX}, and \code{ADCM}, it would be study day based on \code{ASTDT} and/or
-    \code{AENDT} in reference to the start date
+\code{AENDT} in reference to the start date
 \item In \code{ADRS} and \code{ADLB}, it would be study day based on \code{ADT} in reference to
-    the start date
+the start date
 }
 }
 \examples{

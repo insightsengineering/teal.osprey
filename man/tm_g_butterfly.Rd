@@ -24,10 +24,12 @@ tm_g_butterfly(
 )
 }
 \arguments{
-\item{label}{(\code{character})\cr menu item label of the module in the teal app}
+\item{label}{(\code{character(1)})\cr
+menu item label of the module in the teal app}
 
-\item{dataname}{(\code{character}) analysis data used in the teal module, needs to be
-available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
+\item{dataname}{(\code{character(1)})\cr
+analysis data used in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
 \item{filter_var}{(\code{choices_selected}) variable name of data filter, please see details regarding
 expected values, default is \code{NULL}. \code{choices}
@@ -51,9 +53,11 @@ default here is "count"}
 
 \item{legend_on}{(\code{boolean}) value for whether legend is displayed}
 
-\item{plot_height}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_height}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
 
-\item{plot_width}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_width}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example a title.}
@@ -63,22 +67,22 @@ output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 }
 \value{
-an \code{\link[teal]{module}} object
+the \code{\link[teal:module]{teal::module()}} object
 }
 \description{
 Display butterfly plot as a shiny module
 }
 \details{
 \code{filter_var} option is designed to work in conjunction with
-  filtering function provided by \code{teal} (encoding panel on the right
-  hand side of the shiny app). It can be used as quick access to predefined
-  subsets of the domain datasets (not subject-level dataset) to be used for
-  analysis, denoted by an value of "Y". Each variable within the
-  \code{filter_var_choices} is expected to contain values of either "Y" or
-  "N". If multiple variables are selected as \code{filter_var}, only
-  observations with "Y" value in each and every selected variables will be
-  used for subsequent analysis. Flag variables (from ADaM datasets) can be
-  used directly as filter.
+filtering function provided by \code{teal} (encoding panel on the right
+hand side of the shiny app). It can be used as quick access to predefined
+subsets of the domain datasets (not subject-level dataset) to be used for
+analysis, denoted by an value of "Y". Each variable within the
+\code{filter_var_choices} is expected to contain values of either "Y" or
+"N". If multiple variables are selected as \code{filter_var}, only
+observations with "Y" value in each and every selected variables will be
+used for subsequent analysis. Flag variables (from ADaM datasets) can be
+used directly as filter.
 
 
 }

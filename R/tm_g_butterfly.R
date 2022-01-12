@@ -31,7 +31,8 @@
 #'   used directly as filter.
 #' @details
 #'
-#' @return an \code{\link[teal]{module}} object
+#' @inherit argument_convention return
+#'
 #' @export
 #'
 #' @template author_zhanc107
@@ -116,18 +117,18 @@ tm_g_butterfly <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
-  stopifnot(is_character_single(label))
-  stopifnot(is_character_single(dataname))
-  stopifnot(is.choices_selected(filter_var) || is.null(filter_var))
-  stopifnot(is.choices_selected(right_var))
-  stopifnot(is.choices_selected(left_var))
-  stopifnot(is.choices_selected(category_var))
-  stopifnot(is.choices_selected(color_by_var))
-  stopifnot(is.choices_selected(count_by_var))
-  stopifnot(is.choices_selected(facet_var) || is.null(facet_var))
-  stopifnot(is.choices_selected(sort_by_var))
-  stopifnot(is_logical_single(legend_on))
 
+  checkmate::assert_string(label)
+  checkmate::assert_string(dataname)
+  checkmate::assert_class(filter_var, classes = "choices_selected", null.ok = TRUE)
+  checkmate::assert_class(right_var, classes = "choices_selected")
+  checkmate::assert_class(left_var, classes = "choices_selected")
+  checkmate::assert_class(category_var, classes = "choices_selected")
+  checkmate::assert_class(color_by_var, classes = "choices_selected")
+  checkmate::assert_class(count_by_var, classes = "choices_selected")
+  checkmate::assert_class(facet_var, classes = "choices_selected", null.ok = TRUE)
+  checkmate::assert_class(sort_by_var, classes = "choices_selected")
+  checkmate::assert_flag(legend_on)
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
@@ -145,7 +146,7 @@ tm_g_butterfly <- function(label,
     label = label,
     filters = dataname,
     server = srv_g_butterfly,
-    server_args = list(dataname = dataname, plot_height = plot_height, plot_width = plot_width),
+    server_args = list(dataname = dataname, label = label, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_butterfly,
     ui_args = args
   )
@@ -252,7 +253,7 @@ ui_g_butterfly <- function(id, ...) {
   )
 }
 
-srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_height, plot_width) {
+srv_g_butterfly <- function(input, output, session, datasets, dataname, label, plot_height, plot_width) {
   init_chunks()
 
   options <- reactiveValues(r = NULL, l = NULL)
@@ -469,9 +470,12 @@ srv_g_butterfly <- function(input, output, session, datasets, dataname, plot_hei
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
-    ),
-    modal_title = "Butterfly plot"
+    modal_title = paste("R code for", label),
+    datanames = unique(c(
+      dataname,
+      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+      })
+    ))
   )
 }

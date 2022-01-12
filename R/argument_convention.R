@@ -9,15 +9,35 @@
 #' single reference point to import the `roxygen` argument description with:
 #' `@inheritParams argument_convention`
 #'
-#' @param label (\code{character})\cr menu item label of the module in the teal app
-#' @param dataname (\code{character}) analysis data used in the teal module, needs to be
-#' available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.
-#' @param arm_var \code{\link[teal]{choices_selected}} object with all available choices
-#' and the pre-selected option for variable names that can be used as \code{arm_var}.
-#' @param paramcd (`string` or `choices_selected` with teal module)\cr
-#'   variable value designating the studied parameter.
-#' @param plot_height `numeric` vector to indicate default value, minimum and maximum values.
-#' @param plot_width `numeric` vector to indicate default value, minimum and maximum values.
+#' @param label (`character(1)`)\cr
+#'  menu item label of the module in the teal app
+#'
+#' @param dataname (\code{character(1)})\cr
+#'  analysis data used in the teal module, needs to be
+#'  available in the list passed to the `data` argument of [teal::init()].
+#'
+#' @param arm_var (`choices_selected`)\cr
+#'  object with all available choices and the pre-selected option for variable
+#'  names that can be used as `arm_var`. See [teal::choices_selected()] for
+#'  details.
+#'
+#' @param paramcd (`character(1)` or `choices_selected`)\cr
+#'  variable value designating the studied parameter.
+#'  See [teal::choices_selected()] for details.
+#'
+#' @param fontsize (`numeric(1)` or `numeric(3)`)\cr
+#'  Defines initial font-size it's possible range. `fontsize` is set for
+#'  [teal::optionalSliderInputValMinMax()] which controls font-size in the output
+#'  plot.
+#'
+#' @param plot_height (`numeric(3)`)\cr
+#'  vector to indicate default value, minimum and maximum values.
+#'
+#' @param plot_width (`numeric(3)`)\cr
+#'  vector to indicate default value, minimum and maximum values.
+#'
+#' @return the [teal::module()] object
+#'
 #' @name argument_convention
 #'
 NULL

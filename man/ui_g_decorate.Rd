@@ -12,15 +12,17 @@ ui_g_decorate(
 )
 }
 \arguments{
-\item{id}{(\code{character}) id of this module. set to `NULL` if you want to make it identical
+\item{id}{(\code{character}) id of this module. set to \code{NULL} if you want to make it identical
 to the module who called it.}
 
 \item{titles}{(\code{character}) default titles}
 
 \item{footnotes}{(\code{character}) default footnotes}
 
-\item{fontsize}{a numeric vector with 3 values, selected font size and font size range,
-default is \code{c(5, 3, 7)}}
+\item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
+Defines initial font-size it's possible range. \code{fontsize} is set for
+\code{\link[teal:optionalSliderInputValMinMax]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
+plot.}
 }
 \description{
 This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.

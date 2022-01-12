@@ -16,7 +16,7 @@
 #' @param xfacet_var variable for x facets
 #' @param yfacet_var variable for y facets
 #'
-#' @return an \code{\link[teal]{module}} object
+#' @inherit argument_convention return
 #' @export
 #'
 #' @template author_zhanc107
@@ -77,17 +77,17 @@ tm_g_spiderplot <- function(label,
                             plot_width = NULL,
                             pre_output = NULL,
                             post_output = NULL) {
-  stopifnot(is.choices_selected(paramcd))
-  stopifnot(is.choices_selected(x_var))
-  stopifnot(is.choices_selected(y_var))
-  stopifnot(is.choices_selected(marker_var))
-  stopifnot(is.choices_selected(line_colorby_var))
-  stopifnot(is.choices_selected(xfacet_var))
-  stopifnot(is.choices_selected(yfacet_var))
-  stopifnot(is_character_single(vref_line))
-  stopifnot(is_character_single(href_line))
-  stopifnot(is_logical_single(anno_txt_var))
-  stopifnot(is_logical_single(legend_on))
+  checkmate::assert_class(paramcd, classes = "choices_selected")
+  checkmate::assert_class(x_var, classes = "choices_selected")
+  checkmate::assert_class(y_var, classes = "choices_selected")
+  checkmate::assert_class(marker_var, classes = "choices_selected")
+  checkmate::assert_class(line_colorby_var, classes = "choices_selected")
+  checkmate::assert_class(xfacet_var, classes = "choices_selected")
+  checkmate::assert_class(yfacet_var, classes = "choices_selected")
+  checkmate::assert_string(vref_line)
+  checkmate::assert_string(href_line)
+  checkmate::assert_flag(anno_txt_var)
+  checkmate::assert_flag(legend_on)
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
@@ -353,8 +353,16 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
         }),
         vref_line = .(vref_line),
         href_line = .(href_line),
-        x_label = utils.nest::if_null(rtables::var_labels(ADTR_FILTERED[.(x_var)]), .(x_var)),
-        y_label = utils.nest::if_null(rtables::var_labels(ADTR_FILTERED[.(y_var)]), .(y_var)),
+        x_label = if (is.null(rtables::var_labels(ADTR_FILTERED[.(x_var)]))) {
+          .(x_var)
+        } else {
+          rtables::var_labels(ADTR_FILTERED[.(x_var)])
+        },
+        y_label = if (is.null(rtables::var_labels(ADTR_FILTERED[.(y_var)]))) {
+          .(y_var)
+        } else {
+          rtables::var_labels(ADTR_FILTERED[.(y_var)])
+        },
         show_legend = .(legend_on)
       )
     }))
@@ -374,9 +382,12 @@ srv_g_spider <- function(input, output, session, datasets, dataname, label, plot
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
-    ),
-    modal_title = label
+    modal_title = paste("R code for", label),
+    datanames = unique(c(
+      dataname,
+      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+      })
+    ))
   )
 }
