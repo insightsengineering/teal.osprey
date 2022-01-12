@@ -65,8 +65,7 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #' @template author_qit3
 #'
-#' @return plot object
-#' @importFrom purrr map_lgl map2_lgl
+#' @inherit argument_convention return
 #'
 #' @details
 #' As the patient profile module plots different domains in one plot, the study day (x-axis)
@@ -230,22 +229,21 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
                                  pre_output = NULL,
                                  post_output = NULL) {
   args <- as.list(environment())
-  stopifnot(is_character_single(label))
-  stopifnot(is_character_single(sl_dataname))
-  stopifnot(is.na(ex_dataname) | is_character_single(ex_dataname))
-  stopifnot(is.na(ae_dataname) | is_character_single(ae_dataname))
-  stopifnot(is.na(rs_dataname) | is_character_single(rs_dataname))
-  stopifnot(is.na(cm_dataname) | is_character_single(cm_dataname))
-  stopifnot(is.na(lb_dataname) | is_character_single(lb_dataname))
-  stopifnot(is.choices_selected(sl_start_date))
-  stopifnot(is.null(ex_var) | is.choices_selected(ex_var))
-  stopifnot(is.null(ae_var) | is.choices_selected(ae_var))
-  stopifnot(is.null(ae_line_col_var) | is.choices_selected(ae_line_col_var))
-  stopifnot(is.null(rs_var) | is.choices_selected(rs_var))
-  stopifnot(is.null(cm_var) | is.choices_selected(cm_var))
-  stopifnot(is.null(lb_var) | is.choices_selected(lb_var))
-  stopifnot(is_character_single(x_limit))
-
+  checkmate::assert_string(label)
+  checkmate::assert_string(sl_dataname)
+  checkmate::assert_string(ex_dataname, na.ok = TRUE)
+  checkmate::assert_string(ae_dataname, na.ok = TRUE)
+  checkmate::assert_string(rs_dataname, na.ok = TRUE)
+  checkmate::assert_string(cm_dataname, na.ok = TRUE)
+  checkmate::assert_string(lb_dataname, na.ok = TRUE)
+  checkmate::assert_class(sl_start_date, classes = "choices_selected")
+  checkmate::assert_class(ex_var, classes = "choices_selected", null.ok = TRUE)
+  checkmate::assert_class(ae_var, classes = "choices_selected", null.ok = TRUE)
+  checkmate::assert_class(ae_line_col_var, classes = "choices_selected", null.ok = TRUE)
+  checkmate::assert_class(rs_var, classes = "choices_selected", null.ok = TRUE)
+  checkmate::assert_class(cm_var, classes = "choices_selected", null.ok = TRUE)
+  checkmate::assert_class(lb_var, classes = "choices_selected", null.ok = TRUE)
+  checkmate::assert_string(x_limit)
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
@@ -623,8 +621,8 @@ srv_g_patient_profile <- function(input,
       cm_dataname,
       lb_dataname
     )
-    input_select <- map_lgl(datanames, is.na)
-    select_plot <- map2_lgl(
+    input_select <- purrr::map_lgl(datanames, is.na)
+    select_plot <- purrr::map2_lgl(
       input_select, possible_plot,
       ~ if (!.x) {
         input[[paste("select", .y, sep = "_")]]
@@ -1065,7 +1063,7 @@ srv_g_patient_profile <- function(input,
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = datasets$datanames(),
-    modal_title = "Patient profile Plot"
+    modal_title = paste("R code for", label),
+    datanames = datasets$datanames()
   )
 }

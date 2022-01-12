@@ -25,7 +25,7 @@
 #' @param anno_txt_var character vector with subject-level variable names that are selected as annotation
 #' @param y_label the label of the y axis
 #'
-#' @return a \code{\link[teal]{module}} object
+#' @inherit argument_convention return
 #'
 #' @export
 #'
@@ -115,19 +115,17 @@ tm_g_swimlane <- function(label,
                           y_label = "Time from First Treatment (Day)") {
   args <- as.list(environment())
 
-  stopifnot(
-    is_character_single(label),
-    is_character_single(dataname),
-    is.choices_selected(bar_var),
-    is.choices_selected(bar_color_var),
-    is.choices_selected(marker_pos_var),
-    is.choices_selected(marker_shape_var),
-    is_numeric_vector(marker_shape_opt),
-    is.choices_selected(marker_color_var),
-    is_character_vector(marker_color_opt),
-    is.choices_selected(anno_txt_var),
-    is_numeric_vector(vref_line) || is.null(vref_line)
-  )
+  checkmate::assert_string(label)
+  checkmate::assert_string(dataname)
+  checkmate::assert_class(bar_var, classes = "choices_selected")
+  checkmate::assert_class(bar_color_var, classes = "choices_selected")
+  checkmate::assert_class(marker_pos_var, classes = "choices_selected")
+  checkmate::assert_class(marker_shape_var, classes = "choices_selected")
+  checkmate::assert_numeric(marker_shape_opt, min.len = 1, any.missing = FALSE)
+  checkmate::assert_class(marker_color_var, classes = "choices_selected")
+  checkmate::assert_character(marker_color_opt, min.len = 1, any.missing = FALSE)
+  checkmate::assert_class(anno_txt_var, classes = "choices_selected")
+  checkmate::assert_numeric(vref_line, min.len = 1, null.ok = TRUE, any.missing = FALSE)
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
@@ -503,9 +501,12 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
-    ),
-    modal_title = label
+    modal_title = paste("R code for", label),
+    datanames = unique(c(
+      dataname,
+      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+      })
+    ))
   )
 }

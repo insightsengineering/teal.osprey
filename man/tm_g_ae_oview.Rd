@@ -15,27 +15,35 @@ tm_g_ae_oview(
 )
 }
 \arguments{
-\item{label}{(\code{character})\cr menu item label of the module in the teal app}
+\item{label}{(\code{character(1)})\cr
+menu item label of the module in the teal app}
 
-\item{dataname}{(\code{character}) analysis data used in the teal module, needs to be
-available in the list passed to the \code{data} argument of \code{\link[teal]{init}}.}
+\item{dataname}{(\code{character(1)})\cr
+analysis data used in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{arm_var}{\code{\link[teal]{choices_selected}} object with all available choices
-and the pre-selected option for variable names that can be used as \code{arm_var}.}
+\item{arm_var}{(\code{choices_selected})\cr
+object with all available choices and the pre-selected option for variable
+names that can be used as \code{arm_var}. See \code{\link[teal:choices_selected]{teal::choices_selected()}} for
+details.}
 
 \item{flag_var_anl}{([`teal::choices_selected`])
 `choices_selected` object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)}
 
-\item{fontsize}{(`numeric`) vector with 3 values, selected font size and font size range,
-default is \code{c(5, 3, 7)}}
+\item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
+Defines initial font-size it's possible range. \code{fontsize} is set for
+\code{\link[teal:optionalSliderInputValMinMax]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
+plot.}
 
-\item{plot_height}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_height}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
 
-\item{plot_width}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_width}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
 }
 \value{
-object returned by the [teal::module()] function.
+the \code{\link[teal:module]{teal::module()}} object
 }
 \description{
 Display the AE overview plot as a shiny module

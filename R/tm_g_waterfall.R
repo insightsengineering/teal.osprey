@@ -36,7 +36,7 @@
 #' than others, default is \code{NULL}
 #' @param show_value boolean of whether value of bar height is shown, default is \code{TRUE}
 #'
-#' @return a \code{\link[teal]{module}} object
+#' @inherit argument_convention return
 #'
 #' @export
 #'
@@ -106,19 +106,18 @@ tm_g_waterfall <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
-  stopifnot(is_character_single(label))
-  stopifnot(is_character_single(dataname_tr))
-  stopifnot(is_character_single(dataname_rs))
-
-  stopifnot(is.choices_selected(bar_paramcd))
-  stopifnot(is.choices_selected(bar_var))
-  stopifnot(is.choices_selected(bar_color_var))
-  stopifnot(is.choices_selected(sort_var))
-  stopifnot(is.choices_selected(anno_txt_var_sl))
-  stopifnot(is.choices_selected(anno_txt_paramcd_rs))
-  stopifnot(is.choices_selected(facet_var))
-  stopifnot(is.choices_selected(add_label_var_sl))
-  stopifnot(is.choices_selected(add_label_paramcd_rs))
+  checkmate::assert_string(label)
+  checkmate::assert_string(dataname_tr)
+  checkmate::assert_string(dataname_rs)
+  checkmate::assert_class(bar_paramcd, classes = "choices_selected")
+  checkmate::assert_class(bar_var, classes = "choices_selected")
+  checkmate::assert_class(bar_color_var, classes = "choices_selected")
+  checkmate::assert_class(sort_var, classes = "choices_selected")
+  checkmate::assert_class(anno_txt_var_sl, classes = "choices_selected")
+  checkmate::assert_class(anno_txt_paramcd_rs, classes = "choices_selected")
+  checkmate::assert_class(facet_var, classes = "choices_selected")
+  checkmate::assert_class(add_label_var_sl, classes = "choices_selected")
+  checkmate::assert_class(add_label_paramcd_rs, classes = "choices_selected")
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
@@ -140,6 +139,7 @@ tm_g_waterfall <- function(label,
     server_args = list(
       dataname_tr = dataname_tr,
       dataname_rs = dataname_rs,
+      label = label,
       bar_color_opt = bar_color_opt,
       plot_height = plot_height,
       plot_width = plot_width
@@ -517,7 +517,7 @@ srv_g_waterfall <- function(input,
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = datasets$datanames(),
-    modal_title = "Waterfall plot"
+    modal_title = paste("R code for", label),
+    datanames = datasets$datanames()
   )
 }

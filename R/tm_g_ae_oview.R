@@ -10,7 +10,8 @@
 #' @param fontsize (`numeric`) vector with 3 values, selected font size and font size range,
 #' default is \code{c(5, 3, 7)}
 #'
-#' @return object returned by the [teal::module()] function.
+#' @inherit argument_convention return
+#'
 #' @importFrom rtables var_labels
 #'
 #' @export
@@ -94,15 +95,22 @@ tm_g_ae_oview <- function(label,
                           fontsize = c(5, 3, 7),
                           plot_height = c(600L, 200L, 2000L),
                           plot_width = NULL) {
-  stopifnot(is.choices_selected(arm_var))
-  stopifnot(is.choices_selected(flag_var_anl))
-
+  checkmate::assert_class(arm_var, classes = "choices_selected")
+  checkmate::assert_class(add_flag, classes = "choices_selected")
+  checkmate::assert(
+    checkmate::check_number(fontsize, finite = TRUE),
+    checkmate::assert(
+      combine = "and",
+      .var.name = "fontsize",
+      checkmate::check_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
+      checkmate::check_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3])
+    )
+  )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
-  checkmate::assert_numeric(plot_width[1],
-    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,
-    .var.name = "plot_width"
+  checkmate::assert_numeric(
+    plot_width[1], lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
   )
 
   args <- as.list(environment())
@@ -323,9 +331,12 @@ srv_g_ae_oview <- function(input,
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
-    ),
-    modal_title = label
+    modal_title = paste("R code for", label),
+    datanames = unique(c(
+      dataname,
+      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+      })
+    ))
   )
 }

@@ -29,7 +29,8 @@ tm_g_waterfall(
 )
 }
 \arguments{
-\item{label}{(\code{character})\cr menu item label of the module in the teal app}
+\item{label}{(\code{character(1)})\cr
+menu item label of the module in the teal app}
 
 \item{dataname_tr}{tumor burden analysis data used in teal module to plot as bar height, needs to
 be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}}
@@ -78,9 +79,11 @@ than others, default is \code{NULL}}
 
 \item{show_value}{boolean of whether value of bar height is shown, default is \code{TRUE}}
 
-\item{plot_height}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_height}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
 
-\item{plot_width}{`numeric` vector to indicate default value, minimum and maximum values.}
+\item{plot_width}{(\code{numeric(3)})\cr
+vector to indicate default value, minimum and maximum values.}
 
 \item{pre_output}{optional, \code{shiny.tag} with text placed before the
 output to put the output into context. For example a title.}
@@ -90,7 +93,7 @@ output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 }
 \value{
-a \code{\link[teal]{module}} object
+the \code{\link[teal:module]{teal::module()}} object
 }
 \description{
 This is teal module that generates a waterfall plot for ADaM data

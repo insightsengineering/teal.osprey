@@ -6,9 +6,8 @@
 #' @inheritParams argument_convention
 #' @param term_var \code{\link[teal]{choices_selected}} object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
-#' @param fontsize (\code{numeric}) vector of choices for font size
 #'
-#' @return an \code{\link[teal]{module}} object
+#' @inherit argument_convention return
 #'
 #' @export
 #'
@@ -57,9 +56,18 @@ tm_g_events_term_id <- function(label,
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
                                 plot_width = NULL) {
-  stopifnot(is_character_single(label))
-  stopifnot(is.choices_selected(term_var))
-  stopifnot(is.choices_selected(arm_var))
+  checkmate::assert_string(label)
+  checkmate::assert_class(term_var, classes = "choices_selected")
+  checkmate::assert_class(arm_var, classes = "choices_selected")
+  checkmate::assert(
+    checkmate::check_number(fontsize, finite = TRUE),
+    checkmate::assert(
+      combine = "and",
+      .var.name = "fontsize",
+      checkmate::check_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
+      checkmate::check_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3])
+    )
+  )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
@@ -70,7 +78,6 @@ tm_g_events_term_id <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
-  stopifnot(is_numeric_vector(fontsize))
 
   args <- as.list(environment())
 
@@ -212,6 +219,7 @@ srv_g_events_term_id <- function(input,
 
   observeEvent(input$sort,
     handlerExpr = {
+      sort <- if (is.null(input$sort)) " " else input$sort
       updateTextInput(
         session,
         "title",
@@ -222,7 +230,7 @@ srv_g_events_term_id <- function(input,
             "riskdiff" = "Sorted by Risk Difference",
             "meanrisk" = "Sorted by Mean Risk",
             " " = ""
-          )[if_null(input$sort, " ")]
+          )[sort]
         )
       )
     },
@@ -337,9 +345,12 @@ srv_g_events_term_id <- function(input,
     module = get_rcode_srv,
     id = "rcode",
     datasets = datasets,
-    datanames = unique(
-      c(dataname, vapply(dataname, function(x) if_error(datasets$get_parentname(x), x), character(1)))
-    ),
-    modal_title = paste0("R code for ", label)
+    modal_title = paste("R code for", label),
+    datanames = unique(c(
+      dataname,
+      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+      })
+    ))
   )
 }
