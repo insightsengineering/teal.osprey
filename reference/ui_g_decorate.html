@@ -34,15 +34,6 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/insightsengineering/teal.osprey">
     <span class="fa fa-github"></span>
@@ -79,15 +70,17 @@ Other releases
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>id</dt>
-<dd><p>(<code>character</code>) id of this module. set to `NULL` if you want to make it identical
+<dd><p>(<code>character</code>) id of this module. set to <code>NULL</code> if you want to make it identical
 to the module who called it.</p></dd>
 <dt>titles</dt>
 <dd><p>(<code>character</code>) default titles</p></dd>
 <dt>footnotes</dt>
 <dd><p>(<code>character</code>) default footnotes</p></dd>
 <dt>fontsize</dt>
-<dd><p>a numeric vector with 3 values, selected font size and font size range,
-default is <code>c(5, 3, 7)</code></p></dd>
+<dd><p>(<code>numeric(1)</code> or <code>numeric(3)</code>)<br>
+Defines initial font-size it's possible range. <code>fontsize</code> is set for
+<code><a href="https://rdrr.io/pkg/teal/man/optionalSliderInputValMinMax.html" class="external-link">teal::optionalSliderInputValMinMax()</a></code> which controls font-size in the output
+plot.</p></dd>
 </dl></div>
 
   </div>

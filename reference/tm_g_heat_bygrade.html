@@ -34,15 +34,6 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/insightsengineering/teal.osprey">
     <span class="fa fa-github"></span>
@@ -89,7 +80,8 @@ Other releases
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>label</dt>
-<dd><p>(<code>character</code>)<br> menu item label of the module in the teal app</p></dd>
+<dd><p>(<code>character(1)</code>)<br>
+menu item label of the module in the teal app</p></dd>
 <dt>sl_dataname</dt>
 <dd><p>(<code>character</code>) subject level dataset name,
 needs to be available in the list passed to the <code>data</code>
@@ -122,16 +114,20 @@ This variable is a derived logical variable. Usually it can be derived from <cod
 <dd><p>(<code>choices_seleced</code>) concomitant medications variable,
 specify to <code>NA</code> if no concomitant medications data is available</p></dd>
 <dt>fontsize</dt>
-<dd><p>a numeric vector with 3 values, selected font size and font size range,
-default is <code>c(5, 3, 7)</code></p></dd>
+<dd><p>(<code>numeric(1)</code> or <code>numeric(3)</code>)<br>
+Defines initial font-size it's possible range. <code>fontsize</code> is set for
+<code><a href="https://rdrr.io/pkg/teal/man/optionalSliderInputValMinMax.html" class="external-link">teal::optionalSliderInputValMinMax()</a></code> which controls font-size in the output
+plot.</p></dd>
 <dt>plot_height</dt>
-<dd><p>`numeric` vector to indicate default value, minimum and maximum values.</p></dd>
+<dd><p>(<code>numeric(3)</code>)<br>
+vector to indicate default value, minimum and maximum values.</p></dd>
 <dt>plot_width</dt>
-<dd><p>`numeric` vector to indicate default value, minimum and maximum values.</p></dd>
+<dd><p>(<code>numeric(3)</code>)<br>
+vector to indicate default value, minimum and maximum values.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a <code><a href="https://rdrr.io/pkg/teal/man/module.html" class="external-link">module</a></code> object</p>
+    <p>the <code><a href="https://rdrr.io/pkg/teal/man/module.html" class="external-link">teal::module()</a></code> object</p>
     </div>
 
     <div id="ref-examples">
