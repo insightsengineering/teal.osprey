@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">teal.osprey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11.9013</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11.9014</span>
       </span>
     </div>
 
@@ -34,15 +34,6 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/insightsengineering/teal.osprey">
     <span class="fa fa-github"></span>
@@ -72,7 +63,7 @@ Other releases
   <span class="va">label</span>,
   <span class="va">dataname</span>,
   <span class="va">arm_var</span>,
-  add_flag <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">flag_var_anl</span>,
   fontsize <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">7</span><span class="op">)</span>,
   plot_height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">600L</span>, <span class="fl">200L</span>, <span class="fl">2000L</span><span class="op">)</span>,
   plot_width <span class="op">=</span> <span class="cn">NULL</span>
@@ -93,16 +84,13 @@ available in the list passed to the <code>data</code> argument of <code><a href=
 object with all available choices and the pre-selected option for variable
 names that can be used as <code>arm_var</code>. See <code><a href="https://rdrr.io/pkg/teal/man/choices_selected.html" class="external-link">teal::choices_selected()</a></code> for
 details.</p></dd>
-<dt>add_flag</dt>
-<dd><p>(<code>character</code> or <code>choices_selected</code>)<br>
-including variable name(s) for additional flags. See details
-By default, <code>NULL</code> (i.e. no additional flags will be added).
-See <code><a href="https://rdrr.io/pkg/teal/man/choices_selected.html" class="external-link">teal::choices_selected()</a></code> for details.</p></dd>
+<dt>flag_var_anl</dt>
+<dd><p>(<code><a href="https://rdrr.io/pkg/teal/man/choices_selected.html" class="external-link">teal::choices_selected</a></code>)
+<code>choices_selected</code> object with variables used to count adverse event
+sub-groups (e.g. Serious events, Related events, etc.)</p></dd>
 <dt>fontsize</dt>
-<dd><p>(<code>numeric(1)</code> or <code>numeric(3)</code>)<br>
-Defines initial font-size it's possible range. <code>fontsize</code> is set for
-<code><a href="https://rdrr.io/pkg/teal/man/optionalSliderInputValMinMax.html" class="external-link">teal::optionalSliderInputValMinMax()</a></code> which controls font-size in the output
-plot.</p></dd>
+<dd><p>(<code>numeric</code>) vector with 3 values, selected font size and font size range,
+default is <code>c(5, 3, 7)</code></p></dd>
 <dt>plot_height</dt>
 <dd><p>(<code>numeric(3)</code>)<br>
 vector to indicate default value, minimum and maximum values.</p></dd>
@@ -124,29 +112,51 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <span class="r-in"><span class="va">ADAE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html" class="external-link">synthetic_cdisc_data</a></span><span class="op">(</span><span class="st">"latest"</span><span class="op">)</span><span class="op">$</span><span class="va">adae</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Add additional dummy causality flags.</span></span>
-<span class="r-in"><span class="va">ADAE</span> <span class="op">&lt;-</span> <span class="va">ADAE</span> <span class="op">%&gt;%</span></span>
-<span class="r-in">  <span class="fu">mutate</span><span class="op">(</span>AEREL1 <span class="op">=</span> <span class="op">(</span><span class="va">AEREL</span> <span class="op">==</span> <span class="st">"Y"</span> <span class="op">&amp;</span> <span class="va">ACTARM</span> <span class="op">==</span> <span class="st">"A: Drug X"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span class="r-in">  <span class="fu">mutate</span><span class="op">(</span>AEREL2 <span class="op">=</span> <span class="op">(</span><span class="va">AEREL</span> <span class="op">==</span> <span class="st">"Y"</span> <span class="op">&amp;</span> <span class="va">ACTARM</span> <span class="op">==</span> <span class="st">"B: Placebo"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span class="r-in">  <span class="fu">rtables</span><span class="fu">::</span><span class="fu"><a href="https://roche.github.io/rtables/reference/var_relabel.html" class="external-link">var_relabel</a></span><span class="op">(</span></span>
-<span class="r-in">    AEREL1 <span class="op">=</span> <span class="st">"AE related to A: Drug X"</span>,</span>
-<span class="r-in">    AEREL2 <span class="op">=</span> <span class="st">"AE related to B: Placebo"</span></span>
-<span class="r-in">  <span class="op">)</span></span>
+<span class="r-in"><span class="va">add_event_flags</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in">  <span class="va">dat</span> <span class="op">%&gt;%</span></span>
+<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span class="r-in">      TMPFL_SER <span class="op">=</span> <span class="va">AESER</span> <span class="op">==</span> <span class="st">"Y"</span>,</span>
+<span class="r-in">      TMPFL_REL <span class="op">=</span> <span class="va">AEREL</span> <span class="op">==</span> <span class="st">"Y"</span>,</span>
+<span class="r-in">      TMPFL_GR5 <span class="op">=</span> <span class="va">AETOXGR</span> <span class="op">==</span> <span class="st">"5"</span>,</span>
+<span class="r-in">      AEREL1 <span class="op">=</span> <span class="op">(</span><span class="va">AEREL</span> <span class="op">==</span> <span class="st">"Y"</span> <span class="op">&amp;</span> <span class="va">ACTARM</span> <span class="op">==</span> <span class="st">"A: Drug X"</span><span class="op">)</span>,</span>
+<span class="r-in">      AEREL2 <span class="op">=</span> <span class="op">(</span><span class="va">AEREL</span> <span class="op">==</span> <span class="st">"Y"</span> <span class="op">&amp;</span> <span class="va">ACTARM</span> <span class="op">==</span> <span class="st">"B: Placebo"</span><span class="op">)</span></span>
+<span class="r-in">    <span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span class="r-in">    <span class="fu">rtables</span><span class="fu">::</span><span class="fu"><a href="https://roche.github.io/rtables/reference/var_relabel.html" class="external-link">var_relabel</a></span><span class="op">(</span></span>
+<span class="r-in">      TMPFL_SER <span class="op">=</span> <span class="st">"Serious AE"</span>,</span>
+<span class="r-in">      TMPFL_REL <span class="op">=</span> <span class="st">"Related AE"</span>,</span>
+<span class="r-in">      TMPFL_GR5 <span class="op">=</span> <span class="st">"Grade 5 AE"</span>,</span>
+<span class="r-in">      AEREL1 <span class="op">=</span> <span class="st">"AE related to A: Drug X"</span>,</span>
+<span class="r-in">      AEREL2 <span class="op">=</span> <span class="st">"AE related to B: Placebo"</span></span>
+<span class="r-in">    <span class="op">)</span></span>
+<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"><span class="va">ADAE</span> <span class="op">&lt;-</span> <span class="va">ADAE</span> <span class="op">%&gt;%</span> <span class="fu">add_event_flags</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu">init</span><span class="op">(</span></span>
 <span class="r-in">  data <span class="op">=</span> <span class="fu">cdisc_data</span><span class="op">(</span></span>
 <span class="r-in">    <span class="fu">cdisc_dataset</span><span class="op">(</span><span class="st">"ADSL"</span>, <span class="va">ADSL</span>, code <span class="op">=</span> <span class="st">"ADSL &lt;- synthetic_cdisc_data(\"latest\")$adsl"</span><span class="op">)</span>,</span>
 <span class="r-in">    <span class="fu">cdisc_dataset</span><span class="op">(</span><span class="st">"ADAE"</span>, <span class="va">ADAE</span>,</span>
-<span class="r-in">      code <span class="op">=</span> <span class="st">"ADAE &lt;- synthetic_cdisc_data(\"latest\")$adae</span>
-<span class="r-in">              # Add additional dummy causality flags.</span>
-<span class="r-in">              ADAE &lt;- ADAE %&gt;%</span>
-<span class="r-in">                mutate(AEREL1 = (AEREL == 'Y' &amp; ACTARM == 'A: Drug X')) %&gt;%</span>
-<span class="r-in">                mutate(AEREL2 = (AEREL == 'Y' &amp; ACTARM == 'B: Placebo')) %&gt;%</span>
-<span class="r-in">                rtables::var_relabel(</span>
-<span class="r-in">                  AEREL1 = 'AE related to A: Drug X',</span>
-<span class="r-in">                  AEREL2 = 'AE related to B: Placebo'</span>
-<span class="r-in">                )"</span></span>
-<span class="r-in">    <span class="op">)</span>,</span>
-<span class="r-in">    check <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span class="r-in">      code <span class="op">=</span></span>
+<span class="r-in">        <span class="st">"ADAE &lt;- synthetic_cdisc_data('latest')$adae</span>
+<span class="r-in">          add_event_flags &lt;- function(dat) {</span>
+<span class="r-in">            dat %&gt;%</span>
+<span class="r-in">              dplyr::mutate(</span>
+<span class="r-in">                TMPFL_SER = AESER == 'Y',</span>
+<span class="r-in">                TMPFL_REL = AEREL == 'Y',</span>
+<span class="r-in">                TMPFL_GR5 = AETOXGR == '5',</span>
+<span class="r-in">                AEREL1 = (AEREL == 'Y' &amp; ACTARM == 'A: Drug X'),</span>
+<span class="r-in">                AEREL2 = (AEREL == 'Y' &amp; ACTARM == 'B: Placebo')</span>
+<span class="r-in">              ) %&gt;%</span>
+<span class="r-in">              rtables::var_relabel(</span>
+<span class="r-in">                TMPFL_SER = 'Serious AE',</span>
+<span class="r-in">                TMPFL_REL = 'Related AE',</span>
+<span class="r-in">                TMPFL_GR5 = 'Grade 5 AE',</span>
+<span class="r-in">                AEREL1 = 'AE related to A: Drug X',</span>
+<span class="r-in">                AEREL2 = 'AE related to B: Placebo'</span>
+<span class="r-in">              )</span>
+<span class="r-in">          }</span>
+<span class="r-in">          # Generating user-defined event flags.</span>
+<span class="r-in">          ADAE &lt;- ADAE %&gt;% add_event_flags()"</span></span>
+<span class="r-in">    <span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span>,</span>
 <span class="r-in">  modules <span class="op">=</span> <span class="fu">root_modules</span><span class="op">(</span></span>
 <span class="r-in">    <span class="fu">tm_g_ae_oview</span><span class="op">(</span></span>
@@ -156,9 +166,9 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <span class="r-in">        selected <span class="op">=</span> <span class="st">"ACTARM"</span>,</span>
 <span class="r-in">        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ACTARM"</span>, <span class="st">"ACTARMCD"</span><span class="op">)</span></span>
 <span class="r-in">      <span class="op">)</span>,</span>
-<span class="r-in">      add_flag <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span>
-<span class="r-in">        choices <span class="op">=</span> <span class="fu">variable_choices</span><span class="op">(</span><span class="va">ADAE</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AEREL1"</span>, <span class="st">"AEREL2"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">        selected <span class="op">=</span> <span class="cn">NULL</span></span>
+<span class="r-in">      flag_var_anl <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span>
+<span class="r-in">        selected <span class="op">=</span> <span class="st">"AEREL1"</span>,</span>
+<span class="r-in">        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TMPFL_SER"</span>, <span class="st">"TMPFL_REL"</span>, <span class="st">"TMPFL_GR5"</span>, <span class="st">"AEREL1"</span>, <span class="st">"AEREL2"</span><span class="op">)</span></span>
 <span class="r-in">      <span class="op">)</span>,</span>
 <span class="r-in">      plot_height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">600</span>, <span class="fl">200</span>, <span class="fl">2000</span><span class="op">)</span></span>
 <span class="r-in">    <span class="op">)</span></span>
