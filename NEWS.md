@@ -14,7 +14,7 @@
 * Updated R version requirement to `R >= 3.6`.
 * Removed the function `teal::keys` in the examples of `tm_g_spiderplot` and `tm_g_waterfall` modules.
 * Removed dependency on `test.nest` package.
-* Removed dependency on `utils.nest` package and replaced those functions with equivalents from the `checkmate` package.
+* Removed dependency on `utils.nest` package and replaced its functions with equivalents from the `checkmate` package.
 
 # teal.osprey 0.1.11
 
