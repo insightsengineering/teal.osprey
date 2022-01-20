@@ -23,7 +23,7 @@
 #' otherwise color will be assigned by \code{ggplot} default
 #' @param vref_line vertical reference lines
 #' @param anno_txt_var character vector with subject-level variable names that are selected as annotation
-#' @param y_label the label of the y axis
+#' @param x_label the label of the x axis
 #'
 #' @inherit argument_convention return
 #'
@@ -112,7 +112,7 @@ tm_g_swimlane <- function(label,
                           plot_width = NULL,
                           pre_output = NULL,
                           post_output = NULL,
-                          y_label = "Time from First Treatment (Day)") {
+                          x_label = "Time from First Treatment (Day)") {
   args <- as.list(environment())
 
   checkmate::assert_string(label)
@@ -136,7 +136,7 @@ tm_g_swimlane <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
-  checkmate::assert_character(y_label, len = 1)
+  checkmate::assert_string(x_label)
 
 
   module(
@@ -154,7 +154,7 @@ tm_g_swimlane <- function(label,
       label = label,
       plot_height = plot_height,
       plot_width = plot_width,
-      y_label = y_label
+      x_label = x_label
     ),
     filters = dataname
   )
@@ -251,7 +251,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
                            label,
                            plot_height,
                            plot_width,
-                           y_label) {
+                           x_label) {
 
   # use teal.devel code chunks
   init_chunks()
@@ -420,7 +420,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           anno_txt = .(if (length(anno_txt_var) > 0) quote(ADSL[, anno_txt_var]) else NULL),
           yref_line = .(vref_line),
           ytick_at = waiver(),
-          ylab = .(y_label),
+          xlab = .(x_label),
           title = "Swimlane Plot"
         )
       })
@@ -478,7 +478,7 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           }),
           yref_line = .(vref_line),
           ytick_at = waiver(),
-          ylab = .(y_label),
+          xlab = .(x_label),
           title = "Swimlane Plot"
         )
       })

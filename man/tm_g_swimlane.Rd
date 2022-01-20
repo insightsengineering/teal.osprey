@@ -21,7 +21,7 @@ tm_g_swimlane(
   plot_width = NULL,
   pre_output = NULL,
   post_output = NULL,
-  y_label = "Time from First Treatment (Day)"
+  x_label = "Time from First Treatment (Day)"
 )
 }
 \arguments{
@@ -71,7 +71,7 @@ output to put the output into context. For example a title.}
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 
-\item{y_label}{the label of the y axis}
+\item{x_label}{the label of the x axis}
 }
 \value{
 the \code{\link[teal:module]{teal::module()}} object
