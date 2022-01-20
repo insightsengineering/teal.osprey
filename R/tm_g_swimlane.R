@@ -418,8 +418,8 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           marker_color = NULL,
           marker_color_opt = NULL,
           anno_txt = .(if (length(anno_txt_var) > 0) quote(ADSL[, anno_txt_var]) else NULL),
-          yref_line = .(vref_line),
-          ytick_at = waiver(),
+          xref_line = .(vref_line),
+          xtick_at = waiver(),
           xlab = .(x_label),
           title = "Swimlane Plot"
         )
@@ -476,8 +476,8 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
           } else {
             NULL
           }),
-          yref_line = .(vref_line),
-          ytick_at = waiver(),
+          xref_line = .(vref_line),
+          xtick_at = waiver(),
           xlab = .(x_label),
           title = "Swimlane Plot"
         )
