@@ -97,7 +97,8 @@ app <- init(
           }
           # Generating user-defined event flags.
           ADAE <- ADAE \%>\% add_event_flags()"
-    )
+    ),
+    check = TRUE
   ),
   modules = root_modules(
     tm_g_ae_oview(
