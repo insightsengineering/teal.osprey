@@ -273,7 +273,6 @@ srv_g_ae_sub <- function(input,
 
   plt <- reactive({
     validate(need(input$arm_var, "Please select an arm variable."))
-    validate(need(input$groups, "Please select at least one 'Group Variable'."))
     ADAE_FILTERED <- datasets$get_data("ADAE", filtered = TRUE) # nolint
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
 
