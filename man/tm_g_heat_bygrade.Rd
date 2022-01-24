@@ -23,7 +23,7 @@ tm_g_heat_bygrade(
 }
 \arguments{
 \item{label}{(\code{character(1)})\cr
-menu item label of the module in the teal app}
+menu item label of the module in the teal app.}
 
 \item{sl_dataname}{(\code{character}) subject level dataset name,
 needs to be available in the list passed to the \code{data}
@@ -57,7 +57,7 @@ This variable is a derived logical variable. Usually it can be derived from \cod
 specify to \code{NA} if no concomitant medications data is available}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
-Defines initial font-size it's possible range. \code{fontsize} is set for
+Defines initial possible range of font-size. \code{fontsize} is set for
 \code{\link[teal:optionalSliderInputValMinMax]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
 plot.}
 
@@ -68,7 +68,7 @@ vector to indicate default value, minimum and maximum values.}
 vector to indicate default value, minimum and maximum values.}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display the heatmap by grade as a shiny module
