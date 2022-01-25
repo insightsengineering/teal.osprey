@@ -20,7 +20,7 @@ to the module who called it.}
 \item{footnotes}{(\code{character}) default footnotes}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
-Defines initial font-size it's possible range. \code{fontsize} is set for
+Defines initial possible range of font-size. \code{fontsize} is set for
 \code{\link[teal:optionalSliderInputValMinMax]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
 plot.}
 }
