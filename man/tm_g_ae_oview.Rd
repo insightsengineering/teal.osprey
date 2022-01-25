@@ -110,7 +110,7 @@ app <- init(
       ),
       flag_var_anl = choices_selected(
         selected = "AEREL1",
-        choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
+        choices = variable_choices(ADAE, c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")),
       ),
       plot_height = c(600, 200, 2000)
     )
