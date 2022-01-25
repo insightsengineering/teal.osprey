@@ -16,7 +16,7 @@ tm_g_ae_oview(
 }
 \arguments{
 \item{label}{(\code{character(1)})\cr
-menu item label of the module in the teal app}
+menu item label of the module in the teal app.}
 
 \item{dataname}{(\code{character(1)})\cr
 analysis data used in the teal module, needs to be
@@ -31,8 +31,10 @@ details.}
 \code{choices_selected} object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)}
 
-\item{fontsize}{(\code{numeric}) vector with 3 values, selected font size and font size range,
-default is \code{c(5, 3, 7)}}
+\item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
+Defines initial possible range of font-size. \code{fontsize} is set for
+\code{\link[teal:optionalSliderInputValMinMax]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
+plot.}
 
 \item{plot_height}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
@@ -41,7 +43,7 @@ vector to indicate default value, minimum and maximum values.}
 vector to indicate default value, minimum and maximum values.}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display the AE overview plot as a shiny module

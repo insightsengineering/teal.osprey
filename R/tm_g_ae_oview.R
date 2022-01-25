@@ -7,8 +7,6 @@
 #' @param flag_var_anl ([`teal::choices_selected`])
 #'   `choices_selected` object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
-#' @param fontsize (`numeric`) vector with 3 values, selected font size and font size range,
-#' default is \code{c(5, 3, 7)}
 #'
 #' @inherit argument_convention return
 #'
