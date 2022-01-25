@@ -302,7 +302,7 @@ srv_g_ae_oview <- function(input,
       flag_labels <- anl_labels[names(anl_labels) %in% .(input$flag_var_anl)]
       flags <- .(as.name(anl_name)) %>%
         select(all_of(.(input$flag_var_anl))) %>%
-        rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", sorted_flag_labels[x]))
+        rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", flag_labels[x]))
     }))
 
     chunks_push_new_line()
