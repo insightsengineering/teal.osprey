@@ -27,8 +27,7 @@ object with all available choices and the pre-selected option for variable
 names that can be used as \code{arm_var}. See \code{\link[teal:choices_selected]{teal::choices_selected()}} for
 details.}
 
-\item{group_var}{(\code{character(1)} or \code{choices_selected})\cr
-subgroups variables. See \code{\link[teal:choices_selected]{teal::choices_selected()}} for details.}
+\item{group_var}{(\code{choices_selected}) subgroups variables. See \code{\link[teal:choices_selected]{teal::choices_selected()}} for details.}
 
 \item{plot_height}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
