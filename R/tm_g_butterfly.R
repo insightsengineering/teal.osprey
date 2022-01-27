@@ -459,16 +459,14 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
     })
 
     # Insert the plot into a plot_with_settings module from teal.devel
-    callModule(
-      plot_with_settings_srv,
+    plot_with_settings_srv(
       id = "butterflyplot",
       plot_r = plot_r,
       height = plot_height,
       width = plot_width
     )
 
-    callModule(
-      module = get_rcode_srv,
+    get_rcode_srv(
       id = "rcode",
       datasets = datasets,
       modal_title = paste("R code for", label),

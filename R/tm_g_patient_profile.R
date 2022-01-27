@@ -1056,16 +1056,14 @@ srv_g_patient_profile <- function(id,
       chunks_safe_eval()
     })
 
-    callModule(
-      plot_with_settings_srv,
+    plot_with_settings_srv(
       id = "patientprofileplot",
       plot_r = plot_r,
       height = plot_height,
       width = plot_width
     )
 
-    callModule(
-      module = get_rcode_srv,
+    get_rcode_srv(
       id = "rcode",
       datasets = datasets,
       modal_title = paste("R code for", label),

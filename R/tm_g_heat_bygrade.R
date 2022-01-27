@@ -426,8 +426,7 @@ srv_g_heatmap_bygrade <- function(id,
     })
 
 
-    callModule(
-      module = get_rcode_srv,
+    get_rcode_srv(
       id = "rcode",
       datasets = datasets,
       modal_title = paste("R code for", label),

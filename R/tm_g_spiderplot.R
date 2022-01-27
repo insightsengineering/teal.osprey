@@ -371,16 +371,14 @@ srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width)
       chunks_safe_eval()
     })
 
-    callModule(
-      plot_with_settings_srv,
+    plot_with_settings_srv(
       id = "spiderplot",
       plot_r = plot_r,
       height = plot_height,
       width = plot_width
     )
 
-    callModule(
-      module = get_rcode_srv,
+    get_rcode_srv(
       id = "rcode",
       datasets = datasets,
       modal_title = paste("R code for", label),

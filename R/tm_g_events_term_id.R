@@ -340,8 +340,7 @@ srv_g_events_term_id <- function(id,
       chunks_safe_eval()
     })
 
-    callModule(
-      module = get_rcode_srv,
+    get_rcode_srv(
       id = "rcode",
       datasets = datasets,
       modal_title = paste("R code for", label),

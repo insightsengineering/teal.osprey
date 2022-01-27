@@ -66,8 +66,7 @@ srv_g_decorate <- function(id,
 
     class(plot_r) <- c(class(plot_r), "reactive")
 
-    callModule(
-      plot_with_settings_srv,
+    plot_with_settings_srv(
       id = plot_id,
       plot_r = plot_r,
       height = plot_height,
