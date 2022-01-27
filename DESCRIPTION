@@ -25,7 +25,7 @@ Imports:
     dplyr,
     ggplot2,
     purrr,
-    rtables (>= 0.4.0.2.1),
+    rtables (>= 0.4.1),
     teal.devel (>= 0.2.13),
     tern (>= 0.7.6),
     tidyr
