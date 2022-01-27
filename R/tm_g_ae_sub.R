@@ -169,8 +169,7 @@ srv_g_ae_sub <- function(input,
                          plot_height,
                          plot_width) {
   init_chunks()
-  font_size <- callModule(
-    srv_g_decorate,
+  font_size <- srv_g_decorate(
     id = NULL,
     plt = plt,
     plot_height = plot_height,

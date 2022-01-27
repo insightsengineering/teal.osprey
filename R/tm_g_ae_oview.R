@@ -207,7 +207,7 @@ srv_g_ae_oview <- function(input,
                            plot_height,
                            plot_width) {
   init_chunks()
-  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width)
+  font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width)
 
   observeEvent(list(input$diff_ci_method, input$conf_level), {
     req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))

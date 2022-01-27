@@ -197,7 +197,7 @@ srv_g_events_term_id <- function(input,
                                  label,
                                  plot_height,
                                  plot_width) {
-  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+  font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
   init_chunks()
 

@@ -297,7 +297,7 @@ srv_g_heatmap_bygrade <- function(input,
                                   plot_height,
                                   plot_width) {
   init_chunks()
-  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+  font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
   observeEvent(cm_dataname, {
     if (!is.na(cm_dataname)) {
