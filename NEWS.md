@@ -1,3 +1,5 @@
+* Added basic logging to the modules.
+
 # teal.osprey 0.1.11.9015.7
 
 ### Breaking changes
