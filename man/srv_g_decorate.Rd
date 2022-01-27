@@ -5,9 +5,7 @@
 \title{Helper server function to decorate plot output}
 \usage{
 srv_g_decorate(
-  input,
-  output,
-  session,
+  id,
   plot_id = "out",
   plt = reactive(NULL),
   plot_height,
@@ -15,12 +13,7 @@ srv_g_decorate(
 )
 }
 \arguments{
-\item{input}{the session's \code{input} object}
-
-\item{output}{the session's \code{output} object}
-
-\item{session}{session object is an environment that can be used to access information
-and functionality relating to the session}
+\item{id}{(\code{character}) id of the module}
 
 \item{plot_id}{(\code{character}) id for plot output}
 

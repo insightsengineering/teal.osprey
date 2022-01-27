@@ -319,10 +319,12 @@ srv_g_waterfall <- function(id,
       }
 
       # get variables
-      bar_color_var <- if (!is.null(input$bar_color_var) && input$bar_color_var != "None" && input$bar_color_var != "") {
-        input$bar_color_var
+      bar_color_var <- if (!is.null(input$bar_color_var) &&
+                           input$bar_color_var != "None" &&
+                           input$bar_color_var != "") {
+          input$bar_color_var
       } else {
-        NULL
+          NULL
       }
       sort_var <- if (!is.null(input$sort_var) && input$sort_var != "None" && input$sort_var != "") {
         input$sort_var
@@ -361,7 +363,9 @@ srv_g_waterfall <- function(id,
         ytick_at <- 20
       }
 
-      adsl_vars <- unique(c("USUBJID", "STUDYID", bar_color_var, sort_var, add_label_var_sl, anno_txt_var_sl, facet_var))
+      adsl_vars <- unique(
+        c("USUBJID", "STUDYID", bar_color_var, sort_var, add_label_var_sl, anno_txt_var_sl, facet_var)
+      )
       adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", bar_var))
       adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
       adrs_paramcd <- unique(c(add_label_paramcd_rs, anno_txt_paramcd_rs))
