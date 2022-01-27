@@ -1,7 +1,7 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Version: 0.1.11.9015.7
-Date: 2021-10-13
+Version: 0.1.12.9000
+Date: 2022-01-27
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
     person("Chendi", "Liao", , "chendi.liao@roche.com", role = "aut"),
@@ -16,25 +16,25 @@ License: Apache License 2.0 | file LICENSE
 URL: https://github.com/insightsengineering/teal.osprey/
 BugReports: https://github.com/insightsengineering/teal.osprey/issues
 Depends:
-    osprey (>= 0.1.11),
+    osprey (>= 0.1.12),
     R (>= 3.6),
     shiny,
-    teal (>= 0.10.0)
+    teal (>= 0.10.1)
 Imports:
     checkmate,
     dplyr,
     ggplot2,
     logger (>= 0.2.0),
     purrr,
-    rtables (>= 0.3.8),
-    teal.devel (>= 0.2.12),
-    tern (>= 0.7.5),
+    rtables (>= 0.4.1),
+    teal.devel (>= 0.2.13),
+    tern (>= 0.7.6),
     tidyr
 Suggests:
     knitr,
     rmarkdown,
-    scda.2021(>= 0.1.1),
-    scda(>= 0.1.1),
+    scda.2021(>= 0.1.2),
+    scda(>= 0.1.2),
     testthat (>= 2.0)
 VignetteBuilder:
     knitr
