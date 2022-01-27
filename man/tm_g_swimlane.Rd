@@ -21,12 +21,12 @@ tm_g_swimlane(
   plot_width = NULL,
   pre_output = NULL,
   post_output = NULL,
-  y_label = "Time from First Treatment (Day)"
+  x_label = "Time from First Treatment (Day)"
 )
 }
 \arguments{
 \item{label}{(\code{character(1)})\cr
-menu item label of the module in the teal app}
+menu item label of the module in the teal app.}
 
 \item{dataname}{analysis data used for plotting, needs to be available in the list passed to the \code{data}
 argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ADSL" should be
@@ -71,10 +71,10 @@ output to put the output into context. For example a title.}
 output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 
-\item{y_label}{the label of the y axis}
+\item{x_label}{the label of the x axis}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data

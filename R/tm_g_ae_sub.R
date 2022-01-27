@@ -4,8 +4,7 @@
 #'
 #' @inheritParams teal.devel::standard_layout
 #' @inheritParams argument_convention
-#' @param group_var (`character(1)` or `choices_selected`)\cr
-#'  subgroups variables. See [teal::choices_selected()] for details.
+#' @param group_var (`choices_selected`) subgroups variables. See [teal::choices_selected()] for details.
 #'
 #' @author Liming Li (Lil128) \email{liming.li@roche.com}
 #' @author Molly He (hey59) \email{hey59@gene.com}
@@ -273,7 +272,6 @@ srv_g_ae_sub <- function(input,
 
   plt <- reactive({
     validate(need(input$arm_var, "Please select an arm variable."))
-    validate(need(input$groups, "Please select at least one 'Group Variable'."))
     ADAE_FILTERED <- datasets$get_data("ADAE", filtered = TRUE) # nolint
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
 

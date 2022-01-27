@@ -10,7 +10,7 @@
 #' `@inheritParams argument_convention`
 #'
 #' @param label (`character(1)`)\cr
-#'  menu item label of the module in the teal app
+#'  menu item label of the module in the teal app.
 #'
 #' @param dataname (\code{character(1)})\cr
 #'  analysis data used in the teal module, needs to be
@@ -26,7 +26,7 @@
 #'  See [teal::choices_selected()] for details.
 #'
 #' @param fontsize (`numeric(1)` or `numeric(3)`)\cr
-#'  Defines initial font-size it's possible range. `fontsize` is set for
+#'  Defines initial possible range of font-size. `fontsize` is set for
 #'  [teal::optionalSliderInputValMinMax()] which controls font-size in the output
 #'  plot.
 #'
@@ -36,7 +36,7 @@
 #' @param plot_width (`numeric(3)`)\cr
 #'  vector to indicate default value, minimum and maximum values.
 #'
-#' @return the [teal::module()] object
+#' @return the [teal::module()] object.
 #'
 #' @name argument_convention
 #'

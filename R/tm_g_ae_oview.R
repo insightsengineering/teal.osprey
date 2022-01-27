@@ -7,8 +7,6 @@
 #' @param flag_var_anl ([`teal::choices_selected`])
 #'   `choices_selected` object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
-#' @param fontsize (`numeric`) vector with 3 values, selected font size and font size range,
-#' default is \code{c(5, 3, 7)}
 #'
 #' @inherit argument_convention return
 #'
@@ -67,7 +65,8 @@
 #'           }
 #'           # Generating user-defined event flags.
 #'           ADAE <- ADAE %>% add_event_flags()"
-#'     )
+#'     ),
+#'     check = TRUE
 #'   ),
 #'   modules = root_modules(
 #'     tm_g_ae_oview(
@@ -79,7 +78,7 @@
 #'       ),
 #'       flag_var_anl = choices_selected(
 #'         selected = "AEREL1",
-#'         choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
+#'         choices = variable_choices(ADAE, c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")),
 #'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
@@ -270,9 +269,6 @@ srv_g_ae_oview <- function(input,
     ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
     ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
-    # assign labels back to the data
-    anl_labels <- rtables::var_labels(ANL)
-
     anl_name <- paste0(dataname, "_FILTERED")
     assign(anl_name, ANL_FILTERED)
 
@@ -300,8 +296,10 @@ srv_g_ae_oview <- function(input,
       arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
       trt <- .(input$arm_trt)
       ref <- .(input$arm_ref)
+      anl_labels <- rtables::var_labels(.(as.name(anl_name)))
       flags <- .(as.name(anl_name)) %>%
-        select(all_of(.(input$flag_var_anl)))
+        select(all_of(.(input$flag_var_anl))) %>%
+        rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
     }))
 
     chunks_push_new_line()

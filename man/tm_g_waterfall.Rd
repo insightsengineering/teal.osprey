@@ -30,7 +30,7 @@ tm_g_waterfall(
 }
 \arguments{
 \item{label}{(\code{character(1)})\cr
-menu item label of the module in the teal app}
+menu item label of the module in the teal app.}
 
 \item{dataname_tr}{tumor burden analysis data used in teal module to plot as bar height, needs to
 be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}}
@@ -93,7 +93,7 @@ output to put the output into context. For example the
 \code{\link[shiny]{helpText}} elements are useful.}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 This is teal module that generates a waterfall plot for ADaM data

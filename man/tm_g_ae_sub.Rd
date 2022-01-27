@@ -16,7 +16,7 @@ tm_g_ae_sub(
 }
 \arguments{
 \item{label}{(\code{character(1)})\cr
-menu item label of the module in the teal app}
+menu item label of the module in the teal app.}
 
 \item{dataname}{(\code{character(1)})\cr
 analysis data used in the teal module, needs to be
@@ -27,8 +27,7 @@ object with all available choices and the pre-selected option for variable
 names that can be used as \code{arm_var}. See \code{\link[teal:choices_selected]{teal::choices_selected()}} for
 details.}
 
-\item{group_var}{(\code{character(1)} or \code{choices_selected})\cr
-subgroups variables. See \code{\link[teal:choices_selected]{teal::choices_selected()}} for details.}
+\item{group_var}{(\code{choices_selected}) subgroups variables. See \code{\link[teal:choices_selected]{teal::choices_selected()}} for details.}
 
 \item{plot_height}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
@@ -37,12 +36,12 @@ vector to indicate default value, minimum and maximum values.}
 vector to indicate default value, minimum and maximum values.}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
-Defines initial font-size it's possible range. \code{fontsize} is set for
+Defines initial possible range of font-size. \code{fontsize} is set for
 \code{\link[teal:optionalSliderInputValMinMax]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
 plot.}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display the AE by subgroups plot as a teal module
