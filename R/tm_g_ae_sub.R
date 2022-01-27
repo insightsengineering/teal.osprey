@@ -160,218 +160,218 @@ ui_g_ae_sub <- function(id, ...) {
   )
 }
 
-srv_g_ae_sub <- function(input,
-                         output,
-                         session,
+srv_g_ae_sub <- function(id,
                          datasets,
                          dataname,
                          label,
                          plot_height,
                          plot_width) {
-  init_chunks()
-  font_size <- srv_g_decorate(
-    id = NULL,
-    plt = plt,
-    plot_height = plot_height,
-    plot_width = plot_width
-  )
-  observeEvent(input$arm_var, {
-    req(!is.null(input$arm_var))
-    arm_var <- input$arm_var
-    ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-
-    choices <- unique(ADAE_FILTERED[[arm_var]])
-
-    validate(need(
-      length(choices) > 0, "Please include multiple treatment"
-    ))
-    if (length(choices) == 1) {
-      ref_index <- 1
-    } else {
-      ref_index <- 2
-    }
-
-    updateSelectInput(
-      session,
-      "arm_trt",
-      selected = choices[1],
-      choices = choices
+  moduleServer(id, function(input, output, session) {
+    init_chunks()
+    font_size <- srv_g_decorate(
+      id = NULL,
+      plt = plt,
+      plot_height = plot_height,
+      plot_width = plot_width
     )
-    updateSelectInput(
-      session,
-      "arm_ref",
-      selected = choices[ref_index],
-      choices = choices
-    )
-  })
+    observeEvent(input$arm_var, {
+      req(!is.null(input$arm_var))
+      arm_var <- input$arm_var
+      ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
 
-  observeEvent(list(input$ci, input$conf_level, input$arm_trt, input$arm_ref), {
-    diff_ci_method <- input$ci
-    conf_level <- input$conf_level
-    trt <- input$arm_trt
-    ref <- input$arm_ref
-    updateTextAreaInput(
-      session,
-      "foot",
-      value = sprintf(
-        "Note: %d%% CI is calculated using %s\nTRT: %s; CONT: %s",
-        round(conf_level * 100),
-        name_ci(diff_ci_method),
-        trt,
-        ref
-      )
-    )
-  })
+      choices <- unique(ADAE_FILTERED[[arm_var]])
 
-  observeEvent(input$groups, {
-    ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-    output$grouplabel_output <- renderUI({
-      grps <- input$groups
-      lo <- lapply(seq_along(grps), function(index) {
-        grp <- grps[index]
-        choices <- levels(ADAE_FILTERED[[grp]])
-        sel <- optionalSelectInput(
-          session$ns(sprintf("groups__%s", index)),
-          grp,
-          choices,
-          multiple = TRUE,
-          selected = choices
-        )
-        textname <- sprintf("text_%s_out", index)
-        txt <- uiOutput(session$ns(textname))
-        observeEvent(
-          eventExpr = input[[sprintf("groups__%s", index)]],
-          handlerExpr = {
-            output[[textname]] <- renderUI({
-              if (!is.null(input[[sprintf("groups__%s", index)]])) {
-                l <- input[[sprintf("groups__%s", index)]]
-                l2 <- lapply(seq_along(l), function(i) {
-                  nm <- sprintf("groups__%s__level__%s", index, i)
-                  label <- sprintf("Label for %s, Level %s", grp, l[i])
-                  textInput(session$ns(nm), label, l[i])
-                })
-                tagList(textInput(
-                  session$ns(
-                    sprintf("groups__%s__level__%s", index, "all")
-                  ),
-                  sprintf("Label for %s", grp), grp
-                ), l2)
-              }
-            })
-          }
-        )
-        tagList(sel, txt)
-      })
-      ret <- tagList(lo)
-      ret
-    })
-  })
-
-  plt <- reactive({
-    validate(need(input$arm_var, "Please select an arm variable."))
-    ADAE_FILTERED <- datasets$get_data("ADAE", filtered = TRUE) # nolint
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-
-    validate(need(
-      is.factor(ADSL_FILTERED[[input$arm_var]]),
-      "Selected arm variable needs to be a factor."
-    ))
-    validate(
-      need(
-        all(c(input$arm_trt, input$arm_ref) %in% levels(ADSL_FILTERED[[input$arm_var]])),
-        "Updating treatment and control selections."
-      )
-    )
-    validate(
-      need(
-        all(c(input$arm_trt, input$arm_ref) %in% unique(ADAE_FILTERED[[input$arm_var]])),
-        "The dataset does not contain subjects with AE events from both the control and treatment arms."
-      ),
-      need(
-        all(input$groups %in% names(ADAE_FILTERED)) &
-          all(input$groups %in% names(ADSL_FILTERED)),
-        "Check all selected subgroups are columns in ADAE and ADSL."
-      ),
-      need(
-        input$arm_trt != input$arm_ref,
-        "Treatment and Reference can not be identical."
-      )
-    )
-
-    chunks_reset(envir = environment())
-
-    chunks_push(bquote({
-      id <- ADAE_FILTERED$USUBJID
-      arm <- as.factor(ADAE_FILTERED[[.(input$arm_var)]])
-      arm_sl <- as.character(ADSL_FILTERED[[.(input$arm_var)]])
-      grps <- .(input$groups)
-      subgroups <- ADAE_FILTERED[grps]
-      subgroups_sl <- ADSL_FILTERED[grps]
-      trt <- .(input$arm_trt)
-      ref <- .(input$arm_ref)
-    }))
-    chunks_push_new_line()
-
-    chunks_safe_eval()
-
-    group_labels <- lapply(seq_along(input$groups), function(x) {
-      items <- input[[sprintf("groups__%s", x)]]
-      if (length(items) > 0) {
-        l <- lapply(seq_along(items), function(y) {
-          input[[sprintf("groups__%s__level__%s", x, y)]]
-        })
-        names(l) <- items
-        l[["Total"]] <- input[[sprintf("groups__%s__level__%s", x, "all")]]
-        l
+      validate(need(
+        length(choices) > 0, "Please include multiple treatment"
+      ))
+      if (length(choices) == 1) {
+        ref_index <- 1
+      } else {
+        ref_index <- 2
       }
+
+      updateSelectInput(
+        session,
+        "arm_trt",
+        selected = choices[1],
+        choices = choices
+      )
+      updateSelectInput(
+        session,
+        "arm_ref",
+        selected = choices[ref_index],
+        choices = choices
+      )
     })
 
-    if (length(unlist(group_labels)) == 0) {
-      chunks_push(bquote({
-        group_labels <- NULL
-      }))
-    } else {
-      chunks_push(bquote({
-        group_labels <- .(group_labels)
-        names(group_labels) <- .(input$groups)
-      }))
-    }
-
-    chunks_push_new_line()
-    chunks_safe_eval()
-    chunks_push(bquote({
-      osprey::g_ae_sub(
-        id = id,
-        arm = arm,
-        arm_sl = arm_sl,
-        trt = trt,
-        ref = ref,
-        subgroups = subgroups,
-        subgroups_sl = subgroups_sl,
-        subgroups_levels = group_labels,
-        conf_level = .(input$conf_level),
-        diff_ci_method = .(input$ci),
-        fontsize = .(font_size()),
-        arm_n = .(input$arm_n),
-        draw = TRUE
+    observeEvent(list(input$ci, input$conf_level, input$arm_trt, input$arm_ref), {
+      diff_ci_method <- input$ci
+      conf_level <- input$conf_level
+      trt <- input$arm_trt
+      ref <- input$arm_ref
+      updateTextAreaInput(
+        session,
+        "foot",
+        value = sprintf(
+          "Note: %d%% CI is calculated using %s\nTRT: %s; CONT: %s",
+          round(conf_level * 100),
+          name_ci(diff_ci_method),
+          trt,
+          ref
+        )
       )
-    }))
+    })
 
-    chunks_safe_eval()
-  })
-
-  callModule(
-    module = get_rcode_srv,
-    id = "rcode",
-    datasets = datasets,
-    modal_title = paste("R code for", label),
-    datanames = unique(c(
-      dataname,
-      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+    observeEvent(input$groups, {
+      ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      output$grouplabel_output <- renderUI({
+        grps <- input$groups
+        lo <- lapply(seq_along(grps), function(index) {
+          grp <- grps[index]
+          choices <- levels(ADAE_FILTERED[[grp]])
+          sel <- optionalSelectInput(
+            session$ns(sprintf("groups__%s", index)),
+            grp,
+            choices,
+            multiple = TRUE,
+            selected = choices
+          )
+          textname <- sprintf("text_%s_out", index)
+          txt <- uiOutput(session$ns(textname))
+          observeEvent(
+            eventExpr = input[[sprintf("groups__%s", index)]],
+            handlerExpr = {
+              output[[textname]] <- renderUI({
+                if (!is.null(input[[sprintf("groups__%s", index)]])) {
+                  l <- input[[sprintf("groups__%s", index)]]
+                  l2 <- lapply(seq_along(l), function(i) {
+                    nm <- sprintf("groups__%s__level__%s", index, i)
+                    label <- sprintf("Label for %s, Level %s", grp, l[i])
+                    textInput(session$ns(nm), label, l[i])
+                  })
+                  tagList(textInput(
+                    session$ns(
+                      sprintf("groups__%s__level__%s", index, "all")
+                    ),
+                    sprintf("Label for %s", grp), grp
+                  ), l2)
+                }
+              })
+            }
+          )
+          tagList(sel, txt)
+        })
+        ret <- tagList(lo)
+        ret
       })
-    ))
-  )
+    })
+
+    plt <- reactive({
+      validate(need(input$arm_var, "Please select an arm variable."))
+      ADAE_FILTERED <- datasets$get_data("ADAE", filtered = TRUE) # nolint
+      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+
+      validate(need(
+        is.factor(ADSL_FILTERED[[input$arm_var]]),
+        "Selected arm variable needs to be a factor."
+      ))
+      validate(
+        need(
+          all(c(input$arm_trt, input$arm_ref) %in% levels(ADSL_FILTERED[[input$arm_var]])),
+          "Updating treatment and control selections."
+        )
+      )
+      validate(
+        need(
+          all(c(input$arm_trt, input$arm_ref) %in% unique(ADAE_FILTERED[[input$arm_var]])),
+          "The dataset does not contain subjects with AE events from both the control and treatment arms."
+        ),
+        need(
+          all(input$groups %in% names(ADAE_FILTERED)) &
+            all(input$groups %in% names(ADSL_FILTERED)),
+          "Check all selected subgroups are columns in ADAE and ADSL."
+        ),
+        need(
+          input$arm_trt != input$arm_ref,
+          "Treatment and Reference can not be identical."
+        )
+      )
+
+      chunks_reset(envir = environment())
+
+      chunks_push(bquote({
+        id <- ADAE_FILTERED$USUBJID
+        arm <- as.factor(ADAE_FILTERED[[.(input$arm_var)]])
+        arm_sl <- as.character(ADSL_FILTERED[[.(input$arm_var)]])
+        grps <- .(input$groups)
+        subgroups <- ADAE_FILTERED[grps]
+        subgroups_sl <- ADSL_FILTERED[grps]
+        trt <- .(input$arm_trt)
+        ref <- .(input$arm_ref)
+      }))
+      chunks_push_new_line()
+
+      chunks_safe_eval()
+
+      group_labels <- lapply(seq_along(input$groups), function(x) {
+        items <- input[[sprintf("groups__%s", x)]]
+        if (length(items) > 0) {
+          l <- lapply(seq_along(items), function(y) {
+            input[[sprintf("groups__%s__level__%s", x, y)]]
+          })
+          names(l) <- items
+          l[["Total"]] <- input[[sprintf("groups__%s__level__%s", x, "all")]]
+          l
+        }
+      })
+
+      if (length(unlist(group_labels)) == 0) {
+        chunks_push(bquote({
+          group_labels <- NULL
+        }))
+      } else {
+        chunks_push(bquote({
+          group_labels <- .(group_labels)
+          names(group_labels) <- .(input$groups)
+        }))
+      }
+
+      chunks_push_new_line()
+      chunks_safe_eval()
+      chunks_push(bquote({
+        osprey::g_ae_sub(
+          id = id,
+          arm = arm,
+          arm_sl = arm_sl,
+          trt = trt,
+          ref = ref,
+          subgroups = subgroups,
+          subgroups_sl = subgroups_sl,
+          subgroups_levels = group_labels,
+          conf_level = .(input$conf_level),
+          diff_ci_method = .(input$ci),
+          fontsize = .(font_size()),
+          arm_n = .(input$arm_n),
+          draw = TRUE
+        )
+      }))
+
+      chunks_safe_eval()
+    })
+
+    callModule(
+      module = get_rcode_srv,
+      id = "rcode",
+      datasets = datasets,
+      modal_title = paste("R code for", label),
+      datanames = unique(c(
+        dataname,
+        vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+          if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+        })
+      ))
+    )
+  })
 }

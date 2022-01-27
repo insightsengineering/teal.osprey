@@ -208,186 +208,188 @@ ui_g_spider <- function(id, ...) {
   )
 }
 
-srv_g_spider <- function(input, output, session, datasets, dataname, label, plot_height, plot_width) {
-  vals <- reactiveValues(spiderplot = NULL) # nolint
+srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width) {
+  moduleServer(id, function(input, output, session) {
+    vals <- reactiveValues(spiderplot = NULL) # nolint
 
-  # initialize chunks
-  init_chunks()
+    # initialize chunks
+    init_chunks()
 
-  # render plot
-  plot_r <- reactive({
+    # render plot
+    plot_r <- reactive({
 
-    # get datasets ---
+      # get datasets ---
 
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-    ADTR_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ADTR_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
-    adtr_name <- paste0(dataname, "_FILTERED")
-    assign(adtr_name, ADTR_FILTERED) # so that we can refer to the 'correct' data name
-
-
-    # restart chunks & include current environment ---
-
-    chunks_reset(envir = environment())
+      adtr_name <- paste0(dataname, "_FILTERED")
+      assign(adtr_name, ADTR_FILTERED) # so that we can refer to the 'correct' data name
 
 
-    # get inputs ---
+      # restart chunks & include current environment ---
 
-    paramcd <- input$paramcd # nolint
-    x_var <- input$x_var
-    y_var <- input$y_var
-    marker_var <- input$marker_var
-    line_colorby_var <- input$line_colorby_var
-    anno_txt_var <- input$anno_txt_var
-    legend_on <- input$legend_on # nolint
-    xfacet_var <- input$xfacet_var
-    yfacet_var <- input$yfacet_var
-    vref_line <- input$vref_line
-    href_line <- input$href_line
+      chunks_reset(envir = environment())
 
-    validate(need(paramcd, "`Parameter - from ADTR` field is empty"))
-    validate(need(x_var, "`X-axis Variable` field is empty"))
-    validate(need(y_var, "`Y-axis Variable` field is empty"))
-    validate(need(marker_var, "`Marker Symbol By Variable` field is empty"))
-    validate(need(line_colorby_var, "`Color By Variable (Line)` field is empty"))
-    validate(need(nrow(ADSL_FILTERED) > 0, "ADSL data has zero rows"))
-    validate(need(nrow(ADTR_FILTERED) > 0, "ADTR data has zero rows"))
 
-    # define variables ---
+      # get inputs ---
 
-    # if variable is not in ADSL, then take from domain VADs
-    varlist <- c(xfacet_var, yfacet_var, marker_var, line_colorby_var)
-    varlist_from_adsl <- varlist[varlist %in% names(ADSL_FILTERED)]
-    varlist_from_anl <- varlist[!varlist %in% names(ADSL_FILTERED)]
+      paramcd <- input$paramcd # nolint
+      x_var <- input$x_var
+      y_var <- input$y_var
+      marker_var <- input$marker_var
+      line_colorby_var <- input$line_colorby_var
+      anno_txt_var <- input$anno_txt_var
+      legend_on <- input$legend_on # nolint
+      xfacet_var <- input$xfacet_var
+      yfacet_var <- input$yfacet_var
+      vref_line <- input$vref_line
+      href_line <- input$href_line
 
-    adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
-    adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
+      validate(need(paramcd, "`Parameter - from ADTR` field is empty"))
+      validate(need(x_var, "`X-axis Variable` field is empty"))
+      validate(need(y_var, "`Y-axis Variable` field is empty"))
+      validate(need(marker_var, "`Marker Symbol By Variable` field is empty"))
+      validate(need(line_colorby_var, "`Color By Variable (Line)` field is empty"))
+      validate(need(nrow(ADSL_FILTERED) > 0, "ADSL data has zero rows"))
+      validate(need(nrow(ADTR_FILTERED) > 0, "ADTR data has zero rows"))
 
-    # preprocessing of datasets to chunks ---
+      # define variables ---
 
-    # vars definition
-    adtr_vars <- adtr_vars[adtr_vars != "None"]
-    adtr_vars <- adtr_vars[!is.null(adtr_vars)]
+      # if variable is not in ADSL, then take from domain VADs
+      varlist <- c(xfacet_var, yfacet_var, marker_var, line_colorby_var)
+      varlist_from_adsl <- varlist[varlist %in% names(ADSL_FILTERED)]
+      varlist_from_anl <- varlist[!varlist %in% names(ADSL_FILTERED)]
 
-    # merge
-    chunks_push(bquote({
-      ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
-      ADTR <- .(as.name(adtr_name))[, .(adtr_vars)] %>% as.data.frame() # nolint
+      adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
+      adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
 
-      ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID")) # nolint
-      ANL <- ANL %>% # nolint
-        group_by(USUBJID, PARAMCD) %>%
-        arrange(ANL[, .(x_var)]) %>%
-        as.data.frame()
-    }))
+      # preprocessing of datasets to chunks ---
 
-    chunks_push_new_line()
+      # vars definition
+      adtr_vars <- adtr_vars[adtr_vars != "None"]
+      adtr_vars <- adtr_vars[!is.null(adtr_vars)]
 
-    # format and filter
-    chunks_push(bquote({
-      ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-      ANL_f <- ANL %>% # nolint
-        filter(PARAMCD == .(paramcd)) %>%
-        as.data.frame()
-    }))
+      # merge
+      chunks_push(bquote({
+        ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
+        ADTR <- .(as.name(adtr_name))[, .(adtr_vars)] %>% as.data.frame() # nolint
 
-    chunks_push_new_line()
+        ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID")) # nolint
+        ANL <- ANL %>% # nolint
+          group_by(USUBJID, PARAMCD) %>%
+          arrange(ANL[, .(x_var)]) %>%
+          as.data.frame()
+      }))
 
-    # check
-    chunks_safe_eval()
+      chunks_push_new_line()
 
-    # reference lines preprocessing - vertical
-    vref_line <- as_numeric_from_comma_sep_str(vref_line)
-    validate(need(
-      all(!is.na(vref_line)),
-      "Please enter a comma separated set of numeric values for the vertical reference line(s)"
-    ))
+      # format and filter
+      chunks_push(bquote({
+        ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+        ANL_f <- ANL %>% # nolint
+          filter(PARAMCD == .(paramcd)) %>%
+          as.data.frame()
+      }))
 
-    # reference lines preprocessing - horizontal
-    href_line <- as_numeric_from_comma_sep_str(href_line)
-    validate(need(
-      all(!is.na(href_line)),
-      "Please enter a comma separated set of numeric values for the horizontal reference line(s)"
-    ))
+      chunks_push_new_line()
 
-    # label
-    if (anno_txt_var) {
-      chunks_push(quote(lbl <- list(txt_ann = as.factor(ANL_f$USUBJID))))
-    } else {
-      chunks_push(quote(lbl <- NULL))
-    }
+      # check
+      chunks_safe_eval()
 
-    chunks_push_new_line()
+      # reference lines preprocessing - vertical
+      vref_line <- as_numeric_from_comma_sep_str(vref_line)
+      validate(need(
+        all(!is.na(vref_line)),
+        "Please enter a comma separated set of numeric values for the vertical reference line(s)"
+      ))
 
-    # check
-    chunks_safe_eval()
+      # reference lines preprocessing - horizontal
+      href_line <- as_numeric_from_comma_sep_str(href_line)
+      validate(need(
+        all(!is.na(href_line)),
+        "Please enter a comma separated set of numeric values for the horizontal reference line(s)"
+      ))
 
-    # plot code to chunks ---
+      # label
+      if (anno_txt_var) {
+        chunks_push(quote(lbl <- list(txt_ann = as.factor(ANL_f$USUBJID))))
+      } else {
+        chunks_push(quote(lbl <- NULL))
+      }
 
-    chunks_push(bquote({
-      osprey::g_spiderplot(
-        marker_x = ANL_f[, .(x_var)],
-        marker_id = ANL_f$USUBJID,
-        marker_y = ANL_f[, .(y_var)],
-        line_colby = .(if (line_colorby_var != "None") {
-          bquote(ANL_f[, .(line_colorby_var)])
-        } else {
-          NULL
-        }),
-        marker_shape = .(if (marker_var != "None") {
-          bquote(ANL_f[, .(marker_var)])
-        } else {
-          NULL
-        }),
-        marker_size = 4,
-        datalabel_txt = lbl,
-        facet_rows = .(if (!is.null(yfacet_var)) {
-          bquote(data.frame(ANL_f[, .(yfacet_var)]))
-        } else {
-          NULL
-        }),
-        facet_columns = .(if (!is.null(xfacet_var)) {
-          bquote(data.frame(ANL_f[, .(xfacet_var)]))
-        } else {
-          NULL
-        }),
-        vref_line = .(vref_line),
-        href_line = .(href_line),
-        x_label = if (is.null(rtables::var_labels(ADTR_FILTERED[.(x_var)]))) {
-          .(x_var)
-        } else {
-          rtables::var_labels(ADTR_FILTERED[.(x_var)])
-        },
-        y_label = if (is.null(rtables::var_labels(ADTR_FILTERED[.(y_var)]))) {
-          .(y_var)
-        } else {
-          rtables::var_labels(ADTR_FILTERED[.(y_var)])
-        },
-        show_legend = .(legend_on)
-      )
-    }))
+      chunks_push_new_line()
 
-    chunks_safe_eval()
+      # check
+      chunks_safe_eval()
+
+      # plot code to chunks ---
+
+      chunks_push(bquote({
+        osprey::g_spiderplot(
+          marker_x = ANL_f[, .(x_var)],
+          marker_id = ANL_f$USUBJID,
+          marker_y = ANL_f[, .(y_var)],
+          line_colby = .(if (line_colorby_var != "None") {
+            bquote(ANL_f[, .(line_colorby_var)])
+          } else {
+            NULL
+          }),
+          marker_shape = .(if (marker_var != "None") {
+            bquote(ANL_f[, .(marker_var)])
+          } else {
+            NULL
+          }),
+          marker_size = 4,
+          datalabel_txt = lbl,
+          facet_rows = .(if (!is.null(yfacet_var)) {
+            bquote(data.frame(ANL_f[, .(yfacet_var)]))
+          } else {
+            NULL
+          }),
+          facet_columns = .(if (!is.null(xfacet_var)) {
+            bquote(data.frame(ANL_f[, .(xfacet_var)]))
+          } else {
+            NULL
+          }),
+          vref_line = .(vref_line),
+          href_line = .(href_line),
+          x_label = if (is.null(rtables::var_labels(ADTR_FILTERED[.(x_var)]))) {
+            .(x_var)
+          } else {
+            rtables::var_labels(ADTR_FILTERED[.(x_var)])
+          },
+          y_label = if (is.null(rtables::var_labels(ADTR_FILTERED[.(y_var)]))) {
+            .(y_var)
+          } else {
+            rtables::var_labels(ADTR_FILTERED[.(y_var)])
+          },
+          show_legend = .(legend_on)
+        )
+      }))
+
+      chunks_safe_eval()
+    })
+
+    callModule(
+      plot_with_settings_srv,
+      id = "spiderplot",
+      plot_r = plot_r,
+      height = plot_height,
+      width = plot_width
+    )
+
+    callModule(
+      module = get_rcode_srv,
+      id = "rcode",
+      datasets = datasets,
+      modal_title = paste("R code for", label),
+      datanames = unique(c(
+        dataname,
+        vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+          if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+        })
+      ))
+    )
   })
-
-  callModule(
-    plot_with_settings_srv,
-    id = "spiderplot",
-    plot_r = plot_r,
-    height = plot_height,
-    width = plot_width
-  )
-
-  callModule(
-    module = get_rcode_srv,
-    id = "rcode",
-    datasets = datasets,
-    modal_title = paste("R code for", label),
-    datanames = unique(c(
-      dataname,
-      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-      })
-    ))
-  )
 }
