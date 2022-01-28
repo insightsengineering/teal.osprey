@@ -1,6 +1,6 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Version: 0.1.12.9000
+Version: 0.1.12.9001
 Date: 2022-01-27
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
@@ -24,6 +24,7 @@ Imports:
     checkmate,
     dplyr,
     ggplot2,
+    logger (>= 0.2.0),
     purrr,
     rtables (>= 0.4.1),
     teal.devel (>= 0.2.13),

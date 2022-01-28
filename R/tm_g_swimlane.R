@@ -113,6 +113,7 @@ tm_g_swimlane <- function(label,
                           pre_output = NULL,
                           post_output = NULL,
                           x_label = "Time from First Treatment (Day)") {
+  logger::log_info("Initializing tm_g_swimlane")
   args <- as.list(environment())
 
   checkmate::assert_string(label)

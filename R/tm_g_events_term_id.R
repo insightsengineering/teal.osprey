@@ -56,6 +56,7 @@ tm_g_events_term_id <- function(label,
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
                                 plot_width = NULL) {
+  logger::log_info("Initializing tm_g_events_term_id")
   checkmate::assert_string(label)
   checkmate::assert_class(term_var, classes = "choices_selected")
   checkmate::assert_class(arm_var, classes = "choices_selected")
