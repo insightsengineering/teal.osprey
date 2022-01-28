@@ -117,7 +117,7 @@ tm_g_butterfly <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
-
+  logger::log_info("Initializing tm_g_butterfly")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
   checkmate::assert_class(filter_var, classes = "choices_selected", null.ok = TRUE)
