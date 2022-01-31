@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">teal.osprey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12.9001</span>
       </span>
     </div>
 
@@ -34,15 +34,6 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/insightsengineering/teal.osprey">
     <span class="fa fa-github"></span>
@@ -69,9 +60,7 @@ Other releases
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">srv_g_decorate</span><span class="op">(</span>
-  <span class="va">input</span>,
-  <span class="va">output</span>,
-  <span class="va">session</span>,
+  <span class="va">id</span>,
   plot_id <span class="op">=</span> <span class="st">"out"</span>,
   plt <span class="op">=</span> <span class="fu">reactive</span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>,
   <span class="va">plot_height</span>,
@@ -81,13 +70,8 @@ Other releases
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>input</dt>
-<dd><p>the session's <code>input</code> object</p></dd>
-<dt>output</dt>
-<dd><p>the session's <code>output</code> object</p></dd>
-<dt>session</dt>
-<dd><p>session object is an environment that can be used to access information
-and functionality relating to the session</p></dd>
+    <dl><dt>id</dt>
+<dd><p>(<code>character</code>) id of the module</p></dd>
 <dt>plot_id</dt>
 <dd><p>(<code>character</code>) id for plot output</p></dd>
 <dt>plt</dt>
