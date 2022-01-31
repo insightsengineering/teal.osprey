@@ -286,9 +286,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
   )
 }
 
-srv_g_heatmap_bygrade <- function(input,
-                                  output,
-                                  session,
+srv_g_heatmap_bygrade <- function(id,
                                   datasets,
                                   sl_dataname,
                                   ex_dataname,
@@ -297,142 +295,143 @@ srv_g_heatmap_bygrade <- function(input,
                                   label,
                                   plot_height,
                                   plot_width) {
-  init_chunks()
-  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+  moduleServer(id, function(input, output, session) {
+    init_chunks()
+    font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
-  observeEvent(cm_dataname, {
-    if (!is.na(cm_dataname)) {
-      output$plot_cm_output <- renderUI({
-        checkboxInput(
-          session$ns("plot_cm"),
-          "Yes",
-          value = !is.na(cm_dataname)
-        )
-      })
-    }
-  })
+    observeEvent(cm_dataname, {
+      if (!is.na(cm_dataname)) {
+        output$plot_cm_output <- renderUI({
+          checkboxInput(
+            session$ns("plot_cm"),
+            "Yes",
+            value = !is.na(cm_dataname)
+          )
+        })
+      }
+    })
 
-  observeEvent(input$plot_cm, {
-    ADCM_FILTERED <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
-    ADCM_label <- rtables::var_labels(datasets$get_data(cm_dataname, filtered = FALSE)) # nolint
-    rtables::var_labels(ADCM_FILTERED) <- ADCM_label
-    choices <- levels(ADCM_FILTERED[[input$conmed_var]])
-
-    updateSelectInput(
-      session,
-      "conmed_level",
-      selected = choices[1:3],
-      choices = choices
-    )
-  })
-
-  plt <- reactive({
-    validate(need(input$id_var, "Please select a ID variable."))
-    validate(need(input$visit_var, "Please select a visit variable."))
-    validate(need(input$ongo_var, "Please select a Study Ongoing Status variable."))
-    validate(need(input$heat_var, "Please select a heat variable."))
-    validate(need(length(input$anno_var) <= 2, "Please include no more than 2 annotation variables"))
-
-    ADSL_FILTERED <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
-    ADEX_FILTERED <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
-    ADAE_FILTERED <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
-
-    # assign labels back to the data
-    rtables::var_labels(ADSL_FILTERED) <-
-      rtables::var_labels(datasets$get_data(sl_dataname, filtered = FALSE))
-    rtables::var_labels(ADEX_FILTERED) <-
-      rtables::var_labels(datasets$get_data(ex_dataname, filtered = FALSE))
-    rtables::var_labels(ADAE_FILTERED) <-
-      rtables::var_labels(datasets$get_data(ae_dataname, filtered = FALSE))
-
-    validate(need(nrow(ADSL_FILTERED) > 0, "Please select at least one subject"))
-
-    validate(need(
-      input$ongo_var %in% names(ADEX_FILTERED),
-      paste("Study Ongoing Status must be a variable in", ex_dataname, sep = " ")
-    ))
-
-    validate(need(
-      checkmate::test_logical(ADEX_FILTERED[[input$ongo_var]], min.len = 1, any.missing = FALSE),
-      "Study Ongoing Status must be a logical variable"
-    ))
-
-    validate(need(
-      all(input$anno_var %in% names(ADSL_FILTERED)),
-      paste("Please only select annotation variable(s) in", sl_dataname, sep = " ")
-    ))
-
-    validate(need(
-      !(input$id_var %in% input$anno_var),
-      paste("Please de-select", input$id_var, "in annotation variable(s)", sep = " ")
-    ))
-
-    if (input$plot_cm) {
+    observeEvent(input$plot_cm, {
       ADCM_FILTERED <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
       ADCM_label <- rtables::var_labels(datasets$get_data(cm_dataname, filtered = FALSE)) # nolint
       rtables::var_labels(ADCM_FILTERED) <- ADCM_label
-      validate(
-        need(
-          input$conmed_var %in% names(ADCM_FILTERED),
-          paste("Please select a Conmed Variable in", cm_dataname, sep = " ")
-        )
+      choices <- levels(ADCM_FILTERED[[input$conmed_var]])
+
+      updateSelectInput(
+        session,
+        "conmed_level",
+        selected = choices[1:3],
+        choices = choices
       )
+    })
+
+    plt <- reactive({
+      validate(need(input$id_var, "Please select a ID variable."))
+      validate(need(input$visit_var, "Please select a visit variable."))
+      validate(need(input$ongo_var, "Please select a Study Ongoing Status variable."))
+      validate(need(input$heat_var, "Please select a heat variable."))
+      validate(need(length(input$anno_var) <= 2, "Please include no more than 2 annotation variables"))
+
+      ADSL_FILTERED <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
+      ADEX_FILTERED <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
+      ADAE_FILTERED <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
+
+      # assign labels back to the data
+      rtables::var_labels(ADSL_FILTERED) <-
+        rtables::var_labels(datasets$get_data(sl_dataname, filtered = FALSE))
+      rtables::var_labels(ADEX_FILTERED) <-
+        rtables::var_labels(datasets$get_data(ex_dataname, filtered = FALSE))
+      rtables::var_labels(ADAE_FILTERED) <-
+        rtables::var_labels(datasets$get_data(ae_dataname, filtered = FALSE))
+
+      validate(need(nrow(ADSL_FILTERED) > 0, "Please select at least one subject"))
+
       validate(need(
-        all(input$conmed_level %in% levels(ADCM_FILTERED[[input$conmed_var]])),
-        "Updating Conmed Levels"
+        input$ongo_var %in% names(ADEX_FILTERED),
+        paste("Study Ongoing Status must be a variable in", ex_dataname, sep = " ")
       ))
-    }
 
-    chunks_reset(envir = environment())
+      validate(need(
+        checkmate::test_logical(ADEX_FILTERED[[input$ongo_var]], min.len = 1, any.missing = FALSE),
+        "Study Ongoing Status must be a logical variable"
+      ))
 
-    if (input$plot_cm) {
-      validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
-      chunks_push(bquote({
-        conmed_data <- ADCM_FILTERED %>%
-          filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
-        conmed_var <- .(input$conmed_var)
-        conmed_data[[conmed_var]] <-
-          factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
-        rtables::var_labels(conmed_data)[conmed_var] <- rtables::var_labels(ADCM_FILTERED)[conmed_var]
-      }))
-    } else {
-      chunks_push(bquote({
-        conmed_data <- conmed_var <- NULL
-      }))
-    }
-    chunks_safe_eval()
+      validate(need(
+        all(input$anno_var %in% names(ADSL_FILTERED)),
+        paste("Please only select annotation variable(s) in", sl_dataname, sep = " ")
+      ))
 
-    validate(
-      need(length(input$conmed_level) <= 3, "Please select no more than 3 conmed levels")
-    )
+      validate(need(
+        !(input$id_var %in% input$anno_var),
+        paste("Please de-select", input$id_var, "in annotation variable(s)", sep = " ")
+      ))
 
-    chunks_push(bquote({
-      exp_data <- ADEX_FILTERED %>%
-        filter(PARCAT1 == "INDIVIDUAL")
+      if (input$plot_cm) {
+        ADCM_FILTERED <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
+        ADCM_label <- rtables::var_labels(datasets$get_data(cm_dataname, filtered = FALSE)) # nolint
+        rtables::var_labels(ADCM_FILTERED) <- ADCM_label
+        validate(
+          need(
+            input$conmed_var %in% names(ADCM_FILTERED),
+            paste("Please select a Conmed Variable in", cm_dataname, sep = " ")
+          )
+        )
+        validate(need(
+          all(input$conmed_level %in% levels(ADCM_FILTERED[[input$conmed_var]])),
+          "Updating Conmed Levels"
+        ))
+      }
 
-      osprey::g_heat_bygrade(
-        id_var = .(input$id_var),
-        exp_data = exp_data,
-        visit_var = .(input$visit_var),
-        ongo_var = .(input$ongo_var),
-        anno_data = ADSL_FILTERED[c(.(input$anno_var), .(input$id_var))],
-        anno_var = .(input$anno_var),
-        heat_data = ADAE_FILTERED %>% select(!!.(input$id_var), !!.(input$visit_var), !!.(input$heat_var)),
-        heat_color_var = .(input$heat_var),
-        conmed_data = conmed_data,
-        conmed_var = conmed_var
+      chunks_reset(envir = environment())
+
+      if (input$plot_cm) {
+        validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
+        chunks_push(bquote({
+          conmed_data <- ADCM_FILTERED %>%
+            filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
+          conmed_var <- .(input$conmed_var)
+          conmed_data[[conmed_var]] <-
+            factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
+          rtables::var_labels(conmed_data)[conmed_var] <- rtables::var_labels(ADCM_FILTERED)[conmed_var]
+        }))
+      } else {
+        chunks_push(bquote({
+          conmed_data <- conmed_var <- NULL
+        }))
+      }
+      chunks_safe_eval()
+
+      validate(
+        need(length(input$conmed_level) <= 3, "Please select no more than 3 conmed levels")
       )
-    }))
 
-    chunks_safe_eval()
+      chunks_push(bquote({
+        exp_data <- ADEX_FILTERED %>%
+          filter(PARCAT1 == "INDIVIDUAL")
+
+        osprey::g_heat_bygrade(
+          id_var = .(input$id_var),
+          exp_data = exp_data,
+          visit_var = .(input$visit_var),
+          ongo_var = .(input$ongo_var),
+          anno_data = ADSL_FILTERED[c(.(input$anno_var), .(input$id_var))],
+          anno_var = .(input$anno_var),
+          heat_data = ADAE_FILTERED %>% select(!!.(input$id_var), !!.(input$visit_var), !!.(input$heat_var)),
+          heat_color_var = .(input$heat_var),
+          conmed_data = conmed_data,
+          conmed_var = conmed_var
+        )
+      }))
+
+      chunks_safe_eval()
+    })
+
+
+    get_rcode_srv(
+      id = "rcode",
+      datasets = datasets,
+      modal_title = paste("R code for", label),
+      datanames = datasets$datanames()
+    )
   })
-
-
-  callModule(
-    module = get_rcode_srv,
-    id = "rcode",
-    datasets = datasets,
-    modal_title = paste("R code for", label),
-    datanames = datasets$datanames()
-  )
 }

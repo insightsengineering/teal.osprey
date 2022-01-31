@@ -190,168 +190,167 @@ ui_g_events_term_id <- function(id, ...) {
   )
 }
 
-srv_g_events_term_id <- function(input,
-                                 output,
-                                 session,
+srv_g_events_term_id <- function(id,
                                  datasets,
                                  dataname,
                                  label,
                                  plot_height,
                                  plot_width) {
-  font_size <- callModule(srv_g_decorate, id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+  moduleServer(id, function(input, output, session) {
+    font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
-  init_chunks()
+    init_chunks()
 
-  observeEvent(list(input$diff_ci_method, input$conf_level), {
-    req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
-    diff_ci_method <- input$diff_ci_method
-    conf_level <- input$conf_level
-    updateTextAreaInput(
-      session,
-      "foot",
-      value = sprintf(
-        "Note: %d%% CI is calculated using %s",
-        round(conf_level * 100),
-        name_ci(diff_ci_method)
-      )
-    )
-  })
-
-
-  observeEvent(input$sort,
-    handlerExpr = {
-      sort <- if (is.null(input$sort)) " " else input$sort
-      updateTextInput(
+    observeEvent(list(input$diff_ci_method, input$conf_level), {
+      req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
+      diff_ci_method <- input$diff_ci_method
+      conf_level <- input$conf_level
+      updateTextAreaInput(
         session,
-        "title",
+        "foot",
         value = sprintf(
-          "Common AE Table %s",
-          c(
-            "term" = "Sorted by Term",
-            "riskdiff" = "Sorted by Risk Difference",
-            "meanrisk" = "Sorted by Mean Risk",
-            " " = ""
-          )[sort]
+          "Note: %d%% CI is calculated using %s",
+          round(conf_level * 100),
+          name_ci(diff_ci_method)
         )
       )
-    },
-    ignoreNULL = FALSE
-  )
+    })
 
-  observeEvent(input$arm_var,
-    handlerExpr = {
-      arm_var <- input$arm_var
-      ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
-      choices <- levels(ANL_FILTERED[[arm_var]])
-
-      validate(need(length(choices) > 0, "Please include multiple treatment"))
-      if (length(choices) == 1) {
-        trt_index <- 1
-      } else {
-        trt_index <- 2
-      }
-
-      updateSelectInput(
-        session,
-        "arm_ref",
-        selected = choices[1],
-        choices = choices
-      )
-      updateSelectInput(
-        session,
-        "arm_trt",
-        selected = choices[trt_index],
-        choices = choices
-      )
-    },
-    ignoreNULL = TRUE
-  )
-
-  plt <- reactive({
-    validate(
-      need(input$term, "'Term Variable' field is missing"),
-      need(input$arm_var, "'Arm Variable' field is missing")
+    observeEvent(input$sort,
+      handlerExpr = {
+        sort <- if (is.null(input$sort)) " " else input$sort
+        updateTextInput(
+          session,
+          "title",
+          value = sprintf(
+            "Common AE Table %s",
+            c(
+              "term" = "Sorted by Term",
+              "riskdiff" = "Sorted by Risk Difference",
+              "meanrisk" = "Sorted by Mean Risk",
+              " " = ""
+            )[sort]
+          )
+        )
+      },
+      ignoreNULL = FALSE
     )
 
-    validate(need(
-      input$arm_trt != input$arm_ref,
-      paste("Treatment arm and control arm cannot be the same.",
-        "Please select a different treatment arm or control arm",
-        sep = "\n"
+    observeEvent(input$arm_var,
+      handlerExpr = {
+        arm_var <- input$arm_var
+        ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+
+        choices <- levels(ANL_FILTERED[[arm_var]])
+
+        validate(need(length(choices) > 0, "Please include multiple treatment"))
+        if (length(choices) == 1) {
+          trt_index <- 1
+        } else {
+          trt_index <- 2
+        }
+
+        updateSelectInput(
+          session,
+          "arm_ref",
+          selected = choices[1],
+          choices = choices
+        )
+        updateSelectInput(
+          session,
+          "arm_trt",
+          selected = choices[trt_index],
+          choices = choices
+        )
+      },
+      ignoreNULL = TRUE
+    )
+
+    plt <- reactive({
+      validate(
+        need(input$term, "'Term Variable' field is missing"),
+        need(input$arm_var, "'Arm Variable' field is missing")
       )
-    ))
 
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-    ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-    rtables::var_labels(ANL_FILTERED) <- rtables::var_labels(datasets$get_data(dataname, filtered = FALSE)) # nolint
+      validate(need(
+        input$arm_trt != input$arm_ref,
+        paste("Treatment arm and control arm cannot be the same.",
+          "Please select a different treatment arm or control arm",
+          sep = "\n"
+        )
+      ))
 
-    anl_name <- paste0(dataname, "_FILTERED")
-    assign(anl_name, ANL_FILTERED)
+      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      rtables::var_labels(ANL_FILTERED) <- rtables::var_labels(datasets$get_data(dataname, filtered = FALSE)) # nolint
 
-    validate(need(
-      all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])),
-      "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
-    ))
+      anl_name <- paste0(dataname, "_FILTERED")
+      assign(anl_name, ANL_FILTERED)
 
-    chunks_reset(envir = environment())
+      validate(need(
+        all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])),
+        "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
+      ))
 
-    adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
-    anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
+      chunks_reset(envir = environment())
 
-    chunks_push(bquote({
-      ANL <- merge( # nolint
-        x = ADSL_FILTERED[, .(adsl_vars), drop = FALSE],
-        y = .(as.name(anl_name))[, .(anl_vars), drop = FALSE],
-        all.x = FALSE,
-        all.y = FALSE,
-        by = c("USUBJID", "STUDYID")
-      )
-    }))
+      adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
+      anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
 
-    chunks_safe_eval()
-    validate(need(nrow(chunks_get_var("ANL")) > 10, "need at least 10 data points"))
+      chunks_push(bquote({
+        ANL <- merge( # nolint
+          x = ADSL_FILTERED[, .(adsl_vars), drop = FALSE],
+          y = .(as.name(anl_name))[, .(anl_vars), drop = FALSE],
+          all.x = FALSE,
+          all.y = FALSE,
+          by = c("USUBJID", "STUDYID")
+        )
+      }))
 
-    chunks_push(bquote({
-      term <- ANL[[.(input$term)]]
-      id <- ANL$USUBJID
-      arm <- ANL[[.(input$arm_var)]]
-      arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
-      ref <- .(input$arm_ref)
-      trt <- .(input$arm_trt)
+      chunks_safe_eval()
+      validate(need(nrow(chunks_get_var("ANL")) > 10, "need at least 10 data points"))
 
-      osprey::g_events_term_id(
-        term = term,
-        id = id,
-        arm = arm,
-        arm_N = arm_N,
-        ref = .(input$arm_ref),
-        trt = .(input$arm_trt),
-        sort_by = .(input$sort),
-        rate_range = .(input$raterange),
-        diff_range = .(input$diffrange),
-        reversed = .(input$reverse),
-        conf_level = .(input$conf_level),
-        diff_ci_method = .(input$diff_ci_method),
-        axis_side = .(input$axis),
-        fontsize = .(font_size()),
-        draw = TRUE
-      )
-    }))
+      chunks_push(bquote({
+        term <- ANL[[.(input$term)]]
+        id <- ANL$USUBJID
+        arm <- ANL[[.(input$arm_var)]]
+        arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
+        ref <- .(input$arm_ref)
+        trt <- .(input$arm_trt)
 
-    chunks_safe_eval()
+        osprey::g_events_term_id(
+          term = term,
+          id = id,
+          arm = arm,
+          arm_N = arm_N,
+          ref = .(input$arm_ref),
+          trt = .(input$arm_trt),
+          sort_by = .(input$sort),
+          rate_range = .(input$raterange),
+          diff_range = .(input$diffrange),
+          reversed = .(input$reverse),
+          conf_level = .(input$conf_level),
+          diff_ci_method = .(input$diff_ci_method),
+          axis_side = .(input$axis),
+          fontsize = .(font_size()),
+          draw = TRUE
+        )
+      }))
+
+      chunks_safe_eval()
+    })
+
+    get_rcode_srv(
+      id = "rcode",
+      datasets = datasets,
+      modal_title = paste("R code for", label),
+      datanames = unique(c(
+        dataname,
+        vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+          if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+        })
+      ))
+    )
   })
-
-  callModule(
-    module = get_rcode_srv,
-    id = "rcode",
-    datasets = datasets,
-    modal_title = paste("R code for", label),
-    datanames = unique(c(
-      dataname,
-      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-      })
-    ))
-  )
 }

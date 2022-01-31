@@ -243,7 +243,7 @@ ui_g_swimlane <- function(id, ...) {
   )
 }
 
-srv_g_swimlane <- function(input, output, session, datasets, dataname,
+srv_g_swimlane <- function(id, datasets, dataname,
                            marker_pos_var,
                            marker_shape_var,
                            marker_shape_opt,
@@ -253,261 +253,260 @@ srv_g_swimlane <- function(input, output, session, datasets, dataname,
                            plot_height,
                            plot_width,
                            x_label) {
+  moduleServer(id, function(input, output, session) {
+    # use teal.devel code chunks
+    init_chunks()
 
-  # use teal.devel code chunks
-  init_chunks()
+    # if marker position is NULL, then hide options for marker shape and color
+    output$marker_shape_sel <- renderUI({
+      if (dataname == "ADSL" || is.null(marker_shape_var) || is.null(input$marker_pos_var)) {
+        NULL
+      } else {
+        ns <- session$ns
+        optionalSelectInput(
+          ns("marker_shape_var"), "Marker Shape",
+          choices = marker_shape_var$choices,
+          selected = marker_shape_var$selected, multiple = FALSE,
+          label_help = helpText("from ", code(dataname))
+        )
+      }
+    })
+    output$marker_color_sel <- renderUI({
+      if (dataname == "ADSL" || is.null(marker_color_var) || is.null(input$marker_pos_var)) {
+        NULL
+      } else {
+        ns <- session$ns
+        optionalSelectInput(
+          ns("marker_color_var"), "Marker Color",
+          choices = marker_color_var$choices,
+          selected = marker_color_var$selected, multiple = FALSE,
+          label_help = helpText("from ", code(dataname))
+        )
+      }
+    })
 
-  # if marker position is NULL, then hide options for marker shape and color
-  output$marker_shape_sel <- renderUI({
-    if (dataname == "ADSL" || is.null(marker_shape_var) || is.null(input$marker_pos_var)) {
-      NULL
-    } else {
-      ns <- session$ns
-      optionalSelectInput(
-        ns("marker_shape_var"), "Marker Shape",
-        choices = marker_shape_var$choices,
-        selected = marker_shape_var$selected, multiple = FALSE,
-        label_help = helpText("from ", code(dataname))
-      )
-    }
-  })
-  output$marker_color_sel <- renderUI({
-    if (dataname == "ADSL" || is.null(marker_color_var) || is.null(input$marker_pos_var)) {
-      NULL
-    } else {
-      ns <- session$ns
-      optionalSelectInput(
-        ns("marker_color_var"), "Marker Color",
-        choices = marker_color_var$choices,
-        selected = marker_color_var$selected, multiple = FALSE,
-        label_help = helpText("from ", code(dataname))
-      )
-    }
-  })
-
-  # create plot
-  plot_r <- reactive({
-    # DATA GETTERS
-    validate(need("ADSL" %in% datasets$datanames(), "ADSL needs to be defined in datasets"))
-    validate(need(
-      (length(datasets$datanames()) == 1 && dataname == "ADSL") ||
-        (length(datasets$datanames()) >= 2 && dataname != "ADSL"),
-      "Please either add just 'ADSL' as dataname when just ADSL is available
-      In case 2 datasets are available ADSL is not supposed to be the dataname."
-    ))
-    validate(need(input$bar_var, "Please select a variable to map to the bar length."))
-
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-    if (dataname != "ADSL") {
-      ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-      anl_name <- paste0(dataname, "_FILTERED")
-      assign(anl_name, ANL_FILTERED)
-    }
-
-    # Restart the chunks for showing code
-    chunks_reset(envir = environment())
-
-    # VARIABLE GETTERS
-    # lookup bar variables
-    bar_var <- input$bar_var
-    bar_color_var <- input$bar_color_var
-    sort_var <- input$sort_var
-
-    # Check if marker inputs can be used
-    if (dataname == "ADSL") {
-      marker_pos_var <- NULL
-      marker_shape_var <- NULL
-      marker_color_var <- NULL
-    } else {
-      marker_pos_var <- input$marker_pos_var
-      marker_shape_var <- input$marker_shape_var
-      marker_color_var <- input$marker_color_var
-    }
-
-    anno_txt_var <- input$anno_txt_var
-
-    # If reference lines are requested
-    vref_line <- as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)())
-    validate(need(
-      all(!is.na(vref_line)),
-      "Please enter a comma separated set of numeric values for the reference line(s)"
-    ))
-
-    # validate input values
-    if (dataname == "ADSL") {
-      validate_has_data(ADSL_FILTERED, min_nrow = 3)
-      validate_has_variable(ADSL_FILTERED, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
-    } else {
-      validate_has_data(ADSL_FILTERED, min_nrow = 3)
-      validate_has_variable(ADSL_FILTERED, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
-
-      validate_has_data(ANL_FILTERED, min_nrow = 3)
-      validate_has_variable(
-        ANL_FILTERED,
-        unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
-      )
-    }
-
-    # DATA / VARIABLE VALIDATIONS
-
-    adsl_vars <- unique(c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
-
-    if (dataname != "ADSL") {
-      anl_vars <- unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var)) # nolint
+    # create plot
+    plot_r <- reactive({
+      # DATA GETTERS
+      validate(need("ADSL" %in% datasets$datanames(), "ADSL needs to be defined in datasets"))
       validate(need(
-        !any(c(marker_pos_var, marker_shape_var, marker_color_var) %in% adsl_vars),
-        "marker-related variables need to come from marker data"
+        (length(datasets$datanames()) == 1 && dataname == "ADSL") ||
+          (length(datasets$datanames()) >= 2 && dataname != "ADSL"),
+        "Please either add just 'ADSL' as dataname when just ADSL is available
+      In case 2 datasets are available ADSL is not supposed to be the dataname."
       ))
-    }
+      validate(need(input$bar_var, "Please select a variable to map to the bar length."))
 
-    # WRITE VARIABLES TO CHUNKS
+      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      if (dataname != "ADSL") {
+        ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+        anl_name <- paste0(dataname, "_FILTERED")
+        assign(anl_name, ANL_FILTERED)
+      }
 
-    chunks_push(bquote({
-      bar_var <- .(bar_var)
-      bar_color_var <- .(bar_color_var)
-      sort_var <- .(sort_var)
-      marker_pos_var <- .(marker_pos_var)
-      marker_shape_var <- .(marker_shape_var)
-      marker_color_var <- .(marker_color_var)
-      anno_txt_var <- .(anno_txt_var)
-    }))
-    chunks_push_new_line()
+      # Restart the chunks for showing code
+      chunks_reset(envir = environment())
 
-    # WRITE DATA SELECTION TO CHUNKS
+      # VARIABLE GETTERS
+      # lookup bar variables
+      bar_var <- input$bar_var
+      bar_color_var <- input$bar_color_var
+      sort_var <- input$sort_var
 
-    if (dataname == "ADSL") {
+      # Check if marker inputs can be used
+      if (dataname == "ADSL") {
+        marker_pos_var <- NULL
+        marker_shape_var <- NULL
+        marker_color_var <- NULL
+      } else {
+        marker_pos_var <- input$marker_pos_var
+        marker_shape_var <- input$marker_shape_var
+        marker_color_var <- input$marker_color_var
+      }
+
+      anno_txt_var <- input$anno_txt_var
+
+      # If reference lines are requested
+      vref_line <- as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)())
+      validate(need(
+        all(!is.na(vref_line)),
+        "Please enter a comma separated set of numeric values for the reference line(s)"
+      ))
+
+      # validate input values
+      if (dataname == "ADSL") {
+        validate_has_data(ADSL_FILTERED, min_nrow = 3)
+        validate_has_variable(ADSL_FILTERED, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
+      } else {
+        validate_has_data(ADSL_FILTERED, min_nrow = 3)
+        validate_has_variable(ADSL_FILTERED, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
+
+        validate_has_data(ANL_FILTERED, min_nrow = 3)
+        validate_has_variable(
+          ANL_FILTERED,
+          unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
+        )
+      }
+
+      # DATA / VARIABLE VALIDATIONS
+
+      adsl_vars <- unique(c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
+
+      if (dataname != "ADSL") {
+        anl_vars <- unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var)) # nolint
+        validate(need(
+          !any(c(marker_pos_var, marker_shape_var, marker_color_var) %in% adsl_vars),
+          "marker-related variables need to come from marker data"
+        ))
+      }
+
+      # WRITE VARIABLES TO CHUNKS
+
       chunks_push(bquote({
-        ADSL_p <- ADSL_FILTERED # nolint
-        ADSL <- ADSL_p[, .(adsl_vars)] # nolint
-        # only take last part of USUBJID
-        ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+        bar_var <- .(bar_var)
+        bar_color_var <- .(bar_color_var)
+        sort_var <- .(sort_var)
+        marker_pos_var <- .(marker_pos_var)
+        marker_shape_var <- .(marker_shape_var)
+        marker_color_var <- .(marker_color_var)
+        anno_txt_var <- .(anno_txt_var)
       }))
-    } else {
-      anl_name <- paste0(dataname, "_FILTERED")
-      chunks_push(bquote({
-        ADSL_p <- ADSL_FILTERED # nolint
-        ANL_p <- .(as.name(anl_name)) # nolint
+      chunks_push_new_line()
 
-        ADSL <- ADSL_p[, .(adsl_vars)] # nolint
-        ANL <- merge( # nolint
-          x = ADSL,
-          y = ANL_p[, .(anl_vars)],
-          all.x = FALSE, all.y = FALSE,
-          by = c("USUBJID", "STUDYID")
-        )
-        # only take last part of USUBJID
-        ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-        ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-      }))
-    }
-    chunks_push_new_line() # empty line for pretty code
-    chunks_safe_eval()
+      # WRITE DATA SELECTION TO CHUNKS
+
+      if (dataname == "ADSL") {
+        chunks_push(bquote({
+          ADSL_p <- ADSL_FILTERED # nolint
+          ADSL <- ADSL_p[, .(adsl_vars)] # nolint
+          # only take last part of USUBJID
+          ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+        }))
+      } else {
+        anl_name <- paste0(dataname, "_FILTERED")
+        chunks_push(bquote({
+          ADSL_p <- ADSL_FILTERED # nolint
+          ANL_p <- .(as.name(anl_name)) # nolint
+
+          ADSL <- ADSL_p[, .(adsl_vars)] # nolint
+          ANL <- merge( # nolint
+            x = ADSL,
+            y = ANL_p[, .(anl_vars)],
+            all.x = FALSE, all.y = FALSE,
+            by = c("USUBJID", "STUDYID")
+          )
+          # only take last part of USUBJID
+          ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+          ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+        }))
+      }
+      chunks_push_new_line() # empty line for pretty code
+      chunks_safe_eval()
 
 
-    anl <- chunks_get_var("ANL")
-    plot_call <- if (dataname == "ADSL") {
-      bquote({
-        osprey::g_swimlane(
-          bar_id = ADSL[["USUBJID"]],
-          bar_length = ADSL[[bar_var]],
-          sort_by = .(if (length(sort_var) > 0) quote(ADSL[[sort_var]]) else NULL),
-          col_by = .(if (length(bar_color_var) > 0) quote(ADSL[[bar_color_var]]) else NULL),
-          marker_id = NULL,
-          marker_pos = NULL,
-          marker_shape = NULL,
-          marker_shape_opt = NULL,
-          marker_color = NULL,
-          marker_color_opt = NULL,
-          anno_txt = .(if (length(anno_txt_var) > 0) quote(ADSL[, anno_txt_var]) else NULL),
-          xref_line = .(vref_line),
-          xtick_at = waiver(),
-          xlab = .(x_label),
-          title = "Swimlane Plot"
-        )
-      })
-    } else {
-      bquote({
-        osprey::g_swimlane(
-          bar_id = ADSL[["USUBJID"]],
-          bar_length = ADSL[[bar_var]],
-          sort_by = .(if (length(sort_var) > 0) {
-            quote(ADSL[[sort_var]])
-          } else {
-            NULL
-          }),
-          col_by = .(if (length(bar_color_var) > 0) {
-            quote(ADSL[[bar_color_var]])
-          } else {
-            NULL
-          }),
-          marker_id = ANL[["USUBJID"]],
-          marker_pos = .(if (length(marker_pos_var) > 0) {
-            quote(ANL[[marker_pos_var]])
-          } else {
-            NULL
-          }),
-          marker_shape = .(if (length(marker_shape_var) > 0) {
-            quote(ANL[[marker_shape_var]])
-          } else {
-            NULL
-          }),
-          marker_shape_opt = .(if (length(marker_shape_var) == 0) {
-            NULL
-          } else if (length(marker_shape_var) > 0 &
-            all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt)) == TRUE) {
-            bquote(.(marker_shape_opt))
-          } else {
-            NULL
-          }),
-          marker_color = .(if (length(marker_color_var) > 0) {
-            quote(ANL[[marker_color_var]])
-          } else {
-            NULL
-          }),
-          marker_color_opt = .(if (length(marker_color_var) == 0) {
-            NULL
-          } else if (length(marker_color_var) > 0 &
-            all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt)) == TRUE) {
-            bquote(.(marker_color_opt))
-          } else {
-            NULL
-          }),
-          anno_txt = .(if (length(anno_txt_var) > 0) {
-            quote(ADSL[, anno_txt_var])
-          } else {
-            NULL
-          }),
-          xref_line = .(vref_line),
-          xtick_at = waiver(),
-          xlab = .(x_label),
-          title = "Swimlane Plot"
-        )
-      })
-    }
+      anl <- chunks_get_var("ANL")
+      plot_call <- if (dataname == "ADSL") {
+        bquote({
+          osprey::g_swimlane(
+            bar_id = ADSL[["USUBJID"]],
+            bar_length = ADSL[[bar_var]],
+            sort_by = .(if (length(sort_var) > 0) quote(ADSL[[sort_var]]) else NULL),
+            col_by = .(if (length(bar_color_var) > 0) quote(ADSL[[bar_color_var]]) else NULL),
+            marker_id = NULL,
+            marker_pos = NULL,
+            marker_shape = NULL,
+            marker_shape_opt = NULL,
+            marker_color = NULL,
+            marker_color_opt = NULL,
+            anno_txt = .(if (length(anno_txt_var) > 0) quote(ADSL[, anno_txt_var]) else NULL),
+            xref_line = .(vref_line),
+            xtick_at = waiver(),
+            xlab = .(x_label),
+            title = "Swimlane Plot"
+          )
+        })
+      } else {
+        bquote({
+          osprey::g_swimlane(
+            bar_id = ADSL[["USUBJID"]],
+            bar_length = ADSL[[bar_var]],
+            sort_by = .(if (length(sort_var) > 0) {
+              quote(ADSL[[sort_var]])
+            } else {
+              NULL
+            }),
+            col_by = .(if (length(bar_color_var) > 0) {
+              quote(ADSL[[bar_color_var]])
+            } else {
+              NULL
+            }),
+            marker_id = ANL[["USUBJID"]],
+            marker_pos = .(if (length(marker_pos_var) > 0) {
+              quote(ANL[[marker_pos_var]])
+            } else {
+              NULL
+            }),
+            marker_shape = .(if (length(marker_shape_var) > 0) {
+              quote(ANL[[marker_shape_var]])
+            } else {
+              NULL
+            }),
+            marker_shape_opt = .(if (length(marker_shape_var) == 0) {
+              NULL
+            } else if (length(marker_shape_var) > 0 &
+              all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt)) == TRUE) {
+              bquote(.(marker_shape_opt))
+            } else {
+              NULL
+            }),
+            marker_color = .(if (length(marker_color_var) > 0) {
+              quote(ANL[[marker_color_var]])
+            } else {
+              NULL
+            }),
+            marker_color_opt = .(if (length(marker_color_var) == 0) {
+              NULL
+            } else if (length(marker_color_var) > 0 &
+              all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt)) == TRUE) {
+              bquote(.(marker_color_opt))
+            } else {
+              NULL
+            }),
+            anno_txt = .(if (length(anno_txt_var) > 0) {
+              quote(ADSL[, anno_txt_var])
+            } else {
+              NULL
+            }),
+            xref_line = .(vref_line),
+            xtick_at = waiver(),
+            xlab = .(x_label),
+            title = "Swimlane Plot"
+          )
+        })
+      }
 
-    chunks_push(plot_call)
-    chunks_safe_eval()
+      chunks_push(plot_call)
+      chunks_safe_eval()
+    })
+
+    # Insert the plot into a plot_with_settings module from teal.devel
+    plot_with_settings_srv(
+      id = "swimlaneplot",
+      plot_r = plot_r,
+      height = plot_height,
+      width = plot_width
+    )
+
+    get_rcode_srv(
+      id = "rcode",
+      datasets = datasets,
+      modal_title = paste("R code for", label),
+      datanames = unique(c(
+        dataname,
+        vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+          if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+        })
+      ))
+    )
   })
-
-  # Insert the plot into a plot_with_settings module from teal.devel
-  callModule(
-    plot_with_settings_srv,
-    id = "swimlaneplot",
-    plot_r = plot_r,
-    height = plot_height,
-    width = plot_width
-  )
-
-  callModule(
-    module = get_rcode_srv,
-    id = "rcode",
-    datasets = datasets,
-    modal_title = paste("R code for", label),
-    datanames = unique(c(
-      dataname,
-      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-      })
-    ))
-  )
 }

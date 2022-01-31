@@ -228,7 +228,6 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
                                  plot_width = NULL,
                                  pre_output = NULL,
                                  post_output = NULL) {
-  logger::log_info("Initializing tm_g_patient_profile")
   args <- as.list(environment())
   checkmate::assert_string(label)
   checkmate::assert_string(sl_dataname)
@@ -396,9 +395,7 @@ ui_g_patient_profile <- function(id, ...) {
   )
 }
 
-srv_g_patient_profile <- function(input,
-                                  output,
-                                  session,
+srv_g_patient_profile <- function(id,
                                   datasets,
                                   sl_dataname,
                                   ex_dataname,
@@ -410,667 +407,667 @@ srv_g_patient_profile <- function(input,
                                   ae_line_col_opt,
                                   plot_height,
                                   plot_width) {
-  # initialize chunks
-  init_chunks()
+  moduleServer(id, function(input, output, session) {
+    # initialize chunks
+    init_chunks()
 
-  # only show the check box when domain data is available
-  observeEvent(ae_dataname, {
-    if (!is.na(ae_dataname)) {
-      output$select_ae_output <- renderUI({
-        checkboxInput(
-          session$ns("select_ae"),
-          "ADAE",
-          value = !is.na(ae_dataname)
-        )
-      })
-    }
-  })
-
-  observeEvent(ex_dataname, {
-    if (!is.na(ex_dataname)) {
-      output$select_ex_output <- renderUI({
-        checkboxInput(
-          session$ns("select_ex"),
-          "ADEX",
-          value = !is.na(ex_dataname)
-        )
-      })
-    }
-  })
-
-  observeEvent(rs_dataname, {
-    if (!is.na(rs_dataname)) {
-      output$select_rs_output <- renderUI({
-        checkboxInput(
-          session$ns("select_rs"),
-          "ADRS",
-          value = !is.na(rs_dataname)
-        )
-      })
-    }
-  })
-
-  observeEvent(cm_dataname, {
-    if (!is.na(cm_dataname)) {
-      output$select_cm_output <- renderUI({
-        checkboxInput(
-          session$ns("select_cm"),
-          "ADCM",
-          value = !is.na(cm_dataname)
-        )
-      })
-    }
-  })
-
-  observeEvent(lb_dataname, {
-    if (!is.na(lb_dataname)) {
-      output$select_lb_output <- renderUI({
-        checkboxInput(
-          session$ns("select_lb"),
-          "ADLB",
-          value = !is.na(lb_dataname)
-        )
-      })
-    }
-  })
-
-  observeEvent(input$select_lb, {
-    req(input$select_lb == TRUE && !is.null(input$lb_var))
-    ADLB_FILTERED <- datasets$get_data(lb_dataname, filtered = TRUE) # nolint
-    choices <- unique(ADLB_FILTERED[[input$lb_var]])
-    choices_selected <- if (length(choices) > 5) choices[1:5] else choices
-
-    updateSelectInput(
-      session,
-      "lb_var_show",
-      selected = choices_selected,
-      choices = choices
-    )
-  })
-
-  # render plot
-  plot_r <- reactive({
-    # get inputs ---
-    patient_id <- input$patient_id # nolint
-    sl_start_date <- input$sl_start_date # nolint
-    ae_var <- input$ae_var
-    ae_line_col_var <- input$ae_line_var
-    rs_var <- input$rs_var
-    cm_var <- input$cm_var
-    ex_var <- input$ex_var
-    lb_var <- input$lb_var
-    x_limit <- input$x_limit
-    lb_var_show <- input$lb_var_show
-
-
-    validate(
-      need(sl_start_date, "Please select a start date variable."),
-      need(ae_line_col_var, "Please select an adverse event line color."),
-      need(lb_var_show, "`Lab values` field is empty.")
-    )
-
-    adrs_vars <- unique(c(
-      "USUBJID", "STUDYID", "PARAMCD",
-      "PARAM", "AVALC", "AVAL", "ADY",
-      "ADT", rs_var
-    ))
-    adae_vars <- unique(c(
-      "USUBJID", "STUDYID", "ASTDT",
-      "AENDT", "AESOC", "AEDECOD",
-      "AESER", "AETOXGR", "AEREL",
-      "ASTDY", "AENDY",
-      ae_var, ae_line_col_var
-    ))
-    adcm_vars <- unique(c(
-      "USUBJID", "STUDYID", "ASTDT",
-      "AENDT", "ASTDT", "CMDECOD",
-      "ASTDY", "AENDY", "CMCAT",
-      cm_var
-    ))
-    adex_vars <- unique(c(
-      "USUBJID", "STUDYID", "ASTDT",
-      "AENDT", "PARCAT2", "AVAL",
-      "AVALU", "PARAMCD", "PARCAT1",
-      "PARCAT2", ex_var
-    ))
-    adlb_vars <- unique(c(
-      "USUBJID", "STUDYID", "ANRIND", "LBSEQ",
-      "PARAMCD", "BASETYPE", "ADT", "AVISITN",
-      "LBSTRESN", "LBCAT", "LBTESTCD",
-      lb_var
-    ))
-
-    # get ADSL dataset ---
-    ADSL_FILTERED <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
-
-    if (!is.null(input$select_ex)) {
-      if (input$select_ex == FALSE | is.na(ex_dataname)) {
-        ADEX_FILTERED <- NULL # nolint
-      } else {
-        ADEX_FILTERED <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
-        validate_has_variable(ADEX_FILTERED, adex_vars)
-      }
-    } else {
-      ADEX_FILTERED <- NULL # nolint
-    }
-
-    if (!is.null(input$select_ae)) {
-      if (input$select_ae == FALSE | is.na(ae_dataname)) {
-        ADAE_FILTERED <- NULL # nolint
-      } else {
-        ADAE_FILTERED <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
-        rtables::var_labels(ADAE_FILTERED) <- rtables::var_labels(
-          datasets$get_data(ae_dataname, filtered = FALSE)
-        )
-        validate_has_variable(ADAE_FILTERED, adae_vars)
-      }
-    } else {
-      ADAE_FILTERED <- NULL # nolint
-    }
-
-
-    if (!is.null(input$select_rs)) {
-      if (input$select_rs == FALSE | is.na(rs_dataname)) {
-        ADRS_FILTERED <- NULL # nolint
-      } else {
-        ADRS_FILTERED <- datasets$get_data(rs_dataname, filtered = TRUE) # nolint
-        validate_has_variable(ADRS_FILTERED, adrs_vars)
-      }
-    } else {
-      ADRS_FILTERED <- NULL # nolint
-    }
-
-    if (!is.null(input$select_cm)) {
-      if (input$select_cm == FALSE | is.na(cm_dataname)) {
-        ADCM_FILTERED <- NULL # nolint
-      } else {
-        ADCM_FILTERED <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
-        validate_has_variable(ADCM_FILTERED, adcm_vars)
-      }
-    } else {
-      ADCM_FILTERED <- NULL # nolint
-    }
-
-    if (!is.null(input$select_lb)) {
-      if (input$select_lb == FALSE | is.na(lb_dataname)) {
-        ADLB_FILTERED <- NULL # nolint
-      } else {
-        ADLB_FILTERED <- datasets$get_data(lb_dataname, filtered = TRUE) # nolint
-        validate_has_variable(ADLB_FILTERED, adlb_vars)
-      }
-    } else {
-      ADLB_FILTERED <- NULL # nolint
-    }
-
-    # check color assignment
-    if (!is.null(ae_line_col_opt)) {
-      validate(need(
-        is.null(ae_line_col_var) || length(levels(ADAE_FILTERED[[ae_line_col_var]])) <= length(ae_line_col_opt),
-        paste(
-          "Please check ae_line_col_opt contains all possible values for ae_line_col_var values.",
-          "Or specify ae_line_col_opt as NULL.",
-          sep = "\n"
-        )
-      ))
-    }
-
-    possible_plot <- c("ex", "ae", "rs", "cm", "lb")
-    datanames <- c(
-      ex_dataname,
-      ae_dataname,
-      rs_dataname,
-      cm_dataname,
-      lb_dataname
-    )
-    input_select <- purrr::map_lgl(datanames, is.na)
-    select_plot <- purrr::map2_lgl(
-      input_select, possible_plot,
-      ~ if (!.x) {
-        input[[paste("select", .y, sep = "_")]]
-      } else {
-        FALSE
-      }
-    )
-
-    names(select_plot) <- possible_plot
-
-    empty_rs <- FALSE
-    empty_ae <- FALSE
-    empty_cm <- FALSE
-    empty_ex <- FALSE
-    empty_lb <- FALSE
-
-    # restart chunks & include current environment ---
-    chunks_reset(envir = environment())
-
-    chunks_push(bquote({
-      ADSL <- ADSL_FILTERED %>% # nolint
-        group_by(.data$USUBJID)
-      ADSL$max_date <- pmax(
-        as.Date(ADSL$LSTALVDT),
-        as.Date(ADSL$DTHDT),
-        na.rm = TRUE
-      )
-      ADSL <- ADSL %>% # nolint
-        mutate(
-          max_day = as.numeric(
-            as.Date(.data$max_date) - as.Date(
-              eval(parse(text = .(sl_start_date), keep.source = FALSE))
-            )
+    # only show the check box when domain data is available
+    observeEvent(ae_dataname, {
+      if (!is.na(ae_dataname)) {
+        output$select_ae_output <- renderUI({
+          checkboxInput(
+            session$ns("select_ae"),
+            "ADAE",
+            value = !is.na(ae_dataname)
           )
-          + (as.Date(.data$max_date) >= as.Date(eval(parse(text = .(sl_start_date)))))
-        ) %>%
-        filter(USUBJID == .(patient_id))
-    }))
+        })
+      }
+    })
 
-    chunks_push_new_line()
+    observeEvent(ex_dataname, {
+      if (!is.na(ex_dataname)) {
+        output$select_ex_output <- renderUI({
+          checkboxInput(
+            session$ns("select_ex"),
+            "ADEX",
+            value = !is.na(ex_dataname)
+          )
+        })
+      }
+    })
 
-    # check
-    chunks_safe_eval()
+    observeEvent(rs_dataname, {
+      if (!is.na(rs_dataname)) {
+        output$select_rs_output <- renderUI({
+          checkboxInput(
+            session$ns("select_rs"),
+            "ADRS",
+            value = !is.na(rs_dataname)
+          )
+        })
+      }
+    })
 
-    # ADSL with single subject
-    ADSL <- chunks_get_var("ADSL") # nolint
+    observeEvent(cm_dataname, {
+      if (!is.na(cm_dataname)) {
+        output$select_cm_output <- renderUI({
+          checkboxInput(
+            session$ns("select_cm"),
+            "ADCM",
+            value = !is.na(cm_dataname)
+          )
+        })
+      }
+    })
 
-    validate(
-      need(
-        nrow(ADSL) >= 1,
-        paste(
-          "Subject",
-          patient_id,
-          "not found in the dataset. Have they been filtered out by filtering in the filter panel?"
-        )
+    observeEvent(lb_dataname, {
+      if (!is.na(lb_dataname)) {
+        output$select_lb_output <- renderUI({
+          checkboxInput(
+            session$ns("select_lb"),
+            "ADLB",
+            value = !is.na(lb_dataname)
+          )
+        })
+      }
+    })
+
+    observeEvent(input$select_lb, {
+      req(input$select_lb == TRUE && !is.null(input$lb_var))
+      ADLB_FILTERED <- datasets$get_data(lb_dataname, filtered = TRUE) # nolint
+      choices <- unique(ADLB_FILTERED[[input$lb_var]])
+      choices_selected <- if (length(choices) > 5) choices[1:5] else choices
+
+      updateSelectInput(
+        session,
+        "lb_var_show",
+        selected = choices_selected,
+        choices = choices
       )
-    )
+    })
 
-    # name for ae_line_col
-    if (!is.null(ae_line_col_var) && is.data.frame(ADAE_FILTERED)) {
-      chunks_push(bquote(ae_line_col_name <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]))
-    } else {
-      chunks_push(quote(ae_line_col_name <- NULL))
-    }
+    # render plot
+    plot_r <- reactive({
+      # get inputs ---
+      patient_id <- input$patient_id # nolint
+      sl_start_date <- input$sl_start_date # nolint
+      ae_var <- input$ae_var
+      ae_line_col_var <- input$ae_line_var
+      rs_var <- input$rs_var
+      cm_var <- input$cm_var
+      ex_var <- input$ex_var
+      lb_var <- input$lb_var
+      x_limit <- input$x_limit
+      lb_var_show <- input$lb_var_show
 
-    if (select_plot["ae"]) {
+
       validate(
-        need(!is.null(input$ae_var), "Please select an adverse event variable.")
+        need(sl_start_date, "Please select a start date variable."),
+        need(ae_line_col_var, "Please select an adverse event line color."),
+        need(lb_var_show, "`Lab values` field is empty.")
       )
-      if (ADSL$USUBJID %in% ADAE_FILTERED$USUBJID) {
-        chunks_push(bquote({
-          # ADAE
-          ADAE <- ADAE_FILTERED[, .(adae_vars)] # nolint
 
-          ADAE <- ADSL %>% # nolint
-            left_join(ADAE, by = c("STUDYID", "USUBJID")) %>% # nolint
-            as.data.frame() %>%
-            filter(!is.na(ASTDT)) %>%
-            mutate(ASTDY = as.numeric(
-              difftime(
-                ASTDT,
-                as.Date(substr(
-                  as.character(eval(parse(
-                    text = .(sl_start_date)
-                  ))), 1, 10
-                )),
-                units = "days"
-              )
-            )
-            + (ASTDT >= as.Date(substr(
-                as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-              )))) %>%
-            filter(!is.na(AENDT)) %>%
-            mutate(AENDY = as.numeric(
-              difftime(
-                AENDT,
-                as.Date(substr(
-                  as.character(eval(parse(
-                    text = .(sl_start_date)
-                  ))), 1, 10
-                )),
-                units = "days"
-              )
-            )
-            + (AENDT >= as.Date(substr(
-                as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-              )))) %>%
-            select(c(.(adae_vars), ASTDY, AENDY))
-          rtables::var_labels(ADAE)[.(ae_line_col_var)] <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]
-        }))
-        chunks_safe_eval()
+      adrs_vars <- unique(c(
+        "USUBJID", "STUDYID", "PARAMCD",
+        "PARAM", "AVALC", "AVAL", "ADY",
+        "ADT", rs_var
+      ))
+      adae_vars <- unique(c(
+        "USUBJID", "STUDYID", "ASTDT",
+        "AENDT", "AESOC", "AEDECOD",
+        "AESER", "AETOXGR", "AEREL",
+        "ASTDY", "AENDY",
+        ae_var, ae_line_col_var
+      ))
+      adcm_vars <- unique(c(
+        "USUBJID", "STUDYID", "ASTDT",
+        "AENDT", "ASTDT", "CMDECOD",
+        "ASTDY", "AENDY", "CMCAT",
+        cm_var
+      ))
+      adex_vars <- unique(c(
+        "USUBJID", "STUDYID", "ASTDT",
+        "AENDT", "PARCAT2", "AVAL",
+        "AVALU", "PARAMCD", "PARCAT1",
+        "PARCAT2", ex_var
+      ))
+      adlb_vars <- unique(c(
+        "USUBJID", "STUDYID", "ANRIND", "LBSEQ",
+        "PARAMCD", "BASETYPE", "ADT", "AVISITN",
+        "LBSTRESN", "LBCAT", "LBTESTCD",
+        lb_var
+      ))
 
+      # get ADSL dataset ---
+      ADSL_FILTERED <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
 
-        chunks_push(
-          call(
-            "<-",
-            as.name("ae"),
-            call(
-              "list",
-              data = bquote(data.frame(ADAE)),
-              var = bquote(as.vector(ADAE[, .(ae_var)])),
-              line_col = if (!is.null(ae_line_col_var)) {
-                bquote(as.vector(ADAE[, .(ae_line_col_var)]))
-              } else {
-                NULL
-              },
-              line_col_legend = if (!is.null(ae_line_col_var)) {
-                quote(ae_line_col_name)
-              } else {
-                NULL
-              },
-              line_col_opt = if (is.null(ae_line_col_var)) {
-                NULL
-              } else {
-                bquote(.(ae_line_col_opt))
-              }
-            )
-          )
-        )
-        ADAE <- chunks_get_var("ADAE") # nolint
-        if (is.null(ADAE) | nrow(ADAE) == 0) {
-          empty_ae <- TRUE
+      if (!is.null(input$select_ex)) {
+        if (input$select_ex == FALSE | is.na(ex_dataname)) {
+          ADEX_FILTERED <- NULL # nolint
+        } else {
+          ADEX_FILTERED <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
+          validate_has_variable(ADEX_FILTERED, adex_vars)
         }
       } else {
-        empty_ae <- TRUE
+        ADEX_FILTERED <- NULL # nolint
+      }
+
+      if (!is.null(input$select_ae)) {
+        if (input$select_ae == FALSE | is.na(ae_dataname)) {
+          ADAE_FILTERED <- NULL # nolint
+        } else {
+          ADAE_FILTERED <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
+          rtables::var_labels(ADAE_FILTERED) <- rtables::var_labels(
+            datasets$get_data(ae_dataname, filtered = FALSE)
+          )
+          validate_has_variable(ADAE_FILTERED, adae_vars)
+        }
+      } else {
+        ADAE_FILTERED <- NULL # nolint
+      }
+
+
+      if (!is.null(input$select_rs)) {
+        if (input$select_rs == FALSE | is.na(rs_dataname)) {
+          ADRS_FILTERED <- NULL # nolint
+        } else {
+          ADRS_FILTERED <- datasets$get_data(rs_dataname, filtered = TRUE) # nolint
+          validate_has_variable(ADRS_FILTERED, adrs_vars)
+        }
+      } else {
+        ADRS_FILTERED <- NULL # nolint
+      }
+
+      if (!is.null(input$select_cm)) {
+        if (input$select_cm == FALSE | is.na(cm_dataname)) {
+          ADCM_FILTERED <- NULL # nolint
+        } else {
+          ADCM_FILTERED <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
+          validate_has_variable(ADCM_FILTERED, adcm_vars)
+        }
+      } else {
+        ADCM_FILTERED <- NULL # nolint
+      }
+
+      if (!is.null(input$select_lb)) {
+        if (input$select_lb == FALSE | is.na(lb_dataname)) {
+          ADLB_FILTERED <- NULL # nolint
+        } else {
+          ADLB_FILTERED <- datasets$get_data(lb_dataname, filtered = TRUE) # nolint
+          validate_has_variable(ADLB_FILTERED, adlb_vars)
+        }
+      } else {
+        ADLB_FILTERED <- NULL # nolint
+      }
+
+      # check color assignment
+      if (!is.null(ae_line_col_opt)) {
+        validate(need(
+          is.null(ae_line_col_var) || length(levels(ADAE_FILTERED[[ae_line_col_var]])) <= length(ae_line_col_opt),
+          paste(
+            "Please check ae_line_col_opt contains all possible values for ae_line_col_var values.",
+            "Or specify ae_line_col_opt as NULL.",
+            sep = "\n"
+          )
+        ))
+      }
+
+      possible_plot <- c("ex", "ae", "rs", "cm", "lb")
+      datanames <- c(
+        ex_dataname,
+        ae_dataname,
+        rs_dataname,
+        cm_dataname,
+        lb_dataname
+      )
+      input_select <- purrr::map_lgl(datanames, is.na)
+      select_plot <- purrr::map2_lgl(
+        input_select, possible_plot,
+        ~ if (!.x) {
+          input[[paste("select", .y, sep = "_")]]
+        } else {
+          FALSE
+        }
+      )
+
+      names(select_plot) <- possible_plot
+
+      empty_rs <- FALSE
+      empty_ae <- FALSE
+      empty_cm <- FALSE
+      empty_ex <- FALSE
+      empty_lb <- FALSE
+
+      # restart chunks & include current environment ---
+      chunks_reset(envir = environment())
+
+      chunks_push(bquote({
+        ADSL <- ADSL_FILTERED %>% # nolint
+          group_by(.data$USUBJID)
+        ADSL$max_date <- pmax(
+          as.Date(ADSL$LSTALVDT),
+          as.Date(ADSL$DTHDT),
+          na.rm = TRUE
+        )
+        ADSL <- ADSL %>% # nolint
+          mutate(
+            max_day = as.numeric(
+              as.Date(.data$max_date) - as.Date(
+                eval(parse(text = .(sl_start_date), keep.source = FALSE))
+              )
+            )
+            + (as.Date(.data$max_date) >= as.Date(eval(parse(text = .(sl_start_date)))))
+          ) %>%
+          filter(USUBJID == .(patient_id))
+      }))
+
+      chunks_push_new_line()
+
+      # check
+      chunks_safe_eval()
+
+      # ADSL with single subject
+      ADSL <- chunks_get_var("ADSL") # nolint
+
+      validate(
+        need(
+          nrow(ADSL) >= 1,
+          paste(
+            "Subject",
+            patient_id,
+            "not found in the dataset. Have they been filtered out by filtering in the filter panel?"
+          )
+        )
+      )
+
+      # name for ae_line_col
+      if (!is.null(ae_line_col_var) && is.data.frame(ADAE_FILTERED)) {
+        chunks_push(bquote(ae_line_col_name <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]))
+      } else {
+        chunks_push(quote(ae_line_col_name <- NULL))
+      }
+
+      if (select_plot["ae"]) {
+        validate(
+          need(!is.null(input$ae_var), "Please select an adverse event variable.")
+        )
+        if (ADSL$USUBJID %in% ADAE_FILTERED$USUBJID) {
+          chunks_push(bquote({
+            # ADAE
+            ADAE <- ADAE_FILTERED[, .(adae_vars)] # nolint
+
+            ADAE <- ADSL %>% # nolint
+              left_join(ADAE, by = c("STUDYID", "USUBJID")) %>% # nolint
+              as.data.frame() %>%
+              filter(!is.na(ASTDT)) %>%
+              mutate(ASTDY = as.numeric(
+                difftime(
+                  ASTDT,
+                  as.Date(substr(
+                    as.character(eval(parse(
+                      text = .(sl_start_date)
+                    ))), 1, 10
+                  )),
+                  units = "days"
+                )
+              )
+              + (ASTDT >= as.Date(substr(
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                )))) %>%
+              filter(!is.na(AENDT)) %>%
+              mutate(AENDY = as.numeric(
+                difftime(
+                  AENDT,
+                  as.Date(substr(
+                    as.character(eval(parse(
+                      text = .(sl_start_date)
+                    ))), 1, 10
+                  )),
+                  units = "days"
+                )
+              )
+              + (AENDT >= as.Date(substr(
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                )))) %>%
+              select(c(.(adae_vars), ASTDY, AENDY))
+            rtables::var_labels(ADAE)[.(ae_line_col_var)] <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]
+          }))
+          chunks_safe_eval()
+
+
+          chunks_push(
+            call(
+              "<-",
+              as.name("ae"),
+              call(
+                "list",
+                data = bquote(data.frame(ADAE)),
+                var = bquote(as.vector(ADAE[, .(ae_var)])),
+                line_col = if (!is.null(ae_line_col_var)) {
+                  bquote(as.vector(ADAE[, .(ae_line_col_var)]))
+                } else {
+                  NULL
+                },
+                line_col_legend = if (!is.null(ae_line_col_var)) {
+                  quote(ae_line_col_name)
+                } else {
+                  NULL
+                },
+                line_col_opt = if (is.null(ae_line_col_var)) {
+                  NULL
+                } else {
+                  bquote(.(ae_line_col_opt))
+                }
+              )
+            )
+          )
+          ADAE <- chunks_get_var("ADAE") # nolint
+          if (is.null(ADAE) | nrow(ADAE) == 0) {
+            empty_ae <- TRUE
+          }
+        } else {
+          empty_ae <- TRUE
+          chunks_push(bquote(ae <- NULL))
+        }
+      } else {
         chunks_push(bquote(ae <- NULL))
       }
-    } else {
-      chunks_push(bquote(ae <- NULL))
-    }
 
-    chunks_push_new_line()
-    chunks_safe_eval()
+      chunks_push_new_line()
+      chunks_safe_eval()
 
-    if (select_plot["rs"]) {
-      validate(
-        need(!is.null(rs_var), "Please select a tumor response variable.")
-      )
-      if (ADSL$USUBJID %in% ADRS_FILTERED$USUBJID) {
-        chunks_push(bquote({
-          ADRS <- ADRS_FILTERED[, .(adrs_vars)] # nolint
-          ADRS <- ADSL %>% # nolint
-            left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
-            as.data.frame() %>%
-            mutate(
-              ADY = as.numeric(difftime(
-                ADT,
-                as.Date(substr(
-                  as.character(eval(parse(
-                    text = .(sl_start_date),
-                    keep.source = FALSE
-                  ))), 1, 10
-                )),
+      if (select_plot["rs"]) {
+        validate(
+          need(!is.null(rs_var), "Please select a tumor response variable.")
+        )
+        if (ADSL$USUBJID %in% ADRS_FILTERED$USUBJID) {
+          chunks_push(bquote({
+            ADRS <- ADRS_FILTERED[, .(adrs_vars)] # nolint
+            ADRS <- ADSL %>% # nolint
+              left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
+              as.data.frame() %>%
+              mutate(
+                ADY = as.numeric(difftime(
+                  ADT,
+                  as.Date(substr(
+                    as.character(eval(parse(
+                      text = .(sl_start_date),
+                      keep.source = FALSE
+                    ))), 1, 10
+                  )),
+                  units = "days"
+                ))
+                + (ADT >= as.Date(substr(
+                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                  )))
+              ) %>%
+              select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
+              filter(is.na(ADY) == FALSE)
+            rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, .(rs_var)]))
+          }))
+          chunks_safe_eval()
+          ADRS <- chunks_get_var("ADRS") # nolint
+          if (is.null(ADRS) | nrow(ADRS) == 0) {
+            empty_rs <- TRUE
+          }
+        } else {
+          empty_rs <- TRUE
+          chunks_push(bquote(rs <- NULL))
+        }
+      } else {
+        chunks_push(bquote(rs <- NULL))
+      }
+
+      chunks_push_new_line()
+
+      # check
+      chunks_safe_eval()
+      if (select_plot["cm"]) {
+        validate(
+          need(!is.null(cm_var), "Please select a concomitant medication variable.")
+        )
+        if (ADSL$USUBJID %in% ADCM_FILTERED$USUBJID) {
+          chunks_push(bquote({
+            # ADCM
+            ADCM <- ADCM_FILTERED[, .(adcm_vars)] # nolint
+            ADCM <- ADSL %>% # nolint
+              left_join(ADCM, by = c("STUDYID", "USUBJID")) %>% # nolint
+              as.data.frame() %>%
+              filter(!is.na(ASTDT)) %>%
+              mutate(ASTDY = as.numeric(difftime(
+                ASTDT,
+                as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
+                units = "days"
+              ))
+              + (ASTDT >= as.Date(substr(
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                )))) %>%
+              filter(!is.na(AENDT)) %>%
+              mutate(AENDY = as.numeric(difftime(
+                AENDT,
+                as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
+                units = "days"
+              ))
+              + (AENDT >= as.Date(substr(
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                )))) %>%
+              select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(.(cm_var)))
+            if (length(unique(ADCM$USUBJID)) > 0) {
+              ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
+              & is.na(ADCM$ASTDY) == FALSE), ]
+            }
+            cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, .(cm_var)]))
+          }))
+          chunks_safe_eval()
+          ADCM <- chunks_get_var("ADCM") # nolint
+          if (is.null(ADCM) | nrow(ADCM) == 0) {
+            empty_cm <- TRUE
+          }
+        } else {
+          empty_cm <- TRUE
+          chunks_push(bquote(cm <- NULL))
+        }
+      } else {
+        chunks_push(bquote(cm <- NULL))
+      }
+
+      chunks_push_new_line()
+
+      # check
+      chunks_safe_eval()
+      if (select_plot["ex"]) {
+        validate(
+          need(!is.null(ex_var), "Please select an exposure variable.")
+        )
+        if (ADSL$USUBJID %in% ADEX_FILTERED$USUBJID) {
+          chunks_push(bquote({
+            # ADEX
+            ADEX <- ADEX_FILTERED[, .(adex_vars)] # nolint
+            ADEX <- ADSL %>% # nolint
+              left_join(ADEX, by = c("STUDYID", "USUBJID")) %>% # nolint
+              as.data.frame() %>%
+              filter(PARCAT1 == "INDIVIDUAL" & PARAMCD == "DOSE" & !is.na(AVAL)) %>%
+              filter(!is.na(ASTDT)) %>%
+              select(
+                USUBJID, ASTDT, PARCAT2,
+                AVAL, AVALU, PARAMCD, !!quo(.(sl_start_date))
+              )
+            ADEX <- split(ADEX, ADEX$USUBJID) %>% # nolint
+              lapply(function(pinfo) {
+                pinfo %>%
+                  arrange(PARCAT2, PARAMCD, ASTDT) %>%
+                  ungroup() %>%
+                  mutate(diff = c(0, diff(AVAL, lag = 1))) %>%
+                  mutate(
+                    Modification = case_when(
+                      diff < 0 ~ "Decrease",
+                      diff > 0 ~ "Increase",
+                      diff == 0 ~ "None"
+                    )
+                  ) %>%
+                  mutate(ASTDT_dur = as.numeric(
+                    as.Date(substr(as.character(ASTDT), 1, 10)) -
+                      as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10))
+                  )
+                  + (as.Date(substr(as.character(ASTDT), 1, 10)) >=
+                      as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))))
+              }) %>%
+              Reduce(rbind, .) %>%
+              as.data.frame() %>%
+              select(-diff)
+            ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, .(ex_var)]))
+          }))
+          chunks_safe_eval()
+          ADEX <- chunks_get_var("ADEX") # nolint
+          if (is.null(ADEX) | nrow(ADEX) == 0) {
+            empty_ex <- TRUE
+          }
+        } else {
+          empty_ex <- TRUE
+          chunks_push(bquote(ex <- NULL))
+        }
+      } else {
+        chunks_push(bquote(ex <- NULL))
+      }
+
+      chunks_push_new_line()
+
+      # check
+      chunks_safe_eval()
+
+
+      if (select_plot["lb"]) {
+        validate(
+          need(!is.null(lb_var), "Please select a lab variable.")
+        )
+        if (ADSL$USUBJID %in% ADLB_FILTERED$USUBJID) {
+          req(lb_var_show != lb_var)
+          chunks_push(bquote({
+            ADLB <- ADLB_FILTERED[, .(adlb_vars)] # nolint
+            ADLB <- ADSL %>% # nolint
+              left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
+              as.data.frame() %>%
+              group_by(USUBJID) %>%
+              mutate(ANRIND = factor(
+                .data$ANRIND,
+                levels = c("HIGH", "LOW", "NORMAL")
+              )) %>%
+              filter(
+                !is.na(.data$LBSTRESN) & !is.na(.data$ANRIND)
+              ) %>%
+              as.data.frame() %>%
+              select(
+                USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, !!quo(.(sl_start_date)),
+                LBTESTCD, ANRIND, !!quo(.(lb_var))
+              )
+
+            ADLB <- ADLB %>% # nolint
+              mutate(ADY = as.numeric(difftime(
+                .data$ADT,
+                as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
                 units = "days"
               ))
               + (ADT >= as.Date(substr(
                   as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                )))
-            ) %>%
-            select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
-            filter(is.na(ADY) == FALSE)
-          rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, .(rs_var)]))
-        }))
-        chunks_safe_eval()
-        ADRS <- chunks_get_var("ADRS") # nolint
-        if (is.null(ADRS) | nrow(ADRS) == 0) {
-          empty_rs <- TRUE
-        }
-      } else {
-        empty_rs <- TRUE
-        chunks_push(bquote(rs <- NULL))
-      }
-    } else {
-      chunks_push(bquote(rs <- NULL))
-    }
-
-    chunks_push_new_line()
-
-    # check
-    chunks_safe_eval()
-    if (select_plot["cm"]) {
-      validate(
-        need(!is.null(cm_var), "Please select a concomitant medication variable.")
-      )
-      if (ADSL$USUBJID %in% ADCM_FILTERED$USUBJID) {
-        chunks_push(bquote({
-          # ADCM
-          ADCM <- ADCM_FILTERED[, .(adcm_vars)] # nolint
-          ADCM <- ADSL %>% # nolint
-            left_join(ADCM, by = c("STUDYID", "USUBJID")) %>% # nolint
-            as.data.frame() %>%
-            filter(!is.na(ASTDT)) %>%
-            mutate(ASTDY = as.numeric(difftime(
-              ASTDT,
-              as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-              units = "days"
-            ))
-            + (ASTDT >= as.Date(substr(
-                as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-              )))) %>%
-            filter(!is.na(AENDT)) %>%
-            mutate(AENDY = as.numeric(difftime(
-              AENDT,
-              as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-              units = "days"
-            ))
-            + (AENDT >= as.Date(substr(
-                as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-              )))) %>%
-            select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(.(cm_var)))
-          if (length(unique(ADCM$USUBJID)) > 0) {
-            ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
-            & is.na(ADCM$ASTDY) == FALSE), ]
+                )))) %>%
+              filter(.data[[.(lb_var)]] %in% .(lb_var_show))
+            lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
+          }))
+          chunks_safe_eval()
+          ADLB <- chunks_get_var("ADLB") # nolint
+          if (is.null(ADLB) | nrow(ADLB) == 0) {
+            empty_lb <- TRUE
           }
-          cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, .(cm_var)]))
-        }))
-        chunks_safe_eval()
-        ADCM <- chunks_get_var("ADCM") # nolint
-        if (is.null(ADCM) | nrow(ADCM) == 0) {
-          empty_cm <- TRUE
-        }
-      } else {
-        empty_cm <- TRUE
-        chunks_push(bquote(cm <- NULL))
-      }
-    } else {
-      chunks_push(bquote(cm <- NULL))
-    }
-
-    chunks_push_new_line()
-
-    # check
-    chunks_safe_eval()
-    if (select_plot["ex"]) {
-      validate(
-        need(!is.null(ex_var), "Please select an exposure variable.")
-      )
-      if (ADSL$USUBJID %in% ADEX_FILTERED$USUBJID) {
-        chunks_push(bquote({
-          # ADEX
-          ADEX <- ADEX_FILTERED[, .(adex_vars)] # nolint
-          ADEX <- ADSL %>% # nolint
-            left_join(ADEX, by = c("STUDYID", "USUBJID")) %>% # nolint
-            as.data.frame() %>%
-            filter(PARCAT1 == "INDIVIDUAL" & PARAMCD == "DOSE" & !is.na(AVAL)) %>%
-            filter(!is.na(ASTDT)) %>%
-            select(
-              USUBJID, ASTDT, PARCAT2,
-              AVAL, AVALU, PARAMCD, !!quo(.(sl_start_date))
-            )
-          ADEX <- split(ADEX, ADEX$USUBJID) %>% # nolint
-            lapply(function(pinfo) {
-              pinfo %>%
-                arrange(PARCAT2, PARAMCD, ASTDT) %>%
-                ungroup() %>%
-                mutate(diff = c(0, diff(AVAL, lag = 1))) %>%
-                mutate(
-                  Modification = case_when(
-                    diff < 0 ~ "Decrease",
-                    diff > 0 ~ "Increase",
-                    diff == 0 ~ "None"
-                  )
-                ) %>%
-                mutate(ASTDT_dur = as.numeric(
-                  as.Date(substr(as.character(ASTDT), 1, 10)) -
-                    as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10))
-                )
-                + (as.Date(substr(as.character(ASTDT), 1, 10)) >=
-                    as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))))
-            }) %>%
-            Reduce(rbind, .) %>%
-            as.data.frame() %>%
-            select(-diff)
-          ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, .(ex_var)]))
-        }))
-        chunks_safe_eval()
-        ADEX <- chunks_get_var("ADEX") # nolint
-        if (is.null(ADEX) | nrow(ADEX) == 0) {
-          empty_ex <- TRUE
-        }
-      } else {
-        empty_ex <- TRUE
-        chunks_push(bquote(ex <- NULL))
-      }
-    } else {
-      chunks_push(bquote(ex <- NULL))
-    }
-
-    chunks_push_new_line()
-
-    # check
-    chunks_safe_eval()
-
-
-    if (select_plot["lb"]) {
-      validate(
-        need(!is.null(lb_var), "Please select a lab variable.")
-      )
-      if (ADSL$USUBJID %in% ADLB_FILTERED$USUBJID) {
-        req(lb_var_show != lb_var)
-        chunks_push(bquote({
-          ADLB <- ADLB_FILTERED[, .(adlb_vars)] # nolint
-          ADLB <- ADSL %>% # nolint
-            left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
-            as.data.frame() %>%
-            group_by(USUBJID) %>%
-            mutate(ANRIND = factor(
-              .data$ANRIND,
-              levels = c("HIGH", "LOW", "NORMAL")
-            )) %>%
-            filter(
-              !is.na(.data$LBSTRESN) & !is.na(.data$ANRIND)
-            ) %>%
-            as.data.frame() %>%
-            select(
-              USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, !!quo(.(sl_start_date)),
-              LBTESTCD, ANRIND, !!quo(.(lb_var))
-            )
-
-          ADLB <- ADLB %>% # nolint
-            mutate(ADY = as.numeric(difftime(
-              .data$ADT,
-              as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-              units = "days"
-            ))
-            + (ADT >= as.Date(substr(
-                as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-              )))) %>%
-            filter(.data[[.(lb_var)]] %in% .(lb_var_show))
-          lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
-        }))
-        chunks_safe_eval()
-        ADLB <- chunks_get_var("ADLB") # nolint
-        if (is.null(ADLB) | nrow(ADLB) == 0) {
+        } else {
           empty_lb <- TRUE
+          chunks_push(bquote(lb <- NULL))
         }
       } else {
-        empty_lb <- TRUE
         chunks_push(bquote(lb <- NULL))
       }
-    } else {
-      chunks_push(bquote(lb <- NULL))
-    }
 
 
-    chunks_push_new_line()
-    # check
-    chunks_safe_eval()
+      chunks_push_new_line()
+      # check
+      chunks_safe_eval()
 
-    # Check that at least 1 dataset is selected
+      # Check that at least 1 dataset is selected
 
-    validate(
-      need(any(select_plot), "Please select an ADaM dataset.")
+      validate(
+        need(any(select_plot), "Please select an ADaM dataset.")
+      )
+
+      # Check the subject has information in at least one selected domain
+      empty_data_check <- c(empty_ex, empty_ae, empty_rs, empty_cm, empty_lb)
+
+      validate(need(
+        any(!empty_data_check & select_plot),
+        "The subject does not have information in any selected domain."
+      ))
+
+      # Check the subject has information in all the selected domains
+      if (any(empty_data_check & select_plot)) {
+        showNotification(
+          paste0(
+            "This subject does not have information in the ",
+            paste(c(possible_plot[(empty_data_check & select_plot)]), collapse = ", "),
+            " domain."
+          ),
+          duration = 8,
+          type = "warning"
+        )
+      }
+
+      # Convert x_limit to numeric vector
+      if (!is.null(x_limit) || x_limit != "") {
+        chunks_push(bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit), ",")))))
+        chunks_safe_eval()
+        x_limit <- chunks_get_var("x_limit")
+      }
+
+      validate(need(
+        all(!is.na(x_limit)) & all(!is.infinite(x_limit)),
+        "Not all values entered for study days range were numeric."
+      ))
+      validate(need(
+        x_limit[1] < x_limit[2],
+        "The lower limit for study days range should come first."
+      ))
+
+      chunks_push_new_line()
+
+      # check
+      chunks_safe_eval()
+
+      chunks_push(bquote({
+        osprey::g_patient_profile(
+          ex = ex,
+          ae = ae,
+          rs = rs,
+          cm = cm,
+          lb = lb,
+          arrow_end_day = ADSL$max_day,
+          xlim = x_limit,
+          xlab = "Study Day",
+          title = paste("Patient Profile: ", .(patient_id))
+        )
+      }))
+
+      chunks_safe_eval()
+    })
+
+    plot_with_settings_srv(
+      id = "patientprofileplot",
+      plot_r = plot_r,
+      height = plot_height,
+      width = plot_width
     )
 
-    # Check the subject has information in at least one selected domain
-    empty_data_check <- c(empty_ex, empty_ae, empty_rs, empty_cm, empty_lb)
-
-    validate(need(
-      any(!empty_data_check & select_plot),
-      "The subject does not have information in any selected domain."
-    ))
-
-    # Check the subject has information in all the selected domains
-    if (any(empty_data_check & select_plot)) {
-      showNotification(
-        paste0(
-          "This subject does not have information in the ",
-          paste(c(possible_plot[(empty_data_check & select_plot)]), collapse = ", "),
-          " domain."
-        ),
-        duration = 8,
-        type = "warning"
-      )
-    }
-
-    # Convert x_limit to numeric vector
-    if (!is.null(x_limit) || x_limit != "") {
-      chunks_push(bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit), ",")))))
-      chunks_safe_eval()
-      x_limit <- chunks_get_var("x_limit")
-    }
-
-    validate(need(
-      all(!is.na(x_limit)) & all(!is.infinite(x_limit)),
-      "Not all values entered for study days range were numeric."
-    ))
-    validate(need(
-      x_limit[1] < x_limit[2],
-      "The lower limit for study days range should come first."
-    ))
-
-    chunks_push_new_line()
-
-    # check
-    chunks_safe_eval()
-
-    chunks_push(bquote({
-      osprey::g_patient_profile(
-        ex = ex,
-        ae = ae,
-        rs = rs,
-        cm = cm,
-        lb = lb,
-        arrow_end_day = ADSL$max_day,
-        xlim = x_limit,
-        xlab = "Study Day",
-        title = paste("Patient Profile: ", .(patient_id))
-      )
-    }))
-
-    chunks_safe_eval()
+    get_rcode_srv(
+      id = "rcode",
+      datasets = datasets,
+      modal_title = paste("R code for", label),
+      datanames = datasets$datanames()
+    )
   })
-
-  callModule(
-    plot_with_settings_srv,
-    id = "patientprofileplot",
-    plot_r = plot_r,
-    height = plot_height,
-    width = plot_width
-  )
-
-  callModule(
-    module = get_rcode_srv,
-    id = "rcode",
-    datasets = datasets,
-    modal_title = paste("R code for", label),
-    datanames = datasets$datanames()
-  )
 }

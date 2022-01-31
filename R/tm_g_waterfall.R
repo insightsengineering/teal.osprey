@@ -268,9 +268,7 @@ ui_g_waterfall <- function(id, ...) {
 }
 
 #' @importFrom tidyr pivot_wider
-srv_g_waterfall <- function(input,
-                            output,
-                            session,
+srv_g_waterfall <- function(id,
                             datasets,
                             dataname_tr,
                             dataname_rs,
@@ -278,247 +276,251 @@ srv_g_waterfall <- function(input,
                             label,
                             plot_height,
                             plot_width) {
+  moduleServer(id, function(input, output, session) {
+    # use teal.devel code chunks
+    init_chunks()
 
-  # use teal.devel code chunks
-  init_chunks()
+    plot_r <- reactive({
+      adsl_filtered <- datasets$get_data("ADSL", filtered = TRUE)
+      adtr_filtered <- datasets$get_data(dataname_tr, filtered = TRUE)
+      adrs_filtered <- datasets$get_data(dataname_rs, filtered = TRUE)
 
-  plot_r <- reactive({
-    adsl_filtered <- datasets$get_data("ADSL", filtered = TRUE)
-    adtr_filtered <- datasets$get_data(dataname_tr, filtered = TRUE)
-    adrs_filtered <- datasets$get_data(dataname_rs, filtered = TRUE)
+      bar_var <- input$bar_var
+      bar_paramcd <- input$bar_paramcd
+      add_label_var_sl <- input$add_label_var_sl
+      add_label_paramcd_rs <- input$add_label_paramcd_rs
+      anno_txt_var_sl <- input$anno_txt_var_sl
+      anno_txt_paramcd_rs <- input$anno_txt_paramcd_rs
+      ytick_at <- input$ytick_at
+      href_line <- input$href_line
+      gap_point_val <- input$gap_point_val
+      show_value <- input$show_value # nolint
 
-    bar_var <- input$bar_var
-    bar_paramcd <- input$bar_paramcd
-    add_label_var_sl <- input$add_label_var_sl
-    add_label_paramcd_rs <- input$add_label_paramcd_rs
-    anno_txt_var_sl <- input$anno_txt_var_sl
-    anno_txt_paramcd_rs <- input$anno_txt_paramcd_rs
-    ytick_at <- input$ytick_at
-    href_line <- input$href_line
-    gap_point_val <- input$gap_point_val
-    show_value <- input$show_value # nolint
-
-    validate(need(bar_var, "'Bar Height' field is empty"))
-    validate(need(
-      length(add_label_paramcd_rs) == 0 || length(add_label_var_sl) == 0,
-      "`Add ADSL Label to Bars` and `Add ADRS Label to Bars` fields cannot both have values simultaneously."
-    ))
-
-    # validate data rows
-    validate_has_data(adsl_filtered, min_nrow = 2)
-    validate_has_data(adtr_filtered, min_nrow = 2)
-    validate_has_data(adrs_filtered, min_nrow = 2)
-
-    validate_in(
-      bar_paramcd,
-      adtr_filtered$PARAMCD,
-      "Tumor burden parameter is not selected or is not found in ADTR PARAMCD."
-    )
-    if (!is.null(add_label_paramcd_rs)) {
-      validate_in(add_label_paramcd_rs, adrs_filtered$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
-    }
-    if (!is.null(anno_txt_paramcd_rs)) {
-      validate_in(anno_txt_paramcd_rs, adrs_filtered$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
-    }
-
-    # get variables
-    bar_color_var <- if (!is.null(input$bar_color_var) && input$bar_color_var != "None" && input$bar_color_var != "") {
-      input$bar_color_var
-    } else {
-      NULL
-    }
-    sort_var <- if (!is.null(input$sort_var) && input$sort_var != "None" && input$sort_var != "") {
-      input$sort_var
-    } else {
-      NULL
-    }
-    facet_var <- if (!is.null(input$facet_var) && input$facet_var != "None" && input$facet_var != "") {
-      input$facet_var
-    } else {
-      NULL
-    }
-
-    # If reference lines are requested
-    href_line <- as_numeric_from_comma_sep_str(href_line)
-    validate(need(
-      all(!is.na(href_line)),
-      "Please enter a comma separated set of numeric values for the reference line(s)"
-    ))
-
-    # If gap point is requested
-    if (gap_point_val != "" || is.null(gap_point_val)) {
-      gap_point_val <- as.numeric(gap_point_val)
+      validate(need(bar_var, "'Bar Height' field is empty"))
       validate(need(
-        !anyNA(gap_point_val),
-        "Value entered for break point was not numeric"
+        length(add_label_paramcd_rs) == 0 || length(add_label_var_sl) == 0,
+        "`Add ADSL Label to Bars` and `Add ADRS Label to Bars` fields cannot both have values simultaneously."
       ))
-    } else {
-      gap_point_val <- NULL
-    }
 
-    # If y tick is requested
-    if (ytick_at != "" || is.null(ytick_at)) {
-      ytick_at <- as.numeric(ytick_at)
-      validate(need(!anyNA(ytick_at), "Value entered for Y-axis interval was not numeric"))
-    } else {
-      ytick_at <- 20
-    }
+      # validate data rows
+      validate_has_data(adsl_filtered, min_nrow = 2)
+      validate_has_data(adtr_filtered, min_nrow = 2)
+      validate_has_data(adrs_filtered, min_nrow = 2)
 
-    adsl_vars <- unique(c("USUBJID", "STUDYID", bar_color_var, sort_var, add_label_var_sl, anno_txt_var_sl, facet_var))
-    adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", bar_var))
-    adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
-    adrs_paramcd <- unique(c(add_label_paramcd_rs, anno_txt_paramcd_rs))
+      validate_in(
+        bar_paramcd,
+        adtr_filtered$PARAMCD,
+        "Tumor burden parameter is not selected or is not found in ADTR PARAMCD."
+      )
+      if (!is.null(add_label_paramcd_rs)) {
+        validate_in(add_label_paramcd_rs, adrs_filtered$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
+      }
+      if (!is.null(anno_txt_paramcd_rs)) {
+        validate_in(anno_txt_paramcd_rs, adrs_filtered$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
+      }
 
-    # write data selection to chunks
-    adsl_name <- "ADSL_FILTERED"
-    adtr_name <- paste0(dataname_tr, "_FILTERED")
-    adrs_name <- paste0(dataname_rs, "_FILTERED")
+      # get variables
+      bar_color_var <- if (!is.null(input$bar_color_var) &&
+                           input$bar_color_var != "None" &&
+                           input$bar_color_var != "") {
+          input$bar_color_var
+      } else {
+          NULL
+      }
+      sort_var <- if (!is.null(input$sort_var) && input$sort_var != "None" && input$sort_var != "") {
+        input$sort_var
+      } else {
+        NULL
+      }
+      facet_var <- if (!is.null(input$facet_var) && input$facet_var != "None" && input$facet_var != "") {
+        input$facet_var
+      } else {
+        NULL
+      }
 
-    assign(adsl_name, adsl_filtered)
-    assign(adtr_name, adtr_filtered)
-    assign(adrs_name, adrs_filtered)
+      # If reference lines are requested
+      href_line <- as_numeric_from_comma_sep_str(href_line)
+      validate(need(
+        all(!is.na(href_line)),
+        "Please enter a comma separated set of numeric values for the reference line(s)"
+      ))
 
-    # validate data input
-    validate_has_variable(adsl_filtered, adsl_vars)
-    validate_has_variable(adrs_filtered, adrs_vars)
-    validate_has_variable(adtr_filtered, adtr_vars)
+      # If gap point is requested
+      if (gap_point_val != "" || is.null(gap_point_val)) {
+        gap_point_val <- as.numeric(gap_point_val)
+        validate(need(
+          !anyNA(gap_point_val),
+          "Value entered for break point was not numeric"
+        ))
+      } else {
+        gap_point_val <- NULL
+      }
 
-    # restart the chunks for showing code
-    chunks_reset(envir = environment())
+      # If y tick is requested
+      if (ytick_at != "" || is.null(ytick_at)) {
+        ytick_at <- as.numeric(ytick_at)
+        validate(need(!anyNA(ytick_at), "Value entered for Y-axis interval was not numeric"))
+      } else {
+        ytick_at <- 20
+      }
 
-    # write variables to chunks
-    chunks_push(bquote({
-      bar_var <- .(bar_var)
-      bar_color_var <- .(bar_color_var)
-      sort_var <- .(sort_var)
-      add_label_var_sl <- .(add_label_var_sl)
-      add_label_paramcd_rs <- .(add_label_paramcd_rs)
-      anno_txt_var_sl <- .(anno_txt_var_sl)
-      anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs)
-      facet_var <- .(facet_var)
-      href_line <- .(href_line)
-      gap_point_val <- .(gap_point_val)
-      show_value <- .(show_value)
-    }))
-    chunks_push_new_line()
+      adsl_vars <- unique(
+        c("USUBJID", "STUDYID", bar_color_var, sort_var, add_label_var_sl, anno_txt_var_sl, facet_var)
+      )
+      adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", bar_var))
+      adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
+      adrs_paramcd <- unique(c(add_label_paramcd_rs, anno_txt_paramcd_rs))
 
-    # data processing
-    chunks_push(bquote({
-      adsl <- .(as.name(adsl_name))[, .(adsl_vars)]
-      adtr <- .(as.name(adtr_name))[, .(adtr_vars)] # nolint
-      adrs <- .(as.name(adrs_name))[, .(adrs_vars)] # nolint
+      # write data selection to chunks
+      adsl_name <- "ADSL_FILTERED"
+      adtr_name <- paste0(dataname_tr, "_FILTERED")
+      adrs_name <- paste0(dataname_rs, "_FILTERED")
 
-      bar_tr <- adtr %>%
-        dplyr::filter(PARAMCD == .(bar_paramcd)) %>%
-        dplyr::select(USUBJID, .(as.name(bar_var))) %>%
-        dplyr::group_by(USUBJID) %>%
-        dplyr::slice(which.min(.(as.name(bar_var))))
-      bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
-    }))
-    chunks_push_new_line()
-    chunks_safe_eval()
-    bar_data <- chunks_get_var("bar_data") # nolint
+      assign(adsl_name, adsl_filtered)
+      assign(adtr_name, adtr_filtered)
+      assign(adrs_name, adrs_filtered)
 
-    if (is.null(adrs_paramcd)) {
+      # validate data input
+      validate_has_variable(adsl_filtered, adsl_vars)
+      validate_has_variable(adrs_filtered, adrs_vars)
+      validate_has_variable(adtr_filtered, adtr_vars)
+
+      # restart the chunks for showing code
+      chunks_reset(envir = environment())
+
+      # write variables to chunks
       chunks_push(bquote({
-        anl <- bar_data
-        anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+        bar_var <- .(bar_var)
+        bar_color_var <- .(bar_color_var)
+        sort_var <- .(sort_var)
+        add_label_var_sl <- .(add_label_var_sl)
+        add_label_paramcd_rs <- .(add_label_paramcd_rs)
+        anno_txt_var_sl <- .(anno_txt_var_sl)
+        anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs)
+        facet_var <- .(facet_var)
+        href_line <- .(href_line)
+        gap_point_val <- .(gap_point_val)
+        show_value <- .(show_value)
       }))
-    } else {
+      chunks_push_new_line()
+
+      # data processing
       chunks_push(bquote({
-        rs_sub <- adrs %>%
-          dplyr::filter(PARAMCD %in% .(adrs_paramcd))
+        adsl <- .(as.name(adsl_name))[, .(adsl_vars)]
+        adtr <- .(as.name(adtr_name))[, .(adtr_vars)] # nolint
+        adrs <- .(as.name(adrs_name))[, .(adrs_vars)] # nolint
+
+        bar_tr <- adtr %>%
+          dplyr::filter(PARAMCD == .(bar_paramcd)) %>%
+          dplyr::select(USUBJID, .(as.name(bar_var))) %>%
+          dplyr::group_by(USUBJID) %>%
+          dplyr::slice(which.min(.(as.name(bar_var))))
+        bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
       }))
       chunks_push_new_line()
       chunks_safe_eval()
+      bar_data <- chunks_get_var("bar_data") # nolint
 
-      rs_sub <- chunks_get_var("rs_sub")
-      validate_one_row_per_id(rs_sub, key = c("STUDYID", "USUBJID", "PARAMCD"))
+      if (is.null(adrs_paramcd)) {
+        chunks_push(bquote({
+          anl <- bar_data
+          anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+        }))
+      } else {
+        chunks_push(bquote({
+          rs_sub <- adrs %>%
+            dplyr::filter(PARAMCD %in% .(adrs_paramcd))
+        }))
+        chunks_push_new_line()
+        chunks_safe_eval()
+
+        rs_sub <- chunks_get_var("rs_sub")
+        validate_one_row_per_id(rs_sub, key = c("STUDYID", "USUBJID", "PARAMCD"))
+
+        chunks_push(bquote({
+          rs_label <- rs_sub %>%
+            dplyr::select(USUBJID, PARAMCD, AVALC) %>%
+            tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
+          anl <- bar_data %>% dplyr::left_join(rs_label, by = c("USUBJID"))
+          anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+        }))
+      }
+      chunks_push_new_line()
+
+      chunks_safe_eval()
+
+
+      # write plotting code to chunks
+      anl <- chunks_get_var("anl") # nolint
 
       chunks_push(bquote({
-        rs_label <- rs_sub %>%
-          dplyr::select(USUBJID, PARAMCD, AVALC) %>%
-          tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
-        anl <- bar_data %>% dplyr::left_join(rs_label, by = c("USUBJID"))
-        anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+        osprey::g_waterfall(
+          bar_id = anl[["USUBJID"]],
+          bar_height = anl[[bar_var]],
+          sort_by = .(if (length(sort_var) > 0) {
+            quote(anl[[sort_var]])
+          } else {
+            NULL
+          }),
+          col_by = .(if (length(bar_color_var) > 0) {
+            quote(anl[[bar_color_var]])
+          } else {
+            NULL
+          }),
+          bar_color_opt = .(if (length(bar_color_var) == 0) {
+            NULL
+          } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt)) == T) {
+            bar_color_opt
+          } else {
+            NULL
+          }),
+          anno_txt = .(if (length(anno_txt_var_sl) == 0 & length(anno_txt_paramcd_rs) == 0) {
+            NULL
+          } else if (length(anno_txt_var_sl) >= 1 & length(anno_txt_paramcd_rs) == 0) {
+            quote(data.frame(anl[anno_txt_var_sl]))
+          } else if (length(anno_txt_paramcd_rs) >= 1 & length(anno_txt_var_sl) == 0) {
+            quote(data.frame(anl[anno_txt_paramcd_rs]))
+          } else {
+            quote(cbind(anl[anno_txt_var_sl], anl[anno_txt_paramcd_rs]))
+          }),
+          href_line = .(href_line),
+          facet_by = .(if (length(facet_var) > 0) {
+            quote(as.factor(anl[[facet_var]]))
+          } else {
+            NULL
+          }),
+          show_datavalue = .(show_value),
+          add_label = .(if (length(add_label_var_sl) > 0 & length(add_label_paramcd_rs) == 0) {
+            quote(anl[[add_label_var_sl]])
+          } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) == 0) {
+            quote(anl[[add_label_paramcd_rs]])
+          } else {
+            NULL
+          }),
+          gap_point = .(gap_point_val),
+          ytick_at = .(ytick_at),
+          y_label = "Tumor Burden Change from Baseline",
+          title = "Waterfall Plot"
+        )
       }))
-    }
-    chunks_push_new_line()
 
-    chunks_safe_eval()
+      chunks_safe_eval()
+    })
 
+    # Insert the plot into a plot_with_settings module from teal.devel
+    plot_with_settings_srv(
+      id = "waterfallplot",
+      plot_r = plot_r,
+      height = plot_height,
+      width = plot_width
+    )
 
-    # write plotting code to chunks
-    anl <- chunks_get_var("anl") # nolint
-
-    chunks_push(bquote({
-      osprey::g_waterfall(
-        bar_id = anl[["USUBJID"]],
-        bar_height = anl[[bar_var]],
-        sort_by = .(if (length(sort_var) > 0) {
-          quote(anl[[sort_var]])
-        } else {
-          NULL
-        }),
-        col_by = .(if (length(bar_color_var) > 0) {
-          quote(anl[[bar_color_var]])
-        } else {
-          NULL
-        }),
-        bar_color_opt = .(if (length(bar_color_var) == 0) {
-          NULL
-        } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt)) == T) {
-          bar_color_opt
-        } else {
-          NULL
-        }),
-        anno_txt = .(if (length(anno_txt_var_sl) == 0 & length(anno_txt_paramcd_rs) == 0) {
-          NULL
-        } else if (length(anno_txt_var_sl) >= 1 & length(anno_txt_paramcd_rs) == 0) {
-          quote(data.frame(anl[anno_txt_var_sl]))
-        } else if (length(anno_txt_paramcd_rs) >= 1 & length(anno_txt_var_sl) == 0) {
-          quote(data.frame(anl[anno_txt_paramcd_rs]))
-        } else {
-          quote(cbind(anl[anno_txt_var_sl], anl[anno_txt_paramcd_rs]))
-        }),
-        href_line = .(href_line),
-        facet_by = .(if (length(facet_var) > 0) {
-          quote(as.factor(anl[[facet_var]]))
-        } else {
-          NULL
-        }),
-        show_datavalue = .(show_value),
-        add_label = .(if (length(add_label_var_sl) > 0 & length(add_label_paramcd_rs) == 0) {
-          quote(anl[[add_label_var_sl]])
-        } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) == 0) {
-          quote(anl[[add_label_paramcd_rs]])
-        } else {
-          NULL
-        }),
-        gap_point = .(gap_point_val),
-        ytick_at = .(ytick_at),
-        y_label = "Tumor Burden Change from Baseline",
-        title = "Waterfall Plot"
-      )
-    }))
-
-    chunks_safe_eval()
+    # Show R Code
+    get_rcode_srv(
+      id = "rcode",
+      datasets = datasets,
+      modal_title = paste("R code for", label),
+      datanames = datasets$datanames()
+    )
   })
-
-  # Insert the plot into a plot_with_settings module from teal.devel
-  callModule(plot_with_settings_srv,
-    id = "waterfallplot",
-    plot_r = plot_r,
-    height = plot_height,
-    width = plot_width
-  )
-
-  # Show R Code
-  callModule(
-    module = get_rcode_srv,
-    id = "rcode",
-    datasets = datasets,
-    modal_title = paste("R code for", label),
-    datanames = datasets$datanames()
-  )
 }

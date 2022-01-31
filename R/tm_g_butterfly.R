@@ -253,229 +253,229 @@ ui_g_butterfly <- function(id, ...) {
   )
 }
 
-srv_g_butterfly <- function(input, output, session, datasets, dataname, label, plot_height, plot_width) {
-  init_chunks()
+srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_width) {
+  moduleServer(id, function(input, output, session) {
+    init_chunks()
 
-  options <- reactiveValues(r = NULL, l = NULL)
-  vars <- reactiveValues(r = NULL, l = NULL)
+    options <- reactiveValues(r = NULL, l = NULL)
+    vars <- reactiveValues(r = NULL, l = NULL)
 
-  reactive_data <- reactive({
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = FALSE) # nolint
-    ADAE_FILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
+    reactive_data <- reactive({
+      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = FALSE) # nolint
+      ADAE_FILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
 
-    ADSL_df <- ADSL_FILTERED %>% as.data.frame() # nolint
-    ADAE_df <- ADAE_FILTERED %>% as.data.frame() # nolint
+      ADSL_df <- ADSL_FILTERED %>% as.data.frame() # nolint
+      ADAE_df <- ADAE_FILTERED %>% as.data.frame() # nolint
 
-    list(ADSL_df = ADSL_df, ADAE_df = ADAE_df)
-  })
+      list(ADSL_df = ADSL_df, ADAE_df = ADAE_df)
+    })
 
-  # dynamic options for dichotomization variable
-  observeEvent(input$right_var,
-    handlerExpr = {
-      right_var <- input$right_var
-      right_val <- isolate(input$right_val)
-      current_r_var <- isolate(vars$r)
-      if (is.null(right_var)) {
-        updateOptionalSelectInput(session, "right_val", choices = character(0), selected = character(0))
-      } else {
-        data <- reactive_data()
-        options$r <- if (right_var %in% names(data$ADSL_df)) {
-          sort(unique(data$ADSL_df[, right_var]))
+    # dynamic options for dichotomization variable
+    observeEvent(input$right_var,
+      handlerExpr = {
+        right_var <- input$right_var
+        right_val <- isolate(input$right_val)
+        current_r_var <- isolate(vars$r)
+        if (is.null(right_var)) {
+          updateOptionalSelectInput(session, "right_val", choices = character(0), selected = character(0))
         } else {
-          sort(unique(data$ADAE_df[, right_var]))
-        }
+          data <- reactive_data()
+          options$r <- if (right_var %in% names(data$ADSL_df)) {
+            sort(unique(data$ADSL_df[, right_var]))
+          } else {
+            sort(unique(data$ADAE_df[, right_var]))
+          }
 
-        selected <- if (length(right_val) > 0) {
-          left_over <- right_val[right_val %in% options$r]
-          if (length(left_over) > 0 && !is.null(current_r_var) && current_r_var == right_var) {
-            left_over
+          selected <- if (length(right_val) > 0) {
+            left_over <- right_val[right_val %in% options$r]
+            if (length(left_over) > 0 && !is.null(current_r_var) && current_r_var == right_var) {
+              left_over
+            } else {
+              options$r[1]
+            }
           } else {
             options$r[1]
           }
-        } else {
-          options$r[1]
+          updateOptionalSelectInput(
+            session, "right_val",
+            choices = as.character(options$r), selected = selected, label = "Choose Up To 2:"
+          )
         }
-        updateOptionalSelectInput(
-          session, "right_val",
-          choices = as.character(options$r), selected = selected, label = "Choose Up To 2:"
-        )
-      }
-      vars$r <- right_var
-    },
-    ignoreNULL = FALSE
-  )
+        vars$r <- right_var
+      },
+      ignoreNULL = FALSE
+    )
 
-  observeEvent(input$left_var,
-    handlerExpr = {
-      left_var <- input$left_var
-      left_val <- isolate(input$left_val)
-      current_l_var <- isolate(vars$l)
-      if (is.null(left_var)) {
-        updateOptionalSelectInput(session, "left_val", choices = character(0), selected = character(0))
-      } else {
-        data <- reactive_data()
-        options$l <- if (left_var %in% names(data$ADSL_df)) {
-          sort(unique(data$ADSL_df[, left_var]))
+    observeEvent(input$left_var,
+      handlerExpr = {
+        left_var <- input$left_var
+        left_val <- isolate(input$left_val)
+        current_l_var <- isolate(vars$l)
+        if (is.null(left_var)) {
+          updateOptionalSelectInput(session, "left_val", choices = character(0), selected = character(0))
         } else {
-          sort(unique(data$ADAE_df[, left_var]))
-        }
+          data <- reactive_data()
+          options$l <- if (left_var %in% names(data$ADSL_df)) {
+            sort(unique(data$ADSL_df[, left_var]))
+          } else {
+            sort(unique(data$ADAE_df[, left_var]))
+          }
 
-        selected <- if (length(left_val) > 0) {
-          left_over <- left_val[left_val %in% options$l]
-          if (length(left_over) > 0 && !is.null(current_l_var) && current_l_var == left_var) {
-            left_over
+          selected <- if (length(left_val) > 0) {
+            left_over <- left_val[left_val %in% options$l]
+            if (length(left_over) > 0 && !is.null(current_l_var) && current_l_var == left_var) {
+              left_over
+            } else {
+              options$l[1]
+            }
           } else {
             options$l[1]
           }
-        } else {
-          options$l[1]
+
+          updateOptionalSelectInput(
+            session, "left_val",
+            choices = as.character(options$l), selected = selected, label = "Choose Up To 2:"
+          )
         }
-
-        updateOptionalSelectInput(
-          session, "left_val",
-          choices = as.character(options$l), selected = selected, label = "Choose Up To 2:"
-        )
-      }
-      vars$l <- left_var
-    },
-    ignoreNULL = FALSE
-  )
-
-
-
-  plot_r <- reactive({
-    validate(need(input$category_var, "Please select a category variable."))
-
-    ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-    ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-
-    right_var <- isolate(input$right_var)
-    left_var <- isolate(input$left_var)
-    right_val <- input$right_val
-    left_val <- input$left_val
-    category_var <- input$category_var
-    color_by_var <- input$color_by_var
-    count_by_var <- input$count_by_var
-    legend_on <- input$legend_on
-    facet_var <- input$facet_var
-    sort_by_var <- input$sort_by_var
-    filter_var <- input$filter_var
-
-    validate(
-      need(nrow(ADSL_FILTERED) > 0, "ADSL Data has no rows"),
-      need(nrow(ADAE_FILTERED) > 0, "ADAE Data has no rows")
+        vars$l <- left_var
+      },
+      ignoreNULL = FALSE
     )
-    validate(
-      need(right_var, "'Right Dichotomization Variable' not selected"),
-      need(left_var, "'Left Dichotomization Variable' not selected")
-    )
-    validate(
-      need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
-      need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked")
-    )
-    validate(need(
-      any(c(ADSL_FILTERED[[right_var]] %in% right_val, ADSL_FILTERED[[left_var]] %in% left_val)),
-      "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)"
-    ))
 
-    # if variable is not in ADSL, then take from domain VADs
-    varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)
-    varlist_from_adsl <- intersect(varlist, names(ADSL_FILTERED))
-    varlist_from_anl <- intersect(varlist, setdiff(names(ADAE_FILTERED), names(ADSL_FILTERED)))
 
-    adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
-    adae_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
 
-    adae_name <- paste0(dataname, "_FILTERED")
-    assign(adae_name, ADAE_FILTERED) # so that we can refer to the 'correct' data name
+    plot_r <- reactive({
+      validate(need(input$category_var, "Please select a category variable."))
 
-    chunks_reset(envir = environment())
+      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
-    chunks_push(bquote({
-      ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
-      ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
-    }))
+      right_var <- isolate(input$right_var)
+      left_var <- isolate(input$left_var)
+      right_val <- input$right_val
+      left_val <- input$left_val
+      category_var <- input$category_var
+      color_by_var <- input$color_by_var
+      count_by_var <- input$count_by_var
+      legend_on <- input$legend_on
+      facet_var <- input$facet_var
+      sort_by_var <- input$sort_by_var
+      filter_var <- input$filter_var
 
-    chunks_push_new_line()
-    if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
-      chunks_push(bquote(
-        ADAE <- quick_filter(.(filter_var), ADAE) %>% # nolint
-          droplevels() %>%
-          as.data.frame()
+      validate(
+        need(nrow(ADSL_FILTERED) > 0, "ADSL Data has no rows"),
+        need(nrow(ADAE_FILTERED) > 0, "ADAE Data has no rows")
+      )
+      validate(
+        need(right_var, "'Right Dichotomization Variable' not selected"),
+        need(left_var, "'Left Dichotomization Variable' not selected")
+      )
+      validate(
+        need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
+        need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked")
+      )
+      validate(need(
+        any(c(ADSL_FILTERED[[right_var]] %in% right_val, ADSL_FILTERED[[left_var]] %in% left_val)),
+        "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)"
       ))
-    }
-    chunks_push_new_line()
 
-    chunks_push(bquote({
-      ANL_f <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
-      ANL_f <- na.omit(ANL_f) # nolint
-    }))
+      # if variable is not in ADSL, then take from domain VADs
+      varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)
+      varlist_from_adsl <- intersect(varlist, names(ADSL_FILTERED))
+      varlist_from_anl <- intersect(varlist, setdiff(names(ADAE_FILTERED), names(ADSL_FILTERED)))
 
-    chunks_push_new_line()
-    chunks_push_new_line()
+      adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
+      adae_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
 
-    if (!is.null(right_val) && !is.null(right_val)) {
+      adae_name <- paste0(dataname, "_FILTERED")
+      assign(adae_name, ADAE_FILTERED) # so that we can refer to the 'correct' data name
+
+      chunks_reset(envir = environment())
+
       chunks_push(bquote({
-        right <- ANL_f[, .(right_var)] %in% .(right_val)
-        right_name <- paste(.(right_val), collapse = " - ")
-        left <- ANL_f[, .(left_var)] %in% .(left_val)
-        left_name <- paste(.(left_val), collapse = " - ")
+        ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
+        ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
       }))
-    }
 
-    chunks_push_new_line()
-    chunks_safe_eval()
+      chunks_push_new_line()
+      if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
+        chunks_push(bquote(
+          ADAE <- quick_filter(.(filter_var), ADAE) %>% # nolint
+            droplevels() %>%
+            as.data.frame()
+        ))
+      }
+      chunks_push_new_line()
 
-    if (!is.null(right_val) && !is.null(left_val)) {
       chunks_push(bquote({
-        osprey::g_butterfly(
-          category = ANL_f[, .(category_var)],
-          right_flag = right,
-          left_flag = left,
-          group_names = c(right_name, left_name),
-          block_count = .(count_by_var),
-          block_color = .(if (color_by_var != "None") {
-            bquote(ANL_f[, .(color_by_var)])
-          } else {
-            NULL
-          }),
-          id = ANL_f$USUBJID,
-          facet_rows = .(if (!is.null(facet_var)) {
-            bquote(ANL_f[, .(facet_var)])
-          } else {
-            NULL
-          }),
-          x_label = .(count_by_var),
-          y_label = .(category_var),
-          legend_label = .(color_by_var),
-          sort_by = .(sort_by_var),
-          show_legend = .(legend_on)
-        )
+        ANL_f <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
+        ANL_f <- na.omit(ANL_f) # nolint
       }))
-    }
 
-    chunks_safe_eval()
+      chunks_push_new_line()
+      chunks_push_new_line()
+
+      if (!is.null(right_val) && !is.null(right_val)) {
+        chunks_push(bquote({
+          right <- ANL_f[, .(right_var)] %in% .(right_val)
+          right_name <- paste(.(right_val), collapse = " - ")
+          left <- ANL_f[, .(left_var)] %in% .(left_val)
+          left_name <- paste(.(left_val), collapse = " - ")
+        }))
+      }
+
+      chunks_push_new_line()
+      chunks_safe_eval()
+
+      if (!is.null(right_val) && !is.null(left_val)) {
+        chunks_push(bquote({
+          osprey::g_butterfly(
+            category = ANL_f[, .(category_var)],
+            right_flag = right,
+            left_flag = left,
+            group_names = c(right_name, left_name),
+            block_count = .(count_by_var),
+            block_color = .(if (color_by_var != "None") {
+              bquote(ANL_f[, .(color_by_var)])
+            } else {
+              NULL
+            }),
+            id = ANL_f$USUBJID,
+            facet_rows = .(if (!is.null(facet_var)) {
+              bquote(ANL_f[, .(facet_var)])
+            } else {
+              NULL
+            }),
+            x_label = .(count_by_var),
+            y_label = .(category_var),
+            legend_label = .(color_by_var),
+            sort_by = .(sort_by_var),
+            show_legend = .(legend_on)
+          )
+        }))
+      }
+
+      chunks_safe_eval()
+    })
+
+    # Insert the plot into a plot_with_settings module from teal.devel
+    plot_with_settings_srv(
+      id = "butterflyplot",
+      plot_r = plot_r,
+      height = plot_height,
+      width = plot_width
+    )
+
+    get_rcode_srv(
+      id = "rcode",
+      datasets = datasets,
+      modal_title = paste("R code for", label),
+      datanames = unique(c(
+        dataname,
+        vapply(X = dataname, FUN.VALUE = character(1), function(x) {
+          if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
+        })
+      ))
+    )
   })
-
-  # Insert the plot into a plot_with_settings module from teal.devel
-  callModule(
-    plot_with_settings_srv,
-    id = "butterflyplot",
-    plot_r = plot_r,
-    height = plot_height,
-    width = plot_width
-  )
-
-  callModule(
-    module = get_rcode_srv,
-    id = "rcode",
-    datasets = datasets,
-    modal_title = paste("R code for", label),
-    datanames = unique(c(
-      dataname,
-      vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-        if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-      })
-    ))
-  )
 }
