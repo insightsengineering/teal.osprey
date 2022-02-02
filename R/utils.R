@@ -11,6 +11,8 @@
 #' ADaM data structure and ADaM variables.
 #'
 #' @name shared_params
+#' @keywords internal
+#'
 NULL
 
 #'
@@ -61,6 +63,8 @@ label_aevar <- function(x) {
 
 #' retrieve name of ci method
 #' @param x ci method to retrieve its name
+#' @keywords internal
+#'
 name_ci <- function(x) {
   names(ci_choices)[which(ci_choices == x)]
 }
@@ -88,6 +92,8 @@ name_ci <- function(x = ci_choices) {
 #' is c(4, NA, 5, NA, 3).
 #' If input argument is NULL or just whitespace then NULL is returned
 #' @param input_string string to be split into numeric vector
+#' @keywords internal
+#'
 as_numeric_from_comma_sep_str <- function(input_string) {
   if (!is.null(input_string) && trimws(input_string) != "") {
     ref_line <- unlist(strsplit(trimws(input_string), ","))

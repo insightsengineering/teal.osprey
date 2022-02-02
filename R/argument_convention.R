@@ -39,5 +39,6 @@
 #' @return the [teal::module()] object.
 #'
 #' @name argument_convention
+#' @keywords internal
 #'
 NULL

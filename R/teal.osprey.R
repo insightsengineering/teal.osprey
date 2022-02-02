@@ -5,4 +5,6 @@
 #' @import dplyr osprey shiny teal teal.devel
 #' @docType package
 #' @name teal.osprey
+#' @keywords internal
+#'
 NULL
