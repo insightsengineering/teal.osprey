@@ -33,9 +33,3 @@ reference:
       - quick_filter
       - srv_g_decorate
       - ui_g_decorate
-  - title: "Unexported functions"
-    contents:
-      - argument_convention
-      - as_numeric_from_comma_sep_str
-      - name_ci
-      - shared_params
