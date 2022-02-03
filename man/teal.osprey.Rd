@@ -7,3 +7,4 @@
 \description{
 The \code{teal.osprey} R package contains interactive \code{\link{teal}} modules for the outputs
 }
+\keyword{internal}

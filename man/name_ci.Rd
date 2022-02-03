@@ -16,3 +16,4 @@ retrieve name of ci method
 
 retrieve detailed name of ci method
 }
+\keyword{internal}

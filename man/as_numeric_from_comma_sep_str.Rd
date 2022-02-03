@@ -20,3 +20,4 @@ e.g. as_numeric_from_comma_separated_string("4  ,hello,5,, 3")
 is c(4, NA, 5, NA, 3).
 If input argument is NULL or just whitespace then NULL is returned
 }
+\keyword{internal}
