@@ -321,11 +321,11 @@ srv_g_waterfall <- function(id,
 
       # get variables
       bar_color_var <- if (!is.null(input$bar_color_var) &&
-                           input$bar_color_var != "None" &&
-                           input$bar_color_var != "") {
-          input$bar_color_var
+        input$bar_color_var != "None" &&
+        input$bar_color_var != "") {
+        input$bar_color_var
       } else {
-          NULL
+        NULL
       }
       sort_var <- if (!is.null(input$sort_var) && input$sort_var != "None" && input$sort_var != "") {
         input$sort_var
