@@ -93,7 +93,7 @@ app <- teal::init(
     ),
     check = TRUE
   ),
-  modules = root_modules(
+  modules = modules(
     tm_g_spiderplot(
       label = "Spider plot",
       dataname = "ADTR",

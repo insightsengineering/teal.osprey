@@ -102,7 +102,7 @@
 #'     ",
 #'     check = TRUE
 #'   ),
-#'   modules = root_modules(
+#'   modules = modules(
 #'     tm_g_heat_bygrade(
 #'       label = "Heatmap by grade",
 #'       sl_dataname = "ADSL",

@@ -26,7 +26,7 @@
 #'     cdisc_dataset("ADAE", ADAE, code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae"),
 #'     check = TRUE
 #'   ),
-#'   modules = root_modules(
+#'   modules = modules(
 #'     tm_g_ae_sub(
 #'       label = "AE by Subgroup",
 #'       dataname = "ADAE",

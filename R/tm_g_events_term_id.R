@@ -26,7 +26,7 @@
 #'     cdisc_dataset("ADAE", ADAE, code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae"),
 #'     check = TRUE
 #'   ),
-#'   modules = root_modules(
+#'   modules = modules(
 #'     tm_g_events_term_id(
 #'       label = "Common AE",
 #'       dataname = "ADAE",

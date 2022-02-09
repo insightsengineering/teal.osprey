@@ -105,7 +105,7 @@ x <- init(
     ),
     check = TRUE
   ),
-  modules = root_modules(
+  modules = modules(
     tm_g_swimlane(
       label = "Swimlane Plot",
       dataname = "ADRS",
