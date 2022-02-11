@@ -209,7 +209,7 @@ x <- init(
     ),
     check = TRUE
   ),
-  modules = root_modules(
+  modules = modules(
     tm_g_patient_profile(
       label = "Patient Profile Plot",
       patient_id = choices_selected(

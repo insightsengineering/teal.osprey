@@ -118,7 +118,7 @@ x <- teal::init(
     ),
     check = TRUE
   ),
-  modules = root_modules(
+  modules = modules(
     tm_g_waterfall(
       label = "Waterfall",
       dataname_tr = "ADTR",

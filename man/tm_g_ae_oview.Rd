@@ -102,7 +102,7 @@ app <- init(
     ),
     check = TRUE
   ),
-  modules = root_modules(
+  modules = modules(
     tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",

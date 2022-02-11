@@ -121,7 +121,7 @@ app <- init(
     ),
     check = TRUE
   ),
-  modules = root_modules(
+  modules = modules(
     tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
