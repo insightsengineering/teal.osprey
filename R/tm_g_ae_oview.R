@@ -10,8 +10,6 @@
 #'
 #' @inherit argument_convention return
 #'
-#' @importFrom rtables var_labels
-#'
 #' @export
 #'
 #' @examples
