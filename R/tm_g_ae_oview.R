@@ -297,7 +297,7 @@ srv_g_ae_oview <- function(id,
         arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
         trt <- .(input$arm_trt)
         ref <- .(input$arm_ref)
-        anl_labels <- rtables::var_labels(.(as.name(anl_name)))
+        anl_labels <- teal::get_variable_labels(.(as.name(anl_name)), fill = FALSE)
         flags <- .(as.name(anl_name)) %>%
           select(all_of(.(input$flag_var_anl))) %>%
           rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
