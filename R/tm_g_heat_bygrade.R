@@ -338,11 +338,11 @@ srv_g_heatmap_bygrade <- function(id,
 
       # assign labels back to the data
       teal::variable_labels(ADSL_FILTERED) <-
-        teal::get_variable_labels(datasets$get_data(sl_dataname, filtered = FALSE), fill = FALSE)
+        teal::variable_labels(datasets$get_data(sl_dataname, filtered = FALSE), fill = FALSE)
       teal::variable_labels(ADEX_FILTERED) <-
-        teal::get_variable_labels(datasets$get_data(ex_dataname, filtered = FALSE), fill = FALSE)
+        teal::variable_labels(datasets$get_data(ex_dataname, filtered = FALSE), fill = FALSE)
       teal::variable_labels(ADAE_FILTERED) <-
-        teal::get_variable_labels(datasets$get_data(ae_dataname, filtered = FALSE), fill = FALSE)
+        teal::variable_labels(datasets$get_data(ae_dataname, filtered = FALSE), fill = FALSE)
 
       validate(need(nrow(ADSL_FILTERED) > 0, "Please select at least one subject"))
 
@@ -368,7 +368,7 @@ srv_g_heatmap_bygrade <- function(id,
 
       if (input$plot_cm) {
         ADCM_FILTERED <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
-        ADCM_label <- teal::get_variable_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
+        ADCM_label <- teal::variable_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
         teal::variable_labels(ADCM_FILTERED) <- ADCM_label
         validate(
           need(
@@ -392,7 +392,8 @@ srv_g_heatmap_bygrade <- function(id,
           conmed_var <- .(input$conmed_var)
           conmed_data[[conmed_var]] <-
             factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
-          teal::variable_labels(conmed_data)[conmed_var] <- teal::get_variable_labels(ADCM_FILTERED, fill = FALSE)[conmed_var]
+          teal::variable_labels(conmed_data)[conmed_var] <-
+            teal::variable_labels(ADCM_FILTERED, fill = FALSE)[conmed_var]
         }))
       } else {
         chunks_push(bquote({
