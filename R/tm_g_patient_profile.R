@@ -557,8 +557,9 @@ srv_g_patient_profile <- function(id,
           ADAE_FILTERED <- NULL # nolint
         } else {
           ADAE_FILTERED <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
-          rtables::var_labels(ADAE_FILTERED) <- rtables::var_labels(
-            datasets$get_data(ae_dataname, filtered = FALSE)
+          teal::variable_labels(ADAE_FILTERED) <- teal::variable_labels(
+            datasets$get_data(ae_dataname, filtered = FALSE),
+            fill = FALSE
           )
           validate_has_variable(ADAE_FILTERED, adae_vars)
         }
@@ -682,7 +683,7 @@ srv_g_patient_profile <- function(id,
 
       # name for ae_line_col
       if (!is.null(ae_line_col_var) && is.data.frame(ADAE_FILTERED)) {
-        chunks_push(bquote(ae_line_col_name <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]))
+        chunks_push(bquote(ae_line_col_name <- teal::variable_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)]))
       } else {
         chunks_push(quote(ae_line_col_name <- NULL))
       }
@@ -730,7 +731,8 @@ srv_g_patient_profile <- function(id,
                   as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
                 )))) %>%
               select(c(.(adae_vars), ASTDY, AENDY))
-            rtables::var_labels(ADAE)[.(ae_line_col_var)] <- rtables::var_labels(ADAE_FILTERED)[.(ae_line_col_var)]
+            teal::variable_labels(ADAE)[.(ae_line_col_var)] <-
+              teal::variable_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)]
           }))
           chunks_safe_eval()
 

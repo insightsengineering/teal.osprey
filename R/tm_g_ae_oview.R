@@ -10,8 +10,6 @@
 #'
 #' @inherit argument_convention return
 #'
-#' @importFrom rtables var_labels
-#'
 #' @export
 #'
 #' @examples
@@ -22,21 +20,20 @@
 #'
 #' # Add additional dummy causality flags.
 #' add_event_flags <- function(dat) {
-#'   dat %>%
+#'   dat <- dat %>%
 #'     dplyr::mutate(
 #'       TMPFL_SER = AESER == "Y",
 #'       TMPFL_REL = AEREL == "Y",
 #'       TMPFL_GR5 = AETOXGR == "5",
 #'       AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
 #'       AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
-#'     ) %>%
-#'     rtables::var_relabel(
-#'       TMPFL_SER = "Serious AE",
-#'       TMPFL_REL = "Related AE",
-#'       TMPFL_GR5 = "Grade 5 AE",
-#'       AEREL1 = "AE related to A: Drug X",
-#'       AEREL2 = "AE related to B: Placebo"
 #'     )
+#'   labels <- c("Serious AE", "Related AE", "Grade 5 AE", "AE related to A: Drug X", "AE related to B: Placebo")
+#'   cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
+#'   for (i in seq_along(labels)) {
+#'     attr(dat[[cols[i]]], "label") <- labels[i]
+#'   }
+#'   dat
 #' }
 #' ADAE <- ADAE %>% add_event_flags()
 #'
@@ -46,25 +43,30 @@
 #'     cdisc_dataset("ADAE", ADAE,
 #'       code =
 #'         "ADAE <- synthetic_cdisc_data('latest')$adae
-#'           add_event_flags <- function(dat) {
-#'             dat %>%
-#'               dplyr::mutate(
-#'                 TMPFL_SER = AESER == 'Y',
-#'                 TMPFL_REL = AEREL == 'Y',
-#'                 TMPFL_GR5 = AETOXGR == '5',
-#'                 AEREL1 = (AEREL == 'Y' & ACTARM == 'A: Drug X'),
-#'                 AEREL2 = (AEREL == 'Y' & ACTARM == 'B: Placebo')
-#'               ) %>%
-#'               rtables::var_relabel(
-#'                 TMPFL_SER = 'Serious AE',
-#'                 TMPFL_REL = 'Related AE',
-#'                 TMPFL_GR5 = 'Grade 5 AE',
-#'                 AEREL1 = 'AE related to A: Drug X',
-#'                 AEREL2 = 'AE related to B: Placebo'
-#'               )
-#'           }
-#'           # Generating user-defined event flags.
-#'           ADAE <- ADAE %>% add_event_flags()"
+#'            add_event_flags <- function(dat) {
+#'              dat <- dat %>%
+#'                dplyr::mutate(
+#'                  TMPFL_SER = AESER == 'Y',
+#'                  TMPFL_REL = AEREL == 'Y',
+#'                  TMPFL_GR5 = AETOXGR == '5',
+#'                  AEREL1 = (AEREL == 'Y' & ACTARM == 'A: Drug X'),
+#'                  AEREL2 = (AEREL == 'Y' & ACTARM == 'B: Placebo')
+#'                )
+#'              labels <- c(
+#'                'Serious AE',
+#'                'Related AE',
+#'                'Grade 5 AE',
+#'                'AE related to A: Drug X',
+#'                'AE related to B: Placebo'
+#'              )
+#'              cols <- c('TMPFL_SER', 'TMPFL_REL', 'TMPFL_GR5', 'AEREL1', 'AEREL2')
+#'              for (i in seq_along(labels)) {
+#'               attr(dat[[cols[i]]], 'label') <- labels[i]
+#'              }
+#'              dat
+#'            }
+#'            # Generating user-defined event flags.
+#'            ADAE <- ADAE %>% add_event_flags()"
 #'     ),
 #'     check = TRUE
 #'   ),
@@ -297,7 +299,7 @@ srv_g_ae_oview <- function(id,
         arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
         trt <- .(input$arm_trt)
         ref <- .(input$arm_ref)
-        anl_labels <- rtables::var_labels(.(as.name(anl_name)))
+        anl_labels <- teal::variable_labels(.(as.name(anl_name)), fill = FALSE)
         flags <- .(as.name(anl_name)) %>%
           select(all_of(.(input$flag_var_anl))) %>%
           rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
