@@ -1,46 +1,19 @@
 # teal.osprey
 
-`osprey` and `teal.osprey` is a ED SPA community community effort to create TLGs and teal modules that have not been created by the NEST team to date and are needed for ED analysis.
+The teal.goshawk package provides community contributed `teal` modules of the analysis functions from the [osprey](https://github.com/insightsengineering/osprey) R package.
+This enables `teal` app developers to easily create applications making use of the `osprey` analysis functions.
 
 ## Installation
 
-### Clone and install manually
+This repository requires a personal access token to install see here [creating and using PAT](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token). Once this is set up, to install the latest released version of the package run:
 
-1. Clone the repository
+```r
+Sys.setenv(GITHUB_PAT = "your_access_token_here")
+if (!require("devtools")) install.packages("devtools")
+devtools::install_github("insightsengineering/teal.osprey@*release", dependencies = FALSE)
+```
 
-   The repository can be downloaded directly from the `github.com` site as an archive (see [Github tutorial on cloning to learn more](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github/cloning-a-repository)).
-   Alternatively, Git command line tools offer the same functionality, without the need for manual downloading and unpacking the archive, but require to authenticate to Github. You can authenticate using a key pair or a Personal Access Token (PAT).
-   Please refer to excellent Github tutorials on [connecting to Github using SSH](https://docs.github.com/en/github/authenticating-to-github) or [creating and using PAT](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token).
+You might need to manually install all of the package dependencies before installing this package as without
+the `dependencies = FALSE` argument to `install_github` it may produce an error.
 
-   1. Using PAT. Input in the Git Bash console, PowerShell or any Linux shell:
-
-      ```shell
-      $ git clone https://github.com/insightsengineering/teal.osprey.git
-      Username: your_username_goes_here
-      Password: your_github_personal_access_token_goes_here
-      ```
-   1. Using SSH. If set up properly, the repository is ready to be cloned executing:
-
-      ```shell
-      git clone https://github.com/insightsengineering/teal.osprey.git
-      ```
-   This creates a sub-directory `teal.osprey` containing the cloned repository.
-
-2. Build and install
-
-   The native R tools provide a quick way to install a package. Run in PowerShell or any Linux shell:
-
-   ```shell
-   R CMD build teal.osprey
-   ```
-
-   This command builds the package and creates an archive. The name of the archive is output by the command at then of building. Then input in the shell:
-
-   ```shell
-   Rscript -e 'install.packages("name_of_the_archive")
-   ```
-
-   Here is an example of a real command (with name_of_the_archive substituted by the output of the build command):
-   ```shell
-   Rscript -e 'install.packages("teal.osprey_0.1.10.9000.tar.gz")'
-   ```
+In order to run many of the examples you will also need to install the [`scda`](https://github.com/insightsengineering/scda) package.
