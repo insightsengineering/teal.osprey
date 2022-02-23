@@ -1,6 +1,6 @@
 # teal.osprey
 
-The teal.goshawk package provides community contributed `teal` modules of the analysis functions from the [osprey](https://github.com/insightsengineering/osprey) R package.
+The teal.osprey package provides community contributed `teal` modules of the analysis functions from the [osprey](https://github.com/insightsengineering/osprey) R package.
 This enables `teal` app developers to easily create applications making use of the `osprey` analysis functions.
 
 ## Installation
