@@ -1,4 +1,4 @@
-# teal.osprey 0.1.12.9007
+# teal.osprey 0.1.12.9008
 
 * Added basic logging to the modules.
 * Rewrote modules to use `moduleServer` and updated calls to `teal.devel` modules which have also been written to use `moduleServer`.
