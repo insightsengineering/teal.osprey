@@ -3,6 +3,7 @@
 * Added basic logging to the modules.
 * Rewrote modules to use `moduleServer` and updated calls to `teal.devel` modules which have also been written to use `moduleServer`.
 * Replaced calls to `teal::root_modules` with `teal::modules` following deprecation of `teal::root_modules`.
+* `Parameter` `UI` dataset name no longer hard coded to `ADTR` in `tm_g_spiderplot`.
 
 # teal.osprey 0.1.12
 

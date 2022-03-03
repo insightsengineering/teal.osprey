@@ -126,7 +126,7 @@ ui_g_spider <- function(id, ...) {
         style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
         optionalSelectInput(
           ns("paramcd"),
-          "Parameter - from ADTR",
+          paste("Parameter - from", a$dataname),
           a$paramcd$choices,
           a$paramcd$selected,
           multiple = FALSE
