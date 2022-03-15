@@ -3,7 +3,7 @@
 #'
 #' Display spider plot as a shiny module
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param x_var x-axis variables
 #' @param y_var y-axis variables
@@ -115,58 +115,58 @@ ui_g_spider <- function(id, ...) {
   ns <- NS(id)
   a <- list(...)
 
-  standard_layout(
-    output = white_small_well(
-      plot_with_settings_ui(id = ns("spiderplot"))
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
+      teal.widgets::plot_with_settings_ui(id = ns("spiderplot"))
     ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
       div(
         style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("paramcd"),
           paste("Parameter - from", a$dataname),
           a$paramcd$choices,
           a$paramcd$selected,
           multiple = FALSE
         ),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("x_var"),
           "X-axis Variable",
           a$x_var$choices,
           a$x_var$selected,
           multiple = FALSE
         ),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("y_var"),
           "Y-axis Variable",
           a$y_var$choices,
           a$y_var$selected,
           multiple = FALSE
         ),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("line_colorby_var"),
           "Color By Variable (Line)",
           a$line_colorby_var$choices,
           a$line_colorby_var$selected,
           multiple = FALSE
         ),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("marker_var"),
           "Marker Symbol By Variable",
           a$marker_var$choices,
           a$marker_var$selected,
           multiple = FALSE
         ),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("xfacet_var"),
           "X-facet By Variable",
           a$xfacet_var$choices,
           a$xfacet_var$selected,
           multiple = TRUE
         ),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("yfacet_var"),
           "Y-facet By Variable",
           a$yfacet_var$choices,
@@ -214,7 +214,7 @@ srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width)
     vals <- reactiveValues(spiderplot = NULL) # nolint
 
     # initialize chunks
-    init_chunks()
+    teal.code::init_chunks()
 
     # render plot
     plot_r <- reactive({

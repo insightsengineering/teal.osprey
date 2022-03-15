@@ -3,7 +3,7 @@
 #'
 #' Display butterfly plot as a shiny module
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param filter_var (\code{choices_selected}) variable name of data filter, please see details regarding
 #'   expected values, default is \code{NULL}. \code{choices}
@@ -156,15 +156,15 @@ ui_g_butterfly <- function(id, ...) {
   ns <- NS(id)
   a <- list(...)
 
-  standard_layout(
-    output = white_small_well(
-      plot_with_settings_ui(id = ns("butterflyplot"))
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
+      teal.widgets::plot_with_settings_ui(id = ns("butterflyplot"))
     ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
       if (!is.null(a$filter_var)) {
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("filter_var"),
           label =
             "Preset Data Filters Observations with value of 'Y' for selected variable(s) will be used for analysis",
@@ -173,14 +173,14 @@ ui_g_butterfly <- function(id, ...) {
           multiple = TRUE
         )
       },
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("right_var"),
         "Right Dichotomization Variable",
         a$right_var$choices,
         a$right_var$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("right_val"),
         "Choose Up To 2:",
         multiple = TRUE,
@@ -190,14 +190,14 @@ ui_g_butterfly <- function(id, ...) {
           `actions-box` = FALSE
         )
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("left_var"),
         "Left Dichotomization Variable",
         a$left_var$choices,
         a$left_var$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("left_val"),
         "Choose Up To 2:",
         multiple = TRUE,
@@ -207,7 +207,7 @@ ui_g_butterfly <- function(id, ...) {
           `actions-box` = FALSE
         )
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("category_var"),
         "Category Variable",
         a$category_var$choices,
@@ -227,7 +227,7 @@ ui_g_butterfly <- function(id, ...) {
         a$count_by_var$selected
       ),
       if (!is.null(a$facet_var)) {
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("facet_var"),
           "Facet By Variable",
           a$facet_var$choices,
@@ -255,7 +255,7 @@ ui_g_butterfly <- function(id, ...) {
 
 srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_width) {
   moduleServer(id, function(input, output, session) {
-    init_chunks()
+    teal.code::init_chunks()
 
     options <- reactiveValues(r = NULL, l = NULL)
     vars <- reactiveValues(r = NULL, l = NULL)
@@ -458,7 +458,7 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
       chunks_safe_eval()
     })
 
-    # Insert the plot into a plot_with_settings module from teal.devel
+    # Insert the plot into a plot_with_settings module from teal.widgets
     plot_with_settings_srv(
       id = "butterflyplot",
       plot_r = plot_r,

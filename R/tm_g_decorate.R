@@ -14,7 +14,7 @@ ui_g_decorate <- function(id,
                           fontsize = c(5, 4, 11)) {
   ns <- NS(id)
   tagList(
-    optionalSliderInputValMinMax(
+    teal.widgets::optionalSliderInputValMinMax(
       ns("fontsize"),
       "Font Size",
       value_min_max = fontsize,

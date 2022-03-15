@@ -2,7 +2,7 @@
 #'
 #' Display patient profile plot as a shiny module
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param patient_id (\code{choices_seleced}) unique subject ID variable
 #' @param sl_dataname (\code{character}) subject level dataset name,
@@ -280,9 +280,9 @@ ui_g_patient_profile <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
 
-  standard_layout(
-    output = white_small_well(
-      plot_with_settings_ui(id = ns("patientprofileplot"))
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
+      teal.widgets::plot_with_settings_ui(id = ns("patientprofileplot"))
     ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
@@ -305,7 +305,7 @@ ui_g_patient_profile <- function(id, ...) {
         uiOutput(ns("select_cm_output")),
         uiOutput(ns("select_lb_output"))
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("sl_start_date"),
         "Start date variable",
         choices = a$sl_start_date$choices,
@@ -327,14 +327,14 @@ ui_g_patient_profile <- function(id, ...) {
       ),
       conditionalPanel(
         paste0("input['", ns("select_ae"), "']"),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("ae_var"),
           "Adverse Event variable",
           choices = a$ae_var$choices,
           selected = a$ae_var$selected,
           multiple = FALSE
         ),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("ae_line_var"),
           "Adverse Event line color variable",
           choices = a$ae_line_col_var$choices,
@@ -344,7 +344,7 @@ ui_g_patient_profile <- function(id, ...) {
       ),
       conditionalPanel(
         paste0("input['", ns("select_rs"), "']"),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("rs_var"),
           "Tumor response variable",
           choices = a$rs_var$choices,
@@ -354,7 +354,7 @@ ui_g_patient_profile <- function(id, ...) {
       ),
       conditionalPanel(
         paste0("input['", ns("select_cm"), "']"),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("cm_var"),
           "Concomitant medicine variable",
           choices = a$cm_var$choices,
@@ -364,7 +364,7 @@ ui_g_patient_profile <- function(id, ...) {
       ),
       conditionalPanel(
         paste0("input['", ns("select_lb"), "']"),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("lb_var"),
           "Lab variable",
           choices = a$lb_var$choices,
@@ -409,7 +409,7 @@ srv_g_patient_profile <- function(id,
                                   plot_width) {
   moduleServer(id, function(input, output, session) {
     # initialize chunks
-    init_chunks()
+    teal.code::init_chunks()
 
     # only show the check box when domain data is available
     observeEvent(ae_dataname, {

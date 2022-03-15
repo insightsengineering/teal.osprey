@@ -24,16 +24,16 @@ available in the list passed to the \code{data} argument of \code{\link[teal:ini
 
 \item{arm_var}{(\code{choices_selected})\cr
 object with all available choices and the pre-selected option for variable
-names that can be used as \code{arm_var}. See \code{\link[teal:choices_selected]{teal::choices_selected()}} for
+names that can be used as \code{arm_var}. See \code{\link[teal:reexports]{teal::choices_selected()}} for
 details.}
 
-\item{flag_var_anl}{(\code{\link[teal:choices_selected]{teal::choices_selected}})
+\item{flag_var_anl}{(\code{\link[teal:reexports]{teal::choices_selected}})
 \code{choices_selected} object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
 Defines initial possible range of font-size. \code{fontsize} is set for
-\code{\link[teal:optionalSliderInputValMinMax]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
+\code{\link[teal:reexports]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
 plot.}
 
 \item{plot_height}{(\code{numeric(3)})\cr

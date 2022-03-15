@@ -2,7 +2,7 @@
 #'
 #' This is teal module that generates a waterfall plot for ADaM data
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param dataname_tr tumor burden analysis data used in teal module to plot as bar height, needs to
 #' be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}
@@ -153,21 +153,21 @@ ui_g_waterfall <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
 
-  standard_layout(
-    output = white_small_well(
-      plot_with_settings_ui(id = ns("waterfallplot"))
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
+      teal.widgets::plot_with_settings_ui(id = ns("waterfallplot"))
     ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis Data: ", tags$code(a$dataname_tr), tags$code(a$dataname_rs)),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("bar_paramcd"),
         "Tumor Burden Parameter",
         choices = a$bar_paramcd$choices,
         selected = a$bar_paramcd$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("bar_var"),
         "Bar Height",
         choices = a$bar_var$choices,
@@ -175,14 +175,14 @@ ui_g_waterfall <- function(id, ...) {
         multiple = FALSE,
         label_help = helpText("Tumor change variable from ", tags$code("ADTR"))
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("bar_color_var"),
         "Bar Color",
         choices = a$bar_color_var$choices,
         selected = a$bar_color_var$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("sort_var"),
         "Sort by",
         choices = a$sort_var$choices,
@@ -190,21 +190,21 @@ ui_g_waterfall <- function(id, ...) {
         multiple = FALSE,
         label_help = helpText("from ", tags$code("ADSL"))
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("add_label_var_sl"),
         "Add ADSL Label to Bars",
         choices = a$add_label_var_sl$choices,
         selected = a$add_label_var_sl$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("add_label_paramcd_rs"),
         "Add ADRS Label to Bars",
         choices = a$add_label_paramcd_rs$choices,
         selected = a$add_label_paramcd_rs$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("anno_txt_var_sl"),
         "Annotation Variables",
         choices = a$anno_txt_var_sl$choices,
@@ -212,7 +212,7 @@ ui_g_waterfall <- function(id, ...) {
         multiple = TRUE,
         label_help = helpText("from ", tags$code("ADSL"))
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("anno_txt_paramcd_rs"),
         "Annotation Parameters",
         choices = a$anno_txt_paramcd_rs$choices,
@@ -220,7 +220,7 @@ ui_g_waterfall <- function(id, ...) {
         multiple = TRUE,
         label_help = helpText("from ", tags$code("ADRS"))
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("facet_var"),
         "Facet by",
         choices = a$facet_var$choices,
@@ -277,8 +277,8 @@ srv_g_waterfall <- function(id,
                             plot_height,
                             plot_width) {
   moduleServer(id, function(input, output, session) {
-    # use teal.devel code chunks
-    init_chunks()
+    # use teal.code code chunks
+    teal.code::init_chunks()
 
     plot_r <- reactive({
       adsl_filtered <- datasets$get_data("ADSL", filtered = TRUE)
@@ -507,7 +507,7 @@ srv_g_waterfall <- function(id,
       chunks_safe_eval()
     })
 
-    # Insert the plot into a plot_with_settings module from teal.devel
+    # Insert the plot into a plot_with_settings module from teal.widgets
     plot_with_settings_srv(
       id = "waterfallplot",
       plot_r = plot_r,

@@ -5,11 +5,14 @@ upstream_repos:
   insightsengineering/osprey:
     repo: insightsengineering/osprey
     host: https://github.com
-  insightsengineering/teal.devel:
-    repo: insightsengineering/teal.devel
-    host: https://github.com
   insightsengineering/tern:
     repo: insightsengineering/tern
+    host: https://github.com
+  insightsengineering/teal.widgets:
+    repo: insightsengineering/teal.widgets
+    host: https://github.com
+  insightsengineering/teal.code:
+    repo: insightsengineering/teal.code
     host: https://github.com
   insightsengineering/teal:
     repo: insightsengineering/teal

@@ -34,7 +34,7 @@ available in the list passed to the \code{data} argument of \code{\link[teal:ini
 
 \item{paramcd}{(\code{character(1)} or \code{choices_selected})\cr
 variable value designating the studied parameter.
-See \code{\link[teal:choices_selected]{teal::choices_selected()}} for details.}
+See \code{\link[teal:reexports]{teal::choices_selected()}} for details.}
 
 \item{x_var}{x-axis variables}
 
@@ -62,12 +62,11 @@ vector to indicate default value, minimum and maximum values.}
 \item{plot_width}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
 
-\item{pre_output}{optional, \code{shiny.tag} with text placed before the
-output to put the output into context. For example a title.}
+\item{pre_output}{(\code{shiny.tag}, optional)\cr
+with text placed before the output to put the output into context. For example a title.}
 
-\item{post_output}{optional, \code{shiny.tag} with text placed after the
-output to put the output into context. For example the
-\code{\link[shiny]{helpText}} elements are useful.}
+\item{post_output}{(\code{shiny.tag}, optional) with text placed after the output to put the output
+into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} elements are useful.}
 }
 \value{
 the \code{\link[teal:module]{teal::module()}} object.
