@@ -386,10 +386,10 @@ srv_g_waterfall <- function(id,
       validate_has_variable(adtr_filtered, adtr_vars)
 
       # restart the chunks for showing code
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
       # write variables to chunks
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         bar_var <- .(bar_var)
         bar_color_var <- .(bar_color_var)
         sort_var <- .(sort_var)
@@ -402,10 +402,10 @@ srv_g_waterfall <- function(id,
         gap_point_val <- .(gap_point_val)
         show_value <- .(show_value)
       }))
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
       # data processing
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         adsl <- .(as.name(adsl_name))[, .(adsl_vars)]
         adtr <- .(as.name(adtr_name))[, .(adtr_vars)] # nolint
         adrs <- .(as.name(adrs_name))[, .(adrs_vars)] # nolint
@@ -417,27 +417,27 @@ srv_g_waterfall <- function(id,
           dplyr::slice(which.min(.(as.name(bar_var))))
         bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
       }))
-      chunks_push_new_line()
-      chunks_safe_eval()
-      bar_data <- chunks_get_var("bar_data") # nolint
+      teal.code::chunks_push_new_line()
+      teal.code::chunks_safe_eval()
+      bar_data <- teal.code::chunks_get_var("bar_data") # nolint
 
       if (is.null(adrs_paramcd)) {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           anl <- bar_data
           anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
         }))
       } else {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           rs_sub <- adrs %>%
             dplyr::filter(PARAMCD %in% .(adrs_paramcd))
         }))
-        chunks_push_new_line()
-        chunks_safe_eval()
+        teal.code::chunks_push_new_line()
+        teal.code::chunks_safe_eval()
 
-        rs_sub <- chunks_get_var("rs_sub")
+        rs_sub <- teal.code::chunks_get_var("rs_sub")
         validate_one_row_per_id(rs_sub, key = c("STUDYID", "USUBJID", "PARAMCD"))
 
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           rs_label <- rs_sub %>%
             dplyr::select(USUBJID, PARAMCD, AVALC) %>%
             tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
@@ -445,15 +445,15 @@ srv_g_waterfall <- function(id,
           anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
         }))
       }
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
 
 
       # write plotting code to chunks
-      anl <- chunks_get_var("anl") # nolint
+      anl <- teal.code::chunks_get_var("anl") # nolint
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         osprey::g_waterfall(
           bar_id = anl[["USUBJID"]],
           bar_height = anl[[bar_var]],
@@ -504,11 +504,11 @@ srv_g_waterfall <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
     # Insert the plot into a plot_with_settings module from teal.widgets
-    plot_with_settings_srv(
+    teal.widgets::plot_with_settings_srv(
       id = "waterfallplot",
       plot_r = plot_r,
       height = plot_height,

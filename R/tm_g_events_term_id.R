@@ -296,12 +296,12 @@ srv_g_events_term_id <- function(id,
         "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
       ))
 
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
       adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         ANL <- merge( # nolint
           x = ADSL_FILTERED[, .(adsl_vars), drop = FALSE],
           y = .(as.name(anl_name))[, .(anl_vars), drop = FALSE],
@@ -311,10 +311,10 @@ srv_g_events_term_id <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
       validate(need(nrow(chunks_get_var("ANL")) > 10, "need at least 10 data points"))
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         term <- ANL[[.(input$term)]]
         id <- ANL$USUBJID
         arm <- ANL[[.(input$arm_var)]]
@@ -341,7 +341,7 @@ srv_g_events_term_id <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
     get_rcode_srv(

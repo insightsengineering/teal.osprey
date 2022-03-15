@@ -390,33 +390,33 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
       adae_name <- paste0(dataname, "_FILTERED")
       assign(adae_name, ADAE_FILTERED) # so that we can refer to the 'correct' data name
 
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
         ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
       }))
 
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
       if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
-        chunks_push(bquote(
+        teal.code::chunks_push(bquote(
           ADAE <- quick_filter(.(filter_var), ADAE) %>% # nolint
             droplevels() %>%
             as.data.frame()
         ))
       }
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         ANL_f <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
         ANL_f <- na.omit(ANL_f) # nolint
       }))
 
-      chunks_push_new_line()
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
       if (!is.null(right_val) && !is.null(right_val)) {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           right <- ANL_f[, .(right_var)] %in% .(right_val)
           right_name <- paste(.(right_val), collapse = " - ")
           left <- ANL_f[, .(left_var)] %in% .(left_val)
@@ -424,11 +424,11 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
         }))
       }
 
-      chunks_push_new_line()
-      chunks_safe_eval()
+      teal.code::chunks_push_new_line()
+      teal.code::chunks_safe_eval()
 
       if (!is.null(right_val) && !is.null(left_val)) {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           osprey::g_butterfly(
             category = ANL_f[, .(category_var)],
             right_flag = right,
@@ -455,11 +455,11 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
         }))
       }
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
     # Insert the plot into a plot_with_settings module from teal.widgets
-    plot_with_settings_srv(
+    teal.widgets::plot_with_settings_srv(
       id = "butterflyplot",
       plot_r = plot_r,
       height = plot_height,

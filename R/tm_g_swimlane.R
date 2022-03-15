@@ -490,7 +490,7 @@ srv_g_swimlane <- function(id, datasets, dataname,
     })
 
     # Insert the plot into a plot_with_settings module from teal.widgets
-    plot_with_settings_srv(
+    teal.widgets::plot_with_settings_srv(
       id = "swimlaneplot",
       plot_r = plot_r,
       height = plot_height,

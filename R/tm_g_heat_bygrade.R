@@ -382,11 +382,11 @@ srv_g_heatmap_bygrade <- function(id,
         ))
       }
 
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
       if (input$plot_cm) {
         validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           conmed_data <- ADCM_FILTERED %>%
             filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
           conmed_var <- .(input$conmed_var)
@@ -396,17 +396,17 @@ srv_g_heatmap_bygrade <- function(id,
             teal::variable_labels(ADCM_FILTERED, fill = FALSE)[conmed_var]
         }))
       } else {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           conmed_data <- conmed_var <- NULL
         }))
       }
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
 
       validate(
         need(length(input$conmed_level) <= 3, "Please select no more than 3 conmed levels")
       )
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         exp_data <- ADEX_FILTERED %>%
           filter(PARCAT1 == "INDIVIDUAL")
 
@@ -424,7 +424,7 @@ srv_g_heatmap_bygrade <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
 

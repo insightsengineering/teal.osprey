@@ -301,9 +301,9 @@ srv_g_ae_sub <- function(id,
         )
       )
 
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         id <- ADAE_FILTERED$USUBJID
         arm <- as.factor(ADAE_FILTERED[[.(input$arm_var)]])
         arm_sl <- as.character(ADSL_FILTERED[[.(input$arm_var)]])
@@ -313,9 +313,9 @@ srv_g_ae_sub <- function(id,
         trt <- .(input$arm_trt)
         ref <- .(input$arm_ref)
       }))
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
 
       group_labels <- lapply(seq_along(input$groups), function(x) {
         items <- input[[sprintf("groups__%s", x)]]
@@ -330,19 +330,19 @@ srv_g_ae_sub <- function(id,
       })
 
       if (length(unlist(group_labels)) == 0) {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           group_labels <- NULL
         }))
       } else {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           group_labels <- .(group_labels)
           names(group_labels) <- .(input$groups)
         }))
       }
 
-      chunks_push_new_line()
-      chunks_safe_eval()
-      chunks_push(bquote({
+      teal.code::chunks_push_new_line()
+      teal.code::chunks_safe_eval()
+      teal.code::chunks_push(bquote({
         osprey::g_ae_sub(
           id = id,
           arm = arm,
@@ -360,7 +360,7 @@ srv_g_ae_sub <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
     get_rcode_srv(
