@@ -1,6 +1,6 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Version: 0.1.12.9008
+Version: 0.1.12.9009
 Date: 2022-01-27
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
@@ -26,8 +26,8 @@ Imports:
     ggplot2,
     logger (>= 0.2.0),
     purrr,
-    teal.widgets,
     teal.code,
+    teal.widgets,
     tern (>= 0.7.6),
     tidyr
 Suggests:
