@@ -2,7 +2,7 @@
 #'
 #' Display the AE overview plot as a shiny module
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param flag_var_anl ([`teal::choices_selected`])
 #'   `choices_selected` object with variables used to count adverse event
@@ -136,12 +136,12 @@ tm_g_ae_oview <- function(label,
 ui_g_ae_oview <- function(id, ...) {
   ns <- NS(id)
   args <- list(...)
-  standard_layout(
-    output = white_small_well(
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = div(
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("arm_var"),
         "Arm Variable",
         choices = args$arm_var$choices,
@@ -167,9 +167,9 @@ ui_g_ae_oview <- function(id, ...) {
         selected = args$flag_var_anl$selected,
         multiple = TRUE
       ),
-      panel_item(
+      teal.widgets::panel_item(
         "Confidence interval settings",
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("diff_ci_method"),
           "Method for Difference of Proportions CI",
           choices = ci_choices,
@@ -184,7 +184,7 @@ ui_g_ae_oview <- function(id, ...) {
           value = 0.95
         )
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("axis"),
         "Axis Side",
         choices = c("Left" = "left", "Right" = "right"),
@@ -209,7 +209,7 @@ srv_g_ae_oview <- function(id,
                            plot_height,
                            plot_width) {
   moduleServer(id, function(input, output, session) {
-    init_chunks()
+    teal.code::init_chunks()
     font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width)
 
     observeEvent(list(input$diff_ci_method, input$conf_level), {
@@ -275,7 +275,7 @@ srv_g_ae_oview <- function(id,
       anl_name <- paste0(dataname, "_FILTERED")
       assign(anl_name, ANL_FILTERED)
 
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
       validate(need(nlevels(ANL_FILTERED[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
       validate_has_data(ANL_FILTERED, min_nrow = 10)
@@ -293,7 +293,7 @@ srv_g_ae_oview <- function(id,
       }
       validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])), "Plot loading"))
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         id <- .(as.name(anl_name))[["USUBJID"]]
         arm <- .(as.name(anl_name))[[.(input$arm_var)]]
         arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
@@ -305,11 +305,11 @@ srv_g_ae_oview <- function(id,
           rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
       }))
 
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         osprey::g_events_term_id(
           term = flags,
           id = id,
@@ -325,7 +325,7 @@ srv_g_ae_oview <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
     get_rcode_srv(

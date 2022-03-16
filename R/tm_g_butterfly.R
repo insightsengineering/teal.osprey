@@ -3,7 +3,7 @@
 #'
 #' Display butterfly plot as a shiny module
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param filter_var (\code{choices_selected}) variable name of data filter, please see details regarding
 #'   expected values, default is \code{NULL}. \code{choices}
@@ -156,15 +156,15 @@ ui_g_butterfly <- function(id, ...) {
   ns <- NS(id)
   a <- list(...)
 
-  standard_layout(
-    output = white_small_well(
-      plot_with_settings_ui(id = ns("butterflyplot"))
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
+      teal.widgets::plot_with_settings_ui(id = ns("butterflyplot"))
     ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
       if (!is.null(a$filter_var)) {
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("filter_var"),
           label =
             "Preset Data Filters Observations with value of 'Y' for selected variable(s) will be used for analysis",
@@ -173,14 +173,14 @@ ui_g_butterfly <- function(id, ...) {
           multiple = TRUE
         )
       },
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("right_var"),
         "Right Dichotomization Variable",
         a$right_var$choices,
         a$right_var$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("right_val"),
         "Choose Up To 2:",
         multiple = TRUE,
@@ -190,14 +190,14 @@ ui_g_butterfly <- function(id, ...) {
           `actions-box` = FALSE
         )
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("left_var"),
         "Left Dichotomization Variable",
         a$left_var$choices,
         a$left_var$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("left_val"),
         "Choose Up To 2:",
         multiple = TRUE,
@@ -207,7 +207,7 @@ ui_g_butterfly <- function(id, ...) {
           `actions-box` = FALSE
         )
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("category_var"),
         "Category Variable",
         a$category_var$choices,
@@ -227,7 +227,7 @@ ui_g_butterfly <- function(id, ...) {
         a$count_by_var$selected
       ),
       if (!is.null(a$facet_var)) {
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("facet_var"),
           "Facet By Variable",
           a$facet_var$choices,
@@ -255,7 +255,7 @@ ui_g_butterfly <- function(id, ...) {
 
 srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_width) {
   moduleServer(id, function(input, output, session) {
-    init_chunks()
+    teal.code::init_chunks()
 
     options <- reactiveValues(r = NULL, l = NULL)
     vars <- reactiveValues(r = NULL, l = NULL)
@@ -390,33 +390,33 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
       adae_name <- paste0(dataname, "_FILTERED")
       assign(adae_name, ADAE_FILTERED) # so that we can refer to the 'correct' data name
 
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
         ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
       }))
 
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
       if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
-        chunks_push(bquote(
+        teal.code::chunks_push(bquote(
           ADAE <- quick_filter(.(filter_var), ADAE) %>% # nolint
             droplevels() %>%
             as.data.frame()
         ))
       }
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         ANL_f <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
         ANL_f <- na.omit(ANL_f) # nolint
       }))
 
-      chunks_push_new_line()
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
       if (!is.null(right_val) && !is.null(right_val)) {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           right <- ANL_f[, .(right_var)] %in% .(right_val)
           right_name <- paste(.(right_val), collapse = " - ")
           left <- ANL_f[, .(left_var)] %in% .(left_val)
@@ -424,11 +424,11 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
         }))
       }
 
-      chunks_push_new_line()
-      chunks_safe_eval()
+      teal.code::chunks_push_new_line()
+      teal.code::chunks_safe_eval()
 
       if (!is.null(right_val) && !is.null(left_val)) {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           osprey::g_butterfly(
             category = ANL_f[, .(category_var)],
             right_flag = right,
@@ -455,11 +455,11 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
         }))
       }
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
-    # Insert the plot into a plot_with_settings module from teal.devel
-    plot_with_settings_srv(
+    # Insert the plot into a plot_with_settings module from teal.widgets
+    teal.widgets::plot_with_settings_srv(
       id = "butterflyplot",
       plot_r = plot_r,
       height = plot_height,

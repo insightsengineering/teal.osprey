@@ -2,7 +2,7 @@
 #'
 #' Display the heatmap by grade as a shiny module
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param sl_dataname (\code{character}) subject level dataset name,
 #' needs to be available in the list passed to the \code{data}
@@ -209,40 +209,40 @@ tm_g_heat_bygrade <- function(label,
 ui_g_heatmap_bygrade <- function(id, ...) {
   ns <- NS(id)
   args <- list(...)
-  standard_layout(
-    output = white_small_well(
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = div(
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("id_var"),
         "ID Variable",
         choices = args$id_var$choices,
         selected = args$id_var$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("visit_var"),
         "Visit Variable",
         choices = args$visit_var$choices,
         selected = args$visit_var$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("ongo_var"),
         "Study Ongoing Status Variable",
         choices = args$ongo_var$choices,
         selected = args$ongo_var$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("anno_var"),
         "Annotation Variables",
         choices = args$anno_var$choices,
         selected = args$anno_var$selected,
         multiple = TRUE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("heat_var"),
         "Heat Variable",
         choices = args$heat_var$choices,
@@ -260,7 +260,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
       ),
       conditionalPanel(
         paste0("input['", ns("plot_cm"), "']"),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("conmed_var"),
           "Conmed Variable",
           choices = args$conmed_var$choices,
@@ -296,7 +296,7 @@ srv_g_heatmap_bygrade <- function(id,
                                   plot_height,
                                   plot_width) {
   moduleServer(id, function(input, output, session) {
-    init_chunks()
+    teal.code::init_chunks()
     font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
     observeEvent(cm_dataname, {
@@ -382,11 +382,11 @@ srv_g_heatmap_bygrade <- function(id,
         ))
       }
 
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
       if (input$plot_cm) {
         validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           conmed_data <- ADCM_FILTERED %>%
             filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
           conmed_var <- .(input$conmed_var)
@@ -396,17 +396,17 @@ srv_g_heatmap_bygrade <- function(id,
             teal::variable_labels(ADCM_FILTERED, fill = FALSE)[conmed_var]
         }))
       } else {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           conmed_data <- conmed_var <- NULL
         }))
       }
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
 
       validate(
         need(length(input$conmed_level) <= 3, "Please select no more than 3 conmed levels")
       )
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         exp_data <- ADEX_FILTERED %>%
           filter(PARCAT1 == "INDIVIDUAL")
 
@@ -424,7 +424,7 @@ srv_g_heatmap_bygrade <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
 

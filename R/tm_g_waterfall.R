@@ -2,7 +2,7 @@
 #'
 #' This is teal module that generates a waterfall plot for ADaM data
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param dataname_tr tumor burden analysis data used in teal module to plot as bar height, needs to
 #' be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}
@@ -153,21 +153,21 @@ ui_g_waterfall <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
 
-  standard_layout(
-    output = white_small_well(
-      plot_with_settings_ui(id = ns("waterfallplot"))
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
+      teal.widgets::plot_with_settings_ui(id = ns("waterfallplot"))
     ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis Data: ", tags$code(a$dataname_tr), tags$code(a$dataname_rs)),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("bar_paramcd"),
         "Tumor Burden Parameter",
         choices = a$bar_paramcd$choices,
         selected = a$bar_paramcd$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("bar_var"),
         "Bar Height",
         choices = a$bar_var$choices,
@@ -175,14 +175,14 @@ ui_g_waterfall <- function(id, ...) {
         multiple = FALSE,
         label_help = helpText("Tumor change variable from ", tags$code("ADTR"))
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("bar_color_var"),
         "Bar Color",
         choices = a$bar_color_var$choices,
         selected = a$bar_color_var$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("sort_var"),
         "Sort by",
         choices = a$sort_var$choices,
@@ -190,21 +190,21 @@ ui_g_waterfall <- function(id, ...) {
         multiple = FALSE,
         label_help = helpText("from ", tags$code("ADSL"))
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("add_label_var_sl"),
         "Add ADSL Label to Bars",
         choices = a$add_label_var_sl$choices,
         selected = a$add_label_var_sl$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("add_label_paramcd_rs"),
         "Add ADRS Label to Bars",
         choices = a$add_label_paramcd_rs$choices,
         selected = a$add_label_paramcd_rs$selected,
         multiple = FALSE
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("anno_txt_var_sl"),
         "Annotation Variables",
         choices = a$anno_txt_var_sl$choices,
@@ -212,7 +212,7 @@ ui_g_waterfall <- function(id, ...) {
         multiple = TRUE,
         label_help = helpText("from ", tags$code("ADSL"))
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("anno_txt_paramcd_rs"),
         "Annotation Parameters",
         choices = a$anno_txt_paramcd_rs$choices,
@@ -220,7 +220,7 @@ ui_g_waterfall <- function(id, ...) {
         multiple = TRUE,
         label_help = helpText("from ", tags$code("ADRS"))
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("facet_var"),
         "Facet by",
         choices = a$facet_var$choices,
@@ -277,8 +277,8 @@ srv_g_waterfall <- function(id,
                             plot_height,
                             plot_width) {
   moduleServer(id, function(input, output, session) {
-    # use teal.devel code chunks
-    init_chunks()
+    # use teal.code code chunks
+    teal.code::init_chunks()
 
     plot_r <- reactive({
       adsl_filtered <- datasets$get_data("ADSL", filtered = TRUE)
@@ -386,10 +386,10 @@ srv_g_waterfall <- function(id,
       validate_has_variable(adtr_filtered, adtr_vars)
 
       # restart the chunks for showing code
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
       # write variables to chunks
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         bar_var <- .(bar_var)
         bar_color_var <- .(bar_color_var)
         sort_var <- .(sort_var)
@@ -402,10 +402,10 @@ srv_g_waterfall <- function(id,
         gap_point_val <- .(gap_point_val)
         show_value <- .(show_value)
       }))
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
       # data processing
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         adsl <- .(as.name(adsl_name))[, .(adsl_vars)]
         adtr <- .(as.name(adtr_name))[, .(adtr_vars)] # nolint
         adrs <- .(as.name(adrs_name))[, .(adrs_vars)] # nolint
@@ -417,27 +417,27 @@ srv_g_waterfall <- function(id,
           dplyr::slice(which.min(.(as.name(bar_var))))
         bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
       }))
-      chunks_push_new_line()
-      chunks_safe_eval()
-      bar_data <- chunks_get_var("bar_data") # nolint
+      teal.code::chunks_push_new_line()
+      teal.code::chunks_safe_eval()
+      bar_data <- teal.code::chunks_get_var("bar_data") # nolint
 
       if (is.null(adrs_paramcd)) {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           anl <- bar_data
           anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
         }))
       } else {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           rs_sub <- adrs %>%
             dplyr::filter(PARAMCD %in% .(adrs_paramcd))
         }))
-        chunks_push_new_line()
-        chunks_safe_eval()
+        teal.code::chunks_push_new_line()
+        teal.code::chunks_safe_eval()
 
-        rs_sub <- chunks_get_var("rs_sub")
+        rs_sub <- teal.code::chunks_get_var("rs_sub")
         validate_one_row_per_id(rs_sub, key = c("STUDYID", "USUBJID", "PARAMCD"))
 
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           rs_label <- rs_sub %>%
             dplyr::select(USUBJID, PARAMCD, AVALC) %>%
             tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
@@ -445,15 +445,15 @@ srv_g_waterfall <- function(id,
           anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
         }))
       }
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
 
 
       # write plotting code to chunks
-      anl <- chunks_get_var("anl") # nolint
+      anl <- teal.code::chunks_get_var("anl") # nolint
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         osprey::g_waterfall(
           bar_id = anl[["USUBJID"]],
           bar_height = anl[[bar_var]],
@@ -504,11 +504,11 @@ srv_g_waterfall <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
-    # Insert the plot into a plot_with_settings module from teal.devel
-    plot_with_settings_srv(
+    # Insert the plot into a plot_with_settings module from teal.widgets
+    teal.widgets::plot_with_settings_srv(
       id = "waterfallplot",
       plot_r = plot_r,
       height = plot_height,

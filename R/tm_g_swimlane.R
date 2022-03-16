@@ -2,7 +2,7 @@
 #'
 #' This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param dataname analysis data used for plotting, needs to be available in the list passed to the \code{data}
 #' argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, "ADSL" should be
@@ -166,16 +166,16 @@ ui_g_swimlane <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
 
-  standard_layout(
-    output = white_small_well(
-      plot_with_settings_ui(id = ns("swimlaneplot"))
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
+      teal.widgets::plot_with_settings_ui(id = ns("swimlaneplot"))
     ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", code(a$dataname)),
       div(
         style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("bar_var"),
           "Bar Length",
           choices = a$bar_var$choices,
@@ -183,7 +183,7 @@ ui_g_swimlane <- function(id, ...) {
           multiple = FALSE,
           label_help = helpText("from ", code("ADSL"))
         ),
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("bar_color_var"),
           "Bar Color",
           choices = a$bar_color_var$choices,
@@ -192,7 +192,7 @@ ui_g_swimlane <- function(id, ...) {
           label_help = helpText("from ", code("ADSL"))
         )
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("sort_var"),
         "Sort by",
         choices = a$sort_var$choices,
@@ -207,7 +207,7 @@ ui_g_swimlane <- function(id, ...) {
         } else if (is.null(a$marker_pos_var)) {
           NULL
         } else {
-          optionalSelectInput(
+          teal.widgets::optionalSelectInput(
             ns("marker_pos_var"),
             "Marker Position",
             choices = a$marker_pos_var$choices,
@@ -219,7 +219,7 @@ ui_g_swimlane <- function(id, ...) {
         uiOutput(ns("marker_shape_sel")),
         uiOutput(ns("marker_color_sel"))
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("anno_txt_var"),
         "Annotation Variables",
         choices = a$anno_txt_var$choices,
@@ -254,8 +254,8 @@ srv_g_swimlane <- function(id, datasets, dataname,
                            plot_width,
                            x_label) {
   moduleServer(id, function(input, output, session) {
-    # use teal.devel code chunks
-    init_chunks()
+    # use teal.code code chunks
+    teal.code::init_chunks()
 
     # if marker position is NULL, then hide options for marker shape and color
     output$marker_shape_sel <- renderUI({
@@ -263,7 +263,7 @@ srv_g_swimlane <- function(id, datasets, dataname,
         NULL
       } else {
         ns <- session$ns
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("marker_shape_var"), "Marker Shape",
           choices = marker_shape_var$choices,
           selected = marker_shape_var$selected, multiple = FALSE,
@@ -276,7 +276,7 @@ srv_g_swimlane <- function(id, datasets, dataname,
         NULL
       } else {
         ns <- session$ns
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("marker_color_var"), "Marker Color",
           choices = marker_color_var$choices,
           selected = marker_color_var$selected, multiple = FALSE,
@@ -305,7 +305,7 @@ srv_g_swimlane <- function(id, datasets, dataname,
       }
 
       # Restart the chunks for showing code
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
       # VARIABLE GETTERS
       # lookup bar variables
@@ -362,7 +362,7 @@ srv_g_swimlane <- function(id, datasets, dataname,
 
       # WRITE VARIABLES TO CHUNKS
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         bar_var <- .(bar_var)
         bar_color_var <- .(bar_color_var)
         sort_var <- .(sort_var)
@@ -371,12 +371,12 @@ srv_g_swimlane <- function(id, datasets, dataname,
         marker_color_var <- .(marker_color_var)
         anno_txt_var <- .(anno_txt_var)
       }))
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
       # WRITE DATA SELECTION TO CHUNKS
 
       if (dataname == "ADSL") {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           ADSL_p <- ADSL_FILTERED # nolint
           ADSL <- ADSL_p[, .(adsl_vars)] # nolint
           # only take last part of USUBJID
@@ -384,7 +384,7 @@ srv_g_swimlane <- function(id, datasets, dataname,
         }))
       } else {
         anl_name <- paste0(dataname, "_FILTERED")
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           ADSL_p <- ADSL_FILTERED # nolint
           ANL_p <- .(as.name(anl_name)) # nolint
 
@@ -400,11 +400,11 @@ srv_g_swimlane <- function(id, datasets, dataname,
           ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
         }))
       }
-      chunks_push_new_line() # empty line for pretty code
-      chunks_safe_eval()
+      teal.code::chunks_push_new_line() # empty line for pretty code
+      teal.code::chunks_safe_eval()
 
 
-      anl <- chunks_get_var("ANL")
+      anl <- teal.code::chunks_get_var("ANL")
       plot_call <- if (dataname == "ADSL") {
         bquote({
           osprey::g_swimlane(
@@ -485,12 +485,12 @@ srv_g_swimlane <- function(id, datasets, dataname,
         })
       }
 
-      chunks_push(plot_call)
-      chunks_safe_eval()
+      teal.code::chunks_push(plot_call)
+      teal.code::chunks_safe_eval()
     })
 
-    # Insert the plot into a plot_with_settings module from teal.devel
-    plot_with_settings_srv(
+    # Insert the plot into a plot_with_settings module from teal.widgets
+    teal.widgets::plot_with_settings_srv(
       id = "swimlaneplot",
       plot_r = plot_r,
       height = plot_height,

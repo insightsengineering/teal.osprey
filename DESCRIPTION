@@ -26,7 +26,8 @@ Imports:
     ggplot2,
     logger (>= 0.2.0),
     purrr,
-    teal.devel (>= 0.2.13),
+    teal.widgets,
+    teal.code,
     tern (>= 0.7.6),
     tidyr
 Suggests:

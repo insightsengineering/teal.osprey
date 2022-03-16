@@ -14,7 +14,7 @@ ui_g_decorate <- function(id,
                           fontsize = c(5, 4, 11)) {
   ns <- NS(id)
   tagList(
-    optionalSliderInputValMinMax(
+    teal.widgets::optionalSliderInputValMinMax(
       ns("fontsize"),
       "Font Size",
       value_min_max = fontsize,
@@ -66,7 +66,7 @@ srv_g_decorate <- function(id,
 
     class(plot_r) <- c(class(plot_r), "reactive")
 
-    plot_with_settings_srv(
+    teal.widgets::plot_with_settings_srv(
       id = plot_id,
       plot_r = plot_r,
       height = plot_height,

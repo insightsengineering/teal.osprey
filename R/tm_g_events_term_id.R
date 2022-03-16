@@ -2,7 +2,7 @@
 #'
 #' Display Events by Term plot as a shiny module
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param term_var \code{\link[teal]{choices_selected}} object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
@@ -95,18 +95,18 @@ tm_g_events_term_id <- function(label,
 ui_g_events_term_id <- function(id, ...) {
   ns <- NS(id)
   args <- list(...)
-  standard_layout(
-    output = white_small_well(
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = div(
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("term"),
         "Term Variable",
         choices = args$term_var$choices,
         selected = args$term_var$selected
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("arm_var"),
         "Arm Variable",
         choices = args$arm_var$choices,
@@ -124,7 +124,7 @@ ui_g_events_term_id <- function(id, ...) {
         choices = args$arm_var$choices,
         selected = args$arm_var$selected
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("sort"),
         "Sort By",
         choices = c(
@@ -134,15 +134,15 @@ ui_g_events_term_id <- function(id, ...) {
         ),
         selected = NULL
       ),
-      panel_item(
+      teal.widgets::panel_item(
         "Confidence interval settings",
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("diff_ci_method"),
           "Method for Difference of Proportions CI",
           choices = ci_choices,
           selected = ci_choices[1]
         ),
-        optionalSliderInput(
+        teal.widgets::optionalSliderInput(
           ns("conf_level"),
           "Confidence Level",
           min = 0.5,
@@ -150,9 +150,9 @@ ui_g_events_term_id <- function(id, ...) {
           value = 0.95
         )
       ),
-      panel_item(
+      teal.widgets::panel_item(
         "Additional plot settings",
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("axis"),
           "Axis Side",
           choices = c("Left" = "left", "Right" = "right"),
@@ -199,7 +199,7 @@ srv_g_events_term_id <- function(id,
   moduleServer(id, function(input, output, session) {
     font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
-    init_chunks()
+    teal.code::init_chunks()
 
     observeEvent(list(input$diff_ci_method, input$conf_level), {
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
@@ -296,12 +296,12 @@ srv_g_events_term_id <- function(id,
         "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
       ))
 
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
       adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         ANL <- merge( # nolint
           x = ADSL_FILTERED[, .(adsl_vars), drop = FALSE],
           y = .(as.name(anl_name))[, .(anl_vars), drop = FALSE],
@@ -311,10 +311,10 @@ srv_g_events_term_id <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
       validate(need(nrow(chunks_get_var("ANL")) > 10, "need at least 10 data points"))
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         term <- ANL[[.(input$term)]]
         id <- ANL$USUBJID
         arm <- ANL[[.(input$arm_var)]]
@@ -341,7 +341,7 @@ srv_g_events_term_id <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
     get_rcode_srv(

@@ -2,7 +2,7 @@
 #'
 #' Display the AE by subgroups plot as a teal module
 #'
-#' @inheritParams teal.devel::standard_layout
+#' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param group_var (`choices_selected`) subgroups variables. See [teal::choices_selected()] for details.
 #'
@@ -94,14 +94,14 @@ tm_g_ae_sub <- function(label,
 ui_g_ae_sub <- function(id, ...) {
   ns <- NS(id)
   args <- list(...)
-  standard_layout(
-    output = white_small_well(
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code("ADAE")),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("arm_var"),
         "Arm Variable",
         choices = args$arm_var$choices,
@@ -124,20 +124,20 @@ ui_g_ae_sub <- function(id, ...) {
         "Show N in each arm",
         value = args$arm_n
       ),
-      optionalSelectInput(
+      teal.widgets::optionalSelectInput(
         ns("groups"),
         "Group Variable",
         choices = args$group_var$choices,
         selected = args$group_var$selected,
         multiple = TRUE
       ),
-      panel_item(
+      teal.widgets::panel_item(
         "Change group labels",
         uiOutput(ns("grouplabel_output"))
       ),
-      panel_item(
+      teal.widgets::panel_item(
         "Additional plot settings",
-        optionalSelectInput(
+        teal.widgets::optionalSelectInput(
           ns("ci"),
           "CI method",
           choices = ci_choices,
@@ -169,7 +169,7 @@ srv_g_ae_sub <- function(id,
                          plot_height,
                          plot_width) {
   moduleServer(id, function(input, output, session) {
-    init_chunks()
+    teal.code::init_chunks()
     font_size <- srv_g_decorate(
       id = NULL,
       plt = plt,
@@ -233,7 +233,7 @@ srv_g_ae_sub <- function(id,
         lo <- lapply(seq_along(grps), function(index) {
           grp <- grps[index]
           choices <- levels(ADAE_FILTERED[[grp]])
-          sel <- optionalSelectInput(
+          sel <- teal.widgets::optionalSelectInput(
             session$ns(sprintf("groups__%s", index)),
             grp,
             choices,
@@ -301,9 +301,9 @@ srv_g_ae_sub <- function(id,
         )
       )
 
-      chunks_reset(envir = environment())
+      teal.code::chunks_reset(envir = environment())
 
-      chunks_push(bquote({
+      teal.code::chunks_push(bquote({
         id <- ADAE_FILTERED$USUBJID
         arm <- as.factor(ADAE_FILTERED[[.(input$arm_var)]])
         arm_sl <- as.character(ADSL_FILTERED[[.(input$arm_var)]])
@@ -313,9 +313,9 @@ srv_g_ae_sub <- function(id,
         trt <- .(input$arm_trt)
         ref <- .(input$arm_ref)
       }))
-      chunks_push_new_line()
+      teal.code::chunks_push_new_line()
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
 
       group_labels <- lapply(seq_along(input$groups), function(x) {
         items <- input[[sprintf("groups__%s", x)]]
@@ -330,19 +330,19 @@ srv_g_ae_sub <- function(id,
       })
 
       if (length(unlist(group_labels)) == 0) {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           group_labels <- NULL
         }))
       } else {
-        chunks_push(bquote({
+        teal.code::chunks_push(bquote({
           group_labels <- .(group_labels)
           names(group_labels) <- .(input$groups)
         }))
       }
 
-      chunks_push_new_line()
-      chunks_safe_eval()
-      chunks_push(bquote({
+      teal.code::chunks_push_new_line()
+      teal.code::chunks_safe_eval()
+      teal.code::chunks_push(bquote({
         osprey::g_ae_sub(
           id = id,
           arm = arm,
@@ -360,7 +360,7 @@ srv_g_ae_sub <- function(id,
         )
       }))
 
-      chunks_safe_eval()
+      teal.code::chunks_safe_eval()
     })
 
     get_rcode_srv(
