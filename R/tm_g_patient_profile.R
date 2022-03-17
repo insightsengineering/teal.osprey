@@ -557,7 +557,7 @@ srv_g_patient_profile <- function(id,
           ADAE_FILTERED <- NULL # nolint
         } else {
           ADAE_FILTERED <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
-          variable_labels(ADAE_FILTERED) <- variable_labels(
+          teal.data::variable_labels(ADAE_FILTERED) <- teal.data::variable_labels(
             datasets$get_data(ae_dataname, filtered = FALSE),
             fill = FALSE
           )
@@ -684,7 +684,7 @@ srv_g_patient_profile <- function(id,
       # name for ae_line_col
       if (!is.null(ae_line_col_var) && is.data.frame(ADAE_FILTERED)) {
         teal.code::chunks_push(
-          bquote(ae_line_col_name <- variable_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)])
+          bquote(ae_line_col_name <- teal.data::variable_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)])
         )
       } else {
         teal.code::chunks_push(quote(ae_line_col_name <- NULL))
@@ -733,8 +733,8 @@ srv_g_patient_profile <- function(id,
                   as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
                 )))) %>%
               select(c(.(adae_vars), ASTDY, AENDY))
-            variable_labels(ADAE)[.(ae_line_col_var)] <-
-              variable_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)]
+            teal.data::variable_labels(ADAE)[.(ae_line_col_var)] <-
+              teal.data::variable_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)]
           }))
           teal.code::chunks_safe_eval()
 

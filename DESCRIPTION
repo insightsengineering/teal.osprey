@@ -27,6 +27,7 @@ Imports:
     logger (>= 0.2.0),
     purrr,
     teal.code,
+    teal.data,
     teal.logger,
     teal.widgets,
     tern (>= 0.7.6),
