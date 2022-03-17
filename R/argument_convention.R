@@ -18,16 +18,16 @@
 #'
 #' @param arm_var (`choices_selected`)\cr
 #'  object with all available choices and the pre-selected option for variable
-#'  names that can be used as `arm_var`. See [teal::choices_selected()] for
+#'  names that can be used as `arm_var`. See [teal.transform::choices_selected()] for
 #'  details.
 #'
 #' @param paramcd (`character(1)` or `choices_selected`)\cr
 #'  variable value designating the studied parameter.
-#'  See [teal::choices_selected()] for details.
+#'  See [teal.transform::choices_selected()] for details.
 #'
 #' @param fontsize (`numeric(1)` or `numeric(3)`)\cr
 #'  Defines initial possible range of font-size. `fontsize` is set for
-#'  [teal::optionalSliderInputValMinMax()] which controls font-size in the output
+#'  [teal.widgets::optionalSliderInputValMinMax()] which controls font-size in the output
 #'  plot.
 #'
 #' @param plot_height (`numeric(3)`)\cr

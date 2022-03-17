@@ -4,7 +4,7 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param flag_var_anl ([`teal::choices_selected`])
+#' @param flag_var_anl ([`teal.transform::choices_selected`])
 #'   `choices_selected` object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
 #'
@@ -176,7 +176,7 @@ ui_g_ae_oview <- function(id, ...) {
           selected = ci_choices[1],
           multiple = FALSE
         ),
-        optionalSliderInput(
+        teal.widgets::optionalSliderInput(
           ns("conf_level"),
           "Confidence Level",
           min = 0.5,
@@ -299,7 +299,7 @@ srv_g_ae_oview <- function(id,
         arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
         trt <- .(input$arm_trt)
         ref <- .(input$arm_ref)
-        anl_labels <- teal::variable_labels(.(as.name(anl_name)), fill = FALSE)
+        anl_labels <- variable_labels(.(as.name(anl_name)), fill = FALSE)
         flags <- .(as.name(anl_name)) %>%
           select(all_of(.(input$flag_var_anl))) %>%
           rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))

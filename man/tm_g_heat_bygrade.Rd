@@ -58,7 +58,7 @@ specify to \code{NA} if no concomitant medications data is available}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
 Defines initial possible range of font-size. \code{fontsize} is set for
-\code{\link[teal:reexports]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
+\code{\link[teal.widgets:optionalSliderInputValMinMax]{teal.widgets::optionalSliderInputValMinMax()}} which controls font-size in the output
 plot.}
 
 \item{plot_height}{(\code{numeric(3)})\cr

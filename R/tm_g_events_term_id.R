@@ -4,7 +4,7 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param term_var \code{\link[teal]{choices_selected}} object with all available choices
+#' @param term_var \code{\link[teal.transform]{choices_selected}} object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
 #'
 #' @inherit argument_convention return
@@ -283,7 +283,7 @@ srv_g_events_term_id <- function(id,
 
       ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
       ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-      teal::variable_labels(ANL_FILTERED) <- teal::variable_labels(
+      variable_labels(ANL_FILTERED) <- variable_labels(
         datasets$get_data(dataname, filtered = FALSE),
         fill = FALSE
       )
@@ -312,7 +312,7 @@ srv_g_events_term_id <- function(id,
       }))
 
       teal.code::chunks_safe_eval()
-      validate(need(nrow(chunks_get_var("ANL")) > 10, "need at least 10 data points"))
+      validate(need(nrow(teal.code::chunks_get_var("ANL")) > 10, "need at least 10 data points"))
 
       teal.code::chunks_push(bquote({
         term <- ANL[[.(input$term)]]

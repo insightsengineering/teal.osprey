@@ -355,15 +355,15 @@ srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width)
           }),
           vref_line = .(vref_line),
           href_line = .(href_line),
-          x_label = if (is.null(teal::variable_labels(ADTR_FILTERED[.(x_var)], fill = FALSE))) {
+          x_label = if (is.null(variable_labels(ADTR_FILTERED[.(x_var)], fill = FALSE))) {
             .(x_var)
           } else {
-            teal::variable_labels(ADTR_FILTERED[.(x_var)], fill = FALSE)
+            variable_labels(ADTR_FILTERED[.(x_var)], fill = FALSE)
           },
-          y_label = if (is.null(teal::variable_labels(ADTR_FILTERED[.(y_var)], fill = FALSE))) {
+          y_label = if (is.null(variable_labels(ADTR_FILTERED[.(y_var)], fill = FALSE))) {
             .(y_var)
           } else {
-            teal::variable_labels(ADTR_FILTERED[.(y_var)], fill = FALSE)
+            variable_labels(ADTR_FILTERED[.(y_var)], fill = FALSE)
           },
           show_legend = .(legend_on)
         )

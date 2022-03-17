@@ -84,5 +84,5 @@ srv_g_decorate <- function(id,
 #' @export
 plot_decorate_output <- function(id) {
   ns <- NS(id)
-  plot_with_settings_ui(id = ns("out"))
+  teal.widgets::plot_with_settings_ui(id = ns("out"))
 }
