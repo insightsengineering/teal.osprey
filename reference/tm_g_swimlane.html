@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">teal.osprey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12.9007</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12.9009</span>
       </span>
     </div>
 
@@ -34,15 +34,6 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/insightsengineering/teal.osprey">
     <span class="fa fa-github"></span>
@@ -99,17 +90,17 @@ menu item label of the module in the teal app.</p></dd>
 argument of <code><a href="https://rdrr.io/pkg/teal/man/init.html" class="external-link">init</a></code>. If no markers are to be plotted in the module, "ADSL" should be
 the input. If markers are to be plotted, data name for the marker data should be the input</p></dd>
 <dt>bar_var</dt>
-<dd><p>(<code><a href="https://rdrr.io/pkg/teal/man/choices_selected.html" class="external-link">choices_selected</a></code>) subject-level numeric variable from dataset
+<dd><p>(<code><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></code>) subject-level numeric variable from dataset
 to plot as the bar length</p></dd>
 <dt>bar_color_var</dt>
-<dd><p>(<code><a href="https://rdrr.io/pkg/teal/man/choices_selected.html" class="external-link">choices_selected</a></code>) color by variable (subject-level)</p></dd>
+<dd><p>(<code><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></code>) color by variable (subject-level)</p></dd>
 <dt>sort_var</dt>
 <dd><p>(<code>choices_selected</code>) sort by variable (subject-level)</p></dd>
 <dt>marker_pos_var</dt>
-<dd><p>(<code><a href="https://rdrr.io/pkg/teal/man/choices_selected.html" class="external-link">choices_selected</a></code>) variable for marker position from marker data
+<dd><p>(<code><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></code>) variable for marker position from marker data
 (Note: make sure that marker position has the same relative start day as bar length variable <code>bar_var</code>)</p></dd>
 <dt>marker_shape_var</dt>
-<dd><p>(<code><a href="https://rdrr.io/pkg/teal/man/choices_selected.html" class="external-link">choices_selected</a></code>) marker shape variable from marker data</p></dd>
+<dd><p>(<code><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></code>) marker shape variable from marker data</p></dd>
 <dt>marker_shape_opt</dt>
 <dd><p>aesthetic values to map shape values (named vector to map shape values to each name).
 If not <code>NULL</code>, please make sure this contains all possible values for <code>marker_shape_var</code> values,
@@ -131,12 +122,11 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <dd><p>(<code>numeric(3)</code>)<br>
 vector to indicate default value, minimum and maximum values.</p></dd>
 <dt>pre_output</dt>
-<dd><p>optional, <code>shiny.tag</code> with text placed before the
-output to put the output into context. For example a title.</p></dd>
+<dd><p>(<code>shiny.tag</code>, optional)<br>
+with text placed before the output to put the output into context. For example a title.</p></dd>
 <dt>post_output</dt>
-<dd><p>optional, <code>shiny.tag</code> with text placed after the
-output to put the output into context. For example the
-<code><a href="https://rdrr.io/pkg/shiny/man/helpText.html" class="external-link">helpText</a></code> elements are useful.</p></dd>
+<dd><p>(<code>shiny.tag</code>, optional) with text placed after the output to put the output
+into context. For example the <code><a href="https://rdrr.io/pkg/shiny/man/helpText.html" class="external-link">shiny::helpText()</a></code> elements are useful.</p></dd>
 <dt>x_label</dt>
 <dd><p>the label of the x axis</p></dd>
 </dl></div>
@@ -211,7 +201,7 @@ output to put the output into context. For example the
 <span class="r-in">    <span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-03-03 13:47:07.6899 pid:1286 token:[] teal.osprey Initializing tm_g_swimlane</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-03-18 15:40:23.1077 pid:1577 token:[] teal.osprey Initializing tm_g_swimlane</span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="fu">shinyApp</span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">ui</span>, <span class="va">x</span><span class="op">$</span><span class="va">server</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>

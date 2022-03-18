@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">teal.osprey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12.9007</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12.9009</span>
       </span>
     </div>
 
@@ -34,15 +34,6 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/insightsengineering/teal.osprey">
     <span class="fa fa-github"></span>
@@ -101,7 +92,7 @@ available in the list passed to the <code>data</code> argument of <code><a href=
 <dt>paramcd</dt>
 <dd><p>(<code>character(1)</code> or <code>choices_selected</code>)<br>
 variable value designating the studied parameter.
-See <code><a href="https://rdrr.io/pkg/teal/man/choices_selected.html" class="external-link">teal::choices_selected()</a></code> for details.</p></dd>
+See <code><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">teal.transform::choices_selected()</a></code> for details.</p></dd>
 <dt>x_var</dt>
 <dd><p>x-axis variables</p></dd>
 <dt>y_var</dt>
@@ -129,12 +120,11 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <dd><p>(<code>numeric(3)</code>)<br>
 vector to indicate default value, minimum and maximum values.</p></dd>
 <dt>pre_output</dt>
-<dd><p>optional, <code>shiny.tag</code> with text placed before the
-output to put the output into context. For example a title.</p></dd>
+<dd><p>(<code>shiny.tag</code>, optional)<br>
+with text placed before the output to put the output into context. For example a title.</p></dd>
 <dt>post_output</dt>
-<dd><p>optional, <code>shiny.tag</code> with text placed after the
-output to put the output into context. For example the
-<code><a href="https://rdrr.io/pkg/shiny/man/helpText.html" class="external-link">helpText</a></code> elements are useful.</p></dd>
+<dd><p>(<code>shiny.tag</code>, optional) with text placed after the output to put the output
+into context. For example the <code><a href="https://rdrr.io/pkg/shiny/man/helpText.html" class="external-link">shiny::helpText()</a></code> elements are useful.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -181,7 +171,7 @@ output to put the output into context. For example the
 <span class="r-in">    <span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-03-03 13:47:07.0834 pid:1286 token:[] teal.osprey Initializing tm_g_spiderplot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-03-18 15:40:22.5048 pid:1577 token:[] teal.osprey Initializing tm_g_spiderplot</span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="fu">shinyApp</span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="va">ui</span>, <span class="va">app</span><span class="op">$</span><span class="va">server</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
