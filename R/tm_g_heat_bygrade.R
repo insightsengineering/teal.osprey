@@ -314,7 +314,8 @@ srv_g_heatmap_bygrade <- function(id,
     observeEvent(input$plot_cm, {
       ADCM_FILTERED <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
       ADCM_label <- teal.data::variable_labels(
-        datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE
+        datasets$get_data(cm_dataname, filtered = FALSE),
+        fill = FALSE
       ) # nolint
       teal.data::variable_labels(ADCM_FILTERED) <- ADCM_label
       choices <- levels(ADCM_FILTERED[[input$conmed_var]])
