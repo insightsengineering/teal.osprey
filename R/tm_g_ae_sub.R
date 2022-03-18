@@ -4,7 +4,7 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param group_var (`choices_selected`) subgroups variables. See [teal::choices_selected()] for details.
+#' @param group_var (`choices_selected`) subgroups variables. See [teal.transform::choices_selected()] for details.
 #'
 #' @author Liming Li (Lil128) \email{liming.li@roche.com}
 #' @author Molly He (hey59) \email{hey59@gene.com}
@@ -143,7 +143,7 @@ ui_g_ae_sub <- function(id, ...) {
           choices = ci_choices,
           selected = ci_choices[1]
         ),
-        optionalSliderInput(
+        teal.widgets::optionalSliderInput(
           ns("conf_level"),
           "Significant Level",
           min = 0.5,

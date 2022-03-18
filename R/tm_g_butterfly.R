@@ -111,7 +111,9 @@ tm_g_butterfly <- function(label,
                            color_by_var,
                            count_by_var,
                            facet_var = NULL,
-                           sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
+                           sort_by_var = teal.widgets::choices_selected(
+                             selected = "count", choices = c("count", "alphabetical")
+                           ),
                            legend_on = TRUE,
                            plot_height = c(600L, 200L, 2000L),
                            plot_width = NULL,
@@ -277,7 +279,12 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
         right_val <- isolate(input$right_val)
         current_r_var <- isolate(vars$r)
         if (is.null(right_var)) {
-          updateOptionalSelectInput(session, "right_val", choices = character(0), selected = character(0))
+          teal.widgets::updateOptionalSelectInput(
+            session,
+            "right_val",
+            choices = character(0),
+            selected = character(0)
+          )
         } else {
           data <- reactive_data()
           options$r <- if (right_var %in% names(data$ADSL_df)) {
@@ -296,7 +303,7 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
           } else {
             options$r[1]
           }
-          updateOptionalSelectInput(
+          teal.widgets::updateOptionalSelectInput(
             session, "right_val",
             choices = as.character(options$r), selected = selected, label = "Choose Up To 2:"
           )
@@ -312,7 +319,10 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
         left_val <- isolate(input$left_val)
         current_l_var <- isolate(vars$l)
         if (is.null(left_var)) {
-          updateOptionalSelectInput(session, "left_val", choices = character(0), selected = character(0))
+          teal.widgets::updateOptionalSelectInput(
+            session, "left_val",
+            choices = character(0), selected = character(0)
+          )
         } else {
           data <- reactive_data()
           options$l <- if (left_var %in% names(data$ADSL_df)) {
@@ -332,7 +342,7 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
             options$l[1]
           }
 
-          updateOptionalSelectInput(
+          teal.widgets::updateOptionalSelectInput(
             session, "left_val",
             choices = as.character(options$l), selected = selected, label = "Choose Up To 2:"
           )

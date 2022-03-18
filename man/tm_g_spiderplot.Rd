@@ -34,7 +34,7 @@ available in the list passed to the \code{data} argument of \code{\link[teal:ini
 
 \item{paramcd}{(\code{character(1)} or \code{choices_selected})\cr
 variable value designating the studied parameter.
-See \code{\link[teal:reexports]{teal::choices_selected()}} for details.}
+See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for details.}
 
 \item{x_var}{x-axis variables}
 

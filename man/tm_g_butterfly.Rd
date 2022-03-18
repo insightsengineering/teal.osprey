@@ -14,7 +14,7 @@ tm_g_butterfly(
   color_by_var,
   count_by_var,
   facet_var = NULL,
-  sort_by_var = choices_selected(selected = "count", choices = c("count",
+  sort_by_var = teal.widgets::choices_selected(selected = "count", choices = c("count",
     "alphabetical")),
   legend_on = TRUE,
   plot_height = c(600L, 200L, 2000L),
