@@ -4,7 +4,7 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param flag_var_anl ([`teal::choices_selected`])
+#' @param flag_var_anl ([`teal.transform::choices_selected`])
 #'   `choices_selected` object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
 #'
@@ -176,7 +176,7 @@ ui_g_ae_oview <- function(id, ...) {
           selected = ci_choices[1],
           multiple = FALSE
         ),
-        optionalSliderInput(
+        teal.widgets::optionalSliderInput(
           ns("conf_level"),
           "Confidence Level",
           min = 0.5,

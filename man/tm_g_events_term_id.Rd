@@ -22,17 +22,17 @@ menu item label of the module in the teal app.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{term_var}{\code{\link[teal]{choices_selected}} object with all available choices
+\item{term_var}{\code{\link[teal.transform]{choices_selected}} object with all available choices
 and pre-selected option names that can be used to specify the term for events}
 
 \item{arm_var}{(\code{choices_selected})\cr
 object with all available choices and the pre-selected option for variable
-names that can be used as \code{arm_var}. See \code{\link[teal:reexports]{teal::choices_selected()}} for
+names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
 details.}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
 Defines initial possible range of font-size. \code{fontsize} is set for
-\code{\link[teal:reexports]{teal::optionalSliderInputValMinMax()}} which controls font-size in the output
+\code{\link[teal.widgets:optionalSliderInputValMinMax]{teal.widgets::optionalSliderInputValMinMax()}} which controls font-size in the output
 plot.}
 
 \item{plot_height}{(\code{numeric(3)})\cr
