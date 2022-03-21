@@ -34,9 +34,6 @@ ui_g_decorate <- function(id,
 #' @param plot_id (\code{character}) id for plot output
 #' @param plt (\code{reactive}) a reactive object of graph object
 #'
-#' @importFrom grid  gpar grid.draw grid.newpage
-#' @importFrom tern decorate_grob
-#' @importFrom ggplot2 .pt
 #' @export
 srv_g_decorate <- function(id,
                            plot_id = "out",
@@ -45,22 +42,22 @@ srv_g_decorate <- function(id,
                            plot_width) {
   moduleServer(id, function(input, output, session) {
     plot_g <- reactive({
-      g <- decorate_grob(
+      g <- tern::decorate_grob(
         plt(),
         titles = input$title,
         footnotes = input$foot,
-        gp_titles = gpar(
-          fontsize = input$fontsize * .pt,
+        gp_titles = grid::gpar(
+          fontsize = input$fontsize * ggplot2::.pt,
           col = "black",
           fontface = "bold"
         ),
-        gp_footnotes = gpar(fontsize = input$fontsize * .pt, col = "black")
+        gp_footnotes = grid::gpar(fontsize = input$fontsize * ggplot2::.pt, col = "black")
       )
     })
 
     plot_r <- function() {
-      grid.newpage()
-      grid.draw(plot_g())
+      grid::grid.newpage()
+      grid::grid.draw(plot_g())
       plot_g()
     }
 

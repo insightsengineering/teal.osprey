@@ -5,6 +5,7 @@
 * Replaced calls to `teal::root_modules` with `teal::modules` following deprecation of `teal::root_modules`.
 * The label of the select input widget to choose the `paramcd` is no longer hard coded to `ADTR` in `tm_g_spiderplot`.
 * Adjusted package imports to take into account changes to the `teal` framework.
+* Functions from imported packages are now fully specified.
 
 # teal.osprey 0.1.12
 
