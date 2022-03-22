@@ -267,7 +267,6 @@ ui_g_waterfall <- function(id, ...) {
   )
 }
 
-#' @importFrom tidyr pivot_wider
 srv_g_waterfall <- function(id,
                             datasets,
                             dataname_tr,
