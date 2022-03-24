@@ -283,7 +283,7 @@ srv_g_events_term_id <- function(id,
 
       ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
       ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-      formatable::var_labels(ANL_FILTERED) <- formatable::var_labels(
+      formatters::var_labels(ANL_FILTERED) <- formatters::var_labels(
         datasets$get_data(dataname, filtered = FALSE),
         fill = FALSE
       )
