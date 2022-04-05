@@ -28,7 +28,6 @@ Imports:
     logger (>= 0.2.0),
     purrr,
     teal.code,
-    teal.data,
     teal.logger,
     teal.widgets,
     tern (>= 0.7.6),
@@ -38,6 +37,7 @@ Suggests:
     rmarkdown,
     scda.2021(>= 0.1.2),
     scda(>= 0.1.2),
+    teal.data,
     testthat (>= 2.0)
 VignetteBuilder:
     knitr
