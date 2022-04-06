@@ -17,7 +17,7 @@ tm_g_swimlane(
   marker_color_opt = NULL,
   anno_txt_var = NULL,
   vref_line = NULL,
-  plot_height = c(1200L, 400L, 5000L),
+  plot_height = c(4000L, 400L, 5000L),
   plot_width = NULL,
   pre_output = NULL,
   post_output = NULL,
