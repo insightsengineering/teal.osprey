@@ -1,4 +1,4 @@
-# teal.osprey 0.1.12.9013.2
+# teal.osprey 0.1.12.9013.3
 
 ### Enhancements
 * Added basic logging to the modules.
