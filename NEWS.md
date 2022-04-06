@@ -9,6 +9,7 @@
 * Replaced calls to `teal::root_modules` with `teal::modules` following deprecation of `teal::root_modules`.
 * Adjusted package imports to take into account changes to the `teal` framework.
 * Functions from imported packages are now fully specified.
+* Changed default plot height of `tm_g_swimlane` to 4000.
 
 # teal.osprey 0.1.12
 
