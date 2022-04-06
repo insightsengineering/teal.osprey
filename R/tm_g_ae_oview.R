@@ -28,7 +28,10 @@
 #'       AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
 #'       AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
 #'     )
-#'   labels <- c("Serious AE", "Related AE", "Grade 5 AE", "AE related to A: Drug X", "AE related to B: Placebo")
+#'   labels <- c(
+#'     "Serious AE", "Related AE", "Grade 5 AE",
+#'     "AE related to A: Drug X", "AE related to B: Placebo"
+#'   )
 #'   cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
 #'   for (i in seq_along(labels)) {
 #'     attr(dat[[cols[i]]], "label") <- labels[i]
@@ -80,7 +83,10 @@
 #'       ),
 #'       flag_var_anl = choices_selected(
 #'         selected = "AEREL1",
-#'         choices = variable_choices(ADAE, c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")),
+#'         choices = variable_choices(
+#'           ADAE,
+#'           c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
+#'         ),
 #'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
