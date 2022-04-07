@@ -663,8 +663,6 @@ srv_g_patient_profile <- function(id,
       }))
 
       teal.code::chunks_push_new_line()
-
-      # check
       teal.code::chunks_safe_eval()
 
       # ADSL with single subject
@@ -737,7 +735,6 @@ srv_g_patient_profile <- function(id,
               formatters::var_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)]
           }))
           teal.code::chunks_safe_eval()
-
 
           teal.code::chunks_push(
             call(
@@ -824,8 +821,6 @@ srv_g_patient_profile <- function(id,
 
       teal.code::chunks_push_new_line()
 
-      # check
-      teal.code::chunks_safe_eval()
       if (select_plot["cm"]) {
         validate(
           need(!is.null(cm_var), "Please select a concomitant medication variable.")
@@ -877,8 +872,6 @@ srv_g_patient_profile <- function(id,
 
       teal.code::chunks_push_new_line()
 
-      # check
-      teal.code::chunks_safe_eval()
       if (select_plot["ex"]) {
         validate(
           need(!is.null(ex_var), "Please select an exposure variable.")
@@ -936,10 +929,6 @@ srv_g_patient_profile <- function(id,
 
       teal.code::chunks_push_new_line()
 
-      # check
-      teal.code::chunks_safe_eval()
-
-
       if (select_plot["lb"]) {
         validate(
           need(!is.null(lb_var), "Please select a lab variable.")
@@ -992,8 +981,6 @@ srv_g_patient_profile <- function(id,
 
 
       teal.code::chunks_push_new_line()
-      # check
-      teal.code::chunks_safe_eval()
 
       # Check that at least 1 dataset is selected
 
@@ -1040,9 +1027,6 @@ srv_g_patient_profile <- function(id,
 
       teal.code::chunks_push_new_line()
 
-      # check
-      teal.code::chunks_safe_eval()
-
       teal.code::chunks_push(bquote({
         osprey::g_patient_profile(
           ex = ex,
@@ -1056,7 +1040,6 @@ srv_g_patient_profile <- function(id,
           title = paste("Patient Profile: ", .(patient_id))
         )
       }))
-
       teal.code::chunks_safe_eval()
     })
 
