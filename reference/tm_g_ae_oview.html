@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">teal.osprey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12.9013</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12.9014</span>
       </span>
     </div>
 
@@ -34,17 +34,8 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/insightsengineering/teal.osprey">
+  <a href="https://github.com/insightsengineering/teal.osprey" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
@@ -59,7 +50,7 @@ Other releases
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Teal module for the AE overview</h1>
-    <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.osprey/blob/HEAD/R/tm_g_ae_oview.R"><code>R/tm_g_ae_oview.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.osprey/blob/HEAD/R/tm_g_ae_oview.R" class="external-link"><code>R/tm_g_ae_oview.R</code></a></small>
     <div class="hidden name"><code>tm_g_ae_oview.Rd</code></div>
     </div>
 
@@ -132,7 +123,10 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <span class="r-in">      AEREL1 <span class="op">=</span> <span class="op">(</span><span class="va">AEREL</span> <span class="op">==</span> <span class="st">"Y"</span> <span class="op">&amp;</span> <span class="va">ACTARM</span> <span class="op">==</span> <span class="st">"A: Drug X"</span><span class="op">)</span>,</span>
 <span class="r-in">      AEREL2 <span class="op">=</span> <span class="op">(</span><span class="va">AEREL</span> <span class="op">==</span> <span class="st">"Y"</span> <span class="op">&amp;</span> <span class="va">ACTARM</span> <span class="op">==</span> <span class="st">"B: Placebo"</span><span class="op">)</span></span>
 <span class="r-in">    <span class="op">)</span></span>
-<span class="r-in">  <span class="va">labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Serious AE"</span>, <span class="st">"Related AE"</span>, <span class="st">"Grade 5 AE"</span>, <span class="st">"AE related to A: Drug X"</span>, <span class="st">"AE related to B: Placebo"</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span class="r-in">    <span class="st">"Serious AE"</span>, <span class="st">"Related AE"</span>, <span class="st">"Grade 5 AE"</span>,</span>
+<span class="r-in">    <span class="st">"AE related to A: Drug X"</span>, <span class="st">"AE related to B: Placebo"</span></span>
+<span class="r-in">  <span class="op">)</span></span>
 <span class="r-in">  <span class="va">cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TMPFL_SER"</span>, <span class="st">"TMPFL_REL"</span>, <span class="st">"TMPFL_GR5"</span>, <span class="st">"AEREL1"</span>, <span class="st">"AEREL2"</span><span class="op">)</span></span>
 <span class="r-in">  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">labels</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in">    <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[[</span><span class="va">cols</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">]</span>, <span class="st">"label"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">labels</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
@@ -184,13 +178,16 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <span class="r-in">      <span class="op">)</span>,</span>
 <span class="r-in">      flag_var_anl <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span>
 <span class="r-in">        selected <span class="op">=</span> <span class="st">"AEREL1"</span>,</span>
-<span class="r-in">        choices <span class="op">=</span> <span class="fu">variable_choices</span><span class="op">(</span><span class="va">ADAE</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TMPFL_SER"</span>, <span class="st">"TMPFL_REL"</span>, <span class="st">"TMPFL_GR5"</span>, <span class="st">"AEREL1"</span>, <span class="st">"AEREL2"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">        choices <span class="op">=</span> <span class="fu">variable_choices</span><span class="op">(</span></span>
+<span class="r-in">          <span class="va">ADAE</span>,</span>
+<span class="r-in">          <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TMPFL_SER"</span>, <span class="st">"TMPFL_REL"</span>, <span class="st">"TMPFL_GR5"</span>, <span class="st">"AEREL1"</span>, <span class="st">"AEREL2"</span><span class="op">)</span></span>
+<span class="r-in">        <span class="op">)</span>,</span>
 <span class="r-in">      <span class="op">)</span>,</span>
 <span class="r-in">      plot_height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">600</span>, <span class="fl">200</span>, <span class="fl">2000</span><span class="op">)</span></span>
 <span class="r-in">    <span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-03-29 07:36:02.7016 pid:1577 token:[] teal.osprey Initializing tm_g_ae_oview</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-04-07 18:53:36.0371 pid:1642 token:[] teal.osprey Initializing tm_g_ae_oview</span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="fu">shinyApp</span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="va">ui</span>, <span class="va">app</span><span class="op">$</span><span class="va">server</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
