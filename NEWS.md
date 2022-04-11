@@ -1,8 +1,8 @@
-# teal.osprey 0.1.12.9015
+# teal.osprey 0.1.13.9000
 ### Miscellaneous
 * Added a template to the `pkgdown` site.
 
-# teal.osprey 0.1.12
+# teal.osprey 0.1.13
 
 ### Enhancements
 * Added basic logging to the modules.
