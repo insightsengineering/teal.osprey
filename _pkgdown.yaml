@@ -2,8 +2,8 @@ url: https://insightsengineering.github.io/teal.osprey
 
 
 template:
+  package: nesttemplate
   params:
-    bootswatch: cerulean
     ganalytics: "UA-125641273-1"
 
 
