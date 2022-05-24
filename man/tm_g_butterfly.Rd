@@ -82,8 +82,6 @@ analysis, denoted by an value of "Y". Each variable within the
 observations with "Y" value in each and every selected variables will be
 used for subsequent analysis. Flag variables (from ADaM datasets) can be
 used directly as filter.
-
-
 }
 \examples{
 
