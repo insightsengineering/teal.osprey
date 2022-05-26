@@ -1,7 +1,11 @@
 # teal.osprey 0.1.13.9003
+
+### Enhancements
+* Removed unneeded `chunk` evaluations in `tm_g_patient_profile` module.
+
 ### Miscellaneous
 * Added a template to the `pkgdown` site.
-* Removed unneeded `chunk` evaluations in `tm_g_patient_profile` module.
+* Updated package authors.
 
 # teal.osprey 0.1.13
 
