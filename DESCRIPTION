@@ -1,13 +1,17 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Version: 0.1.12.9013.3
-Date: 2022-01-27
+Version: 0.1.13.9004
+Date: 2022-04-07
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
+    person("Konrad", "Pagacz", , "konrad.pagacz@contractors.roche.com", role = "aut"),
+    person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
     person("Chendi", "Liao", , "chendi.liao@roche.com", role = "aut"),
-    person("Mahdi", "About", , "mahdi.about@roche.com", role = "aut"),
-    person("Fei", "Wang", , "fei.wang.fw6@roche.com", role = "aut"),
-    person("Mika", "Maekinen", , "mika.maekinen@roche.com", role = "aut")
+    person("Liming", "Li", , "liming.li@roche.com", role = "aut"),
+    person("F. Hoffmann-La Roche AG", role = c("cph", "fnd")),
+    person("Molly", "He", role = "ctb"),
+    person("Carolyn", "Zhang", role = "ctb"),
+    person("Tina", "Cho", role = "ctb")
   )
 Description: Community efforts to collect teal modules for TLGs defined in
     the osprey package.  The teal modules add an encoding panel to
@@ -16,10 +20,10 @@ License: Apache License 2.0 | file LICENSE
 URL: https://github.com/insightsengineering/teal.osprey/
 BugReports: https://github.com/insightsengineering/teal.osprey/issues
 Depends:
-    osprey (>= 0.1.12),
+    osprey (>= 0.1.13),
     R (>= 3.6),
     shiny,
-    teal (>= 0.10.1)
+    teal (>= 0.11.0)
 Imports:
     checkmate,
     dplyr,
@@ -30,18 +34,18 @@ Imports:
     teal.code,
     teal.logger,
     teal.widgets,
-    tern (>= 0.7.6),
+    tern (>= 0.7.7),
     tidyr
 Suggests:
     knitr,
     rmarkdown,
     scda.2021(>= 0.1.2),
     scda(>= 0.1.2),
-    teal.data,
     testthat (>= 2.0)
 VignetteBuilder:
     knitr
+Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
