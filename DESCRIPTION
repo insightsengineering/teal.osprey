@@ -39,8 +39,9 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    scda.2021(>= 0.1.2),
-    scda(>= 0.1.2),
+    scda.2021(>= 0.1.3),
+    scda(>= 0.1.3),
+    teal.data,
     testthat (>= 2.0)
 VignetteBuilder:
     knitr
