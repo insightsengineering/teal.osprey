@@ -3,9 +3,6 @@ url: https://insightsengineering.github.io/teal.osprey
 
 template:
   package: nesttemplate
-  params:
-    ganalytics: "UA-125641273-1"
-
 
 navbar:
   right:
