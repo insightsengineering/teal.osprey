@@ -14,13 +14,6 @@ navbar:
 
 
 reference:
-  - title: Package
-    contents:
-      - teal.osprey
-  - title: Table Modules
-    desc: "Teal table modules including Disposition table and Adverse Event tables"
-    contents:
-      - starts_with("tm_t_")
   - title: Graph Modules
     desc: "Teal graph modules including safety and early efficacy graphs"
     contents:
