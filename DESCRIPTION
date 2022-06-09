@@ -27,7 +27,7 @@ Depends:
 Imports:
     checkmate,
     dplyr,
-    formatters,
+    formatters (>= 0.3.1),
     ggplot2,
     logger (>= 0.2.0),
     purrr,
