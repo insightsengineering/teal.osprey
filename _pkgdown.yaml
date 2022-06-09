@@ -3,9 +3,6 @@ url: https://insightsengineering.github.io/teal.osprey
 
 template:
   package: nesttemplate
-  params:
-    ganalytics: "UA-125641273-1"
-
 
 navbar:
   right:
@@ -14,13 +11,6 @@ navbar:
 
 
 reference:
-  - title: Package
-    contents:
-      - teal.osprey
-  - title: Table Modules
-    desc: "Teal table modules including Disposition table and Adverse Event tables"
-    contents:
-      - starts_with("tm_t_")
   - title: Graph Modules
     desc: "Teal graph modules including safety and early efficacy graphs"
     contents:
