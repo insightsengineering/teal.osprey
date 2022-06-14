@@ -1,5 +1,8 @@
 # teal.osprey 0.1.14.9000
 
+### Miscellaneous
+* Soft deprecate function `label_aevar()`.
+
 # teal.osprey 0.1.14
 
 ### Enhancements

@@ -42,6 +42,12 @@ quick_filter <- function(filter_opt, ANL) { # nolint
 #'
 #' @export
 label_aevar <- function(x) {
+  lifecycle::deprecate_soft(
+    when = "0.1.15",
+    what = "label_aevar()",
+    details = "It will be removed in the next release."
+  )
+
   # Display full variable labels for standard AE variables
   ae_varlabel <- c(
     AEBODSYS = "MedDRA System Organ Class",
