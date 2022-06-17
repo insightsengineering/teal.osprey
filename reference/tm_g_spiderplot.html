@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.osprey</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.14.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.14.9001</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,50 +77,85 @@
     <dl><dt>label</dt>
 <dd><p>(<code>character(1)</code>)<br>
 menu item label of the module in the teal app.</p></dd>
+
+
 <dt>dataname</dt>
 <dd><p>(<code>character(1)</code>)<br>
 analysis data used in the teal module, needs to be
 available in the list passed to the <code>data</code> argument of <code><a href="https://rdrr.io/pkg/teal/man/init.html" class="external-link">teal::init()</a></code>.</p></dd>
+
+
 <dt>paramcd</dt>
 <dd><p>(<code>character(1)</code> or <code>choices_selected</code>)<br>
 variable value designating the studied parameter.
 See <code><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">teal.transform::choices_selected()</a></code> for details.</p></dd>
+
+
 <dt>x_var</dt>
 <dd><p>x-axis variables</p></dd>
+
+
 <dt>y_var</dt>
 <dd><p>y-axis variables</p></dd>
+
+
 <dt>marker_var</dt>
 <dd><p>variable dictates marker symbol</p></dd>
+
+
 <dt>line_colorby_var</dt>
 <dd><p>variable dictates line color</p></dd>
+
+
 <dt>xfacet_var</dt>
 <dd><p>variable for x facets</p></dd>
+
+
 <dt>yfacet_var</dt>
 <dd><p>variable for y facets</p></dd>
+
+
 <dt>vref_line</dt>
 <dd><p>vertical reference lines</p></dd>
+
+
 <dt>href_line</dt>
 <dd><p>horizontal reference lines</p></dd>
+
+
 <dt>anno_txt_var</dt>
 <dd><p>annotation text</p></dd>
+
+
 <dt>legend_on</dt>
 <dd><p>boolean value for whether legend is displayed</p></dd>
+
+
 <dt>plot_height</dt>
 <dd><p>(<code>numeric(3)</code>)<br>
 vector to indicate default value, minimum and maximum values.</p></dd>
+
+
 <dt>plot_width</dt>
 <dd><p>(<code>numeric(3)</code>)<br>
 vector to indicate default value, minimum and maximum values.</p></dd>
+
+
 <dt>pre_output</dt>
 <dd><p>(<code>shiny.tag</code>, optional)<br>
 with text placed before the output to put the output into context. For example a title.</p></dd>
+
+
 <dt>post_output</dt>
 <dd><p>(<code>shiny.tag</code>, optional) with text placed after the output to put the output
 into context. For example the <code><a href="https://rdrr.io/pkg/shiny/man/helpText.html" class="external-link">shiny::helpText()</a></code> elements are useful.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>the <code><a href="https://rdrr.io/pkg/teal/man/module.html" class="external-link">teal::module()</a></code> object.</p>
+    
+
+<p>the <code><a href="https://rdrr.io/pkg/teal/man/module.html" class="external-link">teal::module()</a></code> object.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -163,7 +198,7 @@ into context. For example the <code><a href="https://rdrr.io/pkg/shiny/man/helpT
 <span class="r-in">    <span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-06-14 17:42:12.1331 pid:1170 token:[] teal.osprey Initializing tm_g_spiderplot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-06-17 09:56:31.1659 pid:1163 token:[] teal.osprey Initializing tm_g_spiderplot</span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="fu">shinyApp</span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="va">ui</span>, <span class="va">app</span><span class="op">$</span><span class="va">server</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>

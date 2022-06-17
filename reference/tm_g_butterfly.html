@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.osprey</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.14.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.14.9001</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,48 +76,79 @@
     <dl><dt>label</dt>
 <dd><p>(<code>character(1)</code>)<br>
 menu item label of the module in the teal app.</p></dd>
+
+
 <dt>dataname</dt>
 <dd><p>(<code>character(1)</code>)<br>
 analysis data used in the teal module, needs to be
 available in the list passed to the <code>data</code> argument of <code><a href="https://rdrr.io/pkg/teal/man/init.html" class="external-link">teal::init()</a></code>.</p></dd>
+
+
 <dt>filter_var</dt>
 <dd><p>(<code>choices_selected</code>) variable name of data filter, please see details regarding
 expected values, default is <code>NULL</code>. <code>choices</code>
 vector with <code>filter_var</code> choices, default is
 <code>NULL</code></p></dd>
+
+
 <dt>right_var</dt>
 <dd><p>(<code>choices_selected</code>) dichotomization variable for right side</p></dd>
+
+
 <dt>left_var</dt>
 <dd><p>(<code>choices_selected</code>) dichotomization variable for left side</p></dd>
+
+
 <dt>category_var</dt>
 <dd><p>(<code>choices_selected</code>) category (y axis) variable</p></dd>
+
+
 <dt>color_by_var</dt>
 <dd><p>(<code>choices_selected</code>) variable defines color blocks within each bar</p></dd>
+
+
 <dt>count_by_var</dt>
 <dd><p>(<code>choices_selected</code>) variable defines how x axis is calculated</p></dd>
+
+
 <dt>facet_var</dt>
 <dd><p>(<code>choices_selected</code>) variable for row facets</p></dd>
+
+
 <dt>sort_by_var</dt>
 <dd><p>(<code>choices_selected</code>) argument for order of class and term elements in table,
 default here is "count"</p></dd>
+
+
 <dt>legend_on</dt>
 <dd><p>(<code>boolean</code>) value for whether legend is displayed</p></dd>
+
+
 <dt>plot_height</dt>
 <dd><p>(<code>numeric(3)</code>)<br>
 vector to indicate default value, minimum and maximum values.</p></dd>
+
+
 <dt>plot_width</dt>
 <dd><p>(<code>numeric(3)</code>)<br>
 vector to indicate default value, minimum and maximum values.</p></dd>
+
+
 <dt>pre_output</dt>
 <dd><p>(<code>shiny.tag</code>, optional)<br>
 with text placed before the output to put the output into context. For example a title.</p></dd>
+
+
 <dt>post_output</dt>
 <dd><p>(<code>shiny.tag</code>, optional) with text placed after the output to put the output
 into context. For example the <code><a href="https://rdrr.io/pkg/shiny/man/helpText.html" class="external-link">shiny::helpText()</a></code> elements are useful.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>the <code><a href="https://rdrr.io/pkg/teal/man/module.html" class="external-link">teal::module()</a></code> object.</p>
+    
+
+<p>the <code><a href="https://rdrr.io/pkg/teal/man/module.html" class="external-link">teal::module()</a></code> object.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -199,7 +230,7 @@ used directly as filter.</p>
 <span class="r-in">    <span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-06-14 17:41:37.8090 pid:1170 token:[] teal.osprey Initializing tm_g_butterfly</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-06-17 09:55:58.9451 pid:1163 token:[] teal.osprey Initializing tm_g_butterfly</span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="fu">shinyApp</span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="va">ui</span>, <span class="va">app</span><span class="op">$</span><span class="va">server</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>

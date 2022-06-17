@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.osprey</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.14.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.14.9001</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,34 +67,49 @@
     <dl><dt>label</dt>
 <dd><p>(<code>character(1)</code>)<br>
 menu item label of the module in the teal app.</p></dd>
+
+
 <dt>dataname</dt>
 <dd><p>(<code>character(1)</code>)<br>
 analysis data used in the teal module, needs to be
 available in the list passed to the <code>data</code> argument of <code><a href="https://rdrr.io/pkg/teal/man/init.html" class="external-link">teal::init()</a></code>.</p></dd>
+
+
 <dt>arm_var</dt>
 <dd><p>(<code>choices_selected</code>)<br>
 object with all available choices and the pre-selected option for variable
 names that can be used as <code>arm_var</code>. See <code><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">teal.transform::choices_selected()</a></code> for
 details.</p></dd>
+
+
 <dt>flag_var_anl</dt>
 <dd><p>(<code><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">teal.transform::choices_selected</a></code>)
 <code>choices_selected</code> object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)</p></dd>
+
+
 <dt>fontsize</dt>
 <dd><p>(<code>numeric(1)</code> or <code>numeric(3)</code>)<br>
 Defines initial possible range of font-size. <code>fontsize</code> is set for
 <code><a href="https://rdrr.io/pkg/teal.widgets/man/optionalSliderInputValMinMax.html" class="external-link">teal.widgets::optionalSliderInputValMinMax()</a></code> which controls font-size in the output
 plot.</p></dd>
+
+
 <dt>plot_height</dt>
 <dd><p>(<code>numeric(3)</code>)<br>
 vector to indicate default value, minimum and maximum values.</p></dd>
+
+
 <dt>plot_width</dt>
 <dd><p>(<code>numeric(3)</code>)<br>
 vector to indicate default value, minimum and maximum values.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>the <code><a href="https://rdrr.io/pkg/teal/man/module.html" class="external-link">teal::module()</a></code> object.</p>
+    
+
+<p>the <code><a href="https://rdrr.io/pkg/teal/man/module.html" class="external-link">teal::module()</a></code> object.</p>
     </div>
 
     <div class="section level2">
@@ -179,7 +194,7 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <span class="r-in">    <span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-06-14 17:41:28.1026 pid:1170 token:[] teal.osprey Initializing tm_g_ae_oview</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2022-06-17 09:55:49.9414 pid:1163 token:[] teal.osprey Initializing tm_g_ae_oview</span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="fu">shinyApp</span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="va">ui</span>, <span class="va">app</span><span class="op">$</span><span class="va">server</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
