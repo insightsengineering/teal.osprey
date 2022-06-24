@@ -1,6 +1,6 @@
 # teal.osprey
 
-The teal.osprey package provides community contributed `teal` modules of the analysis functions from the [osprey](https://github.com/insightsengineering/osprey) R package.
+The teal.osprey package provides community contributed `teal` modules of the analysis functions from the [osprey](https://insightsengineering.github.io/osprey) R package.
 This enables `teal` app developers to easily create applications making use of the `osprey` analysis functions.
 
 ## Installation
@@ -16,4 +16,4 @@ devtools::install_github("insightsengineering/teal.osprey@*release", dependencie
 You might need to manually install all of the package dependencies before installing this package as without
 the `dependencies = FALSE` argument to `install_github` it may produce an error.
 
-In order to run many of the examples you will also need to install the [`scda`](https://github.com/insightsengineering/scda) package.
+In order to run many of the examples you will also need to install the [`scda`](https://insightsengineering.github.io/scda) package.
