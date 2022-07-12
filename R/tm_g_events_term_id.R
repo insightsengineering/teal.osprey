@@ -100,6 +100,14 @@ ui_g_events_term_id <- function(id, ...) {
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       teal.widgets::optionalSelectInput(
         ns("term"),
         "Term Variable",
@@ -192,10 +200,14 @@ ui_g_events_term_id <- function(id, ...) {
 
 srv_g_events_term_id <- function(id,
                                  datasets,
+                                 reporter,
                                  dataname,
                                  label,
                                  plot_height,
                                  plot_width) {
+
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
     font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
 
@@ -355,5 +367,26 @@ srv_g_events_term_id <- function(id,
         })
       ))
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("Events by Term")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        card$append_text("Events by Term Plot", "header3")
+        card$append_plot(plt())
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }
