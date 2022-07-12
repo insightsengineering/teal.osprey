@@ -3,6 +3,9 @@
 ### Breaking changes
 * Soft deprecate function `label_aevar()`.
 
+### Enhancements
+* Added `teal.reporter` to all modules.
+
 # teal.osprey 0.1.14
 
 ### Enhancements
