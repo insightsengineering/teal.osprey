@@ -205,7 +205,6 @@ srv_g_events_term_id <- function(id,
                                  label,
                                  plot_height,
                                  plot_width) {
-
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {

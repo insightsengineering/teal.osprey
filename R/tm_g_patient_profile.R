@@ -416,7 +416,6 @@ srv_g_patient_profile <- function(id,
                                   ae_line_col_opt,
                                   plot_height,
                                   plot_width) {
-
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {

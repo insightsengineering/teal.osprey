@@ -304,7 +304,6 @@ srv_g_heatmap_bygrade <- function(id,
                                   label,
                                   plot_height,
                                   plot_width) {
-
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {

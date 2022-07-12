@@ -218,7 +218,6 @@ ui_g_spider <- function(id, ...) {
 }
 
 srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, plot_width) {
-
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {

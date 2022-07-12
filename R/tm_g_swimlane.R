@@ -264,7 +264,6 @@ srv_g_swimlane <- function(id,
                            plot_height,
                            plot_width,
                            x_label) {
-
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {

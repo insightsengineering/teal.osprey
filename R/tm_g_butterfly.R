@@ -264,7 +264,6 @@ ui_g_butterfly <- function(id, ...) {
 }
 
 srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height, plot_width) {
-
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
