@@ -285,6 +285,14 @@ ui_g_patient_profile <- function(id, ...) {
       teal.widgets::plot_with_settings_ui(id = ns("patientprofileplot"))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       tags$label("Encodings", class = "text-primary"),
       selectizeInput(
         ns("patient_id"),
@@ -397,6 +405,7 @@ ui_g_patient_profile <- function(id, ...) {
 
 srv_g_patient_profile <- function(id,
                                   datasets,
+                                  reporter,
                                   sl_dataname,
                                   ex_dataname,
                                   ae_dataname,
@@ -407,6 +416,9 @@ srv_g_patient_profile <- function(id,
                                   ae_line_col_opt,
                                   plot_height,
                                   plot_width) {
+
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
     # initialize chunks
     teal.code::init_chunks()
@@ -1043,7 +1055,7 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_safe_eval()
     })
 
-    teal.widgets::plot_with_settings_srv(
+    pws <- teal.widgets::plot_with_settings_srv(
       id = "patientprofileplot",
       plot_r = plot_r,
       height = plot_height,
@@ -1056,5 +1068,26 @@ srv_g_patient_profile <- function(id,
       modal_title = paste("R code for", label),
       datanames = datasets$datanames()
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("Patient Profile")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        card$append_text("Plot", "header3")
+        card$append_plot(plot_r(), dim = pws$dim())
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }
