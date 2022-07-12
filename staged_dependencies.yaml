@@ -21,6 +21,9 @@ upstream_repos:
   insightsengineering/teal.data:
     repo: insightsengineering/teal.data
     host: https://github.com
+  insightsengineering/teal.reporter:
+    repo: insightsengineering/teal.reporter
+    host: https://github.com
   insightsengineering/teal:
     repo: insightsengineering/teal
     host: https://github.com
