@@ -163,6 +163,14 @@ ui_g_butterfly <- function(id, ...) {
       teal.widgets::plot_with_settings_ui(id = ns("butterflyplot"))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
       if (!is.null(a$filter_var)) {
@@ -255,7 +263,10 @@ ui_g_butterfly <- function(id, ...) {
   )
 }
 
-srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_width) {
+srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height, plot_width) {
+
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
     teal.code::init_chunks()
 
@@ -469,7 +480,7 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
     })
 
     # Insert the plot into a plot_with_settings module from teal.widgets
-    teal.widgets::plot_with_settings_srv(
+    pws <- teal.widgets::plot_with_settings_srv(
       id = "butterflyplot",
       plot_r = plot_r,
       height = plot_height,
@@ -487,5 +498,32 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
         })
       ))
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("Butterfly")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        card$append_text("Butterfly Plot", "header3")
+        card$append_plot(plot_r(), dim = pws$dim())
+        if (!is.null(input$facet_var)) {
+          card$append_text(paste("Faceted by:", paste(input$facet_var, collapse = ", ")), "header3")
+        }
+        if (!is.null(input$sort_by_var)) {
+          card$append_text(paste("Sorted by:", paste(input$sort_by_var, collapse = ", ")), "header3")
+        }
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }
