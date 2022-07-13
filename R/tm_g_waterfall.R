@@ -538,16 +538,17 @@ srv_g_waterfall <- function(id,
       card_fun <- function(comment) {
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Waterfall")
+        card$append_text("Waterfall Plot", "header2")
         card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
         if (!is.null(input$sort_var)) {
-          card$append_text(paste("Sorted by:", input$sort_var), "header3")
+          card$append_text(paste("Sorted by:", input$sort_var))
         }
         if (!is.null(input$facet_var)) {
-          card$append_text(paste("Faceted by:", paste(input$facet_var, collapse = ", ")), "header3")
+          card$append_text(paste("Faceted by:", paste(input$facet_var, collapse = ", ")))
         }
+        card$append_text("Plot", "header3")
+        card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)

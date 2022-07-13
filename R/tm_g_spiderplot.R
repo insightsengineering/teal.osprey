@@ -405,20 +405,21 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
     if (with_reporter) {
       card_fun <- function(comment) {
         card <- teal.reporter::TealReportCard$new()
-        card$set_name("Spiderplot")
+        card$set_name("Spider Plot")
+        card$append_text("Spider Plot", "header2")
         card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
         if (!is.null(input$paramcd)) {
-          card$append_text(paste("Parameter - from:", input$paramcd), "header3")
+          card$append_text(paste0("Parameter - (from ", dataname, "): ", input$paramcd))
         }
         if (!is.null(input$xfacet_var)) {
-          card$append_text(paste("Faceted on horizontally by:", paste(input$xfacet_var, collapse = ", ")), "header3")
+          card$append_text(paste("Faceted horizontally by:", paste(input$xfacet_var, collapse = ", ")))
         }
         if (!is.null(input$yfacet_var)) {
-          card$append_text(paste("Faceted on vertically by:", paste(input$yfacet_var, collapse = ", ")), "header3")
+          card$append_text(paste("Faceted vertically by:", paste(input$yfacet_var, collapse = ", ")))
         }
+        card$append_text("Plot", "header3")
+        card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)

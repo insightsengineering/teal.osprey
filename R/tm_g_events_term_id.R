@@ -372,9 +372,10 @@ srv_g_events_term_id <- function(id,
       card_fun <- function(comment) {
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Events by Term")
+        card$append_text("Events by Term", "header2")
         card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
-        card$append_text("Events by Term Plot", "header3")
+        card$append_text("Plot", "header3")
         card$append_plot(plt())
         if (!comment == "") {
           card$append_text("Comment", "header3")

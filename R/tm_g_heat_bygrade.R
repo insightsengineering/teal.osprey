@@ -451,9 +451,10 @@ srv_g_heatmap_bygrade <- function(id,
       card_fun <- function(comment) {
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Heatmap by Grade")
+        card$append_text("Heatmap by Grade", "header2")
         card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
-        card$append_text("Heatmap by Grade Plot", "header3")
+        card$append_text("Plot", "header3")
         card$append_plot(plt())
         if (!comment == "") {
           card$append_text("Comment", "header3")

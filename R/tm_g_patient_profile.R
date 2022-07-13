@@ -1073,6 +1073,7 @@ srv_g_patient_profile <- function(id,
       card_fun <- function(comment) {
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Patient Profile")
+        card$append_text("Patient Profile", "header2")
         card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
         card$append_text("Plot", "header3")
