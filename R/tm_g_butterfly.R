@@ -506,6 +506,9 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
         card$append_text("Butterfly Plot", "header2")
         card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
+        if (!is.null(input$filter_var)) {
+          card$append_text(paste0("Preset Data Filters: ", paste(input$filter_var, collapse = ", "), "."))
+        }
         if (!is.null(input$facet_var)) {
           card$append_text(paste0("Faceted by: ", paste(input$facet_var, collapse = ", "), "."))
         }
