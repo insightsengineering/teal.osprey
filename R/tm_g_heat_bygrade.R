@@ -308,7 +308,9 @@ srv_g_heatmap_bygrade <- function(id,
 
   moduleServer(id, function(input, output, session) {
     teal.code::init_chunks()
-    font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+    decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
 
     observeEvent(cm_dataname, {
       if (!is.na(cm_dataname)) {
@@ -455,7 +457,7 @@ srv_g_heatmap_bygrade <- function(id,
         card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
         card$append_text("Plot", "header3")
-        card$append_plot(plt())
+        card$append_plot(plt(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)

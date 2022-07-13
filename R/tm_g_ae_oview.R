@@ -227,7 +227,9 @@ srv_g_ae_oview <- function(id,
 
   moduleServer(id, function(input, output, session) {
     teal.code::init_chunks()
-    font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width)
+    decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width)
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
 
     observeEvent(list(input$diff_ci_method, input$conf_level), {
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
@@ -366,7 +368,7 @@ srv_g_ae_oview <- function(id,
         card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
         card$append_text("Plot", "header3")
-        card$append_plot(plt())
+        card$append_plot(plt(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)

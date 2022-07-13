@@ -208,7 +208,9 @@ srv_g_events_term_id <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
-    font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+    decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
 
     teal.code::init_chunks()
 
@@ -376,7 +378,7 @@ srv_g_events_term_id <- function(id,
         card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
         card$append_text("Plot", "header3")
-        card$append_plot(plt())
+        card$append_plot(plt(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)
