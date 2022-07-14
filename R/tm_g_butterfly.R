@@ -43,6 +43,7 @@
 #' # Example using stream (ADaM) dataset
 #' library(dplyr)
 #' library(scda)
+#' library(nestcolor)
 #'
 #' set.seed(23)
 #' ADSL <- synthetic_cdisc_data("latest")$adsl

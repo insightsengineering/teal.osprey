@@ -82,6 +82,7 @@ This is teal module that generates a swimlane plot (bar plot with markers) for A
 
 # Example using stream (ADaM) dataset
 library(dplyr)
+library(nestcolor)
 
 ADSL <- rADSL
 ADRS <- rADRS

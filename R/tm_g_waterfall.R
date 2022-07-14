@@ -44,6 +44,7 @@
 #' @author houx14 \email{houx14@gene.com}
 #'
 #' @examples
+#' library(nestcolor)
 #' ADSL <- rADSL
 #' ADRS <- rADRS
 #' ADTR <- rADTR
