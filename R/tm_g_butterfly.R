@@ -29,7 +29,6 @@
 #'   observations with "Y" value in each and every selected variables will be
 #'   used for subsequent analysis. Flag variables (from ADaM datasets) can be
 #'   used directly as filter.
-#' @details
 #'
 #' @inherit argument_convention return
 #'
