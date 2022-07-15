@@ -642,25 +642,28 @@ srv_g_patient_profile <- function(id,
       # restart chunks & include current environment ---
       teal.code::chunks_reset(envir = environment())
 
-      teal.code::chunks_push(bquote({
-        ADSL <- ADSL_FILTERED %>% # nolint
-          group_by(.data$USUBJID)
-        ADSL$max_date <- pmax(
-          as.Date(ADSL$LSTALVDT),
-          as.Date(ADSL$DTHDT),
-          na.rm = TRUE
-        )
-        ADSL <- ADSL %>% # nolint
-          mutate(
-            max_day = as.numeric(
-              as.Date(.data$max_date) - as.Date(
-                eval(parse(text = .(sl_start_date), keep.source = FALSE))
+      teal.code::chunks_push(
+        id = "ADSL call",
+        expression = bquote({
+          ADSL <- ADSL_FILTERED %>% # nolint
+            group_by(.data$USUBJID)
+          ADSL$max_date <- pmax(
+            as.Date(ADSL$LSTALVDT),
+            as.Date(ADSL$DTHDT),
+            na.rm = TRUE
+          )
+          ADSL <- ADSL %>% # nolint
+            mutate(
+              max_day = as.numeric(
+                as.Date(.data$max_date) - as.Date(
+                  eval(parse(text = .(sl_start_date), keep.source = FALSE))
+                )
               )
-            )
-            + (as.Date(.data$max_date) >= as.Date(eval(parse(text = .(sl_start_date)))))
-          ) %>%
-          filter(USUBJID == .(patient_id))
-      }))
+              + (as.Date(.data$max_date) >= as.Date(eval(parse(text = .(sl_start_date)))))
+            ) %>%
+            filter(USUBJID == .(patient_id))
+        })
+      )
 
       teal.code::chunks_push_new_line()
       teal.code::chunks_safe_eval()
@@ -682,10 +685,11 @@ srv_g_patient_profile <- function(id,
       # name for ae_line_col
       if (!is.null(ae_line_col_var) && is.data.frame(ADAE_FILTERED)) {
         teal.code::chunks_push(
-          bquote(ae_line_col_name <- formatters::var_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)])
+          id = "ae_line_col_name call",
+          expression = bquote(ae_line_col_name <- formatters::var_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)])
         )
       } else {
-        teal.code::chunks_push(quote(ae_line_col_name <- NULL))
+        teal.code::chunks_push(id = "ae_line_col_name call", expression = quote(ae_line_col_name <- NULL))
       }
 
       if (select_plot["ae"]) {
@@ -693,51 +697,55 @@ srv_g_patient_profile <- function(id,
           need(!is.null(input$ae_var), "Please select an adverse event variable.")
         )
         if (ADSL$USUBJID %in% ADAE_FILTERED$USUBJID) {
-          teal.code::chunks_push(bquote({
-            # ADAE
-            ADAE <- ADAE_FILTERED[, .(adae_vars)] # nolint
+          teal.code::chunks_push(
+            id = "ADAE call",
+            expression = bquote({
+              # ADAE
+              ADAE <- ADAE_FILTERED[, .(adae_vars)] # nolint
 
-            ADAE <- ADSL %>% # nolint
-              left_join(ADAE, by = c("STUDYID", "USUBJID")) %>% # nolint
-              as.data.frame() %>%
-              filter(!is.na(ASTDT)) %>%
-              mutate(ASTDY = as.numeric(
-                difftime(
-                  ASTDT,
-                  as.Date(substr(
-                    as.character(eval(parse(
-                      text = .(sl_start_date)
-                    ))), 1, 10
-                  )),
-                  units = "days"
+              ADAE <- ADSL %>% # nolint
+                left_join(ADAE, by = c("STUDYID", "USUBJID")) %>% # nolint
+                as.data.frame() %>%
+                filter(!is.na(ASTDT)) %>%
+                mutate(ASTDY = as.numeric(
+                  difftime(
+                    ASTDT,
+                    as.Date(substr(
+                      as.character(eval(parse(
+                        text = .(sl_start_date)
+                      ))), 1, 10
+                    )),
+                    units = "days"
+                  )
                 )
-              )
-              + (ASTDT >= as.Date(substr(
-                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                )))) %>%
-              filter(!is.na(AENDT)) %>%
-              mutate(AENDY = as.numeric(
-                difftime(
-                  AENDT,
-                  as.Date(substr(
-                    as.character(eval(parse(
-                      text = .(sl_start_date)
-                    ))), 1, 10
-                  )),
-                  units = "days"
+                + (ASTDT >= as.Date(substr(
+                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                  )))) %>%
+                filter(!is.na(AENDT)) %>%
+                mutate(AENDY = as.numeric(
+                  difftime(
+                    AENDT,
+                    as.Date(substr(
+                      as.character(eval(parse(
+                        text = .(sl_start_date)
+                      ))), 1, 10
+                    )),
+                    units = "days"
+                  )
                 )
-              )
-              + (AENDT >= as.Date(substr(
-                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                )))) %>%
-              select(c(.(adae_vars), ASTDY, AENDY))
-            formatters::var_labels(ADAE)[.(ae_line_col_var)] <-
-              formatters::var_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)]
-          }))
+                + (AENDT >= as.Date(substr(
+                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                  )))) %>%
+                select(c(.(adae_vars), ASTDY, AENDY))
+              formatters::var_labels(ADAE)[.(ae_line_col_var)] <-
+                formatters::var_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)]
+            })
+          )
           teal.code::chunks_safe_eval()
 
           teal.code::chunks_push(
-            call(
+            id = "ae call",
+            expression = call(
               "<-",
               as.name("ae"),
               call(
@@ -768,10 +776,10 @@ srv_g_patient_profile <- function(id,
           }
         } else {
           empty_ae <- TRUE
-          teal.code::chunks_push(bquote(ae <- NULL))
+          teal.code::chunks_push(id = "ae call", expression = bquote(ae <- NULL))
         }
       } else {
-        teal.code::chunks_push(bquote(ae <- NULL))
+        teal.code::chunks_push(id = "ae call", expression = bquote(ae <- NULL))
       }
 
       teal.code::chunks_push_new_line()
@@ -782,30 +790,33 @@ srv_g_patient_profile <- function(id,
           need(!is.null(rs_var), "Please select a tumor response variable.")
         )
         if (ADSL$USUBJID %in% ADRS_FILTERED$USUBJID) {
-          teal.code::chunks_push(bquote({
-            ADRS <- ADRS_FILTERED[, .(adrs_vars)] # nolint
-            ADRS <- ADSL %>% # nolint
-              left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
-              as.data.frame() %>%
-              mutate(
-                ADY = as.numeric(difftime(
-                  ADT,
-                  as.Date(substr(
-                    as.character(eval(parse(
-                      text = .(sl_start_date),
-                      keep.source = FALSE
-                    ))), 1, 10
-                  )),
-                  units = "days"
-                ))
-                + (ADT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))
-              ) %>%
-              select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
-              filter(is.na(ADY) == FALSE)
-            rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, .(rs_var)]))
-          }))
+          teal.code::chunks_push(
+            id = "ADRS and rs call",
+            expression = bquote({
+              ADRS <- ADRS_FILTERED[, .(adrs_vars)] # nolint
+              ADRS <- ADSL %>% # nolint
+                left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
+                as.data.frame() %>%
+                mutate(
+                  ADY = as.numeric(difftime(
+                    ADT,
+                    as.Date(substr(
+                      as.character(eval(parse(
+                        text = .(sl_start_date),
+                        keep.source = FALSE
+                      ))), 1, 10
+                    )),
+                    units = "days"
+                  ))
+                  + (ADT >= as.Date(substr(
+                      as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                    )))
+                ) %>%
+                select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
+                filter(is.na(ADY) == FALSE)
+              rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, .(rs_var)]))
+            })
+          )
           teal.code::chunks_safe_eval()
           ADRS <- teal.code::chunks_get_var("ADRS") # nolint
           if (is.null(ADRS) | nrow(ADRS) == 0) {
@@ -813,10 +824,10 @@ srv_g_patient_profile <- function(id,
           }
         } else {
           empty_rs <- TRUE
-          teal.code::chunks_push(bquote(rs <- NULL))
+          teal.code::chunks_push(id = "rs call", expression = bquote(rs <- NULL))
         }
       } else {
-        teal.code::chunks_push(bquote(rs <- NULL))
+        teal.code::chunks_push(id = "rs call", expression = bquote(rs <- NULL))
       }
 
       teal.code::chunks_push_new_line()
@@ -826,37 +837,40 @@ srv_g_patient_profile <- function(id,
           need(!is.null(cm_var), "Please select a concomitant medication variable.")
         )
         if (ADSL$USUBJID %in% ADCM_FILTERED$USUBJID) {
-          teal.code::chunks_push(bquote({
-            # ADCM
-            ADCM <- ADCM_FILTERED[, .(adcm_vars)] # nolint
-            ADCM <- ADSL %>% # nolint
-              left_join(ADCM, by = c("STUDYID", "USUBJID")) %>% # nolint
-              as.data.frame() %>%
-              filter(!is.na(ASTDT)) %>%
-              mutate(ASTDY = as.numeric(difftime(
-                ASTDT,
-                as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-                units = "days"
-              ))
-              + (ASTDT >= as.Date(substr(
-                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                )))) %>%
-              filter(!is.na(AENDT)) %>%
-              mutate(AENDY = as.numeric(difftime(
-                AENDT,
-                as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-                units = "days"
-              ))
-              + (AENDT >= as.Date(substr(
-                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                )))) %>%
-              select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(.(cm_var)))
-            if (length(unique(ADCM$USUBJID)) > 0) {
-              ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
-              & is.na(ADCM$ASTDY) == FALSE), ]
-            }
-            cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, .(cm_var)]))
-          }))
+          teal.code::chunks_push(
+            id = "ADCM and cm call",
+            expression = bquote({
+              # ADCM
+              ADCM <- ADCM_FILTERED[, .(adcm_vars)] # nolint
+              ADCM <- ADSL %>% # nolint
+                left_join(ADCM, by = c("STUDYID", "USUBJID")) %>% # nolint
+                as.data.frame() %>%
+                filter(!is.na(ASTDT)) %>%
+                mutate(ASTDY = as.numeric(difftime(
+                  ASTDT,
+                  as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
+                  units = "days"
+                ))
+                + (ASTDT >= as.Date(substr(
+                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                  )))) %>%
+                filter(!is.na(AENDT)) %>%
+                mutate(AENDY = as.numeric(difftime(
+                  AENDT,
+                  as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
+                  units = "days"
+                ))
+                + (AENDT >= as.Date(substr(
+                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                  )))) %>%
+                select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(.(cm_var)))
+              if (length(unique(ADCM$USUBJID)) > 0) {
+                ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
+                & is.na(ADCM$ASTDY) == FALSE), ]
+              }
+              cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, .(cm_var)]))
+            })
+          )
           teal.code::chunks_safe_eval()
           ADCM <- teal.code::chunks_get_var("ADCM") # nolint
           if (is.null(ADCM) | nrow(ADCM) == 0) {
@@ -864,10 +878,10 @@ srv_g_patient_profile <- function(id,
           }
         } else {
           empty_cm <- TRUE
-          teal.code::chunks_push(bquote(cm <- NULL))
+          teal.code::chunks_push(id = "cm call", expression = bquote(cm <- NULL))
         }
       } else {
-        teal.code::chunks_push(bquote(cm <- NULL))
+        teal.code::chunks_push(id = "cm call", expression = bquote(cm <- NULL))
       }
 
       teal.code::chunks_push_new_line()
@@ -877,43 +891,46 @@ srv_g_patient_profile <- function(id,
           need(!is.null(ex_var), "Please select an exposure variable.")
         )
         if (ADSL$USUBJID %in% ADEX_FILTERED$USUBJID) {
-          teal.code::chunks_push(bquote({
-            # ADEX
-            ADEX <- ADEX_FILTERED[, .(adex_vars)] # nolint
-            ADEX <- ADSL %>% # nolint
-              left_join(ADEX, by = c("STUDYID", "USUBJID")) %>% # nolint
-              as.data.frame() %>%
-              filter(PARCAT1 == "INDIVIDUAL" & PARAMCD == "DOSE" & !is.na(AVAL)) %>%
-              filter(!is.na(ASTDT)) %>%
-              select(
-                USUBJID, ASTDT, PARCAT2,
-                AVAL, AVALU, PARAMCD, !!quo(.(sl_start_date))
-              )
-            ADEX <- split(ADEX, ADEX$USUBJID) %>% # nolint
-              lapply(function(pinfo) {
-                pinfo %>%
-                  arrange(PARCAT2, PARAMCD, ASTDT) %>%
-                  ungroup() %>%
-                  mutate(diff = c(0, diff(AVAL, lag = 1))) %>%
-                  mutate(
-                    Modification = case_when(
-                      diff < 0 ~ "Decrease",
-                      diff > 0 ~ "Increase",
-                      diff == 0 ~ "None"
+          teal.code::chunks_push(
+            id = "ADEX and ex call",
+            expression = bquote({
+              # ADEX
+              ADEX <- ADEX_FILTERED[, .(adex_vars)] # nolint
+              ADEX <- ADSL %>% # nolint
+                left_join(ADEX, by = c("STUDYID", "USUBJID")) %>% # nolint
+                as.data.frame() %>%
+                filter(PARCAT1 == "INDIVIDUAL" & PARAMCD == "DOSE" & !is.na(AVAL)) %>%
+                filter(!is.na(ASTDT)) %>%
+                select(
+                  USUBJID, ASTDT, PARCAT2,
+                  AVAL, AVALU, PARAMCD, !!quo(.(sl_start_date))
+                )
+              ADEX <- split(ADEX, ADEX$USUBJID) %>% # nolint
+                lapply(function(pinfo) {
+                  pinfo %>%
+                    arrange(PARCAT2, PARAMCD, ASTDT) %>%
+                    ungroup() %>%
+                    mutate(diff = c(0, diff(AVAL, lag = 1))) %>%
+                    mutate(
+                      Modification = case_when(
+                        diff < 0 ~ "Decrease",
+                        diff > 0 ~ "Increase",
+                        diff == 0 ~ "None"
+                      )
+                    ) %>%
+                    mutate(ASTDT_dur = as.numeric(
+                      as.Date(substr(as.character(ASTDT), 1, 10)) -
+                        as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10))
                     )
-                  ) %>%
-                  mutate(ASTDT_dur = as.numeric(
-                    as.Date(substr(as.character(ASTDT), 1, 10)) -
-                      as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10))
-                  )
-                  + (as.Date(substr(as.character(ASTDT), 1, 10)) >=
-                      as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))))
-              }) %>%
-              Reduce(rbind, .) %>%
-              as.data.frame() %>%
-              select(-diff)
-            ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, .(ex_var)]))
-          }))
+                    + (as.Date(substr(as.character(ASTDT), 1, 10)) >=
+                        as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))))
+                }) %>%
+                Reduce(rbind, .) %>%
+                as.data.frame() %>%
+                select(-diff)
+              ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, .(ex_var)]))
+            })
+          )
           teal.code::chunks_safe_eval()
           ADEX <- teal.code::chunks_get_var("ADEX") # nolint
           if (is.null(ADEX) | nrow(ADEX) == 0) {
@@ -921,10 +938,10 @@ srv_g_patient_profile <- function(id,
           }
         } else {
           empty_ex <- TRUE
-          teal.code::chunks_push(bquote(ex <- NULL))
+          teal.code::chunks_push(id = "ex call", expression = bquote(ex <- NULL))
         }
       } else {
-        teal.code::chunks_push(bquote(ex <- NULL))
+        teal.code::chunks_push(id = "ex call", expression = bquote(ex <- NULL))
       }
 
       teal.code::chunks_push_new_line()
@@ -935,37 +952,40 @@ srv_g_patient_profile <- function(id,
         )
         if (ADSL$USUBJID %in% ADLB_FILTERED$USUBJID) {
           req(lb_var_show != lb_var)
-          teal.code::chunks_push(bquote({
-            ADLB <- ADLB_FILTERED[, .(adlb_vars)] # nolint
-            ADLB <- ADSL %>% # nolint
-              left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
-              as.data.frame() %>%
-              group_by(USUBJID) %>%
-              mutate(ANRIND = factor(
-                .data$ANRIND,
-                levels = c("HIGH", "LOW", "NORMAL")
-              )) %>%
-              filter(
-                !is.na(.data$LBSTRESN) & !is.na(.data$ANRIND)
-              ) %>%
-              as.data.frame() %>%
-              select(
-                USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, !!quo(.(sl_start_date)),
-                LBTESTCD, ANRIND, !!quo(.(lb_var))
-              )
+          teal.code::chunks_push(
+            id = "ADLB and lb call",
+            expression = bquote({
+              ADLB <- ADLB_FILTERED[, .(adlb_vars)] # nolint
+              ADLB <- ADSL %>% # nolint
+                left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
+                as.data.frame() %>%
+                group_by(USUBJID) %>%
+                mutate(ANRIND = factor(
+                  .data$ANRIND,
+                  levels = c("HIGH", "LOW", "NORMAL")
+                )) %>%
+                filter(
+                  !is.na(.data$LBSTRESN) & !is.na(.data$ANRIND)
+                ) %>%
+                as.data.frame() %>%
+                select(
+                  USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, !!quo(.(sl_start_date)),
+                  LBTESTCD, ANRIND, !!quo(.(lb_var))
+                )
 
-            ADLB <- ADLB %>% # nolint
-              mutate(ADY = as.numeric(difftime(
-                .data$ADT,
-                as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-                units = "days"
-              ))
-              + (ADT >= as.Date(substr(
-                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                )))) %>%
-              filter(.data[[.(lb_var)]] %in% .(lb_var_show))
-            lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
-          }))
+              ADLB <- ADLB %>% # nolint
+                mutate(ADY = as.numeric(difftime(
+                  .data$ADT,
+                  as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
+                  units = "days"
+                ))
+                + (ADT >= as.Date(substr(
+                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                  )))) %>%
+                filter(.data[[.(lb_var)]] %in% .(lb_var_show))
+              lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
+            })
+          )
           teal.code::chunks_safe_eval()
           ADLB <- teal.code::chunks_get_var("ADLB") # nolint
           if (is.null(ADLB) | nrow(ADLB) == 0) {
@@ -973,10 +993,10 @@ srv_g_patient_profile <- function(id,
           }
         } else {
           empty_lb <- TRUE
-          teal.code::chunks_push(bquote(lb <- NULL))
+          teal.code::chunks_push(id = "lb call", expression = bquote(lb <- NULL))
         }
       } else {
-        teal.code::chunks_push(bquote(lb <- NULL))
+        teal.code::chunks_push(id = "lb call", expression = bquote(lb <- NULL))
       }
 
 
@@ -1011,7 +1031,10 @@ srv_g_patient_profile <- function(id,
 
       # Convert x_limit to numeric vector
       if (!is.null(x_limit) || x_limit != "") {
-        teal.code::chunks_push(bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit), ",")))))
+        teal.code::chunks_push(
+          id = "x_limit call",
+          expression = bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit), ","))))
+        )
         teal.code::chunks_safe_eval()
         x_limit <- teal.code::chunks_get_var("x_limit")
       }
@@ -1027,19 +1050,22 @@ srv_g_patient_profile <- function(id,
 
       teal.code::chunks_push_new_line()
 
-      teal.code::chunks_push(bquote({
-        osprey::g_patient_profile(
-          ex = ex,
-          ae = ae,
-          rs = rs,
-          cm = cm,
-          lb = lb,
-          arrow_end_day = ADSL$max_day,
-          xlim = x_limit,
-          xlab = "Study Day",
-          title = paste("Patient Profile: ", .(patient_id))
-        )
-      }))
+      teal.code::chunks_push(
+        id = "g_patient_profile call",
+        expression = bquote({
+          osprey::g_patient_profile(
+            ex = ex,
+            ae = ae,
+            rs = rs,
+            cm = cm,
+            lb = lb,
+            arrow_end_day = ADSL$max_day,
+            xlim = x_limit,
+            xlab = "Study Day",
+            title = paste("Patient Profile: ", .(patient_id))
+          )
+        })
+      )
       teal.code::chunks_safe_eval()
     })
 
