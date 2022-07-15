@@ -321,11 +321,11 @@ srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width)
       # label
       if (anno_txt_var) {
         teal.code::chunks_push(
-          id = "tbl call",
+          id = "lbl call",
           expression = quote(lbl <- list(txt_ann = as.factor(ANL_f$USUBJID)))
         )
       } else {
-        teal.code::chunks_push(id = "tbl call", expression = quote(lbl <- NULL))
+        teal.code::chunks_push(id = "lbl call", expression = quote(lbl <- NULL))
       }
 
       teal.code::chunks_push_new_line()
