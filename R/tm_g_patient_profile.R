@@ -686,7 +686,8 @@ srv_g_patient_profile <- function(id,
       if (!is.null(ae_line_col_var) && is.data.frame(ADAE_FILTERED)) {
         teal.code::chunks_push(
           id = "ae_line_col_name call",
-          expression = bquote(ae_line_col_name <- formatters::var_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)])
+          expression =
+            bquote(ae_line_col_name <- formatters::var_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)])
         )
       } else {
         teal.code::chunks_push(id = "ae_line_col_name call", expression = quote(ae_line_col_name <- NULL))
