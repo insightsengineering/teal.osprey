@@ -272,26 +272,32 @@ srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width)
       adtr_vars <- adtr_vars[!is.null(adtr_vars)]
 
       # merge
-      teal.code::chunks_push(bquote({
-        ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
-        ADTR <- .(as.name(adtr_name))[, .(adtr_vars)] %>% as.data.frame() # nolint
+      teal.code::chunks_push(
+        id = "ANL call",
+        expression = bquote({
+          ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
+          ADTR <- .(as.name(adtr_name))[, .(adtr_vars)] %>% as.data.frame() # nolint
 
-        ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID")) # nolint
-        ANL <- ANL %>% # nolint
-          group_by(USUBJID, PARAMCD) %>%
-          arrange(ANL[, .(x_var)]) %>%
-          as.data.frame()
-      }))
+          ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID")) # nolint
+          ANL <- ANL %>% # nolint
+            group_by(USUBJID, PARAMCD) %>%
+            arrange(ANL[, .(x_var)]) %>%
+            as.data.frame()
+        })
+      )
 
       teal.code::chunks_push_new_line()
 
       # format and filter
-      teal.code::chunks_push(bquote({
-        ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-        ANL_f <- ANL %>% # nolint
-          filter(PARAMCD == .(paramcd)) %>%
-          as.data.frame()
-      }))
+      teal.code::chunks_push(
+        id = "ANL_f call",
+        expression = bquote({
+          ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+          ANL_f <- ANL %>% # nolint
+            filter(PARAMCD == .(paramcd)) %>%
+            as.data.frame()
+        })
+      )
 
       teal.code::chunks_push_new_line()
 
@@ -314,9 +320,12 @@ srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width)
 
       # label
       if (anno_txt_var) {
-        teal.code::chunks_push(quote(lbl <- list(txt_ann = as.factor(ANL_f$USUBJID))))
+        teal.code::chunks_push(
+          id = "lbl call",
+          expression = quote(lbl <- list(txt_ann = as.factor(ANL_f$USUBJID)))
+        )
       } else {
-        teal.code::chunks_push(quote(lbl <- NULL))
+        teal.code::chunks_push(id = "lbl call", expression = quote(lbl <- NULL))
       }
 
       teal.code::chunks_push_new_line()
@@ -326,48 +335,51 @@ srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width)
 
       # plot code to chunks ---
 
-      teal.code::chunks_push(bquote({
-        osprey::g_spiderplot(
-          marker_x = ANL_f[, .(x_var)],
-          marker_id = ANL_f$USUBJID,
-          marker_y = ANL_f[, .(y_var)],
-          line_colby = .(if (line_colorby_var != "None") {
-            bquote(ANL_f[, .(line_colorby_var)])
-          } else {
-            NULL
-          }),
-          marker_shape = .(if (marker_var != "None") {
-            bquote(ANL_f[, .(marker_var)])
-          } else {
-            NULL
-          }),
-          marker_size = 4,
-          datalabel_txt = lbl,
-          facet_rows = .(if (!is.null(yfacet_var)) {
-            bquote(data.frame(ANL_f[, .(yfacet_var)]))
-          } else {
-            NULL
-          }),
-          facet_columns = .(if (!is.null(xfacet_var)) {
-            bquote(data.frame(ANL_f[, .(xfacet_var)]))
-          } else {
-            NULL
-          }),
-          vref_line = .(vref_line),
-          href_line = .(href_line),
-          x_label = if (is.null(formatters::var_labels(ADTR_FILTERED[.(x_var)], fill = FALSE))) {
-            .(x_var)
-          } else {
-            formatters::var_labels(ADTR_FILTERED[.(x_var)], fill = FALSE)
-          },
-          y_label = if (is.null(formatters::var_labels(ADTR_FILTERED[.(y_var)], fill = FALSE))) {
-            .(y_var)
-          } else {
-            formatters::var_labels(ADTR_FILTERED[.(y_var)], fill = FALSE)
-          },
-          show_legend = .(legend_on)
-        )
-      }))
+      teal.code::chunks_push(
+        id = "g_spiderplot call",
+        expression = bquote({
+          osprey::g_spiderplot(
+            marker_x = ANL_f[, .(x_var)],
+            marker_id = ANL_f$USUBJID,
+            marker_y = ANL_f[, .(y_var)],
+            line_colby = .(if (line_colorby_var != "None") {
+              bquote(ANL_f[, .(line_colorby_var)])
+            } else {
+              NULL
+            }),
+            marker_shape = .(if (marker_var != "None") {
+              bquote(ANL_f[, .(marker_var)])
+            } else {
+              NULL
+            }),
+            marker_size = 4,
+            datalabel_txt = lbl,
+            facet_rows = .(if (!is.null(yfacet_var)) {
+              bquote(data.frame(ANL_f[, .(yfacet_var)]))
+            } else {
+              NULL
+            }),
+            facet_columns = .(if (!is.null(xfacet_var)) {
+              bquote(data.frame(ANL_f[, .(xfacet_var)]))
+            } else {
+              NULL
+            }),
+            vref_line = .(vref_line),
+            href_line = .(href_line),
+            x_label = if (is.null(formatters::var_labels(ADTR_FILTERED[.(x_var)], fill = FALSE))) {
+              .(x_var)
+            } else {
+              formatters::var_labels(ADTR_FILTERED[.(x_var)], fill = FALSE)
+            },
+            y_label = if (is.null(formatters::var_labels(ADTR_FILTERED[.(y_var)], fill = FALSE))) {
+              .(y_var)
+            } else {
+              formatters::var_labels(ADTR_FILTERED[.(y_var)], fill = FALSE)
+            },
+            show_legend = .(legend_on)
+          )
+        })
+      )
 
       teal.code::chunks_safe_eval()
     })

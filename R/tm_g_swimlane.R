@@ -362,43 +362,52 @@ srv_g_swimlane <- function(id, datasets, dataname,
 
       # WRITE VARIABLES TO CHUNKS
 
-      teal.code::chunks_push(bquote({
-        bar_var <- .(bar_var)
-        bar_color_var <- .(bar_color_var)
-        sort_var <- .(sort_var)
-        marker_pos_var <- .(marker_pos_var)
-        marker_shape_var <- .(marker_shape_var)
-        marker_color_var <- .(marker_color_var)
-        anno_txt_var <- .(anno_txt_var)
-      }))
+      teal.code::chunks_push(
+        id = "variables call",
+        expression = bquote({
+          bar_var <- .(bar_var)
+          bar_color_var <- .(bar_color_var)
+          sort_var <- .(sort_var)
+          marker_pos_var <- .(marker_pos_var)
+          marker_shape_var <- .(marker_shape_var)
+          marker_color_var <- .(marker_color_var)
+          anno_txt_var <- .(anno_txt_var)
+        })
+      )
       teal.code::chunks_push_new_line()
 
       # WRITE DATA SELECTION TO CHUNKS
 
       if (dataname == "ADSL") {
-        teal.code::chunks_push(bquote({
-          ADSL_p <- ADSL_FILTERED # nolint
-          ADSL <- ADSL_p[, .(adsl_vars)] # nolint
-          # only take last part of USUBJID
-          ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-        }))
+        teal.code::chunks_push(
+          id = "ADSL call",
+          expression = bquote({
+            ADSL_p <- ADSL_FILTERED # nolint
+            ADSL <- ADSL_p[, .(adsl_vars)] # nolint
+            # only take last part of USUBJID
+            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+          })
+        )
       } else {
         anl_name <- paste0(dataname, "_FILTERED")
-        teal.code::chunks_push(bquote({
-          ADSL_p <- ADSL_FILTERED # nolint
-          ANL_p <- .(as.name(anl_name)) # nolint
+        teal.code::chunks_push(
+          id = "ADSL and ANL call",
+          expression = bquote({
+            ADSL_p <- ADSL_FILTERED # nolint
+            ANL_p <- .(as.name(anl_name)) # nolint
 
-          ADSL <- ADSL_p[, .(adsl_vars)] # nolint
-          ANL <- merge( # nolint
-            x = ADSL,
-            y = ANL_p[, .(anl_vars)],
-            all.x = FALSE, all.y = FALSE,
-            by = c("USUBJID", "STUDYID")
-          )
-          # only take last part of USUBJID
-          ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-          ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-        }))
+            ADSL <- ADSL_p[, .(adsl_vars)] # nolint
+            ANL <- merge( # nolint
+              x = ADSL,
+              y = ANL_p[, .(anl_vars)],
+              all.x = FALSE, all.y = FALSE,
+              by = c("USUBJID", "STUDYID")
+            )
+            # only take last part of USUBJID
+            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+          })
+        )
       }
       teal.code::chunks_push_new_line() # empty line for pretty code
       teal.code::chunks_safe_eval()
@@ -485,7 +494,7 @@ srv_g_swimlane <- function(id, datasets, dataname,
         })
       }
 
-      teal.code::chunks_push(plot_call)
+      teal.code::chunks_push(id = "plot call", expression = plot_call)
       teal.code::chunks_safe_eval()
     })
 
