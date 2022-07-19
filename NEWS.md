@@ -1,4 +1,4 @@
-# teal.osprey 0.1.14.9006
+# teal.osprey 0.1.14.9007
 
 ### Breaking changes
 * Soft deprecate function `label_aevar()`.

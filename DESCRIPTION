@@ -1,6 +1,6 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Version: 0.1.14.9006
+Version: 0.1.14.9007
 Date: 2022-06-09
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
@@ -55,10 +55,10 @@ Remotes:
     insightsengineering/teal.data@*release,
     insightsengineering/teal.logger@*release,
     insightsengineering/teal.logger@*release,
+    insightsengineering/teal.reporter@*release,
     insightsengineering/teal.widgets@*release,
     insightsengineering/teal@*release,
-    insightsengineering/tern@*release,
-    insightsengineering/teal.reporter@*release
+    insightsengineering/tern@*release
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
