@@ -314,45 +314,51 @@ srv_g_events_term_id <- function(id,
       adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
 
-      teal.code::chunks_push(bquote({
-        ANL <- merge( # nolint
-          x = ADSL_FILTERED[, .(adsl_vars), drop = FALSE],
-          y = .(as.name(anl_name))[, .(anl_vars), drop = FALSE],
-          all.x = FALSE,
-          all.y = FALSE,
-          by = c("USUBJID", "STUDYID")
-        )
-      }))
+      teal.code::chunks_push(
+        id = "ANL call",
+        expression = bquote({
+          ANL <- merge( # nolint
+            x = ADSL_FILTERED[, .(adsl_vars), drop = FALSE],
+            y = .(as.name(anl_name))[, .(anl_vars), drop = FALSE],
+            all.x = FALSE,
+            all.y = FALSE,
+            by = c("USUBJID", "STUDYID")
+          )
+        })
+      )
 
       teal.code::chunks_safe_eval()
       validate(need(nrow(teal.code::chunks_get_var("ANL")) > 10, "need at least 10 data points"))
 
-      teal.code::chunks_push(bquote({
-        term <- ANL[[.(input$term)]]
-        id <- ANL$USUBJID
-        arm <- ANL[[.(input$arm_var)]]
-        arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
-        ref <- .(input$arm_ref)
-        trt <- .(input$arm_trt)
+      teal.code::chunks_push(
+        id = "Variables and g_events_term_id call",
+        expression = bquote({
+          term <- ANL[[.(input$term)]]
+          id <- ANL$USUBJID
+          arm <- ANL[[.(input$arm_var)]]
+          arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
+          ref <- .(input$arm_ref)
+          trt <- .(input$arm_trt)
 
-        osprey::g_events_term_id(
-          term = term,
-          id = id,
-          arm = arm,
-          arm_N = arm_N,
-          ref = .(input$arm_ref),
-          trt = .(input$arm_trt),
-          sort_by = .(input$sort),
-          rate_range = .(input$raterange),
-          diff_range = .(input$diffrange),
-          reversed = .(input$reverse),
-          conf_level = .(input$conf_level),
-          diff_ci_method = .(input$diff_ci_method),
-          axis_side = .(input$axis),
-          fontsize = .(font_size()),
-          draw = TRUE
-        )
-      }))
+          osprey::g_events_term_id(
+            term = term,
+            id = id,
+            arm = arm,
+            arm_N = arm_N,
+            ref = .(input$arm_ref),
+            trt = .(input$arm_trt),
+            sort_by = .(input$sort),
+            rate_range = .(input$raterange),
+            diff_range = .(input$diffrange),
+            reversed = .(input$reverse),
+            conf_level = .(input$conf_level),
+            diff_ci_method = .(input$diff_ci_method),
+            axis_side = .(input$axis),
+            fontsize = .(font_size()),
+            draw = TRUE
+          )
+        })
+      )
 
       teal.code::chunks_safe_eval()
     })

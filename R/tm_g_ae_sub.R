@@ -317,16 +317,19 @@ srv_g_ae_sub <- function(id,
 
       teal.code::chunks_reset(envir = environment())
 
-      teal.code::chunks_push(bquote({
-        id <- ADAE_FILTERED$USUBJID
-        arm <- as.factor(ADAE_FILTERED[[.(input$arm_var)]])
-        arm_sl <- as.character(ADSL_FILTERED[[.(input$arm_var)]])
-        grps <- .(input$groups)
-        subgroups <- ADAE_FILTERED[grps]
-        subgroups_sl <- ADSL_FILTERED[grps]
-        trt <- .(input$arm_trt)
-        ref <- .(input$arm_ref)
-      }))
+      teal.code::chunks_push(
+        id = "variables call",
+        expression = bquote({
+          id <- ADAE_FILTERED$USUBJID
+          arm <- as.factor(ADAE_FILTERED[[.(input$arm_var)]])
+          arm_sl <- as.character(ADSL_FILTERED[[.(input$arm_var)]])
+          grps <- .(input$groups)
+          subgroups <- ADAE_FILTERED[grps]
+          subgroups_sl <- ADSL_FILTERED[grps]
+          trt <- .(input$arm_trt)
+          ref <- .(input$arm_ref)
+        })
+      )
       teal.code::chunks_push_new_line()
 
       teal.code::chunks_safe_eval()
@@ -344,35 +347,44 @@ srv_g_ae_sub <- function(id,
       })
 
       if (length(unlist(group_labels)) == 0) {
-        teal.code::chunks_push(bquote({
-          group_labels <- NULL
-        }))
+        teal.code::chunks_push(
+          id = "group_labels call",
+          expression = bquote({
+            group_labels <- NULL
+          })
+        )
       } else {
-        teal.code::chunks_push(bquote({
-          group_labels <- .(group_labels)
-          names(group_labels) <- .(input$groups)
-        }))
+        teal.code::chunks_push(
+          id = "group_labels call",
+          expression = bquote({
+            group_labels <- .(group_labels)
+            names(group_labels) <- .(input$groups)
+          })
+        )
       }
 
       teal.code::chunks_push_new_line()
       teal.code::chunks_safe_eval()
-      teal.code::chunks_push(bquote({
-        osprey::g_ae_sub(
-          id = id,
-          arm = arm,
-          arm_sl = arm_sl,
-          trt = trt,
-          ref = ref,
-          subgroups = subgroups,
-          subgroups_sl = subgroups_sl,
-          subgroups_levels = group_labels,
-          conf_level = .(input$conf_level),
-          diff_ci_method = .(input$ci),
-          fontsize = .(font_size()),
-          arm_n = .(input$arm_n),
-          draw = TRUE
-        )
-      }))
+      teal.code::chunks_push(
+        id = "g_ae_sub call",
+        expression = bquote({
+          osprey::g_ae_sub(
+            id = id,
+            arm = arm,
+            arm_sl = arm_sl,
+            trt = trt,
+            ref = ref,
+            subgroups = subgroups,
+            subgroups_sl = subgroups_sl,
+            subgroups_levels = group_labels,
+            conf_level = .(input$conf_level),
+            diff_ci_method = .(input$ci),
+            fontsize = .(font_size()),
+            arm_n = .(input$arm_n),
+            draw = TRUE
+          )
+        })
+      )
 
       teal.code::chunks_safe_eval()
     })

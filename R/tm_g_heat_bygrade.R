@@ -399,19 +399,25 @@ srv_g_heatmap_bygrade <- function(id,
 
       if (input$plot_cm) {
         validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
-        teal.code::chunks_push(bquote({
-          conmed_data <- ADCM_FILTERED %>%
-            filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
-          conmed_var <- .(input$conmed_var)
-          conmed_data[[conmed_var]] <-
-            factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
-          formatters::var_labels(conmed_data)[conmed_var] <-
-            formatters::var_labels(ADCM_FILTERED, fill = FALSE)[conmed_var]
-        }))
+        teal.code::chunks_push(
+          id = "conmed_data call",
+          expression = bquote({
+            conmed_data <- ADCM_FILTERED %>%
+              filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
+            conmed_var <- .(input$conmed_var)
+            conmed_data[[conmed_var]] <-
+              factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
+            formatters::var_labels(conmed_data)[conmed_var] <-
+              formatters::var_labels(ADCM_FILTERED, fill = FALSE)[conmed_var]
+          })
+        )
       } else {
-        teal.code::chunks_push(bquote({
-          conmed_data <- conmed_var <- NULL
-        }))
+        teal.code::chunks_push(
+          id = "conmed_data call",
+          expression = bquote({
+            conmed_data <- conmed_var <- NULL
+          })
+        )
       }
       teal.code::chunks_safe_eval()
 
@@ -419,23 +425,26 @@ srv_g_heatmap_bygrade <- function(id,
         need(length(input$conmed_level) <= 3, "Please select no more than 3 conmed levels")
       )
 
-      teal.code::chunks_push(bquote({
-        exp_data <- ADEX_FILTERED %>%
-          filter(PARCAT1 == "INDIVIDUAL")
+      teal.code::chunks_push(
+        id = "g_heat_bygrade call",
+        expression = bquote({
+          exp_data <- ADEX_FILTERED %>%
+            filter(PARCAT1 == "INDIVIDUAL")
 
-        osprey::g_heat_bygrade(
-          id_var = .(input$id_var),
-          exp_data = exp_data,
-          visit_var = .(input$visit_var),
-          ongo_var = .(input$ongo_var),
-          anno_data = ADSL_FILTERED[c(.(input$anno_var), .(input$id_var))],
-          anno_var = .(input$anno_var),
-          heat_data = ADAE_FILTERED %>% select(!!.(input$id_var), !!.(input$visit_var), !!.(input$heat_var)),
-          heat_color_var = .(input$heat_var),
-          conmed_data = conmed_data,
-          conmed_var = conmed_var
-        )
-      }))
+          osprey::g_heat_bygrade(
+            id_var = .(input$id_var),
+            exp_data = exp_data,
+            visit_var = .(input$visit_var),
+            ongo_var = .(input$ongo_var),
+            anno_data = ADSL_FILTERED[c(.(input$anno_var), .(input$id_var))],
+            anno_var = .(input$anno_var),
+            heat_data = ADAE_FILTERED %>% select(!!.(input$id_var), !!.(input$visit_var), !!.(input$heat_var)),
+            heat_color_var = .(input$heat_var),
+            conmed_data = conmed_data,
+            conmed_var = conmed_var
+          )
+        })
+      )
 
       teal.code::chunks_safe_eval()
     })

@@ -412,67 +412,82 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
 
       teal.code::chunks_reset(envir = environment())
 
-      teal.code::chunks_push(bquote({
-        ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
-        ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
-      }))
+      teal.code::chunks_push(
+        id = "datasets call",
+        expression = bquote({
+          ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
+          ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
+        })
+      )
 
       teal.code::chunks_push_new_line()
       if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
-        teal.code::chunks_push(bquote(
-          ADAE <- quick_filter(.(filter_var), ADAE) %>% # nolint
-            droplevels() %>%
-            as.data.frame()
-        ))
+        teal.code::chunks_push(
+          id = "ADAE filter call",
+          expression = bquote(
+            ADAE <- quick_filter(.(filter_var), ADAE) %>% # nolint
+              droplevels() %>%
+              as.data.frame()
+          )
+        )
       }
       teal.code::chunks_push_new_line()
 
-      teal.code::chunks_push(bquote({
-        ANL_f <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
-        ANL_f <- na.omit(ANL_f) # nolint
-      }))
+      teal.code::chunks_push(
+        id = "ANL_f call",
+        expression = bquote({
+          ANL_f <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
+          ANL_f <- na.omit(ANL_f) # nolint
+        })
+      )
 
       teal.code::chunks_push_new_line()
       teal.code::chunks_push_new_line()
 
       if (!is.null(right_val) && !is.null(right_val)) {
-        teal.code::chunks_push(bquote({
-          right <- ANL_f[, .(right_var)] %in% .(right_val)
-          right_name <- paste(.(right_val), collapse = " - ")
-          left <- ANL_f[, .(left_var)] %in% .(left_val)
-          left_name <- paste(.(left_val), collapse = " - ")
-        }))
+        teal.code::chunks_push(
+          id = "right/left call",
+          expression = bquote({
+            right <- ANL_f[, .(right_var)] %in% .(right_val)
+            right_name <- paste(.(right_val), collapse = " - ")
+            left <- ANL_f[, .(left_var)] %in% .(left_val)
+            left_name <- paste(.(left_val), collapse = " - ")
+          })
+        )
       }
 
       teal.code::chunks_push_new_line()
       teal.code::chunks_safe_eval()
 
       if (!is.null(right_val) && !is.null(left_val)) {
-        teal.code::chunks_push(bquote({
-          osprey::g_butterfly(
-            category = ANL_f[, .(category_var)],
-            right_flag = right,
-            left_flag = left,
-            group_names = c(right_name, left_name),
-            block_count = .(count_by_var),
-            block_color = .(if (color_by_var != "None") {
-              bquote(ANL_f[, .(color_by_var)])
-            } else {
-              NULL
-            }),
-            id = ANL_f$USUBJID,
-            facet_rows = .(if (!is.null(facet_var)) {
-              bquote(ANL_f[, .(facet_var)])
-            } else {
-              NULL
-            }),
-            x_label = .(count_by_var),
-            y_label = .(category_var),
-            legend_label = .(color_by_var),
-            sort_by = .(sort_by_var),
-            show_legend = .(legend_on)
-          )
-        }))
+        teal.code::chunks_push(
+          id = "g_butterfly call",
+          expression = bquote({
+            osprey::g_butterfly(
+              category = ANL_f[, .(category_var)],
+              right_flag = right,
+              left_flag = left,
+              group_names = c(right_name, left_name),
+              block_count = .(count_by_var),
+              block_color = .(if (color_by_var != "None") {
+                bquote(ANL_f[, .(color_by_var)])
+              } else {
+                NULL
+              }),
+              id = ANL_f$USUBJID,
+              facet_rows = .(if (!is.null(facet_var)) {
+                bquote(ANL_f[, .(facet_var)])
+              } else {
+                NULL
+              }),
+              x_label = .(count_by_var),
+              y_label = .(category_var),
+              legend_label = .(color_by_var),
+              sort_by = .(sort_by_var),
+              show_legend = .(legend_on)
+            )
+          })
+        )
       }
 
       teal.code::chunks_safe_eval()

@@ -399,61 +399,76 @@ srv_g_waterfall <- function(id,
       teal.code::chunks_reset(envir = environment())
 
       # write variables to chunks
-      teal.code::chunks_push(bquote({
-        bar_var <- .(bar_var)
-        bar_color_var <- .(bar_color_var)
-        sort_var <- .(sort_var)
-        add_label_var_sl <- .(add_label_var_sl)
-        add_label_paramcd_rs <- .(add_label_paramcd_rs)
-        anno_txt_var_sl <- .(anno_txt_var_sl)
-        anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs)
-        facet_var <- .(facet_var)
-        href_line <- .(href_line)
-        gap_point_val <- .(gap_point_val)
-        show_value <- .(show_value)
-      }))
+      teal.code::chunks_push(
+        id = "variables call",
+        expression = bquote({
+          bar_var <- .(bar_var)
+          bar_color_var <- .(bar_color_var)
+          sort_var <- .(sort_var)
+          add_label_var_sl <- .(add_label_var_sl)
+          add_label_paramcd_rs <- .(add_label_paramcd_rs)
+          anno_txt_var_sl <- .(anno_txt_var_sl)
+          anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs)
+          facet_var <- .(facet_var)
+          href_line <- .(href_line)
+          gap_point_val <- .(gap_point_val)
+          show_value <- .(show_value)
+        })
+      )
       teal.code::chunks_push_new_line()
 
       # data processing
-      teal.code::chunks_push(bquote({
-        adsl <- .(as.name(adsl_name))[, .(adsl_vars)]
-        adtr <- .(as.name(adtr_name))[, .(adtr_vars)] # nolint
-        adrs <- .(as.name(adrs_name))[, .(adrs_vars)] # nolint
+      teal.code::chunks_push(
+        id = "bar_data call",
+        expression = bquote({
+          adsl <- .(as.name(adsl_name))[, .(adsl_vars)]
+          adtr <- .(as.name(adtr_name))[, .(adtr_vars)] # nolint
+          adrs <- .(as.name(adrs_name))[, .(adrs_vars)] # nolint
 
-        bar_tr <- adtr %>%
-          dplyr::filter(PARAMCD == .(bar_paramcd)) %>%
-          dplyr::select(USUBJID, .(as.name(bar_var))) %>%
-          dplyr::group_by(USUBJID) %>%
-          dplyr::slice(which.min(.(as.name(bar_var))))
-        bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
-      }))
+          bar_tr <- adtr %>%
+            dplyr::filter(PARAMCD == .(bar_paramcd)) %>%
+            dplyr::select(USUBJID, .(as.name(bar_var))) %>%
+            dplyr::group_by(USUBJID) %>%
+            dplyr::slice(which.min(.(as.name(bar_var))))
+          bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
+        })
+      )
       teal.code::chunks_push_new_line()
       teal.code::chunks_safe_eval()
       bar_data <- teal.code::chunks_get_var("bar_data") # nolint
 
       if (is.null(adrs_paramcd)) {
-        teal.code::chunks_push(bquote({
-          anl <- bar_data
-          anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-        }))
+        teal.code::chunks_push(
+          id = "anl call",
+          expression = bquote({
+            anl <- bar_data
+            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+          })
+        )
       } else {
-        teal.code::chunks_push(bquote({
-          rs_sub <- adrs %>%
-            dplyr::filter(PARAMCD %in% .(adrs_paramcd))
-        }))
+        teal.code::chunks_push(
+          id = "rs_sub call",
+          expression = bquote({
+            rs_sub <- adrs %>%
+              dplyr::filter(PARAMCD %in% .(adrs_paramcd))
+          })
+        )
         teal.code::chunks_push_new_line()
         teal.code::chunks_safe_eval()
 
         rs_sub <- teal.code::chunks_get_var("rs_sub")
         validate_one_row_per_id(rs_sub, key = c("STUDYID", "USUBJID", "PARAMCD"))
 
-        teal.code::chunks_push(bquote({
-          rs_label <- rs_sub %>%
-            dplyr::select(USUBJID, PARAMCD, AVALC) %>%
-            tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
-          anl <- bar_data %>% dplyr::left_join(rs_label, by = c("USUBJID"))
-          anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-        }))
+        teal.code::chunks_push(
+          id = "anl call",
+          expression = bquote({
+            rs_label <- rs_sub %>%
+              dplyr::select(USUBJID, PARAMCD, AVALC) %>%
+              tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
+            anl <- bar_data %>% dplyr::left_join(rs_label, by = c("USUBJID"))
+            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+          })
+        )
       }
       teal.code::chunks_push_new_line()
 
@@ -463,56 +478,59 @@ srv_g_waterfall <- function(id,
       # write plotting code to chunks
       anl <- teal.code::chunks_get_var("anl") # nolint
 
-      teal.code::chunks_push(bquote({
-        osprey::g_waterfall(
-          bar_id = anl[["USUBJID"]],
-          bar_height = anl[[bar_var]],
-          sort_by = .(if (length(sort_var) > 0) {
-            quote(anl[[sort_var]])
-          } else {
-            NULL
-          }),
-          col_by = .(if (length(bar_color_var) > 0) {
-            quote(anl[[bar_color_var]])
-          } else {
-            NULL
-          }),
-          bar_color_opt = .(if (length(bar_color_var) == 0) {
-            NULL
-          } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt)) == T) {
-            bar_color_opt
-          } else {
-            NULL
-          }),
-          anno_txt = .(if (length(anno_txt_var_sl) == 0 & length(anno_txt_paramcd_rs) == 0) {
-            NULL
-          } else if (length(anno_txt_var_sl) >= 1 & length(anno_txt_paramcd_rs) == 0) {
-            quote(data.frame(anl[anno_txt_var_sl]))
-          } else if (length(anno_txt_paramcd_rs) >= 1 & length(anno_txt_var_sl) == 0) {
-            quote(data.frame(anl[anno_txt_paramcd_rs]))
-          } else {
-            quote(cbind(anl[anno_txt_var_sl], anl[anno_txt_paramcd_rs]))
-          }),
-          href_line = .(href_line),
-          facet_by = .(if (length(facet_var) > 0) {
-            quote(as.factor(anl[[facet_var]]))
-          } else {
-            NULL
-          }),
-          show_datavalue = .(show_value),
-          add_label = .(if (length(add_label_var_sl) > 0 & length(add_label_paramcd_rs) == 0) {
-            quote(anl[[add_label_var_sl]])
-          } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) == 0) {
-            quote(anl[[add_label_paramcd_rs]])
-          } else {
-            NULL
-          }),
-          gap_point = .(gap_point_val),
-          ytick_at = .(ytick_at),
-          y_label = "Tumor Burden Change from Baseline",
-          title = "Waterfall Plot"
-        )
-      }))
+      teal.code::chunks_push(
+        id = "g_waterfall call",
+        expression = bquote({
+          osprey::g_waterfall(
+            bar_id = anl[["USUBJID"]],
+            bar_height = anl[[bar_var]],
+            sort_by = .(if (length(sort_var) > 0) {
+              quote(anl[[sort_var]])
+            } else {
+              NULL
+            }),
+            col_by = .(if (length(bar_color_var) > 0) {
+              quote(anl[[bar_color_var]])
+            } else {
+              NULL
+            }),
+            bar_color_opt = .(if (length(bar_color_var) == 0) {
+              NULL
+            } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt)) == T) {
+              bar_color_opt
+            } else {
+              NULL
+            }),
+            anno_txt = .(if (length(anno_txt_var_sl) == 0 & length(anno_txt_paramcd_rs) == 0) {
+              NULL
+            } else if (length(anno_txt_var_sl) >= 1 & length(anno_txt_paramcd_rs) == 0) {
+              quote(data.frame(anl[anno_txt_var_sl]))
+            } else if (length(anno_txt_paramcd_rs) >= 1 & length(anno_txt_var_sl) == 0) {
+              quote(data.frame(anl[anno_txt_paramcd_rs]))
+            } else {
+              quote(cbind(anl[anno_txt_var_sl], anl[anno_txt_paramcd_rs]))
+            }),
+            href_line = .(href_line),
+            facet_by = .(if (length(facet_var) > 0) {
+              quote(as.factor(anl[[facet_var]]))
+            } else {
+              NULL
+            }),
+            show_datavalue = .(show_value),
+            add_label = .(if (length(add_label_var_sl) > 0 & length(add_label_paramcd_rs) == 0) {
+              quote(anl[[add_label_var_sl]])
+            } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) == 0) {
+              quote(anl[[add_label_paramcd_rs]])
+            } else {
+              NULL
+            }),
+            gap_point = .(gap_point_val),
+            ytick_at = .(ytick_at),
+            y_label = "Tumor Burden Change from Baseline",
+            title = "Waterfall Plot"
+          )
+        })
+      )
 
       teal.code::chunks_safe_eval()
     })
