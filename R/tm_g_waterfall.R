@@ -158,6 +158,14 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::plot_with_settings_ui(id = ns("waterfallplot"))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis Data: ", tags$code(a$dataname_tr), tags$code(a$dataname_rs)),
       teal.widgets::optionalSelectInput(
@@ -269,12 +277,15 @@ ui_g_waterfall <- function(id, ...) {
 
 srv_g_waterfall <- function(id,
                             datasets,
+                            reporter,
                             dataname_tr,
                             dataname_rs,
                             bar_color_opt,
                             label,
                             plot_height,
                             plot_width) {
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
     # use teal.code code chunks
     teal.code::init_chunks()
@@ -525,7 +536,7 @@ srv_g_waterfall <- function(id,
     })
 
     # Insert the plot into a plot_with_settings module from teal.widgets
-    teal.widgets::plot_with_settings_srv(
+    pws <- teal.widgets::plot_with_settings_srv(
       id = "waterfallplot",
       plot_r = plot_r,
       height = plot_height,
@@ -539,5 +550,34 @@ srv_g_waterfall <- function(id,
       modal_title = paste("R code for", label),
       datanames = datasets$datanames()
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("Waterfall")
+        card$append_text("Waterfall Plot", "header2")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        card$append_text(paste0("Tumor Burden Parameter: ", input$bar_paramcd, "."))
+        if (!is.null(input$sort_var)) {
+          card$append_text(paste0("Sorted by: ", input$sort_var, "."))
+        }
+        if (!is.null(input$facet_var)) {
+          card$append_text(paste0("Faceted by: ", paste(input$facet_var, collapse = ", "), "."))
+        }
+        card$append_text("Plot", "header3")
+        card$append_plot(plot_r(), dim = pws$dim())
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }

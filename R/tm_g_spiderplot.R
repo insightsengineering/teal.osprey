@@ -120,6 +120,14 @@ ui_g_spider <- function(id, ...) {
       teal.widgets::plot_with_settings_ui(id = ns("spiderplot"))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code(a$dataname)),
       div(
@@ -209,7 +217,9 @@ ui_g_spider <- function(id, ...) {
   )
 }
 
-srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width) {
+srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, plot_width) {
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
     vals <- reactiveValues(spiderplot = NULL) # nolint
 
@@ -384,7 +394,7 @@ srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width)
       teal.code::chunks_safe_eval()
     })
 
-    teal.widgets::plot_with_settings_srv(
+    pws <- teal.widgets::plot_with_settings_srv(
       id = "spiderplot",
       plot_r = plot_r,
       height = plot_height,
@@ -402,5 +412,36 @@ srv_g_spider <- function(id, datasets, dataname, label, plot_height, plot_width)
         })
       ))
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("Spider Plot")
+        card$append_text("Spider Plot", "header2")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        if (!is.null(input$paramcd)) {
+          card$append_text(paste0("Parameter - (from ", dataname, "): ", input$paramcd, "."))
+        }
+        if (!is.null(input$xfacet_var)) {
+          card$append_text(paste0("Faceted horizontally by: ", paste(input$xfacet_var, collapse = ", "), "."))
+        }
+        if (!is.null(input$yfacet_var)) {
+          card$append_text(paste0("Faceted vertically by: ", paste(input$yfacet_var, collapse = ", "), "."))
+        }
+        card$append_text("Plot", "header3")
+        card$append_plot(plot_r(), dim = pws$dim())
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }

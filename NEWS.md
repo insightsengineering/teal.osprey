@@ -3,8 +3,13 @@
 ### Breaking changes
 * Soft deprecate function `label_aevar()`.
 
+
+### Enhancements
+* Added `teal.reporter` to all modules.
+
 ### Miscellaneous
 * Added names to the `id` parameter of `teal.code::chunks_push` in all modules.
+
 
 # teal.osprey 0.1.14
 

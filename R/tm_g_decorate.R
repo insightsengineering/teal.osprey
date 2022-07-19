@@ -63,14 +63,19 @@ srv_g_decorate <- function(id,
 
     class(plot_r) <- c(class(plot_r), "reactive")
 
-    teal.widgets::plot_with_settings_srv(
+    pws <- teal.widgets::plot_with_settings_srv(
       id = plot_id,
       plot_r = plot_r,
       height = plot_height,
       width = plot_width
     )
 
-    return(reactive(input$fontsize))
+    return(
+      list(
+        font_size = reactive(input$fontsize),
+        pws = pws
+      )
+    )
   })
 }
 

@@ -171,6 +171,14 @@ ui_g_swimlane <- function(id, ...) {
       teal.widgets::plot_with_settings_ui(id = ns("swimlaneplot"))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", code(a$dataname)),
       div(
@@ -243,7 +251,10 @@ ui_g_swimlane <- function(id, ...) {
   )
 }
 
-srv_g_swimlane <- function(id, datasets, dataname,
+srv_g_swimlane <- function(id,
+                           datasets,
+                           reporter,
+                           dataname,
                            marker_pos_var,
                            marker_shape_var,
                            marker_shape_opt,
@@ -253,6 +264,8 @@ srv_g_swimlane <- function(id, datasets, dataname,
                            plot_height,
                            plot_width,
                            x_label) {
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
     # use teal.code code chunks
     teal.code::init_chunks()
@@ -499,7 +512,7 @@ srv_g_swimlane <- function(id, datasets, dataname,
     })
 
     # Insert the plot into a plot_with_settings module from teal.widgets
-    teal.widgets::plot_with_settings_srv(
+    pws <- teal.widgets::plot_with_settings_srv(
       id = "swimlaneplot",
       plot_r = plot_r,
       height = plot_height,
@@ -517,5 +530,30 @@ srv_g_swimlane <- function(id, datasets, dataname,
         })
       ))
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("Swimlane")
+        card$append_text("Swimlane Plot", "header2")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        if (!is.null(input$sort_var)) {
+          card$append_text(paste("Sorted by:", input$sort_var))
+        }
+        card$append_text("Plot", "header3")
+        card$append_plot(plot_r(), dim = pws$dim())
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }
