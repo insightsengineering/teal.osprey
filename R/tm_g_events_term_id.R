@@ -101,6 +101,14 @@ ui_g_events_term_id <- function(id, ...) {
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       teal.widgets::optionalSelectInput(
         ns("term"),
         "Term Variable",
@@ -193,12 +201,17 @@ ui_g_events_term_id <- function(id, ...) {
 
 srv_g_events_term_id <- function(id,
                                  datasets,
+                                 reporter,
                                  dataname,
                                  label,
                                  plot_height,
                                  plot_width) {
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
-    font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+    decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
 
     teal.code::init_chunks()
 
@@ -302,45 +315,51 @@ srv_g_events_term_id <- function(id,
       adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
 
-      teal.code::chunks_push(bquote({
-        ANL <- merge( # nolint
-          x = ADSL_FILTERED[, .(adsl_vars), drop = FALSE],
-          y = .(as.name(anl_name))[, .(anl_vars), drop = FALSE],
-          all.x = FALSE,
-          all.y = FALSE,
-          by = c("USUBJID", "STUDYID")
-        )
-      }))
+      teal.code::chunks_push(
+        id = "ANL call",
+        expression = bquote({
+          ANL <- merge( # nolint
+            x = ADSL_FILTERED[, .(adsl_vars), drop = FALSE],
+            y = .(as.name(anl_name))[, .(anl_vars), drop = FALSE],
+            all.x = FALSE,
+            all.y = FALSE,
+            by = c("USUBJID", "STUDYID")
+          )
+        })
+      )
 
       teal.code::chunks_safe_eval()
       validate(need(nrow(teal.code::chunks_get_var("ANL")) > 10, "need at least 10 data points"))
 
-      teal.code::chunks_push(bquote({
-        term <- ANL[[.(input$term)]]
-        id <- ANL$USUBJID
-        arm <- ANL[[.(input$arm_var)]]
-        arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
-        ref <- .(input$arm_ref)
-        trt <- .(input$arm_trt)
+      teal.code::chunks_push(
+        id = "Variables and g_events_term_id call",
+        expression = bquote({
+          term <- ANL[[.(input$term)]]
+          id <- ANL$USUBJID
+          arm <- ANL[[.(input$arm_var)]]
+          arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
+          ref <- .(input$arm_ref)
+          trt <- .(input$arm_trt)
 
-        osprey::g_events_term_id(
-          term = term,
-          id = id,
-          arm = arm,
-          arm_N = arm_N,
-          ref = .(input$arm_ref),
-          trt = .(input$arm_trt),
-          sort_by = .(input$sort),
-          rate_range = .(input$raterange),
-          diff_range = .(input$diffrange),
-          reversed = .(input$reverse),
-          conf_level = .(input$conf_level),
-          diff_ci_method = .(input$diff_ci_method),
-          axis_side = .(input$axis),
-          fontsize = .(font_size()),
-          draw = TRUE
-        )
-      }))
+          osprey::g_events_term_id(
+            term = term,
+            id = id,
+            arm = arm,
+            arm_N = arm_N,
+            ref = .(input$arm_ref),
+            trt = .(input$arm_trt),
+            sort_by = .(input$sort),
+            rate_range = .(input$raterange),
+            diff_range = .(input$diffrange),
+            reversed = .(input$reverse),
+            conf_level = .(input$conf_level),
+            diff_ci_method = .(input$diff_ci_method),
+            axis_side = .(input$axis),
+            fontsize = .(font_size()),
+            draw = TRUE
+          )
+        })
+      )
 
       teal.code::chunks_safe_eval()
     })
@@ -356,5 +375,27 @@ srv_g_events_term_id <- function(id,
         })
       ))
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("Events by Term")
+        card$append_text("Events by Term", "header2")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        card$append_text("Plot", "header3")
+        card$append_plot(plt(), dim = pws$dim())
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }

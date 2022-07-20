@@ -163,6 +163,14 @@ ui_g_butterfly <- function(id, ...) {
       teal.widgets::plot_with_settings_ui(id = ns("butterflyplot"))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
       if (!is.null(a$filter_var)) {
@@ -255,7 +263,9 @@ ui_g_butterfly <- function(id, ...) {
   )
 }
 
-srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_width) {
+srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height, plot_width) {
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
     teal.code::init_chunks()
 
@@ -402,74 +412,89 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
 
       teal.code::chunks_reset(envir = environment())
 
-      teal.code::chunks_push(bquote({
-        ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
-        ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
-      }))
+      teal.code::chunks_push(
+        id = "datasets call",
+        expression = bquote({
+          ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
+          ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
+        })
+      )
 
       teal.code::chunks_push_new_line()
       if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
-        teal.code::chunks_push(bquote(
-          ADAE <- quick_filter(.(filter_var), ADAE) %>% # nolint
-            droplevels() %>%
-            as.data.frame()
-        ))
+        teal.code::chunks_push(
+          id = "ADAE filter call",
+          expression = bquote(
+            ADAE <- quick_filter(.(filter_var), ADAE) %>% # nolint
+              droplevels() %>%
+              as.data.frame()
+          )
+        )
       }
       teal.code::chunks_push_new_line()
 
-      teal.code::chunks_push(bquote({
-        ANL_f <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
-        ANL_f <- na.omit(ANL_f) # nolint
-      }))
+      teal.code::chunks_push(
+        id = "ANL_f call",
+        expression = bquote({
+          ANL_f <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
+          ANL_f <- na.omit(ANL_f) # nolint
+        })
+      )
 
       teal.code::chunks_push_new_line()
       teal.code::chunks_push_new_line()
 
       if (!is.null(right_val) && !is.null(right_val)) {
-        teal.code::chunks_push(bquote({
-          right <- ANL_f[, .(right_var)] %in% .(right_val)
-          right_name <- paste(.(right_val), collapse = " - ")
-          left <- ANL_f[, .(left_var)] %in% .(left_val)
-          left_name <- paste(.(left_val), collapse = " - ")
-        }))
+        teal.code::chunks_push(
+          id = "right/left call",
+          expression = bquote({
+            right <- ANL_f[, .(right_var)] %in% .(right_val)
+            right_name <- paste(.(right_val), collapse = " - ")
+            left <- ANL_f[, .(left_var)] %in% .(left_val)
+            left_name <- paste(.(left_val), collapse = " - ")
+          })
+        )
       }
 
       teal.code::chunks_push_new_line()
       teal.code::chunks_safe_eval()
 
       if (!is.null(right_val) && !is.null(left_val)) {
-        teal.code::chunks_push(bquote({
-          osprey::g_butterfly(
-            category = ANL_f[, .(category_var)],
-            right_flag = right,
-            left_flag = left,
-            group_names = c(right_name, left_name),
-            block_count = .(count_by_var),
-            block_color = .(if (color_by_var != "None") {
-              bquote(ANL_f[, .(color_by_var)])
-            } else {
-              NULL
-            }),
-            id = ANL_f$USUBJID,
-            facet_rows = .(if (!is.null(facet_var)) {
-              bquote(ANL_f[, .(facet_var)])
-            } else {
-              NULL
-            }),
-            x_label = .(count_by_var),
-            y_label = .(category_var),
-            legend_label = .(color_by_var),
-            sort_by = .(sort_by_var),
-            show_legend = .(legend_on)
-          )
-        }))
+        teal.code::chunks_push(
+          id = "g_butterfly call",
+          expression = bquote({
+            osprey::g_butterfly(
+              category = ANL_f[, .(category_var)],
+              right_flag = right,
+              left_flag = left,
+              group_names = c(right_name, left_name),
+              block_count = .(count_by_var),
+              block_color = .(if (color_by_var != "None") {
+                bquote(ANL_f[, .(color_by_var)])
+              } else {
+                NULL
+              }),
+              id = ANL_f$USUBJID,
+              facet_rows = .(if (!is.null(facet_var)) {
+                bquote(ANL_f[, .(facet_var)])
+              } else {
+                NULL
+              }),
+              x_label = .(count_by_var),
+              y_label = .(category_var),
+              legend_label = .(color_by_var),
+              sort_by = .(sort_by_var),
+              show_legend = .(legend_on)
+            )
+          })
+        )
       }
 
       teal.code::chunks_safe_eval()
     })
 
     # Insert the plot into a plot_with_settings module from teal.widgets
-    teal.widgets::plot_with_settings_srv(
+    pws <- teal.widgets::plot_with_settings_srv(
       id = "butterflyplot",
       plot_r = plot_r,
       height = plot_height,
@@ -487,5 +512,36 @@ srv_g_butterfly <- function(id, datasets, dataname, label, plot_height, plot_wid
         })
       ))
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("Butterfly")
+        card$append_text("Butterfly Plot", "header2")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        if (!is.null(input$filter_var)) {
+          card$append_text(paste0("Preset Data Filters: ", paste(input$filter_var, collapse = ", "), "."))
+        }
+        if (!is.null(input$facet_var)) {
+          card$append_text(paste0("Faceted by: ", paste(input$facet_var, collapse = ", "), "."))
+        }
+        if (!is.null(input$sort_by_var)) {
+          card$append_text(paste0("Sorted by: ", paste(input$sort_by_var, collapse = ", "), "."))
+        }
+        card$append_text("Plot", "header3")
+        card$append_plot(plot_r(), dim = pws$dim())
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }

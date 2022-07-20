@@ -215,6 +215,14 @@ ui_g_heatmap_bygrade <- function(id, ...) {
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       teal.widgets::optionalSelectInput(
         ns("id_var"),
         "ID Variable",
@@ -289,6 +297,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
 
 srv_g_heatmap_bygrade <- function(id,
                                   datasets,
+                                  reporter,
                                   sl_dataname,
                                   ex_dataname,
                                   ae_dataname,
@@ -296,9 +305,13 @@ srv_g_heatmap_bygrade <- function(id,
                                   label,
                                   plot_height,
                                   plot_width) {
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
     teal.code::init_chunks()
-    font_size <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+    decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
 
     observeEvent(cm_dataname, {
       if (!is.na(cm_dataname)) {
@@ -387,19 +400,25 @@ srv_g_heatmap_bygrade <- function(id,
 
       if (input$plot_cm) {
         validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
-        teal.code::chunks_push(bquote({
-          conmed_data <- ADCM_FILTERED %>%
-            filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
-          conmed_var <- .(input$conmed_var)
-          conmed_data[[conmed_var]] <-
-            factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
-          formatters::var_labels(conmed_data)[conmed_var] <-
-            formatters::var_labels(ADCM_FILTERED, fill = FALSE)[conmed_var]
-        }))
+        teal.code::chunks_push(
+          id = "conmed_data call",
+          expression = bquote({
+            conmed_data <- ADCM_FILTERED %>%
+              filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
+            conmed_var <- .(input$conmed_var)
+            conmed_data[[conmed_var]] <-
+              factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
+            formatters::var_labels(conmed_data)[conmed_var] <-
+              formatters::var_labels(ADCM_FILTERED, fill = FALSE)[conmed_var]
+          })
+        )
       } else {
-        teal.code::chunks_push(bquote({
-          conmed_data <- conmed_var <- NULL
-        }))
+        teal.code::chunks_push(
+          id = "conmed_data call",
+          expression = bquote({
+            conmed_data <- conmed_var <- NULL
+          })
+        )
       }
       teal.code::chunks_safe_eval()
 
@@ -407,23 +426,26 @@ srv_g_heatmap_bygrade <- function(id,
         need(length(input$conmed_level) <= 3, "Please select no more than 3 conmed levels")
       )
 
-      teal.code::chunks_push(bquote({
-        exp_data <- ADEX_FILTERED %>%
-          filter(PARCAT1 == "INDIVIDUAL")
+      teal.code::chunks_push(
+        id = "g_heat_bygrade call",
+        expression = bquote({
+          exp_data <- ADEX_FILTERED %>%
+            filter(PARCAT1 == "INDIVIDUAL")
 
-        osprey::g_heat_bygrade(
-          id_var = .(input$id_var),
-          exp_data = exp_data,
-          visit_var = .(input$visit_var),
-          ongo_var = .(input$ongo_var),
-          anno_data = ADSL_FILTERED[c(.(input$anno_var), .(input$id_var))],
-          anno_var = .(input$anno_var),
-          heat_data = ADAE_FILTERED %>% select(!!.(input$id_var), !!.(input$visit_var), !!.(input$heat_var)),
-          heat_color_var = .(input$heat_var),
-          conmed_data = conmed_data,
-          conmed_var = conmed_var
-        )
-      }))
+          osprey::g_heat_bygrade(
+            id_var = .(input$id_var),
+            exp_data = exp_data,
+            visit_var = .(input$visit_var),
+            ongo_var = .(input$ongo_var),
+            anno_data = ADSL_FILTERED[c(.(input$anno_var), .(input$id_var))],
+            anno_var = .(input$anno_var),
+            heat_data = ADAE_FILTERED %>% select(!!.(input$id_var), !!.(input$visit_var), !!.(input$heat_var)),
+            heat_color_var = .(input$heat_var),
+            conmed_data = conmed_data,
+            conmed_var = conmed_var
+          )
+        })
+      )
 
       teal.code::chunks_safe_eval()
     })
@@ -435,5 +457,27 @@ srv_g_heatmap_bygrade <- function(id,
       modal_title = paste("R code for", label),
       datanames = datasets$datanames()
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("Heatmap by Grade")
+        card$append_text("Heatmap by Grade", "header2")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        card$append_text("Plot", "header3")
+        card$append_plot(plt(), dim = pws$dim())
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }
