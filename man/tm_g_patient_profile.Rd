@@ -144,6 +144,7 @@ the start date
 }
 \examples{
 library(scda)
+library(nestcolor)
 
 ADSL <- synthetic_cdisc_data("latest")$adsl
 ADAE <- synthetic_cdisc_data("latest")$adae \%>\%

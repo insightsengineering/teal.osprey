@@ -33,6 +33,7 @@
 #' @examples
 #' library(scda)
 #' library(dplyr)
+#' library(nestcolor)
 #' ADSL <- synthetic_cdisc_data("latest")$adsl %>% slice(1:30)
 #' ADEX <- synthetic_cdisc_data("latest")$adex %>% filter(USUBJID %in% ADSL$USUBJID)
 #' ADAE <- synthetic_cdisc_data("latest")$adae %>% filter(USUBJID %in% ADSL$USUBJID)

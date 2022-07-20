@@ -29,7 +29,6 @@
 #'   observations with "Y" value in each and every selected variables will be
 #'   used for subsequent analysis. Flag variables (from ADaM datasets) can be
 #'   used directly as filter.
-#' @details
 #'
 #' @inherit argument_convention return
 #'
@@ -43,6 +42,7 @@
 #' # Example using stream (ADaM) dataset
 #' library(dplyr)
 #' library(scda)
+#' library(nestcolor)
 #'
 #' set.seed(23)
 #' ADSL <- synthetic_cdisc_data("latest")$adsl

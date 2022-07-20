@@ -15,6 +15,7 @@
 
 ### Enhancements
 * Removed unneeded `chunk` evaluations in `tm_g_patient_profile` module.
+* Implemented `nestcolor` with slight refactoring to `tm_g_swimlane`. Added `nestcolor` in examples.
 
 ### Miscellaneous
 * Added a template to the `pkgdown` site.

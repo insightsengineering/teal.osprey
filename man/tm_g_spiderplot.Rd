@@ -79,6 +79,7 @@ Display spider plot as a shiny module
 # Example using stream (ADaM) dataset
 library(dplyr)
 library(scda)
+library(nestcolor)
 
 ADSL <- synthetic_cdisc_data("latest")$adsl
 ADTR <- synthetic_cdisc_data("latest")$adtr

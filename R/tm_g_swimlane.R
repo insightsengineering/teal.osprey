@@ -35,6 +35,7 @@
 #'
 #' # Example using stream (ADaM) dataset
 #' library(dplyr)
+#' library(nestcolor)
 #'
 #' ADSL <- rADSL
 #' ADRS <- rADRS
@@ -124,7 +125,7 @@ tm_g_swimlane <- function(label,
   checkmate::assert_class(marker_shape_var, classes = "choices_selected")
   checkmate::assert_numeric(marker_shape_opt, min.len = 1, any.missing = FALSE)
   checkmate::assert_class(marker_color_var, classes = "choices_selected")
-  checkmate::assert_character(marker_color_opt, min.len = 1, any.missing = FALSE)
+  checkmate::assert_character(marker_color_opt, min.len = 1, any.missing = FALSE, null.ok = TRUE)
   checkmate::assert_class(anno_txt_var, classes = "choices_selected")
   checkmate::assert_numeric(vref_line, min.len = 1, null.ok = TRUE, any.missing = FALSE)
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
