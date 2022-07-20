@@ -172,6 +172,14 @@ ui_g_swimlane <- function(id, ...) {
       teal.widgets::plot_with_settings_ui(id = ns("swimlaneplot"))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", code(a$dataname)),
       div(
@@ -244,7 +252,10 @@ ui_g_swimlane <- function(id, ...) {
   )
 }
 
-srv_g_swimlane <- function(id, datasets, dataname,
+srv_g_swimlane <- function(id,
+                           datasets,
+                           reporter,
+                           dataname,
                            marker_pos_var,
                            marker_shape_var,
                            marker_shape_opt,
@@ -254,6 +265,8 @@ srv_g_swimlane <- function(id, datasets, dataname,
                            plot_height,
                            plot_width,
                            x_label) {
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
     # use teal.code code chunks
     teal.code::init_chunks()
@@ -363,43 +376,52 @@ srv_g_swimlane <- function(id, datasets, dataname,
 
       # WRITE VARIABLES TO CHUNKS
 
-      teal.code::chunks_push(bquote({
-        bar_var <- .(bar_var)
-        bar_color_var <- .(bar_color_var)
-        sort_var <- .(sort_var)
-        marker_pos_var <- .(marker_pos_var)
-        marker_shape_var <- .(marker_shape_var)
-        marker_color_var <- .(marker_color_var)
-        anno_txt_var <- .(anno_txt_var)
-      }))
+      teal.code::chunks_push(
+        id = "variables call",
+        expression = bquote({
+          bar_var <- .(bar_var)
+          bar_color_var <- .(bar_color_var)
+          sort_var <- .(sort_var)
+          marker_pos_var <- .(marker_pos_var)
+          marker_shape_var <- .(marker_shape_var)
+          marker_color_var <- .(marker_color_var)
+          anno_txt_var <- .(anno_txt_var)
+        })
+      )
       teal.code::chunks_push_new_line()
 
       # WRITE DATA SELECTION TO CHUNKS
 
       if (dataname == "ADSL") {
-        teal.code::chunks_push(bquote({
-          ADSL_p <- ADSL_FILTERED # nolint
-          ADSL <- ADSL_p[, .(adsl_vars)] # nolint
-          # only take last part of USUBJID
-          ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-        }))
+        teal.code::chunks_push(
+          id = "ADSL call",
+          expression = bquote({
+            ADSL_p <- ADSL_FILTERED # nolint
+            ADSL <- ADSL_p[, .(adsl_vars)] # nolint
+            # only take last part of USUBJID
+            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+          })
+        )
       } else {
         anl_name <- paste0(dataname, "_FILTERED")
-        teal.code::chunks_push(bquote({
-          ADSL_p <- ADSL_FILTERED # nolint
-          ANL_p <- .(as.name(anl_name)) # nolint
+        teal.code::chunks_push(
+          id = "ADSL and ANL call",
+          expression = bquote({
+            ADSL_p <- ADSL_FILTERED # nolint
+            ANL_p <- .(as.name(anl_name)) # nolint
 
-          ADSL <- ADSL_p[, .(adsl_vars)] # nolint
-          ANL <- merge( # nolint
-            x = ADSL,
-            y = ANL_p[, .(anl_vars)],
-            all.x = FALSE, all.y = FALSE,
-            by = c("USUBJID", "STUDYID")
-          )
-          # only take last part of USUBJID
-          ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-          ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-        }))
+            ADSL <- ADSL_p[, .(adsl_vars)] # nolint
+            ANL <- merge( # nolint
+              x = ADSL,
+              y = ANL_p[, .(anl_vars)],
+              all.x = FALSE, all.y = FALSE,
+              by = c("USUBJID", "STUDYID")
+            )
+            # only take last part of USUBJID
+            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+          })
+        )
       }
       teal.code::chunks_push_new_line() # empty line for pretty code
       teal.code::chunks_safe_eval()
@@ -486,12 +508,12 @@ srv_g_swimlane <- function(id, datasets, dataname,
         })
       }
 
-      teal.code::chunks_push(plot_call)
+      teal.code::chunks_push(id = "plot call", expression = plot_call)
       teal.code::chunks_safe_eval()
     })
 
     # Insert the plot into a plot_with_settings module from teal.widgets
-    teal.widgets::plot_with_settings_srv(
+    pws <- teal.widgets::plot_with_settings_srv(
       id = "swimlaneplot",
       plot_r = plot_r,
       height = plot_height,
@@ -509,5 +531,30 @@ srv_g_swimlane <- function(id, datasets, dataname,
         })
       ))
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("Swimlane")
+        card$append_text("Swimlane Plot", "header2")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        if (!is.null(input$sort_var)) {
+          card$append_text(paste("Sorted by:", input$sort_var))
+        }
+        card$append_text("Plot", "header3")
+        card$append_plot(plot_r(), dim = pws$dim())
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }

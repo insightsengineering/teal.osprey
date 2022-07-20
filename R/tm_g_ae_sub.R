@@ -99,6 +99,14 @@ ui_g_ae_sub <- function(id, ...) {
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = div(
+      ### Reporter
+      shiny::tags$div(
+        teal.reporter::add_card_button_ui(ns("addReportCard")),
+        teal.reporter::download_report_button_ui(ns("downloadButton")),
+        teal.reporter::reset_report_button_ui(ns("resetButton"))
+      ),
+      shiny::tags$br(),
+      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code("ADAE")),
       teal.widgets::optionalSelectInput(
@@ -164,18 +172,24 @@ ui_g_ae_sub <- function(id, ...) {
 
 srv_g_ae_sub <- function(id,
                          datasets,
+                         reporter,
                          dataname,
                          label,
                          plot_height,
                          plot_width) {
+  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+
   moduleServer(id, function(input, output, session) {
     teal.code::init_chunks()
-    font_size <- srv_g_decorate(
+    decorate_output <- srv_g_decorate(
       id = NULL,
       plt = plt,
       plot_height = plot_height,
       plot_width = plot_width
     )
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
+
     observeEvent(input$arm_var, {
       req(!is.null(input$arm_var))
       arm_var <- input$arm_var
@@ -303,16 +317,19 @@ srv_g_ae_sub <- function(id,
 
       teal.code::chunks_reset(envir = environment())
 
-      teal.code::chunks_push(bquote({
-        id <- ADAE_FILTERED$USUBJID
-        arm <- as.factor(ADAE_FILTERED[[.(input$arm_var)]])
-        arm_sl <- as.character(ADSL_FILTERED[[.(input$arm_var)]])
-        grps <- .(input$groups)
-        subgroups <- ADAE_FILTERED[grps]
-        subgroups_sl <- ADSL_FILTERED[grps]
-        trt <- .(input$arm_trt)
-        ref <- .(input$arm_ref)
-      }))
+      teal.code::chunks_push(
+        id = "variables call",
+        expression = bquote({
+          id <- ADAE_FILTERED$USUBJID
+          arm <- as.factor(ADAE_FILTERED[[.(input$arm_var)]])
+          arm_sl <- as.character(ADSL_FILTERED[[.(input$arm_var)]])
+          grps <- .(input$groups)
+          subgroups <- ADAE_FILTERED[grps]
+          subgroups_sl <- ADSL_FILTERED[grps]
+          trt <- .(input$arm_trt)
+          ref <- .(input$arm_ref)
+        })
+      )
       teal.code::chunks_push_new_line()
 
       teal.code::chunks_safe_eval()
@@ -330,35 +347,44 @@ srv_g_ae_sub <- function(id,
       })
 
       if (length(unlist(group_labels)) == 0) {
-        teal.code::chunks_push(bquote({
-          group_labels <- NULL
-        }))
+        teal.code::chunks_push(
+          id = "group_labels call",
+          expression = bquote({
+            group_labels <- NULL
+          })
+        )
       } else {
-        teal.code::chunks_push(bquote({
-          group_labels <- .(group_labels)
-          names(group_labels) <- .(input$groups)
-        }))
+        teal.code::chunks_push(
+          id = "group_labels call",
+          expression = bquote({
+            group_labels <- .(group_labels)
+            names(group_labels) <- .(input$groups)
+          })
+        )
       }
 
       teal.code::chunks_push_new_line()
       teal.code::chunks_safe_eval()
-      teal.code::chunks_push(bquote({
-        osprey::g_ae_sub(
-          id = id,
-          arm = arm,
-          arm_sl = arm_sl,
-          trt = trt,
-          ref = ref,
-          subgroups = subgroups,
-          subgroups_sl = subgroups_sl,
-          subgroups_levels = group_labels,
-          conf_level = .(input$conf_level),
-          diff_ci_method = .(input$ci),
-          fontsize = .(font_size()),
-          arm_n = .(input$arm_n),
-          draw = TRUE
-        )
-      }))
+      teal.code::chunks_push(
+        id = "g_ae_sub call",
+        expression = bquote({
+          osprey::g_ae_sub(
+            id = id,
+            arm = arm,
+            arm_sl = arm_sl,
+            trt = trt,
+            ref = ref,
+            subgroups = subgroups,
+            subgroups_sl = subgroups_sl,
+            subgroups_levels = group_labels,
+            conf_level = .(input$conf_level),
+            diff_ci_method = .(input$ci),
+            fontsize = .(font_size()),
+            arm_n = .(input$arm_n),
+            draw = TRUE
+          )
+        })
+      )
 
       teal.code::chunks_safe_eval()
     })
@@ -374,5 +400,27 @@ srv_g_ae_sub <- function(id,
         })
       ))
     )
+
+    ### REPORTER
+    if (with_reporter) {
+      card_fun <- function(comment) {
+        card <- teal.reporter::TealReportCard$new()
+        card$set_name("AE Subgroups")
+        card$append_text("AE Subgroups", "header2")
+        card$append_text("Filter State", "header3")
+        card$append_fs(datasets$get_filter_state())
+        card$append_text("Plot", "header3")
+        card$append_plot(plt(), dim = pws$dim())
+        if (!comment == "") {
+          card$append_text("Comment", "header3")
+          card$append_text(comment)
+        }
+        card
+      }
+
+      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
+      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
+      teal.reporter::reset_report_button_srv("resetButton", reporter)
+    }
   })
 }
