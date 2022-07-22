@@ -417,6 +417,9 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
         card$set_name("Spider Plot")
         card$append_text("Spider Plot", "header2")
         card$append_fs(datasets$get_filter_state())
+        if (!is.null(input$paramcd) || !is.null(input$xfacet_var) || !is.null(input$yfacet_var)) {
+          card$append_text("Selected Options", "header3")
+        }
         if (!is.null(input$paramcd)) {
           card$append_text(paste0("Parameter - (from ", dataname, "): ", input$paramcd, "."))
         }
@@ -432,6 +435,12 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
+        card$append_src(paste(get_rcode(
+          chunks = teal.code::get_chunks_object(parent_idx = 2L),
+          datasets = datasets,
+          title = "",
+          description = ""
+        ), collapse = "\n"))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

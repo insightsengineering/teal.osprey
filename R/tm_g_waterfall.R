@@ -555,6 +555,7 @@ srv_g_waterfall <- function(id,
         card$set_name("Waterfall")
         card$append_text("Waterfall Plot", "header2")
         card$append_fs(datasets$get_filter_state())
+        card$append_text("Selected Options", "header3")
         card$append_text(paste0("Tumor Burden Parameter: ", input$bar_paramcd, "."))
         if (!is.null(input$sort_var)) {
           card$append_text(paste0("Sorted by: ", input$sort_var, "."))
@@ -568,6 +569,12 @@ srv_g_waterfall <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
+        card$append_src(paste(get_rcode(
+          chunks = teal.code::get_chunks_object(parent_idx = 2L),
+          datasets = datasets,
+          title = "",
+          description = ""
+        ), collapse = "\n"))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
