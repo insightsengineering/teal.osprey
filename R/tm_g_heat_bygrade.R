@@ -326,10 +326,10 @@ srv_g_heatmap_bygrade <- function(id,
     })
 
     observeEvent(input$plot_cm, {
-      ADCM_FILTERED <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
+      ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
       ADCM_label <- formatters::var_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
-      formatters::var_labels(ADCM_FILTERED) <- ADCM_label
-      choices <- levels(ADCM_FILTERED[[input$conmed_var]])
+      formatters::var_labels(ADCM) <- ADCM_label
+      choices <- levels(ADCM[[input$conmed_var]])
 
       updateSelectInput(
         session,
@@ -346,32 +346,32 @@ srv_g_heatmap_bygrade <- function(id,
       validate(need(input$heat_var, "Please select a heat variable."))
       validate(need(length(input$anno_var) <= 2, "Please include no more than 2 annotation variables"))
 
-      ADSL_FILTERED <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
-      ADEX_FILTERED <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
-      ADAE_FILTERED <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
+      ADSL <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
+      ADEX <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
+      ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
 
       # assign labels back to the data
-      formatters::var_labels(ADSL_FILTERED) <-
+      formatters::var_labels(ADSL) <-
         formatters::var_labels(datasets$get_data(sl_dataname, filtered = FALSE), fill = FALSE)
-      formatters::var_labels(ADEX_FILTERED) <-
+      formatters::var_labels(ADEX) <-
         formatters::var_labels(datasets$get_data(ex_dataname, filtered = FALSE), fill = FALSE)
-      formatters::var_labels(ADAE_FILTERED) <-
+      formatters::var_labels(ADAE) <-
         formatters::var_labels(datasets$get_data(ae_dataname, filtered = FALSE), fill = FALSE)
 
-      validate(need(nrow(ADSL_FILTERED) > 0, "Please select at least one subject"))
+      validate(need(nrow(ADSL) > 0, "Please select at least one subject"))
 
       validate(need(
-        input$ongo_var %in% names(ADEX_FILTERED),
+        input$ongo_var %in% names(ADEX),
         paste("Study Ongoing Status must be a variable in", ex_dataname, sep = " ")
       ))
 
       validate(need(
-        checkmate::test_logical(ADEX_FILTERED[[input$ongo_var]], min.len = 1, any.missing = FALSE),
+        checkmate::test_logical(ADEX[[input$ongo_var]], min.len = 1, any.missing = FALSE),
         "Study Ongoing Status must be a logical variable"
       ))
 
       validate(need(
-        all(input$anno_var %in% names(ADSL_FILTERED)),
+        all(input$anno_var %in% names(ADSL)),
         paste("Please only select annotation variable(s) in", sl_dataname, sep = " ")
       ))
 
@@ -381,17 +381,17 @@ srv_g_heatmap_bygrade <- function(id,
       ))
 
       if (input$plot_cm) {
-        ADCM_FILTERED <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
+        ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
         ADCM_label <- formatters::var_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
-        formatters::var_labels(ADCM_FILTERED) <- ADCM_label
+        formatters::var_labels(ADCM) <- ADCM_label
         validate(
           need(
-            input$conmed_var %in% names(ADCM_FILTERED),
+            input$conmed_var %in% names(ADCM),
             paste("Please select a Conmed Variable in", cm_dataname, sep = " ")
           )
         )
         validate(need(
-          all(input$conmed_level %in% levels(ADCM_FILTERED[[input$conmed_var]])),
+          all(input$conmed_level %in% levels(ADCM[[input$conmed_var]])),
           "Updating Conmed Levels"
         ))
       }
@@ -403,13 +403,13 @@ srv_g_heatmap_bygrade <- function(id,
         teal.code::chunks_push(
           id = "conmed_data call",
           expression = bquote({
-            conmed_data <- ADCM_FILTERED %>%
+            conmed_data <- ADCM %>%
               filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
             conmed_var <- .(input$conmed_var)
             conmed_data[[conmed_var]] <-
               factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
             formatters::var_labels(conmed_data)[conmed_var] <-
-              formatters::var_labels(ADCM_FILTERED, fill = FALSE)[conmed_var]
+              formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
           })
         )
       } else {
@@ -429,7 +429,7 @@ srv_g_heatmap_bygrade <- function(id,
       teal.code::chunks_push(
         id = "g_heat_bygrade call",
         expression = bquote({
-          exp_data <- ADEX_FILTERED %>%
+          exp_data <- ADEX %>%
             filter(PARCAT1 == "INDIVIDUAL")
 
           osprey::g_heat_bygrade(
@@ -437,9 +437,9 @@ srv_g_heatmap_bygrade <- function(id,
             exp_data = exp_data,
             visit_var = .(input$visit_var),
             ongo_var = .(input$ongo_var),
-            anno_data = ADSL_FILTERED[c(.(input$anno_var), .(input$id_var))],
+            anno_data = ADSL[c(.(input$anno_var), .(input$id_var))],
             anno_var = .(input$anno_var),
-            heat_data = ADAE_FILTERED %>% select(!!.(input$id_var), !!.(input$visit_var), !!.(input$heat_var)),
+            heat_data = ADAE %>% select(!!.(input$id_var), !!.(input$visit_var), !!.(input$heat_var)),
             heat_color_var = .(input$heat_var),
             conmed_data = conmed_data,
             conmed_var = conmed_var
