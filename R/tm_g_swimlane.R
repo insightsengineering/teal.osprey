@@ -174,7 +174,6 @@ ui_g_swimlane <- function(id, ...) {
     encoding = div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
-      shiny::tags$br(),
       ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", code(a$dataname)),

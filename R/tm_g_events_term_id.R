@@ -103,7 +103,6 @@ ui_g_events_term_id <- function(id, ...) {
     encoding = div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
-      shiny::tags$br(),
       ###
       teal.widgets::optionalSelectInput(
         ns("term"),

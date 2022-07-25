@@ -217,7 +217,6 @@ ui_g_heatmap_bygrade <- function(id, ...) {
     encoding = div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
-      shiny::tags$br(),
       ###
       teal.widgets::optionalSelectInput(
         ns("id_var"),
