@@ -249,9 +249,9 @@ srv_g_events_term_id <- function(id,
     observeEvent(input$arm_var,
       handlerExpr = {
         arm_var <- input$arm_var
-        ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+        ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
-        choices <- levels(ANL_FILTERED[[arm_var]])
+        choices <- levels(ANL[[arm_var]])
 
         validate(need(length(choices) > 0, "Please include multiple treatment"))
         if (length(choices) == 1) {
@@ -290,18 +290,18 @@ srv_g_events_term_id <- function(id,
         )
       ))
 
-      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-      ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-      formatters::var_labels(ANL_FILTERED) <- formatters::var_labels(
+      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      formatters::var_labels(ANL) <- formatters::var_labels(
         datasets$get_data(dataname, filtered = FALSE),
         fill = FALSE
       )
 
-      anl_name <- paste0(dataname, "_FILTERED")
-      assign(anl_name, ANL_FILTERED)
+      anl_name <- dataname
+      assign(anl_name, ANL)
 
       validate(need(
-        all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])),
+        all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])),
         "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
       ))
 
@@ -314,7 +314,7 @@ srv_g_events_term_id <- function(id,
         id = "ANL call",
         expression = bquote({
           ANL <- merge( # nolint
-            x = ADSL_FILTERED[, .(adsl_vars), drop = FALSE],
+            x = ADSL[, .(adsl_vars), drop = FALSE],
             y = .(as.name(anl_name))[, .(anl_vars), drop = FALSE],
             all.x = FALSE,
             all.y = FALSE,
@@ -332,7 +332,7 @@ srv_g_events_term_id <- function(id,
           term <- ANL[[.(input$term)]]
           id <- ANL$USUBJID
           arm <- ANL[[.(input$arm_var)]]
-          arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
+          arm_N <- table(ADSL[[.(input$arm_var)]]) # nolint
           ref <- .(input$arm_ref)
           trt <- .(input$arm_trt)
 

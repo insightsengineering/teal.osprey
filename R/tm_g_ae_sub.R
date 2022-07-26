@@ -188,10 +188,9 @@ srv_g_ae_sub <- function(id,
     observeEvent(input$arm_var, {
       req(!is.null(input$arm_var))
       arm_var <- input$arm_var
-      ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
-      choices <- unique(ADAE_FILTERED[[arm_var]])
+      choices <- unique(ANL[[arm_var]])
 
       validate(need(
         length(choices) > 0, "Please include multiple treatment"
@@ -235,13 +234,12 @@ srv_g_ae_sub <- function(id,
     })
 
     observeEvent(input$groups, {
-      ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
       output$grouplabel_output <- renderUI({
         grps <- input$groups
         lo <- lapply(seq_along(grps), function(index) {
           grp <- grps[index]
-          choices <- levels(ADAE_FILTERED[[grp]])
+          choices <- levels(ANL[[grp]])
           sel <- teal.widgets::optionalSelectInput(
             session$ns(sprintf("groups__%s", index)),
             grp,
@@ -281,27 +279,30 @@ srv_g_ae_sub <- function(id,
 
     plt <- reactive({
       validate(need(input$arm_var, "Please select an arm variable."))
-      ADAE_FILTERED <- datasets$get_data("ADAE", filtered = TRUE) # nolint
-      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+
+      anl_name <- dataname
+      assign(anl_name, ANL)
 
       validate(need(
-        is.factor(ADSL_FILTERED[[input$arm_var]]),
+        is.factor(ADSL[[input$arm_var]]),
         "Selected arm variable needs to be a factor."
       ))
       validate(
         need(
-          all(c(input$arm_trt, input$arm_ref) %in% levels(ADSL_FILTERED[[input$arm_var]])),
+          all(c(input$arm_trt, input$arm_ref) %in% levels(ADSL[[input$arm_var]])),
           "Updating treatment and control selections."
         )
       )
       validate(
         need(
-          all(c(input$arm_trt, input$arm_ref) %in% unique(ADAE_FILTERED[[input$arm_var]])),
+          all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])),
           "The dataset does not contain subjects with AE events from both the control and treatment arms."
         ),
         need(
-          all(input$groups %in% names(ADAE_FILTERED)) &
-            all(input$groups %in% names(ADSL_FILTERED)),
+          all(input$groups %in% names(ANL)) &
+            all(input$groups %in% names(ADSL)),
           "Check all selected subgroups are columns in ADAE and ADSL."
         ),
         need(
@@ -315,12 +316,12 @@ srv_g_ae_sub <- function(id,
       teal.code::chunks_push(
         id = "variables call",
         expression = bquote({
-          id <- ADAE_FILTERED$USUBJID
-          arm <- as.factor(ADAE_FILTERED[[.(input$arm_var)]])
-          arm_sl <- as.character(ADSL_FILTERED[[.(input$arm_var)]])
+          id <- .(as.name(anl_name))$USUBJID
+          arm <- as.factor(.(as.name(anl_name))[[.(input$arm_var)]])
+          arm_sl <- as.character(ADSL[[.(input$arm_var)]])
           grps <- .(input$groups)
-          subgroups <- ADAE_FILTERED[grps]
-          subgroups_sl <- ADSL_FILTERED[grps]
+          subgroups <- .(as.name(anl_name))[grps]
+          subgroups_sl <- ADSL[grps]
           trt <- .(input$arm_trt)
           ref <- .(input$arm_ref)
         })

@@ -287,9 +287,9 @@ srv_g_waterfall <- function(id,
     teal.code::init_chunks()
 
     plot_r <- reactive({
-      adsl_filtered <- datasets$get_data("ADSL", filtered = TRUE)
-      adtr_filtered <- datasets$get_data(dataname_tr, filtered = TRUE)
-      adrs_filtered <- datasets$get_data(dataname_rs, filtered = TRUE)
+      adsl <- datasets$get_data("ADSL", filtered = TRUE)
+      adtr <- datasets$get_data(dataname_tr, filtered = TRUE)
+      adrs <- datasets$get_data(dataname_rs, filtered = TRUE)
 
       bar_var <- input$bar_var
       bar_paramcd <- input$bar_paramcd
@@ -309,20 +309,20 @@ srv_g_waterfall <- function(id,
       ))
 
       # validate data rows
-      validate_has_data(adsl_filtered, min_nrow = 2)
-      validate_has_data(adtr_filtered, min_nrow = 2)
-      validate_has_data(adrs_filtered, min_nrow = 2)
+      validate_has_data(adsl, min_nrow = 2)
+      validate_has_data(adtr, min_nrow = 2)
+      validate_has_data(adrs, min_nrow = 2)
 
       validate_in(
         bar_paramcd,
-        adtr_filtered$PARAMCD,
+        adtr$PARAMCD,
         "Tumor burden parameter is not selected or is not found in ADTR PARAMCD."
       )
       if (!is.null(add_label_paramcd_rs)) {
-        validate_in(add_label_paramcd_rs, adrs_filtered$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
+        validate_in(add_label_paramcd_rs, adrs$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
       }
       if (!is.null(anno_txt_paramcd_rs)) {
-        validate_in(anno_txt_paramcd_rs, adrs_filtered$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
+        validate_in(anno_txt_paramcd_rs, adrs$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
       }
 
       # get variables
@@ -378,18 +378,18 @@ srv_g_waterfall <- function(id,
       adrs_paramcd <- unique(c(add_label_paramcd_rs, anno_txt_paramcd_rs))
 
       # write data selection to chunks
-      adsl_name <- "ADSL_FILTERED"
-      adtr_name <- paste0(dataname_tr, "_FILTERED")
-      adrs_name <- paste0(dataname_rs, "_FILTERED")
+      adsl_name <- "ADSL"
+      adtr_name <- dataname_tr
+      adrs_name <- dataname_rs
 
-      assign(adsl_name, adsl_filtered)
-      assign(adtr_name, adtr_filtered)
-      assign(adrs_name, adrs_filtered)
+      assign(adsl_name, adsl)
+      assign(adtr_name, adtr)
+      assign(adrs_name, adrs)
 
       # validate data input
-      validate_has_variable(adsl_filtered, adsl_vars)
-      validate_has_variable(adrs_filtered, adrs_vars)
-      validate_has_variable(adtr_filtered, adtr_vars)
+      validate_has_variable(adsl, adsl_vars)
+      validate_has_variable(adrs, adrs_vars)
+      validate_has_variable(adtr, adtr_vars)
 
       # restart the chunks for showing code
       teal.code::chunks_reset(envir = environment())
@@ -421,7 +421,7 @@ srv_g_waterfall <- function(id,
           adtr <- .(as.name(adtr_name))[, .(adtr_vars)] # nolint
           adrs <- .(as.name(adrs_name))[, .(adrs_vars)] # nolint
 
-          bar_tr <- adtr %>%
+          bar_tr <- .(as.name(adtr_name)) %>%
             dplyr::filter(PARAMCD == .(bar_paramcd)) %>%
             dplyr::select(USUBJID, .(as.name(bar_var))) %>%
             dplyr::group_by(USUBJID) %>%
@@ -445,7 +445,7 @@ srv_g_waterfall <- function(id,
         teal.code::chunks_push(
           id = "rs_sub call",
           expression = bquote({
-            rs_sub <- adrs %>%
+            rs_sub <- .(as.name(adrs_name)) %>%
               dplyr::filter(PARAMCD %in% .(adrs_paramcd))
           })
         )
