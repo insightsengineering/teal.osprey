@@ -167,88 +167,93 @@ ui_g_swimlane <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
 
-  teal.widgets::standard_layout(
-    output = teal.widgets::white_small_well(
-      teal.widgets::plot_with_settings_ui(id = ns("swimlaneplot"))
+  shiny::tagList(
+    shiny::singleton(
+      shiny::tags$head(shiny::includeCSS(system.file("css/custom.css", package = "teal.osprey")))
     ),
-    encoding = div(
-      ### Reporter
-      shiny::tags$div(
-        teal.reporter::add_card_button_ui(ns("addReportCard")),
-        teal.reporter::download_report_button_ui(ns("downloadButton")),
-        teal.reporter::reset_report_button_ui(ns("resetButton"))
+    teal.widgets::standard_layout(
+      output = teal.widgets::white_small_well(
+        teal.widgets::plot_with_settings_ui(id = ns("swimlaneplot"))
       ),
-      shiny::tags$br(),
-      ###
-      tags$label("Encodings", class = "text-primary"),
-      helpText("Analysis data:", code(a$dataname)),
-      div(
-        style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
+      encoding = div(
+        ### Reporter
+        shiny::tags$div(
+          teal.reporter::add_card_button_ui(ns("addReportCard")),
+          teal.reporter::download_report_button_ui(ns("downloadButton")),
+          teal.reporter::reset_report_button_ui(ns("resetButton"))
+        ),
+        shiny::tags$br(),
+        ###
+        tags$label("Encodings", class = "text-primary"),
+        helpText("Analysis data:", code(a$dataname)),
+        div(
+          class = "pretty-left-border",
+          teal.widgets::optionalSelectInput(
+            ns("bar_var"),
+            "Bar Length",
+            choices = a$bar_var$choices,
+            selected = a$bar_var$selected,
+            multiple = FALSE,
+            label_help = helpText("from ", code("ADSL"))
+          ),
+          teal.widgets::optionalSelectInput(
+            ns("bar_color_var"),
+            "Bar Color",
+            choices = a$bar_color_var$choices,
+            selected = a$bar_color_var$selected,
+            multiple = FALSE,
+            label_help = helpText("from ", code("ADSL"))
+          )
+        ),
         teal.widgets::optionalSelectInput(
-          ns("bar_var"),
-          "Bar Length",
-          choices = a$bar_var$choices,
-          selected = a$bar_var$selected,
+          ns("sort_var"),
+          "Sort by",
+          choices = a$sort_var$choices,
+          selected = a$sort_var$selected,
           multiple = FALSE,
           label_help = helpText("from ", code("ADSL"))
         ),
+        div(
+          class = "pretty-left-border",
+          if (a$dataname == "ADSL") {
+            NULL
+          } else if (is.null(a$marker_pos_var)) {
+            NULL
+          } else {
+            teal.widgets::optionalSelectInput(
+              ns("marker_pos_var"),
+              "Marker Position",
+              choices = a$marker_pos_var$choices,
+              selected = a$marker_pos_var$selected,
+              multiple = FALSE,
+              label_help = helpText("from ", code(a$dataname))
+            )
+          },
+          uiOutput(ns("marker_shape_sel")),
+          uiOutput(ns("marker_color_sel"))
+        ),
         teal.widgets::optionalSelectInput(
-          ns("bar_color_var"),
-          "Bar Color",
-          choices = a$bar_color_var$choices,
-          selected = a$bar_color_var$selected,
-          multiple = FALSE,
+          ns("anno_txt_var"),
+          "Annotation Variables",
+          choices = a$anno_txt_var$choices,
+          selected = a$anno_txt_var$selected,
+          multiple = TRUE,
           label_help = helpText("from ", code("ADSL"))
+        ),
+        textInput(
+          ns("vref_line"),
+          label = div(
+            "Vertical Reference Line(s)",
+            tags$br(),
+            helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
+          ),
+          value = paste(a$vref_line, collapse = ", ")
         )
       ),
-      teal.widgets::optionalSelectInput(
-        ns("sort_var"),
-        "Sort by",
-        choices = a$sort_var$choices,
-        selected = a$sort_var$selected,
-        multiple = FALSE,
-        label_help = helpText("from ", code("ADSL"))
-      ),
-      div(
-        style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
-        if (a$dataname == "ADSL") {
-          NULL
-        } else if (is.null(a$marker_pos_var)) {
-          NULL
-        } else {
-          teal.widgets::optionalSelectInput(
-            ns("marker_pos_var"),
-            "Marker Position",
-            choices = a$marker_pos_var$choices,
-            selected = a$marker_pos_var$selected,
-            multiple = FALSE,
-            label_help = helpText("from ", code(a$dataname))
-          )
-        },
-        uiOutput(ns("marker_shape_sel")),
-        uiOutput(ns("marker_color_sel"))
-      ),
-      teal.widgets::optionalSelectInput(
-        ns("anno_txt_var"),
-        "Annotation Variables",
-        choices = a$anno_txt_var$choices,
-        selected = a$anno_txt_var$selected,
-        multiple = TRUE,
-        label_help = helpText("from ", code("ADSL"))
-      ),
-      textInput(
-        ns("vref_line"),
-        label = div(
-          "Vertical Reference Line(s)",
-          tags$br(),
-          helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
-        ),
-        value = paste(a$vref_line, collapse = ", ")
-      )
-    ),
-    forms = get_rcode_ui(ns("rcode")),
-    pre_output = a$pre_output,
-    post_output = a$post_output
+      forms = get_rcode_ui(ns("rcode")),
+      pre_output = a$pre_output,
+      post_output = a$post_output
+    )
   )
 }
 

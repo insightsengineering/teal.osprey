@@ -116,105 +116,110 @@ ui_g_spider <- function(id, ...) {
   ns <- NS(id)
   a <- list(...)
 
-  teal.widgets::standard_layout(
-    output = teal.widgets::white_small_well(
-      teal.widgets::plot_with_settings_ui(id = ns("spiderplot"))
+  shiny::tagList(
+    shiny::singleton(
+      shiny::tags$head(shiny::includeCSS(system.file("css/custom.css", package = "teal.osprey")))
     ),
-    encoding = div(
-      ### Reporter
-      shiny::tags$div(
-        teal.reporter::add_card_button_ui(ns("addReportCard")),
-        teal.reporter::download_report_button_ui(ns("downloadButton")),
-        teal.reporter::reset_report_button_ui(ns("resetButton"))
+    teal.widgets::standard_layout(
+      output = teal.widgets::white_small_well(
+        teal.widgets::plot_with_settings_ui(id = ns("spiderplot"))
       ),
-      shiny::tags$br(),
-      ###
-      tags$label("Encodings", class = "text-primary"),
-      helpText("Analysis data:", tags$code(a$dataname)),
-      div(
-        style = "border-left: 3px solid #e3e3e3; padding-left: 0.6em; border-radius: 5px; margin-left: -0.6em;",
-        teal.widgets::optionalSelectInput(
-          ns("paramcd"),
-          paste("Parameter - from", a$dataname),
-          a$paramcd$choices,
-          a$paramcd$selected,
-          multiple = FALSE
+      encoding = div(
+        ### Reporter
+        shiny::tags$div(
+          teal.reporter::add_card_button_ui(ns("addReportCard")),
+          teal.reporter::download_report_button_ui(ns("downloadButton")),
+          teal.reporter::reset_report_button_ui(ns("resetButton"))
         ),
-        teal.widgets::optionalSelectInput(
-          ns("x_var"),
-          "X-axis Variable",
-          a$x_var$choices,
-          a$x_var$selected,
-          multiple = FALSE
+        shiny::tags$br(),
+        ###
+        tags$label("Encodings", class = "text-primary"),
+        helpText("Analysis data:", tags$code(a$dataname)),
+        div(
+          class = "pretty-left-border",
+          teal.widgets::optionalSelectInput(
+            ns("paramcd"),
+            paste("Parameter - from", a$dataname),
+            a$paramcd$choices,
+            a$paramcd$selected,
+            multiple = FALSE
+          ),
+          teal.widgets::optionalSelectInput(
+            ns("x_var"),
+            "X-axis Variable",
+            a$x_var$choices,
+            a$x_var$selected,
+            multiple = FALSE
+          ),
+          teal.widgets::optionalSelectInput(
+            ns("y_var"),
+            "Y-axis Variable",
+            a$y_var$choices,
+            a$y_var$selected,
+            multiple = FALSE
+          ),
+          teal.widgets::optionalSelectInput(
+            ns("line_colorby_var"),
+            "Color By Variable (Line)",
+            a$line_colorby_var$choices,
+            a$line_colorby_var$selected,
+            multiple = FALSE
+          ),
+          teal.widgets::optionalSelectInput(
+            ns("marker_var"),
+            "Marker Symbol By Variable",
+            a$marker_var$choices,
+            a$marker_var$selected,
+            multiple = FALSE
+          ),
+          teal.widgets::optionalSelectInput(
+            ns("xfacet_var"),
+            "X-facet By Variable",
+            a$xfacet_var$choices,
+            a$xfacet_var$selected,
+            multiple = TRUE
+          ),
+          teal.widgets::optionalSelectInput(
+            ns("yfacet_var"),
+            "Y-facet By Variable",
+            a$yfacet_var$choices,
+            a$yfacet_var$selected,
+            multiple = TRUE
+          )
         ),
-        teal.widgets::optionalSelectInput(
-          ns("y_var"),
-          "Y-axis Variable",
-          a$y_var$choices,
-          a$y_var$selected,
-          multiple = FALSE
+        checkboxInput(
+          ns("anno_txt_var"),
+          "Add subject ID label",
+          value = a$anno_txt_var
         ),
-        teal.widgets::optionalSelectInput(
-          ns("line_colorby_var"),
-          "Color By Variable (Line)",
-          a$line_colorby_var$choices,
-          a$line_colorby_var$selected,
-          multiple = FALSE
+        checkboxInput(
+          ns("legend_on"),
+          "Add legend",
+          value = a$legend_on
         ),
-        teal.widgets::optionalSelectInput(
-          ns("marker_var"),
-          "Marker Symbol By Variable",
-          a$marker_var$choices,
-          a$marker_var$selected,
-          multiple = FALSE
+        textInput(
+          ns("vref_line"),
+          label = div(
+            "Vertical Reference Line(s)",
+            tags$br(),
+            helpText("Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)")
+          ),
+          value = a$vref_line
         ),
-        teal.widgets::optionalSelectInput(
-          ns("xfacet_var"),
-          "X-facet By Variable",
-          a$xfacet_var$choices,
-          a$xfacet_var$selected,
-          multiple = TRUE
-        ),
-        teal.widgets::optionalSelectInput(
-          ns("yfacet_var"),
-          "Y-facet By Variable",
-          a$yfacet_var$choices,
-          a$yfacet_var$selected,
-          multiple = TRUE
+        textInput(
+          ns("href_line"),
+          label = div(
+            "Hortizontal Reference Line(s)",
+            tags$br(),
+            helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")
+          ),
+          value = a$href_line
         )
       ),
-      checkboxInput(
-        ns("anno_txt_var"),
-        "Add subject ID label",
-        value = a$anno_txt_var
-      ),
-      checkboxInput(
-        ns("legend_on"),
-        "Add legend",
-        value = a$legend_on
-      ),
-      textInput(
-        ns("vref_line"),
-        label = div(
-          "Vertical Reference Line(s)",
-          tags$br(),
-          helpText("Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)")
-        ),
-        value = a$vref_line
-      ),
-      textInput(
-        ns("href_line"),
-        label = div(
-          "Hortizontal Reference Line(s)",
-          tags$br(),
-          helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")
-        ),
-        value = a$href_line
-      )
-    ),
-    forms = get_rcode_ui(ns("rcode")),
-    pre_output = a$pre_output,
-    post_output = a$post_output
+      forms = get_rcode_ui(ns("rcode")),
+      pre_output = a$pre_output,
+      post_output = a$post_output
+    )
   )
 }
 
