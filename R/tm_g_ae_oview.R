@@ -248,7 +248,6 @@ srv_g_ae_oview <- function(id,
 
     observeEvent(input$arm_var, {
       ANL <- datasets$get_data(dataname, filtered = FALSE) # nolint
-      ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
       req(!is.null(input$arm_var))
       arm_var <- input$arm_var
@@ -288,37 +287,37 @@ srv_g_ae_oview <- function(id,
         )
       ))
 
-      ANL <- datasets$get_data(dataname, filtered = FALSE) # nolint
-      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-      ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      ANL_UNFILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
+      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
-      anl_name <- paste0(dataname, "_FILTERED")
-      assign(anl_name, ANL_FILTERED)
+      anl_name <- dataname
+      assign(anl_name, ANL)
 
       teal.code::chunks_reset(envir = environment())
 
-      validate(need(nlevels(ANL_FILTERED[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
-      validate_has_data(ANL_FILTERED, min_nrow = 10)
-      if (all(c(input$arm_trt, input$arm_ref) %in% ANL[[input$arm_var]])) {
+      validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
+      validate_has_data(ANL, min_nrow = 10)
+      if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
         validate(
           need(
-            input$arm_ref %in% ANL_FILTERED[[input$arm_var]],
+            input$arm_ref %in% ANL[[input$arm_var]],
             paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
           ),
           need(
-            input$arm_trt %in% ANL_FILTERED[[input$arm_var]],
+            input$arm_trt %in% ANL[[input$arm_var]],
             paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
           )
         )
       }
-      validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])), "Plot loading"))
+      validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
       teal.code::chunks_push(
         id = "variables call",
         expression = bquote({
           id <- .(as.name(anl_name))[["USUBJID"]]
           arm <- .(as.name(anl_name))[[.(input$arm_var)]]
-          arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
+          arm_N <- table(ADSL[[.(input$arm_var)]]) # nolint
           trt <- .(input$arm_trt)
           ref <- .(input$arm_ref)
           anl_labels <- formatters::var_labels(.(as.name(anl_name)), fill = FALSE)
