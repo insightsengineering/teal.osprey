@@ -160,12 +160,7 @@ ui_g_waterfall <- function(id, ...) {
     ),
     encoding = div(
       ### Reporter
-      shiny::tags$div(
-        teal.reporter::add_card_button_ui(ns("addReportCard")),
-        teal.reporter::download_report_button_ui(ns("downloadButton")),
-        teal.reporter::reset_report_button_ui(ns("resetButton"))
-      ),
-      shiny::tags$br(),
+      teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis Data: ", tags$code(a$dataname_tr), tags$code(a$dataname_rs)),
@@ -558,8 +553,8 @@ srv_g_waterfall <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Waterfall")
         card$append_text("Waterfall Plot", "header2")
-        card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
+        card$append_text("Selected Options", "header3")
         card$append_text(paste0("Tumor Burden Parameter: ", input$bar_paramcd, "."))
         if (!is.null(input$sort_var)) {
           card$append_text(paste0("Sorted by: ", input$sort_var, "."))
@@ -573,12 +568,15 @@ srv_g_waterfall <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
+        card$append_src(paste(get_rcode(
+          chunks = teal.code::get_chunks_object(parent_idx = 2L),
+          datasets = datasets,
+          title = "",
+          description = ""
+        ), collapse = "\n"))
         card
       }
-
-      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
-      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
-      teal.reporter::reset_report_button_srv("resetButton", reporter)
+      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
     }
   })
 }
