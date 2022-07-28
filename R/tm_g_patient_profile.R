@@ -281,121 +281,121 @@ ui_g_patient_profile <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
 
-  teal.widgets::standard_layout(
-    output = teal.widgets::white_small_well(
-      teal.widgets::plot_with_settings_ui(id = ns("patientprofileplot"))
-    ),
-    encoding = div(
-      ### Reporter
-      teal.reporter::simple_reporter_ui(ns("simple_reporter")),
-      ###
-      tags$label("Encodings", class = "text-primary"),
-      selectizeInput(
-        ns("patient_id"),
-        "Patient ID",
-        choices = a$patient_id$choices,
-        selected = a$patient_id$selected
+
+  shiny::tagList(
+    include_css_files("custom"),
+    teal.widgets::standard_layout(
+      output = teal.widgets::white_small_well(
+        teal.widgets::plot_with_settings_ui(id = ns("patientprofileplot"))
       ),
-      helpText("Select", tags$code("ADaM"), "Domains"),
-      div(
-        style =
-          "border-left: 3px solid #e3e3e3;
-        padding-left: 0.6em;
-        border-radius: 5px;
-        margin-left: -0.6m;",
-        uiOutput(ns("select_ae_output")),
-        uiOutput(ns("select_ex_output")),
-        uiOutput(ns("select_rs_output")),
-        uiOutput(ns("select_cm_output")),
-        uiOutput(ns("select_lb_output"))
-      ),
-      teal.widgets::optionalSelectInput(
-        ns("sl_start_date"),
-        "Start date variable",
-        choices = a$sl_start_date$choices,
-        selected = a$sl_start_date$selected,
-        multiple = FALSE,
-        label_help = helpText(
-          "from ", tags$code("ADSL")
-        )
-      ),
-      conditionalPanel(
-        paste0("input['", ns("select_ex"), "']"),
-        selectInput(
-          ns("ex_var"),
-          "Exposure variable",
-          choices = a$ex_var$choices,
-          selected = a$ex_var$selected,
-          multiple = FALSE
-        )
-      ),
-      conditionalPanel(
-        paste0("input['", ns("select_ae"), "']"),
-        teal.widgets::optionalSelectInput(
-          ns("ae_var"),
-          "Adverse Event variable",
-          choices = a$ae_var$choices,
-          selected = a$ae_var$selected,
-          multiple = FALSE
+      encoding = div(
+        ### Reporter
+        teal.reporter::simple_reporter_ui(ns("simple_reporter")),
+        ###
+        tags$label("Encodings", class = "text-primary"),
+        selectizeInput(
+          ns("patient_id"),
+          "Patient ID",
+          choices = a$patient_id$choices,
+          selected = a$patient_id$selected
+        ),
+        helpText("Select", tags$code("ADaM"), "Domains"),
+        div(
+          class = "pretty-left-border",
+          uiOutput(ns("select_ae_output")),
+          uiOutput(ns("select_ex_output")),
+          uiOutput(ns("select_rs_output")),
+          uiOutput(ns("select_cm_output")),
+          uiOutput(ns("select_lb_output"))
         ),
         teal.widgets::optionalSelectInput(
-          ns("ae_line_var"),
-          "Adverse Event line color variable",
-          choices = a$ae_line_col_var$choices,
-          selected = a$ae_line_col_var$selected,
-          multiple = FALSE
-        )
-      ),
-      conditionalPanel(
-        paste0("input['", ns("select_rs"), "']"),
-        teal.widgets::optionalSelectInput(
-          ns("rs_var"),
-          "Tumor response variable",
-          choices = a$rs_var$choices,
-          selected = a$rs_var$selected,
-          multiple = FALSE
-        )
-      ),
-      conditionalPanel(
-        paste0("input['", ns("select_cm"), "']"),
-        teal.widgets::optionalSelectInput(
-          ns("cm_var"),
-          "Concomitant medicine variable",
-          choices = a$cm_var$choices,
-          selected = a$cm_var$selected,
-          multiple = FALSE
-        )
-      ),
-      conditionalPanel(
-        paste0("input['", ns("select_lb"), "']"),
-        teal.widgets::optionalSelectInput(
-          ns("lb_var"),
-          "Lab variable",
-          choices = a$lb_var$choices,
-          selected = a$lb_var$selected,
-          multiple = FALSE
+          ns("sl_start_date"),
+          "Start date variable",
+          choices = a$sl_start_date$choices,
+          selected = a$sl_start_date$selected,
+          multiple = FALSE,
+          label_help = helpText(
+            "from ", tags$code("ADSL")
+          )
         ),
-        selectInput(
-          ns("lb_var_show"),
-          "Lab values",
-          choices = a$lb_var$choices,
-          selected = a$lb_var$selected,
-          multiple = TRUE
+        conditionalPanel(
+          paste0("input['", ns("select_ex"), "']"),
+          selectInput(
+            ns("ex_var"),
+            "Exposure variable",
+            choices = a$ex_var$choices,
+            selected = a$ex_var$selected,
+            multiple = FALSE
+          )
+        ),
+        conditionalPanel(
+          paste0("input['", ns("select_ae"), "']"),
+          teal.widgets::optionalSelectInput(
+            ns("ae_var"),
+            "Adverse Event variable",
+            choices = a$ae_var$choices,
+            selected = a$ae_var$selected,
+            multiple = FALSE
+          ),
+          teal.widgets::optionalSelectInput(
+            ns("ae_line_var"),
+            "Adverse Event line color variable",
+            choices = a$ae_line_col_var$choices,
+            selected = a$ae_line_col_var$selected,
+            multiple = FALSE
+          )
+        ),
+        conditionalPanel(
+          paste0("input['", ns("select_rs"), "']"),
+          teal.widgets::optionalSelectInput(
+            ns("rs_var"),
+            "Tumor response variable",
+            choices = a$rs_var$choices,
+            selected = a$rs_var$selected,
+            multiple = FALSE
+          )
+        ),
+        conditionalPanel(
+          paste0("input['", ns("select_cm"), "']"),
+          teal.widgets::optionalSelectInput(
+            ns("cm_var"),
+            "Concomitant medicine variable",
+            choices = a$cm_var$choices,
+            selected = a$cm_var$selected,
+            multiple = FALSE
+          )
+        ),
+        conditionalPanel(
+          paste0("input['", ns("select_lb"), "']"),
+          teal.widgets::optionalSelectInput(
+            ns("lb_var"),
+            "Lab variable",
+            choices = a$lb_var$choices,
+            selected = a$lb_var$selected,
+            multiple = FALSE
+          ),
+          selectInput(
+            ns("lb_var_show"),
+            "Lab values",
+            choices = a$lb_var$choices,
+            selected = a$lb_var$selected,
+            multiple = TRUE
+          )
+        ),
+        textInput(
+          ns("x_limit"),
+          label = div(
+            "Study Days Range",
+            tags$br(),
+            helpText("Enter TWO numeric values of study days range, separated by comma (eg. -28, 750)")
+          ),
+          value = a$x_limit
         )
       ),
-      textInput(
-        ns("x_limit"),
-        label = div(
-          "Study Days Range",
-          tags$br(),
-          helpText("Enter TWO numeric values of study days range, separated by comma (eg. -28, 750)")
-        ),
-        value = a$x_limit
-      )
-    ),
-    forms = get_rcode_ui(ns("rcode")),
-    pre_output = a$pre_output,
-    post_output = a$post_output
+      forms = get_rcode_ui(ns("rcode")),
+      pre_output = a$pre_output,
+      post_output = a$post_output
+    )
   )
 }
 

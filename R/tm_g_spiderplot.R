@@ -117,9 +117,7 @@ ui_g_spider <- function(id, ...) {
   a <- list(...)
 
   shiny::tagList(
-    shiny::singleton(
-      shiny::tags$head(shiny::includeCSS(system.file("css/custom.css", package = "teal.osprey")))
-    ),
+    include_css_files("custom"),
     teal.widgets::standard_layout(
       output = teal.widgets::white_small_well(
         teal.widgets::plot_with_settings_ui(id = ns("spiderplot"))
