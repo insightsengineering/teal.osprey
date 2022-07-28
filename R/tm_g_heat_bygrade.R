@@ -210,83 +210,83 @@ tm_g_heat_bygrade <- function(label,
 ui_g_heatmap_bygrade <- function(id, ...) {
   ns <- NS(id)
   args <- list(...)
-  teal.widgets::standard_layout(
-    output = teal.widgets::white_small_well(
-      plot_decorate_output(id = ns(NULL))
-    ),
-    encoding = div(
-      ### Reporter
-      teal.reporter::simple_reporter_ui(ns("simple_reporter")),
-      ###
-      teal.widgets::optionalSelectInput(
-        ns("id_var"),
-        "ID Variable",
-        choices = args$id_var$choices,
-        selected = args$id_var$selected,
-        multiple = FALSE
+
+  shiny::tagList(
+    include_css_files("custom"),
+    teal.widgets::standard_layout(
+      output = teal.widgets::white_small_well(
+        plot_decorate_output(id = ns(NULL))
       ),
-      teal.widgets::optionalSelectInput(
-        ns("visit_var"),
-        "Visit Variable",
-        choices = args$visit_var$choices,
-        selected = args$visit_var$selected,
-        multiple = FALSE
-      ),
-      teal.widgets::optionalSelectInput(
-        ns("ongo_var"),
-        "Study Ongoing Status Variable",
-        choices = args$ongo_var$choices,
-        selected = args$ongo_var$selected,
-        multiple = FALSE
-      ),
-      teal.widgets::optionalSelectInput(
-        ns("anno_var"),
-        "Annotation Variables",
-        choices = args$anno_var$choices,
-        selected = args$anno_var$selected,
-        multiple = TRUE
-      ),
-      teal.widgets::optionalSelectInput(
-        ns("heat_var"),
-        "Heat Variable",
-        choices = args$heat_var$choices,
-        selected = args$heat_var$selected,
-        multiple = FALSE
-      ),
-      helpText("Plot conmed"),
-      div(
-        style =
-          "border-left: 3px solid #e3e3e3;
-        padding-left: 0.6em;
-        border-radius: 5px;
-        margin-left: -0.6m;",
-        uiOutput(ns("plot_cm_output"))
-      ),
-      conditionalPanel(
-        paste0("input['", ns("plot_cm"), "']"),
+      encoding = div(
+        ### Reporter
+        teal.reporter::simple_reporter_ui(ns("simple_reporter")),
+        ###
         teal.widgets::optionalSelectInput(
-          ns("conmed_var"),
-          "Conmed Variable",
-          choices = args$conmed_var$choices,
-          selected = args$conmed_var$selected,
+          ns("id_var"),
+          "ID Variable",
+          choices = args$id_var$choices,
+          selected = args$id_var$selected,
           multiple = FALSE
         ),
-        selectInput(
-          ns("conmed_level"),
-          "Conmed Levels",
-          choices = args$conmed_var$choices,
-          selected = args$conmed_var$selected,
+        teal.widgets::optionalSelectInput(
+          ns("visit_var"),
+          "Visit Variable",
+          choices = args$visit_var$choices,
+          selected = args$visit_var$selected,
+          multiple = FALSE
+        ),
+        teal.widgets::optionalSelectInput(
+          ns("ongo_var"),
+          "Study Ongoing Status Variable",
+          choices = args$ongo_var$choices,
+          selected = args$ongo_var$selected,
+          multiple = FALSE
+        ),
+        teal.widgets::optionalSelectInput(
+          ns("anno_var"),
+          "Annotation Variables",
+          choices = args$anno_var$choices,
+          selected = args$anno_var$selected,
           multiple = TRUE
+        ),
+        teal.widgets::optionalSelectInput(
+          ns("heat_var"),
+          "Heat Variable",
+          choices = args$heat_var$choices,
+          selected = args$heat_var$selected,
+          multiple = FALSE
+        ),
+        helpText("Plot conmed"),
+        div(
+          class = "pretty-left-border",
+          uiOutput(ns("plot_cm_output"))
+        ),
+        conditionalPanel(
+          paste0("input['", ns("plot_cm"), "']"),
+          teal.widgets::optionalSelectInput(
+            ns("conmed_var"),
+            "Conmed Variable",
+            choices = args$conmed_var$choices,
+            selected = args$conmed_var$selected,
+            multiple = FALSE
+          ),
+          selectInput(
+            ns("conmed_level"),
+            "Conmed Levels",
+            choices = args$conmed_var$choices,
+            selected = args$conmed_var$selected,
+            multiple = TRUE
+          )
+        ),
+        ui_g_decorate(
+          ns(NULL),
+          fontsize = args$fontsize,
+          titles = "Heatmap by Grade",
+          footnotes = ""
         )
       ),
-      ui_g_decorate(
-        ns(NULL),
-        fontsize = args$fontsize,
-        titles = "Heatmap by Grade",
-        footnotes = ""
-      )
-    ),
-    forms = get_rcode_ui(ns("rcode"))
+      forms = get_rcode_ui(ns("rcode"))
+    )
   )
 }
 

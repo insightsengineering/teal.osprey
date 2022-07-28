@@ -1,0 +1,9 @@
+/* teal.osprey custom css */
+
+.pretty-left-border {
+  border-left: 3px solid #e3e3e3;
+  padding-left: 0.6em;
+  border-radius: 5px;
+  margin-left: -0.6em;
+  margin-bottom: 0.5em;
+}
