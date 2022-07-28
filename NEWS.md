@@ -1,4 +1,4 @@
-# teal.osprey 0.1.14.9008
+# teal.osprey 0.1.14.9011
 
 ### Breaking changes
 * Soft deprecate function `label_aevar()`.
@@ -9,7 +9,7 @@
 
 ### Miscellaneous
 * Added names to the `id` parameter of `teal.code::chunks_push` in all modules.
-
+* Updated modules to not use datasets with names with suffix `_FILTERED` so the package works with the breaking changes in `teal.slice`. 
 
 # teal.osprey 0.1.14
 

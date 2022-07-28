@@ -177,12 +177,7 @@ ui_g_swimlane <- function(id, ...) {
       ),
       encoding = div(
         ### Reporter
-        shiny::tags$div(
-          teal.reporter::add_card_button_ui(ns("addReportCard")),
-          teal.reporter::download_report_button_ui(ns("downloadButton")),
-          teal.reporter::reset_report_button_ui(ns("resetButton"))
-        ),
-        shiny::tags$br(),
+        teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
         tags$label("Encodings", class = "text-primary"),
         helpText("Analysis data:", code(a$dataname)),
@@ -316,11 +311,11 @@ srv_g_swimlane <- function(id,
       ))
       validate(need(input$bar_var, "Please select a variable to map to the bar length."))
 
-      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
       if (dataname != "ADSL") {
-        ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
-        anl_name <- paste0(dataname, "_FILTERED")
-        assign(anl_name, ANL_FILTERED)
+        ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
+        anl_name <- dataname
+        assign(anl_name, ANL)
       }
 
       # Restart the chunks for showing code
@@ -354,15 +349,15 @@ srv_g_swimlane <- function(id,
 
       # validate input values
       if (dataname == "ADSL") {
-        validate_has_data(ADSL_FILTERED, min_nrow = 3)
-        validate_has_variable(ADSL_FILTERED, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
+        validate_has_data(ADSL, min_nrow = 3)
+        validate_has_variable(ADSL, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
       } else {
-        validate_has_data(ADSL_FILTERED, min_nrow = 3)
-        validate_has_variable(ADSL_FILTERED, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
+        validate_has_data(ADSL, min_nrow = 3)
+        validate_has_variable(ADSL, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
 
-        validate_has_data(ANL_FILTERED, min_nrow = 3)
+        validate_has_data(ANL, min_nrow = 3)
         validate_has_variable(
-          ANL_FILTERED,
+          ANL,
           unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
         )
       }
@@ -401,18 +396,18 @@ srv_g_swimlane <- function(id,
         teal.code::chunks_push(
           id = "ADSL call",
           expression = bquote({
-            ADSL_p <- ADSL_FILTERED # nolint
+            ADSL_p <- ADSL # nolint
             ADSL <- ADSL_p[, .(adsl_vars)] # nolint
             # only take last part of USUBJID
             ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
           })
         )
       } else {
-        anl_name <- paste0(dataname, "_FILTERED")
+        anl_name <- dataname
         teal.code::chunks_push(
           id = "ADSL and ANL call",
           expression = bquote({
-            ADSL_p <- ADSL_FILTERED # nolint
+            ADSL_p <- ADSL # nolint
             ANL_p <- .(as.name(anl_name)) # nolint
 
             ADSL <- ADSL_p[, .(adsl_vars)] # nolint
@@ -543,9 +538,9 @@ srv_g_swimlane <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Swimlane")
         card$append_text("Swimlane Plot", "header2")
-        card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
         if (!is.null(input$sort_var)) {
+          card$append_text("Selected Options", "header3")
           card$append_text(paste("Sorted by:", input$sort_var))
         }
         card$append_text("Plot", "header3")
@@ -554,12 +549,15 @@ srv_g_swimlane <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
+        card$append_src(paste(get_rcode(
+          chunks = teal.code::get_chunks_object(parent_idx = 2L),
+          datasets = datasets,
+          title = "",
+          description = ""
+        ), collapse = "\n"))
         card
       }
-
-      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
-      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
-      teal.reporter::reset_report_button_srv("resetButton", reporter)
+      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
     }
   })
 }

@@ -126,12 +126,7 @@ ui_g_spider <- function(id, ...) {
       ),
       encoding = div(
         ### Reporter
-        shiny::tags$div(
-          teal.reporter::add_card_button_ui(ns("addReportCard")),
-          teal.reporter::download_report_button_ui(ns("downloadButton")),
-          teal.reporter::reset_report_button_ui(ns("resetButton"))
-        ),
-        shiny::tags$br(),
+        teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
         tags$label("Encodings", class = "text-primary"),
         helpText("Analysis data:", tags$code(a$dataname)),
@@ -237,11 +232,11 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
 
       # get datasets ---
 
-      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-      ADTR_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ADTR <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
-      adtr_name <- paste0(dataname, "_FILTERED")
-      assign(adtr_name, ADTR_FILTERED) # so that we can refer to the 'correct' data name
+      adtr_name <- dataname
+      assign(adtr_name, ADTR) # so that we can refer to the 'correct' data name
 
 
       # restart chunks & include current environment ---
@@ -268,15 +263,15 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
       validate(need(y_var, "`Y-axis Variable` field is empty"))
       validate(need(marker_var, "`Marker Symbol By Variable` field is empty"))
       validate(need(line_colorby_var, "`Color By Variable (Line)` field is empty"))
-      validate(need(nrow(ADSL_FILTERED) > 0, "ADSL data has zero rows"))
-      validate(need(nrow(ADTR_FILTERED) > 0, "ADTR data has zero rows"))
+      validate(need(nrow(ADSL) > 0, "ADSL data has zero rows"))
+      validate(need(nrow(ADTR) > 0, paste(dataname, "data has zero rows")))
 
       # define variables ---
 
       # if variable is not in ADSL, then take from domain VADs
       varlist <- c(xfacet_var, yfacet_var, marker_var, line_colorby_var)
-      varlist_from_adsl <- varlist[varlist %in% names(ADSL_FILTERED)]
-      varlist_from_anl <- varlist[!varlist %in% names(ADSL_FILTERED)]
+      varlist_from_adsl <- varlist[varlist %in% names(ADSL)]
+      varlist_from_anl <- varlist[!varlist %in% names(ADSL)]
 
       adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
       adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
@@ -291,7 +286,7 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
       teal.code::chunks_push(
         id = "ANL call",
         expression = bquote({
-          ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
+          ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
           ADTR <- .(as.name(adtr_name))[, .(adtr_vars)] %>% as.data.frame() # nolint
 
           ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID")) # nolint
@@ -382,15 +377,15 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
             }),
             vref_line = .(vref_line),
             href_line = .(href_line),
-            x_label = if (is.null(formatters::var_labels(ADTR_FILTERED[.(x_var)], fill = FALSE))) {
+            x_label = if (is.null(formatters::var_labels(ADTR[.(x_var)], fill = FALSE))) {
               .(x_var)
             } else {
-              formatters::var_labels(ADTR_FILTERED[.(x_var)], fill = FALSE)
+              formatters::var_labels(ADTR[.(x_var)], fill = FALSE)
             },
-            y_label = if (is.null(formatters::var_labels(ADTR_FILTERED[.(y_var)], fill = FALSE))) {
+            y_label = if (is.null(formatters::var_labels(ADTR[.(y_var)], fill = FALSE))) {
               .(y_var)
             } else {
-              formatters::var_labels(ADTR_FILTERED[.(y_var)], fill = FALSE)
+              formatters::var_labels(ADTR[.(y_var)], fill = FALSE)
             },
             show_legend = .(legend_on)
           )
@@ -425,8 +420,10 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Spider Plot")
         card$append_text("Spider Plot", "header2")
-        card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
+        if (!is.null(input$paramcd) || !is.null(input$xfacet_var) || !is.null(input$yfacet_var)) {
+          card$append_text("Selected Options", "header3")
+        }
         if (!is.null(input$paramcd)) {
           card$append_text(paste0("Parameter - (from ", dataname, "): ", input$paramcd, "."))
         }
@@ -442,12 +439,15 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
+        card$append_src(paste(get_rcode(
+          chunks = teal.code::get_chunks_object(parent_idx = 2L),
+          datasets = datasets,
+          title = "",
+          description = ""
+        ), collapse = "\n"))
         card
       }
-
-      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
-      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
-      teal.reporter::reset_report_button_srv("resetButton", reporter)
+      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
     }
   })
 }

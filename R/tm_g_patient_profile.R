@@ -287,12 +287,7 @@ ui_g_patient_profile <- function(id, ...) {
     ),
     encoding = div(
       ### Reporter
-      shiny::tags$div(
-        teal.reporter::add_card_button_ui(ns("addReportCard")),
-        teal.reporter::download_report_button_ui(ns("downloadButton")),
-        teal.reporter::reset_report_button_ui(ns("resetButton"))
-      ),
-      shiny::tags$br(),
+      teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###
       tags$label("Encodings", class = "text-primary"),
       selectizeInput(
@@ -486,8 +481,8 @@ srv_g_patient_profile <- function(id,
 
     observeEvent(input$select_lb, {
       req(input$select_lb == TRUE && !is.null(input$lb_var))
-      ADLB_FILTERED <- datasets$get_data(lb_dataname, filtered = TRUE) # nolint
-      choices <- unique(ADLB_FILTERED[[input$lb_var]])
+      ADLB <- datasets$get_data(lb_dataname, filtered = TRUE) # nolint
+      choices <- unique(ADLB[[input$lb_var]])
       choices_selected <- if (length(choices) > 5) choices[1:5] else choices
 
       updateSelectInput(
@@ -551,72 +546,72 @@ srv_g_patient_profile <- function(id,
       ))
 
       # get ADSL dataset ---
-      ADSL_FILTERED <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
+      ADSL <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
 
       if (!is.null(input$select_ex)) {
         if (input$select_ex == FALSE | is.na(ex_dataname)) {
-          ADEX_FILTERED <- NULL # nolint
+          ADEX <- NULL # nolint
         } else {
-          ADEX_FILTERED <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
-          validate_has_variable(ADEX_FILTERED, adex_vars)
+          ADEX <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
+          validate_has_variable(ADEX, adex_vars)
         }
       } else {
-        ADEX_FILTERED <- NULL # nolint
+        ADEX <- NULL # nolint
       }
 
       if (!is.null(input$select_ae)) {
         if (input$select_ae == FALSE | is.na(ae_dataname)) {
-          ADAE_FILTERED <- NULL # nolint
+          ADAE <- NULL # nolint
         } else {
-          ADAE_FILTERED <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
-          formatters::var_labels(ADAE_FILTERED) <- formatters::var_labels(
+          ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
+          formatters::var_labels(ADAE) <- formatters::var_labels(
             datasets$get_data(ae_dataname, filtered = FALSE),
             fill = FALSE
           )
-          validate_has_variable(ADAE_FILTERED, adae_vars)
+          validate_has_variable(ADAE, adae_vars)
         }
       } else {
-        ADAE_FILTERED <- NULL # nolint
+        ADAE <- NULL # nolint
       }
 
 
       if (!is.null(input$select_rs)) {
         if (input$select_rs == FALSE | is.na(rs_dataname)) {
-          ADRS_FILTERED <- NULL # nolint
+          ADRS <- NULL # nolint
         } else {
-          ADRS_FILTERED <- datasets$get_data(rs_dataname, filtered = TRUE) # nolint
-          validate_has_variable(ADRS_FILTERED, adrs_vars)
+          ADRS <- datasets$get_data(rs_dataname, filtered = TRUE) # nolint
+          validate_has_variable(ADRS, adrs_vars)
         }
       } else {
-        ADRS_FILTERED <- NULL # nolint
+        ADRS <- NULL # nolint
       }
 
       if (!is.null(input$select_cm)) {
         if (input$select_cm == FALSE | is.na(cm_dataname)) {
-          ADCM_FILTERED <- NULL # nolint
+          ADCMD <- NULL # nolint
         } else {
-          ADCM_FILTERED <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
-          validate_has_variable(ADCM_FILTERED, adcm_vars)
+          ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
+          validate_has_variable(ADCM, adcm_vars)
         }
       } else {
-        ADCM_FILTERED <- NULL # nolint
+        ADCM <- NULL # nolint
       }
 
       if (!is.null(input$select_lb)) {
         if (input$select_lb == FALSE | is.na(lb_dataname)) {
-          ADLB_FILTERED <- NULL # nolint
+          ADLB <- NULL # nolint
         } else {
-          ADLB_FILTERED <- datasets$get_data(lb_dataname, filtered = TRUE) # nolint
-          validate_has_variable(ADLB_FILTERED, adlb_vars)
+          ADLB <- datasets$get_data(lb_dataname, filtered = TRUE) # nolint
+          validate_has_variable(ADLB, adlb_vars)
         }
       } else {
-        ADLB_FILTERED <- NULL # nolint
+        ADLB <- NULL # nolint
       }
 
       # check color assignment
       if (!is.null(ae_line_col_opt)) {
         validate(need(
-          is.null(ae_line_col_var) || length(levels(ADAE_FILTERED[[ae_line_col_var]])) <= length(ae_line_col_opt),
+          is.null(ae_line_col_var) || length(levels(ADAE[[ae_line_col_var]])) <= length(ae_line_col_opt),
           paste(
             "Please check ae_line_col_opt contains all possible values for ae_line_col_var values.",
             "Or specify ae_line_col_opt as NULL.",
@@ -657,7 +652,7 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push(
         id = "ADSL call",
         expression = bquote({
-          ADSL <- ADSL_FILTERED %>% # nolint
+          ADSL <- ADSL %>% # nolint
             group_by(.data$USUBJID)
           ADSL$max_date <- pmax(
             as.Date(ADSL$LSTALVDT),
@@ -695,11 +690,11 @@ srv_g_patient_profile <- function(id,
       )
 
       # name for ae_line_col
-      if (!is.null(ae_line_col_var) && is.data.frame(ADAE_FILTERED)) {
+      if (!is.null(ae_line_col_var) && is.data.frame(ADAE)) {
         teal.code::chunks_push(
           id = "ae_line_col_name call",
           expression =
-            bquote(ae_line_col_name <- formatters::var_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)])
+            bquote(ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)])
         )
       } else {
         teal.code::chunks_push(id = "ae_line_col_name call", expression = quote(ae_line_col_name <- NULL))
@@ -709,12 +704,12 @@ srv_g_patient_profile <- function(id,
         validate(
           need(!is.null(input$ae_var), "Please select an adverse event variable.")
         )
-        if (ADSL$USUBJID %in% ADAE_FILTERED$USUBJID) {
+        if (ADSL$USUBJID %in% ADAE$USUBJID) {
           teal.code::chunks_push(
             id = "ADAE call",
             expression = bquote({
               # ADAE
-              ADAE <- ADAE_FILTERED[, .(adae_vars)] # nolint
+              ADAE <- ADAE[, .(adae_vars)] # nolint
 
               ADAE <- ADSL %>% # nolint
                 left_join(ADAE, by = c("STUDYID", "USUBJID")) %>% # nolint
@@ -751,7 +746,7 @@ srv_g_patient_profile <- function(id,
                   )))) %>%
                 select(c(.(adae_vars), ASTDY, AENDY))
               formatters::var_labels(ADAE)[.(ae_line_col_var)] <-
-                formatters::var_labels(ADAE_FILTERED, fill = FALSE)[.(ae_line_col_var)]
+                formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)]
             })
           )
           teal.code::chunks_safe_eval()
@@ -802,11 +797,11 @@ srv_g_patient_profile <- function(id,
         validate(
           need(!is.null(rs_var), "Please select a tumor response variable.")
         )
-        if (ADSL$USUBJID %in% ADRS_FILTERED$USUBJID) {
+        if (ADSL$USUBJID %in% ADRS$USUBJID) {
           teal.code::chunks_push(
             id = "ADRS and rs call",
             expression = bquote({
-              ADRS <- ADRS_FILTERED[, .(adrs_vars)] # nolint
+              ADRS <- ADRS[, .(adrs_vars)] # nolint
               ADRS <- ADSL %>% # nolint
                 left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
                 as.data.frame() %>%
@@ -832,7 +827,7 @@ srv_g_patient_profile <- function(id,
           )
           teal.code::chunks_safe_eval()
           ADRS <- teal.code::chunks_get_var("ADRS") # nolint
-          if (is.null(ADRS) | nrow(ADRS) == 0) {
+          if (is.null(ADRS) || nrow(ADRS) == 0) {
             empty_rs <- TRUE
           }
         } else {
@@ -849,12 +844,12 @@ srv_g_patient_profile <- function(id,
         validate(
           need(!is.null(cm_var), "Please select a concomitant medication variable.")
         )
-        if (ADSL$USUBJID %in% ADCM_FILTERED$USUBJID) {
+        if (ADSL$USUBJID %in% ADCM$USUBJID) {
           teal.code::chunks_push(
             id = "ADCM and cm call",
             expression = bquote({
               # ADCM
-              ADCM <- ADCM_FILTERED[, .(adcm_vars)] # nolint
+              ADCM <- ADCM[, .(adcm_vars)] # nolint
               ADCM <- ADSL %>% # nolint
                 left_join(ADCM, by = c("STUDYID", "USUBJID")) %>% # nolint
                 as.data.frame() %>%
@@ -903,12 +898,12 @@ srv_g_patient_profile <- function(id,
         validate(
           need(!is.null(ex_var), "Please select an exposure variable.")
         )
-        if (ADSL$USUBJID %in% ADEX_FILTERED$USUBJID) {
+        if (ADSL$USUBJID %in% ADEX$USUBJID) {
           teal.code::chunks_push(
             id = "ADEX and ex call",
             expression = bquote({
               # ADEX
-              ADEX <- ADEX_FILTERED[, .(adex_vars)] # nolint
+              ADEX <- ADEX[, .(adex_vars)] # nolint
               ADEX <- ADSL %>% # nolint
                 left_join(ADEX, by = c("STUDYID", "USUBJID")) %>% # nolint
                 as.data.frame() %>%
@@ -963,12 +958,12 @@ srv_g_patient_profile <- function(id,
         validate(
           need(!is.null(lb_var), "Please select a lab variable.")
         )
-        if (ADSL$USUBJID %in% ADLB_FILTERED$USUBJID) {
+        if (ADSL$USUBJID %in% ADLB$USUBJID) {
           req(lb_var_show != lb_var)
           teal.code::chunks_push(
             id = "ADLB and lb call",
             expression = bquote({
-              ADLB <- ADLB_FILTERED[, .(adlb_vars)] # nolint
+              ADLB <- ADLB[, .(adlb_vars)] # nolint
               ADLB <- ADSL %>% # nolint
                 left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
                 as.data.frame() %>%
@@ -1102,7 +1097,6 @@ srv_g_patient_profile <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Patient Profile")
         card$append_text("Patient Profile", "header2")
-        card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
         card$append_text("Plot", "header3")
         card$append_plot(plot_r(), dim = pws$dim())
@@ -1110,12 +1104,15 @@ srv_g_patient_profile <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
+        card$append_src(paste(get_rcode(
+          chunks = teal.code::get_chunks_object(parent_idx = 2L),
+          datasets = datasets,
+          title = "",
+          description = ""
+        ), collapse = "\n"))
         card
       }
-
-      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
-      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
-      teal.reporter::reset_report_button_srv("resetButton", reporter)
+      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
     }
   })
 }

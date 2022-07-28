@@ -164,12 +164,7 @@ ui_g_butterfly <- function(id, ...) {
     ),
     encoding = div(
       ### Reporter
-      shiny::tags$div(
-        teal.reporter::add_card_button_ui(ns("addReportCard")),
-        teal.reporter::download_report_button_ui(ns("downloadButton")),
-        teal.reporter::reset_report_button_ui(ns("resetButton"))
-      ),
-      shiny::tags$br(),
+      teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
@@ -273,13 +268,13 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
     vars <- reactiveValues(r = NULL, l = NULL)
 
     reactive_data <- reactive({
-      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = FALSE) # nolint
-      ADAE_FILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
+      ADSL <- datasets$get_data("ADSL", filtered = FALSE) # nolint
+      ANL <- datasets$get_data(dataname, filtered = FALSE) # nolint
 
-      ADSL_df <- ADSL_FILTERED %>% as.data.frame() # nolint
-      ADAE_df <- ADAE_FILTERED %>% as.data.frame() # nolint
+      ADSL_df <- ADSL %>% as.data.frame() # nolint
+      ANL_df <- ANL %>% as.data.frame() # nolint
 
-      list(ADSL_df = ADSL_df, ADAE_df = ADAE_df)
+      list(ADSL_df = ADSL_df, ANL_df = ANL_df)
     })
 
     # dynamic options for dichotomization variable
@@ -300,7 +295,7 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
           options$r <- if (right_var %in% names(data$ADSL_df)) {
             sort(unique(data$ADSL_df[, right_var]))
           } else {
-            sort(unique(data$ADAE_df[, right_var]))
+            sort(unique(data$ANL_df[, right_var]))
           }
 
           selected <- if (length(right_val) > 0) {
@@ -338,7 +333,7 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
           options$l <- if (left_var %in% names(data$ADSL_df)) {
             sort(unique(data$ADSL_df[, left_var]))
           } else {
-            sort(unique(data$ADAE_df[, left_var]))
+            sort(unique(data$ANL_df[, left_var]))
           }
 
           selected <- if (length(left_val) > 0) {
@@ -367,8 +362,8 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
     plot_r <- reactive({
       validate(need(input$category_var, "Please select a category variable."))
 
-      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-      ADAE_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
       right_var <- isolate(input$right_var)
       left_var <- isolate(input$left_var)
@@ -383,8 +378,8 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
       filter_var <- input$filter_var
 
       validate(
-        need(nrow(ADSL_FILTERED) > 0, "ADSL Data has no rows"),
-        need(nrow(ADAE_FILTERED) > 0, "ADAE Data has no rows")
+        need(nrow(ADSL) > 0, "ADSL Data has no rows"),
+        need(nrow(ANL) > 0, "ADAE Data has no rows")
       )
       validate(
         need(right_var, "'Right Dichotomization Variable' not selected"),
@@ -395,37 +390,37 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
         need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked")
       )
       validate(need(
-        any(c(ADSL_FILTERED[[right_var]] %in% right_val, ADSL_FILTERED[[left_var]] %in% left_val)),
+        any(c(ADSL[[right_var]] %in% right_val, ADSL[[left_var]] %in% left_val)),
         "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)"
       ))
 
       # if variable is not in ADSL, then take from domain VADs
       varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)
-      varlist_from_adsl <- intersect(varlist, names(ADSL_FILTERED))
-      varlist_from_anl <- intersect(varlist, setdiff(names(ADAE_FILTERED), names(ADSL_FILTERED)))
+      varlist_from_adsl <- intersect(varlist, names(ADSL))
+      varlist_from_anl <- intersect(varlist, setdiff(names(ANL), names(ADSL)))
 
       adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
-      adae_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
+      anl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
 
-      adae_name <- paste0(dataname, "_FILTERED")
-      assign(adae_name, ADAE_FILTERED) # so that we can refer to the 'correct' data name
+      anl_name <- dataname
+      assign(anl_name, ANL) # so that we can refer to the 'correct' data name
 
       teal.code::chunks_reset(envir = environment())
 
       teal.code::chunks_push(
         id = "datasets call",
         expression = bquote({
-          ADSL <- ADSL_FILTERED[, .(adsl_vars)] %>% as.data.frame() # nolint
-          ADAE <- .(as.name(adae_name))[, .(adae_vars)] %>% as.data.frame() # nolint
+          ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
+          ANL <- .(as.name(anl_name))[, .(anl_vars)] %>% as.data.frame() # nolint
         })
       )
 
       teal.code::chunks_push_new_line()
       if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
         teal.code::chunks_push(
-          id = "ADAE filter call",
+          id = "data filter call",
           expression = bquote(
-            ADAE <- quick_filter(.(filter_var), ADAE) %>% # nolint
+            ANL <- quick_filter(.(filter_var), ANL) %>% # nolint
               droplevels() %>%
               as.data.frame()
           )
@@ -436,7 +431,7 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
       teal.code::chunks_push(
         id = "ANL_f call",
         expression = bquote({
-          ANL_f <- left_join(ADSL, ADAE, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
+          ANL_f <- left_join(ADSL, ANL, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
           ANL_f <- na.omit(ANL_f) # nolint
         })
       )
@@ -519,8 +514,10 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Butterfly")
         card$append_text("Butterfly Plot", "header2")
-        card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
+        if (!is.null(input$filter_var) || !is.null(input$facet_var) || !is.null(input$sort_by_var)) {
+          card$append_text("Selected Options", "header3")
+        }
         if (!is.null(input$filter_var)) {
           card$append_text(paste0("Preset Data Filters: ", paste(input$filter_var, collapse = ", "), "."))
         }
@@ -536,12 +533,15 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
+        card$append_src(paste(get_rcode(
+          chunks = teal.code::get_chunks_object(parent_idx = 2L),
+          datasets = datasets,
+          title = "",
+          description = ""
+        ), collapse = "\n"))
         card
       }
-
-      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
-      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
-      teal.reporter::reset_report_button_srv("resetButton", reporter)
+      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
     }
   })
 }

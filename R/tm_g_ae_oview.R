@@ -149,12 +149,7 @@ ui_g_ae_oview <- function(id, ...) {
     ),
     encoding = div(
       ### Reporter
-      shiny::tags$div(
-        teal.reporter::add_card_button_ui(ns("addReportCard")),
-        teal.reporter::download_report_button_ui(ns("downloadButton")),
-        teal.reporter::reset_report_button_ui(ns("resetButton"))
-      ),
-      shiny::tags$br(),
+      teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###
       teal.widgets::optionalSelectInput(
         ns("arm_var"),
@@ -248,7 +243,6 @@ srv_g_ae_oview <- function(id,
 
     observeEvent(input$arm_var, {
       ANL <- datasets$get_data(dataname, filtered = FALSE) # nolint
-      ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
       req(!is.null(input$arm_var))
       arm_var <- input$arm_var
@@ -288,37 +282,37 @@ srv_g_ae_oview <- function(id,
         )
       ))
 
-      ANL <- datasets$get_data(dataname, filtered = FALSE) # nolint
-      ADSL_FILTERED <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-      ANL_FILTERED <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      ANL_UNFILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
+      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
+      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
-      anl_name <- paste0(dataname, "_FILTERED")
-      assign(anl_name, ANL_FILTERED)
+      anl_name <- dataname
+      assign(anl_name, ANL)
 
       teal.code::chunks_reset(envir = environment())
 
-      validate(need(nlevels(ANL_FILTERED[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
-      validate_has_data(ANL_FILTERED, min_nrow = 10)
-      if (all(c(input$arm_trt, input$arm_ref) %in% ANL[[input$arm_var]])) {
+      validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
+      validate_has_data(ANL, min_nrow = 10)
+      if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
         validate(
           need(
-            input$arm_ref %in% ANL_FILTERED[[input$arm_var]],
+            input$arm_ref %in% ANL[[input$arm_var]],
             paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
           ),
           need(
-            input$arm_trt %in% ANL_FILTERED[[input$arm_var]],
+            input$arm_trt %in% ANL[[input$arm_var]],
             paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
           )
         )
       }
-      validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL_FILTERED[[input$arm_var]])), "Plot loading"))
+      validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
       teal.code::chunks_push(
         id = "variables call",
         expression = bquote({
           id <- .(as.name(anl_name))[["USUBJID"]]
           arm <- .(as.name(anl_name))[[.(input$arm_var)]]
-          arm_N <- table(ADSL_FILTERED[[.(input$arm_var)]]) # nolint
+          arm_N <- table(ADSL[[.(input$arm_var)]]) # nolint
           trt <- .(input$arm_trt)
           ref <- .(input$arm_ref)
           anl_labels <- formatters::var_labels(.(as.name(anl_name)), fill = FALSE)
@@ -372,7 +366,6 @@ srv_g_ae_oview <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("AE Overview")
         card$append_text("AE Overview", "header2")
-        card$append_text("Filter State", "header3")
         card$append_fs(datasets$get_filter_state())
         card$append_text("Plot", "header3")
         card$append_plot(plt(), dim = pws$dim())
@@ -380,12 +373,15 @@ srv_g_ae_oview <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
+        card$append_src(paste(get_rcode(
+          chunks = teal.code::get_chunks_object(parent_idx = 2L),
+          datasets = datasets,
+          title = "",
+          description = ""
+        ), collapse = "\n"))
         card
       }
-
-      teal.reporter::add_card_button_srv("addReportCard", reporter = reporter, card_fun = card_fun)
-      teal.reporter::download_report_button_srv("downloadButton", reporter = reporter)
-      teal.reporter::reset_report_button_srv("resetButton", reporter)
+      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
     }
   })
 }
