@@ -100,7 +100,8 @@ add_visit <- function(data_need_visit) {
     select(USUBJID, ASTDTM) \%>\%
     left_join(visit_dates, by = "USUBJID") \%>\%
     filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
-    left_join(data_need_visit) \%>\% distinct()
+    left_join(data_need_visit) \%>\%
+    distinct()
   return(data_visit)
 }
 # derive AVISIT for ADAE and ADCM
