@@ -14,7 +14,7 @@ available in the list passed to the \code{data} argument of \code{\link[teal:ini
 \item{arm_var}{(\code{choices_selected})\cr
 object with all available choices and the pre-selected option for variable
 names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
-details.}
+details. Column \code{arm_var} in the \code{dataname} have to be a factor.}
 
 \item{paramcd}{(\code{character(1)} or \code{choices_selected})\cr
 variable value designating the studied parameter.

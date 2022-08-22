@@ -392,7 +392,7 @@ ui_g_patient_profile <- function(id, ...) {
           value = a$x_limit
         )
       ),
-      forms = get_rcode_ui(ns("rcode")),
+      forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code"),
       pre_output = a$pre_output,
       post_output = a$post_output
     )
@@ -400,7 +400,8 @@ ui_g_patient_profile <- function(id, ...) {
 }
 
 srv_g_patient_profile <- function(id,
-                                  datasets,
+                                  data,
+                                  filter_panel_api,
                                   reporter,
                                   sl_dataname,
                                   ex_dataname,
@@ -415,9 +416,6 @@ srv_g_patient_profile <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
-    # initialize chunks
-    teal.code::init_chunks()
-
     # only show the check box when domain data is available
     observeEvent(ae_dataname, {
       if (!is.na(ae_dataname)) {
@@ -481,7 +479,7 @@ srv_g_patient_profile <- function(id,
 
     observeEvent(input$select_lb, {
       req(input$select_lb == TRUE && !is.null(input$lb_var))
-      ADLB <- datasets$get_data(lb_dataname, filtered = TRUE) # nolint
+      ADLB <- data[[lb_dataname]]() # nolint
       choices <- unique(ADLB[[input$lb_var]])
       choices_selected <- if (length(choices) > 5) choices[1:5] else choices
 
@@ -494,7 +492,7 @@ srv_g_patient_profile <- function(id,
     })
 
     # render plot
-    plot_r <- reactive({
+    output_q <- reactive({
       # get inputs ---
       patient_id <- input$patient_id # nolint
       sl_start_date <- input$sl_start_date # nolint
@@ -546,13 +544,13 @@ srv_g_patient_profile <- function(id,
       ))
 
       # get ADSL dataset ---
-      ADSL <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
+      ADSL <- data[[sl_dataname]]() # nolint
 
       if (!is.null(input$select_ex)) {
         if (input$select_ex == FALSE | is.na(ex_dataname)) {
           ADEX <- NULL # nolint
         } else {
-          ADEX <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
+          ADEX <- data[[ex_dataname]]() # nolint
           validate_has_variable(ADEX, adex_vars)
         }
       } else {
@@ -563,11 +561,7 @@ srv_g_patient_profile <- function(id,
         if (input$select_ae == FALSE | is.na(ae_dataname)) {
           ADAE <- NULL # nolint
         } else {
-          ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
-          formatters::var_labels(ADAE) <- formatters::var_labels(
-            datasets$get_data(ae_dataname, filtered = FALSE),
-            fill = FALSE
-          )
+          ADAE <- data[[ae_dataname]]() # nolint
           validate_has_variable(ADAE, adae_vars)
         }
       } else {
@@ -579,7 +573,7 @@ srv_g_patient_profile <- function(id,
         if (input$select_rs == FALSE | is.na(rs_dataname)) {
           ADRS <- NULL # nolint
         } else {
-          ADRS <- datasets$get_data(rs_dataname, filtered = TRUE) # nolint
+          ADRS <- data[[rs_dataname]]() # nolint
           validate_has_variable(ADRS, adrs_vars)
         }
       } else {
@@ -590,7 +584,7 @@ srv_g_patient_profile <- function(id,
         if (input$select_cm == FALSE | is.na(cm_dataname)) {
           ADCMD <- NULL # nolint
         } else {
-          ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
+          ADCM <- data[[cm_dataname]]() # nolint
           validate_has_variable(ADCM, adcm_vars)
         }
       } else {
@@ -601,7 +595,7 @@ srv_g_patient_profile <- function(id,
         if (input$select_lb == FALSE | is.na(lb_dataname)) {
           ADLB <- NULL # nolint
         } else {
-          ADLB <- datasets$get_data(lb_dataname, filtered = TRUE) # nolint
+          ADLB <- data[[lb_dataname]]() # nolint
           validate_has_variable(ADLB, adlb_vars)
         }
       } else {
@@ -646,21 +640,14 @@ srv_g_patient_profile <- function(id,
       empty_ex <- FALSE
       empty_lb <- FALSE
 
-      # restart chunks & include current environment ---
-      teal.code::chunks_reset(envir = environment())
-
-      teal.code::chunks_push(
-        id = "ADSL call",
-        expression = bquote({
+      q1 <- teal.code::eval_code(
+        teal.code::new_quosure(data),
+        name = "ADSL call",
+        code = bquote({
           ADSL <- ADSL %>% # nolint
-            group_by(.data$USUBJID)
-          ADSL$max_date <- pmax(
-            as.Date(ADSL$LSTALVDT),
-            as.Date(ADSL$DTHDT),
-            na.rm = TRUE
-          )
-          ADSL <- ADSL %>% # nolint
+            group_by(.data$USUBJID) %>%
             mutate(
+              max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
               max_day = as.numeric(
                 as.Date(.data$max_date) - as.Date(
                   eval(parse(text = .(sl_start_date), keep.source = FALSE))
@@ -672,15 +659,12 @@ srv_g_patient_profile <- function(id,
         })
       )
 
-      teal.code::chunks_push_new_line()
-      teal.code::chunks_safe_eval()
+      q2 <- teal.code::eval_code(q1, "")
 
       # ADSL with single subject
-      ADSL <- teal.code::chunks_get_var("ADSL") # nolint
-
       validate(
         need(
-          nrow(ADSL) >= 1,
+          nrow(q1[["ADSL"]]) >= 1,
           paste(
             "Subject",
             patient_id,
@@ -690,24 +674,26 @@ srv_g_patient_profile <- function(id,
       )
 
       # name for ae_line_col
-      if (!is.null(ae_line_col_var) && is.data.frame(ADAE)) {
-        teal.code::chunks_push(
-          id = "ae_line_col_name call",
-          expression =
+      q3 <- if (!is.null(ae_line_col_var) && is.data.frame(ADAE)) {
+        teal.code::eval_code(
+          q2,
+          name = "ae_line_col_name call",
+          code =
             bquote(ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)])
         )
       } else {
-        teal.code::chunks_push(id = "ae_line_col_name call", expression = quote(ae_line_col_name <- NULL))
+        teal.code::eval_code(q2, name = "ae_line_col_name call", code = quote(ae_line_col_name <- NULL))
       }
 
-      if (select_plot["ae"]) {
+      q4 <- if (select_plot["ae"]) {
         validate(
           need(!is.null(input$ae_var), "Please select an adverse event variable.")
         )
-        if (ADSL$USUBJID %in% ADAE$USUBJID) {
-          teal.code::chunks_push(
-            id = "ADAE call",
-            expression = bquote({
+        if (all(ADAE$USUBJID %in% ADSL$USUBJID)) {
+          qq <- teal.code::eval_code(
+            q3,
+            name = "ADAE call",
+            code = bquote({
               # ADAE
               ADAE <- ADAE[, .(adae_vars)] # nolint
 
@@ -748,12 +734,10 @@ srv_g_patient_profile <- function(id,
               formatters::var_labels(ADAE)[.(ae_line_col_var)] <-
                 formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)]
             })
-          )
-          teal.code::chunks_safe_eval()
-
-          teal.code::chunks_push(
-            id = "ae call",
-            expression = call(
+          ) %>%
+          teal.code::eval_code(
+            name = "ae call",
+            code = call(
               "<-",
               as.name("ae"),
               call(
@@ -778,29 +762,30 @@ srv_g_patient_profile <- function(id,
               )
             )
           )
-          ADAE <- teal.code::chunks_get_var("ADAE") # nolint
+          ADAE <- qq[["ADAE"]] # nolint
           if (is.null(ADAE) | nrow(ADAE) == 0) {
             empty_ae <- TRUE
           }
+          qq
         } else {
           empty_ae <- TRUE
-          teal.code::chunks_push(id = "ae call", expression = bquote(ae <- NULL))
+          teal.code::eval_code(q3, name = "ae call", code = bquote(ae <- NULL))
         }
       } else {
-        teal.code::chunks_push(id = "ae call", expression = bquote(ae <- NULL))
+        teal.code::eval_code(q3, name = "ae call", code = bquote(ae <- NULL))
       }
 
-      teal.code::chunks_push_new_line()
-      teal.code::chunks_safe_eval()
+      q5 <- teal.code::eval_code(q4, "")
 
-      if (select_plot["rs"]) {
+      q6 <- if (select_plot["rs"]) {
         validate(
           need(!is.null(rs_var), "Please select a tumor response variable.")
         )
-        if (ADSL$USUBJID %in% ADRS$USUBJID) {
-          teal.code::chunks_push(
-            id = "ADRS and rs call",
-            expression = bquote({
+        if (all(ADRS$USUBJID %in% ADSL$USUBJID)) {
+          qq <- teal.code::eval_code(
+            q5,
+            name = "ADRS and rs call",
+            code = bquote({
               ADRS <- ADRS[, .(adrs_vars)] # nolint
               ADRS <- ADSL %>% # nolint
                 left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
@@ -825,29 +810,30 @@ srv_g_patient_profile <- function(id,
               rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, .(rs_var)]))
             })
           )
-          teal.code::chunks_safe_eval()
-          ADRS <- teal.code::chunks_get_var("ADRS") # nolint
+          ADRS <- qq[["ADRS"]] # nolint
           if (is.null(ADRS) || nrow(ADRS) == 0) {
             empty_rs <- TRUE
           }
+          qq
         } else {
           empty_rs <- TRUE
-          teal.code::chunks_push(id = "rs call", expression = bquote(rs <- NULL))
+          teal.code::eval_code(q5, id = "rs call", expression = bquote(rs <- NULL))
         }
       } else {
-        teal.code::chunks_push(id = "rs call", expression = bquote(rs <- NULL))
+        teal.code::eval_code(q5, name = "rs call", code = bquote(rs <- NULL))
       }
 
-      teal.code::chunks_push_new_line()
+      q7 <- teal.code::eval_code(q6, "")
 
-      if (select_plot["cm"]) {
+      q8 <- if (select_plot["cm"]) {
         validate(
           need(!is.null(cm_var), "Please select a concomitant medication variable.")
         )
-        if (ADSL$USUBJID %in% ADCM$USUBJID) {
-          teal.code::chunks_push(
-            id = "ADCM and cm call",
-            expression = bquote({
+        if (all(ADCM$USUBJID %in% ADSL$USUBJID)) {
+          qq <- teal.code::eval_code(
+            q7,
+            name = "ADCM and cm call",
+            code = bquote({
               # ADCM
               ADCM <- ADCM[, .(adcm_vars)] # nolint
               ADCM <- ADSL %>% # nolint
@@ -879,29 +865,31 @@ srv_g_patient_profile <- function(id,
               cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, .(cm_var)]))
             })
           )
-          teal.code::chunks_safe_eval()
-          ADCM <- teal.code::chunks_get_var("ADCM") # nolint
+
+          ADCM <- qq[["ADCM"]] # nolint
           if (is.null(ADCM) | nrow(ADCM) == 0) {
             empty_cm <- TRUE
           }
+          qq
         } else {
           empty_cm <- TRUE
-          teal.code::chunks_push(id = "cm call", expression = bquote(cm <- NULL))
+          teal.code::eval_code(q7, name = "cm call", code = quote(cm <- NULL))
         }
       } else {
-        teal.code::chunks_push(id = "cm call", expression = bquote(cm <- NULL))
+        teal.code::eval_code(q7, name = "cm call", code = bquote(cm <- NULL))
       }
 
-      teal.code::chunks_push_new_line()
+      q9 <- teal.code::eval_code(q8, "")
 
-      if (select_plot["ex"]) {
+      q10 <- if (select_plot["ex"]) {
         validate(
           need(!is.null(ex_var), "Please select an exposure variable.")
         )
-        if (ADSL$USUBJID %in% ADEX$USUBJID) {
-          teal.code::chunks_push(
-            id = "ADEX and ex call",
-            expression = bquote({
+        if (all(ADEX$USUBJID %in% ADSL$USUBJID)) {
+          qq <- teal.code::eval_code(
+            q9,
+            name = "ADEX and ex call",
+            code = bquote({
               # ADEX
               ADEX <- ADEX[, .(adex_vars)] # nolint
               ADEX <- ADSL %>% # nolint
@@ -939,30 +927,31 @@ srv_g_patient_profile <- function(id,
               ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, .(ex_var)]))
             })
           )
-          teal.code::chunks_safe_eval()
-          ADEX <- teal.code::chunks_get_var("ADEX") # nolint
+          ADEX <- qq[["ADEX"]] # nolint
           if (is.null(ADEX) | nrow(ADEX) == 0) {
             empty_ex <- TRUE
           }
+          qq
         } else {
           empty_ex <- TRUE
-          teal.code::chunks_push(id = "ex call", expression = bquote(ex <- NULL))
+          teal.code::eval_code(q9, name = "ex call", code = quote(ex <- NULL))
         }
       } else {
-        teal.code::chunks_push(id = "ex call", expression = bquote(ex <- NULL))
+        teal.code::eval_code(q9, name = "ex call", code = quote(ex <- NULL))
       }
 
-      teal.code::chunks_push_new_line()
+      q11 <- teal.code::eval_code(q10, "")
 
-      if (select_plot["lb"]) {
+      q12 <- if (select_plot["lb"]) {
         validate(
           need(!is.null(lb_var), "Please select a lab variable.")
         )
-        if (ADSL$USUBJID %in% ADLB$USUBJID) {
-          req(lb_var_show != lb_var)
-          teal.code::chunks_push(
-            id = "ADLB and lb call",
-            expression = bquote({
+        if (all(ADLB$USUBJID %in% ADSL$USUBJID)) {
+          validate(need(lb_var_show != lb_var, "Lab variable and lab values must differ"))
+          qq <- teal.code::eval_code(
+            q11,
+            name = "ADLB and lb call",
+            code = bquote({
               ADLB <- ADLB[, .(adlb_vars)] # nolint
               ADLB <- ADSL %>% # nolint
                 left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
@@ -994,21 +983,22 @@ srv_g_patient_profile <- function(id,
               lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
             })
           )
-          teal.code::chunks_safe_eval()
-          ADLB <- teal.code::chunks_get_var("ADLB") # nolint
+
+          ADLB <- qq[["ADLB"]] # nolint
           if (is.null(ADLB) | nrow(ADLB) == 0) {
             empty_lb <- TRUE
           }
+          qq
         } else {
           empty_lb <- TRUE
-          teal.code::chunks_push(id = "lb call", expression = bquote(lb <- NULL))
+          teal.code::eval_code(q11, name = "lb call", code = quote(lb <- NULL))
         }
       } else {
-        teal.code::chunks_push(id = "lb call", expression = bquote(lb <- NULL))
+        teal.code::eval_code(q11, name = "lb call", code = bquote(lb <- NULL))
       }
 
 
-      teal.code::chunks_push_new_line()
+      q13 <- teal.code::eval_code(q12, "")
 
       # Check that at least 1 dataset is selected
 
@@ -1039,12 +1029,12 @@ srv_g_patient_profile <- function(id,
 
       # Convert x_limit to numeric vector
       if (!is.null(x_limit) || x_limit != "") {
-        teal.code::chunks_push(
-          id = "x_limit call",
-          expression = bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit), ","))))
+        q12 <- teal.code::eval_code(
+          q12,
+          name = "x_limit call",
+          code = bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit), ","))))
         )
-        teal.code::chunks_safe_eval()
-        x_limit <- teal.code::chunks_get_var("x_limit")
+        x_limit <- q12[["x_limit"]]
       }
 
       validate(need(
@@ -1056,12 +1046,13 @@ srv_g_patient_profile <- function(id,
         "The lower limit for study days range should come first."
       ))
 
-      teal.code::chunks_push_new_line()
+      q13 <- teal.code::eval_code(q12, "")
 
-      teal.code::chunks_push(
-        id = "g_patient_profile call",
-        expression = bquote({
-          osprey::g_patient_profile(
+      q14 <- teal.code::eval_code(
+        q13,
+        name = "g_patient_profile call",
+        code = bquote({
+          plot <- osprey::g_patient_profile(
             ex = ex,
             ae = ae,
             rs = rs,
@@ -1072,10 +1063,12 @@ srv_g_patient_profile <- function(id,
             xlab = "Study Day",
             title = paste("Patient Profile: ", .(patient_id))
           )
+          print(plot)
         })
       )
-      teal.code::chunks_safe_eval()
     })
+
+    plot_r <- reactive(output_q()[["plot"]])
 
     pws <- teal.widgets::plot_with_settings_srv(
       id = "patientprofileplot",
@@ -1084,11 +1077,10 @@ srv_g_patient_profile <- function(id,
       width = plot_width
     )
 
-    get_rcode_srv(
+    teal.widgets::verbatim_popup_srv(
       id = "rcode",
-      datasets = datasets,
-      modal_title = paste("R code for", label),
-      datanames = datasets$datanames()
+      title = paste("R code for", label),
+      verbatim_content = reactive(teal.code::get_code(output_q()))
     )
 
     ### REPORTER
@@ -1097,19 +1089,14 @@ srv_g_patient_profile <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Patient Profile")
         card$append_text("Patient Profile", "header2")
-        card$append_fs(datasets$get_filter_state())
+        card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Plot", "header3")
         card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(get_rcode(
-          chunks = teal.code::get_chunks_object(parent_idx = 2L),
-          datasets = datasets,
-          title = "",
-          description = ""
-        ), collapse = "\n"))
+        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

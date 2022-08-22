@@ -1,8 +1,10 @@
-# teal.osprey 0.1.14.9013
+# teal.osprey 0.1.14.9013.1
 
 ### Breaking changes
 * Soft deprecate function `label_aevar()`.
-
+* Replaced `chunks` with simpler `Quosure` class.
+* Replaced `datasets` argument containing `FilteredData` with the new arguments `data` (list of reactive datasets) and `filter_panel_api` (`FilterPanelApi`).
+* `arm_var` have to point to the factor column in `ANL`. It can't be a character column anymore. 
 
 ### Enhancements
 * Added `teal.reporter` to all modules.

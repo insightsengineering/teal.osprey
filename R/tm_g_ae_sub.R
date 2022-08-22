@@ -87,7 +87,7 @@ tm_g_ae_sub <- function(label,
       group_var = group_var,
       fontsize = fontsize
     ),
-    filters = dataname
+    filters = c("ADSL", dataname)
   )
 }
 
@@ -161,12 +161,13 @@ ui_g_ae_sub <- function(id, ...) {
         )
       )
     ),
-    forms = get_rcode_ui(ns("rcode"))
+    forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
   )
 }
 
 srv_g_ae_sub <- function(id,
-                         datasets,
+                         data,
+                         filter_panel_api,
                          reporter,
                          dataname,
                          label,
@@ -175,26 +176,22 @@ srv_g_ae_sub <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
-    teal.code::init_chunks()
     decorate_output <- srv_g_decorate(
       id = NULL,
-      plt = plt,
+      plt = plot_r,
       plot_height = plot_height,
       plot_width = plot_width
     )
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
-    observeEvent(input$arm_var, {
-      req(!is.null(input$arm_var))
+    observeEvent(input$arm_var, ignoreNULL = TRUE, {
       arm_var <- input$arm_var
-      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      ANL <- data[[dataname]]() # nolint
 
-      choices <- unique(ANL[[arm_var]])
+      anl_val <- ANL[[arm_var]]
+      choices <- levels(anl_val)
 
-      validate(need(
-        length(choices) > 0, "Please include multiple treatment"
-      ))
       if (length(choices) == 1) {
         ref_index <- 1
       } else {
@@ -234,7 +231,7 @@ srv_g_ae_sub <- function(id,
     })
 
     observeEvent(input$groups, {
-      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      ANL <- data[[dataname]]() # nolint
       output$grouplabel_output <- renderUI({
         grps <- input$groups
         lo <- lapply(seq_along(grps), function(index) {
@@ -277,17 +274,14 @@ srv_g_ae_sub <- function(id,
       })
     })
 
-    plt <- reactive({
+    output_q <- reactive({
+      ANL <- data[[dataname]]() # nolint
+      ADSL <- data[["ADSL"]]() # nolint
+
       validate(need(input$arm_var, "Please select an arm variable."))
-      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
-      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-
-      anl_name <- dataname
-      assign(anl_name, ANL)
-
       validate(need(
-        is.factor(ADSL[[input$arm_var]]),
-        "Selected arm variable needs to be a factor."
+        is.factor(ANL[[input$arm_var]]),
+        "Selected arm variable needs to be a factor. Contact an app developer."
       ))
       validate(
         need(
@@ -297,12 +291,11 @@ srv_g_ae_sub <- function(id,
       )
       validate(
         need(
-          all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])),
+          all(c(input$arm_trt, input$arm_ref) %in% levels(ANL[[input$arm_var]])),
           "The dataset does not contain subjects with AE events from both the control and treatment arms."
         ),
         need(
-          all(input$groups %in% names(ANL)) &
-            all(input$groups %in% names(ADSL)),
+          all(input$groups %in% names(ANL)) & all(input$groups %in% names(ADSL)), # todo: ask Nina what should be included in the code ANL or ADSL?
           "Check all selected subgroups are columns in ADAE and ADSL."
         ),
         need(
@@ -310,25 +303,6 @@ srv_g_ae_sub <- function(id,
           "Treatment and Reference can not be identical."
         )
       )
-
-      teal.code::chunks_reset(envir = environment())
-
-      teal.code::chunks_push(
-        id = "variables call",
-        expression = bquote({
-          id <- .(as.name(anl_name))$USUBJID
-          arm <- as.factor(.(as.name(anl_name))[[.(input$arm_var)]])
-          arm_sl <- as.character(ADSL[[.(input$arm_var)]])
-          grps <- .(input$groups)
-          subgroups <- .(as.name(anl_name))[grps]
-          subgroups_sl <- ADSL[grps]
-          trt <- .(input$arm_trt)
-          ref <- .(input$arm_ref)
-        })
-      )
-      teal.code::chunks_push_new_line()
-
-      teal.code::chunks_safe_eval()
 
       group_labels <- lapply(seq_along(input$groups), function(x) {
         items <- input[[sprintf("groups__%s", x)]]
@@ -342,59 +316,47 @@ srv_g_ae_sub <- function(id,
         }
       })
 
-      if (length(unlist(group_labels)) == 0) {
-        teal.code::chunks_push(
-          id = "group_labels call",
-          expression = bquote({
-            group_labels <- NULL
-          })
-        )
+      group_labels_call <- if (length(unlist(group_labels)) == 0) {
+        quote(group_labels <- NULL)
       } else {
-        teal.code::chunks_push(
-          id = "group_labels call",
-          expression = bquote({
-            group_labels <- .(group_labels)
-            names(group_labels) <- .(input$groups)
-          })
-        )
+        bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
       }
 
-      teal.code::chunks_push_new_line()
-      teal.code::chunks_safe_eval()
-      teal.code::chunks_push(
-        id = "g_ae_sub call",
-        expression = bquote({
-          osprey::g_ae_sub(
-            id = id,
-            arm = arm,
-            arm_sl = arm_sl,
-            trt = trt,
-            ref = ref,
-            subgroups = subgroups,
-            subgroups_sl = subgroups_sl,
-            subgroups_levels = group_labels,
-            conf_level = .(input$conf_level),
-            diff_ci_method = .(input$ci),
-            fontsize = .(font_size()),
-            arm_n = .(input$arm_n),
-            draw = TRUE
-          )
-        })
+      q1 <- teal.code::eval_code(teal.code::new_quosure(data), code = group_labels_call, name = "group_labels call")
+      q2 <- teal.code::eval_code(q1, code = "")
+      teal.code::eval_code(
+        q2,
+        name = "g_ae_sub call",
+        code = as.expression(c(
+          bquote(
+            plot <- osprey::g_ae_sub(
+              id = .(as.name(dataname))$USUBJID,
+              arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
+              arm_sl = as.character(ADSL[[.(input$arm_var)]]),
+              trt = .(input$arm_trt),
+              ref = .(input$arm_ref),
+              subgroups = .(as.name(dataname))[.(input$groups)],
+              subgroups_sl = ADSL[.(input$groups)],
+              subgroups_levels = group_labels,
+              conf_level = .(input$conf_level),
+              diff_ci_method = .(input$ci),
+              fontsize = .(font_size()),
+              arm_n = .(input$arm_n),
+              draw = TRUE
+            )
+          ),
+          quote(print(plot))
+        ))
       )
-
-      teal.code::chunks_safe_eval()
     })
 
-    get_rcode_srv(
+    plot_r <- reactive(output_q()[["plot"]])
+
+    teal.widgets::verbatim_popup_srv(
       id = "rcode",
-      datasets = datasets,
-      modal_title = paste("R code for", label),
-      datanames = unique(c(
-        dataname,
-        vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-          if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-        })
-      ))
+      verbatim_content = reactive(teal.code::get_code(output_q())),
+      title = paste("R code for", label),
+
     )
 
     ### REPORTER
@@ -403,19 +365,14 @@ srv_g_ae_sub <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("AE Subgroups")
         card$append_text("AE Subgroups", "header2")
-        card$append_fs(datasets$get_filter_state())
+        card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Plot", "header3")
-        card$append_plot(plt(), dim = pws$dim())
+        card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(get_rcode(
-          chunks = teal.code::get_chunks_object(parent_idx = 2L),
-          datasets = datasets,
-          title = "",
-          description = ""
-        ), collapse = "\n"))
+        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
