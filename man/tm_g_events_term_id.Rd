@@ -28,10 +28,7 @@ and pre-selected option names that can be used to specify the term for events}
 \item{arm_var}{(\code{choices_selected})\cr
 object with all available choices and the pre-selected option for variable
 names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
-details. It's recommended that \code{arm_var} is a name of the factor variable to make
-sure that UI elements present complete information for levels of this variable.
-Otherwise, limited number of levels might be presented in treatment inputs
-(e.g. if filter is applied).}
+details. Column \code{arm_var} in the \code{dataname} have to be a factor.}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
 Defines initial possible range of font-size. \code{fontsize} is set for

@@ -286,13 +286,14 @@ ui_g_heatmap_bygrade <- function(id, ...) {
           footnotes = ""
         )
       ),
-      forms = get_rcode_ui(ns("rcode"))
+      forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
     )
   )
 }
 
 srv_g_heatmap_bygrade <- function(id,
-                                  datasets,
+                                  data,
+                                  filter_panel_api,
                                   reporter,
                                   sl_dataname,
                                   ex_dataname,
@@ -304,8 +305,7 @@ srv_g_heatmap_bygrade <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
-    teal.code::init_chunks()
-    decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+    decorate_output <- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width) # nolint
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
@@ -322,9 +322,7 @@ srv_g_heatmap_bygrade <- function(id,
     })
 
     observeEvent(input$plot_cm, {
-      ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
-      ADCM_label <- formatters::var_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
-      formatters::var_labels(ADCM) <- ADCM_label
+      ADCM <- data[[cm_dataname]]() # nolint
       choices <- levels(ADCM[[input$conmed_var]])
 
       updateSelectInput(
@@ -335,24 +333,16 @@ srv_g_heatmap_bygrade <- function(id,
       )
     })
 
-    plt <- reactive({
+    output_q <- reactive({
       validate(need(input$id_var, "Please select a ID variable."))
       validate(need(input$visit_var, "Please select a visit variable."))
       validate(need(input$ongo_var, "Please select a Study Ongoing Status variable."))
       validate(need(input$heat_var, "Please select a heat variable."))
       validate(need(length(input$anno_var) <= 2, "Please include no more than 2 annotation variables"))
 
-      ADSL <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
-      ADEX <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
-      ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
-
-      # assign labels back to the data
-      formatters::var_labels(ADSL) <-
-        formatters::var_labels(datasets$get_data(sl_dataname, filtered = FALSE), fill = FALSE)
-      formatters::var_labels(ADEX) <-
-        formatters::var_labels(datasets$get_data(ex_dataname, filtered = FALSE), fill = FALSE)
-      formatters::var_labels(ADAE) <-
-        formatters::var_labels(datasets$get_data(ae_dataname, filtered = FALSE), fill = FALSE)
+      ADSL <- data[[sl_dataname]]() # nolint
+      ADEX <- data[[ex_dataname]]() # nolint
+      ADAE <- data[[ae_dataname]]() # nolint
 
       validate(need(nrow(ADSL) > 0, "Please select at least one subject"))
 
@@ -377,9 +367,7 @@ srv_g_heatmap_bygrade <- function(id,
       ))
 
       if (input$plot_cm) {
-        ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
-        ADCM_label <- formatters::var_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
-        formatters::var_labels(ADCM) <- ADCM_label
+        ADCM <- data[[cm_dataname]]() # nolint
         validate(
           need(
             input$conmed_var %in% names(ADCM),
@@ -392,13 +380,12 @@ srv_g_heatmap_bygrade <- function(id,
         ))
       }
 
-      teal.code::chunks_reset(envir = environment())
-
-      if (input$plot_cm) {
+      q1 <- if (input$plot_cm) {
         validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
-        teal.code::chunks_push(
-          id = "conmed_data call",
-          expression = bquote({
+        teal.code::eval_code(
+          teal.code::new_quosure(data),
+          name = "conmed_data call",
+          code = bquote({
             conmed_data <- ADCM %>%
               filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
             conmed_var <- .(input$conmed_var)
@@ -409,28 +396,24 @@ srv_g_heatmap_bygrade <- function(id,
           })
         )
       } else {
-        teal.code::chunks_push(
-          id = "conmed_data call",
-          expression = bquote({
-            conmed_data <- conmed_var <- NULL
-          })
+        teal.code::eval_code(
+          teal.code::new_quosure(data),
+          name = "conmed_data call",
+          expression = quote(conmed_data <- conmed_var <- NULL)
         )
       }
-      teal.code::chunks_safe_eval()
 
       validate(
         need(length(input$conmed_level) <= 3, "Please select no more than 3 conmed levels")
       )
 
-      teal.code::chunks_push(
-        id = "g_heat_bygrade call",
-        expression = bquote({
-          exp_data <- ADEX %>%
-            filter(PARCAT1 == "INDIVIDUAL")
-
-          osprey::g_heat_bygrade(
+      q2 <- teal.code::eval_code(
+        q1,
+        name = "g_heat_bygrade call",
+        code = bquote({
+          plot <- osprey::g_heat_bygrade(
             id_var = .(input$id_var),
-            exp_data = exp_data,
+            exp_data = ADEX %>% filter(PARCAT1 == "INDIVIDUAL"),
             visit_var = .(input$visit_var),
             ongo_var = .(input$ongo_var),
             anno_data = ADSL[c(.(input$anno_var), .(input$id_var))],
@@ -442,16 +425,15 @@ srv_g_heatmap_bygrade <- function(id,
           )
         })
       )
-
-      teal.code::chunks_safe_eval()
+      teal.code::eval_code(q2, quote(print(plot)))
     })
 
+    plot_r <- reactive(output_q()[["plot"]])
 
-    get_rcode_srv(
+    teal.widgets::verbatim_popup_srv(
       id = "rcode",
-      datasets = datasets,
-      modal_title = paste("R code for", label),
-      datanames = datasets$datanames()
+      title = paste("R code for", label),
+      verbatim_content = reactive(teal.code::get_code(output_q()))
     )
 
     ### REPORTER
@@ -460,19 +442,14 @@ srv_g_heatmap_bygrade <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Heatmap by Grade")
         card$append_text("Heatmap by Grade", "header2")
-        card$append_fs(datasets$get_filter_state())
+        card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Plot", "header3")
-        card$append_plot(plt(), dim = pws$dim())
+        card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(get_rcode(
-          chunks = teal.code::get_chunks_object(parent_idx = 2L),
-          datasets = datasets,
-          title = "",
-          description = ""
-        ), collapse = "\n"))
+        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

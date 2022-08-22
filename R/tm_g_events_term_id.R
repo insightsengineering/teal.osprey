@@ -89,7 +89,7 @@ tm_g_events_term_id <- function(label,
     server_args = list(label = label, dataname = dataname, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_events_term_id,
     ui_args = args,
-    filters = dataname
+    filters = c("ADSL", dataname)
   )
 }
 
@@ -190,12 +190,13 @@ ui_g_events_term_id <- function(id, ...) {
         footnotes = ""
       )
     ),
-    forms = get_rcode_ui(ns("rcode"))
+    forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
   )
 }
 
 srv_g_events_term_id <- function(id,
-                                 datasets,
+                                 data,
+                                 filter_panel_api,
                                  reporter,
                                  dataname,
                                  label,
@@ -204,11 +205,11 @@ srv_g_events_term_id <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
-    decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
+    decorate_output <- srv_g_decorate(
+      id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width
+    )
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
-
-    teal.code::init_chunks()
 
     observeEvent(list(input$diff_ci_method, input$conf_level), {
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
@@ -249,7 +250,7 @@ srv_g_events_term_id <- function(id,
     observeEvent(input$arm_var,
       handlerExpr = {
         arm_var <- input$arm_var
-        ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
+        ANL <- data[[dataname]]() # nolint
 
         choices <- levels(ANL[[arm_var]])
 
@@ -276,7 +277,7 @@ srv_g_events_term_id <- function(id,
       ignoreNULL = TRUE
     )
 
-    plt <- reactive({
+    output_q <- reactive({
       validate(
         need(input$term, "'Term Variable' field is missing"),
         need(input$arm_var, "'Arm Variable' field is missing")
@@ -290,57 +291,41 @@ srv_g_events_term_id <- function(id,
         )
       ))
 
-      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
-      formatters::var_labels(ANL) <- formatters::var_labels(
-        datasets$get_data(dataname, filtered = FALSE),
-        fill = FALSE
-      )
-
-      anl_name <- dataname
-      assign(anl_name, ANL)
+      ANL <- data[[dataname]]() # nolint
 
       validate(need(
         all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])),
         "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
       ))
 
-      teal.code::chunks_reset(envir = environment())
-
       adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
 
-      teal.code::chunks_push(
-        id = "ANL call",
-        expression = bquote({
+      q1 <- teal.code::eval_code(
+        teal.code::new_quosure(data),
+        name = "ANL call",
+        code = bquote(
           ANL <- merge( # nolint
             x = ADSL[, .(adsl_vars), drop = FALSE],
-            y = .(as.name(anl_name))[, .(anl_vars), drop = FALSE],
+            y = .(as.name(dataname))[, .(anl_vars), drop = FALSE],
             all.x = FALSE,
             all.y = FALSE,
             by = c("USUBJID", "STUDYID")
           )
-        })
+        )
       )
 
-      teal.code::chunks_safe_eval()
-      validate(need(nrow(teal.code::chunks_get_var("ANL")) > 10, "need at least 10 data points"))
+      validate(need(nrow(q1[["ANL"]]) > 10, "ANL needs at least 10 data points"))
 
-      teal.code::chunks_push(
-        id = "Variables and g_events_term_id call",
-        expression = bquote({
-          term <- ANL[[.(input$term)]]
-          id <- ANL$USUBJID
-          arm <- ANL[[.(input$arm_var)]]
-          arm_N <- table(ADSL[[.(input$arm_var)]]) # nolint
-          ref <- .(input$arm_ref)
-          trt <- .(input$arm_trt)
-
-          osprey::g_events_term_id(
-            term = term,
-            id = id,
-            arm = arm,
-            arm_N = arm_N,
+      q2 <- teal.code::eval_code(
+        q1,
+        name = "Variables and g_events_term_id call",
+        code = bquote(
+          plot <- osprey::g_events_term_id(
+            term = ANL[[.(input$term)]],
+            id = ANL$USUBJID,
+            arm = ANL[[.(input$arm_var)]],
+            arm_N = table(ADSL[[.(input$arm_var)]]),
             ref = .(input$arm_ref),
             trt = .(input$arm_trt),
             sort_by = .(input$sort),
@@ -353,22 +338,18 @@ srv_g_events_term_id <- function(id,
             fontsize = .(font_size()),
             draw = TRUE
           )
-        })
+        )
       )
 
-      teal.code::chunks_safe_eval()
+      teal.code::eval_code(q2, quote(print(plot)))
     })
 
-    get_rcode_srv(
+    plot_r <- reactive(output_q()[["plot"]])
+
+    teal.widgets::verbatim_popup_srv(
       id = "rcode",
-      datasets = datasets,
-      modal_title = paste("R code for", label),
-      datanames = unique(c(
-        dataname,
-        vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-          if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-        })
-      ))
+      title = paste("R code for", label),
+      verbatim_content = reactive(teal.code::get_code(output_q()))
     )
 
     ### REPORTER
@@ -377,19 +358,14 @@ srv_g_events_term_id <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Events by Term")
         card$append_text("Events by Term", "header2")
-        card$append_fs(datasets$get_filter_state())
+        card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Plot", "header3")
-        card$append_plot(plt(), dim = pws$dim())
+        card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(get_rcode(
-          chunks = teal.code::get_chunks_object(parent_idx = 2L),
-          datasets = datasets,
-          title = "",
-          description = ""
-        ), collapse = "\n"))
+        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

@@ -136,7 +136,7 @@ tm_g_ae_oview <- function(label,
     ),
     ui = ui_g_ae_oview,
     ui_args = args,
-    filters = dataname
+    filters = c("ADSL", dataname)
   )
 }
 
@@ -248,11 +248,7 @@ srv_g_ae_oview <- function(id,
       arm_var <- input$arm_var
 
       arm_val <- ANL[[arm_var]]
-      choices <- if (is.factor(arm_val)) {
-        levels(arm_val)
-      } else {
-        unique(arm_val)
-      }
+      choices <- sort(unique(arm_val))
 
       if (length(choices) == 1) {
         trt_index <- 1
@@ -275,7 +271,12 @@ srv_g_ae_oview <- function(id,
     })
 
     output_q <- reactive({
+      ANL <- data[[dataname]]() # nolint
       validate(need(input$arm_var, "Please select an arm variable."))
+      validate(need(
+        is.factor(ANL[[input$arm_var]]),
+        "Selected arm variable needs to be a factor."
+      ))
       validate(need(input$flag_var_anl, "Please select at least one flag."))
       validate(need(
         input$arm_trt != input$arm_ref,
@@ -285,7 +286,6 @@ srv_g_ae_oview <- function(id,
           sep = "\n"
         )
       ))
-      ANL <- data[[dataname]]() # nolint
       validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
       validate_has_data(ANL, min_nrow = 10)
       validate(
@@ -311,7 +311,7 @@ srv_g_ae_oview <- function(id,
         ))
       )
 
-      q2 <- teal.code::eval_code(
+      teal.code::eval_code(
         q1,
         name = "g_events_term_id call",
         code = as.expression(c(
@@ -351,7 +351,7 @@ srv_g_ae_oview <- function(id,
         card$append_text("AE Overview", "header2")
         card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Plot", "header3")
-        card$append_plot(plt(), dim = pws$dim())
+        card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)

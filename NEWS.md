@@ -2,7 +2,8 @@
 
 ### Breaking changes
 * Soft deprecate function `label_aevar()`.
-
+* Replaced `chunks` with simpler `Quosure` class.
+* Replaced `datasets` argument containing `FilteredData` with the new arguments `data` (list of reactive datasets) and `filter_panel_api` (`FilterPanelApi`).
 
 ### Enhancements
 * Added `teal.reporter` to all modules.
