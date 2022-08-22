@@ -345,7 +345,6 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
     )
 
     output_q <- reactive({
-
       ADSL <- data[["ADSL"]]() # nolint
       ANL <- data[[dataname]]() # nolint
 

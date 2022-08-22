@@ -356,7 +356,6 @@ srv_g_ae_sub <- function(id,
       id = "rcode",
       verbatim_content = reactive(teal.code::get_code(output_q())),
       title = paste("R code for", label),
-
     )
 
     ### REPORTER

@@ -247,7 +247,8 @@ srv_g_events_term_id <- function(id,
       ignoreNULL = FALSE
     )
 
-    observeEvent(input$arm_var, ignoreNULL = TRUE,
+    observeEvent(input$arm_var,
+      ignoreNULL = TRUE,
       handlerExpr = {
         arm_var <- input$arm_var
         ANL <- data[[dataname]]() # nolint

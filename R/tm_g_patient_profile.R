@@ -735,33 +735,33 @@ srv_g_patient_profile <- function(id,
                 formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)]
             })
           ) %>%
-          teal.code::eval_code(
-            name = "ae call",
-            code = call(
-              "<-",
-              as.name("ae"),
-              call(
-                "list",
-                data = bquote(data.frame(ADAE)),
-                var = bquote(as.vector(ADAE[, .(ae_var)])),
-                line_col = if (!is.null(ae_line_col_var)) {
-                  bquote(as.vector(ADAE[, .(ae_line_col_var)]))
-                } else {
-                  NULL
-                },
-                line_col_legend = if (!is.null(ae_line_col_var)) {
-                  quote(ae_line_col_name)
-                } else {
-                  NULL
-                },
-                line_col_opt = if (is.null(ae_line_col_var)) {
-                  NULL
-                } else {
-                  bquote(.(ae_line_col_opt))
-                }
+            teal.code::eval_code(
+              name = "ae call",
+              code = call(
+                "<-",
+                as.name("ae"),
+                call(
+                  "list",
+                  data = bquote(data.frame(ADAE)),
+                  var = bquote(as.vector(ADAE[, .(ae_var)])),
+                  line_col = if (!is.null(ae_line_col_var)) {
+                    bquote(as.vector(ADAE[, .(ae_line_col_var)]))
+                  } else {
+                    NULL
+                  },
+                  line_col_legend = if (!is.null(ae_line_col_var)) {
+                    quote(ae_line_col_name)
+                  } else {
+                    NULL
+                  },
+                  line_col_opt = if (is.null(ae_line_col_var)) {
+                    NULL
+                  } else {
+                    bquote(.(ae_line_col_opt))
+                  }
+                )
               )
             )
-          )
           ADAE <- qq[["ADAE"]] # nolint
           if (is.null(ADAE) | nrow(ADAE) == 0) {
             empty_ae <- TRUE
