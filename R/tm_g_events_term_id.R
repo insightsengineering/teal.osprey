@@ -247,7 +247,7 @@ srv_g_events_term_id <- function(id,
       ignoreNULL = FALSE
     )
 
-    observeEvent(input$arm_var,
+    observeEvent(input$arm_var, ignoreNULL = TRUE,
       handlerExpr = {
         arm_var <- input$arm_var
         ANL <- data[[dataname]]() # nolint
@@ -273,15 +273,21 @@ srv_g_events_term_id <- function(id,
           selected = choices[trt_index],
           choices = choices
         )
-      },
-      ignoreNULL = TRUE
+      }
     )
 
     output_q <- reactive({
+      ANL <- data[[dataname]]() # nolint
+
       validate(
         need(input$term, "'Term Variable' field is missing"),
         need(input$arm_var, "'Arm Variable' field is missing")
       )
+
+      validate(need(
+        is.factor(ANL[[input$arm_var]]),
+        "Selected arm variable needs to be a factor. Contact an app developer."
+      ))
 
       validate(need(
         input$arm_trt != input$arm_ref,
@@ -290,8 +296,6 @@ srv_g_events_term_id <- function(id,
           sep = "\n"
         )
       ))
-
-      ANL <- data[[dataname]]() # nolint
 
       validate(need(
         all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])),

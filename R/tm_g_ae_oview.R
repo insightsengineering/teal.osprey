@@ -241,14 +241,11 @@ srv_g_ae_oview <- function(id,
       )
     })
 
-    observeEvent(input$arm_var, {
+    observeEvent(input$arm_var, ignoreNULL = TRUE, {
       ANL <- data[[dataname]]() # nolint
-
-      req(!is.null(input$arm_var))
       arm_var <- input$arm_var
-
       arm_val <- ANL[[arm_var]]
-      choices <- sort(unique(arm_val))
+      choices <- levels(arm_val)
 
       if (length(choices) == 1) {
         trt_index <- 1

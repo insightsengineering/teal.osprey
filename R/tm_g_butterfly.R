@@ -281,9 +281,9 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         } else {
           options$r <- if (right_var %in% names(data[["ADSL"]]())) {
             # todo: right and left_var should be factors - so the levels could be obtained instead of using filtered = FALSE
-            sort(unique(data[["ADSL"]]()[[right_var]]))
+            levels(data[["ADSL"]]()[[right_var]])
           } else {
-            sort(unique(data[[dataname]]()[[right_var]]))
+            levels(data[[dataname]]()[[right_var]])
           }
 
           selected <- if (length(right_val) > 0) {
@@ -318,9 +318,9 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
           )
         } else {
           options$l <- if (left_var %in% names(data[["ADSL"]]())) {
-            sort(unique(data[["ADSL"]]()[[left_var]]))
+            levels(data[["ADSL"]]()[[left_var]])
           } else {
-            sort(unique(data[[dataname]]()[[left_var]]))
+            levels(data[[dataname]]()[[left_var]])
           }
 
           selected <- if (length(left_val) > 0) {
@@ -345,7 +345,6 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
     )
 
     output_q <- reactive({
-      validate(need(input$category_var, "Please select a category variable."))
 
       ADSL <- data[["ADSL"]]() # nolint
       ANL <- data[[dataname]]() # nolint
@@ -362,6 +361,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       sort_by_var <- input$sort_by_var
       filter_var <- input$filter_var
 
+      validate(need(category_var, "Please select a category variable."))
       validate(
         need(nrow(ADSL) > 0, "ADSL Data has no rows"),
         need(nrow(ANL) > 0, "ADAE Data has no rows")
@@ -370,10 +370,14 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         need(right_var, "'Right Dichotomization Variable' not selected"),
         need(left_var, "'Left Dichotomization Variable' not selected")
       )
-      validate(
-        need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
-        need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked")
-      )
+      validate(need(
+        is.factor(ANL[[right_var]]),
+        "Selected 'Right Dichotomization Variable' variable needs to be a factor. Contact an app developer."
+      ))
+      validate(need(
+        is.factor(ANL[[left_var]]),
+        "Selected 'Right Dichotomization Variable' variable needs to be a factor. Contact an app developer."
+      ))
       validate(need(
         any(c(ADSL[[right_var]] %in% right_val, ADSL[[left_var]] %in% left_val)),
         "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)"

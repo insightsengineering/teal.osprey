@@ -323,6 +323,7 @@ srv_g_heatmap_bygrade <- function(id,
 
     observeEvent(input$plot_cm, {
       ADCM <- data[[cm_dataname]]() # nolint
+      # todo shiny validate that ADCM[[input$conmed_var]] is a factor
       choices <- levels(ADCM[[input$conmed_var]])
 
       updateSelectInput(
@@ -345,7 +346,6 @@ srv_g_heatmap_bygrade <- function(id,
       ADAE <- data[[ae_dataname]]() # nolint
 
       validate(need(nrow(ADSL) > 0, "Please select at least one subject"))
-
       validate(need(
         input$ongo_var %in% names(ADEX),
         paste("Study Ongoing Status must be a variable in", ex_dataname, sep = " ")

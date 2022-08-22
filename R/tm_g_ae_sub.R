@@ -185,13 +185,12 @@ srv_g_ae_sub <- function(id,
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
-    observeEvent(input$arm_var, {
-      req(!is.null(input$arm_var))
+    observeEvent(input$arm_var, ignoreNULL = TRUE, {
       arm_var <- input$arm_var
       ANL <- data[[dataname]]() # nolint
 
       anl_val <- ANL[[arm_var]]
-      choices <- sort(unique(anl_val))
+      choices <- levels(anl_val)
 
       if (length(choices) == 1) {
         ref_index <- 1
@@ -276,13 +275,13 @@ srv_g_ae_sub <- function(id,
     })
 
     output_q <- reactive({
-      validate(need(input$arm_var, "Please select an arm variable."))
       ANL <- data[[dataname]]() # nolint
       ADSL <- data[["ADSL"]]() # nolint
 
+      validate(need(input$arm_var, "Please select an arm variable."))
       validate(need(
         is.factor(ANL[[input$arm_var]]),
-        "Selected arm variable needs to be a factor."
+        "Selected arm variable needs to be a factor. Contact an app developer."
       ))
       validate(
         need(
