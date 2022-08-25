@@ -731,7 +731,7 @@ srv_g_patient_profile <- function(id,
                     as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
                   )))) %>%
                 select(c(.(adae_vars), ASTDY, AENDY))
-              formatters::var_labels(ADAE)[.(ae_line_col_var)] <-
+              formatters::var_labels(ADAE)[.(ae_line_col_var)] <- # nolint
                 formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)]
             })
           ) %>%

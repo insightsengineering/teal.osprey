@@ -295,7 +295,8 @@ srv_g_ae_sub <- function(id,
           "The dataset does not contain subjects with AE events from both the control and treatment arms."
         ),
         need(
-          all(input$groups %in% names(ANL)) & all(input$groups %in% names(ADSL)), # todo: ask Nina what should be included in the code ANL or ADSL?
+          all(input$groups %in% names(ANL)) & all(input$groups %in% names(ADSL)),
+          # todo: ask Nina what should be included in the code ANL or ADSL?
           "Check all selected subgroups are columns in ADAE and ADSL."
         ),
         need(

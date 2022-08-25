@@ -280,7 +280,8 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
           )
         } else {
           options$r <- if (right_var %in% names(data[["ADSL"]]())) {
-            # todo: right and left_var should be factors - so the levels could be obtained instead of using filtered = FALSE
+            # todo: right and left_var should be factors -
+            # so the levels could be obtained instead of using filtered = FALSE
             levels(data[["ADSL"]]()[[right_var]])
           } else {
             levels(data[[dataname]]()[[right_var]])

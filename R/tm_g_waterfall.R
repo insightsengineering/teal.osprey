@@ -477,7 +477,7 @@ srv_g_waterfall <- function(id,
             }),
             bar_color_opt = .(if (length(bar_color_var) == 0) {
               NULL
-            } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt)) == T) {
+            } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt))) {
               bar_color_opt
             } else {
               NULL
