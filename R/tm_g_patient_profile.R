@@ -414,6 +414,7 @@ srv_g_patient_profile <- function(id,
                                   plot_height,
                                   plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
 
   moduleServer(id, function(input, output, session) {
     # only show the check box when domain data is available
@@ -1089,7 +1090,7 @@ srv_g_patient_profile <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Patient Profile")
         card$append_text("Patient Profile", "header2")
-        card$append_fs(filter_panel_api$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Plot", "header3")
         card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {

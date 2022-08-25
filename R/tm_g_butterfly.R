@@ -260,6 +260,7 @@ ui_g_butterfly <- function(id, ...) {
 
 srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, label, plot_height, plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
 
   moduleServer(id, function(input, output, session) {
     options <- reactiveValues(r = NULL, l = NULL)
@@ -497,7 +498,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Butterfly")
         card$append_text("Butterfly Plot", "header2")
-        card$append_fs(filter_panel_api$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         if (!is.null(input$filter_var) || !is.null(input$facet_var) || !is.null(input$sort_by_var)) {
           card$append_text("Selected Options", "header3")
         }

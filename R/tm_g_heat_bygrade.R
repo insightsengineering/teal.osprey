@@ -303,6 +303,7 @@ srv_g_heatmap_bygrade <- function(id,
                                   plot_height,
                                   plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
 
   moduleServer(id, function(input, output, session) {
     decorate_output <- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width) # nolint
@@ -442,7 +443,7 @@ srv_g_heatmap_bygrade <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Heatmap by Grade")
         card$append_text("Heatmap by Grade", "header2")
-        card$append_fs(filter_panel_api$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Plot", "header3")
         card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {

@@ -221,6 +221,7 @@ srv_g_ae_oview <- function(id,
                            plot_height,
                            plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
 
   moduleServer(id, function(input, output, session) {
     decorate_output <- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width)
@@ -346,7 +347,7 @@ srv_g_ae_oview <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("AE Overview")
         card$append_text("AE Overview", "header2")
-        card$append_fs(filter_panel_api$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Plot", "header3")
         card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {

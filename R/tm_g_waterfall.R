@@ -282,6 +282,7 @@ srv_g_waterfall <- function(id,
                             plot_height,
                             plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
 
   moduleServer(id, function(input, output, session) {
     output_q <- reactive({
@@ -538,7 +539,7 @@ srv_g_waterfall <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Waterfall")
         card$append_text("Waterfall Plot", "header2")
-        card$append_fs(filter_panel_api$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Selected Options", "header3")
         card$append_text(paste0("Tumor Burden Parameter: ", input$bar_paramcd, "."))
         if (!is.null(input$sort_var)) {

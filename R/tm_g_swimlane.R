@@ -265,6 +265,7 @@ srv_g_swimlane <- function(id,
                            plot_width,
                            x_label) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
 
   moduleServer(id, function(input, output, session) {
     # if marker position is NULL, then hide options for marker shape and color
@@ -523,7 +524,7 @@ srv_g_swimlane <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Swimlane")
         card$append_text("Swimlane Plot", "header2")
-        card$append_fs(filter_panel_api$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         if (!is.null(input$sort_var)) {
           card$append_text("Selected Options", "header3")
           card$append_text(paste("Sorted by:", input$sort_var))

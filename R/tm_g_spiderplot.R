@@ -218,6 +218,7 @@ ui_g_spider <- function(id, ...) {
 
 srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, plot_height, plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
 
   moduleServer(id, function(input, output, session) {
     vals <- reactiveValues(spiderplot = NULL) # nolint
@@ -396,7 +397,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Spider Plot")
         card$append_text("Spider Plot", "header2")
-        card$append_fs(filter_panel_api$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         if (!is.null(input$paramcd) || !is.null(input$xfacet_var) || !is.null(input$yfacet_var)) {
           card$append_text("Selected Options", "header3")
         }
