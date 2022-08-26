@@ -265,7 +265,7 @@ srv_g_swimlane <- function(id,
                            plot_width,
                            x_label) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
 
   moduleServer(id, function(input, output, session) {
     # if marker position is NULL, then hide options for marker shape and color
