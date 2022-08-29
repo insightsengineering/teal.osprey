@@ -38,7 +38,7 @@ Imports:
     teal.reporter (>= 0.1.0),
     teal.widgets (>= 0.1.1),
     tern (>= 0.7.8),
-    tidyr,
+    tidyr
 Suggests:
     knitr,
     nestcolor,
