@@ -1,3 +1,4 @@
+library(teal.osprey)
 test_that("as_numeric_from_comma_sep_str converts comma sep string into numeric vector", {
   expect_equal(as_numeric_from_comma_sep_str("5.65"), 5.65)
   expect_equal(as_numeric_from_comma_sep_str("5,-6, 0"), c(5, -6, 0))

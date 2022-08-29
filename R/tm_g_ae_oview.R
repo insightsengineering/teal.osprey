@@ -222,6 +222,37 @@ srv_g_ae_oview <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("arm_var", shinyvalidate::sv_required(message = "Please select an arm variable."))
+    iv$add_rule("flag_var_anl", shinyvalidate::sv_required(message = "Please select at least one flag"))
+    #iv$add_rule("arm_var-dataset_ANL_singleextract-select", function(fac) if (length(fac) > 0) "Arm needs to have at least 2 levels")
+    iv$enable()
+    # "teal-main_ui-root-ae_overview-arm_var"
+    # ANL[["arm_var"]]
+    #"arm_var-dataset_ANL_singleextract-select"
+
+    # ivx <- shinyvalidate::InputValidator$new()
+    # ivx$add_rule("ANL[[input$arm_var]]", function(fac) if (nlevels(fac) <= 1) "Arm needs to have at least 2 levels")
+    # ivx$enable()
+    # validate(need(ivx$is_valid(), "IVX error"))
+
+    # validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
+    # if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
+    #   validate(
+    #     need(
+    #       input$arm_ref %in% ANL[[input$arm_var]],
+    #       paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
+    #     ),
+    #     need(
+    #       input$arm_trt %in% ANL[[input$arm_var]],
+    #       paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
+    #     )
+    #   )
+    # }
+    # validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
+    # validate(need(length(choices) > 0, "Please include multiple treatment"))
+
     teal.code::init_chunks()
     decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width)
     font_size <- decorate_output$font_size
@@ -232,12 +263,12 @@ srv_g_ae_oview <- function(id,
       diff_ci_method <- input$diff_ci_method
       conf_level <- input$conf_level
       updateTextAreaInput(session,
-        "foot",
-        value = sprintf(
-          "Note: %d%% CI is calculated using %s",
-          round(conf_level * 100),
-          name_ci(diff_ci_method)
-        )
+                          "foot",
+                          value = sprintf(
+                            "Note: %d%% CI is calculated using %s",
+                            round(conf_level * 100),
+                            name_ci(diff_ci_method)
+                          )
       )
     })
 
@@ -246,9 +277,9 @@ srv_g_ae_oview <- function(id,
 
       req(!is.null(input$arm_var))
       arm_var <- input$arm_var
+      # iv$add_rule("arm_var", function(fac) if (nlevels(ANL[[fac]]) <= 1) "Arm needs to have at least 2 levels")
 
       choices <- unique(ANL[[arm_var]])
-
       validate(need(length(choices) > 0, "Please include multiple treatment"))
       if (length(choices) == 1) {
         trt_index <- 1
@@ -271,16 +302,18 @@ srv_g_ae_oview <- function(id,
     })
 
     plt <- reactive({
-      validate(need(input$arm_var, "Please select an arm variable."))
-      validate(need(input$flag_var_anl, "Please select at least one flag."))
-      validate(need(
-        input$arm_trt != input$arm_ref,
-        paste(
-          "Treatment arm and control arm cannot be the same.",
-          "Please select a different treatment arm or control arm",
-          sep = "\n"
-        )
-      ))
+      iv_comp_arm <- shinyvalidate::InputValidator$new()
+      comp_arm_message <- sprintf(
+        "Misspecified: treatment and control arm cannot be the same.
+Please change one of them."
+      )
+      comp_arm <- function(value, comparison) if (value == comparison) comp_arm_message
+      iv_comp_arm$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
+      iv_comp_arm$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
+      iv_comp_arm$enable()
+
+      validate(need(iv_comp_arm$is_valid(), comp_arm_message))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
       ANL_UNFILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
@@ -291,21 +324,22 @@ srv_g_ae_oview <- function(id,
 
       teal.code::chunks_reset(envir = environment())
 
-      validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
       validate_has_data(ANL, min_nrow = 10)
-      if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
-        validate(
-          need(
-            input$arm_ref %in% ANL[[input$arm_var]],
-            paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
-          ),
-          need(
-            input$arm_trt %in% ANL[[input$arm_var]],
-            paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
-          )
-        )
-      }
-      validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
+
+      # validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
+      # if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
+      #   validate(
+      #     need(
+      #       input$arm_ref %in% ANL[[input$arm_var]],
+      #       paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
+      #     ),
+      #     need(
+      #       input$arm_trt %in% ANL[[input$arm_var]],
+      #       paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
+      #     )
+      #   )
+      # }
+      # validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
       teal.code::chunks_push(
         id = "variables call",
@@ -359,7 +393,6 @@ srv_g_ae_oview <- function(id,
         })
       ))
     )
-
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment) {
