@@ -275,17 +275,17 @@ srv_g_ae_oview <- function(id,
     })
 
     plt <- reactive({
-      iv_comp_arm <- shinyvalidate::InputValidator$new()
-      comp_arm_message <- sprintf(
-        "Misspecified: treatment and control arm cannot be the same.
+      comp_arm <- function(value, comparison) if (value == comparison) {
+        sprintf(
+          "Misspecified: treatment and control arm cannot be the same.
 Please change one of them."
-      )
-      comp_arm <- function(value, comparison) if (value == comparison) comp_arm_message
-      iv_comp_arm$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
-      iv_comp_arm$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
-      iv_comp_arm$enable()
+        )
+      }
 
-      validate(need(iv_comp_arm$is_valid(), comp_arm_message))
+      iv$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
+      iv$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
+      iv$enable()
+
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
       ANL_UNFILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
