@@ -565,7 +565,7 @@ srv_g_patient_profile <- function(id,
 
       if (!is.null(input$select_ae)) {
         if (input$select_ae == FALSE | is.na(ae_dataname)) {
-        # nolint start
+          # nolint start
           ADAE <- NULL #
         } else {
           ADAE <- datasets$get_data(ae_dataname, filtered = TRUE)
@@ -574,7 +574,6 @@ srv_g_patient_profile <- function(id,
             fill = FALSE
           )
           validate_has_variable(ADAE, adae_vars)
-
         }
       } else {
         ADAE <- NULL
@@ -667,7 +666,7 @@ srv_g_patient_profile <- function(id,
             na.rm = TRUE
           )
           ADSL <- ADSL %>%
-          # nolint end
+            # nolint end
             mutate(
               max_day = as.numeric(
                 as.Date(.data$max_date) - as.Date(
