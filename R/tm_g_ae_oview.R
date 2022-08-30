@@ -222,7 +222,6 @@ srv_g_ae_oview <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
-
     iv <- shinyvalidate::InputValidator$new()
     iv$add_rule("arm_var", shinyvalidate::sv_required(message = "Please select an arm variable."))
     iv$add_rule("flag_var_anl", shinyvalidate::sv_required(message = "Please select at least one flag"))
@@ -238,12 +237,12 @@ srv_g_ae_oview <- function(id,
       diff_ci_method <- input$diff_ci_method
       conf_level <- input$conf_level
       updateTextAreaInput(session,
-                          "foot",
-                          value = sprintf(
-                            "Note: %d%% CI is calculated using %s",
-                            round(conf_level * 100),
-                            name_ci(diff_ci_method)
-                          )
+        "foot",
+        value = sprintf(
+          "Note: %d%% CI is calculated using %s",
+          round(conf_level * 100),
+          name_ci(diff_ci_method)
+        )
       )
     })
 

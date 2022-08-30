@@ -268,8 +268,8 @@ srv_g_swimlane <- function(id,
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
     iv$add_rule("bar_var", shinyvalidate::sv_required(
-      message = "Please select a variable to map to the bar length.")
-    )
+      message = "Please select a variable to map to the bar length."
+    ))
     iv$enable()
 
     # use teal.code code chunks
@@ -305,7 +305,6 @@ srv_g_swimlane <- function(id,
 
     # create plot
     plot_r <- reactive({
-
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
       # DATA GETTERS
