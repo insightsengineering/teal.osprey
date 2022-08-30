@@ -565,19 +565,21 @@ srv_g_patient_profile <- function(id,
 
       if (!is.null(input$select_ae)) {
         if (input$select_ae == FALSE | is.na(ae_dataname)) {
-          ADAE <- NULL # nolint
+        # nolint start
+          ADAE <- NULL #
         } else {
-          ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
+          ADAE <- datasets$get_data(ae_dataname, filtered = TRUE)
           formatters::var_labels(ADAE) <- formatters::var_labels(
             datasets$get_data(ae_dataname, filtered = FALSE),
             fill = FALSE
           )
           validate_has_variable(ADAE, adae_vars)
+
         }
       } else {
-        ADAE <- NULL # nolint
+        ADAE <- NULL
+        # nolint end
       }
-
 
       if (!is.null(input$select_rs)) {
         if (input$select_rs == FALSE | is.na(rs_dataname)) {
@@ -656,14 +658,16 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push(
         id = "ADSL call",
         expression = bquote({
-          ADSL <- ADSL %>% # nolint
+          # nolint start
+          ADSL <- ADSL %>%
             group_by(.data$USUBJID)
           ADSL$max_date <- pmax(
             as.Date(ADSL$LSTALVDT),
             as.Date(ADSL$DTHDT),
             na.rm = TRUE
           )
-          ADSL <- ADSL %>% # nolint
+          ADSL <- ADSL %>%
+          # nolint end
             mutate(
               max_day = as.numeric(
                 as.Date(.data$max_date) - as.Date(
@@ -745,11 +749,11 @@ srv_g_patient_profile <- function(id,
                     units = "days"
                   )
                 )
-                + (AENDT >= as.Date(substr(
+                + (AENDT >= as.Date(substr( # nolint
                     as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
                   )))) %>%
                 select(c(.(adae_vars), ASTDY, AENDY))
-              formatters::var_labels(ADAE)[.(ae_line_col_var)] <-
+              formatters::var_labels(ADAE)[.(ae_line_col_var)] <- # nolint
                 formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)]
             })
           )

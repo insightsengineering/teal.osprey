@@ -351,13 +351,14 @@ srv_g_heatmap_bygrade <- function(id,
       ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
 
       # assign labels back to the data
+      # nolint start
       formatters::var_labels(ADSL) <-
         formatters::var_labels(datasets$get_data(sl_dataname, filtered = FALSE), fill = FALSE)
       formatters::var_labels(ADEX) <-
         formatters::var_labels(datasets$get_data(ex_dataname, filtered = FALSE), fill = FALSE)
       formatters::var_labels(ADAE) <-
         formatters::var_labels(datasets$get_data(ae_dataname, filtered = FALSE), fill = FALSE)
-
+      # nolint end
       validate(need(nrow(ADSL) > 0, "Please select at least one subject"))
 
       validate(need(
