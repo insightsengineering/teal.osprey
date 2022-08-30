@@ -305,10 +305,10 @@ srv_g_heatmap_bygrade <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("heat_var", shinyvalidate::sv_required(message = "Please select heat variable."))
     iv$add_rule("id_var", shinyvalidate::sv_required(message = "Please select ID variable."))
     iv$add_rule("visit_var", shinyvalidate::sv_required(message = "Please select visit variable."))
     iv$add_rule("ongo_var", shinyvalidate::sv_required(message = "Please select Study Ongoing Status variable."))
-    iv$add_rule("heat_var", shinyvalidate::sv_required(message = "Please select heat variable."))
     iv$enable()
 
     teal.code::init_chunks()
