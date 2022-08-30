@@ -226,16 +226,7 @@ srv_g_ae_oview <- function(id,
     iv <- shinyvalidate::InputValidator$new()
     iv$add_rule("arm_var", shinyvalidate::sv_required(message = "Please select an arm variable."))
     iv$add_rule("flag_var_anl", shinyvalidate::sv_required(message = "Please select at least one flag"))
-    #iv$add_rule("arm_var-dataset_ANL_singleextract-select", function(fac) if (length(fac) > 0) "Arm needs to have at least 2 levels")
     iv$enable()
-    # "teal-main_ui-root-ae_overview-arm_var"
-    # ANL[["arm_var"]]
-    #"arm_var-dataset_ANL_singleextract-select"
-
-    # ivx <- shinyvalidate::InputValidator$new()
-    # ivx$add_rule("ANL[[input$arm_var]]", function(fac) if (nlevels(fac) <= 1) "Arm needs to have at least 2 levels")
-    # ivx$enable()
-    # validate(need(ivx$is_valid(), "IVX error"))
 
     # validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
     # if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
@@ -326,20 +317,20 @@ Please change one of them."
 
       validate_has_data(ANL, min_nrow = 10)
 
-      # validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
-      # if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
-      #   validate(
-      #     need(
-      #       input$arm_ref %in% ANL[[input$arm_var]],
-      #       paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
-      #     ),
-      #     need(
-      #       input$arm_trt %in% ANL[[input$arm_var]],
-      #       paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
-      #     )
-      #   )
-      # }
-      # validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
+      validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
+      if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
+        validate(
+          need(
+            input$arm_ref %in% ANL[[input$arm_var]],
+            paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
+          ),
+          need(
+            input$arm_trt %in% ANL[[input$arm_var]],
+            paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
+          )
+        )
+      }
+      validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
       teal.code::chunks_push(
         id = "variables call",
