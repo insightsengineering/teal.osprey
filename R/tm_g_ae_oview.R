@@ -278,7 +278,6 @@ srv_g_ae_oview <- function(id,
       comp_arm <- function(value, comparison) if (value == comparison) {
         sprintf("Misspecified: treatment and control arm cannot be the same. Please change one of them.")
       }
-
       iv$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
       iv$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
       iv$enable()
