@@ -262,6 +262,12 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("category_var", shinyvalidate::sv_required(message = "Please select category variable."))
+    iv$add_rule("right_var", shinyvalidate::sv_required(message = "Please select Right Dichotomization Variable."))
+    iv$add_rule("left_var", shinyvalidate::sv_required(message = "Please select Left Dichotomization Variable."))
+    iv$enable()
+
     teal.code::init_chunks()
 
     options <- reactiveValues(r = NULL, l = NULL)
@@ -360,8 +366,7 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
 
 
     plot_r <- reactive({
-      validate(need(input$category_var, "Please select a category variable."))
-
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
       ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
@@ -380,10 +385,6 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
       validate(
         need(nrow(ADSL) > 0, "ADSL Data has no rows"),
         need(nrow(ANL) > 0, "ADAE Data has no rows")
-      )
-      validate(
-        need(right_var, "'Right Dichotomization Variable' not selected"),
-        need(left_var, "'Left Dichotomization Variable' not selected")
       )
       validate(
         need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
