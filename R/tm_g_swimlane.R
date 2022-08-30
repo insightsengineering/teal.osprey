@@ -266,6 +266,12 @@ srv_g_swimlane <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("bar_var", shinyvalidate::sv_required(
+      message = "Please select a variable to map to the bar length.")
+    )
+    iv$enable()
+
     # use teal.code code chunks
     teal.code::init_chunks()
 
@@ -299,6 +305,9 @@ srv_g_swimlane <- function(id,
 
     # create plot
     plot_r <- reactive({
+
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
       # DATA GETTERS
       validate(need("ADSL" %in% datasets$datanames(), "ADSL needs to be defined in datasets"))
       validate(need(
@@ -307,7 +316,6 @@ srv_g_swimlane <- function(id,
         "Please either add just 'ADSL' as dataname when just ADSL is available
       In case 2 datasets are available ADSL is not supposed to be the dataname."
       ))
-      validate(need(input$bar_var, "Please select a variable to map to the bar length."))
 
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
       if (dataname != "ADSL") {
