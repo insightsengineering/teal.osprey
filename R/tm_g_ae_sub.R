@@ -175,6 +175,10 @@ srv_g_ae_sub <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("arm_var", shinyvalidate::sv_required(message = "Please select an arm variable."))
+    iv$enable()
+
     teal.code::init_chunks()
     decorate_output <- srv_g_decorate(
       id = NULL,
@@ -278,7 +282,7 @@ srv_g_ae_sub <- function(id,
     })
 
     plt <- reactive({
-      validate(need(input$arm_var, "Please select an arm variable."))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
       ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
 

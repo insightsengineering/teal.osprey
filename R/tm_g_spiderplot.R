@@ -220,6 +220,14 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("paramcd", shinyvalidate::sv_required(message = "Please select Parameter - from ADTR."))
+    iv$add_rule("x_var", shinyvalidate::sv_required(message = "Please select X-axis Variable."))
+    iv$add_rule("y_var", shinyvalidate::sv_required(message = "Please select Y-axis Variable."))
+    iv$add_rule("marker_var", shinyvalidate::sv_required(message = "Please select `Marker Symbol By Variable`."))
+    iv$add_rule("line_colorby_var", shinyvalidate::sv_required(message = "Please select `Color By Variable (Line)`."))
+    iv$enable()
+
     vals <- reactiveValues(spiderplot = NULL) # nolint
 
     # initialize chunks
@@ -256,11 +264,7 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
       vref_line <- input$vref_line
       href_line <- input$href_line
 
-      validate(need(paramcd, "`Parameter - from ADTR` field is empty"))
-      validate(need(x_var, "`X-axis Variable` field is empty"))
-      validate(need(y_var, "`Y-axis Variable` field is empty"))
-      validate(need(marker_var, "`Marker Symbol By Variable` field is empty"))
-      validate(need(line_colorby_var, "`Color By Variable (Line)` field is empty"))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
       validate(need(nrow(ADSL) > 0, "ADSL data has zero rows"))
       validate(need(nrow(ADTR) > 0, paste(dataname, "data has zero rows")))
 
