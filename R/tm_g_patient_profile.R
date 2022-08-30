@@ -415,6 +415,11 @@ srv_g_patient_profile <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("sl_start_date", shinyvalidate::sv_required(message = "Please select a start date variable."))
+    iv$add_rule("lb_var_show", shinyvalidate::sv_required(message = "Please select `Lab values`."))
+    iv$enable()
+
     # initialize chunks
     teal.code::init_chunks()
 
@@ -507,12 +512,11 @@ srv_g_patient_profile <- function(id,
       x_limit <- input$x_limit
       lb_var_show <- input$lb_var_show
 
-
       validate(
-        need(sl_start_date, "Please select a start date variable."),
-        need(ae_line_col_var, "Please select an adverse event line color."),
-        need(lb_var_show, "`Lab values` field is empty.")
+        need(ae_line_col_var, "Please select an adverse event line color.")
       )
+
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
       adrs_vars <- unique(c(
         "USUBJID", "STUDYID", "PARAMCD",
