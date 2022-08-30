@@ -304,6 +304,13 @@ srv_g_heatmap_bygrade <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("id_var", shinyvalidate::sv_required(message = "Please select ID variable."))
+    iv$add_rule("visit_var", shinyvalidate::sv_required(message = "Please select visit variable."))
+    iv$add_rule("ongo_var", shinyvalidate::sv_required(message = "Please select Study Ongoing Status variable."))
+    iv$add_rule("heat_var", shinyvalidate::sv_required(message = "Please select heat variable."))
+    iv$enable()
+
     teal.code::init_chunks()
     decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
     font_size <- decorate_output$font_size
@@ -324,7 +331,7 @@ srv_g_heatmap_bygrade <- function(id,
     observeEvent(input$plot_cm, {
       ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
       ADCM_label <- formatters::var_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
-      formatters::var_labels(ADCM) <- ADCM_label
+      formatters::var_labels(ADCM) <- ADCM_label # nolint
       choices <- levels(ADCM[[input$conmed_var]])
 
       updateSelectInput(
@@ -336,10 +343,7 @@ srv_g_heatmap_bygrade <- function(id,
     })
 
     plt <- reactive({
-      validate(need(input$id_var, "Please select a ID variable."))
-      validate(need(input$visit_var, "Please select a visit variable."))
-      validate(need(input$ongo_var, "Please select a Study Ongoing Status variable."))
-      validate(need(input$heat_var, "Please select a heat variable."))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
       validate(need(length(input$anno_var) <= 2, "Please include no more than 2 annotation variables"))
 
       ADSL <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
@@ -347,13 +351,14 @@ srv_g_heatmap_bygrade <- function(id,
       ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
 
       # assign labels back to the data
+      # nolint start
       formatters::var_labels(ADSL) <-
         formatters::var_labels(datasets$get_data(sl_dataname, filtered = FALSE), fill = FALSE)
       formatters::var_labels(ADEX) <-
         formatters::var_labels(datasets$get_data(ex_dataname, filtered = FALSE), fill = FALSE)
       formatters::var_labels(ADAE) <-
         formatters::var_labels(datasets$get_data(ae_dataname, filtered = FALSE), fill = FALSE)
-
+      # nolint end
       validate(need(nrow(ADSL) > 0, "Please select at least one subject"))
 
       validate(need(
@@ -379,7 +384,7 @@ srv_g_heatmap_bygrade <- function(id,
       if (input$plot_cm) {
         ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
         ADCM_label <- formatters::var_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
-        formatters::var_labels(ADCM) <- ADCM_label
+        formatters::var_labels(ADCM) <- ADCM_label # nolint
         validate(
           need(
             input$conmed_var %in% names(ADCM),
