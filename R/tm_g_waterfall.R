@@ -283,10 +283,16 @@ srv_g_waterfall <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("bar_var", shinyvalidate::sv_required(message = "Please select Bar Height."))
+    iv$add_rule("bar_paramcd", shinyvalidate::sv_required(message = "Please select Tumor Burden Parameter."))
+    iv$enable()
+
     # use teal.code code chunks
     teal.code::init_chunks()
 
     plot_r <- reactive({
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
       adsl <- datasets$get_data("ADSL", filtered = TRUE)
       adtr <- datasets$get_data(dataname_tr, filtered = TRUE)
       adrs <- datasets$get_data(dataname_rs, filtered = TRUE)
@@ -302,7 +308,6 @@ srv_g_waterfall <- function(id,
       gap_point_val <- input$gap_point_val
       show_value <- input$show_value # nolint
 
-      validate(need(bar_var, "'Bar Height' field is empty"))
       validate(need(
         length(add_label_paramcd_rs) == 0 || length(add_label_var_sl) == 0,
         "`Add ADSL Label to Bars` and `Add ADRS Label to Bars` fields cannot both have values simultaneously."

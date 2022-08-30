@@ -228,22 +228,6 @@ srv_g_ae_oview <- function(id,
     iv$add_rule("flag_var_anl", shinyvalidate::sv_required(message = "Please select at least one flag"))
     iv$enable()
 
-    # validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
-    # if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
-    #   validate(
-    #     need(
-    #       input$arm_ref %in% ANL[[input$arm_var]],
-    #       paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
-    #     ),
-    #     need(
-    #       input$arm_trt %in% ANL[[input$arm_var]],
-    #       paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
-    #     )
-    #   )
-    # }
-    # validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
-    # validate(need(length(choices) > 0, "Please include multiple treatment"))
-
     teal.code::init_chunks()
     decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width)
     font_size <- decorate_output$font_size
