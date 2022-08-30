@@ -331,7 +331,7 @@ srv_g_heatmap_bygrade <- function(id,
     observeEvent(input$plot_cm, {
       ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
       ADCM_label <- formatters::var_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
-      formatters::var_labels(ADCM) <- ADCM_label
+      formatters::var_labels(ADCM) <- ADCM_label # nolint
       choices <- levels(ADCM[[input$conmed_var]])
 
       updateSelectInput(
@@ -383,7 +383,7 @@ srv_g_heatmap_bygrade <- function(id,
       if (input$plot_cm) {
         ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
         ADCM_label <- formatters::var_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
-        formatters::var_labels(ADCM) <- ADCM_label
+        formatters::var_labels(ADCM) <- ADCM_label # nolint
         validate(
           need(
             input$conmed_var %in% names(ADCM),
