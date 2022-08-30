@@ -251,7 +251,6 @@ srv_g_ae_oview <- function(id,
 
       req(!is.null(input$arm_var))
       arm_var <- input$arm_var
-      # iv$add_rule("arm_var", function(fac) if (nlevels(ANL[[fac]]) <= 1) "Arm needs to have at least 2 levels")
 
       choices <- unique(ANL[[arm_var]])
       validate(need(length(choices) > 0, "Please include multiple treatment"))
