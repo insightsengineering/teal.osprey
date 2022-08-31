@@ -382,14 +382,20 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
       sort_by_var <- input$sort_by_var
       filter_var <- input$filter_var
 
+      iv_len <- shinyvalidate::InputValidator$new()
+      iv_len$add_rule("right_val", function(x) if (length(x) == 0) "Please select at least one")
+      iv_len$add_rule("left_val", function(x) if (length(x) == 0) "Please select at least one")
+      iv_len$enable()
+      validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
       validate(
         need(nrow(ADSL) > 0, "ADSL Data has no rows"),
         need(nrow(ANL) > 0, "ADAE Data has no rows")
       )
-      validate(
-        need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
-        need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked")
-      )
+      # validate(
+      #   need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
+      #   need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked")
+      # )
       validate(need(
         any(c(ADSL[[right_var]] %in% right_val, ADSL[[left_var]] %in% left_val)),
         "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)"

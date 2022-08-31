@@ -282,6 +282,12 @@ srv_g_ae_sub <- function(id,
     })
 
     plt <- reactive({
+      iv_comp <- shinyvalidate::InputValidator$new()
+      iv_comp$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
+      iv_comp$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
+      iv_comp$enable()
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
       ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
@@ -308,10 +314,6 @@ srv_g_ae_sub <- function(id,
           all(input$groups %in% names(ANL)) &
             all(input$groups %in% names(ADSL)),
           "Check all selected subgroups are columns in ADAE and ADSL."
-        ),
-        need(
-          input$arm_trt != input$arm_ref,
-          "Treatment and Reference can not be identical."
         )
       )
 

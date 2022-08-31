@@ -130,3 +130,15 @@ include_css_files <- function(pattern = "*") {
   }
   return(shiny::singleton(shiny::tags$head(lapply(css_files, shiny::includeCSS))))
 }
+
+#' Utility unction used by shinyvalidate to print warning when two objects are the same.
+#' @param value object one
+#' @param comparison object to compare
+#' @keywords internal
+#'
+comp_arm <- function(value, comparison) {
+  if (value == comparison) {
+    sprintf("Misspecified: treatment and control arm cannot be the same.
+Please change one of them.")
+  }
+}
