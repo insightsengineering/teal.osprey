@@ -145,7 +145,7 @@ Please change one of them.")
 }
 
 #' Utility function to check whether desired value exist within the variable in
-#'  specified data and return message if not.
+#'  specified data and return message otherwise.
 #' @param is_in string value of the variable to look for
 #' @param anl data
 #' @param armv name of the variable to search
