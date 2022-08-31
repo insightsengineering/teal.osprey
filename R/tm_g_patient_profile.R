@@ -848,7 +848,12 @@ srv_g_patient_profile <- function(id,
 
       if (select_plot["cm"]) {
         iv_tum <- shinyvalidate::InputValidator$new()
-        iv_tum$add_rule("cm_var", shinyvalidate::sv_required(message = "Please select a concomitant medication variable."))
+        iv_tum$add_rule(
+          "cm_var",
+          shinyvalidate::sv_required(
+            message = "Please select a concomitant medication variable."
+            )
+        )
         iv_tum$enable()
         validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
