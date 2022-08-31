@@ -293,14 +293,10 @@ srv_g_ae_oview <- function(id,
       iv_comp <- shinyvalidate::InputValidator$new()
       iv_comp$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
       iv_comp$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
-      arm_var <- input$arm_var
-      iv_comp$add_rule(
-        "arm_var",
-        function(av, anl) if (nlevels(anl[[av]]) < 2) "Arm needs to have at least 2 levels",
-        anl = ANL
-      )
       iv_comp$enable()
       validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
+      validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
 
       if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
         iv_an <- shinyvalidate::InputValidator$new()
