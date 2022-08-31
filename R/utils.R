@@ -146,16 +146,16 @@ Please change one of them.")
 
 #' Utility function to check whether desired value exist within the variable in
 #'  specified data and return message otherwise.
-#' @param is_in string value of the variable to look for
+#' @param value string value of the variable to look for
 #' @param anl data
 #' @param armv name of the variable to search
 #' @keywords internal
 #'
-isin_dataset <- function(is_in, anl, armv) {
-  if (!(is_in %in% anl[[armv]])) {
+isin_dataset <- function(value, anl, armv) {
+  if (!(value %in% anl[[armv]])) {
     sprintf(
       "Selected control: '%s' not found in the %s variable (filtered out?)",
-      is_in, arm_var
+      value, arm_var
     )
   }
 }
