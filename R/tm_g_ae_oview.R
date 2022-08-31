@@ -295,7 +295,8 @@ srv_g_ae_oview <- function(id,
       iv_comp$add_rule(
         "arm_var",
         function(av, anl) if (nlevels(anl[[av]]) < 2) "Arm needs to have at least 2 levels",
-        anl = ANL)
+        anl = ANL
+      )
       iv_comp$enable()
       validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
