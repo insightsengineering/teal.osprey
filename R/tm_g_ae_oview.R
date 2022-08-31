@@ -275,12 +275,6 @@ srv_g_ae_oview <- function(id,
     })
 
     plt <- reactive({
-      iv_comp <- shinyvalidate::InputValidator$new()
-      iv_comp$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
-      iv_comp$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
-      iv_comp$enable()
-      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the interface."))
-
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
       ANL_UNFILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
@@ -294,18 +288,23 @@ srv_g_ae_oview <- function(id,
 
       validate_has_data(ANL, min_nrow = 10)
 
-      validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
+      iv_comp <- shinyvalidate::InputValidator$new()
+      iv_comp$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
+      iv_comp$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
+      arm_var <- input$arm_var
+      iv_comp$add_rule(
+        "arm_var",
+        function(av, anl) if (nlevels(anl[[av]]) < 2) "Arm needs to have at least 2 levels",
+        anl = ANL)
+      iv_comp$enable()
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
       if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
-        validate(
-          need(
-            input$arm_ref %in% ANL[[input$arm_var]],
-            paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
-          ),
-          need(
-            input$arm_trt %in% ANL[[input$arm_var]],
-            paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
-          )
-        )
+        iv_an <- shinyvalidate::InputValidator$new()
+        iv_an$add_rule("arm_ref", isin_dataset, anl = ANL, armv = input$arm_var)
+        iv_an$add_rule("arm_trt", isin_dataset, anl = ANL, armv = input$arm_var)
+        iv_an$enable()
+        validate(need(iv_an$is_valid(), "Misspecification error: please observe red flags in the interface."))
       }
       validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
