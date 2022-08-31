@@ -252,10 +252,8 @@ srv_g_ae_oview <- function(id,
 
     observeEvent(input$arm_var, {
       ANL <- datasets$get_data(dataname, filtered = FALSE) # nolint
-
       req(!is.null(input$arm_var))
       arm_var <- input$arm_var
-
       choices <- unique(ANL[[arm_var]])
       validate(need(length(choices) > 0, "Please include multiple treatment"))
       if (length(choices) == 1) {
