@@ -3,7 +3,7 @@
 \name{isin_dataset}
 \alias{isin_dataset}
 \title{Utility function to check whether desired value exist within the variable in
-specified data and return message if not.}
+specified data and return message otherwise.}
 \usage{
 isin_dataset(is_in, anl, armv)
 }
@@ -16,6 +16,6 @@ isin_dataset(is_in, anl, armv)
 }
 \description{
 Utility function to check whether desired value exist within the variable in
-specified data and return message if not.
+specified data and return message otherwise.
 }
 \keyword{internal}
