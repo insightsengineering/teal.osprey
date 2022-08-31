@@ -284,13 +284,11 @@ srv_g_events_term_id <- function(id,
     plt <- reactive({
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
-      validate(need(
-        input$arm_trt != input$arm_ref,
-        paste("Treatment arm and control arm cannot be the same.",
-          "Please select a different treatment arm or control arm",
-          sep = "\n"
-        )
-      ))
+      iv_comp <- shinyvalidate::InputValidator$new()
+      iv_comp$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
+      iv_comp$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
+      iv_comp$enable()
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
       ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
