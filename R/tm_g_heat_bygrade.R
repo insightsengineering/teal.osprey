@@ -343,8 +343,13 @@ srv_g_heatmap_bygrade <- function(id,
     })
 
     plt <- reactive({
+      iv_len <- shinyvalidate::InputValidator$new()
+      anno_var <- input$anno_var
+      iv_len$add_rule("anno_var", function(x) if (length(x) > 2) "Please include no more than 2 annotation variables.")
+      iv_len$enable()
+      validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
-      validate(need(length(input$anno_var) <= 2, "Please include no more than 2 annotation variables"))
 
       ADSL <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
       ADEX <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
@@ -400,7 +405,12 @@ srv_g_heatmap_bygrade <- function(id,
       teal.code::chunks_reset(envir = environment())
 
       if (input$plot_cm) {
-        validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
+        iv_cm <- shinyvalidate::InputValidator$new()
+        conmed_var <- input$conmed_var
+        iv_cm$add_rule("conmed_var", shinyvalidate::sv_required(message = "Please select Conmed variable."))
+        iv_cm$enable()
+        validate(need(iv_cm$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
         teal.code::chunks_push(
           id = "conmed_data call",
           expression = bquote({

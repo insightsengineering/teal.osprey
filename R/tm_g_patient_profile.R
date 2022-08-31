@@ -417,7 +417,8 @@ srv_g_patient_profile <- function(id,
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
     iv$add_rule("sl_start_date", shinyvalidate::sv_required(message = "Please select a start date variable."))
-    iv$add_rule("lb_var_show", shinyvalidate::sv_required(message = "Please select `Lab values`."))
+    iv$add_rule("lb_var_show", shinyvalidate::sv_required(message = "Please select Lab values."))
+    iv$add_rule("ae_var", shinyvalidate::sv_required(message = "Please select an adverse event variable."))
     iv$enable()
 
     # initialize chunks
@@ -511,10 +512,6 @@ srv_g_patient_profile <- function(id,
       lb_var <- input$lb_var
       x_limit <- input$x_limit
       lb_var_show <- input$lb_var_show
-
-      validate(
-        need(ae_line_col_var, "Please select an adverse event line color.")
-      )
 
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
@@ -801,9 +798,11 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_safe_eval()
 
       if (select_plot["rs"]) {
-        validate(
-          need(!is.null(rs_var), "Please select a tumor response variable.")
-        )
+        iv_tum <- shinyvalidate::InputValidator$new()
+        iv_tum$add_rule("rs_var", shinyvalidate::sv_required(message = "Please select a tumor response variable."))
+        iv_tum$enable()
+        validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
         if (ADSL$USUBJID %in% ADRS$USUBJID) {
           teal.code::chunks_push(
             id = "ADRS and rs call",
@@ -848,9 +847,11 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push_new_line()
 
       if (select_plot["cm"]) {
-        validate(
-          need(!is.null(cm_var), "Please select a concomitant medication variable.")
-        )
+        iv_tum <- shinyvalidate::InputValidator$new()
+        iv_tum$add_rule("cm_var", shinyvalidate::sv_required(message = "Please select a concomitant medication variable."))
+        iv_tum$enable()
+        validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
         if (ADSL$USUBJID %in% ADCM$USUBJID) {
           teal.code::chunks_push(
             id = "ADCM and cm call",
@@ -902,9 +903,11 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push_new_line()
 
       if (select_plot["ex"]) {
-        validate(
-          need(!is.null(ex_var), "Please select an exposure variable.")
-        )
+        iv_ex <- shinyvalidate::InputValidator$new()
+        iv_ex$add_rule("ex_var", shinyvalidate::sv_required(message = "Please select an exposure variable."))
+        iv_ex$enable()
+        validate(need(iv_ex$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
         if (ADSL$USUBJID %in% ADEX$USUBJID) {
           teal.code::chunks_push(
             id = "ADEX and ex call",
@@ -962,9 +965,11 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push_new_line()
 
       if (select_plot["lb"]) {
-        validate(
-          need(!is.null(lb_var), "Please select a lab variable.")
-        )
+        iv_lb <- shinyvalidate::InputValidator$new()
+        iv_lb$add_rule("lb_var", shinyvalidate::sv_required(message = "Please select a lab variable."))
+        iv_lb$enable()
+        validate(need(iv_lb$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
         if (ADSL$USUBJID %in% ADLB$USUBJID) {
           req(lb_var_show != lb_var)
           teal.code::chunks_push(
