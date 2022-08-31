@@ -5,10 +5,10 @@
 \title{Utility function to check whether desired value exist within the variable in
 specified data and return message otherwise.}
 \usage{
-isin_dataset(is_in, anl, armv)
+isin_dataset(value, anl, armv)
 }
 \arguments{
-\item{is_in}{string value of the variable to look for}
+\item{value}{string value of the variable to look for}
 
 \item{anl}{data}
 
