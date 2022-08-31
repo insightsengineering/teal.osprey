@@ -130,3 +130,32 @@ include_css_files <- function(pattern = "*") {
   }
   return(shiny::singleton(shiny::tags$head(lapply(css_files, shiny::includeCSS))))
 }
+
+#' Utility function to print warning when two objects are the same
+#'  and return message if not.
+#' @param value object one
+#' @param comparison object to compare
+#' @keywords internal
+#'
+comp_arm <- function(value, comparison) {
+  if (value == comparison) {
+    sprintf("Misspecified: treatment and control arm cannot be the same.
+Please change one of them.")
+  }
+}
+
+#' Utility function to check whether desired value exist within the variable in
+#'  specified data and return message if not.
+#' @param is_in string value of the variable to look for
+#' @param anl data
+#' @param armv name of the variable to search
+#' @keywords internal
+#'
+isin_dataset <- function(is_in, anl, armv) {
+  if (!(is_in %in% anl[[armv]])) {
+    sprintf(
+      "Selected control: '%s' not found in the %s variable (filtered out?)",
+      is_in, arm_var
+    )
+  }
+}

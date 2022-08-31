@@ -175,6 +175,10 @@ srv_g_ae_sub <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("arm_var", shinyvalidate::sv_required(message = "Please select an arm variable."))
+    iv$enable()
+
     teal.code::init_chunks()
     decorate_output <- srv_g_decorate(
       id = NULL,
@@ -278,7 +282,13 @@ srv_g_ae_sub <- function(id,
     })
 
     plt <- reactive({
-      validate(need(input$arm_var, "Please select an arm variable."))
+      iv_comp <- shinyvalidate::InputValidator$new()
+      iv_comp$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
+      iv_comp$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
+      iv_comp$enable()
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the interface."))
+
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
       ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
 
@@ -304,10 +314,6 @@ srv_g_ae_sub <- function(id,
           all(input$groups %in% names(ANL)) &
             all(input$groups %in% names(ADSL)),
           "Check all selected subgroups are columns in ADAE and ADSL."
-        ),
-        need(
-          input$arm_trt != input$arm_ref,
-          "Treatment and Reference can not be identical."
         )
       )
 

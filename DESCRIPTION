@@ -32,6 +32,7 @@ Imports:
     lifecycle,
     logger (>= 0.2.0),
     purrr,
+    shinyvalidate,
     teal.code (>= 0.1.1),
     teal.logger (>= 0.1.0),
     teal.reporter (>= 0.1.0),
