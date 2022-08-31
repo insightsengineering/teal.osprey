@@ -852,7 +852,7 @@ srv_g_patient_profile <- function(id,
           "cm_var",
           shinyvalidate::sv_required(
             message = "Please select a concomitant medication variable."
-            )
+          )
         )
         iv_tum$enable()
         validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the interface."))
