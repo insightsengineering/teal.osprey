@@ -225,10 +225,10 @@ srv_g_ae_oview <- function(id,
     iv <- shinyvalidate::InputValidator$new()
     iv$add_rule("arm_var", shinyvalidate::sv_required(
       message = "Please select an arm variable.")
-      )
+    )
     iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
       message = "Please select at least one flag")
-      )
+    )
     iv$enable()
 
     teal.code::init_chunks()
