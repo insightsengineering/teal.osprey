@@ -2,7 +2,8 @@
 % Please edit documentation in R/utils.R
 \name{comp_arm}
 \alias{comp_arm}
-\title{Utility unction used by shinyvalidate to print warning when two objects are the same.}
+\title{Utility function to print warning when two objects are the same
+and return message if not.}
 \usage{
 comp_arm(value, comparison)
 }
@@ -12,6 +13,7 @@ comp_arm(value, comparison)
 \item{comparison}{object to compare}
 }
 \description{
-Utility unction used by shinyvalidate to print warning when two objects are the same.
+Utility function to print warning when two objects are the same
+and return message if not.
 }
 \keyword{internal}
