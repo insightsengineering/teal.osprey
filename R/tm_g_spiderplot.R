@@ -221,11 +221,11 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
 
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("paramcd", shinyvalidate::sv_required(message = "Please select Parameter - from ADTR."))
-    iv$add_rule("x_var", shinyvalidate::sv_required(message = "Please select X-axis Variable."))
-    iv$add_rule("y_var", shinyvalidate::sv_required(message = "Please select Y-axis Variable."))
-    iv$add_rule("marker_var", shinyvalidate::sv_required(message = "Please select `Marker Symbol By Variable`."))
-    iv$add_rule("line_colorby_var", shinyvalidate::sv_required(message = "Please select `Color By Variable (Line)`."))
+    iv$add_rule("paramcd", shinyvalidate::sv_required())
+    iv$add_rule("x_var", shinyvalidate::sv_required())
+    iv$add_rule("y_var", shinyvalidate::sv_required())
+    iv$add_rule("marker_var", shinyvalidate::sv_required())
+    iv$add_rule("line_colorby_var", shinyvalidate::sv_required())
     iv$enable()
 
     vals <- reactiveValues(spiderplot = NULL) # nolint
@@ -237,21 +237,16 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
     plot_r <- reactive({
 
       # get datasets ---
-
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
       ADTR <- datasets$get_data(dataname, filtered = TRUE) # nolint
 
       adtr_name <- dataname
       assign(adtr_name, ADTR) # so that we can refer to the 'correct' data name
 
-
       # restart chunks & include current environment ---
-
       teal.code::chunks_reset(envir = environment())
 
-
       # get inputs ---
-
       paramcd <- input$paramcd # nolint
       x_var <- input$x_var
       y_var <- input$y_var
@@ -269,7 +264,6 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
       validate(need(nrow(ADTR) > 0, paste(dataname, "data has zero rows")))
 
       # define variables ---
-
       # if variable is not in ADSL, then take from domain VADs
       varlist <- c(xfacet_var, yfacet_var, marker_var, line_colorby_var)
       varlist_from_adsl <- varlist[varlist %in% names(ADSL)]

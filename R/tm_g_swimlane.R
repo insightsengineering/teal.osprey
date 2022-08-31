@@ -267,9 +267,7 @@ srv_g_swimlane <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("bar_var", shinyvalidate::sv_required(
-      message = "Please select a variable to map to the bar length."
-    ))
+    iv$add_rule("bar_var", shinyvalidate::sv_required())
     iv$enable()
 
     # use teal.code code chunks

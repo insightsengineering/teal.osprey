@@ -305,10 +305,10 @@ srv_g_heatmap_bygrade <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("heat_var", shinyvalidate::sv_required(message = "Please select heat variable."))
-    iv$add_rule("id_var", shinyvalidate::sv_required(message = "Please select ID variable."))
-    iv$add_rule("visit_var", shinyvalidate::sv_required(message = "Please select visit variable."))
-    iv$add_rule("ongo_var", shinyvalidate::sv_required(message = "Please select Study Ongoing Status variable."))
+    iv$add_rule("heat_var", shinyvalidate::sv_required())
+    iv$add_rule("id_var", shinyvalidate::sv_required())
+    iv$add_rule("visit_var", shinyvalidate::sv_required())
+    iv$add_rule("ongo_var", shinyvalidate::sv_required())
     iv$enable()
 
     teal.code::init_chunks()
@@ -407,7 +407,7 @@ srv_g_heatmap_bygrade <- function(id,
       if (input$plot_cm) {
         iv_cm <- shinyvalidate::InputValidator$new()
         conmed_var <- input$conmed_var
-        iv_cm$add_rule("conmed_var", shinyvalidate::sv_required(message = "Please select Conmed variable."))
+        iv_cm$add_rule("conmed_var", shinyvalidate::sv_required())
         iv_cm$enable()
         validate(need(iv_cm$is_valid(), "Misspecification error: please observe red flags in the interface."))
 

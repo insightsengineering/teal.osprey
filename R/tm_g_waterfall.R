@@ -284,8 +284,8 @@ srv_g_waterfall <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("bar_var", shinyvalidate::sv_required(message = "Please select Bar Height."))
-    iv$add_rule("bar_paramcd", shinyvalidate::sv_required(message = "Please select Tumor Burden Parameter."))
+    iv$add_rule("bar_var", shinyvalidate::sv_required())
+    iv$add_rule("bar_paramcd", shinyvalidate::sv_required())
     iv$enable()
 
     # use teal.code code chunks

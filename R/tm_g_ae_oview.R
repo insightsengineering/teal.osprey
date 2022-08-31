@@ -223,9 +223,7 @@ srv_g_ae_oview <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("arm_var", shinyvalidate::sv_required(
-      message = "Please select an arm variable."
-    ))
+    iv$add_rule("arm_var", shinyvalidate::sv_required())
     iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
       message = "Please select at least one flag"
     ))

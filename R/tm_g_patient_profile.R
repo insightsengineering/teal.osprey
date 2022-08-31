@@ -416,9 +416,9 @@ srv_g_patient_profile <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("sl_start_date", shinyvalidate::sv_required(message = "Please select a start date variable."))
-    iv$add_rule("lb_var_show", shinyvalidate::sv_required(message = "Please select Lab values."))
-    iv$add_rule("ae_var", shinyvalidate::sv_required(message = "Please select an adverse event variable."))
+    iv$add_rule("sl_start_date", shinyvalidate::sv_required())
+    iv$add_rule("lb_var_show", shinyvalidate::sv_required())
+    iv$add_rule("ae_var", shinyvalidate::sv_required())
     iv$enable()
 
     # initialize chunks
@@ -799,7 +799,7 @@ srv_g_patient_profile <- function(id,
 
       if (select_plot["rs"]) {
         iv_tum <- shinyvalidate::InputValidator$new()
-        iv_tum$add_rule("rs_var", shinyvalidate::sv_required(message = "Please select a tumor response variable."))
+        iv_tum$add_rule("rs_var", shinyvalidate::sv_required())
         iv_tum$enable()
         validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
@@ -848,12 +848,7 @@ srv_g_patient_profile <- function(id,
 
       if (select_plot["cm"]) {
         iv_tum <- shinyvalidate::InputValidator$new()
-        iv_tum$add_rule(
-          "cm_var",
-          shinyvalidate::sv_required(
-            message = "Please select a concomitant medication variable."
-          )
-        )
+        iv_tum$add_rule("cm_var", shinyvalidate::sv_required())
         iv_tum$enable()
         validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
@@ -909,7 +904,7 @@ srv_g_patient_profile <- function(id,
 
       if (select_plot["ex"]) {
         iv_ex <- shinyvalidate::InputValidator$new()
-        iv_ex$add_rule("ex_var", shinyvalidate::sv_required(message = "Please select an exposure variable."))
+        iv_ex$add_rule("ex_var", shinyvalidate::sv_required())
         iv_ex$enable()
         validate(need(iv_ex$is_valid(), "Misspecification error: please observe red flags in the interface."))
 
@@ -971,7 +966,7 @@ srv_g_patient_profile <- function(id,
 
       if (select_plot["lb"]) {
         iv_lb <- shinyvalidate::InputValidator$new()
-        iv_lb$add_rule("lb_var", shinyvalidate::sv_required(message = "Please select a lab variable."))
+        iv_lb$add_rule("lb_var", shinyvalidate::sv_required())
         iv_lb$enable()
         validate(need(iv_lb$is_valid(), "Misspecification error: please observe red flags in the interface."))
 

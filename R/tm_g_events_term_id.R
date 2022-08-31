@@ -205,8 +205,8 @@ srv_g_events_term_id <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("arm_var", shinyvalidate::sv_required(message = "Please select an arm variable."))
-    iv$add_rule("term", shinyvalidate::sv_required(message = "Please select Term Variable"))
+    iv$add_rule("arm_var", shinyvalidate::sv_required())
+    iv$add_rule("term", shinyvalidate::sv_required())
     iv$enable()
 
     decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint

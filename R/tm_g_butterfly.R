@@ -263,9 +263,9 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
 
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("category_var", shinyvalidate::sv_required(message = "Please select category variable."))
-    iv$add_rule("right_var", shinyvalidate::sv_required(message = "Please select Right Dichotomization Variable."))
-    iv$add_rule("left_var", shinyvalidate::sv_required(message = "Please select Left Dichotomization Variable."))
+    iv$add_rule("category_var", shinyvalidate::sv_required())
+    iv$add_rule("right_var", shinyvalidate::sv_required())
+    iv$add_rule("left_var", shinyvalidate::sv_required())
     iv$enable()
 
     teal.code::init_chunks()
