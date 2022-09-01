@@ -30,4 +30,3 @@ In order to run many of the examples you will also need to install the [`scda`](
 ### Forkers
 
 [![Forkers repo roster for @insightsengineering/teal.osprey](https://reporoster.com/forks/insightsengineering/teal.osprey)](https://github.com/insightsengineering/teal.osprey/network/members)
-
