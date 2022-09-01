@@ -282,7 +282,7 @@ srv_g_ae_sub <- function(id,
       validate(need(input$arm_var, "Please select an arm variable."))
       validate(need(
         is.factor(ANL[[input$arm_var]]),
-        "Selected arm variable needs to be a factor. Contact an app developer."
+        "Selected arm variable needs to be a factor. Contact the app developer."
       ))
       validate(
         need(

@@ -324,7 +324,6 @@ srv_g_heatmap_bygrade <- function(id,
 
     observeEvent(input$plot_cm, {
       ADCM <- data[[cm_dataname]]() # nolint
-      # todo shiny validate that ADCM[[input$conmed_var]] is a factor
       choices <- levels(ADCM[[input$conmed_var]])
 
       updateSelectInput(
@@ -376,6 +375,10 @@ srv_g_heatmap_bygrade <- function(id,
           )
         )
         validate(need(
+          is.factor(ADCM[[input$conmed_var]]),
+          "Conmed Variable should be a factor"
+        ))
+        validate(need(
           all(input$conmed_level %in% levels(ADCM[[input$conmed_var]])),
           "Updating Conmed Levels"
         ))
@@ -400,7 +403,7 @@ srv_g_heatmap_bygrade <- function(id,
         teal.code::eval_code(
           teal.code::new_quosure(data),
           name = "conmed_data call",
-          expression = quote(conmed_data <- conmed_var <- NULL)
+          code = quote(conmed_data <- conmed_var <- NULL)
         )
       }
 
