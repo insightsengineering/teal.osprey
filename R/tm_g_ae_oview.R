@@ -328,7 +328,7 @@ srv_g_ae_oview <- function(id,
               draw = TRUE
             )
           ),
-          quote(print(plot))
+          quote(plot)
         ))
       )
     })

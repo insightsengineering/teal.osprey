@@ -499,7 +499,7 @@ srv_g_swimlane <- function(id,
       }
 
       q6 <- teal.code::eval_code(q5, name = "plot call", code = plot_call)
-      teal.code::eval_code(q6, quote(print(plot)))
+      teal.code::eval_code(q6, quote(plot))
     })
 
     plot_r <- reactive(output_q()[["plot"]])

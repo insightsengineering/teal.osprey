@@ -471,7 +471,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         )
       }
 
-      teal.code::eval_code(q6, quote(print(plot)))
+      teal.code::eval_code(q6, quote(plot))
     })
 
     plot_r <- reactive(output_q()[["plot"]])

@@ -511,7 +511,7 @@ srv_g_waterfall <- function(id,
             y_label = "Tumor Burden Change from Baseline",
             title = "Waterfall Plot"
           )
-          print(plot)
+          plot
         })
       )
     })

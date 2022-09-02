@@ -371,7 +371,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
             show_legend = .(legend_on)
           )
 
-          print(plot)
+          plot
         })
       )
     })

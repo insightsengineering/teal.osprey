@@ -347,7 +347,7 @@ srv_g_events_term_id <- function(id,
         )
       )
 
-      teal.code::eval_code(q2, quote(print(plot)))
+      teal.code::eval_code(q2, quote(plot))
     })
 
     plot_r <- reactive(output_q()[["plot"]])

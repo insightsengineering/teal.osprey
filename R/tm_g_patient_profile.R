@@ -1064,7 +1064,7 @@ srv_g_patient_profile <- function(id,
             xlab = "Study Day",
             title = paste("Patient Profile: ", .(patient_id))
           )
-          print(plot)
+          plot
         })
       )
     })

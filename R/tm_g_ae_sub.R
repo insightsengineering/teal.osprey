@@ -347,7 +347,7 @@ srv_g_ae_sub <- function(id,
               draw = TRUE
             )
           ),
-          quote(print(plot))
+          quote(plot)
         ))
       )
     })
