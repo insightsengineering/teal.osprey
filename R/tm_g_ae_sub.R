@@ -278,7 +278,7 @@ srv_g_ae_sub <- function(id,
     output_q <- reactive({
       ANL <- data[[dataname]]() # nolint
       ADSL <- data[["ADSL"]]() # nolint
-
+      validate_has_data(ANL, min_nrow = 10)
       validate(need(input$arm_var, "Please select an arm variable."))
       validate(need(
         is.factor(ANL[[input$arm_var]]),
@@ -297,7 +297,6 @@ srv_g_ae_sub <- function(id,
         ),
         need(
           all(input$groups %in% names(ANL)) & all(input$groups %in% names(ADSL)),
-          # todo: ask Nina what should be included in the code ANL or ADSL?
           "Check all selected subgroups are columns in ADAE and ADSL."
         ),
         need(
