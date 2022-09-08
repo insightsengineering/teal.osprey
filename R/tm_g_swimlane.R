@@ -158,7 +158,7 @@ tm_g_swimlane <- function(label,
       plot_width = plot_width,
       x_label = x_label
     ),
-    filters = dataname
+    filters = c("ADSL", dataname)
   )
 }
 
@@ -243,7 +243,7 @@ ui_g_swimlane <- function(id, ...) {
           value = paste(a$vref_line, collapse = ", ")
         )
       ),
-      forms = get_rcode_ui(ns("rcode")),
+      forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code"),
       pre_output = a$pre_output,
       post_output = a$post_output
     )
@@ -251,7 +251,8 @@ ui_g_swimlane <- function(id, ...) {
 }
 
 srv_g_swimlane <- function(id,
-                           datasets,
+                           data,
+                           filter_panel_api,
                            reporter,
                            dataname,
                            marker_pos_var,
@@ -264,11 +265,9 @@ srv_g_swimlane <- function(id,
                            plot_width,
                            x_label) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
 
   moduleServer(id, function(input, output, session) {
-    # use teal.code code chunks
-    teal.code::init_chunks()
-
     # if marker position is NULL, then hide options for marker shape and color
     output$marker_shape_sel <- renderUI({
       if (dataname == "ADSL" || is.null(marker_shape_var) || is.null(input$marker_pos_var)) {
@@ -298,26 +297,20 @@ srv_g_swimlane <- function(id,
     })
 
     # create plot
-    plot_r <- reactive({
+    output_q <- reactive({
       # DATA GETTERS
-      validate(need("ADSL" %in% datasets$datanames(), "ADSL needs to be defined in datasets"))
+      validate(need("ADSL" %in% names(data), "'ADSL' not included in data"))
       validate(need(
-        (length(datasets$datanames()) == 1 && dataname == "ADSL") ||
-          (length(datasets$datanames()) >= 2 && dataname != "ADSL"),
+        (length(data) == 1 && dataname == "ADSL") ||
+          (length(data) >= 2 && dataname != "ADSL"),
         "Please either add just 'ADSL' as dataname when just ADSL is available
       In case 2 datasets are available ADSL is not supposed to be the dataname."
       ))
       validate(need(input$bar_var, "Please select a variable to map to the bar length."))
 
-      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-      if (dataname != "ADSL") {
-        ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
-        anl_name <- dataname
-        assign(anl_name, ANL)
-      }
+      ADSL <- data[["ADSL"]]() # nolint
 
-      # Restart the chunks for showing code
-      teal.code::chunks_reset(envir = environment())
+      q1 <- teal.code::new_quosure(data)
 
       # VARIABLE GETTERS
       # lookup bar variables
@@ -350,12 +343,13 @@ srv_g_swimlane <- function(id,
         validate_has_data(ADSL, min_nrow = 3)
         validate_has_variable(ADSL, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
       } else {
+        anl <- data[[dataname]]()
         validate_has_data(ADSL, min_nrow = 3)
         validate_has_variable(ADSL, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
 
-        validate_has_data(ANL, min_nrow = 3)
+        validate_has_data(anl, min_nrow = 3)
         validate_has_variable(
-          ANL,
+          anl,
           unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
         )
       }
@@ -372,11 +366,12 @@ srv_g_swimlane <- function(id,
         ))
       }
 
-      # WRITE VARIABLES TO CHUNKS
+      # WRITE VARIABLES TO QUOSURE
 
-      teal.code::chunks_push(
-        id = "variables call",
-        expression = bquote({
+      q2 <- teal.code::eval_code(
+        q1,
+        name = "variables call",
+        code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
           sort_var <- .(sort_var)
@@ -386,14 +381,14 @@ srv_g_swimlane <- function(id,
           anno_txt_var <- .(anno_txt_var)
         })
       )
-      teal.code::chunks_push_new_line()
+      q3 <- teal.code::eval_code(q2, "")
 
-      # WRITE DATA SELECTION TO CHUNKS
-
-      if (dataname == "ADSL") {
-        teal.code::chunks_push(
-          id = "ADSL call",
-          expression = bquote({
+      # WRITE DATA SELECTION TO QUOSURE
+      q4 <- if (dataname == "ADSL") {
+        teal.code::eval_code(
+          q3,
+          name = "ADSL call",
+          code = bquote({
             ADSL_p <- ADSL # nolint
             ADSL <- ADSL_p[, .(adsl_vars)] # nolint
             # only take last part of USUBJID
@@ -401,12 +396,12 @@ srv_g_swimlane <- function(id,
           })
         )
       } else {
-        anl_name <- dataname
-        teal.code::chunks_push(
-          id = "ADSL and ANL call",
-          expression = bquote({
+        teal.code::eval_code(
+          q3,
+          name = "ADSL and ANL call",
+          code = bquote({
             ADSL_p <- ADSL # nolint
-            ANL_p <- .(as.name(anl_name)) # nolint
+            ANL_p <- .(as.name(dataname)) # nolint
 
             ADSL <- ADSL_p[, .(adsl_vars)] # nolint
             ANL <- merge( # nolint
@@ -421,14 +416,11 @@ srv_g_swimlane <- function(id,
           })
         )
       }
-      teal.code::chunks_push_new_line() # empty line for pretty code
-      teal.code::chunks_safe_eval()
+      q5 <- teal.code::eval_code(q4, "") # empty line for pretty code
 
-
-      anl <- teal.code::chunks_get_var("ANL")
       plot_call <- if (dataname == "ADSL") {
-        bquote({
-          osprey::g_swimlane(
+        bquote(
+          plot <- osprey::g_swimlane(
             bar_id = ADSL[["USUBJID"]],
             bar_length = ADSL[[bar_var]],
             sort_by = .(if (length(sort_var) > 0) quote(ADSL[[sort_var]]) else NULL),
@@ -445,10 +437,10 @@ srv_g_swimlane <- function(id,
             xlab = .(x_label),
             title = "Swimlane Plot"
           )
-        })
+        )
       } else {
-        bquote({
-          osprey::g_swimlane(
+        bquote(
+          plot <- osprey::g_swimlane(
             bar_id = ADSL[["USUBJID"]],
             bar_length = ADSL[[bar_var]],
             sort_by = .(if (length(sort_var) > 0) {
@@ -503,12 +495,14 @@ srv_g_swimlane <- function(id,
             xlab = .(x_label),
             title = "Swimlane Plot"
           )
-        })
+        )
       }
 
-      teal.code::chunks_push(id = "plot call", expression = plot_call)
-      teal.code::chunks_safe_eval()
+      q6 <- teal.code::eval_code(q5, name = "plot call", code = plot_call)
+      teal.code::eval_code(q6, quote(plot))
     })
+
+    plot_r <- reactive(output_q()[["plot"]])
 
     # Insert the plot into a plot_with_settings module from teal.widgets
     pws <- teal.widgets::plot_with_settings_srv(
@@ -518,16 +512,10 @@ srv_g_swimlane <- function(id,
       width = plot_width
     )
 
-    get_rcode_srv(
+    teal.widgets::verbatim_popup_srv(
       id = "rcode",
-      datasets = datasets,
-      modal_title = paste("R code for", label),
-      datanames = unique(c(
-        dataname,
-        vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-          if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-        })
-      ))
+      title = paste("R code for", label),
+      verbatim_content = reactive(teal.code::get_code(output_q()))
     )
 
     ### REPORTER
@@ -536,7 +524,7 @@ srv_g_swimlane <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Swimlane")
         card$append_text("Swimlane Plot", "header2")
-        card$append_fs(datasets$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         if (!is.null(input$sort_var)) {
           card$append_text("Selected Options", "header3")
           card$append_text(paste("Sorted by:", input$sort_var))
@@ -547,12 +535,7 @@ srv_g_swimlane <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(get_rcode(
-          chunks = teal.code::get_chunks_object(parent_idx = 2L),
-          datasets = datasets,
-          title = "",
-          description = ""
-        ), collapse = "\n"))
+        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

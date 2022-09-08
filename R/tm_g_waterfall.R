@@ -265,14 +265,15 @@ ui_g_waterfall <- function(id, ...) {
         value = a$gap_point_val
       )
     ),
-    forms = get_rcode_ui(ns("rcode")),
+    forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code"),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
 }
 
 srv_g_waterfall <- function(id,
-                            datasets,
+                            data,
+                            filter_panel_api,
                             reporter,
                             dataname_tr,
                             dataname_rs,
@@ -281,15 +282,13 @@ srv_g_waterfall <- function(id,
                             plot_height,
                             plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
 
   moduleServer(id, function(input, output, session) {
-    # use teal.code code chunks
-    teal.code::init_chunks()
-
-    plot_r <- reactive({
-      adsl <- datasets$get_data("ADSL", filtered = TRUE)
-      adtr <- datasets$get_data(dataname_tr, filtered = TRUE)
-      adrs <- datasets$get_data(dataname_rs, filtered = TRUE)
+    output_q <- reactive({
+      adsl <- data[["ADSL"]]()
+      adtr <- data[[dataname_tr]]()
+      adrs <- data[[dataname_rs]]()
 
       bar_var <- input$bar_var
       bar_paramcd <- input$bar_paramcd
@@ -377,27 +376,16 @@ srv_g_waterfall <- function(id,
       adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
       adrs_paramcd <- unique(c(add_label_paramcd_rs, anno_txt_paramcd_rs))
 
-      # write data selection to chunks
-      adsl_name <- "ADSL"
-      adtr_name <- dataname_tr
-      adrs_name <- dataname_rs
-
-      assign(adsl_name, adsl)
-      assign(adtr_name, adtr)
-      assign(adrs_name, adrs)
-
       # validate data input
       validate_has_variable(adsl, adsl_vars)
       validate_has_variable(adrs, adrs_vars)
       validate_has_variable(adtr, adtr_vars)
 
-      # restart the chunks for showing code
-      teal.code::chunks_reset(envir = environment())
-
-      # write variables to chunks
-      teal.code::chunks_push(
-        id = "variables call",
-        expression = bquote({
+      # write variables to quosure
+      q1 <- teal.code::eval_code(
+        teal.code::new_quosure(data),
+        name = "variables call",
+        code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
           sort_var <- .(sort_var)
@@ -411,17 +399,18 @@ srv_g_waterfall <- function(id,
           show_value <- .(show_value)
         })
       )
-      teal.code::chunks_push_new_line()
+      q2 <- teal.code::eval_code(q1, "")
 
       # data processing
-      teal.code::chunks_push(
-        id = "bar_data call",
-        expression = bquote({
-          adsl <- .(as.name(adsl_name))[, .(adsl_vars)]
-          adtr <- .(as.name(adtr_name))[, .(adtr_vars)] # nolint
-          adrs <- .(as.name(adrs_name))[, .(adrs_vars)] # nolint
+      q3 <- teal.code::eval_code(
+        q2,
+        name = "bar_data call",
+        code = bquote({
+          adsl <- ADSL[, .(adsl_vars)]
+          adtr <- .(as.name(dataname_tr))[, .(adtr_vars)] # nolint
+          adrs <- .(as.name(dataname_rs))[, .(adrs_vars)] # nolint
 
-          bar_tr <- .(as.name(adtr_name)) %>%
+          bar_tr <- .(as.name(dataname_tr)) %>%
             dplyr::filter(PARAMCD == .(bar_paramcd)) %>%
             dplyr::select(USUBJID, .(as.name(bar_var))) %>%
             dplyr::group_by(USUBJID) %>%
@@ -429,35 +418,34 @@ srv_g_waterfall <- function(id,
           bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
         })
       )
-      teal.code::chunks_push_new_line()
-      teal.code::chunks_safe_eval()
-      bar_data <- teal.code::chunks_get_var("bar_data") # nolint
+      q4 <- teal.code::eval_code(q3, "")
 
-      if (is.null(adrs_paramcd)) {
-        teal.code::chunks_push(
-          id = "anl call",
-          expression = bquote({
+      q5 <- if (is.null(adrs_paramcd)) {
+        teal.code::eval_code(
+          q4,
+          name = "anl call",
+          code = bquote({
             anl <- bar_data
             anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
           })
         )
       } else {
-        teal.code::chunks_push(
-          id = "rs_sub call",
-          expression = bquote({
-            rs_sub <- .(as.name(adrs_name)) %>%
+        qq1 <- teal.code::eval_code(
+          q4,
+          name = "rs_sub call",
+          code = bquote(
+            rs_sub <- .(as.name(dataname_rs)) %>%
               dplyr::filter(PARAMCD %in% .(adrs_paramcd))
-          })
+          )
         )
-        teal.code::chunks_push_new_line()
-        teal.code::chunks_safe_eval()
+        qq2 <- teal.code::eval_code(qq1, "")
 
-        rs_sub <- teal.code::chunks_get_var("rs_sub")
-        validate_one_row_per_id(rs_sub, key = c("STUDYID", "USUBJID", "PARAMCD"))
+        validate_one_row_per_id(qq2[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
 
-        teal.code::chunks_push(
-          id = "anl call",
-          expression = bquote({
+        teal.code::eval_code(
+          qq2,
+          name = "anl call",
+          code = bquote({
             rs_label <- rs_sub %>%
               dplyr::select(USUBJID, PARAMCD, AVALC) %>%
               tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
@@ -466,18 +454,16 @@ srv_g_waterfall <- function(id,
           })
         )
       }
-      teal.code::chunks_push_new_line()
+      q6 <- teal.code::eval_code(q5, "")
 
-      teal.code::chunks_safe_eval()
+      # write plotting code to quosure
+      anl <- q6[["anl"]] # nolint
 
-
-      # write plotting code to chunks
-      anl <- teal.code::chunks_get_var("anl") # nolint
-
-      teal.code::chunks_push(
-        id = "g_waterfall call",
-        expression = bquote({
-          osprey::g_waterfall(
+      q7 <- teal.code::eval_code(
+        q6,
+        name = "g_waterfall call",
+        code = bquote({
+          plot <- osprey::g_waterfall(
             bar_id = anl[["USUBJID"]],
             bar_height = anl[[bar_var]],
             sort_by = .(if (length(sort_var) > 0) {
@@ -492,7 +478,7 @@ srv_g_waterfall <- function(id,
             }),
             bar_color_opt = .(if (length(bar_color_var) == 0) {
               NULL
-            } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt)) == T) {
+            } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt))) {
               bar_color_opt
             } else {
               NULL
@@ -525,11 +511,12 @@ srv_g_waterfall <- function(id,
             y_label = "Tumor Burden Change from Baseline",
             title = "Waterfall Plot"
           )
+          plot
         })
       )
-
-      teal.code::chunks_safe_eval()
     })
+
+    plot_r <- reactive(output_q()[["plot"]])
 
     # Insert the plot into a plot_with_settings module from teal.widgets
     pws <- teal.widgets::plot_with_settings_srv(
@@ -540,11 +527,10 @@ srv_g_waterfall <- function(id,
     )
 
     # Show R Code
-    get_rcode_srv(
+    teal.widgets::verbatim_popup_srv(
       id = "rcode",
-      datasets = datasets,
-      modal_title = paste("R code for", label),
-      datanames = datasets$datanames()
+      title = paste("R code for", label),
+      verbatim_content = reactive(teal.code::get_code(output_q()))
     )
 
     ### REPORTER
@@ -553,7 +539,7 @@ srv_g_waterfall <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Waterfall")
         card$append_text("Waterfall Plot", "header2")
-        card$append_fs(datasets$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Selected Options", "header3")
         card$append_text(paste0("Tumor Burden Parameter: ", input$bar_paramcd, "."))
         if (!is.null(input$sort_var)) {
@@ -568,12 +554,7 @@ srv_g_waterfall <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(get_rcode(
-          chunks = teal.code::get_chunks_object(parent_idx = 2L),
-          datasets = datasets,
-          title = "",
-          description = ""
-        ), collapse = "\n"))
+        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
