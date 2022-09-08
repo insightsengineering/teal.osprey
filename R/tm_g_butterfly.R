@@ -360,27 +360,30 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       sort_by_var <- input$sort_by_var
       filter_var <- input$filter_var
 
-      validate(need(category_var, "Please select a category variable."))
       validate(
+        need(category_var, "Please select a category variable."),
         need(nrow(ADSL) > 0, "ADSL Data has no rows"),
-        need(nrow(ANL) > 0, "ADAE Data has no rows")
-      )
-      validate(
+        need(nrow(ANL) > 0, "ADAE Data has no rows"),
         need(right_var, "'Right Dichotomization Variable' not selected"),
         need(left_var, "'Left Dichotomization Variable' not selected")
       )
-      validate(need(
-        is.factor(ANL[[right_var]]),
-        "Selected 'Right Dichotomization Variable' variable needs to be a factor. Contact an app developer."
-      ))
-      validate(need(
-        is.factor(ANL[[left_var]]),
-        "Selected 'Right Dichotomization Variable' variable needs to be a factor. Contact an app developer."
-      ))
-      validate(need(
-        any(c(ADSL[[right_var]] %in% right_val, ADSL[[left_var]] %in% left_val)),
-        "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)"
-      ))
+
+      validate(
+        need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
+        need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked"),
+        need(
+          is.factor(ANL[[right_var]]),
+          "Selected 'Right Dichotomization Variable' variable needs to be a factor. Contact an app developer."
+        ),
+        need(
+          is.factor(ANL[[left_var]]),
+          "Selected 'Right Dichotomization Variable' variable needs to be a factor. Contact an app developer."
+        ),
+        need(
+          any(c(ADSL[[right_var]] %in% right_val, ADSL[[left_var]] %in% left_val)),
+          "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)"
+        )
+      )
 
       # if variable is not in ADSL, then take from domain VADs
       varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)
