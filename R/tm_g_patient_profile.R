@@ -566,7 +566,7 @@ srv_g_patient_profile <- function(id,
           ADAE <- NULL # nolint
         } else {
           ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
-          formatters::var_labels(ADAE) <- formatters::var_labels(
+          formatters::var_labels(ADAE) <- formatters::var_labels( # nolint
             datasets$get_data(ae_dataname, filtered = FALSE),
             fill = FALSE
           )
@@ -656,7 +656,7 @@ srv_g_patient_profile <- function(id,
         expression = bquote({
           ADSL <- ADSL %>% # nolint
             group_by(.data$USUBJID)
-          ADSL$max_date <- pmax(
+          ADSL$max_date <- pmax( # nolint
             as.Date(ADSL$LSTALVDT),
             as.Date(ADSL$DTHDT),
             na.rm = TRUE
@@ -747,7 +747,7 @@ srv_g_patient_profile <- function(id,
                     as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
                   )))) %>%
                 select(c(.(adae_vars), ASTDY, AENDY))
-              formatters::var_labels(ADAE)[.(ae_line_col_var)] <-
+              formatters::var_labels(ADAE)[.(ae_line_col_var)] <- # nolint
                 formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)]
             })
           )
