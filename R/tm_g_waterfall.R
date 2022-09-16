@@ -433,7 +433,7 @@ srv_g_waterfall <- function(id,
           )
         )
 
-        validate_one_row_per_id(qq2[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
+        validate_one_row_per_id(qq1[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
 
         teal.code::eval_code(
           qq1,
