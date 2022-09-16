@@ -84,13 +84,15 @@
 #' library(scda)
 #' library(nestcolor)
 #'
-#' ADSL <- synthetic_cdisc_data("latest")$adsl
-#' ADAE <- synthetic_cdisc_data("latest")$adae %>%
+#' latest_data <- synthetic_cdisc_data("latest")
+#'
+#' ADSL <- latest_data$adsl
+#' ADAE <- latest_data$adae %>%
 #'   mutate(
 #'     ASTDT = as.Date(ASTDTM),
 #'     AENDT = as.Date(AENDTM)
 #'   )
-#' ADCM <- synthetic_cdisc_data("latest")$adcm %>%
+#' ADCM <- latest_data$adcm %>%
 #'   mutate(
 #'     ASTDT = as.Date(ASTDTM),
 #'     AENDT = as.Date(AENDTM)
@@ -101,14 +103,14 @@
 #'   select(-starts_with("ATC")) %>%
 #'   unique()
 #'
-#' ADRS <- synthetic_cdisc_data("latest")$adrs %>%
+#' ADRS <- latest_data$adrs %>%
 #'   mutate(ADT = as.Date(ADTM))
-#' ADEX <- synthetic_cdisc_data("latest")$adex %>%
+#' ADEX <- latest_data$adex %>%
 #'   mutate(
 #'     ASTDT = as.Date(ASTDTM),
 #'     AENDT = as.Date(AENDTM)
 #'   )
-#' ADLB <- synthetic_cdisc_data("latest")$adlb %>%
+#' ADLB <- latest_data$adlb %>%
 #'   mutate(
 #'     ADT = as.Date(ADTM),
 #'     LBSTRESN = as.numeric(LBSTRESC)
@@ -145,7 +147,7 @@
 #'               mutate(ASTDT = as.Date(ASTDTM),
 #'                      AENDT = as.Date(AENDTM))"
 #'     ),
-#'     check = TRUE
+#'     check = FALSE # set FALSE here to keep run time of example short, should be set to TRUE
 #'   ),
 #'   modules = modules(
 #'     tm_g_patient_profile(
@@ -564,7 +566,7 @@ srv_g_patient_profile <- function(id,
           ADAE <- NULL # nolint
         } else {
           ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
-          formatters::var_labels(ADAE) <- formatters::var_labels(
+          formatters::var_labels(ADAE) <- formatters::var_labels( # nolint
             datasets$get_data(ae_dataname, filtered = FALSE),
             fill = FALSE
           )
@@ -654,7 +656,7 @@ srv_g_patient_profile <- function(id,
         expression = bquote({
           ADSL <- ADSL %>% # nolint
             group_by(.data$USUBJID)
-          ADSL$max_date <- pmax(
+          ADSL$max_date <- pmax( # nolint
             as.Date(ADSL$LSTALVDT),
             as.Date(ADSL$DTHDT),
             na.rm = TRUE
@@ -745,7 +747,7 @@ srv_g_patient_profile <- function(id,
                     as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
                   )))) %>%
                 select(c(.(adae_vars), ASTDY, AENDY))
-              formatters::var_labels(ADAE)[.(ae_line_col_var)] <-
+              formatters::var_labels(ADAE)[.(ae_line_col_var)] <- # nolint
                 formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)]
             })
           )

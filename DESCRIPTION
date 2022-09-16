@@ -46,8 +46,6 @@ Suggests:
     scda.2021 (>= 0.1.3),
     teal.data (>= 0.1.1),
     testthat (>= 2.0)
-VignetteBuilder:
-    knitr
 Remotes:
     insightsengineering/osprey@*release,
     insightsengineering/scda.2021@*release,

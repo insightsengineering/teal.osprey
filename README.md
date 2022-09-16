@@ -1,6 +1,6 @@
 # teal.osprey
 
-The teal.osprey package provides community contributed `teal` modules of the analysis functions from the [osprey](https://insightsengineering.github.io/osprey) R package.
+The teal.osprey package provides community contributed `teal` modules of the analysis functions from the [osprey](https://insightsengineering.github.io/osprey/) R package.
 This enables `teal` app developers to easily create applications making use of the `osprey` analysis functions.
 
 ## Installation
@@ -15,7 +15,7 @@ remotes::install_github("insightsengineering/teal.osprey@*release")
 
 A stable release of all `NEST` packages from June 2022 is also available [here](https://github.com/insightsengineering/depository#readme).
 
-In order to run many of the examples you will also need to install the [`scda`](https://insightsengineering.github.io/scda) package.
+In order to run many of the examples you will also need to install the [`scda`](https://insightsengineering.github.io/scda/) package.
 
 ## Stargazers and Forkers
 
