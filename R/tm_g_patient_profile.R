@@ -643,7 +643,6 @@ srv_g_patient_profile <- function(id,
 
       q1 <- teal.code::eval_code(
         teal.code::new_quosure(data),
-        name = "ADSL call",
         code = bquote({
           ADSL <- ADSL %>% # nolint
             group_by(.data$USUBJID) %>%
@@ -660,8 +659,6 @@ srv_g_patient_profile <- function(id,
         })
       )
 
-      q2 <- teal.code::eval_code(q1, "")
-
       # ADSL with single subject
       validate(
         need(
@@ -675,25 +672,23 @@ srv_g_patient_profile <- function(id,
       )
 
       # name for ae_line_col
-      q3 <- if (!is.null(ae_line_col_var) && is.data.frame(ADAE)) {
+      q1 <- if (!is.null(ae_line_col_var) && is.data.frame(ADAE)) {
         teal.code::eval_code(
-          q2,
-          name = "ae_line_col_name call",
+          q1,
           code =
             bquote(ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)])
         )
       } else {
-        teal.code::eval_code(q2, name = "ae_line_col_name call", code = quote(ae_line_col_name <- NULL))
+        teal.code::eval_code(q1, code = quote(ae_line_col_name <- NULL))
       }
 
-      q4 <- if (select_plot["ae"]) {
+      q1 <- if (select_plot["ae"]) {
         validate(
           need(!is.null(input$ae_var), "Please select an adverse event variable.")
         )
         if (all(ADAE$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
-            q3,
-            name = "ADAE call",
+            q1,
             code = bquote({
               # ADAE
               ADAE <- ADAE[, .(adae_vars)] # nolint
@@ -737,7 +732,6 @@ srv_g_patient_profile <- function(id,
             })
           ) %>%
             teal.code::eval_code(
-              name = "ae call",
               code = call(
                 "<-",
                 as.name("ae"),
@@ -770,22 +764,19 @@ srv_g_patient_profile <- function(id,
           qq
         } else {
           empty_ae <- TRUE
-          teal.code::eval_code(q3, name = "ae call", code = bquote(ae <- NULL))
+          teal.code::eval_code(q1, code = bquote(ae <- NULL))
         }
       } else {
-        teal.code::eval_code(q3, name = "ae call", code = bquote(ae <- NULL))
+        teal.code::eval_code(q1, code = bquote(ae <- NULL))
       }
 
-      q5 <- teal.code::eval_code(q4, "")
-
-      q6 <- if (select_plot["rs"]) {
+      q1 <- if (select_plot["rs"]) {
         validate(
           need(!is.null(rs_var), "Please select a tumor response variable.")
         )
         if (all(ADRS$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
-            q5,
-            name = "ADRS and rs call",
+            q1,
             code = bquote({
               ADRS <- ADRS[, .(adrs_vars)] # nolint
               ADRS <- ADSL %>% # nolint
@@ -818,22 +809,19 @@ srv_g_patient_profile <- function(id,
           qq
         } else {
           empty_rs <- TRUE
-          teal.code::eval_code(q5, id = "rs call", expression = bquote(rs <- NULL))
+          teal.code::eval_code(q1, id = "rs call", expression = bquote(rs <- NULL))
         }
       } else {
-        teal.code::eval_code(q5, name = "rs call", code = bquote(rs <- NULL))
+        teal.code::eval_code(q1, code = bquote(rs <- NULL))
       }
 
-      q7 <- teal.code::eval_code(q6, "")
-
-      q8 <- if (select_plot["cm"]) {
+      q1 <- if (select_plot["cm"]) {
         validate(
           need(!is.null(cm_var), "Please select a concomitant medication variable.")
         )
         if (all(ADCM$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
-            q7,
-            name = "ADCM and cm call",
+            q1,
             code = bquote({
               # ADCM
               ADCM <- ADCM[, .(adcm_vars)] # nolint
@@ -874,22 +862,19 @@ srv_g_patient_profile <- function(id,
           qq
         } else {
           empty_cm <- TRUE
-          teal.code::eval_code(q7, name = "cm call", code = quote(cm <- NULL))
+          teal.code::eval_code(q1, code = quote(cm <- NULL))
         }
       } else {
-        teal.code::eval_code(q7, name = "cm call", code = bquote(cm <- NULL))
+        teal.code::eval_code(q1, code = bquote(cm <- NULL))
       }
 
-      q9 <- teal.code::eval_code(q8, "")
-
-      q10 <- if (select_plot["ex"]) {
+      q1 <- if (select_plot["ex"]) {
         validate(
           need(!is.null(ex_var), "Please select an exposure variable.")
         )
         if (all(ADEX$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
-            q9,
-            name = "ADEX and ex call",
+            q1,
             code = bquote({
               # ADEX
               ADEX <- ADEX[, .(adex_vars)] # nolint
@@ -935,23 +920,20 @@ srv_g_patient_profile <- function(id,
           qq
         } else {
           empty_ex <- TRUE
-          teal.code::eval_code(q9, name = "ex call", code = quote(ex <- NULL))
+          teal.code::eval_code(q1, code = quote(ex <- NULL))
         }
       } else {
-        teal.code::eval_code(q9, name = "ex call", code = quote(ex <- NULL))
+        teal.code::eval_code(q1, code = quote(ex <- NULL))
       }
 
-      q11 <- teal.code::eval_code(q10, "")
-
-      q12 <- if (select_plot["lb"]) {
+      q1 <- if (select_plot["lb"]) {
         validate(
           need(!is.null(lb_var), "Please select a lab variable.")
         )
         if (all(ADLB$USUBJID %in% ADSL$USUBJID)) {
           validate(need(lb_var_show != lb_var, "Lab variable and lab values must differ"))
           qq <- teal.code::eval_code(
-            q11,
-            name = "ADLB and lb call",
+            q1,
             code = bquote({
               ADLB <- ADLB[, .(adlb_vars)] # nolint
               ADLB <- ADSL %>% # nolint
@@ -992,14 +974,12 @@ srv_g_patient_profile <- function(id,
           qq
         } else {
           empty_lb <- TRUE
-          teal.code::eval_code(q11, name = "lb call", code = quote(lb <- NULL))
+          teal.code::eval_code(q1, code = quote(lb <- NULL))
         }
       } else {
-        teal.code::eval_code(q11, name = "lb call", code = bquote(lb <- NULL))
+        teal.code::eval_code(q1, code = bquote(lb <- NULL))
       }
-
-
-      q13 <- teal.code::eval_code(q12, "")
+     
 
       # Check that at least 1 dataset is selected
 
@@ -1030,12 +1010,11 @@ srv_g_patient_profile <- function(id,
 
       # Convert x_limit to numeric vector
       if (!is.null(x_limit) || x_limit != "") {
-        q12 <- teal.code::eval_code(
-          q12,
-          name = "x_limit call",
+        q1 <- teal.code::eval_code(
+          q1,
           code = bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit), ","))))
         )
-        x_limit <- q12[["x_limit"]]
+        x_limit <- q1[["x_limit"]]
       }
 
       validate(need(
@@ -1047,11 +1026,8 @@ srv_g_patient_profile <- function(id,
         "The lower limit for study days range should come first."
       ))
 
-      q13 <- teal.code::eval_code(q12, "")
-
-      q14 <- teal.code::eval_code(
-        q13,
-        name = "g_patient_profile call",
+      q1 <- teal.code::eval_code(
+        q1,
         code = bquote({
           plot <- osprey::g_patient_profile(
             ex = ex,

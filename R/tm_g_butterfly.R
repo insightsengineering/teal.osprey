@@ -395,18 +395,15 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
 
       q1 <- teal.code::eval_code(
         teal.code::new_quosure(data),
-        name = "datasets call",
         code = bquote({
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
           ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame() # nolint
         })
       )
 
-      q2 <- teal.code::eval_code(q1, "")
       if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
-        q2 <- teal.code::eval_code(
-          q2,
-          name = "data filter call",
+        q1 <- teal.code::eval_code(
+          q1,
           code = bquote(
             ANL <- quick_filter(.(filter_var), ANL) %>% # nolint
               droplevels() %>%
@@ -414,23 +411,18 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
           )
         )
       }
-      q3 <- teal.code::eval_code(q2, "")
 
-      q4 <- teal.code::eval_code(
-        q3,
-        name = "ANL_f call",
+      q1 <- teal.code::eval_code(
+        q1,
         code = bquote({
           ANL_f <- left_join(ADSL, ANL, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
           ANL_f <- na.omit(ANL_f) # nolint
         })
       )
 
-      q5 <- teal.code::eval_code(q4, "\n")
-
       if (!is.null(right_val) && !is.null(right_val)) {
-        q5 <- teal.code::eval_code(
-          q5,
-          name = "right/left call",
+        q1 <- teal.code::eval_code(
+          q1,
           code = bquote({
             right <- ANL_f[, .(right_var)] %in% .(right_val)
             right_name <- paste(.(right_val), collapse = " - ")
@@ -440,12 +432,9 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         )
       }
 
-      q6 <- teal.code::eval_code(q5, "")
-
       if (!is.null(right_val) && !is.null(left_val)) {
-        q6 <- teal.code::eval_code(
-          q6,
-          name = "g_butterfly call",
+        q1 <- teal.code::eval_code(
+          q1,
           code = bquote(
             plot <- osprey::g_butterfly(
               category = ANL_f[, .(category_var)],
@@ -474,7 +463,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         )
       }
 
-      teal.code::eval_code(q6, quote(plot))
+      teal.code::eval_code(q1, quote(plot))
     })
 
     plot_r <- reactive(output_q()[["plot"]])

@@ -309,7 +309,6 @@ srv_g_events_term_id <- function(id,
 
       q1 <- teal.code::eval_code(
         teal.code::new_quosure(data),
-        name = "ANL call",
         code = bquote(
           ANL <- merge( # nolint
             x = ADSL[, .(adsl_vars), drop = FALSE],
@@ -325,7 +324,6 @@ srv_g_events_term_id <- function(id,
 
       q2 <- teal.code::eval_code(
         q1,
-        name = "Variables and g_events_term_id call",
         code = bquote(
           plot <- osprey::g_events_term_id(
             term = ANL[[.(input$term)]],

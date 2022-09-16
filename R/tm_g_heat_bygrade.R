@@ -388,7 +388,6 @@ srv_g_heatmap_bygrade <- function(id,
         validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
         teal.code::eval_code(
           teal.code::new_quosure(data),
-          name = "conmed_data call",
           code = bquote({
             conmed_data <- ADCM %>%
               filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
@@ -402,7 +401,6 @@ srv_g_heatmap_bygrade <- function(id,
       } else {
         teal.code::eval_code(
           teal.code::new_quosure(data),
-          name = "conmed_data call",
           code = quote(conmed_data <- conmed_var <- NULL)
         )
       }
@@ -413,7 +411,6 @@ srv_g_heatmap_bygrade <- function(id,
 
       q2 <- teal.code::eval_code(
         q1,
-        name = "g_heat_bygrade call",
         code = bquote({
           plot <- osprey::g_heat_bygrade(
             id_var = .(input$id_var),
