@@ -291,9 +291,13 @@ srv_g_ae_oview <- function(id,
 
       iv_comp <- shinyvalidate::InputValidator$new()
       iv_comp$add_rule("arm_trt", shinyvalidate::sv_not_equal(
-        input$arm_ref, message_fmt = "Must not be equal to Control"))
+        input$arm_ref,
+        message_fmt = "Must not be equal to Control"
+      ))
       iv_comp$add_rule("arm_ref", shinyvalidate::sv_not_equal(
-        input$arm_trt, message_fmt = "Must not be equal to Treatment"))
+        input$arm_trt,
+        message_fmt = "Must not be equal to Treatment"
+      ))
 
       iv_comp$enable()
       validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
