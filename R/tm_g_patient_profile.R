@@ -574,7 +574,7 @@ srv_g_patient_profile <- function(id,
           validate_has_variable(ADAE, adae_vars)
         }
       } else {
-        ADAE <- NULL
+        ADAE <- NULL # nolint
       }
 
       if (!is.null(input$select_rs)) {
