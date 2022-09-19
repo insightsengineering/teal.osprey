@@ -417,6 +417,12 @@ srv_g_patient_profile <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("sl_start_date", shinyvalidate::sv_required())
+    iv$add_rule("lb_var_show", shinyvalidate::sv_required())
+    iv$add_rule("ae_var", shinyvalidate::sv_required())
+    iv$enable()
+
     # initialize chunks
     teal.code::init_chunks()
 
@@ -509,12 +515,7 @@ srv_g_patient_profile <- function(id,
       x_limit <- input$x_limit
       lb_var_show <- input$lb_var_show
 
-
-      validate(
-        need(sl_start_date, "Please select a start date variable."),
-        need(ae_line_col_var, "Please select an adverse event line color."),
-        need(lb_var_show, "`Lab values` field is empty.")
-      )
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       adrs_vars <- unique(c(
         "USUBJID", "STUDYID", "PARAMCD",
@@ -575,7 +576,6 @@ srv_g_patient_profile <- function(id,
       } else {
         ADAE <- NULL # nolint
       }
-
 
       if (!is.null(input$select_rs)) {
         if (input$select_rs == FALSE | is.na(rs_dataname)) {
@@ -654,14 +654,16 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push(
         id = "ADSL call",
         expression = bquote({
-          ADSL <- ADSL %>% # nolint
+          # nolint start
+          ADSL <- ADSL %>%
             group_by(.data$USUBJID)
           ADSL$max_date <- pmax( # nolint
             as.Date(ADSL$LSTALVDT),
             as.Date(ADSL$DTHDT),
             na.rm = TRUE
           )
-          ADSL <- ADSL %>% # nolint
+          ADSL <- ADSL %>%
+            # nolint end
             mutate(
               max_day = as.numeric(
                 as.Date(.data$max_date) - as.Date(
@@ -743,7 +745,7 @@ srv_g_patient_profile <- function(id,
                     units = "days"
                   )
                 )
-                + (AENDT >= as.Date(substr(
+                + (AENDT >= as.Date(substr( # nolint
                     as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
                   )))) %>%
                 select(c(.(adae_vars), ASTDY, AENDY))
@@ -796,9 +798,11 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_safe_eval()
 
       if (select_plot["rs"]) {
-        validate(
-          need(!is.null(rs_var), "Please select a tumor response variable.")
-        )
+        iv_tum <- shinyvalidate::InputValidator$new()
+        iv_tum$add_rule("rs_var", shinyvalidate::sv_required())
+        iv_tum$enable()
+        validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
         if (ADSL$USUBJID %in% ADRS$USUBJID) {
           teal.code::chunks_push(
             id = "ADRS and rs call",
@@ -843,9 +847,11 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push_new_line()
 
       if (select_plot["cm"]) {
-        validate(
-          need(!is.null(cm_var), "Please select a concomitant medication variable.")
-        )
+        iv_tum <- shinyvalidate::InputValidator$new()
+        iv_tum$add_rule("cm_var", shinyvalidate::sv_required())
+        iv_tum$enable()
+        validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
         if (ADSL$USUBJID %in% ADCM$USUBJID) {
           teal.code::chunks_push(
             id = "ADCM and cm call",
@@ -897,9 +903,11 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push_new_line()
 
       if (select_plot["ex"]) {
-        validate(
-          need(!is.null(ex_var), "Please select an exposure variable.")
-        )
+        iv_ex <- shinyvalidate::InputValidator$new()
+        iv_ex$add_rule("ex_var", shinyvalidate::sv_required())
+        iv_ex$enable()
+        validate(need(iv_ex$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
         if (ADSL$USUBJID %in% ADEX$USUBJID) {
           teal.code::chunks_push(
             id = "ADEX and ex call",
@@ -957,9 +965,11 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push_new_line()
 
       if (select_plot["lb"]) {
-        validate(
-          need(!is.null(lb_var), "Please select a lab variable.")
-        )
+        iv_lb <- shinyvalidate::InputValidator$new()
+        iv_lb$add_rule("lb_var", shinyvalidate::sv_required())
+        iv_lb$enable()
+        validate(need(iv_lb$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
         if (ADSL$USUBJID %in% ADLB$USUBJID) {
           req(lb_var_show != lb_var)
           teal.code::chunks_push(

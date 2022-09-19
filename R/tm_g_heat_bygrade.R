@@ -306,6 +306,13 @@ srv_g_heatmap_bygrade <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("heat_var", shinyvalidate::sv_required())
+    iv$add_rule("id_var", shinyvalidate::sv_required())
+    iv$add_rule("visit_var", shinyvalidate::sv_required())
+    iv$add_rule("ongo_var", shinyvalidate::sv_required())
+    iv$enable()
+
     teal.code::init_chunks()
     decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
     font_size <- decorate_output$font_size
@@ -338,11 +345,13 @@ srv_g_heatmap_bygrade <- function(id,
     })
 
     plt <- reactive({
-      validate(need(input$id_var, "Please select a ID variable."))
-      validate(need(input$visit_var, "Please select a visit variable."))
-      validate(need(input$ongo_var, "Please select a Study Ongoing Status variable."))
-      validate(need(input$heat_var, "Please select a heat variable."))
-      validate(need(length(input$anno_var) <= 2, "Please include no more than 2 annotation variables"))
+      iv_len <- shinyvalidate::InputValidator$new()
+      anno_var <- input$anno_var
+      iv_len$add_rule("anno_var", function(x) if (length(x) > 2) "Please include no more than 2 annotation variables.")
+      iv_len$enable()
+      validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       ADSL <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
       ADEX <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
@@ -355,7 +364,6 @@ srv_g_heatmap_bygrade <- function(id,
         formatters::var_labels(datasets$get_data(ex_dataname, filtered = FALSE), fill = FALSE)
       formatters::var_labels(ADAE) <- # nolint
         formatters::var_labels(datasets$get_data(ae_dataname, filtered = FALSE), fill = FALSE)
-
       validate(need(nrow(ADSL) > 0, "Please select at least one subject"))
 
       validate(need(
@@ -397,7 +405,12 @@ srv_g_heatmap_bygrade <- function(id,
       teal.code::chunks_reset(envir = environment())
 
       if (input$plot_cm) {
-        validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
+        iv_cm <- shinyvalidate::InputValidator$new()
+        conmed_var <- input$conmed_var
+        iv_cm$add_rule("conmed_var", shinyvalidate::sv_required())
+        iv_cm$enable()
+        validate(need(iv_cm$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
         teal.code::chunks_push(
           id = "conmed_data call",
           expression = bquote({

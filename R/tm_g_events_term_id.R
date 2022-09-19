@@ -204,6 +204,11 @@ srv_g_events_term_id <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("arm_var", shinyvalidate::sv_required())
+    iv$add_rule("term", shinyvalidate::sv_required())
+    iv$enable()
+
     decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
@@ -277,26 +282,24 @@ srv_g_events_term_id <- function(id,
     )
 
     plt <- reactive({
-      validate(
-        need(input$term, "'Term Variable' field is missing"),
-        need(input$arm_var, "'Arm Variable' field is missing")
-      )
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
-      validate(need(
-        input$arm_trt != input$arm_ref,
-        paste("Treatment arm and control arm cannot be the same.",
-          "Please select a different treatment arm or control arm",
-          sep = "\n"
-        )
-      ))
+      iv_comp <- shinyvalidate::InputValidator$new()
+      iv_comp$add_rule("arm_trt", shinyvalidate::sv_not_equal(
+        input$arm_ref, message_fmt = "Must not be equal to Control"))
+      iv_comp$add_rule("arm_ref", shinyvalidate::sv_not_equal(
+        input$arm_trt, message_fmt = "Must not be equal to Treatment"))
+      iv_comp$enable()
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
       ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
+      # nolint start
       formatters::var_labels(ANL) <- formatters::var_labels(
         datasets$get_data(dataname, filtered = FALSE),
         fill = FALSE
       )
-
+      # nolint end
       anl_name <- dataname
       assign(anl_name, ANL)
 
