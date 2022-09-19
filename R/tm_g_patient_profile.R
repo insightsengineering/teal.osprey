@@ -515,8 +515,8 @@ srv_g_patient_profile <- function(id,
       x_limit <- input$x_limit
       lb_var_show <- input$lb_var_show
 
-      iv$add_rule("rs_var", shinyvalidate::sv_required())
       iv$add_rule("cm_var", shinyvalidate::sv_required())
+      iv$add_rule("rs_var", shinyvalidate::sv_required())
       iv$add_rule("ex_var", shinyvalidate::sv_required())
       iv$add_rule("lb_var", shinyvalidate::sv_required())
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
