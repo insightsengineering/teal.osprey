@@ -34,10 +34,11 @@
 #' library(scda)
 #' library(dplyr)
 #' library(nestcolor)
-#' ADSL <- synthetic_cdisc_data("latest")$adsl %>% slice(1:30)
-#' ADEX <- synthetic_cdisc_data("latest")$adex %>% filter(USUBJID %in% ADSL$USUBJID)
-#' ADAE <- synthetic_cdisc_data("latest")$adae %>% filter(USUBJID %in% ADSL$USUBJID)
-#' ADCM <- synthetic_cdisc_data("latest")$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
+#' latest_data <- synthetic_cdisc_data("latest")
+#' ADSL <- latest_data$adsl %>% slice(1:30)
+#' ADEX <- latest_data$adex %>% filter(USUBJID %in% ADSL$USUBJID)
+#' ADAE <- latest_data$adae %>% filter(USUBJID %in% ADSL$USUBJID)
+#' ADCM <- latest_data$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
 #'
 #' # This preprocess is only to force legacy standard on ADCM
 #' ADCM <- ADCM %>%
@@ -76,10 +77,11 @@
 #'     cdisc_dataset("ADAE", ADAE),
 #'     cdisc_dataset("ADCM", ADCM, keys = c("STUDYID", "USUBJID", "ASTDTM", "CMSEQ", "CMDECOD")),
 #'     code = "
-#'     ADSL <- synthetic_cdisc_data(\"latest\")$adsl %>% slice(1:30)
-#'     ADEX <- synthetic_cdisc_data(\"latest\")$adex %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADAE <- synthetic_cdisc_data(\"latest\")$adae %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADCM <- synthetic_cdisc_data(\"latest\")$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     latest_data <- synthetic_cdisc_data('latest')
+#'     ADSL <- latest_data$adsl %>% slice(1:30)
+#'     ADEX <- latest_data$adex %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADAE <- latest_data$adae %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADCM <- latest_data$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
 #'     ADCM <- ADCM %>% select(-starts_with(\"ATC\")) %>% unique()
 #'     ADEX  <- ADEX %>%
 #'       filter(PARCAT1 == 'INDIVIDUAL') %>%
@@ -356,14 +358,12 @@ srv_g_heatmap_bygrade <- function(id,
       ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
 
       # assign labels back to the data
-      # nolint start
-      formatters::var_labels(ADSL) <-
+      formatters::var_labels(ADSL) <- # nolint
         formatters::var_labels(datasets$get_data(sl_dataname, filtered = FALSE), fill = FALSE)
-      formatters::var_labels(ADEX) <-
+      formatters::var_labels(ADEX) <- # nolint
         formatters::var_labels(datasets$get_data(ex_dataname, filtered = FALSE), fill = FALSE)
-      formatters::var_labels(ADAE) <-
+      formatters::var_labels(ADAE) <- # nolint
         formatters::var_labels(datasets$get_data(ae_dataname, filtered = FALSE), fill = FALSE)
-      # nolint end
       validate(need(nrow(ADSL) > 0, "Please select at least one subject"))
 
       validate(need(
