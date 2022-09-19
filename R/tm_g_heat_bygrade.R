@@ -377,12 +377,12 @@ srv_g_heatmap_bygrade <- function(id,
       ))
 
       validate(need(
-        all(input$anno_var %in% names(ADSL)),
+        all(anno_var %in% names(ADSL)),
         paste("Please only select annotation variable(s) in", sl_dataname, sep = " ")
       ))
 
       validate(need(
-        !(input$id_var %in% input$anno_var),
+        !(input$id_var %in% anno_var),
         paste("Please de-select", input$id_var, "in annotation variable(s)", sep = " ")
       ))
 
@@ -415,8 +415,8 @@ srv_g_heatmap_bygrade <- function(id,
           id = "conmed_data call",
           expression = bquote({
             conmed_data <- ADCM %>%
-              filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
-            conmed_var <- .(input$conmed_var)
+              filter(!!sym(.(conmed_var)) %in% .(input$conmed_level))
+            conmed_var <- .(conmed_var)
             conmed_data[[conmed_var]] <-
               factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
             formatters::var_labels(conmed_data)[conmed_var] <-
