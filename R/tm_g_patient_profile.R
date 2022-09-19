@@ -802,7 +802,6 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_safe_eval()
 
       if (select_plot["rs"]) {
-
         if (ADSL$USUBJID %in% ADRS$USUBJID) {
           teal.code::chunks_push(
             id = "ADRS and rs call",
@@ -847,7 +846,6 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push_new_line()
 
       if (select_plot["cm"]) {
-
         if (ADSL$USUBJID %in% ADCM$USUBJID) {
           teal.code::chunks_push(
             id = "ADCM and cm call",
@@ -899,7 +897,6 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push_new_line()
 
       if (select_plot["ex"]) {
-
         if (ADSL$USUBJID %in% ADEX$USUBJID) {
           teal.code::chunks_push(
             id = "ADEX and ex call",
@@ -957,7 +954,6 @@ srv_g_patient_profile <- function(id,
       teal.code::chunks_push_new_line()
 
       if (select_plot["lb"]) {
-
         if (ADSL$USUBJID %in% ADLB$USUBJID) {
           req(lb_var_show != lb_var)
           teal.code::chunks_push(
