@@ -259,7 +259,7 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
       vref_line <- input$vref_line
       href_line <- input$href_line
 
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       validate(need(nrow(ADSL) > 0, "ADSL data has zero rows"))
       validate(need(nrow(ADTR) > 0, paste(dataname, "data has zero rows")))
 

@@ -303,7 +303,7 @@ srv_g_swimlane <- function(id,
 
     # create plot
     plot_r <- reactive({
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       # DATA GETTERS
       validate(need("ADSL" %in% datasets$datanames(), "ADSL needs to be defined in datasets"))

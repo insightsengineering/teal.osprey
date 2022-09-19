@@ -515,7 +515,7 @@ srv_g_patient_profile <- function(id,
       x_limit <- input$x_limit
       lb_var_show <- input$lb_var_show
 
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       adrs_vars <- unique(c(
         "USUBJID", "STUDYID", "PARAMCD",
@@ -801,7 +801,7 @@ srv_g_patient_profile <- function(id,
         iv_tum <- shinyvalidate::InputValidator$new()
         iv_tum$add_rule("rs_var", shinyvalidate::sv_required())
         iv_tum$enable()
-        validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the interface."))
+        validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
         if (ADSL$USUBJID %in% ADRS$USUBJID) {
           teal.code::chunks_push(
@@ -850,7 +850,7 @@ srv_g_patient_profile <- function(id,
         iv_tum <- shinyvalidate::InputValidator$new()
         iv_tum$add_rule("cm_var", shinyvalidate::sv_required())
         iv_tum$enable()
-        validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the interface."))
+        validate(need(iv_tum$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
         if (ADSL$USUBJID %in% ADCM$USUBJID) {
           teal.code::chunks_push(
@@ -906,7 +906,7 @@ srv_g_patient_profile <- function(id,
         iv_ex <- shinyvalidate::InputValidator$new()
         iv_ex$add_rule("ex_var", shinyvalidate::sv_required())
         iv_ex$enable()
-        validate(need(iv_ex$is_valid(), "Misspecification error: please observe red flags in the interface."))
+        validate(need(iv_ex$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
         if (ADSL$USUBJID %in% ADEX$USUBJID) {
           teal.code::chunks_push(
@@ -968,7 +968,7 @@ srv_g_patient_profile <- function(id,
         iv_lb <- shinyvalidate::InputValidator$new()
         iv_lb$add_rule("lb_var", shinyvalidate::sv_required())
         iv_lb$enable()
-        validate(need(iv_lb$is_valid(), "Misspecification error: please observe red flags in the interface."))
+        validate(need(iv_lb$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
         if (ADSL$USUBJID %in% ADLB$USUBJID) {
           req(lb_var_show != lb_var)

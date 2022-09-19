@@ -349,9 +349,9 @@ srv_g_heatmap_bygrade <- function(id,
       anno_var <- input$anno_var
       iv_len$add_rule("anno_var", function(x) if (length(x) > 2) "Please include no more than 2 annotation variables.")
       iv_len$enable()
-      validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the interface."))
+      validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       ADSL <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
       ADEX <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
@@ -409,7 +409,7 @@ srv_g_heatmap_bygrade <- function(id,
         conmed_var <- input$conmed_var
         iv_cm$add_rule("conmed_var", shinyvalidate::sv_required())
         iv_cm$enable()
-        validate(need(iv_cm$is_valid(), "Misspecification error: please observe red flags in the interface."))
+        validate(need(iv_cm$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
         teal.code::chunks_push(
           id = "conmed_data call",

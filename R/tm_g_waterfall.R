@@ -292,7 +292,7 @@ srv_g_waterfall <- function(id,
     teal.code::init_chunks()
 
     plot_r <- reactive({
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       adsl <- datasets$get_data("ADSL", filtered = TRUE)
       adtr <- datasets$get_data(dataname_tr, filtered = TRUE)
       adrs <- datasets$get_data(dataname_rs, filtered = TRUE)

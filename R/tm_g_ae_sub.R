@@ -283,12 +283,14 @@ srv_g_ae_sub <- function(id,
 
     plt <- reactive({
       iv_comp <- shinyvalidate::InputValidator$new()
-      iv_comp$add_rule("arm_trt", comp_arm, comparison = input$arm_ref)
-      iv_comp$add_rule("arm_ref", comp_arm, comparison = input$arm_trt)
+      iv_comp$add_rule("arm_trt", shinyvalidate::sv_not_equal(
+        input$arm_ref, message_fmt = "Must not be equal to Control"))
+      iv_comp$add_rule("arm_ref", shinyvalidate::sv_not_equal(
+        input$arm_trt, message_fmt = "Must not be equal to Treatment"))
       iv_comp$enable()
-      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the interface."))
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the interface."))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
 
