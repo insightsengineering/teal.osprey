@@ -204,6 +204,7 @@ srv_g_events_term_id <- function(id,
                                  plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     decorate_output <- srv_g_decorate(
@@ -308,7 +309,7 @@ srv_g_events_term_id <- function(id,
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
 
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(data),
+        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
         code = bquote(
           ANL <- merge( # nolint
             x = ADSL[, .(adsl_vars), drop = FALSE],

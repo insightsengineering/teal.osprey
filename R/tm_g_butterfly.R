@@ -261,6 +261,7 @@ ui_g_butterfly <- function(id, ...) {
 srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, label, plot_height, plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     options <- reactiveValues(r = NULL, l = NULL)
@@ -394,7 +395,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       anl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
 
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(data),
+        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
         code = bquote({
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
           ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame() # nolint

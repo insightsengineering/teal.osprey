@@ -304,6 +304,7 @@ srv_g_heatmap_bygrade <- function(id,
                                   plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     decorate_output <- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width) # nolint
@@ -387,7 +388,7 @@ srv_g_heatmap_bygrade <- function(id,
       q1 <- if (input$plot_cm) {
         validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
         teal.code::eval_code(
-          teal.code::new_qenv(data),
+          teal.code::new_qenv(tdata2env(data), code = get_code(data)),
           code = bquote({
             conmed_data <- ADCM %>%
               filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
@@ -400,7 +401,7 @@ srv_g_heatmap_bygrade <- function(id,
         )
       } else {
         teal.code::eval_code(
-          teal.code::new_qenv(data),
+          teal.code::new_qenv(tdata2env(data), code = get_code(data)),
           code = quote(conmed_data <- conmed_var <- NULL)
         )
       }

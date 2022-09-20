@@ -283,6 +283,7 @@ srv_g_waterfall <- function(id,
                             plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     output_q <- reactive({
@@ -383,7 +384,7 @@ srv_g_waterfall <- function(id,
 
       # write variables to qenv
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(data),
+        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
         code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)

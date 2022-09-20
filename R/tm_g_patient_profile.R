@@ -415,6 +415,7 @@ srv_g_patient_profile <- function(id,
                                   plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     # only show the check box when domain data is available
@@ -642,7 +643,7 @@ srv_g_patient_profile <- function(id,
       empty_lb <- FALSE
 
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(data),
+        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
         code = bquote({
           ADSL <- ADSL %>% # nolint
             group_by(.data$USUBJID) %>%
