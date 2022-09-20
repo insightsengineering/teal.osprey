@@ -384,7 +384,6 @@ srv_g_waterfall <- function(id,
       # write variables to quosure
       q1 <- teal.code::eval_code(
         teal.code::new_quosure(data),
-        name = "variables call",
         code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
@@ -399,12 +398,10 @@ srv_g_waterfall <- function(id,
           show_value <- .(show_value)
         })
       )
-      q2 <- teal.code::eval_code(q1, "")
 
       # data processing
-      q3 <- teal.code::eval_code(
-        q2,
-        name = "bar_data call",
+      q1 <- teal.code::eval_code(
+        q1,
         code = bquote({
           adsl <- ADSL[, .(adsl_vars)]
           adtr <- .(as.name(dataname_tr))[, .(adtr_vars)] # nolint
@@ -418,12 +415,10 @@ srv_g_waterfall <- function(id,
           bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
         })
       )
-      q4 <- teal.code::eval_code(q3, "")
 
-      q5 <- if (is.null(adrs_paramcd)) {
+      q1 <- if (is.null(adrs_paramcd)) {
         teal.code::eval_code(
-          q4,
-          name = "anl call",
+          q1,
           code = bquote({
             anl <- bar_data
             anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
@@ -431,20 +426,17 @@ srv_g_waterfall <- function(id,
         )
       } else {
         qq1 <- teal.code::eval_code(
-          q4,
-          name = "rs_sub call",
+          q1,
           code = bquote(
             rs_sub <- .(as.name(dataname_rs)) %>%
               dplyr::filter(PARAMCD %in% .(adrs_paramcd))
           )
         )
-        qq2 <- teal.code::eval_code(qq1, "")
 
-        validate_one_row_per_id(qq2[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
+        validate_one_row_per_id(qq1[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
 
         teal.code::eval_code(
-          qq2,
-          name = "anl call",
+          qq1,
           code = bquote({
             rs_label <- rs_sub %>%
               dplyr::select(USUBJID, PARAMCD, AVALC) %>%
@@ -454,14 +446,12 @@ srv_g_waterfall <- function(id,
           })
         )
       }
-      q6 <- teal.code::eval_code(q5, "")
 
       # write plotting code to quosure
-      anl <- q6[["anl"]] # nolint
+      anl <- q1[["anl"]] # nolint
 
-      q7 <- teal.code::eval_code(
-        q6,
-        name = "g_waterfall call",
+      q1 <- teal.code::eval_code(
+        q1,
         code = bquote({
           plot <- osprey::g_waterfall(
             bar_id = anl[["USUBJID"]],

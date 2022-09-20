@@ -300,7 +300,6 @@ srv_g_ae_oview <- function(id,
 
       q1 <- teal.code::eval_code(
         teal.code::new_quosure(data),
-        name = "variables call",
         code = as.expression(c(
           bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
           bquote(flags <- .(as.name(dataname)) %>%
@@ -311,7 +310,6 @@ srv_g_ae_oview <- function(id,
 
       teal.code::eval_code(
         q1,
-        name = "g_events_term_id call",
         code = as.expression(c(
           bquote(
             plot <- osprey::g_events_term_id(

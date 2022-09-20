@@ -268,7 +268,6 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       # merge
       q1 <- teal.code::eval_code(
         teal.code::new_quosure(data),
-        name = "ANL call",
         code = bquote({
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
           ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame() # nolint
@@ -281,12 +280,9 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
         })
       )
 
-      q2 <- teal.code::eval_code(q1, "")
-
       # format and filter
-      q3 <- teal.code::eval_code(
-        q2,
-        name = "ANL_f call",
+      q1 <- teal.code::eval_code(
+        q1,
         code = bquote({
           ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
           ANL_f <- ANL %>% # nolint
@@ -294,8 +290,6 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
             as.data.frame()
         })
       )
-
-      q4 <- teal.code::eval_code(q3, "")
 
       # reference lines preprocessing - vertical
       vref_line <- as_numeric_from_comma_sep_str(vref_line)
@@ -312,23 +306,19 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       ))
 
       # label
-      q5 <- if (anno_txt_var) {
+      q1 <- if (anno_txt_var) {
         teal.code::eval_code(
-          q4,
-          name = "lbl call",
+          q1,
           code = quote(lbl <- list(txt_ann = as.factor(ANL_f$USUBJID)))
         )
       } else {
-        teal.code::eval_code(q4, name = "lbl call", code = quote(lbl <- NULL))
+        teal.code::eval_code(q1, code = quote(lbl <- NULL))
       }
-
-      q6 <- teal.code::eval_code(q5, "")
 
       # plot code to quosure ---
 
-      q7 <- teal.code::eval_code(
-        q6,
-        name = "g_spiderplot call",
+      q1 <- teal.code::eval_code(
+        q1,
         code = bquote({
           plot <- osprey::g_spiderplot(
             marker_x = ANL_f[, .(x_var)],

@@ -370,7 +370,6 @@ srv_g_swimlane <- function(id,
 
       q2 <- teal.code::eval_code(
         q1,
-        name = "variables call",
         code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
@@ -381,13 +380,11 @@ srv_g_swimlane <- function(id,
           anno_txt_var <- .(anno_txt_var)
         })
       )
-      q3 <- teal.code::eval_code(q2, "")
 
       # WRITE DATA SELECTION TO QUOSURE
-      q4 <- if (dataname == "ADSL") {
+      q3 <- if (dataname == "ADSL") {
         teal.code::eval_code(
-          q3,
-          name = "ADSL call",
+          q2,
           code = bquote({
             ADSL_p <- ADSL # nolint
             ADSL <- ADSL_p[, .(adsl_vars)] # nolint
@@ -397,8 +394,7 @@ srv_g_swimlane <- function(id,
         )
       } else {
         teal.code::eval_code(
-          q3,
-          name = "ADSL and ANL call",
+          q2,
           code = bquote({
             ADSL_p <- ADSL # nolint
             ANL_p <- .(as.name(dataname)) # nolint
@@ -416,7 +412,6 @@ srv_g_swimlane <- function(id,
           })
         )
       }
-      q5 <- teal.code::eval_code(q4, "") # empty line for pretty code
 
       plot_call <- if (dataname == "ADSL") {
         bquote(
@@ -498,8 +493,8 @@ srv_g_swimlane <- function(id,
         )
       }
 
-      q6 <- teal.code::eval_code(q5, name = "plot call", code = plot_call)
-      teal.code::eval_code(q6, quote(plot))
+      q4 <- teal.code::eval_code(q3, code = plot_call)
+      teal.code::eval_code(q4, quote(plot))
     })
 
     plot_r <- reactive(output_q()[["plot"]])

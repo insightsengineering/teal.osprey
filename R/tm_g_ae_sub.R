@@ -323,11 +323,10 @@ srv_g_ae_sub <- function(id,
         bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
       }
 
-      q1 <- teal.code::eval_code(teal.code::new_quosure(data), code = group_labels_call, name = "group_labels call")
+      q1 <- teal.code::eval_code(teal.code::new_quosure(data), code = group_labels_call)
       q2 <- teal.code::eval_code(q1, code = "")
       teal.code::eval_code(
         q2,
-        name = "g_ae_sub call",
         code = as.expression(c(
           bquote(
             plot <- osprey::g_ae_sub(
