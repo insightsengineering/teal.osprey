@@ -83,8 +83,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(x$ui, x$server)
+#' if (interactive()) {
+#'   shinyApp(x$ui, x$server)
 #' }
 tm_g_waterfall <- function(label,
                            dataname_tr = "ADTR",
@@ -381,9 +381,9 @@ srv_g_waterfall <- function(id,
       validate_has_variable(adrs, adrs_vars)
       validate_has_variable(adtr, adtr_vars)
 
-      # write variables to quosure
+      # write variables to qenv
       q1 <- teal.code::eval_code(
-        teal.code::new_quosure(data),
+        teal.code::new_qenv(data),
         code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
@@ -447,7 +447,7 @@ srv_g_waterfall <- function(id,
         )
       }
 
-      # write plotting code to quosure
+      # write plotting code to qenv
       anl <- q1[["anl"]] # nolint
 
       q1 <- teal.code::eval_code(

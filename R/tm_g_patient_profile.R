@@ -199,8 +199,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(x$ui, x$server)
+#' if (interactive()) {
+#'   shinyApp(x$ui, x$server)
 #' }
 #'
 tm_g_patient_profile <- function(label = "Patient Profile Plot",
@@ -642,7 +642,7 @@ srv_g_patient_profile <- function(id,
       empty_lb <- FALSE
 
       q1 <- teal.code::eval_code(
-        teal.code::new_quosure(data),
+        teal.code::new_qenv(data),
         code = bquote({
           ADSL <- ADSL %>% # nolint
             group_by(.data$USUBJID) %>%
@@ -979,7 +979,7 @@ srv_g_patient_profile <- function(id,
       } else {
         teal.code::eval_code(q1, code = bquote(lb <- NULL))
       }
-     
+
 
       # Check that at least 1 dataset is selected
 

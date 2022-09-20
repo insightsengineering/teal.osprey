@@ -139,8 +139,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(app$ui, app$server)
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
 #' }
 tm_g_heat_bygrade <- function(label,
                               sl_dataname,
@@ -387,7 +387,7 @@ srv_g_heatmap_bygrade <- function(id,
       q1 <- if (input$plot_cm) {
         validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
         teal.code::eval_code(
-          teal.code::new_quosure(data),
+          teal.code::new_qenv(data),
           code = bquote({
             conmed_data <- ADCM %>%
               filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
@@ -400,7 +400,7 @@ srv_g_heatmap_bygrade <- function(id,
         )
       } else {
         teal.code::eval_code(
-          teal.code::new_quosure(data),
+          teal.code::new_qenv(data),
           code = quote(conmed_data <- conmed_var <- NULL)
         )
       }

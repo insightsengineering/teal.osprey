@@ -93,8 +93,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(app$ui, app$server)
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
 #' }
 tm_g_ae_oview <- function(label,
                           dataname,
@@ -299,7 +299,7 @@ srv_g_ae_oview <- function(id,
       validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
       q1 <- teal.code::eval_code(
-        teal.code::new_quosure(data),
+        teal.code::new_qenv(data),
         code = as.expression(c(
           bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
           bquote(flags <- .(as.name(dataname)) %>%

@@ -42,8 +42,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(app$ui, app$server)
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
 #' }
 tm_g_ae_sub <- function(label,
                         dataname,
@@ -323,7 +323,7 @@ srv_g_ae_sub <- function(id,
         bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
       }
 
-      q1 <- teal.code::eval_code(teal.code::new_quosure(data), code = group_labels_call)
+      q1 <- teal.code::eval_code(teal.code::new_qenv(data), code = group_labels_call)
       q2 <- teal.code::eval_code(q1, code = "")
       teal.code::eval_code(
         q2,

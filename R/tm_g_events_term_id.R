@@ -46,8 +46,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(app$ui, app$server)
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
 #' }
 #'
 tm_g_events_term_id <- function(label,
@@ -308,7 +308,7 @@ srv_g_events_term_id <- function(id,
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
 
       q1 <- teal.code::eval_code(
-        teal.code::new_quosure(data),
+        teal.code::new_qenv(data),
         code = bquote(
           ANL <- merge( # nolint
             x = ADSL[, .(adsl_vars), drop = FALSE],

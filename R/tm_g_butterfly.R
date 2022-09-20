@@ -98,8 +98,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(app$ui, app$server)
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
 #' }
 #'
 tm_g_butterfly <- function(label,
@@ -394,7 +394,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       anl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
 
       q1 <- teal.code::eval_code(
-        teal.code::new_quosure(data),
+        teal.code::new_qenv(data),
         code = bquote({
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
           ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame() # nolint
