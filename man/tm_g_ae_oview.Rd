@@ -52,8 +52,9 @@ Display the AE overview plot as a shiny module
 library(scda)
 library(nestcolor)
 
-ADSL <- synthetic_cdisc_data("latest")$adsl
-ADAE <- synthetic_cdisc_data("latest")$adae
+latest_data <- synthetic_cdisc_data("latest")
+ADSL <- latest_data$adsl
+ADAE <- latest_data$adae
 
 # Add additional dummy causality flags.
 add_event_flags <- function(dat) {

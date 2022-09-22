@@ -146,13 +146,15 @@ the start date
 library(scda)
 library(nestcolor)
 
-ADSL <- synthetic_cdisc_data("latest")$adsl
-ADAE <- synthetic_cdisc_data("latest")$adae \%>\%
+latest_data <- synthetic_cdisc_data("latest")
+
+ADSL <- latest_data$adsl
+ADAE <- latest_data$adae \%>\%
   mutate(
     ASTDT = as.Date(ASTDTM),
     AENDT = as.Date(AENDTM)
   )
-ADCM <- synthetic_cdisc_data("latest")$adcm \%>\%
+ADCM <- latest_data$adcm \%>\%
   mutate(
     ASTDT = as.Date(ASTDTM),
     AENDT = as.Date(AENDTM)
@@ -163,14 +165,14 @@ ADCM <- ADCM \%>\%
   select(-starts_with("ATC")) \%>\%
   unique()
 
-ADRS <- synthetic_cdisc_data("latest")$adrs \%>\%
+ADRS <- latest_data$adrs \%>\%
   mutate(ADT = as.Date(ADTM))
-ADEX <- synthetic_cdisc_data("latest")$adex \%>\%
+ADEX <- latest_data$adex \%>\%
   mutate(
     ASTDT = as.Date(ASTDTM),
     AENDT = as.Date(AENDTM)
   )
-ADLB <- synthetic_cdisc_data("latest")$adlb \%>\%
+ADLB <- latest_data$adlb \%>\%
   mutate(
     ADT = as.Date(ADTM),
     LBSTRESN = as.numeric(LBSTRESC)
@@ -207,7 +209,7 @@ x <- init(
               mutate(ASTDT = as.Date(ASTDTM),
                      AENDT = as.Date(AENDTM))"
     ),
-    check = TRUE
+    check = FALSE # set FALSE here to keep run time of example short, should be set to TRUE
   ),
   modules = modules(
     tm_g_patient_profile(
