@@ -93,8 +93,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(app$ui, app$server)
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
 #' }
 tm_g_ae_oview <- function(label,
                           dataname,
@@ -222,6 +222,7 @@ srv_g_ae_oview <- function(id,
                            plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     decorate_output <- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width)
@@ -299,7 +300,7 @@ srv_g_ae_oview <- function(id,
       validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
       q1 <- teal.code::eval_code(
-        teal.code::new_quosure(data),
+        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
         code = as.expression(c(
           bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
           bquote(flags <- .(as.name(dataname)) %>%

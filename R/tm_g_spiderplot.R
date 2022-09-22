@@ -57,8 +57,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(app$ui, app$server)
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
 #' }
 #'
 tm_g_spiderplot <- function(label,
@@ -219,6 +219,7 @@ ui_g_spider <- function(id, ...) {
 srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, plot_height, plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     vals <- reactiveValues(spiderplot = NULL) # nolint
@@ -259,7 +260,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
       adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
 
-      # preprocessing of datasets to quosure ---
+      # preprocessing of datasets to qenv ---
 
       # vars definition
       adtr_vars <- adtr_vars[adtr_vars != "None"]
@@ -267,7 +268,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
       # merge
       q1 <- teal.code::eval_code(
-        teal.code::new_quosure(data),
+        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
         code = bquote({
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
           ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame() # nolint
@@ -315,7 +316,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
         teal.code::eval_code(q1, code = quote(lbl <- NULL))
       }
 
-      # plot code to quosure ---
+      # plot code to qenv ---
 
       q1 <- teal.code::eval_code(
         q1,

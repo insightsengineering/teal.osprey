@@ -93,8 +93,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(x$ui, x$server)
+#' if (interactive()) {
+#'   shinyApp(x$ui, x$server)
 #' }
 #'
 tm_g_swimlane <- function(label,
@@ -266,6 +266,7 @@ srv_g_swimlane <- function(id,
                            x_label) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     # if marker position is NULL, then hide options for marker shape and color
@@ -310,7 +311,7 @@ srv_g_swimlane <- function(id,
 
       ADSL <- data[["ADSL"]]() # nolint
 
-      q1 <- teal.code::new_quosure(data)
+      q1 <- teal.code::new_qenv(tdata2env(data), code = get_code(data))
 
       # VARIABLE GETTERS
       # lookup bar variables
@@ -366,7 +367,7 @@ srv_g_swimlane <- function(id,
         ))
       }
 
-      # WRITE VARIABLES TO QUOSURE
+      # WRITE VARIABLES TO qenv
 
       q2 <- teal.code::eval_code(
         q1,
@@ -381,7 +382,7 @@ srv_g_swimlane <- function(id,
         })
       )
 
-      # WRITE DATA SELECTION TO QUOSURE
+      # WRITE DATA SELECTION TO qenv
       q3 <- if (dataname == "ADSL") {
         teal.code::eval_code(
           q2,

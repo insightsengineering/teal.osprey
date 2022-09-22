@@ -42,8 +42,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(app$ui, app$server)
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
 #' }
 tm_g_ae_sub <- function(label,
                         dataname,
@@ -175,6 +175,7 @@ srv_g_ae_sub <- function(id,
                          plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     decorate_output <- srv_g_decorate(
@@ -323,7 +324,7 @@ srv_g_ae_sub <- function(id,
         bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
       }
 
-      q1 <- teal.code::eval_code(teal.code::new_quosure(data), code = group_labels_call)
+      q1 <- teal.code::eval_code(teal.code::new_qenv(tdata2env(data), code = get_code(data)), code = group_labels_call)
       q2 <- teal.code::eval_code(q1, code = "")
       teal.code::eval_code(
         q2,
