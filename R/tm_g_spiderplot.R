@@ -57,8 +57,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(app$ui, app$server)
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
 #' }
 #'
 tm_g_spiderplot <- function(label,
@@ -104,7 +104,7 @@ tm_g_spiderplot <- function(label,
   args <- as.list(environment())
   module(
     label = label,
-    filters = dataname,
+    filters = c("ADSL", dataname),
     server = srv_g_spider,
     server_args = list(dataname = dataname, label = label, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_spider,
@@ -209,40 +209,29 @@ ui_g_spider <- function(id, ...) {
           value = a$href_line
         )
       ),
-      forms = get_rcode_ui(ns("rcode")),
+      forms = tagList(
+        teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
+        teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+      ),
       pre_output = a$pre_output,
       post_output = a$post_output
     )
   )
 }
 
-srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, plot_width) {
+srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, plot_height, plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     vals <- reactiveValues(spiderplot = NULL) # nolint
 
-    # initialize chunks
-    teal.code::init_chunks()
-
     # render plot
-    plot_r <- reactive({
-
+    output_q <- reactive({
       # get datasets ---
-
-      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-      ADTR <- datasets$get_data(dataname, filtered = TRUE) # nolint
-
-      adtr_name <- dataname
-      assign(adtr_name, ADTR) # so that we can refer to the 'correct' data name
-
-
-      # restart chunks & include current environment ---
-
-      teal.code::chunks_reset(envir = environment())
-
-
-      # get inputs ---
+      ADSL <- data[["ADSL"]]() # nolint
+      ADTR <- data[[dataname]]() # nolint
 
       paramcd <- input$paramcd # nolint
       x_var <- input$x_var
@@ -274,18 +263,18 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
       adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
       adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
 
-      # preprocessing of datasets to chunks ---
+      # preprocessing of datasets to qenv ---
 
       # vars definition
       adtr_vars <- adtr_vars[adtr_vars != "None"]
       adtr_vars <- adtr_vars[!is.null(adtr_vars)]
 
       # merge
-      teal.code::chunks_push(
-        id = "ANL call",
-        expression = bquote({
+      q1 <- teal.code::eval_code(
+        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+        code = bquote({
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
-          ADTR <- .(as.name(adtr_name))[, .(adtr_vars)] %>% as.data.frame() # nolint
+          ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame() # nolint
 
           ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID")) # nolint
           ANL <- ANL %>% # nolint
@@ -295,23 +284,16 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
         })
       )
 
-      teal.code::chunks_push_new_line()
-
       # format and filter
-      teal.code::chunks_push(
-        id = "ANL_f call",
-        expression = bquote({
+      q1 <- teal.code::eval_code(
+        q1,
+        code = bquote({
           ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
           ANL_f <- ANL %>% # nolint
             filter(PARAMCD == .(paramcd)) %>%
             as.data.frame()
         })
       )
-
-      teal.code::chunks_push_new_line()
-
-      # check
-      teal.code::chunks_safe_eval()
 
       # reference lines preprocessing - vertical
       vref_line <- as_numeric_from_comma_sep_str(vref_line)
@@ -328,26 +310,21 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
       ))
 
       # label
-      if (anno_txt_var) {
-        teal.code::chunks_push(
-          id = "lbl call",
-          expression = quote(lbl <- list(txt_ann = as.factor(ANL_f$USUBJID)))
+      q1 <- if (anno_txt_var) {
+        teal.code::eval_code(
+          q1,
+          code = quote(lbl <- list(txt_ann = as.factor(ANL_f$USUBJID)))
         )
       } else {
-        teal.code::chunks_push(id = "lbl call", expression = quote(lbl <- NULL))
+        teal.code::eval_code(q1, code = quote(lbl <- NULL))
       }
 
-      teal.code::chunks_push_new_line()
+      # plot code to qenv ---
 
-      # check
-      teal.code::chunks_safe_eval()
-
-      # plot code to chunks ---
-
-      teal.code::chunks_push(
-        id = "g_spiderplot call",
-        expression = bquote({
-          osprey::g_spiderplot(
+      q1 <- teal.code::eval_code(
+        q1,
+        code = bquote({
+          plot <- osprey::g_spiderplot(
             marker_x = ANL_f[, .(x_var)],
             marker_id = ANL_f$USUBJID,
             marker_y = ANL_f[, .(y_var)],
@@ -387,11 +364,13 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
             },
             show_legend = .(legend_on)
           )
+
+          plot
         })
       )
-
-      teal.code::chunks_safe_eval()
     })
+
+    plot_r <- reactive(output_q()[["plot"]])
 
     pws <- teal.widgets::plot_with_settings_srv(
       id = "spiderplot",
@@ -400,16 +379,17 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
       width = plot_width
     )
 
-    get_rcode_srv(
+    teal.widgets::verbatim_popup_srv(
+      id = "warning",
+      verbatim_content = reactive(teal.code::get_warnings(output_q())),
+      title = "Warning",
+      disabled =reactive(is.null(output_q()) || is.null(teal.code::get_warnings(output_q())))
+    )
+
+    teal.widgets::verbatim_popup_srv(
       id = "rcode",
-      datasets = datasets,
-      modal_title = paste("R code for", label),
-      datanames = unique(c(
-        dataname,
-        vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-          if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-        })
-      ))
+      title = paste("R code for", label),
+      verbatim_content = reactive(teal.code::get_code(output_q()))
     )
 
     ### REPORTER
@@ -418,7 +398,7 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
         card <- teal.reporter::TealReportCard$new()
         card$set_name("Spider Plot")
         card$append_text("Spider Plot", "header2")
-        card$append_fs(datasets$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         if (!is.null(input$paramcd) || !is.null(input$xfacet_var) || !is.null(input$yfacet_var)) {
           card$append_text("Selected Options", "header3")
         }
@@ -437,12 +417,7 @@ srv_g_spider <- function(id, datasets, reporter, dataname, label, plot_height, p
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(get_rcode(
-          chunks = teal.code::get_chunks_object(parent_idx = 2L),
-          datasets = datasets,
-          title = "",
-          description = ""
-        ), collapse = "\n"))
+        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
