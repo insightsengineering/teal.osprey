@@ -209,7 +209,10 @@ ui_g_spider <- function(id, ...) {
           value = a$href_line
         )
       ),
-      forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code"),
+      forms = tagList(
+        teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
+        teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+      ),
       pre_output = a$pre_output,
       post_output = a$post_output
     )
@@ -268,7 +271,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
       # merge
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
+        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
         code = bquote({
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
           ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame() # nolint
@@ -374,6 +377,13 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       plot_r = plot_r,
       height = plot_height,
       width = plot_width
+    )
+
+    teal.widgets::verbatim_popup_srv(
+      id = "warning",
+      verbatim_content = reactive(teal.code::get_warnings(output_q())),
+      title = "Warning",
+      disabled =reactive(is.null(output_q()) || is.null(teal.code::get_warnings(output_q())))
     )
 
     teal.widgets::verbatim_popup_srv(

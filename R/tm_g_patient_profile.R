@@ -394,7 +394,10 @@ ui_g_patient_profile <- function(id, ...) {
           value = a$x_limit
         )
       ),
-      forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code"),
+      forms = tagList(
+        teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
+        teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+      ),
       pre_output = a$pre_output,
       post_output = a$post_output
     )
@@ -645,7 +648,7 @@ srv_g_patient_profile <- function(id,
       empty_lb <- FALSE
 
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
+        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
         code = bquote({
           ADSL <- ADSL %>% # nolint
             group_by(.data$USUBJID)
@@ -1061,6 +1064,13 @@ srv_g_patient_profile <- function(id,
       plot_r = plot_r,
       height = plot_height,
       width = plot_width
+    )
+
+    teal.widgets::verbatim_popup_srv(
+      id = "warning",
+      verbatim_content = reactive(teal.code::get_warnings(output_q())),
+      title = "Warning",
+      disabled =reactive(is.null(output_q()) || is.null(teal.code::get_warnings(output_q())))
     )
 
     teal.widgets::verbatim_popup_srv(

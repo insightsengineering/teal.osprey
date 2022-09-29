@@ -265,7 +265,10 @@ ui_g_waterfall <- function(id, ...) {
         value = a$gap_point_val
       )
     ),
-    forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code"),
+    forms = tagList(
+      teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
+      teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+    ),
     pre_output = a$pre_output,
     post_output = a$post_output
   )
@@ -384,7 +387,7 @@ srv_g_waterfall <- function(id,
 
       # write variables to qenv
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
+        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
         code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
@@ -515,6 +518,13 @@ srv_g_waterfall <- function(id,
       plot_r = plot_r,
       height = plot_height,
       width = plot_width
+    )
+
+    teal.widgets::verbatim_popup_srv(
+      id = "warning",
+      verbatim_content = reactive(teal.code::get_warnings(output_q())),
+      title = "Warning",
+      disabled =reactive(is.null(output_q()) || is.null(teal.code::get_warnings(output_q())))
     )
 
     # Show R Code

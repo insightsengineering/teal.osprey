@@ -288,7 +288,10 @@ ui_g_heatmap_bygrade <- function(id, ...) {
           footnotes = ""
         )
       ),
-      forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+      forms = tagList(
+        teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
+        teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+      )
     )
   )
 }
@@ -390,7 +393,7 @@ srv_g_heatmap_bygrade <- function(id,
       q1 <- if (input$plot_cm) {
         validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
         teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = get_code(data)),
+          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
           code = bquote({
             conmed_data <- ADCM %>%
               filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
@@ -433,6 +436,13 @@ srv_g_heatmap_bygrade <- function(id,
     })
 
     plot_r <- reactive(output_q()[["plot"]])
+
+    teal.widgets::verbatim_popup_srv(
+      id = "warning",
+      verbatim_content = reactive(teal.code::get_warnings(output_q())),
+      title = "Warning",
+      disabled =reactive(is.null(output_q()) || is.null(teal.code::get_warnings(output_q())))
+    )
 
     teal.widgets::verbatim_popup_srv(
       id = "rcode",

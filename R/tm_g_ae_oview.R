@@ -209,7 +209,10 @@ ui_g_ae_oview <- function(id, ...) {
         footnotes = ""
       )
     ),
-    forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+    forms = tagList(
+      teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
+      teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+    )
   )
 }
 
@@ -301,7 +304,7 @@ srv_g_ae_oview <- function(id,
       validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
+        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
         code = as.expression(c(
           bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
           bquote(flags <- .(as.name(dataname)) %>%
@@ -334,6 +337,13 @@ srv_g_ae_oview <- function(id,
     })
 
     plot_r <- reactive(output_q()[["plot"]])
+
+    teal.widgets::verbatim_popup_srv(
+      id = "warning",
+      verbatim_content = reactive(teal.code::get_warnings(output_q())),
+      title = "Warning",
+      disabled =reactive(is.null(output_q()) || is.null(teal.code::get_warnings(output_q())))
+    )
 
     teal.widgets::verbatim_popup_srv(
       id = "rcode",
