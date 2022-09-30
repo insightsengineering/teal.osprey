@@ -223,6 +223,13 @@ srv_g_ae_oview <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("arm_var", shinyvalidate::sv_required())
+    iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
+      message = "Please select at least one flag"
+    ))
+    iv$enable()
+
     teal.code::init_chunks()
     decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width)
     font_size <- decorate_output$font_size
@@ -244,12 +251,9 @@ srv_g_ae_oview <- function(id,
 
     observeEvent(input$arm_var, {
       ANL <- datasets$get_data(dataname, filtered = FALSE) # nolint
-
       req(!is.null(input$arm_var))
       arm_var <- input$arm_var
-
       choices <- unique(ANL[[arm_var]])
-
       validate(need(length(choices) > 0, "Please include multiple treatment"))
       if (length(choices) == 1) {
         trt_index <- 1
@@ -272,16 +276,7 @@ srv_g_ae_oview <- function(id,
     })
 
     plt <- reactive({
-      validate(need(input$arm_var, "Please select an arm variable."))
-      validate(need(input$flag_var_anl, "Please select at least one flag."))
-      validate(need(
-        input$arm_trt != input$arm_ref,
-        paste(
-          "Treatment arm and control arm cannot be the same.",
-          "Please select a different treatment arm or control arm",
-          sep = "\n"
-        )
-      ))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       ANL_UNFILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
       ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
@@ -292,19 +287,29 @@ srv_g_ae_oview <- function(id,
 
       teal.code::chunks_reset(envir = environment())
 
-      validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
       validate_has_data(ANL, min_nrow = 10)
+
+      iv_comp <- shinyvalidate::InputValidator$new()
+      iv_comp$add_rule("arm_trt", shinyvalidate::sv_not_equal(
+        input$arm_ref,
+        message_fmt = "Must not be equal to Control"
+      ))
+      iv_comp$add_rule("arm_ref", shinyvalidate::sv_not_equal(
+        input$arm_trt,
+        message_fmt = "Must not be equal to Treatment"
+      ))
+
+      iv_comp$enable()
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
+      validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
+
       if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
-        validate(
-          need(
-            input$arm_ref %in% ANL[[input$arm_var]],
-            paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
-          ),
-          need(
-            input$arm_trt %in% ANL[[input$arm_var]],
-            paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
-          )
-        )
+        iv_an <- shinyvalidate::InputValidator$new()
+        iv_an$add_rule("arm_ref", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
+        iv_an$add_rule("arm_trt", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
+        iv_an$enable()
+        validate(need(iv_an$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       }
       validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
@@ -360,7 +365,6 @@ srv_g_ae_oview <- function(id,
         })
       ))
     )
-
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment) {

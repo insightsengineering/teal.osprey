@@ -3,9 +3,9 @@
 ### Breaking changes
 * Soft deprecate function `label_aevar()`.
 
-
 ### Enhancements
 * Added `teal.reporter` to all modules.
+* Updated `shiny::validate` calls to `shinyvalidate` for better UI overview.
 
 ### Miscellaneous
 * Added names to the `id` parameter of `teal.code::chunks_push` in all modules.
