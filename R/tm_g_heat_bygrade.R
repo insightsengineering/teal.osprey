@@ -350,7 +350,6 @@ srv_g_heatmap_bygrade <- function(id,
       iv_len$add_rule("anno_var", function(x) if (length(x) > 2) "Please include no more than 2 annotation variables.")
       iv_len$enable()
       validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       ADSL <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
