@@ -383,8 +383,8 @@ srv_g_butterfly <- function(id, datasets, reporter, dataname, label, plot_height
       filter_var <- input$filter_var
 
       iv_len <- shinyvalidate::InputValidator$new()
-      iv_len$add_rule("right_val", function(x) if (length(x) == 0) "Please select at least one")
-      iv_len$add_rule("left_val", function(x) if (length(x) == 0) "Please select at least one")
+      iv_len$add_rule("right_val", shinyvalidate::sv_required("Please select at least one"))
+      iv_len$add_rule("left_val", shinyvalidate::sv_required("Please select at least one"))
       iv_len$enable()
       validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
