@@ -5,7 +5,7 @@
 
 ### Enhancements
 * Added `teal.reporter` to all modules.
-* Number of `shiny::validate` calls changed to `shinyvalidate` for better UI overview.
+* Updated `shiny::validate` calls to `shinyvalidate` for better UI overview.
 
 ### Miscellaneous
 * Added names to the `id` parameter of `teal.code::chunks_push` in all modules.
