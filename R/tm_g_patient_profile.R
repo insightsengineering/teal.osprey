@@ -630,9 +630,10 @@ srv_g_patient_profile <- function(id,
         lb_dataname
       )
       input_select <- purrr::map_lgl(datanames, is.na)
+
       select_plot <- purrr::map2_lgl(
         input_select, possible_plot,
-        ~ if (!.x) {
+        ~ if (!.x && paste("select", .y, sep = "_") %in% names(input)) {
           input[[paste("select", .y, sep = "_")]]
         } else {
           FALSE

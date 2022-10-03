@@ -372,7 +372,7 @@ srv_g_heatmap_bygrade <- function(id,
         paste("Please de-select", input$id_var, "in annotation variable(s)", sep = " ")
       ))
 
-      if (input$plot_cm) {
+      if (!is.null(input$plot_cm) && input$plot_cm) {
         ADCM <- data[[cm_dataname]]() # nolint
         validate(
           need(
@@ -390,7 +390,7 @@ srv_g_heatmap_bygrade <- function(id,
         ))
       }
 
-      q1 <- if (input$plot_cm) {
+      q1 <- if (!is.null(input$plot_cm) && input$plot_cm) {
         validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
         teal.code::eval_code(
           teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
