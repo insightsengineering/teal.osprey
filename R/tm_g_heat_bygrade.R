@@ -34,10 +34,11 @@
 #' library(scda)
 #' library(dplyr)
 #' library(nestcolor)
-#' ADSL <- synthetic_cdisc_data("latest")$adsl %>% slice(1:30)
-#' ADEX <- synthetic_cdisc_data("latest")$adex %>% filter(USUBJID %in% ADSL$USUBJID)
-#' ADAE <- synthetic_cdisc_data("latest")$adae %>% filter(USUBJID %in% ADSL$USUBJID)
-#' ADCM <- synthetic_cdisc_data("latest")$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
+#' latest_data <- synthetic_cdisc_data("latest")
+#' ADSL <- latest_data$adsl %>% slice(1:30)
+#' ADEX <- latest_data$adex %>% filter(USUBJID %in% ADSL$USUBJID)
+#' ADAE <- latest_data$adae %>% filter(USUBJID %in% ADSL$USUBJID)
+#' ADCM <- latest_data$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
 #'
 #' # This preprocess is only to force legacy standard on ADCM
 #' ADCM <- ADCM %>%
@@ -76,10 +77,11 @@
 #'     cdisc_dataset("ADAE", ADAE),
 #'     cdisc_dataset("ADCM", ADCM, keys = c("STUDYID", "USUBJID", "ASTDTM", "CMSEQ", "CMDECOD")),
 #'     code = "
-#'     ADSL <- synthetic_cdisc_data(\"latest\")$adsl %>% slice(1:30)
-#'     ADEX <- synthetic_cdisc_data(\"latest\")$adex %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADAE <- synthetic_cdisc_data(\"latest\")$adae %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADCM <- synthetic_cdisc_data(\"latest\")$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     latest_data <- synthetic_cdisc_data('latest')
+#'     ADSL <- latest_data$adsl %>% slice(1:30)
+#'     ADEX <- latest_data$adex %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADAE <- latest_data$adae %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADCM <- latest_data$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
 #'     ADCM <- ADCM %>% select(-starts_with(\"ATC\")) %>% unique()
 #'     ADEX  <- ADEX %>%
 #'       filter(PARCAT1 == 'INDIVIDUAL') %>%
@@ -304,6 +306,13 @@ srv_g_heatmap_bygrade <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("heat_var", shinyvalidate::sv_required())
+    iv$add_rule("id_var", shinyvalidate::sv_required())
+    iv$add_rule("visit_var", shinyvalidate::sv_required())
+    iv$add_rule("ongo_var", shinyvalidate::sv_required())
+    iv$enable()
+
     teal.code::init_chunks()
     decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width) # nolint
     font_size <- decorate_output$font_size
@@ -324,7 +333,7 @@ srv_g_heatmap_bygrade <- function(id,
     observeEvent(input$plot_cm, {
       ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
       ADCM_label <- formatters::var_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
-      formatters::var_labels(ADCM) <- ADCM_label
+      formatters::var_labels(ADCM) <- ADCM_label # nolint
       choices <- levels(ADCM[[input$conmed_var]])
 
       updateSelectInput(
@@ -336,24 +345,24 @@ srv_g_heatmap_bygrade <- function(id,
     })
 
     plt <- reactive({
-      validate(need(input$id_var, "Please select a ID variable."))
-      validate(need(input$visit_var, "Please select a visit variable."))
-      validate(need(input$ongo_var, "Please select a Study Ongoing Status variable."))
-      validate(need(input$heat_var, "Please select a heat variable."))
-      validate(need(length(input$anno_var) <= 2, "Please include no more than 2 annotation variables"))
+      iv_len <- shinyvalidate::InputValidator$new()
+      anno_var <- input$anno_var
+      iv_len$add_rule("anno_var", function(x) if (length(x) > 2) "Please include no more than 2 annotation variables.")
+      iv_len$enable()
+      validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       ADSL <- datasets$get_data(sl_dataname, filtered = TRUE) # nolint
       ADEX <- datasets$get_data(ex_dataname, filtered = TRUE) # nolint
       ADAE <- datasets$get_data(ae_dataname, filtered = TRUE) # nolint
 
       # assign labels back to the data
-      formatters::var_labels(ADSL) <-
+      formatters::var_labels(ADSL) <- # nolint
         formatters::var_labels(datasets$get_data(sl_dataname, filtered = FALSE), fill = FALSE)
-      formatters::var_labels(ADEX) <-
+      formatters::var_labels(ADEX) <- # nolint
         formatters::var_labels(datasets$get_data(ex_dataname, filtered = FALSE), fill = FALSE)
-      formatters::var_labels(ADAE) <-
+      formatters::var_labels(ADAE) <- # nolint
         formatters::var_labels(datasets$get_data(ae_dataname, filtered = FALSE), fill = FALSE)
-
       validate(need(nrow(ADSL) > 0, "Please select at least one subject"))
 
       validate(need(
@@ -367,19 +376,19 @@ srv_g_heatmap_bygrade <- function(id,
       ))
 
       validate(need(
-        all(input$anno_var %in% names(ADSL)),
+        all(anno_var %in% names(ADSL)),
         paste("Please only select annotation variable(s) in", sl_dataname, sep = " ")
       ))
 
       validate(need(
-        !(input$id_var %in% input$anno_var),
+        !(input$id_var %in% anno_var),
         paste("Please de-select", input$id_var, "in annotation variable(s)", sep = " ")
       ))
 
       if (input$plot_cm) {
         ADCM <- datasets$get_data(cm_dataname, filtered = TRUE) # nolint
         ADCM_label <- formatters::var_labels(datasets$get_data(cm_dataname, filtered = FALSE), fill = FALSE) # nolint
-        formatters::var_labels(ADCM) <- ADCM_label
+        formatters::var_labels(ADCM) <- ADCM_label # nolint
         validate(
           need(
             input$conmed_var %in% names(ADCM),
@@ -395,13 +404,18 @@ srv_g_heatmap_bygrade <- function(id,
       teal.code::chunks_reset(envir = environment())
 
       if (input$plot_cm) {
-        validate(need(!is.na(input$conmed_var), "Please select a conmed variable."))
+        iv_cm <- shinyvalidate::InputValidator$new()
+        conmed_var <- input$conmed_var
+        iv_cm$add_rule("conmed_var", shinyvalidate::sv_required())
+        iv_cm$enable()
+        validate(need(iv_cm$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
         teal.code::chunks_push(
           id = "conmed_data call",
           expression = bquote({
             conmed_data <- ADCM %>%
-              filter(!!sym(.(input$conmed_var)) %in% .(input$conmed_level))
-            conmed_var <- .(input$conmed_var)
+              filter(!!sym(.(conmed_var)) %in% .(input$conmed_level))
+            conmed_var <- .(conmed_var)
             conmed_data[[conmed_var]] <-
               factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
             formatters::var_labels(conmed_data)[conmed_var] <-
