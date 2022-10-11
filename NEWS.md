@@ -6,6 +6,7 @@
 ### Enhancements
 * Added `teal.reporter` to all modules.
 * Updated `shiny::validate` calls to `shinyvalidate` for better UI overview.
+* Implemented `nestcolor` with slight refactoring to `tm_g_swimlane`. Added `nestcolor` in examples.
 
 ### Miscellaneous
 * Added names to the `id` parameter of `teal.code::chunks_push` in all modules.
@@ -15,7 +16,6 @@
 
 ### Enhancements
 * Removed unneeded `chunk` evaluations in `tm_g_patient_profile` module.
-* Implemented `nestcolor` with slight refactoring to `tm_g_swimlane`. Added `nestcolor` in examples.
 
 ### Miscellaneous
 * Added a template to the `pkgdown` site.
