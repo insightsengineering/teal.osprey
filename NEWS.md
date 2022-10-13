@@ -1,13 +1,14 @@
-# teal.osprey 0.1.14.9015
+# teal.osprey 0.1.14.9017
 
 ### Breaking changes
 * Soft deprecate function `label_aevar()`.
 * Replaced `chunks` with simpler `qenv` class.
 * Replaced `datasets` argument containing `FilteredData` with the new arguments `data` (list of reactive datasets) and `filter_panel_api` (`FilterPanelAPI`).
 * Updated `arm_var` to point to the factor column in `ANL`. It can't be a character column anymore. 
-
 ### Enhancements
 * Added `teal.reporter` to all modules.
+* Updated `shiny::validate` calls to `shinyvalidate` for better UI overview.
+* Implemented `nestcolor` with slight refactoring to `tm_g_swimlane`. Added `nestcolor` in examples.
 
 ### Miscellaneous
 * Added names to the `id` parameter of `teal.code::chunks_push` in all modules.
@@ -17,7 +18,6 @@
 
 ### Enhancements
 * Removed unneeded `chunk` evaluations in `tm_g_patient_profile` module.
-* Implemented `nestcolor` with slight refactoring to `tm_g_swimlane`. Added `nestcolor` in examples.
 
 ### Miscellaneous
 * Added a template to the `pkgdown` site.

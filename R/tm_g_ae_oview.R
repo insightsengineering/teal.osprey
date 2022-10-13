@@ -226,6 +226,13 @@ srv_g_ae_oview <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("arm_var", shinyvalidate::sv_required())
+    iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
+      message = "Please select at least one flag"
+    ))
+    iv$enable()
+
     decorate_output <- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width)
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
@@ -272,32 +279,34 @@ srv_g_ae_oview <- function(id,
 
     output_q <- reactive({
       ANL <- data[[dataname]]() # nolint
-      validate(need(input$arm_var, "Please select an arm variable."))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       validate(need(
         is.factor(ANL[[input$arm_var]]),
         "Selected arm variable needs to be a factor."
       ))
       validate(need(input$flag_var_anl, "Please select at least one flag."))
-      validate(need(
-        input$arm_trt != input$arm_ref,
-        paste(
-          "Treatment arm and control arm cannot be the same.",
-          "Please select a different treatment arm or control arm",
-          sep = "\n"
-        )
+      iv_comp <- shinyvalidate::InputValidator$new()
+      iv_comp$add_rule("arm_trt", shinyvalidate::sv_not_equal(
+        input$arm_ref,
+        message_fmt = "Must not be equal to Control"
       ))
+      iv_comp$add_rule("arm_ref", shinyvalidate::sv_not_equal(
+        input$arm_trt,
+        message_fmt = "Must not be equal to Treatment"
+      ))
+
+      iv_comp$enable()
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
       validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
       validate_has_data(ANL, min_nrow = 10)
-      validate(
-        need(
-          input$arm_ref %in% ANL[[input$arm_var]],
-          paste0("Selected Control ", input$arm_var, ", ", input$arm_ref, ", is not in the data (filtered out?)")
-        ),
-        need(
-          input$arm_trt %in% ANL[[input$arm_var]],
-          paste0("Selected Treatment ", input$arm_var, ", ", input$arm_trt, ", is not in the data (filtered out?)")
-        )
-      )
+      if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
+        iv_an <- shinyvalidate::InputValidator$new()
+        iv_an$add_rule("arm_ref", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
+        iv_an$add_rule("arm_trt", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
+        iv_an$enable()
+        validate(need(iv_an$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+      }
       validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
       q1 <- teal.code::eval_code(
@@ -340,7 +349,6 @@ srv_g_ae_oview <- function(id,
       verbatim_content = reactive(teal.code::get_code(output_q())),
       title = paste("R code for", label)
     )
-
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment) {

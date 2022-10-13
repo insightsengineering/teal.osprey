@@ -420,6 +420,12 @@ srv_g_patient_profile <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("sl_start_date", shinyvalidate::sv_required())
+    iv$add_rule("lb_var_show", shinyvalidate::sv_required())
+    iv$add_rule("ae_var", shinyvalidate::sv_required())
+    iv$enable()
+
     # only show the check box when domain data is available
     observeEvent(ae_dataname, {
       if (!is.na(ae_dataname)) {
@@ -509,12 +515,12 @@ srv_g_patient_profile <- function(id,
       x_limit <- input$x_limit
       lb_var_show <- input$lb_var_show
 
-
-      validate(
-        need(sl_start_date, "Please select a start date variable."),
-        need(ae_line_col_var, "Please select an adverse event line color."),
-        need(lb_var_show, "`Lab values` field is empty.")
-      )
+      iv$add_rule("cm_var", shinyvalidate::sv_required())
+      iv$add_rule("rs_var", shinyvalidate::sv_required())
+      iv$add_rule("ex_var", shinyvalidate::sv_required())
+      iv$add_rule("lb_var", shinyvalidate::sv_required())
+      iv$add_rule("x_limit", shinyvalidate::sv_required())
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       adrs_vars <- unique(c(
         "USUBJID", "STUDYID", "PARAMCD",
@@ -571,7 +577,6 @@ srv_g_patient_profile <- function(id,
       } else {
         ADAE <- NULL # nolint
       }
-
 
       if (!is.null(input$select_rs)) {
         if (input$select_rs == FALSE | is.na(rs_dataname)) {
@@ -654,7 +659,7 @@ srv_g_patient_profile <- function(id,
             as.Date(ADSL$DTHDT),
             na.rm = TRUE
           )
-          ADSL <- ADSL %>% # nolint
+          ADSL <- ADSL %>%
             mutate(
               max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
               max_day = as.numeric(
@@ -732,7 +737,7 @@ srv_g_patient_profile <- function(id,
                     units = "days"
                   )
                 )
-                + (AENDT >= as.Date(substr(
+                + (AENDT >= as.Date(substr( # nolint
                     as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
                   )))) %>%
                 select(c(.(adae_vars), ASTDY, AENDY))

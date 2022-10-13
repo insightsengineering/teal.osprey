@@ -222,6 +222,14 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("paramcd", shinyvalidate::sv_required())
+    iv$add_rule("x_var", shinyvalidate::sv_required())
+    iv$add_rule("y_var", shinyvalidate::sv_required())
+    iv$add_rule("marker_var", shinyvalidate::sv_required())
+    iv$add_rule("line_colorby_var", shinyvalidate::sv_required())
+    iv$enable()
+
     vals <- reactiveValues(spiderplot = NULL) # nolint
 
     # render plot
@@ -242,16 +250,11 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       vref_line <- input$vref_line
       href_line <- input$href_line
 
-      validate(need(paramcd, "`Parameter - from ADTR` field is empty"))
-      validate(need(x_var, "`X-axis Variable` field is empty"))
-      validate(need(y_var, "`Y-axis Variable` field is empty"))
-      validate(need(marker_var, "`Marker Symbol By Variable` field is empty"))
-      validate(need(line_colorby_var, "`Color By Variable (Line)` field is empty"))
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       validate(need(nrow(ADSL) > 0, "ADSL data has zero rows"))
       validate(need(nrow(ADTR) > 0, paste(dataname, "data has zero rows")))
 
       # define variables ---
-
       # if variable is not in ADSL, then take from domain VADs
       varlist <- c(xfacet_var, yfacet_var, marker_var, line_colorby_var)
       varlist_from_adsl <- varlist[varlist %in% names(ADSL)]

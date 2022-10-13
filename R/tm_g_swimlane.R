@@ -269,6 +269,10 @@ srv_g_swimlane <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("bar_var", shinyvalidate::sv_required())
+    iv$enable()
+
     # if marker position is NULL, then hide options for marker shape and color
     output$marker_shape_sel <- renderUI({
       if (dataname == "ADSL" || is.null(marker_shape_var) || is.null(input$marker_pos_var)) {
@@ -299,6 +303,8 @@ srv_g_swimlane <- function(id,
 
     # create plot
     output_q <- reactive({
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
       # DATA GETTERS
       validate(need("ADSL" %in% names(data), "'ADSL' not included in data"))
       validate(need(
@@ -307,7 +313,6 @@ srv_g_swimlane <- function(id,
         "Please either add just 'ADSL' as dataname when just ADSL is available
       In case 2 datasets are available ADSL is not supposed to be the dataname."
       ))
-      validate(need(input$bar_var, "Please select a variable to map to the bar length."))
 
       ADSL <- data[["ADSL"]]() # nolint
 
