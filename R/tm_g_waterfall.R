@@ -290,6 +290,11 @@ srv_g_waterfall <- function(id,
 
   moduleServer(id, function(input, output, session) {
     output_q <- reactive({
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("bar_var", shinyvalidate::sv_required())
+      iv$add_rule("bar_paramcd", shinyvalidate::sv_required())
+      iv$enable()
+
       adsl <- data[["ADSL"]]()
       adtr <- data[[dataname_tr]]()
       adrs <- data[[dataname_rs]]()
@@ -305,7 +310,6 @@ srv_g_waterfall <- function(id,
       gap_point_val <- input$gap_point_val
       show_value <- input$show_value # nolint
 
-      validate(need(bar_var, "'Bar Height' field is empty"))
       validate(need(
         length(add_label_paramcd_rs) == 0 || length(add_label_var_sl) == 0,
         "`Add ADSL Label to Bars` and `Add ADRS Label to Bars` fields cannot both have values simultaneously."

@@ -267,6 +267,12 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("category_var", shinyvalidate::sv_required())
+    iv$add_rule("right_var", shinyvalidate::sv_required())
+    iv$add_rule("left_var", shinyvalidate::sv_required())
+    iv$enable()
+
     options <- reactiveValues(r = NULL, l = NULL)
     vars <- reactiveValues(r = NULL, l = NULL)
 
@@ -363,6 +369,12 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       facet_var <- input$facet_var
       sort_by_var <- input$sort_by_var
       filter_var <- input$filter_var
+
+      iv_len <- shinyvalidate::InputValidator$new()
+      iv_len$add_rule("right_val", shinyvalidate::sv_required("Please select at least one"))
+      iv_len$add_rule("left_val", shinyvalidate::sv_required("Please select at least one"))
+      iv_len$enable()
+      validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       validate(
         need(category_var, "Please select a category variable."),

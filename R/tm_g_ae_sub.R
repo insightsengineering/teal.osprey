@@ -181,6 +181,10 @@ srv_g_ae_sub <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("arm_var", shinyvalidate::sv_required())
+    iv$enable()
+
     decorate_output <- srv_g_decorate(
       id = NULL,
       plt = plot_r,
@@ -283,7 +287,19 @@ srv_g_ae_sub <- function(id,
       ANL <- data[[dataname]]() # nolint
       ADSL <- data[["ADSL"]]() # nolint
       validate_has_data(ANL, min_nrow = 10)
-      validate(need(input$arm_var, "Please select an arm variable."))
+      iv_comp <- shinyvalidate::InputValidator$new()
+      iv_comp$add_rule("arm_trt", shinyvalidate::sv_not_equal(
+        input$arm_ref,
+        message_fmt = "Must not be equal to Control"
+      ))
+      iv_comp$add_rule("arm_ref", shinyvalidate::sv_not_equal(
+        input$arm_trt,
+        message_fmt = "Must not be equal to Treatment"
+      ))
+      iv_comp$enable()
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+
+      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       validate(need(
         is.factor(ANL[[input$arm_var]]),
         "Selected arm variable needs to be a factor. Contact the app developer."
@@ -302,10 +318,6 @@ srv_g_ae_sub <- function(id,
         need(
           all(input$groups %in% names(ANL)) & all(input$groups %in% names(ADSL)),
           "Check all selected subgroups are columns in ADAE and ADSL."
-        ),
-        need(
-          input$arm_trt != input$arm_ref,
-          "Treatment and Reference can not be identical."
         )
       )
 
