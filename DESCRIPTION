@@ -1,7 +1,7 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Version: 0.1.14.9017
-Date: 2022-10-12
+Version: 0.1.15
+Date: 2022-10-14
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
     person("Konrad", "Pagacz", , "konrad.pagacz@contractors.roche.com", role = "aut"),
@@ -20,10 +20,10 @@ License: Apache License 2.0 | file LICENSE
 URL: https://github.com/insightsengineering/teal.osprey/
 BugReports: https://github.com/insightsengineering/teal.osprey/issues
 Depends:
-    osprey (>= 0.1.14),
+    osprey (>= 0.1.15),
     R (>= 3.6),
     shiny,
-    teal (>= 0.11.1)
+    teal (>= 0.12.0)
 Imports:
     checkmate,
     dplyr,
@@ -33,19 +33,19 @@ Imports:
     logger (>= 0.2.0),
     purrr,
     shinyvalidate,
-    teal.code (>= 0.1.1),
-    teal.logger (>= 0.1.0),
-    teal.reporter (>= 0.1.0),
-    teal.widgets (>= 0.1.1),
-    tern (>= 0.7.8),
+    teal.code (>= 0.2.0),
+    teal.logger (>= 0.1.1),
+    teal.reporter (>= 0.1.1),
+    teal.widgets (>= 0.2.0),
+    tern (>= 0.7.10),
     tidyr
 Suggests:
     knitr,
-    nestcolor,
+    nestcolor (>= 0.1.0),
     rmarkdown,
-    scda (>= 0.1.3),
-    scda.2021 (>= 0.1.3),
-    teal.data (>= 0.1.1),
+    scda (>= 0.1.5),
+    scda.2021 (>= 0.1.5),
+    teal.data (>= 0.1.2),
     testthat (>= 2.0)
 Remotes:
     insightsengineering/osprey@*release,
