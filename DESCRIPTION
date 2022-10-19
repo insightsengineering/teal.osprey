@@ -58,7 +58,8 @@ Remotes:
     insightsengineering/teal.reporter@*release,
     insightsengineering/teal.widgets@*release,
     insightsengineering/teal@*release,
-    insightsengineering/tern@*release
+    insightsengineering/tern@*release,
+    insightsengineering/osprey@*release
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
