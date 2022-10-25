@@ -1,10 +1,16 @@
-# teal.osprey 0.1.14.9017
+# teal.osprey 0.1.15.9000
+
+### Breaking changes
+
+* Replaced `chunks` with simpler `qenv` class.
+* Replaced `datasets` argument containing `FilteredData` with the new arguments `data` (list of reactive datasets) and `filter_panel_api` (`FilterPanelAPI`).
+* Updated `arm_var` to point to the factor column in `ANL`. It can't be a character column anymore.
+
+# teal.osprey 0.1.15
 
 ### Breaking changes
 * Soft deprecate function `label_aevar()`.
-* Replaced `chunks` with simpler `qenv` class.
-* Replaced `datasets` argument containing `FilteredData` with the new arguments `data` (list of reactive datasets) and `filter_panel_api` (`FilterPanelAPI`).
-* Updated `arm_var` to point to the factor column in `ANL`. It can't be a character column anymore. 
+
 ### Enhancements
 * Added `teal.reporter` to all modules.
 * Updated `shiny::validate` calls to `shinyvalidate` for better UI overview.
