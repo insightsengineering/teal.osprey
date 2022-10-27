@@ -297,13 +297,12 @@ srv_g_ae_oview <- function(id,
         input$arm_trt,
         message_fmt = "Must not be equal to Treatment"
       ))
-
       iv_comp$enable()
-      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
       validate_has_data(ANL, min_nrow = 10)
-      if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
+      if (all(c(input$arm_trt, input$arm_ref) %in% ANL[[input$arm_var]])) {
         iv_an <- shinyvalidate::InputValidator$new()
         iv_an$add_rule("arm_ref", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
         iv_an$add_rule("arm_trt", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
