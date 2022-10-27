@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage line-rate="0.00144801621778164" branch-rate="0" lines-covered="5" lines-valid="3453" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2022-10-27 12:58:26">
+<coverage line-rate="0.00144675925925926" branch-rate="0" lines-covered="5" lines-valid="3456" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2022-10-27 15:37:08">
   <sources/>
   <packages>
-    <package name="teal.osprey" line-rate="0.00144801621778164" branch-rate="0" complexity="0">
+    <package name="teal.osprey" line-rate="0.00144675925925926" branch-rate="0" complexity="0">
       <classes>
         <class name="tm_g_ae_oview.R" filename="R/tm_g_ae_oview.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
@@ -802,21 +802,21 @@
                 <line number="365" hits="0" branch="false"/>
                 <line number="366" hits="0" branch="false"/>
                 <line number="367" hits="0" branch="false"/>
+                <line number="368" hits="0" branch="false"/>
                 <line number="369" hits="0" branch="false"/>
-                <line number="371" hits="0" branch="false"/>
+                <line number="370" hits="0" branch="false"/>
                 <line number="372" hits="0" branch="false"/>
-                <line number="373" hits="0" branch="false"/>
                 <line number="374" hits="0" branch="false"/>
                 <line number="375" hits="0" branch="false"/>
                 <line number="376" hits="0" branch="false"/>
+                <line number="377" hits="0" branch="false"/>
                 <line number="378" hits="0" branch="false"/>
                 <line number="379" hits="0" branch="false"/>
-                <line number="380" hits="0" branch="false"/>
                 <line number="381" hits="0" branch="false"/>
                 <line number="382" hits="0" branch="false"/>
+                <line number="383" hits="0" branch="false"/>
+                <line number="384" hits="0" branch="false"/>
                 <line number="385" hits="0" branch="false"/>
-                <line number="386" hits="0" branch="false"/>
-                <line number="387" hits="0" branch="false"/>
                 <line number="388" hits="0" branch="false"/>
                 <line number="389" hits="0" branch="false"/>
                 <line number="390" hits="0" branch="false"/>
@@ -832,6 +832,9 @@
                 <line number="400" hits="0" branch="false"/>
                 <line number="401" hits="0" branch="false"/>
                 <line number="402" hits="0" branch="false"/>
+                <line number="403" hits="0" branch="false"/>
+                <line number="404" hits="0" branch="false"/>
+                <line number="405" hits="0" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -1120,21 +1123,21 @@
             <line number="365" hits="0" branch="false"/>
             <line number="366" hits="0" branch="false"/>
             <line number="367" hits="0" branch="false"/>
+            <line number="368" hits="0" branch="false"/>
             <line number="369" hits="0" branch="false"/>
-            <line number="371" hits="0" branch="false"/>
+            <line number="370" hits="0" branch="false"/>
             <line number="372" hits="0" branch="false"/>
-            <line number="373" hits="0" branch="false"/>
             <line number="374" hits="0" branch="false"/>
             <line number="375" hits="0" branch="false"/>
             <line number="376" hits="0" branch="false"/>
+            <line number="377" hits="0" branch="false"/>
             <line number="378" hits="0" branch="false"/>
             <line number="379" hits="0" branch="false"/>
-            <line number="380" hits="0" branch="false"/>
             <line number="381" hits="0" branch="false"/>
             <line number="382" hits="0" branch="false"/>
+            <line number="383" hits="0" branch="false"/>
+            <line number="384" hits="0" branch="false"/>
             <line number="385" hits="0" branch="false"/>
-            <line number="386" hits="0" branch="false"/>
-            <line number="387" hits="0" branch="false"/>
             <line number="388" hits="0" branch="false"/>
             <line number="389" hits="0" branch="false"/>
             <line number="390" hits="0" branch="false"/>
@@ -1150,6 +1153,9 @@
             <line number="400" hits="0" branch="false"/>
             <line number="401" hits="0" branch="false"/>
             <line number="402" hits="0" branch="false"/>
+            <line number="403" hits="0" branch="false"/>
+            <line number="404" hits="0" branch="false"/>
+            <line number="405" hits="0" branch="false"/>
           </lines>
         </class>
         <class name="tm_g_butterfly.R" filename="R/tm_g_butterfly.R" line-rate="0" branch-rate="0" complexity="0">
