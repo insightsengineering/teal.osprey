@@ -380,7 +380,7 @@ srv_g_heatmap_bygrade <- function(id,
         paste("Please de-select", input$id_var, "in annotation variable(s)", sep = " ")
       ))
 
-      if (!is.null(input$plot_cm) && input$plot_cm) {
+      if (isTRUE(input$plot_cm)) {
         ADCM <- data[[cm_dataname]]() # nolint
         validate(
           need(
@@ -398,7 +398,7 @@ srv_g_heatmap_bygrade <- function(id,
         ))
       }
 
-      q1 <- if (!is.null(input$plot_cm) && input$plot_cm) {
+      q1 <- if (isTRUE(input$plot_cm)) {
         iv_cm <- shinyvalidate::InputValidator$new()
         conmed_var <- input$conmed_var
         iv_cm$add_rule("conmed_var", shinyvalidate::sv_required())
