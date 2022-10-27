@@ -288,7 +288,10 @@ ui_g_heatmap_bygrade <- function(id, ...) {
           footnotes = ""
         )
       ),
-      forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+      forms = tagList(
+        teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
+        teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+      )
     )
   )
 }
@@ -377,7 +380,7 @@ srv_g_heatmap_bygrade <- function(id,
         paste("Please de-select", input$id_var, "in annotation variable(s)", sep = " ")
       ))
 
-      if (input$plot_cm) {
+      if (isTRUE(input$plot_cm)) {
         ADCM <- data[[cm_dataname]]() # nolint
         validate(
           need(
@@ -395,7 +398,7 @@ srv_g_heatmap_bygrade <- function(id,
         ))
       }
 
-      q1 <- if (input$plot_cm) {
+      q1 <- if (isTRUE(input$plot_cm)) {
         iv_cm <- shinyvalidate::InputValidator$new()
         conmed_var <- input$conmed_var
         iv_cm$add_rule("conmed_var", shinyvalidate::sv_required())
@@ -403,7 +406,7 @@ srv_g_heatmap_bygrade <- function(id,
         validate(need(iv_cm$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
         teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = get_code(data)),
+          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
           code = bquote({
             conmed_data <- ADCM %>%
               filter(!!sym(.(conmed_var)) %in% .(input$conmed_level))
@@ -446,6 +449,13 @@ srv_g_heatmap_bygrade <- function(id,
     })
 
     plot_r <- reactive(output_q()[["plot"]])
+
+    teal.widgets::verbatim_popup_srv(
+      id = "warning",
+      verbatim_content = reactive(teal.code::get_warnings(output_q())),
+      title = "Warning",
+      disabled = reactive(is.null(teal.code::get_warnings(output_q())))
+    )
 
     teal.widgets::verbatim_popup_srv(
       id = "rcode",

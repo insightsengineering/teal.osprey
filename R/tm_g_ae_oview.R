@@ -209,7 +209,10 @@ ui_g_ae_oview <- function(id, ...) {
         footnotes = ""
       )
     ),
-    forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+    forms = tagList(
+      teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
+      teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+    )
   )
 }
 
@@ -294,13 +297,12 @@ srv_g_ae_oview <- function(id,
         input$arm_trt,
         message_fmt = "Must not be equal to Treatment"
       ))
-
       iv_comp$enable()
-      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
       validate_has_data(ANL, min_nrow = 10)
-      if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
+      if (all(c(input$arm_trt, input$arm_ref) %in% ANL[[input$arm_var]])) {
         iv_an <- shinyvalidate::InputValidator$new()
         iv_an$add_rule("arm_ref", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
         iv_an$add_rule("arm_trt", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
@@ -310,7 +312,7 @@ srv_g_ae_oview <- function(id,
       validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code(data)),
+        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
         code = as.expression(c(
           bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
           bquote(flags <- .(as.name(dataname)) %>%
@@ -343,6 +345,13 @@ srv_g_ae_oview <- function(id,
     })
 
     plot_r <- reactive(output_q()[["plot"]])
+
+    teal.widgets::verbatim_popup_srv(
+      id = "warning",
+      verbatim_content = reactive(teal.code::get_warnings(output_q())),
+      title = "Warning",
+      disabled = reactive(is.null(teal.code::get_warnings(output_q())))
+    )
 
     teal.widgets::verbatim_popup_srv(
       id = "rcode",

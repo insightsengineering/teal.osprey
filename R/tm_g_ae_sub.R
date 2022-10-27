@@ -161,7 +161,10 @@ ui_g_ae_sub <- function(id, ...) {
         )
       )
     ),
-    forms = teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+    forms = tagList(
+      teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
+      teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+    )
   )
 }
 
@@ -336,7 +339,7 @@ srv_g_ae_sub <- function(id,
         bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
       }
 
-      q1 <- teal.code::eval_code(teal.code::new_qenv(tdata2env(data), code = get_code(data)), code = group_labels_call)
+      q1 <- teal.code::eval_code(teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)), code = group_labels_call)
       q2 <- teal.code::eval_code(q1, code = "")
       teal.code::eval_code(
         q2,
@@ -364,6 +367,13 @@ srv_g_ae_sub <- function(id,
     })
 
     plot_r <- reactive(output_q()[["plot"]])
+
+    teal.widgets::verbatim_popup_srv(
+      id = "warning",
+      verbatim_content = reactive(teal.code::get_warnings(output_q())),
+      title = "Warning",
+      disabled = reactive(is.null(teal.code::get_warnings(output_q())))
+    )
 
     teal.widgets::verbatim_popup_srv(
       id = "rcode",
