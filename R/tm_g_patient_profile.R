@@ -663,7 +663,7 @@ srv_g_patient_profile <- function(id,
             as.Date(ADSL$DTHDT),
             na.rm = TRUE
           )
-          ADSL <- ADSL %>%
+          ADSL <- ADSL %>% # nolint
             mutate(
               max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
               max_day = as.numeric(

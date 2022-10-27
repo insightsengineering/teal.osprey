@@ -339,7 +339,10 @@ srv_g_ae_sub <- function(id,
         bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
       }
 
-      q1 <- teal.code::eval_code(teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)), code = group_labels_call)
+      q1 <- teal.code::eval_code(
+        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+        code = group_labels_call
+      )
       q2 <- teal.code::eval_code(q1, code = "")
       teal.code::eval_code(
         q2,
