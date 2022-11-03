@@ -337,6 +337,7 @@ srv_g_heatmap_bygrade <- function(id,
 
     observeEvent(input$plot_cm, {
       ADCM <- data[[cm_dataname]]() # nolint
+      req(input$conmed_var)
       choices <- levels(ADCM[[input$conmed_var]])
 
       updateSelectInput(
