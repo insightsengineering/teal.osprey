@@ -1,6 +1,13 @@
 # teal.osprey 0.1.15.9001
 
 * Examples now use `scda.2022` instead of `scda.2021`.
+* Fixed crash in `tm_g_heat_bygrade` when not plotting `Conmed`. 
+
+### Breaking changes
+
+* Replaced `chunks` with simpler `qenv` class.
+* Replaced `datasets` argument containing `FilteredData` with the new arguments `data` (`tdata` object) and `filter_panel_api` (`FilterPanelAPI`).
+* Updated `arm_var` to point to the factor column in `ANL`. It can't be a character column anymore.
 
 # teal.osprey 0.1.15
 

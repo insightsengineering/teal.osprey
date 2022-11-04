@@ -94,8 +94,8 @@
 #'     )
 #'   )
 #' )
-#' \dontrun{
-#' shinyApp(app$ui, app$server)
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
 #' }
 tm_g_ae_oview <- function(label,
                           dataname,
@@ -137,7 +137,7 @@ tm_g_ae_oview <- function(label,
     ),
     ui = ui_g_ae_oview,
     ui_args = args,
-    filters = dataname
+    filters = c("ADSL", dataname)
   )
 }
 
@@ -209,18 +209,24 @@ ui_g_ae_oview <- function(id, ...) {
         footnotes = ""
       )
     ),
-    forms = get_rcode_ui(ns("rcode"))
+    forms = tagList(
+      teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
+      teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
+    )
   )
 }
 
 srv_g_ae_oview <- function(id,
-                           datasets,
+                           data,
+                           filter_panel_api,
                            reporter,
                            dataname,
                            label,
                            plot_height,
                            plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
+  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+  checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
     iv <- shinyvalidate::InputValidator$new()
@@ -230,8 +236,7 @@ srv_g_ae_oview <- function(id,
     ))
     iv$enable()
 
-    teal.code::init_chunks()
-    decorate_output <- srv_g_decorate(id = NULL, plt = plt, plot_height = plot_height, plot_width = plot_width)
+    decorate_output <- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width)
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
@@ -249,12 +254,12 @@ srv_g_ae_oview <- function(id,
       )
     })
 
-    observeEvent(input$arm_var, {
-      ANL <- datasets$get_data(dataname, filtered = FALSE) # nolint
-      req(!is.null(input$arm_var))
+    observeEvent(input$arm_var, ignoreNULL = TRUE, {
+      ANL <- data[[dataname]]() # nolint
       arm_var <- input$arm_var
-      choices <- unique(ANL[[arm_var]])
-      validate(need(length(choices) > 0, "Please include multiple treatment"))
+      arm_val <- ANL[[arm_var]]
+      choices <- levels(arm_val)
+
       if (length(choices) == 1) {
         trt_index <- 1
       } else {
@@ -275,20 +280,14 @@ srv_g_ae_oview <- function(id,
       )
     })
 
-    plt <- reactive({
+    output_q <- reactive({
+      ANL <- data[[dataname]]() # nolint
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-
-      ANL_UNFILTERED <- datasets$get_data(dataname, filtered = FALSE) # nolint
-      ADSL <- datasets$get_data("ADSL", filtered = TRUE) # nolint
-      ANL <- datasets$get_data(dataname, filtered = TRUE) # nolint
-
-      anl_name <- dataname
-      assign(anl_name, ANL)
-
-      teal.code::chunks_reset(envir = environment())
-
-      validate_has_data(ANL, min_nrow = 10)
-
+      validate(need(
+        is.factor(ANL[[input$arm_var]]),
+        "Selected arm variable needs to be a factor."
+      ))
+      validate(need(input$flag_var_anl, "Please select at least one flag."))
       iv_comp <- shinyvalidate::InputValidator$new()
       iv_comp$add_rule("arm_trt", shinyvalidate::sv_not_equal(
         input$arm_ref,
@@ -298,13 +297,12 @@ srv_g_ae_oview <- function(id,
         input$arm_trt,
         message_fmt = "Must not be equal to Treatment"
       ))
-
       iv_comp$enable()
+
       validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-
       validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
-
-      if (all(c(input$arm_trt, input$arm_ref) %in% ANL_UNFILTERED[[input$arm_var]])) {
+      validate_has_data(ANL, min_nrow = 10)
+      if (all(c(input$arm_trt, input$arm_ref) %in% ANL[[input$arm_var]])) {
         iv_an <- shinyvalidate::InputValidator$new()
         iv_an$add_rule("arm_ref", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
         iv_an$add_rule("arm_trt", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
@@ -313,57 +311,52 @@ srv_g_ae_oview <- function(id,
       }
       validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
 
-      teal.code::chunks_push(
-        id = "variables call",
-        expression = bquote({
-          id <- .(as.name(anl_name))[["USUBJID"]]
-          arm <- .(as.name(anl_name))[[.(input$arm_var)]]
-          arm_N <- table(ADSL[[.(input$arm_var)]]) # nolint
-          trt <- .(input$arm_trt)
-          ref <- .(input$arm_ref)
-          anl_labels <- formatters::var_labels(.(as.name(anl_name)), fill = FALSE)
-          flags <- .(as.name(anl_name)) %>%
+      q1 <- teal.code::eval_code(
+        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+        code = as.expression(c(
+          bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
+          bquote(flags <- .(as.name(dataname)) %>%
             select(all_of(.(input$flag_var_anl))) %>%
-            rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
-        })
+            rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x])))
+        ))
       )
 
-      teal.code::chunks_push_new_line()
-
-      teal.code::chunks_safe_eval()
-
-      teal.code::chunks_push(
-        id = "g_events_term_id call",
-        expression = bquote({
-          osprey::g_events_term_id(
-            term = flags,
-            id = id,
-            arm = arm,
-            arm_N = arm_N,
-            ref = .(input$arm_ref),
-            trt = .(input$arm_trt),
-            diff_ci_method = .(input$diff_ci_method),
-            conf_level = .(input$conf_level),
-            axis_side = .(input$axis),
-            fontsize = .(font_size()),
-            draw = TRUE
-          )
-        })
+      teal.code::eval_code(
+        q1,
+        code = as.expression(c(
+          bquote(
+            plot <- osprey::g_events_term_id(
+              term = flags,
+              id = .(as.name(dataname))[["USUBJID"]],
+              arm = .(as.name(dataname))[[.(input$arm_var)]],
+              arm_N = table(ADSL[[.(input$arm_var)]]),
+              ref = .(input$arm_ref),
+              trt = .(input$arm_trt),
+              diff_ci_method = .(input$diff_ci_method),
+              conf_level = .(input$conf_level),
+              axis_side = .(input$axis),
+              fontsize = .(font_size()),
+              draw = TRUE
+            )
+          ),
+          quote(plot)
+        ))
       )
-
-      teal.code::chunks_safe_eval()
     })
 
-    get_rcode_srv(
+    plot_r <- reactive(output_q()[["plot"]])
+
+    teal.widgets::verbatim_popup_srv(
+      id = "warning",
+      verbatim_content = reactive(teal.code::get_warnings(output_q())),
+      title = "Warning",
+      disabled = reactive(is.null(teal.code::get_warnings(output_q())))
+    )
+
+    teal.widgets::verbatim_popup_srv(
       id = "rcode",
-      datasets = datasets,
-      modal_title = paste("R code for", label),
-      datanames = unique(c(
-        dataname,
-        vapply(X = dataname, FUN.VALUE = character(1), function(x) {
-          if (inherits(datasets, "CDISCFilteredData")) datasets$get_parentname(x)
-        })
-      ))
+      verbatim_content = reactive(teal.code::get_code(output_q())),
+      title = paste("R code for", label)
     )
     ### REPORTER
     if (with_reporter) {
@@ -371,19 +364,14 @@ srv_g_ae_oview <- function(id,
         card <- teal.reporter::TealReportCard$new()
         card$set_name("AE Overview")
         card$append_text("AE Overview", "header2")
-        card$append_fs(datasets$get_filter_state())
+        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
         card$append_text("Plot", "header3")
-        card$append_plot(plt(), dim = pws$dim())
+        card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(get_rcode(
-          chunks = teal.code::get_chunks_object(parent_idx = 2L),
-          datasets = datasets,
-          title = "",
-          description = ""
-        ), collapse = "\n"))
+        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

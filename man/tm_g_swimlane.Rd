@@ -140,8 +140,8 @@ x <- init(
     )
   )
 )
-\dontrun{
-shinyApp(x$ui, x$server)
+if (interactive()) {
+  shinyApp(x$ui, x$server)
 }
 
 }

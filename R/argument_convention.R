@@ -19,7 +19,7 @@
 #' @param arm_var (`choices_selected`)\cr
 #'  object with all available choices and the pre-selected option for variable
 #'  names that can be used as `arm_var`. See [teal.transform::choices_selected()] for
-#'  details.
+#'  details. Column `arm_var` in the `dataname` has to be a factor.
 #'
 #' @param paramcd (`character(1)` or `choices_selected`)\cr
 #'  variable value designating the studied parameter.
