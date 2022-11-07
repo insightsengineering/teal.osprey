@@ -1,5 +1,9 @@
 # teal.osprey
 
+<!-- start badges -->
+[![Code Coverage](https://raw.githubusercontent.com/insightsengineering/teal.osprey/_xml_coverage_reports/data/main/badge.svg)](https://raw.githubusercontent.com/insightsengineering/teal.osprey/_xml_coverage_reports/data/main/coverage.xml)
+<!-- end badges -->
+
 The teal.osprey package provides community contributed `teal` modules of the analysis functions from the [osprey](https://insightsengineering.github.io/osprey/) R package.
 This enables `teal` app developers to easily create applications making use of the `osprey` analysis functions.
 
