@@ -1,5 +1,8 @@
 #' Teal module for the heatmap by grade
 #'
+#' @description
+#' `r lifecycle::badge("stable")`
+#'
 #' Display the heatmap by grade as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout
