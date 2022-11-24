@@ -1,5 +1,8 @@
 #' Events by Term Plot Teal Module
 #'
+#' @description
+#' `r lifecycle::badge("stable")`
+#'
 #' Display Events by Term plot as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout

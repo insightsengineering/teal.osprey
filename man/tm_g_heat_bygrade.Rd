@@ -71,6 +71,8 @@ vector to indicate default value, minimum and maximum values.}
 the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Display the heatmap by grade as a shiny module
 }
 \examples{

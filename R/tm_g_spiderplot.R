@@ -1,5 +1,7 @@
-
 #' Spider plot Teal Module
+#'
+#' @description
+#' `r lifecycle::badge("stable")`
 #'
 #' Display spider plot as a shiny module
 #'

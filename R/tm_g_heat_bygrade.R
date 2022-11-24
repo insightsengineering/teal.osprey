@@ -1,5 +1,8 @@
 #' Teal module for the heatmap by grade
 #'
+#' @description
+#' `r lifecycle::badge("stable")`
+#'
 #' Display the heatmap by grade as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout
@@ -407,7 +410,7 @@ srv_g_heatmap_bygrade <- function(id,
         validate(need(iv_cm$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
         teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+          teal.code::new_qenv(tdata2env(data), code = teal::get_code_tdata(data)),
           code = bquote({
             conmed_data <- ADCM %>%
               filter(!!sym(.(conmed_var)) %in% .(input$conmed_level))
@@ -420,7 +423,7 @@ srv_g_heatmap_bygrade <- function(id,
         )
       } else {
         teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = get_code(data)),
+          teal.code::new_qenv(tdata2env(data), code = teal.code::get_code(data)),
           code = quote(conmed_data <- conmed_var <- NULL)
         )
       }
