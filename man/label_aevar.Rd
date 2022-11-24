@@ -2,7 +2,8 @@
 % Please edit documentation in R/utils.R
 \name{label_aevar}
 \alias{label_aevar}
-\title{Automatically switch variable labels for standard AE variables in AE osprey functions}
+\title{Automatically switch variable labels for standard AE variables in AE osprey functions
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}}
 \usage{
 label_aevar(x)
 }
@@ -11,4 +12,5 @@ label_aevar(x)
 }
 \description{
 Automatically switch variable labels for standard AE variables in AE osprey functions
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
