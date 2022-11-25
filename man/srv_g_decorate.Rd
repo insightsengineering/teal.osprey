@@ -26,5 +26,7 @@ the height of the main plot.}
 the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.
 }

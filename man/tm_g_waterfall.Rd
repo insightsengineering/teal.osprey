@@ -95,6 +95,8 @@ into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} el
 the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 This is teal module that generates a waterfall plot for ADaM data
 }
 \examples{

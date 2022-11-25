@@ -15,8 +15,8 @@
 #'
 NULL
 
-#'
 #' Utility function for quick filter
+#' `r lifecycle::badge("stable")`
 #'
 #'
 #' @param filter_opt vector of string names of flag variable to filter (keep Y rows only)
@@ -28,7 +28,6 @@ NULL
 #'
 #' @template author_zhanc107
 #'
-
 quick_filter <- function(filter_opt, ANL) { # nolint
   for (i in seq_along(filter_opt)) {
     ANL <- ANL[ANL[, filter_opt[i]] == "Y", ] # nolint
@@ -37,6 +36,7 @@ quick_filter <- function(filter_opt, ANL) { # nolint
 }
 
 #' Automatically switch variable labels for standard AE variables in AE osprey functions
+#' `r lifecycle::badge("stable")`
 #'
 #' @param x variable key
 #'

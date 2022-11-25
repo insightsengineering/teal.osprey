@@ -1,5 +1,8 @@
 #' Teal module for the AE overview
 #'
+#' @description
+#' `r lifecycle::badge("stable")`
+#'
 #' Display the AE overview plot as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout
