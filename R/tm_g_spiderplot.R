@@ -229,6 +229,18 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
   moduleServer(id, function(input, output, session) {
     vals <- reactiveValues(spiderplot = NULL) # nolint
 
+    iv <- shinyvalidate::InputValidator$new()
+    iv$add_rule("paramcd", shinyvalidate::sv_required())
+    iv$add_rule("x_var", shinyvalidate::sv_required())
+    iv$add_rule("y_var", shinyvalidate::sv_required())
+    iv$add_rule("marker_var", shinyvalidate::sv_required())
+    iv$add_rule("line_colorby_var", shinyvalidate::sv_required())
+    fac_dupl <- function(x, y) length(x) * length(y) > 0 & anyDuplicated(c(x, y))
+    msg_dupl <- "X- and Y-facet variables must not be duplicated."
+    iv$add_rule("xfacet_var", ~ if (fac_dupl(input$xfacet_var, input$yfacet_var)) msg_dupl)
+    iv$add_rule("yfacet_var", ~ if (fac_dupl(input$xfacet_var, input$yfacet_var)) msg_dupl)
+    iv$enable()
+
     # render plot
     output_q <- reactive({
       # get datasets ---
@@ -246,20 +258,6 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       yfacet_var <- input$yfacet_var
       vref_line <- input$vref_line
       href_line <- input$href_line
-
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("paramcd", shinyvalidate::sv_required())
-      iv$add_rule("x_var", shinyvalidate::sv_required())
-      iv$add_rule("y_var", shinyvalidate::sv_required())
-      iv$add_rule("marker_var", shinyvalidate::sv_required())
-      iv$add_rule("line_colorby_var", shinyvalidate::sv_required())
-
-      facets_duplicated <- length(xfacet_var) * length(yfacet_var) > 0 &
-        anyDuplicated(c(xfacet_var, yfacet_var))
-      message_duplicated <- "X- and Y-facet variables must not be duplicated."
-      iv$add_rule("xfacet_var", ~ if (facets_duplicated) message_duplicated)
-      iv$add_rule("yfacet_var", ~ if (facets_duplicated) message_duplicated)
-      iv$enable()
 
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       validate(need(nrow(ADSL) > 0, "ADSL data has zero rows"))
