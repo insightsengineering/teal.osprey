@@ -255,17 +255,18 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       vref_line <- input$vref_line
       href_line <- input$href_line
 
+      iv_comp <- shinyvalidate::InputValidator$new()
+      facets_duplicated <- length(xfacet_var) * length(yfacet_var) > 0 &
+        anyDuplicated(c(xfacet_var, yfacet_var))
+      message_duplicated <- "X- and Y-facet variables must not be duplicated."
+      iv_comp$add_rule("xfacet_var", ~ if (facets_duplicated) message_duplicated)
+      iv_comp$add_rule("yfacet_var", ~ if (facets_duplicated) message_duplicated)
+      iv_comp$enable()
+
       validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
       validate(need(nrow(ADSL) > 0, "ADSL data has zero rows"))
       validate(need(nrow(ADTR) > 0, paste(dataname, "data has zero rows")))
-      if (length(xfacet_var) * length(yfacet_var) > 0) {
-        validate(
-          need(
-            !anyDuplicated(c(xfacet_var, yfacet_var)),
-            "X- and Y-facet variables must not be duplicated."
-          )
-        )
-      }
 
       # define variables ---
       # if variable is not in ADSL, then take from domain VADs
