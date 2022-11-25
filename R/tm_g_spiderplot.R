@@ -260,8 +260,11 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       validate(need(nrow(ADTR) > 0, paste(dataname, "data has zero rows")))
       if (length(xfacet_var) * length(yfacet_var) > 0) {
         validate(
-          need(!anyDuplicated(c(xfacet_var, yfacet_var)),
-               "X- and Y-facet variables must not be duplicated."))
+          need(
+            !anyDuplicated(c(xfacet_var, yfacet_var)),
+            "X- and Y-facet variables must not be duplicated."
+          )
+        )
       }
 
       # define variables ---
