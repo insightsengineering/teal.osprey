@@ -227,15 +227,19 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+    vals <- reactiveValues(spiderplot = NULL) # nolint
+
     iv <- shinyvalidate::InputValidator$new()
     iv$add_rule("paramcd", shinyvalidate::sv_required())
     iv$add_rule("x_var", shinyvalidate::sv_required())
     iv$add_rule("y_var", shinyvalidate::sv_required())
     iv$add_rule("marker_var", shinyvalidate::sv_required())
     iv$add_rule("line_colorby_var", shinyvalidate::sv_required())
+    fac_dupl <- function(x, y) length(x) * length(y) > 0 & anyDuplicated(c(x, y))
+    msg_dupl <- "X- and Y-facet variables must not be duplicated."
+    iv$add_rule("xfacet_var", ~ if (fac_dupl(input$xfacet_var, input$yfacet_var)) msg_dupl)
+    iv$add_rule("yfacet_var", ~ if (fac_dupl(input$xfacet_var, input$yfacet_var)) msg_dupl)
     iv$enable()
-
-    vals <- reactiveValues(spiderplot = NULL) # nolint
 
     # render plot
     output_q <- reactive({

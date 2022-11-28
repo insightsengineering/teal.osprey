@@ -2,6 +2,7 @@
 
 * Examples now use `scda.2022` instead of `scda.2021`.
 * Fixed crash in `tm_g_heat_bygrade` when not plotting `Conmed`. 
+* Added validation to `tm_g_spiderplot.R` that checks if there are duplicates in X and Y facet variables.
 
 ### Breaking changes
 
