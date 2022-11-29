@@ -282,14 +282,16 @@ srv_g_ae_oview <- function(id,
     output_q <- reactive({
       ANL <- data[[dataname]]() # nolint
 
-      validate(need(is.factor(ANL[[input$arm_var]]), "Selected arm variable must be a factor." ))
-      validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
-      validate_has_data(ANL, min_nrow = 10)
+      teal::validate_has_data(ANL, min_nrow = 10)
 
       # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
         message = "Arm Variable is required"))
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]]))
+        "Arm Var must be a factor variable")
+      iv$add_rule("arm_var", ~ if (length(unique(ANL[[req(.)]])) < 2)
+        "This Arm Var has no groups to compare")
       iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
         message = "At least one Flag is required"))
       iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
@@ -300,7 +302,7 @@ srv_g_ae_oview <- function(id,
         message_fmt = "Control and Treatment must be different"))
       iv$enable()
 
-      # intercept validator messages
+      # collate validator messages
       gather_fails(iv)
 
       validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])),
