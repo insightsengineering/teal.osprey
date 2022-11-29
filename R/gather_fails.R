@@ -64,7 +64,7 @@
 #'   iv$enable()
 #'   # more input validation
 #'   iv_par <- InputValidator$new()
-#'   iv_par$add_rule("color", ~ if (is.null(.)) "choose a color")
+#'   iv_par$add_rule("color", sv_required(message = "choose a color"))
 #'   iv_par$add_rule("color", ~ if (length(.) > 1L) "choose only one color")
 #'   iv_par$add_rule("size", sv_between(left = 0.5, right = 3,
 #'                                      message_fmt = "choose a value between {left} and {right}"))
