@@ -287,7 +287,7 @@ srv_g_ae_sub <- function(id,
       ANL <- data[[dataname]]() # nolint
       ADSL <- data[["ADSL"]]() # nolint
 
-      validate_has_data(ANL, min_nrow = 10)
+      teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
       # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()

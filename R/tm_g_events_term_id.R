@@ -285,6 +285,7 @@ srv_g_events_term_id <- function(id,
     output_q <- reactive({
       ANL <- data[[dataname]]() # nolint
 
+      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("term", shinyvalidate::sv_required(
         message = "Term Variable is required"))

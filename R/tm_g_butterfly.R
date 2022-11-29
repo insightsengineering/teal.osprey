@@ -355,9 +355,10 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       ADSL <- data[["ADSL"]]() # nolint
       ANL <- data[[dataname]]() # nolint
 
-      teal::validate_has_data(ADSL, min_nrow = 0, msg = "ADSL Data is empty")
-      teal::validate_has_data(ANL, min_nrow = 0, msg = "ANL Data is empty")
+      teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s Data is empty", "ADSL"))
+      teal::validate_has_data(ANL, min_nrow = 0, msg = sprintf("%s Data is empty", dataname))
 
+      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("category_var", shinyvalidate::sv_required(
         message = "Category Variable is required"))

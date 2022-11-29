@@ -298,9 +298,9 @@ srv_g_waterfall <- function(id,
       adrs <- data[[dataname_rs]]()
 
       # validate data rows
-      validate_has_data(adsl, min_nrow = 2)
-      validate_has_data(adtr, min_nrow = 2)
-      validate_has_data(adrs, min_nrow = 2)
+      teal::validate_has_data(adsl, min_nrow = 2)
+      teal::validate_has_data(adtr, min_nrow = 2)
+      teal::validate_has_data(adrs, min_nrow = 2)
 
       adsl_vars <- unique(
         c("USUBJID", "STUDYID",
@@ -311,9 +311,9 @@ srv_g_waterfall <- function(id,
       adrs_paramcd <- unique(c(input$add_label_paramcd_rs, input$anno_txt_paramcd_rs))
 
       # validate data input
-      validate_has_variable(adsl, adsl_vars)
-      validate_has_variable(adrs, adrs_vars)
-      validate_has_variable(adtr, adtr_vars)
+      teal::validate_has_variable(adsl, adsl_vars)
+      teal::validate_has_variable(adrs, adrs_vars)
+      teal::validate_has_variable(adtr, adtr_vars)
 
 
 
@@ -453,7 +453,7 @@ srv_g_waterfall <- function(id,
           )
         )
 
-        validate_one_row_per_id(qq1[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
+        teal::validate_one_row_per_id(qq1[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
 
         teal.code::eval_code(
           qq1,

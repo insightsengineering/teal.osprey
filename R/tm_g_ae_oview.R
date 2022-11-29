@@ -282,7 +282,7 @@ srv_g_ae_oview <- function(id,
     output_q <- reactive({
       ANL <- data[[dataname]]() # nolint
 
-      teal::validate_has_data(ANL, min_nrow = 10)
+      teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
       # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
@@ -291,7 +291,7 @@ srv_g_ae_oview <- function(id,
       iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]]))
         "Arm Var must be a factor variable")
       iv$add_rule("arm_var", ~ if (length(unique(ANL[[req(.)]])) < 2)
-        "This Arm Var has no groups to compare")
+        "Selected Arm Var has not enough treatments to compare")
       iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
         message = "At least one Flag is required"))
       iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
