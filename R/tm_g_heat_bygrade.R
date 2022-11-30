@@ -315,14 +315,12 @@ srv_g_heatmap_bygrade <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-    iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("heat_var", shinyvalidate::sv_required())
-    iv$add_rule("id_var", shinyvalidate::sv_required())
-    iv$add_rule("visit_var", shinyvalidate::sv_required())
-    iv$add_rule("ongo_var", shinyvalidate::sv_required())
-    iv$enable()
 
-    decorate_output <- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width) # nolint
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width) # nolint
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
@@ -352,62 +350,64 @@ srv_g_heatmap_bygrade <- function(id,
     })
 
     output_q <- reactive({
-      iv_len <- shinyvalidate::InputValidator$new()
-      anno_var <- input$anno_var
-      iv_len$add_rule("anno_var", function(x) if (length(x) > 2) "Please include no more than 2 annotation variables.")
-      iv_len$enable()
-      validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-
       ADSL <- data[[sl_dataname]]() # nolint
       ADEX <- data[[ex_dataname]]() # nolint
       ADAE <- data[[ae_dataname]]() # nolint
-
-      validate(need(nrow(ADSL) > 0, "Please select at least one subject"))
-      validate(need(
-        input$ongo_var %in% names(ADEX),
-        paste("Study Ongoing Status must be a variable in", ex_dataname, sep = " ")
-      ))
-
-      validate(need(
-        checkmate::test_logical(ADEX[[input$ongo_var]], min.len = 1, any.missing = FALSE),
-        "Study Ongoing Status must be a logical variable"
-      ))
-
-      validate(need(
-        all(anno_var %in% names(ADSL)),
-        paste("Please only select annotation variable(s) in", sl_dataname, sep = " ")
-      ))
-
-      validate(need(
-        !(input$id_var %in% anno_var),
-        paste("Please de-select", input$id_var, "in annotation variable(s)", sep = " ")
-      ))
-
       if (isTRUE(input$plot_cm)) {
         ADCM <- data[[cm_dataname]]() # nolint
-        validate(
-          need(
-            input$conmed_var %in% names(ADCM),
-            paste("Please select a Conmed Variable in", cm_dataname, sep = " ")
-          )
-        )
-        validate(need(
-          is.factor(ADCM[[input$conmed_var]]),
-          "Conmed Variable should be a factor"
-        ))
-        validate(need(
-          all(input$conmed_level %in% levels(ADCM[[input$conmed_var]])),
-          "Updating Conmed Levels"
-        ))
       }
 
+      teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s contains no data", sl_dataname))
+
+      # set up and enable input validator(s)
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("id_var", shinyvalidate::sv_required(
+        message = "ID Variable is required"))
+      iv$add_rule("visit_var", shinyvalidate::sv_required(
+        message = "Visit Variable is required"))
+      iv$add_rule("ongo_var", shinyvalidate::sv_required(
+        message = "Study Ongoing Status Variable is required"))
+      iv$add_rule("ongo_var", shinyvalidate::sv_in_set(
+        set = names(ADEX),
+        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", ex_dataname)))
+      iv$add_rule("ongo_var", ~ if (!is.logical(ADEX[[req(.)]]))
+        "Study Ongoing Status must be a logical variable")
+      iv$add_rule("anno_var", shinyvalidate::sv_required(
+        message = "Annotation Variables is required"))
+      iv$add_rule("anno_var", ~ if (length(.) > 2L)
+        "No more than two Annotation Variables are allowed")
+      iv$add_rule("anno_var", shinyvalidate::sv_in_set(
+        set = names(ADSL),
+        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", sl_dataname)))
+      iv$add_rule("anno_var", ~ if (!is.null(input$id_var) && input$id_var %in% .)
+        sprintf("Deselect %s in Annotation Variables", req(input$id_var)))
+      iv$add_rule("heat_var", shinyvalidate::sv_required(
+        message = "Heat Variable is required"))
+      iv$enable()
+
+      # set up conditional validator
+      iv_cm <- shinyvalidate::InputValidator$new()
+      iv_cm$condition(~ isTRUE(input$plot_cm))
+      iv_cm$add_rule("conmed_var", shinyvalidate::sv_required(
+        message = "Conmed Variable is required"))
+      iv_cm$add_rule("conmed_var", shinyvalidate::sv_in_set(
+        set = names(ADCM),
+        message_fmt = sprintf("Conmed Variable must be a variable in %s", cm_dataname)))
+      iv_cm$add_rule("conmed_var", ~ if (!is.factor(ADCM[[req(.)]]))
+        "Study Ongoing Status must be a factor variable")
+      iv_cm$add_rule("conmed_level", ~if (length(.) > 3L)
+        "No more than three Conmed Levels are allowed")
+      iv_cm$enable()
+
+      # collate validator messages
+      gather_fails_com(iv, iv_cm)
+
+      validate(need(
+        all(input$conmed_level %in% unique(ADCM[[input$conmed_var]])),
+        "Updating Conmed Levels"))
+
       q1 <- if (isTRUE(input$plot_cm)) {
-        iv_cm <- shinyvalidate::InputValidator$new()
         conmed_var <- input$conmed_var
-        iv_cm$add_rule("conmed_var", shinyvalidate::sv_required())
-        iv_cm$enable()
-        validate(need(iv_cm$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
         teal.code::eval_code(
           teal.code::new_qenv(tdata2env(data), code = teal::get_code_tdata(data)),
@@ -423,14 +423,10 @@ srv_g_heatmap_bygrade <- function(id,
         )
       } else {
         teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = teal.code::get_code(data)),
+          teal.code::new_qenv(tdata2env(data), code = teal::get_code_tdata(data)),
           code = quote(conmed_data <- conmed_var <- NULL)
         )
       }
-
-      validate(
-        need(length(input$conmed_level) <= 3, "Please select no more than 3 conmed levels")
-      )
 
       q2 <- teal.code::eval_code(
         q1,
