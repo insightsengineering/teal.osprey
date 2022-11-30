@@ -426,11 +426,6 @@ srv_g_patient_profile <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-    iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("sl_start_date", shinyvalidate::sv_required())
-    iv$add_rule("lb_var_show", shinyvalidate::sv_required())
-    iv$add_rule("ae_var", shinyvalidate::sv_required())
-    iv$enable()
 
     # only show the check box when domain data is available
     observeEvent(ae_dataname, {
@@ -509,6 +504,55 @@ srv_g_patient_profile <- function(id,
 
     # render plot
     output_q <- reactive({
+
+      # set up and enable input validator(s)
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("sl_start_date", shinyvalidate::sv_required(
+        message = "Date variable is required"))
+      iv$add_rule("ex_var", shinyvalidate::sv_required(
+        message = "Exposure variable is required"))
+      iv$add_rule("ae_var", shinyvalidate::sv_required(
+        message = "Adverse Event variable is required"))
+      iv$add_rule("ae_line_var", shinyvalidate::sv_optional())
+      iv$add_rule("ae_line_var", ~ if (length(levels(ADAE[[.]])) > length(ae_line_col_opt))
+        "Not enough colors provided Adverse Event line color, unselect")
+      iv$add_rule("rs_var", shinyvalidate::sv_required(
+        message = "Tumor response variable is required"))
+      iv$add_rule("cm_var", shinyvalidate::sv_required(
+        message = "Concomitant medicine variable is required"))
+      iv$add_rule("lb_var", shinyvalidate::sv_required(
+        message = "Lab variable is required"))
+      iv$add_rule("lb_var_show", shinyvalidate::sv_required(
+        message = "At least one Lab value is required"))
+      rule_diff <- function(value, other) {
+        if (any(value == other))
+          "Lab variable and Lab value must be different"
+      }
+      iv$add_rule("lb_var", rule_diff, other = input$lb_var_show)
+      iv$add_rule("lb_var_show", rule_diff, other = input$lb_var)
+      iv$add_rule("x_limit", shinyvalidate::sv_required(
+        message = "Study Days Range is required"))
+      iv$add_rule("x_limit", ~ if (anyNA(as_numeric_from_comma_sep_str(.)))
+        "Study Days Range is invalid")
+      iv$add_rule("x_limit", ~ if (length(as_numeric_from_comma_sep_str(.)) != 2L)
+        "Study Days Range must be two values")
+      iv$add_rule("x_limit", ~ if (!identical(order(as_numeric_from_comma_sep_str(.)), 1:2))
+        "Study Days Range mut be: first lower, then upper limit")
+      rule_dataset <- function(value) {
+        if (!any(c(input$select_ae, input$select_ex, input$select_rs, input$select_cm, input$select_lb)))
+          "Select at least one ADaM data set"
+      }
+      iv$add_rule("select_ae", rule_dataset)
+      iv$add_rule("select_ex", rule_dataset)
+      iv$add_rule("select_rs", rule_dataset)
+      iv$add_rule("select_cm", rule_dataset)
+      iv$add_rule("select_lb", rule_dataset)
+
+      iv$enable()
+
+      # collate validator messages
+      gather_fails(iv)
+
       # get inputs ---
       patient_id <- input$patient_id # nolint
       sl_start_date <- input$sl_start_date # nolint
@@ -520,13 +564,6 @@ srv_g_patient_profile <- function(id,
       lb_var <- input$lb_var
       x_limit <- input$x_limit
       lb_var_show <- input$lb_var_show
-
-      iv$add_rule("cm_var", shinyvalidate::sv_required())
-      iv$add_rule("rs_var", shinyvalidate::sv_required())
-      iv$add_rule("ex_var", shinyvalidate::sv_required())
-      iv$add_rule("lb_var", shinyvalidate::sv_required())
-      iv$add_rule("x_limit", shinyvalidate::sv_required())
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       adrs_vars <- unique(c(
         "USUBJID", "STUDYID", "PARAMCD",
@@ -567,7 +604,7 @@ srv_g_patient_profile <- function(id,
           ADEX <- NULL # nolint
         } else {
           ADEX <- data[[ex_dataname]]() # nolint
-          validate_has_variable(ADEX, adex_vars)
+          teal::validate_has_variable(ADEX, adex_vars)
         }
       } else {
         ADEX <- NULL # nolint
@@ -578,7 +615,7 @@ srv_g_patient_profile <- function(id,
           ADAE <- NULL # nolint
         } else {
           ADAE <- data[[ae_dataname]]() # nolint
-          validate_has_variable(ADAE, adae_vars)
+          teal::validate_has_variable(ADAE, adae_vars)
         }
       } else {
         ADAE <- NULL # nolint
@@ -589,7 +626,7 @@ srv_g_patient_profile <- function(id,
           ADRS <- NULL # nolint
         } else {
           ADRS <- data[[rs_dataname]]() # nolint
-          validate_has_variable(ADRS, adrs_vars)
+          teal::validate_has_variable(ADRS, adrs_vars)
         }
       } else {
         ADRS <- NULL # nolint
@@ -600,7 +637,7 @@ srv_g_patient_profile <- function(id,
           ADCMD <- NULL # nolint
         } else {
           ADCM <- data[[cm_dataname]]() # nolint
-          validate_has_variable(ADCM, adcm_vars)
+          teal::validate_has_variable(ADCM, adcm_vars)
         }
       } else {
         ADCM <- NULL # nolint
@@ -611,22 +648,10 @@ srv_g_patient_profile <- function(id,
           ADLB <- NULL # nolint
         } else {
           ADLB <- data[[lb_dataname]]() # nolint
-          validate_has_variable(ADLB, adlb_vars)
+          teal::validate_has_variable(ADLB, adlb_vars)
         }
       } else {
         ADLB <- NULL # nolint
-      }
-
-      # check color assignment
-      if (!is.null(ae_line_col_opt)) {
-        validate(need(
-          is.null(ae_line_col_var) || length(levels(ADAE[[ae_line_col_var]])) <= length(ae_line_col_opt),
-          paste(
-            "Please check ae_line_col_opt contains all possible values for ae_line_col_var values.",
-            "Or specify ae_line_col_opt as NULL.",
-            sep = "\n"
-          )
-        ))
       }
 
       possible_plot <- c("ex", "ae", "rs", "cm", "lb")
@@ -646,6 +671,11 @@ srv_g_patient_profile <- function(id,
         } else {
           FALSE
         }
+      )
+
+      # Check that at least 1 dataset is selected
+      validate(
+        need(any(select_plot), "Please select an ADaM dataset.")
       )
 
       names(select_plot) <- possible_plot
@@ -687,7 +717,7 @@ srv_g_patient_profile <- function(id,
           paste(
             "Subject",
             patient_id,
-            "not found in the dataset. Have they been filtered out by filtering in the filter panel?"
+            "not found in the dataset. Perhaps they have been filtered out by the filter panel?"
           )
         )
       )
@@ -704,9 +734,6 @@ srv_g_patient_profile <- function(id,
       }
 
       q1 <- if (select_plot["ae"]) {
-        validate(
-          need(!is.null(input$ae_var), "Please select an adverse event variable.")
-        )
         if (all(ADAE$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -792,9 +819,6 @@ srv_g_patient_profile <- function(id,
       }
 
       q1 <- if (select_plot["rs"]) {
-        validate(
-          need(!is.null(rs_var), "Please select a tumor response variable.")
-        )
         if (all(ADRS$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -837,9 +861,6 @@ srv_g_patient_profile <- function(id,
       }
 
       q1 <- if (select_plot["cm"]) {
-        validate(
-          need(!is.null(cm_var), "Please select a concomitant medication variable.")
-        )
         if (all(ADCM$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -890,9 +911,6 @@ srv_g_patient_profile <- function(id,
       }
 
       q1 <- if (select_plot["ex"]) {
-        validate(
-          need(!is.null(ex_var), "Please select an exposure variable.")
-        )
         if (all(ADEX$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -948,11 +966,7 @@ srv_g_patient_profile <- function(id,
       }
 
       q1 <- if (select_plot["lb"]) {
-        validate(
-          need(!is.null(lb_var), "Please select a lab variable.")
-        )
         if (all(ADLB$USUBJID %in% ADSL$USUBJID)) {
-          validate(need(lb_var_show != lb_var, "Lab variable and lab values must differ"))
           qq <- teal.code::eval_code(
             q1,
             code = bquote({
@@ -1001,13 +1015,6 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = bquote(lb <- NULL))
       }
 
-
-      # Check that at least 1 dataset is selected
-
-      validate(
-        need(any(select_plot), "Please select an ADaM dataset.")
-      )
-
       # Check the subject has information in at least one selected domain
       empty_data_check <- c(empty_ex, empty_ae, empty_rs, empty_cm, empty_lb)
 
@@ -1037,15 +1044,6 @@ srv_g_patient_profile <- function(id,
         )
         x_limit <- q1[["x_limit"]]
       }
-
-      validate(need(
-        all(!is.na(x_limit)) & all(!is.infinite(x_limit)),
-        "Not all values entered for study days range were numeric."
-      ))
-      validate(need(
-        x_limit[1] < x_limit[2],
-        "The lower limit for study days range should come first."
-      ))
 
       q1 <- teal.code::eval_code(
         q1,
