@@ -397,14 +397,13 @@ srv_g_heatmap_bygrade <- function(id,
         "Study Ongoing Status must be a factor variable")
       iv_cm$add_rule("conmed_level", ~if (length(.) > 3L)
         "No more than three Conmed Levels are allowed")
+      iv_cm$add_rule("conmed_level", shinyvalidate::sv_in_set(
+        set = unique(ADCM[[req(input$conmed_var)]]),
+        message_fmt = "Updating Conmed Levels"))
       iv_cm$enable()
 
       # collate validator messages
       gather_fails_com(iv, iv_cm)
-
-      validate(need(
-        all(input$conmed_level %in% unique(ADCM[[input$conmed_var]])),
-        "Updating Conmed Levels"))
 
       q1 <- if (isTRUE(input$plot_cm)) {
         conmed_var <- input$conmed_var

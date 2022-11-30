@@ -300,13 +300,16 @@ srv_g_ae_oview <- function(id,
       iv$add_rule("arm_ref", shinyvalidate::sv_not_equal(
         input$arm_trt,
         message_fmt = "Control and Treatment must be different"))
+      iv$add_rule("arm_trt", shinyvalidate::sv_in_set(
+        set = unique(ANL[[req(input$arm_var)]]),
+        message_fmt = "Treatment not found in Arm Variable"))
+      iv$add_rule("arm_ref", shinyvalidate::sv_in_set(
+        set = unique(ANL[[req(input$arm_var)]]),
+        message_fmt = "Control not found in Arm Variable"))
       iv$enable()
 
       # collate validator messages
       gather_fails(iv)
-
-      validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])),
-                    "Plot loading"))
 
       q1 <- teal.code::eval_code(
         teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),

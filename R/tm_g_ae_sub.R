@@ -307,17 +307,16 @@ srv_g_ae_sub <- function(id,
       iv$add_rule("groups", shinyvalidate::sv_in_set(
         names(ADSL),
         message_fmt = "Groups must be a variable in ADSL"))
+      iv$add_rule("arm_trt", shinyvalidate::sv_in_set(
+        set = unique(ANL[[req(input$arm_var)]]),
+        message_fmt = "Treatment not found in Arm Variable"))
+      iv$add_rule("arm_ref", shinyvalidate::sv_in_set(
+        set = unique(ANL[[req(input$arm_var)]]),
+        message_fmt = "Control not found in Arm Variable"))
       iv$enable()
 
       # collate validator messages
       gather_fails(iv)
-
-      validate(
-        need(
-          all(c(input$arm_trt, input$arm_ref) %in% levels(ADSL[[input$arm_var]])) &&
-            all(c(input$arm_trt, input$arm_ref) %in% levels(ANL[[input$arm_var]])),
-          "Plot loading"
-        ))
 
       group_labels <- lapply(seq_along(input$groups), function(x) {
         items <- input[[sprintf("groups__%s", x)]]
