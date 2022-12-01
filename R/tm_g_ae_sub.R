@@ -289,7 +289,6 @@ srv_g_ae_sub <- function(id,
 
       teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
-      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
         message = "Arm Variable is required"))
@@ -307,16 +306,13 @@ srv_g_ae_sub <- function(id,
       iv$add_rule("groups", shinyvalidate::sv_in_set(
         names(ADSL),
         message_fmt = "Groups must be a variable in ADSL"))
-      iv$add_rule("arm_trt", shinyvalidate::sv_in_set(
-        set = unique(ANL[[req(input$arm_var)]]),
-        message_fmt = "Treatment not found in Arm Variable"))
-      iv$add_rule("arm_ref", shinyvalidate::sv_in_set(
-        set = unique(ANL[[req(input$arm_var)]]),
-        message_fmt = "Control not found in Arm Variable"))
       iv$enable()
 
-      # collate validator messages
       gather_fails(iv)
+
+      validate(need(input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
+                      input$arm_ref %in% unique(ANL[[input$arm_var]]),
+                    "Treatment or Control not found in Arm Variable. Filtered out?"))
 
       group_labels <- lapply(seq_along(input$groups), function(x) {
         items <- input[[sprintf("groups__%s", x)]]

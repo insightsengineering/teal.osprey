@@ -315,23 +315,16 @@ srv_g_waterfall <- function(id,
       teal::validate_has_variable(adrs, adrs_vars)
       teal::validate_has_variable(adtr, adtr_vars)
 
-
-
-      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
         message = "Bar Height is required"))
       iv$add_rule("bar_paramcd", shinyvalidate::sv_required(
         message = "Tumor Burden Parameter is required"))
-
       iv$add_rule("bar_paramcd", shinyvalidate::sv_in_set(
         set = adtr$PARAMCD,
         message_fmt = "All values of Tumor Burden Parameter must be elements of ADTR PARAMCD"))
-
-      # If reference lines are requested
       iv$add_rule("href_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.)))
         "Horizontal Reference Line(s) are invalid")
-
       iv$add_rule("add_label_paramcd_rs", shinyvalidate::sv_optional())
       iv$add_rule("add_label_paramcd_rs", shinyvalidate::sv_in_set(
           set = adrs$PARAMCD,
@@ -359,7 +352,6 @@ srv_g_waterfall <- function(id,
         "Fractions are not allowed in Y-axis Interval")
       iv$enable()
 
-      # collate validator messages
       gather_fails(iv)
 
 

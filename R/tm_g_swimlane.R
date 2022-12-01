@@ -321,12 +321,12 @@ srv_g_swimlane <- function(id,
                             input$bar_var, input$bar_color_var, input$sort_var, input$anno_txt_var))
 
       if (dataname == "ADSL") {
-        validate_has_data(ADSL, min_nrow = 3)
-        validate_has_variable(ADSL, adsl_vars)
+        teal::validate_has_data(ADSL, min_nrow = 3)
+        teal::validate_has_variable(ADSL, adsl_vars)
       } else {
         anl <- data[[dataname]]()
-        validate_has_data(anl, min_nrow = 3)
-        validate_has_variable(anl, anl_vars)
+        teal::validate_has_data(anl, min_nrow = 3)
+        teal::validate_has_variable(anl, anl_vars)
 
         validate(need(
           !any(c(marker_pos_var, marker_shape_var, marker_color_var) %in% adsl_vars),
@@ -334,8 +334,6 @@ srv_g_swimlane <- function(id,
         ))
       }
 
-
-      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
         message = "Bar Length is required"))
@@ -344,7 +342,6 @@ srv_g_swimlane <- function(id,
         "Vertical Reference Line(s) are invalid")
       iv$enable()
 
-      # collate validator messages
       gather_fails(iv)
 
 

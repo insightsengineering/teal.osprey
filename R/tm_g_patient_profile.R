@@ -505,7 +505,6 @@ srv_g_patient_profile <- function(id,
     # render plot
     output_q <- reactive({
 
-      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("sl_start_date", shinyvalidate::sv_required(
         message = "Date variable is required"))
@@ -547,10 +546,8 @@ srv_g_patient_profile <- function(id,
       iv$add_rule("select_rs", rule_dataset)
       iv$add_rule("select_cm", rule_dataset)
       iv$add_rule("select_lb", rule_dataset)
-
       iv$enable()
 
-      # collate validator messages
       gather_fails(iv)
 
       # get inputs ---

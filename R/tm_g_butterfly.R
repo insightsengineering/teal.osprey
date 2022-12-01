@@ -358,7 +358,6 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s Data is empty", "ADSL"))
       teal::validate_has_data(ANL, min_nrow = 0, msg = sprintf("%s Data is empty", dataname))
 
-      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("category_var", shinyvalidate::sv_required(
         message = "Category Variable is required"))
@@ -376,15 +375,13 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         message = "At least one value of Left Dichotomization Variable must be selected"))
       iv$enable()
 
-      # collate validator messages
       gather_fails(iv)
 
       validate(
         need(
-          any(c(ADSL[[input$right_var]] %in% input$right_val, ADSL[[input$left_var]] %in% input$left_val)),
-          "ADSL Data contains no observations for either of the selected dichotomization values (filtered out?)"
-        )
-      )
+          input$right_val %in% ADSL[[input$right_var]] &&
+            input$left_val %in% ADSL[[input$right_var]],
+          "No observations for selected dichotomization values (filtered out?)"))
 
       right_var <- isolate(input$right_var)
       left_var <- isolate(input$left_var)

@@ -238,7 +238,6 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s data has zero rows", "ADSL"))
       teal::validate_has_data(ADTR, min_nrow = 0, msg = sprintf("%s data has zero rows", dataname))
 
-      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("paramcd", shinyvalidate::sv_required(
         message =  "Parameter is required"))
@@ -251,9 +250,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       iv$add_rule("line_colorby_var", shinyvalidate::sv_required(
         message = "Color Variable is required"))
       fac_dupl <- function(value, other) {
-        # another possible test:
-        # if (length(setdiff(intersect(value, other), "")) > 0L)
-        if (length(value) * length(other) > 0 & anyDuplicated(c(value, other)))
+        if (length(value) * length(other) > 0L & anyDuplicated(c(value, other)))
           "X- and Y-facet Variables must not overlap"
       }
       iv$add_rule("xfacet_var", fac_dupl, other = input$yfacet_var)
@@ -264,7 +261,6 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
         "Horizontal Reference Line(s) are invalid")
       iv$enable()
 
-      # collate validator messages
       gather_fails(iv)
 
       paramcd <- input$paramcd # nolint

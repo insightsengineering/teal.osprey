@@ -284,14 +284,13 @@ srv_g_ae_oview <- function(id,
 
       teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
-      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
         message = "Arm Variable is required"))
       iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]]))
         "Arm Var must be a factor variable")
-      iv$add_rule("arm_var", ~ if (length(unique(ANL[[req(.)]])) < 2)
-        "Selected Arm Var has not enough treatments to compare")
+      iv$add_rule("arm_var", ~ if (length(levels(ANL[[req(.)]])) < 2L)
+        "Selected Arm Var must have at least two levels")
       iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
         message = "At least one Flag is required"))
       iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
@@ -300,16 +299,13 @@ srv_g_ae_oview <- function(id,
       iv$add_rule("arm_ref", shinyvalidate::sv_not_equal(
         input$arm_trt,
         message_fmt = "Control and Treatment must be different"))
-      iv$add_rule("arm_trt", shinyvalidate::sv_in_set(
-        set = unique(ANL[[req(input$arm_var)]]),
-        message_fmt = "Treatment not found in Arm Variable"))
-      iv$add_rule("arm_ref", shinyvalidate::sv_in_set(
-        set = unique(ANL[[req(input$arm_var)]]),
-        message_fmt = "Control not found in Arm Variable"))
       iv$enable()
 
-      # collate validator messages
       gather_fails(iv)
+
+      validate(need(input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
+                      input$arm_ref %in% unique(ANL[[input$arm_var]]),
+                    "Treatment or Control not found in Arm Variable. Filtered out?"))
 
       q1 <- teal.code::eval_code(
         teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),

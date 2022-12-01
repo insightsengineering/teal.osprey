@@ -359,7 +359,6 @@ srv_g_heatmap_bygrade <- function(id,
 
       teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s contains no data", sl_dataname))
 
-      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("id_var", shinyvalidate::sv_required(
         message = "ID Variable is required"))
@@ -379,13 +378,12 @@ srv_g_heatmap_bygrade <- function(id,
       iv$add_rule("anno_var", shinyvalidate::sv_in_set(
         set = names(ADSL),
         message_fmt = sprintf("Study Ongoing Status must be a variable in %s", sl_dataname)))
-      iv$add_rule("anno_var", ~ if (!is.null(input$id_var) && input$id_var %in% .)
+      iv$add_rule("anno_var", ~ if (isTRUE(input$id_var %in% .))
         sprintf("Deselect %s in Annotation Variables", req(input$id_var)))
       iv$add_rule("heat_var", shinyvalidate::sv_required(
         message = "Heat Variable is required"))
       iv$enable()
 
-      # set up conditional validator
       iv_cm <- shinyvalidate::InputValidator$new()
       iv_cm$condition(~ isTRUE(input$plot_cm))
       iv_cm$add_rule("conmed_var", shinyvalidate::sv_required(
@@ -402,7 +400,6 @@ srv_g_heatmap_bygrade <- function(id,
         message_fmt = "Updating Conmed Levels"))
       iv_cm$enable()
 
-      # collate validator messages
       gather_fails_com(iv, iv_cm)
 
       q1 <- if (isTRUE(input$plot_cm)) {

@@ -285,7 +285,6 @@ srv_g_events_term_id <- function(id,
     output_q <- reactive({
       ANL <- data[[dataname]]() # nolint
 
-      # set up and enable input validator(s)
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("term", shinyvalidate::sv_required(
         message = "Term Variable is required"))
@@ -293,14 +292,6 @@ srv_g_events_term_id <- function(id,
         message = "Arm Variable is required"))
       iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]]))
         "Arm Var must be a factor variable, contact developer")
-      iv$add_rule("arm_var", ~ if (length(unique(ANL[[req(.)]])) < 2L)
-        "Selected Arm Var has not enough treatments to compare")
-      iv$add_rule("arm_trt", shinyvalidate::sv_in_set(
-        unique(ANL[[req(input$arm_var)]]),
-        message_fmt = "No subjects in Treatment"))
-      iv$add_rule("arm_ref", shinyvalidate::sv_in_set(
-        unique(ANL[[req(input$arm_var)]]),
-        message_fmt = "No subjects in Control"))
       iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
         input$arm_ref,
         message_fmt = "Control and Treatment must be different"))
@@ -311,6 +302,10 @@ srv_g_events_term_id <- function(id,
 
       # collate validator messages
       gather_fails(iv)
+
+      validate(need(input$arm_trt %in% unique(ANL[[req(input$arm_var)]]) &&
+                      input$arm_ref %in% unique(ANL[[req(input$arm_var)]]),
+                    "Cannot generate plot. No subjects in both Control and Treatment arms."))
 
       adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
