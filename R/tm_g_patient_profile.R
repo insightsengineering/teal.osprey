@@ -548,7 +548,7 @@ srv_g_patient_profile <- function(id,
       iv$add_rule("select_lb", rule_dataset)
       iv$enable()
 
-      gather_fails(iv)
+      teal::gather_fails(iv)
 
       # get inputs ---
       patient_id <- input$patient_id # nolint

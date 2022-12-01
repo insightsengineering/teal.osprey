@@ -352,7 +352,7 @@ srv_g_waterfall <- function(id,
         "Fractions are not allowed in Y-axis Interval")
       iv$enable()
 
-      gather_fails(iv)
+      teal::gather_fails(iv)
 
 
       # get variables

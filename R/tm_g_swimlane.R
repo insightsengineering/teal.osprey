@@ -342,7 +342,7 @@ srv_g_swimlane <- function(id,
         "Vertical Reference Line(s) are invalid")
       iv$enable()
 
-      gather_fails(iv)
+      teal::gather_fails(iv)
 
 
       # VARIABLE GETTERS

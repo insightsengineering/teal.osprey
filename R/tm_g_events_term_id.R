@@ -301,7 +301,7 @@ srv_g_events_term_id <- function(id,
       iv$enable()
 
       # collate validator messages
-      gather_fails(iv)
+      teal::gather_fails(iv)
 
       validate(need(input$arm_trt %in% unique(ANL[[req(input$arm_var)]]) &&
                       input$arm_ref %in% unique(ANL[[req(input$arm_var)]]),

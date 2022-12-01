@@ -261,7 +261,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
         "Horizontal Reference Line(s) are invalid")
       iv$enable()
 
-      gather_fails(iv)
+      teal::gather_fails(iv)
 
       paramcd <- input$paramcd # nolint
       x_var <- input$x_var

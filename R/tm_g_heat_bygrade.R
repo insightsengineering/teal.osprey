@@ -400,7 +400,7 @@ srv_g_heatmap_bygrade <- function(id,
         message_fmt = "Updating Conmed Levels"))
       iv_cm$enable()
 
-      gather_fails_com(iv, iv_cm)
+      teal::gather_fails_com(iv, iv_cm)
 
       q1 <- if (isTRUE(input$plot_cm)) {
         conmed_var <- input$conmed_var

@@ -308,7 +308,7 @@ srv_g_ae_sub <- function(id,
         message_fmt = "Groups must be a variable in ADSL"))
       iv$enable()
 
-      gather_fails(iv)
+      teal::gather_fails(iv)
 
       validate(need(input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
                       input$arm_ref %in% unique(ANL[[input$arm_var]]),
