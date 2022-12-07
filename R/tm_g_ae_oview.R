@@ -301,7 +301,7 @@ srv_g_ae_oview <- function(id,
         message_fmt = "Control and Treatment must be different"))
       iv$enable()
 
-      teal::gather_fails(iv)
+      teal::validate_inputs(iv)
 
       validate(need(input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
                       input$arm_ref %in% unique(ANL[[input$arm_var]]),

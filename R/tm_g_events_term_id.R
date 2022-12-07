@@ -300,8 +300,7 @@ srv_g_events_term_id <- function(id,
         message_fmt = "Control and Treatment must be different"))
       iv$enable()
 
-      # collate validator messages
-      teal::gather_fails(iv)
+      teal::validate_inputs(iv)
 
       validate(need(input$arm_trt %in% unique(ANL[[req(input$arm_var)]]) &&
                       input$arm_ref %in% unique(ANL[[req(input$arm_var)]]),

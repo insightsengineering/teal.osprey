@@ -375,7 +375,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         message = "At least one value of Left Dichotomization Variable must be selected"))
       iv$enable()
 
-      teal::gather_fails(iv)
+      teal::validate_inputs(iv)
 
       validate(
         need(
