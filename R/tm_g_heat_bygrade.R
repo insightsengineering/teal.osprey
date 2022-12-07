@@ -315,12 +315,12 @@ srv_g_heatmap_bygrade <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     decorate_output <- srv_g_decorate(
       id = NULL,
       plt = plot_r,
       plot_height = plot_height,
-      plot_width = plot_width) # nolint
+      plot_width = plot_width
+    ) # nolint
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
@@ -361,43 +361,58 @@ srv_g_heatmap_bygrade <- function(id,
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("id_var", shinyvalidate::sv_required(
-        message = "ID Variable is required"))
+        message = "ID Variable is required"
+      ))
       iv$add_rule("visit_var", shinyvalidate::sv_required(
-        message = "Visit Variable is required"))
+        message = "Visit Variable is required"
+      ))
       iv$add_rule("ongo_var", shinyvalidate::sv_required(
-        message = "Study Ongoing Status Variable is required"))
+        message = "Study Ongoing Status Variable is required"
+      ))
       iv$add_rule("ongo_var", shinyvalidate::sv_in_set(
         set = names(ADEX),
-        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", ex_dataname)))
-      iv$add_rule("ongo_var", ~ if (!is.logical(ADEX[[req(.)]]))
-        "Study Ongoing Status must be a logical variable")
+        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", ex_dataname)
+      ))
+      iv$add_rule("ongo_var", ~ if (!is.logical(ADEX[[req(.)]])) {
+        "Study Ongoing Status must be a logical variable"
+      })
       iv$add_rule("anno_var", shinyvalidate::sv_required(
-        message = "Annotation Variables is required"))
-      iv$add_rule("anno_var", ~ if (length(.) > 2L)
-        "No more than two Annotation Variables are allowed")
+        message = "Annotation Variables is required"
+      ))
+      iv$add_rule("anno_var", ~ if (length(.) > 2L) {
+        "No more than two Annotation Variables are allowed"
+      })
       iv$add_rule("anno_var", shinyvalidate::sv_in_set(
         set = names(ADSL),
-        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", sl_dataname)))
-      iv$add_rule("anno_var", ~ if (isTRUE(input$id_var %in% .))
-        sprintf("Deselect %s in Annotation Variables", req(input$id_var)))
+        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", sl_dataname)
+      ))
+      iv$add_rule("anno_var", ~ if (isTRUE(input$id_var %in% .)) {
+        sprintf("Deselect %s in Annotation Variables", req(input$id_var))
+      })
       iv$add_rule("heat_var", shinyvalidate::sv_required(
-        message = "Heat Variable is required"))
+        message = "Heat Variable is required"
+      ))
       iv$enable()
 
       iv_cm <- shinyvalidate::InputValidator$new()
       iv_cm$condition(~ isTRUE(input$plot_cm))
       iv_cm$add_rule("conmed_var", shinyvalidate::sv_required(
-        message = "Conmed Variable is required"))
+        message = "Conmed Variable is required"
+      ))
       iv_cm$add_rule("conmed_var", shinyvalidate::sv_in_set(
         set = names(ADCM),
-        message_fmt = sprintf("Conmed Variable must be a variable in %s", cm_dataname)))
-      iv_cm$add_rule("conmed_var", ~ if (!is.factor(ADCM[[req(.)]]))
-        "Study Ongoing Status must be a factor variable")
-      iv_cm$add_rule("conmed_level", ~if (length(.) > 3L)
-        "No more than three Conmed Levels are allowed")
+        message_fmt = sprintf("Conmed Variable must be a variable in %s", cm_dataname)
+      ))
+      iv_cm$add_rule("conmed_var", ~ if (!is.factor(ADCM[[req(.)]])) {
+        "Study Ongoing Status must be a factor variable"
+      })
+      iv_cm$add_rule("conmed_level", ~ if (length(.) > 3L) {
+        "No more than three Conmed Levels are allowed"
+      })
       iv_cm$add_rule("conmed_level", shinyvalidate::sv_in_set(
         set = unique(ADCM[[req(input$conmed_var)]]),
-        message_fmt = "Updating Conmed Levels"))
+        message_fmt = "Updating Conmed Levels"
+      ))
       iv_cm$enable()
 
       teal::validate_inputs(iv, iv_cm)

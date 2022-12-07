@@ -184,7 +184,6 @@ srv_g_ae_sub <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     decorate_output <- srv_g_decorate(
       id = NULL,
       plt = plot_r,
@@ -291,28 +290,36 @@ srv_g_ae_sub <- function(id,
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
-        message = "Arm Variable is required"))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]]))
-        "Arm Var must be a factor variable, contact developer")
+        message = "Arm Variable is required"
+      ))
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]])) {
+        "Arm Var must be a factor variable, contact developer"
+      })
       iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
         input$arm_ref,
-        message_fmt = "Control and Treatment must be different"))
+        message_fmt = "Control and Treatment must be different"
+      ))
       iv$add_rule("arm_ref", shinyvalidate::sv_not_equal(
         input$arm_trt,
-        message_fmt = "Control and Treatment must be different"))
+        message_fmt = "Control and Treatment must be different"
+      ))
       iv$add_rule("groups", shinyvalidate::sv_in_set(
         names(ANL),
-        message_fmt = "Groups must be a variable in ANL"))
+        message_fmt = "Groups must be a variable in ANL"
+      ))
       iv$add_rule("groups", shinyvalidate::sv_in_set(
         names(ADSL),
-        message_fmt = "Groups must be a variable in ADSL"))
+        message_fmt = "Groups must be a variable in ADSL"
+      ))
       iv$enable()
 
       teal::validate_inputs(iv)
 
-      validate(need(input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
-                      input$arm_ref %in% unique(ANL[[input$arm_var]]),
-                    "Treatment or Control not found in Arm Variable. Filtered out?"))
+      validate(need(
+        input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
+          input$arm_ref %in% unique(ANL[[input$arm_var]]),
+        "Treatment or Control not found in Arm Variable. Filtered out?"
+      ))
 
       group_labels <- lapply(seq_along(input$groups), function(x) {
         items <- input[[sprintf("groups__%s", x)]]

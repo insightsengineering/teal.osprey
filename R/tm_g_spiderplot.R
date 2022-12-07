@@ -240,25 +240,33 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("paramcd", shinyvalidate::sv_required(
-        message =  "Parameter is required"))
+        message = "Parameter is required"
+      ))
       iv$add_rule("x_var", shinyvalidate::sv_required(
-        message = "X Axis Variable is required"))
+        message = "X Axis Variable is required"
+      ))
       iv$add_rule("y_var", shinyvalidate::sv_required(
-        message = "Y Axis Variable is required"))
+        message = "Y Axis Variable is required"
+      ))
       iv$add_rule("marker_var", shinyvalidate::sv_required(
-        message = "Marker Symbol Variable is required"))
+        message = "Marker Symbol Variable is required"
+      ))
       iv$add_rule("line_colorby_var", shinyvalidate::sv_required(
-        message = "Color Variable is required"))
+        message = "Color Variable is required"
+      ))
       fac_dupl <- function(value, other) {
-        if (length(value) * length(other) > 0L & anyDuplicated(c(value, other)))
+        if (length(value) * length(other) > 0L & anyDuplicated(c(value, other))) {
           "X- and Y-facet Variables must not overlap"
+        }
       }
       iv$add_rule("xfacet_var", fac_dupl, other = input$yfacet_var)
       iv$add_rule("yfacet_var", fac_dupl, other = input$xfacet_var)
-      iv$add_rule("vref_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.)))
-        "Vertical Reference Line(s) are invalid")
-      iv$add_rule("href_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.)))
-        "Horizontal Reference Line(s) are invalid")
+      iv$add_rule("vref_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.))) {
+        "Vertical Reference Line(s) are invalid"
+      })
+      iv$add_rule("href_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.))) {
+        "Horizontal Reference Line(s) are invalid"
+      })
       iv$enable()
 
       teal::validate_inputs(iv)

@@ -426,7 +426,6 @@ srv_g_patient_profile <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     # only show the check box when domain data is available
     observeEvent(ae_dataname, {
       if (!is.na(ae_dataname)) {
@@ -504,42 +503,55 @@ srv_g_patient_profile <- function(id,
 
     # render plot
     output_q <- reactive({
-
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("sl_start_date", shinyvalidate::sv_required(
-        message = "Date variable is required"))
+        message = "Date variable is required"
+      ))
       iv$add_rule("ex_var", shinyvalidate::sv_required(
-        message = "Exposure variable is required"))
+        message = "Exposure variable is required"
+      ))
       iv$add_rule("ae_var", shinyvalidate::sv_required(
-        message = "Adverse Event variable is required"))
+        message = "Adverse Event variable is required"
+      ))
       iv$add_rule("ae_line_var", shinyvalidate::sv_optional())
-      iv$add_rule("ae_line_var", ~ if (length(levels(ADAE[[.]])) > length(ae_line_col_opt))
-        "Not enough colors provided Adverse Event line color, unselect")
+      iv$add_rule("ae_line_var", ~ if (length(levels(ADAE[[.]])) > length(ae_line_col_opt)) {
+        "Not enough colors provided Adverse Event line color, unselect"
+      })
       iv$add_rule("rs_var", shinyvalidate::sv_required(
-        message = "Tumor response variable is required"))
+        message = "Tumor response variable is required"
+      ))
       iv$add_rule("cm_var", shinyvalidate::sv_required(
-        message = "Concomitant medicine variable is required"))
+        message = "Concomitant medicine variable is required"
+      ))
       iv$add_rule("lb_var", shinyvalidate::sv_required(
-        message = "Lab variable is required"))
+        message = "Lab variable is required"
+      ))
       iv$add_rule("lb_var_show", shinyvalidate::sv_required(
-        message = "At least one Lab value is required"))
+        message = "At least one Lab value is required"
+      ))
       rule_diff <- function(value, other) {
-        if (any(value == other))
+        if (any(value == other)) {
           "Lab variable and Lab value must be different"
+        }
       }
       iv$add_rule("lb_var", rule_diff, other = input$lb_var_show)
       iv$add_rule("lb_var_show", rule_diff, other = input$lb_var)
       iv$add_rule("x_limit", shinyvalidate::sv_required(
-        message = "Study Days Range is required"))
-      iv$add_rule("x_limit", ~ if (anyNA(as_numeric_from_comma_sep_str(.)))
-        "Study Days Range is invalid")
-      iv$add_rule("x_limit", ~ if (length(as_numeric_from_comma_sep_str(.)) != 2L)
-        "Study Days Range must be two values")
-      iv$add_rule("x_limit", ~ if (!identical(order(as_numeric_from_comma_sep_str(.)), 1:2))
-        "Study Days Range mut be: first lower, then upper limit")
+        message = "Study Days Range is required"
+      ))
+      iv$add_rule("x_limit", ~ if (anyNA(as_numeric_from_comma_sep_str(.))) {
+        "Study Days Range is invalid"
+      })
+      iv$add_rule("x_limit", ~ if (length(as_numeric_from_comma_sep_str(.)) != 2L) {
+        "Study Days Range must be two values"
+      })
+      iv$add_rule("x_limit", ~ if (!identical(order(as_numeric_from_comma_sep_str(.)), 1:2)) {
+        "Study Days Range mut be: first lower, then upper limit"
+      })
       rule_dataset <- function(value) {
-        if (!any(c(input$select_ae, input$select_ex, input$select_rs, input$select_cm, input$select_lb)))
+        if (!any(c(input$select_ae, input$select_ex, input$select_rs, input$select_cm, input$select_lb))) {
           "Select at least one ADaM data set"
+        }
       }
       iv$add_rule("select_ae", rule_dataset)
       iv$add_rule("select_ex", rule_dataset)

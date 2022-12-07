@@ -213,7 +213,6 @@ srv_g_events_term_id <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     decorate_output <- srv_g_decorate(
       id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width
     )
@@ -236,7 +235,8 @@ srv_g_events_term_id <- function(id,
     })
 
 
-    observeEvent(input$sort, {
+    observeEvent(input$sort,
+      {
         sort <- if (is.null(input$sort)) " " else input$sort
         updateTextInput(
           session,
@@ -255,7 +255,8 @@ srv_g_events_term_id <- function(id,
       ignoreNULL = FALSE
     )
 
-    observeEvent(input$arm_var, {
+    observeEvent(input$arm_var,
+      {
         arm_var <- input$arm_var
         ANL <- data[[dataname]]() # nolint
 
@@ -279,7 +280,8 @@ srv_g_events_term_id <- function(id,
           selected = choices[trt_index],
           choices = choices
         )
-      }, ignoreNULL = TRUE
+      },
+      ignoreNULL = TRUE
     )
 
     output_q <- reactive({
@@ -287,24 +289,31 @@ srv_g_events_term_id <- function(id,
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("term", shinyvalidate::sv_required(
-        message = "Term Variable is required"))
+        message = "Term Variable is required"
+      ))
       iv$add_rule("arm_var", shinyvalidate::sv_required(
-        message = "Arm Variable is required"))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]]))
-        "Arm Var must be a factor variable, contact developer")
+        message = "Arm Variable is required"
+      ))
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]])) {
+        "Arm Var must be a factor variable, contact developer"
+      })
       iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
         input$arm_ref,
-        message_fmt = "Control and Treatment must be different"))
+        message_fmt = "Control and Treatment must be different"
+      ))
       iv$add_rule("arm_ref", shinyvalidate::sv_not_equal(
         input$arm_trt,
-        message_fmt = "Control and Treatment must be different"))
+        message_fmt = "Control and Treatment must be different"
+      ))
       iv$enable()
 
       teal::validate_inputs(iv)
 
-      validate(need(input$arm_trt %in% unique(ANL[[req(input$arm_var)]]) &&
-                      input$arm_ref %in% unique(ANL[[req(input$arm_var)]]),
-                    "Cannot generate plot. No subjects in both Control and Treatment arms."))
+      validate(need(
+        input$arm_trt %in% unique(ANL[[req(input$arm_var)]]) &&
+          input$arm_ref %in% unique(ANL[[req(input$arm_var)]]),
+        "Cannot generate plot. No subjects in both Control and Treatment arms."
+      ))
 
       adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint

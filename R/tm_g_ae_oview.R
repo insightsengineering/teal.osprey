@@ -120,8 +120,10 @@ tm_g_ae_oview <- function(label,
     )
   )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
-  checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3],
-                            .var.name = "plot_height")
+  checkmate::assert_numeric(plot_height[1],
+    lower = plot_height[2], upper = plot_height[3],
+    .var.name = "plot_height"
+  )
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
   checkmate::assert_numeric(
     plot_width[1],
@@ -233,9 +235,10 @@ srv_g_ae_oview <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
-    decorate_output <- srv_g_decorate(id = NULL, plt = plot_r,
-                                      plot_height = plot_height, plot_width = plot_width)
+    decorate_output <- srv_g_decorate(
+      id = NULL, plt = plot_r,
+      plot_height = plot_height, plot_width = plot_width
+    )
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
@@ -286,26 +289,34 @@ srv_g_ae_oview <- function(id,
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
-        message = "Arm Variable is required"))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]]))
-        "Arm Var must be a factor variable")
-      iv$add_rule("arm_var", ~ if (length(levels(ANL[[req(.)]])) < 2L)
-        "Selected Arm Var must have at least two levels")
+        message = "Arm Variable is required"
+      ))
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]])) {
+        "Arm Var must be a factor variable"
+      })
+      iv$add_rule("arm_var", ~ if (length(levels(ANL[[req(.)]])) < 2L) {
+        "Selected Arm Var must have at least two levels"
+      })
       iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
-        message = "At least one Flag is required"))
+        message = "At least one Flag is required"
+      ))
       iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
         input$arm_ref,
-        message_fmt = "Control and Treatment must be different"))
+        message_fmt = "Control and Treatment must be different"
+      ))
       iv$add_rule("arm_ref", shinyvalidate::sv_not_equal(
         input$arm_trt,
-        message_fmt = "Control and Treatment must be different"))
+        message_fmt = "Control and Treatment must be different"
+      ))
       iv$enable()
 
       teal::validate_inputs(iv)
 
-      validate(need(input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
-                      input$arm_ref %in% unique(ANL[[input$arm_var]]),
-                    "Treatment or Control not found in Arm Variable. Filtered out?"))
+      validate(need(
+        input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
+          input$arm_ref %in% unique(ANL[[input$arm_var]]),
+        "Treatment or Control not found in Arm Variable. Filtered out?"
+      ))
 
       q1 <- teal.code::eval_code(
         teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),

@@ -269,7 +269,6 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     options <- reactiveValues(r = NULL, l = NULL)
     vars <- reactiveValues(r = NULL, l = NULL)
 
@@ -360,19 +359,26 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("category_var", shinyvalidate::sv_required(
-        message = "Category Variable is required"))
+        message = "Category Variable is required"
+      ))
       iv$add_rule("right_var", shinyvalidate::sv_required(
-        message = "Right Dichotomization Variable is required"))
+        message = "Right Dichotomization Variable is required"
+      ))
       iv$add_rule("left_var", shinyvalidate::sv_required(
-        message = "Left Dichotomization Variable is required"))
-      iv$add_rule("right_var", ~ if (!is.factor(ANL[[req(.)]]))
-        "Right Dichotomization Variable must be a factor variable, contact developer")
-      iv$add_rule("left_var", ~ if (!is.factor(ANL[[req(.)]]))
-        "Left Dichotomization Variable must be a factor variable, contact developer")
+        message = "Left Dichotomization Variable is required"
+      ))
+      iv$add_rule("right_var", ~ if (!is.factor(ANL[[req(.)]])) {
+        "Right Dichotomization Variable must be a factor variable, contact developer"
+      })
+      iv$add_rule("left_var", ~ if (!is.factor(ANL[[req(.)]])) {
+        "Left Dichotomization Variable must be a factor variable, contact developer"
+      })
       iv$add_rule("right_val", shinyvalidate::sv_required(
-        message = "At least one value of Right Dichotomization Variable must be selected"))
+        message = "At least one value of Right Dichotomization Variable must be selected"
+      ))
       iv$add_rule("left_val", shinyvalidate::sv_required(
-        message = "At least one value of Left Dichotomization Variable must be selected"))
+        message = "At least one value of Left Dichotomization Variable must be selected"
+      ))
       iv$enable()
 
       teal::validate_inputs(iv)
@@ -381,7 +387,9 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         need(
           input$right_val %in% ADSL[[input$right_var]] &&
             input$left_val %in% ADSL[[input$right_var]],
-          "No observations for selected dichotomization values (filtered out?)"))
+          "No observations for selected dichotomization values (filtered out?)"
+        )
+      )
 
       right_var <- isolate(input$right_var)
       left_var <- isolate(input$left_var)

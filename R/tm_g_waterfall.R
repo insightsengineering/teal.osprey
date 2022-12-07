@@ -303,8 +303,10 @@ srv_g_waterfall <- function(id,
       teal::validate_has_data(adrs, min_nrow = 2)
 
       adsl_vars <- unique(
-        c("USUBJID", "STUDYID",
-          input$bar_color_var, input$sort_var, input$add_label_var_sl, input$anno_txt_var_sl, input$facet_var)
+        c(
+          "USUBJID", "STUDYID",
+          input$bar_color_var, input$sort_var, input$add_label_var_sl, input$anno_txt_var_sl, input$facet_var
+        )
       )
       adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", input$bar_var))
       adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
@@ -317,39 +319,51 @@ srv_g_waterfall <- function(id,
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
-        message = "Bar Height is required"))
+        message = "Bar Height is required"
+      ))
       iv$add_rule("bar_paramcd", shinyvalidate::sv_required(
-        message = "Tumor Burden Parameter is required"))
+        message = "Tumor Burden Parameter is required"
+      ))
       iv$add_rule("bar_paramcd", shinyvalidate::sv_in_set(
         set = adtr$PARAMCD,
-        message_fmt = "All values of Tumor Burden Parameter must be elements of ADTR PARAMCD"))
-      iv$add_rule("href_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.)))
-        "Horizontal Reference Line(s) are invalid")
+        message_fmt = "All values of Tumor Burden Parameter must be elements of ADTR PARAMCD"
+      ))
+      iv$add_rule("href_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.))) {
+        "Horizontal Reference Line(s) are invalid"
+      })
       iv$add_rule("add_label_paramcd_rs", shinyvalidate::sv_optional())
       iv$add_rule("add_label_paramcd_rs", shinyvalidate::sv_in_set(
-          set = adrs$PARAMCD,
-          message_fmt = "ADRS Label must be an element of ADRS PARAMCD"))
+        set = adrs$PARAMCD,
+        message_fmt = "ADRS Label must be an element of ADRS PARAMCD"
+      ))
       rule_excl <- function(value, other) {
-        if (length(value) > 0L & length(other) > 0L)
+        if (length(value) > 0L & length(other) > 0L) {
           "Only one \"Label to Bars\" is allowed"
+        }
       }
       iv$add_rule("add_label_paramcd_rs", rule_excl, other = input$add_label_var_sl)
       iv$add_rule("add_label_var_sl", rule_excl, other = input$add_label_paramcd_rs)
       iv$add_rule("anno_txt_paramcd_rs", shinyvalidate::sv_optional())
       iv$add_rule("anno_txt_paramcd_rs", shinyvalidate::sv_in_set(
-          set = adrs$PARAMCD,
-          message_fmt = "Annotation Parameters must be elements of ADRS PARAMCD"))
+        set = adrs$PARAMCD,
+        message_fmt = "Annotation Parameters must be elements of ADRS PARAMCD"
+      ))
       iv$add_rule("gap_point_val", shinyvalidate::sv_optional())
-      iv$add_rule("gap_point_val", ~ if (!checkmate::test_number(suppressWarnings(as.numeric(.)), lower = 1))
-        "Break High Bars must be a positive number")
-      iv$add_rule("gap_point_val", ~ if (!checkmate::test_integerish(suppressWarnings(as.numeric(.)), lower = 1))
-        "Fractions are not allowed in Break High Bars")
+      iv$add_rule("gap_point_val", ~ if (!checkmate::test_number(suppressWarnings(as.numeric(.)), lower = 1)) {
+        "Break High Bars must be a positive number"
+      })
+      iv$add_rule("gap_point_val", ~ if (!checkmate::test_integerish(suppressWarnings(as.numeric(.)), lower = 1)) {
+        "Fractions are not allowed in Break High Bars"
+      })
       iv$add_rule("ytick_at", shinyvalidate::sv_required(
-        message = "Y-axis Interval is required"))
-      iv$add_rule("ytick_at", ~ if (!checkmate::test_number(suppressWarnings(as.numeric(.)), lower = 1))
-        "Y-axis Interval must be a positive number")
-      iv$add_rule("ytick_at", ~ if (!checkmate::test_integerish(suppressWarnings(as.numeric(.)), lower = 1))
-        "Fractions are not allowed in Y-axis Interval")
+        message = "Y-axis Interval is required"
+      ))
+      iv$add_rule("ytick_at", ~ if (!checkmate::test_number(suppressWarnings(as.numeric(.)), lower = 1)) {
+        "Y-axis Interval must be a positive number"
+      })
+      iv$add_rule("ytick_at", ~ if (!checkmate::test_integerish(suppressWarnings(as.numeric(.)), lower = 1)) {
+        "Fractions are not allowed in Y-axis Interval"
+      })
       iv$enable()
 
       teal::validate_inputs(iv)

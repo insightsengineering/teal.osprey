@@ -309,16 +309,21 @@ srv_g_swimlane <- function(id,
       validate(need(
         (length(data) == 1 && dataname == "ADSL") ||
           (length(data) >= 2 && dataname != "ADSL"), paste(
-            "Please either add just 'ADSL' as dataname when just ADSL is available.",
-            "In case 2 datasets are available ADSL is not supposed to be the dataname."
-          )))
+          "Please either add just 'ADSL' as dataname when just ADSL is available.",
+          "In case 2 datasets are available ADSL is not supposed to be the dataname."
+        )
+      ))
 
       ADSL <- data[["ADSL"]]() # nolint
 
-      anl_vars <- unique(c("USUBJID", "STUDYID",
-                           input$marker_pos_var, input$marker_shape_var, input$marker_color_var)) # nolint
-      adsl_vars <- unique(c("USUBJID", "STUDYID",
-                            input$bar_var, input$bar_color_var, input$sort_var, input$anno_txt_var))
+      anl_vars <- unique(c(
+        "USUBJID", "STUDYID",
+        input$marker_pos_var, input$marker_shape_var, input$marker_color_var
+      )) # nolint
+      adsl_vars <- unique(c(
+        "USUBJID", "STUDYID",
+        input$bar_var, input$bar_color_var, input$sort_var, input$anno_txt_var
+      ))
 
       if (dataname == "ADSL") {
         teal::validate_has_data(ADSL, min_nrow = 3)
@@ -336,10 +341,12 @@ srv_g_swimlane <- function(id,
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
-        message = "Bar Length is required"))
+        message = "Bar Length is required"
+      ))
       # If reference lines are requested
-      iv$add_rule("vref_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.)))
-        "Vertical Reference Line(s) are invalid")
+      iv$add_rule("vref_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.))) {
+        "Vertical Reference Line(s) are invalid"
+      })
       iv$enable()
 
       teal::validate_inputs(iv)
