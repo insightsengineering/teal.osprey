@@ -23,7 +23,7 @@ Depends:
     osprey (>= 0.1.15),
     R (>= 3.6),
     shiny,
-    teal (>= 0.12.0)
+    teal (>= 0.12.0.9013)
 Imports:
     checkmate,
     dplyr,
