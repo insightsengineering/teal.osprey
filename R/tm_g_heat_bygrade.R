@@ -387,7 +387,7 @@ srv_g_heatmap_bygrade <- function(id,
         message_fmt = sprintf("Study Ongoing Status must be a variable in %s", sl_dataname)
       ))
       iv$add_rule("anno_var", ~ if (isTRUE(input$id_var %in% .)) {
-        sprintf("Deselect %s in Annotation Variables", req(input$id_var))
+        sprintf("Deselect %s in Annotation Variables", input$id_var)
       })
       iv$add_rule("heat_var", shinyvalidate::sv_required(
         message = "Heat Variable is required"
@@ -403,7 +403,7 @@ srv_g_heatmap_bygrade <- function(id,
         set = names(ADCM),
         message_fmt = sprintf("Conmed Variable must be a variable in %s", cm_dataname)
       ))
-      iv_cm$add_rule("conmed_var", ~ if (!is.factor(ADCM[[req(.)]])) {
+      iv_cm$add_rule("conmed_var", ~ if (!is.factor(ADCM[[.]])) {
         "Study Ongoing Status must be a factor variable"
       })
       iv_cm$add_rule("conmed_level", ~ if (length(.) > 3L) {

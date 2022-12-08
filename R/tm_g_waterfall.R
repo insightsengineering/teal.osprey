@@ -328,16 +328,13 @@ srv_g_waterfall <- function(id,
         set = adtr$PARAMCD,
         message_fmt = "All values of Tumor Burden Parameter must be elements of ADTR PARAMCD"
       ))
-      iv$add_rule("href_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.))) {
-        "Horizontal Reference Line(s) are invalid"
-      })
       iv$add_rule("add_label_paramcd_rs", shinyvalidate::sv_optional())
       iv$add_rule("add_label_paramcd_rs", shinyvalidate::sv_in_set(
         set = adrs$PARAMCD,
         message_fmt = "ADRS Label must be an element of ADRS PARAMCD"
       ))
       rule_excl <- function(value, other) {
-        if (length(value) > 0L & length(other) > 0L) {
+        if (length(value) > 0L && length(other) > 0L) {
           "Only one \"Label to Bars\" is allowed"
         }
       }
@@ -348,21 +345,19 @@ srv_g_waterfall <- function(id,
         set = adrs$PARAMCD,
         message_fmt = "Annotation Parameters must be elements of ADRS PARAMCD"
       ))
-      iv$add_rule("gap_point_val", shinyvalidate::sv_optional())
-      iv$add_rule("gap_point_val", ~ if (!checkmate::test_number(suppressWarnings(as.numeric(.)), lower = 1)) {
-        "Break High Bars must be a positive number"
-      })
-      iv$add_rule("gap_point_val", ~ if (!checkmate::test_integerish(suppressWarnings(as.numeric(.)), lower = 1)) {
-        "Fractions are not allowed in Break High Bars"
+      iv$add_rule("href_line", shinyvalidate::sv_optional())
+      iv$add_rule("href_line", ~ if (anyNA(suppressWarnings(as_numeric_from_comma_sep_str(.)))) {
+        "Horizontal Reference Line(s) are invalid"
       })
       iv$add_rule("ytick_at", shinyvalidate::sv_required(
         message = "Y-axis Interval is required"
       ))
       iv$add_rule("ytick_at", ~ if (!checkmate::test_number(suppressWarnings(as.numeric(.)), lower = 1)) {
-        "Y-axis Interval must be a positive number"
+        "Y-axis Interval must be a single positive number"
       })
-      iv$add_rule("ytick_at", ~ if (!checkmate::test_integerish(suppressWarnings(as.numeric(.)), lower = 1)) {
-        "Fractions are not allowed in Y-axis Interval"
+      iv$add_rule("gap_point_val", shinyvalidate::sv_optional())
+      iv$add_rule("gap_point_val", ~ if (!checkmate::test_number(suppressWarnings(as.numeric(.)), lower = 1)) {
+        "Break High Bars must be a single positive number"
       })
       iv$enable()
 
@@ -380,7 +375,7 @@ srv_g_waterfall <- function(id,
       href_line <- input$href_line
       gap_point_val <- input$gap_point_val
       show_value <- input$show_value # nolint
-      href_line <- as_numeric_from_comma_sep_str(href_line)
+      href_line <- suppressWarnings(as_numeric_from_comma_sep_str(href_line))
 
       if (gap_point_val == "") {
         gap_point_val <- NULL

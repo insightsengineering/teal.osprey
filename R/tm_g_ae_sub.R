@@ -318,7 +318,7 @@ srv_g_ae_sub <- function(id,
       validate(need(
         input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
           input$arm_ref %in% unique(ANL[[input$arm_var]]),
-        "Treatment or Control not found in Arm Variable. Filtered out?"
+        "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
       ))
 
       group_labels <- lapply(seq_along(input$groups), function(x) {

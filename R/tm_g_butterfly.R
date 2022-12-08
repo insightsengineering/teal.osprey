@@ -367,10 +367,10 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       iv$add_rule("left_var", shinyvalidate::sv_required(
         message = "Left Dichotomization Variable is required"
       ))
-      iv$add_rule("right_var", ~ if (!is.factor(ANL[[req(.)]])) {
+      iv$add_rule("right_var", ~ if (!is.factor(ANL[[.]])) {
         "Right Dichotomization Variable must be a factor variable, contact developer"
       })
-      iv$add_rule("left_var", ~ if (!is.factor(ANL[[req(.)]])) {
+      iv$add_rule("left_var", ~ if (!is.factor(ANL[[.]])) {
         "Left Dichotomization Variable must be a factor variable, contact developer"
       })
       iv$add_rule("right_val", shinyvalidate::sv_required(
@@ -385,8 +385,8 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
 
       validate(
         need(
-          input$right_val %in% ADSL[[input$right_var]] &&
-            input$left_val %in% ADSL[[input$right_var]],
+          all(input$right_val %in% ADSL[[input$right_var]]) &&
+            all(input$left_val %in% ADSL[[input$left_var]]),
           "No observations for selected dichotomization values (filtered out?)"
         )
       )

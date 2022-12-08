@@ -235,9 +235,6 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       ADSL <- data[["ADSL"]]() # nolint
       ADTR <- data[[dataname]]() # nolint
 
-      teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s data has zero rows", "ADSL"))
-      teal::validate_has_data(ADTR, min_nrow = 0, msg = sprintf("%s data has zero rows", dataname))
-
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("paramcd", shinyvalidate::sv_required(
         message = "Parameter is required"
@@ -255,7 +252,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
         message = "Color Variable is required"
       ))
       fac_dupl <- function(value, other) {
-        if (length(value) * length(other) > 0L & anyDuplicated(c(value, other))) {
+        if (length(value) * length(other) > 0L && anyDuplicated(c(value, other))) {
           "X- and Y-facet Variables must not overlap"
         }
       }
@@ -271,6 +268,9 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
       teal::validate_inputs(iv)
 
+      teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s data has zero rows", "ADSL"))
+      teal::validate_has_data(ADTR, min_nrow = 0, msg = sprintf("%s data has zero rows", dataname))
+
       paramcd <- input$paramcd # nolint
       x_var <- input$x_var
       y_var <- input$y_var
@@ -284,8 +284,8 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       href_line <- input$href_line
 
       # reference lines preprocessing
-      vref_line <- as_numeric_from_comma_sep_str(input$vref_line)
-      href_line <- as_numeric_from_comma_sep_str(input$href_line)
+      vref_line <- as_numeric_from_comma_sep_str(vref_line)
+      href_line <- as_numeric_from_comma_sep_str(href_line)
 
       # define variables ---
       # if variable is not in ADSL, then take from domain VADs

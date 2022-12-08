@@ -291,10 +291,10 @@ srv_g_ae_oview <- function(id,
       iv$add_rule("arm_var", shinyvalidate::sv_required(
         message = "Arm Variable is required"
       ))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]])) {
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
         "Arm Var must be a factor variable"
       })
-      iv$add_rule("arm_var", ~ if (length(levels(ANL[[req(.)]])) < 2L) {
+      iv$add_rule("arm_var", ~ if (length(levels(ANL[[.]])) < 2L) {
         "Selected Arm Var must have at least two levels"
       })
       iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
@@ -315,7 +315,7 @@ srv_g_ae_oview <- function(id,
       validate(need(
         input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
           input$arm_ref %in% unique(ANL[[input$arm_var]]),
-        "Treatment or Control not found in Arm Variable. Filtered out?"
+        "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
       ))
 
       q1 <- teal.code::eval_code(

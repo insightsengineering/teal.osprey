@@ -294,7 +294,7 @@ srv_g_events_term_id <- function(id,
       iv$add_rule("arm_var", shinyvalidate::sv_required(
         message = "Arm Variable is required"
       ))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]])) {
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
         "Arm Var must be a factor variable, contact developer"
       })
       iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
@@ -312,7 +312,7 @@ srv_g_events_term_id <- function(id,
       validate(need(
         input$arm_trt %in% unique(ANL[[req(input$arm_var)]]) &&
           input$arm_ref %in% unique(ANL[[req(input$arm_var)]]),
-        "Cannot generate plot. No subjects in both Control and Treatment arms."
+        "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
       ))
 
       adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
@@ -331,7 +331,8 @@ srv_g_events_term_id <- function(id,
         )
       )
 
-      teal::validate_has_data(q1[["ANL"]], min_nrow = 10, msg = "ANL needs at least 10 data points")
+      teal::validate_has_data(q1[["ANL"]], min_nrow = 10,
+                              msg = "Analysis data set must have at least 10 data points")
 
       q2 <- teal.code::eval_code(
         q1,

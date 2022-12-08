@@ -305,6 +305,19 @@ srv_g_swimlane <- function(id,
 
     # create plot
     output_q <- reactive({
+
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("bar_var", shinyvalidate::sv_required(
+        message = "Bar Length is required"
+      ))
+      # If reference lines are requested
+      iv$add_rule("vref_line", ~ if (anyNA(suppressWarnings(as_numeric_from_comma_sep_str(.)))) {
+        "Vertical Reference Line(s) are invalid"
+      })
+      iv$enable()
+
+      teal::validate_inputs(iv)
+
       validate(need("ADSL" %in% names(data), "'ADSL' not included in data"))
       validate(need(
         (length(data) == 1 && dataname == "ADSL") ||
@@ -339,19 +352,6 @@ srv_g_swimlane <- function(id,
         ))
       }
 
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("bar_var", shinyvalidate::sv_required(
-        message = "Bar Length is required"
-      ))
-      # If reference lines are requested
-      iv$add_rule("vref_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.))) {
-        "Vertical Reference Line(s) are invalid"
-      })
-      iv$enable()
-
-      teal::validate_inputs(iv)
-
-
       # VARIABLE GETTERS
       # lookup bar variables
       bar_var <- input$bar_var
@@ -369,7 +369,7 @@ srv_g_swimlane <- function(id,
         marker_shape_var <- input$marker_shape_var
         marker_color_var <- input$marker_color_var
       }
-      vref_line <- as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)())
+      vref_line <- suppressWarnings(as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)()))
 
       q1 <- teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data))
 
