@@ -229,23 +229,47 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
   moduleServer(id, function(input, output, session) {
     vals <- reactiveValues(spiderplot = NULL) # nolint
 
-    iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("paramcd", shinyvalidate::sv_required())
-    iv$add_rule("x_var", shinyvalidate::sv_required())
-    iv$add_rule("y_var", shinyvalidate::sv_required())
-    iv$add_rule("marker_var", shinyvalidate::sv_required())
-    iv$add_rule("line_colorby_var", shinyvalidate::sv_required())
-    fac_dupl <- function(x, y) length(x) * length(y) > 0 & anyDuplicated(c(x, y))
-    msg_dupl <- "X- and Y-facet variables must not be duplicated."
-    iv$add_rule("xfacet_var", ~ if (fac_dupl(input$xfacet_var, input$yfacet_var)) msg_dupl)
-    iv$add_rule("yfacet_var", ~ if (fac_dupl(input$xfacet_var, input$yfacet_var)) msg_dupl)
-    iv$enable()
-
     # render plot
     output_q <- reactive({
       # get datasets ---
       ADSL <- data[["ADSL"]]() # nolint
       ADTR <- data[[dataname]]() # nolint
+
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("paramcd", shinyvalidate::sv_required(
+        message = "Parameter is required"
+      ))
+      iv$add_rule("x_var", shinyvalidate::sv_required(
+        message = "X Axis Variable is required"
+      ))
+      iv$add_rule("y_var", shinyvalidate::sv_required(
+        message = "Y Axis Variable is required"
+      ))
+      iv$add_rule("marker_var", shinyvalidate::sv_required(
+        message = "Marker Symbol Variable is required"
+      ))
+      iv$add_rule("line_colorby_var", shinyvalidate::sv_required(
+        message = "Color Variable is required"
+      ))
+      fac_dupl <- function(value, other) {
+        if (length(value) * length(other) > 0L && anyDuplicated(c(value, other))) {
+          "X- and Y-facet Variables must not overlap"
+        }
+      }
+      iv$add_rule("xfacet_var", fac_dupl, other = input$yfacet_var)
+      iv$add_rule("yfacet_var", fac_dupl, other = input$xfacet_var)
+      iv$add_rule("vref_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.))) {
+        "Vertical Reference Line(s) are invalid"
+      })
+      iv$add_rule("href_line", ~ if (anyNA(as_numeric_from_comma_sep_str(.))) {
+        "Horizontal Reference Line(s) are invalid"
+      })
+      iv$enable()
+
+      teal::validate_inputs(iv)
+
+      teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s data has zero rows", "ADSL"))
+      teal::validate_has_data(ADTR, min_nrow = 0, msg = sprintf("%s data has zero rows", dataname))
 
       paramcd <- input$paramcd # nolint
       x_var <- input$x_var
@@ -259,9 +283,9 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       vref_line <- input$vref_line
       href_line <- input$href_line
 
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-      validate(need(nrow(ADSL) > 0, "ADSL data has zero rows"))
-      validate(need(nrow(ADTR) > 0, paste(dataname, "data has zero rows")))
+      # reference lines preprocessing
+      vref_line <- as_numeric_from_comma_sep_str(vref_line)
+      href_line <- as_numeric_from_comma_sep_str(href_line)
 
       # define variables ---
       # if variable is not in ADSL, then take from domain VADs
@@ -303,20 +327,6 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
             as.data.frame()
         })
       )
-
-      # reference lines preprocessing - vertical
-      vref_line <- as_numeric_from_comma_sep_str(vref_line)
-      validate(need(
-        all(!is.na(vref_line)),
-        "Please enter a comma separated set of numeric values for the vertical reference line(s)"
-      ))
-
-      # reference lines preprocessing - horizontal
-      href_line <- as_numeric_from_comma_sep_str(href_line)
-      validate(need(
-        all(!is.na(href_line)),
-        "Please enter a comma separated set of numeric values for the horizontal reference line(s)"
-      ))
 
       # label
       q1 <- if (anno_txt_var) {
