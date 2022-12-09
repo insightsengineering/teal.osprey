@@ -331,8 +331,10 @@ srv_g_events_term_id <- function(id,
         )
       )
 
-      teal::validate_has_data(q1[["ANL"]], min_nrow = 10,
-                              msg = "Analysis data set must have at least 10 data points")
+      teal::validate_has_data(q1[["ANL"]],
+        min_nrow = 10,
+        msg = "Analysis data set must have at least 10 data points"
+      )
 
       q2 <- teal.code::eval_code(
         q1,

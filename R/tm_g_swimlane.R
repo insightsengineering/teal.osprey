@@ -305,7 +305,6 @@ srv_g_swimlane <- function(id,
 
     # create plot
     output_q <- reactive({
-
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
         message = "Bar Length is required"
