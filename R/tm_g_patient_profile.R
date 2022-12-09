@@ -428,25 +428,24 @@ srv_g_patient_profile <- function(id,
   moduleServer(id, function(input, output, session) {
     # only show the check box when domain data is available
     checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
-    checkboxes <- checkboxes[!is.na(checkboxes)]
     output$select_ADaM_output <- renderUI({
       tagList(
         helpText("Select", tags$code("ADaM"), "Domains"),
         checkboxGroupInput(
           inputId = session$ns("select_ADaM"),
           label = NULL,
-          choices = checkboxes,
-          selected = checkboxes
+          choices = checkboxes[!is.na(checkboxes)],
+          selected = checkboxes[!is.na(checkboxes)]
         )
       )
     })
 
     select_plot <- reactive({
-      vapply(checkboxes, function(x) x %in% req(input$select_ADaM), logical(1L))
+      vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
     })
 
     observeEvent(select_plot(), {
-      req(select_plot()["ADLB"]) && !is.null(input$lb_var)
+      req(isTRUE(select_plot()[lb_dataname])) && !is.null(input$lb_var)
       ADLB <- data[[lb_dataname]]() # nolint
       choices <- unique(ADLB[[input$lb_var]])
       choices_selected <- if (length(choices) > 5) choices[1:5] else choices
@@ -468,35 +467,45 @@ srv_g_patient_profile <- function(id,
       iv$add_rule("sl_start_date", shinyvalidate::sv_required(
         message = "Date variable is required"
       ))
-      iv$add_rule("ex_var", shinyvalidate::sv_required(
-        message = "Exposure variable is required"
-      ))
-      iv$add_rule("ae_var", shinyvalidate::sv_required(
-        message = "Adverse Event variable is required"
-      ))
-      iv$add_rule("ae_line_var", shinyvalidate::sv_optional())
-      iv$add_rule("ae_line_var", ~ if (length(levels(ADAE[[.]])) > length(ae_line_col_opt)) {
-        "Not enough colors provided Adverse Event line color, unselect"
-      })
-      iv$add_rule("rs_var", shinyvalidate::sv_required(
-        message = "Tumor response variable is required"
-      ))
-      iv$add_rule("cm_var", shinyvalidate::sv_required(
-        message = "Concomitant medicine variable is required"
-      ))
-      iv$add_rule("lb_var", shinyvalidate::sv_required(
-        message = "Lab variable is required"
-      ))
-      iv$add_rule("lb_var_show", shinyvalidate::sv_required(
-        message = "At least one Lab value is required"
-      ))
-      rule_diff <- function(value, other) {
-        if (any(value == other)) {
-          "Lab variable and Lab value must be different"
-        }
+      if (isTRUE(select_plot()[ex_dataname])) {
+        iv$add_rule("ex_var", shinyvalidate::sv_required(
+          message = "Exposure variable is required"
+        ))
       }
-      iv$add_rule("lb_var", rule_diff, other = input$lb_var_show)
-      iv$add_rule("lb_var_show", rule_diff, other = input$lb_var)
+      if (isTRUE(select_plot()[ae_dataname])) {
+        iv$add_rule("ae_var", shinyvalidate::sv_required(
+          message = "Adverse Event variable is required"
+        ))
+        iv$add_rule("ae_line_var", shinyvalidate::sv_optional())
+        iv$add_rule("ae_line_var", ~ if (length(levels(ADAE[[.]])) > length(ae_line_col_opt)) {
+          "Not enough colors provided Adverse Event line color, unselect"
+        })
+      }
+      if (isTRUE(select_plot()[rs_dataname])) {
+        iv$add_rule("rs_var", shinyvalidate::sv_required(
+          message = "Tumor response variable is required"
+        ))
+      }
+      if (isTRUE(select_plot()[cm_dataname])) {
+        iv$add_rule("cm_var", shinyvalidate::sv_required(
+          message = "Concomitant medicine variable is required"
+        ))
+      }
+      if (isTRUE(select_plot()[lb_dataname])) {
+        iv$add_rule("lb_var", shinyvalidate::sv_required(
+          message = "Lab variable is required"
+        ))
+        iv$add_rule("lb_var_show", shinyvalidate::sv_required(
+          message = "At least one Lab value is required"
+        ))
+        rule_diff <- function(value, other) {
+          if (any(value == other)) {
+            "Lab variable and Lab value must be different"
+          }
+        }
+        iv$add_rule("lb_var", rule_diff, other = input$lb_var_show)
+        iv$add_rule("lb_var_show", rule_diff, other = input$lb_var)
+      }
       iv$add_rule("x_limit", shinyvalidate::sv_required(
         message = "Study Days Range is required"
       ))
@@ -559,29 +568,28 @@ srv_g_patient_profile <- function(id,
       # get ADSL dataset ---
       ADSL <- data[[sl_dataname]]() # nolint
 
-
       ADEX <- NULL
-      if (("ADEX" %in% input$select_ADaM) && !is.na(ex_dataname)) {
+      if ((ex_dataname %in% input$select_ADaM) && !is.na(ex_dataname)) {
         ADEX <- data[[ex_dataname]]()
         teal::validate_has_variable(ADEX, adex_vars)
       }
       ADAE <- NULL
-      if (("ADAE" %in% input$select_ADaM) && !is.na(ae_dataname)) {
+      if ((ae_dataname %in% input$select_ADaM) && !is.na(ae_dataname)) {
         ADAE <- data[[ae_dataname]]()
         teal::validate_has_variable(ADAE, adae_vars)
       }
       ADRS <- NULL
-      if (("ADRS" %in% input$select_ADaM) && !is.na(rs_dataname)) {
+      if ((rs_dataname %in% input$select_ADaM) && !is.na(rs_dataname)) {
         ADRS <- data[[rs_dataname]]()
         teal::validate_has_variable(ADRS, adrs_vars)
       }
       ADCM <- NULL
-      if (("ADCM" %in% input$select_ADaM) && !is.na(cm_dataname)) {
+      if ((cm_dataname %in% input$select_ADaM) && !is.na(cm_dataname)) {
         ADCM <- data[[cm_dataname]]()
         teal::validate_has_variable(ADCM, adcm_vars)
       }
       ADLB <- NULL
-      if (("ADLB" %in% input$select_ADaM) && !is.na(lb_dataname)) {
+      if ((lb_dataname %in% input$select_ADaM) && !is.na(lb_dataname)) {
         ADLB <- data[[lb_dataname]]()
         teal::validate_has_variable(ADLB, adlb_vars)
       }
@@ -639,7 +647,7 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = quote(ae_line_col_name <- NULL))
       }
 
-      q1 <- if (select_plot()["ADAE"]) {
+      q1 <- if (isTRUE(select_plot()[ae_dataname])) {
         if (all(ADAE$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -663,8 +671,8 @@ srv_g_patient_profile <- function(id,
                   )
                 )
                 + (ASTDT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                )))) %>%
                 filter(!is.na(AENDT)) %>%
                 mutate(AENDY = as.numeric(
                   difftime(
@@ -678,8 +686,8 @@ srv_g_patient_profile <- function(id,
                   )
                 )
                 + (AENDT >= as.Date(substr( # nolint
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                )))) %>%
                 select(c(.(adae_vars), ASTDY, AENDY))
               formatters::var_labels(ADAE)[.(ae_line_col_var)] <- # nolint
                 formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)]
@@ -711,7 +719,7 @@ srv_g_patient_profile <- function(id,
                 )
               )
             )
-          ADAE <- qq[["ADAE"]] # nolint
+          ADAE <- qq[[ae_dataname]] # nolint
           if (is.null(ADAE) | nrow(ADAE) == 0) {
             empty_ae <- TRUE
           }
@@ -724,7 +732,7 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = bquote(ae <- NULL))
       }
 
-      q1 <- if (select_plot()["ADRS"]) {
+      q1 <- if (isTRUE(select_plot()[rs_dataname])) {
         if (all(ADRS$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -745,15 +753,15 @@ srv_g_patient_profile <- function(id,
                     units = "days"
                   ))
                   + (ADT >= as.Date(substr(
-                      as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                    )))
+                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                  )))
                 ) %>%
                 select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
                 filter(is.na(ADY) == FALSE)
               rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, .(rs_var)]))
             })
           )
-          ADRS <- qq[["ADRS"]] # nolint
+          ADRS <- qq[[rs_dataname]] # nolint
           if (is.null(ADRS) || nrow(ADRS) == 0) {
             empty_rs <- TRUE
           }
@@ -766,7 +774,7 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = bquote(rs <- NULL))
       }
 
-      q1 <- if (select_plot()["ADCM"]) {
+      q1 <- if (isTRUE(select_plot()[cm_dataname])) {
         if (all(ADCM$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -783,8 +791,8 @@ srv_g_patient_profile <- function(id,
                   units = "days"
                 ))
                 + (ASTDT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                )))) %>%
                 filter(!is.na(AENDT)) %>%
                 mutate(AENDY = as.numeric(difftime(
                   AENDT,
@@ -792,18 +800,18 @@ srv_g_patient_profile <- function(id,
                   units = "days"
                 ))
                 + (AENDT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                )))) %>%
                 select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(.(cm_var)))
               if (length(unique(ADCM$USUBJID)) > 0) {
                 ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
-                & is.na(ADCM$ASTDY) == FALSE), ]
+                                   & is.na(ADCM$ASTDY) == FALSE), ]
               }
               cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, .(cm_var)]))
             })
           )
 
-          ADCM <- qq[["ADCM"]] # nolint
+          ADCM <- qq[[cm_dataname]] # nolint
           if (is.null(ADCM) | nrow(ADCM) == 0) {
             empty_cm <- TRUE
           }
@@ -816,7 +824,7 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = bquote(cm <- NULL))
       }
 
-      q1 <- if (select_plot()["ADEX"]) {
+      q1 <- if (isTRUE(select_plot()[ex_dataname])) {
         if (all(ADEX$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -850,7 +858,7 @@ srv_g_patient_profile <- function(id,
                         as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10))
                     )
                     + (as.Date(substr(as.character(ASTDT), 1, 10)) >=
-                        as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))))
+                         as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))))
                 }) %>%
                 Reduce(rbind, .) %>%
                 as.data.frame() %>%
@@ -858,7 +866,7 @@ srv_g_patient_profile <- function(id,
               ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, .(ex_var)]))
             })
           )
-          ADEX <- qq[["ADEX"]] # nolint
+          ADEX <- qq[[ex_dataname]] # nolint
           if (is.null(ADEX) | nrow(ADEX) == 0) {
             empty_ex <- TRUE
           }
@@ -871,7 +879,7 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = quote(ex <- NULL))
       }
 
-      q1 <- if (select_plot()["ADLB"]) {
+      q1 <- if (isTRUE(select_plot()[lb_dataname])) {
         if (all(ADLB$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -901,14 +909,14 @@ srv_g_patient_profile <- function(id,
                   units = "days"
                 ))
                 + (ADT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
+                  as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
+                )))) %>%
                 filter(.data[[.(lb_var)]] %in% .(lb_var_show))
               lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
             })
           )
 
-          ADLB <- qq[["ADLB"]] # nolint
+          ADLB <- qq[[lb_dataname]] # nolint
           if (is.null(ADLB) | nrow(ADLB) == 0) {
             empty_lb <- TRUE
           }
@@ -922,7 +930,9 @@ srv_g_patient_profile <- function(id,
       }
 
       # Check the subject has information in at least one selected domain
-      empty_data_check <- c(empty_ex, empty_ae, empty_rs, empty_cm, empty_lb)
+      empty_data_check <- structure(
+        c(empty_ex, empty_ae, empty_rs, empty_lb, empty_cm),
+        names = checkboxes)
 
       validate(need(
         any(!empty_data_check & select_plot()),
@@ -934,7 +944,7 @@ srv_g_patient_profile <- function(id,
         showNotification(
           paste0(
             "This subject does not have information in the ",
-            paste(c(names(select_plot())[empty_data_check & select_plot()]), collapse = ", "),
+            paste(checkboxes[empty_data_check & select_plot()], collapse = ", "),
             " domain."
           ),
           duration = 8,
