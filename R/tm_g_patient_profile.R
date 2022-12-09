@@ -304,14 +304,9 @@ ui_g_patient_profile <- function(id, ...) {
           choices = a$patient_id$choices,
           selected = a$patient_id$selected
         ),
-        helpText("Select", tags$code("ADaM"), "Domains"),
         div(
           class = "pretty-left-border",
-          uiOutput(ns("select_ae_output")),
-          uiOutput(ns("select_ex_output")),
-          uiOutput(ns("select_rs_output")),
-          uiOutput(ns("select_cm_output")),
-          uiOutput(ns("select_lb_output"))
+          uiOutput(ns("select_ADaM_output"))
         ),
         teal.widgets::optionalSelectInput(
           ns("sl_start_date"),
@@ -324,7 +319,8 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          paste0("input['", ns("select_ex"), "']"),
+          condition = "input['select_ADaM'].includes('ADEX')",
+          ns = ns,
           selectInput(
             ns("ex_var"),
             "Exposure variable",
@@ -334,7 +330,8 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          paste0("input['", ns("select_ae"), "']"),
+          condition = "input['select_ADaM'].includes('ADAE')",
+          ns = ns,
           teal.widgets::optionalSelectInput(
             ns("ae_var"),
             "Adverse Event variable",
@@ -351,7 +348,8 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          paste0("input['", ns("select_rs"), "']"),
+          condition = "input['select_ADaM'].includes('ADRS')",
+          ns = ns,
           teal.widgets::optionalSelectInput(
             ns("rs_var"),
             "Tumor response variable",
@@ -361,7 +359,8 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          paste0("input['", ns("select_cm"), "']"),
+          condition = "input['select_ADaM'].includes('ADCM')",
+          ns = ns,
           teal.widgets::optionalSelectInput(
             ns("cm_var"),
             "Concomitant medicine variable",
@@ -371,7 +370,8 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          paste0("input['", ns("select_lb"), "']"),
+          condition = "input['select_ADaM'].includes('ADLB')",
+          ns = ns,
           teal.widgets::optionalSelectInput(
             ns("lb_var"),
             "Lab variable",
@@ -426,69 +426,26 @@ srv_g_patient_profile <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+
     # only show the check box when domain data is available
-    observeEvent(ae_dataname, {
-      if (!is.na(ae_dataname)) {
-        output$select_ae_output <- renderUI({
-          checkboxInput(
-            session$ns("select_ae"),
-            "ADAE",
-            value = !is.na(ae_dataname)
-          )
-        })
-      }
+    checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
+    checkboxes <- checkboxes[!is.na(checkboxes)]
+    output$select_ADaM_output <- renderUI({
+      tagList(
+        helpText("Select", tags$code("ADaM"), "Domains"),
+        checkboxGroupInput(inputId = session$ns("select_ADaM"),
+                           label = NULL,
+                           choices = checkboxes,
+                           selected = checkboxes)
+      )
     })
 
-    observeEvent(ex_dataname, {
-      if (!is.na(ex_dataname)) {
-        output$select_ex_output <- renderUI({
-          checkboxInput(
-            session$ns("select_ex"),
-            "ADEX",
-            value = !is.na(ex_dataname)
-          )
-        })
-      }
+    select_plot <- reactive({
+      vapply(checkboxes, function(x) x %in% req(input$select_ADaM), logical(1L))
     })
 
-    observeEvent(rs_dataname, {
-      if (!is.na(rs_dataname)) {
-        output$select_rs_output <- renderUI({
-          checkboxInput(
-            session$ns("select_rs"),
-            "ADRS",
-            value = !is.na(rs_dataname)
-          )
-        })
-      }
-    })
-
-    observeEvent(cm_dataname, {
-      if (!is.na(cm_dataname)) {
-        output$select_cm_output <- renderUI({
-          checkboxInput(
-            session$ns("select_cm"),
-            "ADCM",
-            value = !is.na(cm_dataname)
-          )
-        })
-      }
-    })
-
-    observeEvent(lb_dataname, {
-      if (!is.na(lb_dataname)) {
-        output$select_lb_output <- renderUI({
-          checkboxInput(
-            session$ns("select_lb"),
-            "ADLB",
-            value = !is.na(lb_dataname)
-          )
-        })
-      }
-    })
-
-    observeEvent(input$select_lb, {
-      req(input$select_lb == TRUE && !is.null(input$lb_var))
+    observeEvent(select_plot(), {
+      req(select_plot()["ADLB"]) && !is.null(input$lb_var)
       ADLB <- data[[lb_dataname]]() # nolint
       choices <- unique(ADLB[[input$lb_var]])
       choices_selected <- if (length(choices) > 5) choices[1:5] else choices
@@ -504,6 +461,8 @@ srv_g_patient_profile <- function(id,
     # render plot
     output_q <- reactive({
       iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("select_ADaM", shinyvalidate::sv_required(
+        message = "At least one ADaM data set is required"))
       iv$add_rule("sl_start_date", shinyvalidate::sv_required(
         message = "Date variable is required"
       ))
@@ -548,16 +507,6 @@ srv_g_patient_profile <- function(id,
       iv$add_rule("x_limit", ~ if (!identical(order(as_numeric_from_comma_sep_str(.)), 1:2)) {
         "Study Days Range mut be: first lower, then upper limit"
       })
-      rule_dataset <- function(value) {
-        if (!any(c(input$select_ae, input$select_ex, input$select_rs, input$select_cm, input$select_lb))) {
-          "Select at least one ADaM data set"
-        }
-      }
-      iv$add_rule("select_ae", rule_dataset)
-      iv$add_rule("select_ex", rule_dataset)
-      iv$add_rule("select_rs", rule_dataset)
-      iv$add_rule("select_cm", rule_dataset)
-      iv$add_rule("select_lb", rule_dataset)
       iv$enable()
 
       teal::validate_inputs(iv)
@@ -608,86 +557,32 @@ srv_g_patient_profile <- function(id,
       # get ADSL dataset ---
       ADSL <- data[[sl_dataname]]() # nolint
 
-      if (!is.null(input$select_ex)) {
-        if (input$select_ex == FALSE | is.na(ex_dataname)) {
-          ADEX <- NULL # nolint
-        } else {
-          ADEX <- data[[ex_dataname]]() # nolint
-          teal::validate_has_variable(ADEX, adex_vars)
-        }
-      } else {
-        ADEX <- NULL # nolint
+
+      ADEX <- NULL
+      if (("ADEX" %in% input$select_ADaM) && !is.na(ex_dataname)) {
+        ADEX <- data[[ex_dataname]]()
+        teal::validate_has_variable(ADEX, adex_vars)
       }
-
-      if (!is.null(input$select_ae)) {
-        if (input$select_ae == FALSE | is.na(ae_dataname)) {
-          ADAE <- NULL # nolint
-        } else {
-          ADAE <- data[[ae_dataname]]() # nolint
-          teal::validate_has_variable(ADAE, adae_vars)
-        }
-      } else {
-        ADAE <- NULL # nolint
+      ADAE <- NULL
+      if (("ADAE" %in% input$select_ADaM) && !is.na(ae_dataname)) {
+        ADAE <- data[[ae_dataname]]()
+        teal::validate_has_variable(ADAE, adae_vars)
       }
-
-      if (!is.null(input$select_rs)) {
-        if (input$select_rs == FALSE | is.na(rs_dataname)) {
-          ADRS <- NULL # nolint
-        } else {
-          ADRS <- data[[rs_dataname]]() # nolint
-          teal::validate_has_variable(ADRS, adrs_vars)
-        }
-      } else {
-        ADRS <- NULL # nolint
+      ADRS <- NULL
+      if (("ADRS" %in% input$select_ADaM) && !is.na(rs_dataname)) {
+        ADRS <- data[[rs_dataname]]()
+        teal::validate_has_variable(ADRS, adrs_vars)
       }
-
-      if (!is.null(input$select_cm)) {
-        if (input$select_cm == FALSE | is.na(cm_dataname)) {
-          ADCMD <- NULL # nolint
-        } else {
-          ADCM <- data[[cm_dataname]]() # nolint
-          teal::validate_has_variable(ADCM, adcm_vars)
-        }
-      } else {
-        ADCM <- NULL # nolint
+      ADCM <- NULL
+      if (("ADCM" %in% input$select_ADaM) && !is.na(cm_dataname)) {
+        ADCM <- data[[cm_dataname]]()
+        teal::validate_has_variable(ADCM, adcm_vars)
       }
-
-      if (!is.null(input$select_lb)) {
-        if (input$select_lb == FALSE | is.na(lb_dataname)) {
-          ADLB <- NULL # nolint
-        } else {
-          ADLB <- data[[lb_dataname]]() # nolint
-          teal::validate_has_variable(ADLB, adlb_vars)
-        }
-      } else {
-        ADLB <- NULL # nolint
+      ADLB <- NULL
+      if (("ADLB" %in% input$select_ADaM) && !is.na(lb_dataname)) {
+        ADLB <- data[[lb_dataname]]()
+        teal::validate_has_variable(ADLB, adlb_vars)
       }
-
-      possible_plot <- c("ex", "ae", "rs", "cm", "lb")
-      datanames <- c(
-        ex_dataname,
-        ae_dataname,
-        rs_dataname,
-        cm_dataname,
-        lb_dataname
-      )
-      input_select <- purrr::map_lgl(datanames, is.na)
-
-      select_plot <- purrr::map2_lgl(
-        input_select, possible_plot,
-        ~ if (!.x && paste("select", .y, sep = "_") %in% names(input)) {
-          input[[paste("select", .y, sep = "_")]]
-        } else {
-          FALSE
-        }
-      )
-
-      # Check that at least 1 dataset is selected
-      validate(
-        need(any(select_plot), "Please select an ADaM dataset.")
-      )
-
-      names(select_plot) <- possible_plot
 
       empty_rs <- FALSE
       empty_ae <- FALSE
@@ -742,7 +637,7 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = quote(ae_line_col_name <- NULL))
       }
 
-      q1 <- if (select_plot["ae"]) {
+      q1 <- if (select_plot()["ADAE"]) {
         if (all(ADAE$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -827,7 +722,7 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = bquote(ae <- NULL))
       }
 
-      q1 <- if (select_plot["rs"]) {
+      q1 <- if (select_plot()["ADRS"]) {
         if (all(ADRS$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -869,7 +764,7 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = bquote(rs <- NULL))
       }
 
-      q1 <- if (select_plot["cm"]) {
+      q1 <- if (select_plot()["ADCM"]) {
         if (all(ADCM$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -919,7 +814,7 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = bquote(cm <- NULL))
       }
 
-      q1 <- if (select_plot["ex"]) {
+      q1 <- if (select_plot()["ADEX"]) {
         if (all(ADEX$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -974,7 +869,7 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = quote(ex <- NULL))
       }
 
-      q1 <- if (select_plot["lb"]) {
+      q1 <- if (select_plot()["ADLB"]) {
         if (all(ADLB$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
@@ -1028,16 +923,16 @@ srv_g_patient_profile <- function(id,
       empty_data_check <- c(empty_ex, empty_ae, empty_rs, empty_cm, empty_lb)
 
       validate(need(
-        any(!empty_data_check & select_plot),
+        any(!empty_data_check & select_plot()),
         "The subject does not have information in any selected domain."
       ))
 
       # Check the subject has information in all the selected domains
-      if (any(empty_data_check & select_plot)) {
+      if (any(empty_data_check & select_plot())) {
         showNotification(
           paste0(
             "This subject does not have information in the ",
-            paste(c(possible_plot[(empty_data_check & select_plot)]), collapse = ", "),
+            paste(c(names(select_plot())[empty_data_check & select_plot()]), collapse = ", "),
             " domain."
           ),
           duration = 8,
