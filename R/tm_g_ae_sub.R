@@ -305,7 +305,7 @@ srv_g_ae_sub <- function(id,
       ))
       iv$add_rule("groups", shinyvalidate::sv_in_set(
         names(ANL),
-        message_fmt = "Groups must be a variable in ANL"
+        message_fmt = sprintf("Groups must be a variable in %s", dataname)
       ))
       iv$add_rule("groups", shinyvalidate::sv_in_set(
         names(ADSL),
