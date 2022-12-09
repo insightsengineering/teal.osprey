@@ -426,17 +426,18 @@ srv_g_patient_profile <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     # only show the check box when domain data is available
     checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
     checkboxes <- checkboxes[!is.na(checkboxes)]
     output$select_ADaM_output <- renderUI({
       tagList(
         helpText("Select", tags$code("ADaM"), "Domains"),
-        checkboxGroupInput(inputId = session$ns("select_ADaM"),
-                           label = NULL,
-                           choices = checkboxes,
-                           selected = checkboxes)
+        checkboxGroupInput(
+          inputId = session$ns("select_ADaM"),
+          label = NULL,
+          choices = checkboxes,
+          selected = checkboxes
+        )
       )
     })
 
@@ -462,7 +463,8 @@ srv_g_patient_profile <- function(id,
     output_q <- reactive({
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("select_ADaM", shinyvalidate::sv_required(
-        message = "At least one ADaM data set is required"))
+        message = "At least one ADaM data set is required"
+      ))
       iv$add_rule("sl_start_date", shinyvalidate::sv_required(
         message = "Date variable is required"
       ))
