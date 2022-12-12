@@ -213,10 +213,28 @@ srv_g_events_term_id <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-    iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("arm_var", shinyvalidate::sv_required())
-    iv$add_rule("term", shinyvalidate::sv_required())
-    iv$enable()
+
+    iv <- reactive({
+      ANL <- data[[dataname]]() # nolint
+
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("term", shinyvalidate::sv_required(
+        message = "Term Variable is required"
+      ))
+      iv$add_rule("arm_var", shinyvalidate::sv_required(
+        message = "Arm Variable is required"
+      ))
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
+        "Arm Var must be a factor variable, contact developer"
+      })
+      rule_diff <- function(value, other) {
+        if (isTRUE(value == other)) "Control and Treatment must be different"
+      }
+      iv$add_rule("arm_trt", rule_diff, other = input$arm_ref)
+      iv$add_rule("arm_ref", rule_diff, other = input$arm_trt)
+      iv$enable()
+      iv
+    })
 
     decorate_output <- srv_g_decorate(
       id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width
@@ -241,7 +259,7 @@ srv_g_events_term_id <- function(id,
 
 
     observeEvent(input$sort,
-      handlerExpr = {
+      {
         sort <- if (is.null(input$sort)) " " else input$sort
         updateTextInput(
           session,
@@ -261,14 +279,12 @@ srv_g_events_term_id <- function(id,
     )
 
     observeEvent(input$arm_var,
-      ignoreNULL = TRUE,
-      handlerExpr = {
+      {
         arm_var <- input$arm_var
         ANL <- data[[dataname]]() # nolint
 
         choices <- levels(ANL[[arm_var]])
 
-        validate(need(length(choices) > 0, "Please include multiple treatment"))
         if (length(choices) == 1) {
           trt_index <- 1
         } else {
@@ -287,33 +303,18 @@ srv_g_events_term_id <- function(id,
           selected = choices[trt_index],
           choices = choices
         )
-      }
+      },
+      ignoreNULL = TRUE
     )
 
     output_q <- reactive({
       ANL <- data[[dataname]]() # nolint
 
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+      teal::validate_inputs(iv())
 
       validate(need(
-        is.factor(ANL[[input$arm_var]]),
-        "Selected arm variable needs to be a factor. Contact an app developer."
-      ))
-
-      iv_comp <- shinyvalidate::InputValidator$new()
-      iv_comp$add_rule("arm_trt", shinyvalidate::sv_not_equal(
-        input$arm_ref,
-        message_fmt = "Must not be equal to Control"
-      ))
-      iv_comp$add_rule("arm_ref", shinyvalidate::sv_not_equal(
-        input$arm_trt,
-        message_fmt = "Must not be equal to Treatment"
-      ))
-      iv_comp$enable()
-      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-
-      validate(need(
-        all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])),
+        input$arm_trt %in% unique(ANL[[req(input$arm_var)]]) &&
+          input$arm_ref %in% unique(ANL[[req(input$arm_var)]]),
         "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
       ))
 
@@ -333,7 +334,10 @@ srv_g_events_term_id <- function(id,
         )
       )
 
-      validate(need(nrow(q1[["ANL"]]) > 10, "ANL needs at least 10 data points"))
+      teal::validate_has_data(q1[["ANL"]],
+        min_nrow = 10,
+        msg = "Analysis data set must have at least 10 data points"
+      )
 
       q2 <- teal.code::eval_code(
         q1,

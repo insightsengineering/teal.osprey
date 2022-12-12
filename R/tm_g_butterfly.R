@@ -81,11 +81,11 @@
 #'       dataname = "ADAE",
 #'       right_var = choices_selected(
 #'         selected = "SEX",
-#'         choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")
+#'         choices = c("SEX", "ARM", "RACE")
 #'       ),
 #'       left_var = choices_selected(
 #'         selected = "RACE",
-#'         choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")
+#'         choices = c("SEX", "ARM", "RACE")
 #'       ),
 #'       category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
 #'       color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
@@ -269,11 +269,36 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-    iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("category_var", shinyvalidate::sv_required())
-    iv$add_rule("right_var", shinyvalidate::sv_required())
-    iv$add_rule("left_var", shinyvalidate::sv_required())
-    iv$enable()
+
+    iv <- reactive({
+      ADSL <- data[["ADSL"]]() # nolint
+      ANL <- data[[dataname]]() # nolint
+
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("category_var", shinyvalidate::sv_required(
+        message = "Category Variable is required"
+      ))
+      iv$add_rule("right_var", shinyvalidate::sv_required(
+        message = "Right Dichotomization Variable is required"
+      ))
+      iv$add_rule("left_var", shinyvalidate::sv_required(
+        message = "Left Dichotomization Variable is required"
+      ))
+      iv$add_rule("right_var", ~ if (!is.factor(ANL[[.]])) {
+        "Right Dichotomization Variable must be a factor variable, contact developer"
+      })
+      iv$add_rule("left_var", ~ if (!is.factor(ANL[[.]])) {
+        "Left Dichotomization Variable must be a factor variable, contact developer"
+      })
+      iv$add_rule("right_val", shinyvalidate::sv_required(
+        message = "At least one value of Right Dichotomization Variable must be selected"
+      ))
+      iv$add_rule("left_val", shinyvalidate::sv_required(
+        message = "At least one value of Left Dichotomization Variable must be selected"
+      ))
+      iv$enable()
+      iv
+    })
 
     options <- reactiveValues(r = NULL, l = NULL)
     vars <- reactiveValues(r = NULL, l = NULL)
@@ -360,6 +385,19 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       ADSL <- data[["ADSL"]]() # nolint
       ANL <- data[[dataname]]() # nolint
 
+      teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s Data is empty", "ADSL"))
+      teal::validate_has_data(ANL, min_nrow = 0, msg = sprintf("%s Data is empty", dataname))
+
+      teal::validate_inputs(iv())
+
+      validate(
+        need(
+          all(input$right_val %in% ADSL[[input$right_var]]) &&
+            all(input$left_val %in% ADSL[[input$left_var]]),
+          "No observations for selected dichotomization values (filtered out?)"
+        )
+      )
+
       right_var <- isolate(input$right_var)
       left_var <- isolate(input$left_var)
       right_val <- input$right_val
@@ -371,37 +409,6 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       facet_var <- input$facet_var
       sort_by_var <- input$sort_by_var
       filter_var <- input$filter_var
-
-      iv_len <- shinyvalidate::InputValidator$new()
-      iv_len$add_rule("right_val", shinyvalidate::sv_required("Please select at least one"))
-      iv_len$add_rule("left_val", shinyvalidate::sv_required("Please select at least one"))
-      iv_len$enable()
-      validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-
-      validate(
-        need(category_var, "Please select a category variable."),
-        need(nrow(ADSL) > 0, "ADSL Data has no rows"),
-        need(nrow(ANL) > 0, "ADAE Data has no rows"),
-        need(right_var, "'Right Dichotomization Variable' not selected"),
-        need(left_var, "'Left Dichotomization Variable' not selected")
-      )
-
-      validate(
-        need(length(right_val) > 0, "No values of 'Right Dichotomization Variable' are checked"),
-        need(length(left_val) > 0, "No values of 'Left Dichotomization Variable' are checked"),
-        need(
-          is.factor(ANL[[right_var]]),
-          "Selected 'Right Dichotomization Variable' variable needs to be a factor. Contact an app developer."
-        ),
-        need(
-          is.factor(ANL[[left_var]]),
-          "Selected 'Right Dichotomization Variable' variable needs to be a factor. Contact an app developer."
-        ),
-        need(
-          any(c(ADSL[[right_var]] %in% right_val, ADSL[[left_var]] %in% left_val)),
-          "ADSL Data contains no rows with either of the selected left or right dichotomization values (filtered out?)"
-        )
-      )
 
       # if variable is not in ADSL, then take from domain VADs
       varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)

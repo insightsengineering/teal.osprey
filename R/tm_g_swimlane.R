@@ -49,7 +49,7 @@
 #'   base::rbind(ADRS %>% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
 #'   arrange(USUBJID)
 #'
-#' x <- init(
+#' app <- init(
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- rADSL"),
 #'     cdisc_dataset("ADRS", ADRS,
@@ -97,7 +97,7 @@
 #'   )
 #' )
 #' if (interactive()) {
-#'   shinyApp(x$ui, x$server)
+#'   shinyApp(app$ui, app$server)
 #' }
 #'
 tm_g_swimlane <- function(label,
@@ -275,9 +275,19 @@ srv_g_swimlane <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-    iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("bar_var", shinyvalidate::sv_required())
-    iv$enable()
+
+    iv <- reactive({
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("bar_var", shinyvalidate::sv_required(
+        message = "Bar Length is required"
+      ))
+      # If reference lines are requested
+      iv$add_rule("vref_line", ~ if (anyNA(suppressWarnings(as_numeric_from_comma_sep_str(.)))) {
+        "Vertical Reference Line(s) are invalid"
+      })
+      iv$enable()
+      iv
+    })
 
     # if marker position is NULL, then hide options for marker shape and color
     output$marker_shape_sel <- renderUI({
@@ -309,26 +319,49 @@ srv_g_swimlane <- function(id,
 
     # create plot
     output_q <- reactive({
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
-      # DATA GETTERS
+      teal::validate_inputs(iv())
+
       validate(need("ADSL" %in% names(data), "'ADSL' not included in data"))
       validate(need(
         (length(data) == 1 && dataname == "ADSL") ||
-          (length(data) >= 2 && dataname != "ADSL"),
-        "Please either add just 'ADSL' as dataname when just ADSL is available
-      In case 2 datasets are available ADSL is not supposed to be the dataname."
+          (length(data) >= 2 && dataname != "ADSL"), paste(
+          "Please either add just 'ADSL' as dataname when just ADSL is available.",
+          "In case 2 datasets are available ADSL is not supposed to be the dataname."
+        )
       ))
 
       ADSL <- data[["ADSL"]]() # nolint
 
-      q1 <- teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data))
+      anl_vars <- unique(c(
+        "USUBJID", "STUDYID",
+        input$marker_pos_var, input$marker_shape_var, input$marker_color_var
+      )) # nolint
+      adsl_vars <- unique(c(
+        "USUBJID", "STUDYID",
+        input$bar_var, input$bar_color_var, input$sort_var, input$anno_txt_var
+      ))
+
+      if (dataname == "ADSL") {
+        teal::validate_has_data(ADSL, min_nrow = 3)
+        teal::validate_has_variable(ADSL, adsl_vars)
+      } else {
+        anl <- data[[dataname]]()
+        teal::validate_has_data(anl, min_nrow = 3)
+        teal::validate_has_variable(anl, anl_vars)
+
+        validate(need(
+          !any(c(marker_pos_var, marker_shape_var, marker_color_var) %in% adsl_vars),
+          "marker-related variables need to come from marker data"
+        ))
+      }
 
       # VARIABLE GETTERS
       # lookup bar variables
       bar_var <- input$bar_var
       bar_color_var <- input$bar_color_var
       sort_var <- input$sort_var
+      anno_txt_var <- input$anno_txt_var
 
       # Check if marker inputs can be used
       if (dataname == "ADSL") {
@@ -340,45 +373,9 @@ srv_g_swimlane <- function(id,
         marker_shape_var <- input$marker_shape_var
         marker_color_var <- input$marker_color_var
       }
+      vref_line <- suppressWarnings(as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)()))
 
-      anno_txt_var <- input$anno_txt_var
-
-      # If reference lines are requested
-      vref_line <- as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)())
-      validate(need(
-        all(!is.na(vref_line)),
-        "Please enter a comma separated set of numeric values for the reference line(s)"
-      ))
-
-      # validate input values
-      if (dataname == "ADSL") {
-        validate_has_data(ADSL, min_nrow = 3)
-        validate_has_variable(ADSL, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
-      } else {
-        anl <- data[[dataname]]()
-        validate_has_data(ADSL, min_nrow = 3)
-        validate_has_variable(ADSL, c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
-
-        validate_has_data(anl, min_nrow = 3)
-        validate_has_variable(
-          anl,
-          unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var))
-        )
-      }
-
-      # DATA / VARIABLE VALIDATIONS
-
-      adsl_vars <- unique(c("USUBJID", "STUDYID", bar_var, bar_color_var, sort_var, anno_txt_var))
-
-      if (dataname != "ADSL") {
-        anl_vars <- unique(c("USUBJID", "STUDYID", marker_pos_var, marker_shape_var, marker_color_var)) # nolint
-        validate(need(
-          !any(c(marker_pos_var, marker_shape_var, marker_color_var) %in% adsl_vars),
-          "marker-related variables need to come from marker data"
-        ))
-      }
-
-      # WRITE VARIABLES TO qenv
+      q1 <- teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data))
 
       q2 <- teal.code::eval_code(
         q1,
