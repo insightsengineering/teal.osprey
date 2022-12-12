@@ -49,7 +49,7 @@
 #'   base::rbind(ADRS %>% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
 #'   arrange(USUBJID)
 #'
-#' x <- init(
+#' app <- init(
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- rADSL"),
 #'     cdisc_dataset("ADRS", ADRS,
@@ -97,7 +97,7 @@
 #'   )
 #' )
 #' if (interactive()) {
-#'   shinyApp(x$ui, x$server)
+#'   shinyApp(app$ui, app$server)
 #' }
 #'
 tm_g_swimlane <- function(label,
@@ -275,6 +275,20 @@ srv_g_swimlane <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+
+    iv <- reactive({
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("bar_var", shinyvalidate::sv_required(
+        message = "Bar Length is required"
+      ))
+      # If reference lines are requested
+      iv$add_rule("vref_line", ~ if (anyNA(suppressWarnings(as_numeric_from_comma_sep_str(.)))) {
+        "Vertical Reference Line(s) are invalid"
+      })
+      iv$enable()
+      iv
+    })
+
     # if marker position is NULL, then hide options for marker shape and color
     output$marker_shape_sel <- renderUI({
       if (dataname == "ADSL" || is.null(marker_shape_var) || is.null(input$marker_pos_var)) {
@@ -305,17 +319,8 @@ srv_g_swimlane <- function(id,
 
     # create plot
     output_q <- reactive({
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("bar_var", shinyvalidate::sv_required(
-        message = "Bar Length is required"
-      ))
-      # If reference lines are requested
-      iv$add_rule("vref_line", ~ if (anyNA(suppressWarnings(as_numeric_from_comma_sep_str(.)))) {
-        "Vertical Reference Line(s) are invalid"
-      })
-      iv$enable()
 
-      teal::validate_inputs(iv)
+      teal::validate_inputs(iv())
 
       validate(need("ADSL" %in% names(data), "'ADSL' not included in data"))
       validate(need(

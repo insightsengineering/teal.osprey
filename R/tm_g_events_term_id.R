@@ -213,6 +213,29 @@ srv_g_events_term_id <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+
+    iv <- reactive({
+      ANL <- data[[dataname]]() # nolint
+
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("term", shinyvalidate::sv_required(
+        message = "Term Variable is required"
+      ))
+      iv$add_rule("arm_var", shinyvalidate::sv_required(
+        message = "Arm Variable is required"
+      ))
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
+        "Arm Var must be a factor variable, contact developer"
+      })
+      rule_diff <- function(value, other) {
+        if (isTRUE(value == other)) "Control and Treatment must be different"
+      }
+      iv$add_rule("arm_trt", rule_diff, other = input$arm_ref)
+      iv$add_rule("arm_ref", rule_diff, other = input$arm_trt)
+      iv$enable()
+      iv
+    })
+
     decorate_output <- srv_g_decorate(
       id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width
     )
@@ -287,27 +310,7 @@ srv_g_events_term_id <- function(id,
     output_q <- reactive({
       ANL <- data[[dataname]]() # nolint
 
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("term", shinyvalidate::sv_required(
-        message = "Term Variable is required"
-      ))
-      iv$add_rule("arm_var", shinyvalidate::sv_required(
-        message = "Arm Variable is required"
-      ))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
-        "Arm Var must be a factor variable, contact developer"
-      })
-      iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
-        input$arm_ref,
-        message_fmt = "Control and Treatment must be different"
-      ))
-      iv$add_rule("arm_ref", shinyvalidate::sv_not_equal(
-        input$arm_trt,
-        message_fmt = "Control and Treatment must be different"
-      ))
-      iv$enable()
-
-      teal::validate_inputs(iv)
+      teal::validate_inputs(iv())
 
       validate(need(
         input$arm_trt %in% unique(ANL[[req(input$arm_var)]]) &&

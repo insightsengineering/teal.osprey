@@ -95,7 +95,7 @@ ADRS <- ADRS \%>\%
   base::rbind(ADRS \%>\% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
   arrange(USUBJID)
 
-x <- init(
+app <- init(
   data = cdisc_data(
     cdisc_dataset("ADSL", ADSL, code = "ADSL <- rADSL"),
     cdisc_dataset("ADRS", ADRS,
@@ -143,7 +143,7 @@ x <- init(
   )
 )
 if (interactive()) {
-  shinyApp(x$ui, x$server)
+  shinyApp(app$ui, app$server)
 }
 
 }

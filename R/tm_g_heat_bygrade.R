@@ -315,6 +315,78 @@ srv_g_heatmap_bygrade <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+
+    iv <- reactive({
+      ADSL <- data[[sl_dataname]]() # nolint
+      ADEX <- data[[ex_dataname]]() # nolint
+      ADAE <- data[[ae_dataname]]() # nolint
+      if (isTRUE(input$plot_cm)) {
+        ADCM <- data[[cm_dataname]]() # nolint
+      }
+
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("id_var", shinyvalidate::sv_required(
+        message = "ID Variable is required"
+      ))
+      iv$add_rule("visit_var", shinyvalidate::sv_required(
+        message = "Visit Variable is required"
+      ))
+      iv$add_rule("ongo_var", shinyvalidate::sv_required(
+        message = "Study Ongoing Status Variable is required"
+      ))
+      iv$add_rule("ongo_var", shinyvalidate::sv_in_set(
+        set = names(ADEX),
+        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", ex_dataname)
+      ))
+      iv$add_rule("ongo_var", ~ if (!is.logical(ADEX[[req(.)]])) {
+        "Study Ongoing Status must be a logical variable"
+      })
+      iv$add_rule("anno_var", shinyvalidate::sv_required(
+        message = "Annotation Variables is required"
+      ))
+      iv$add_rule("anno_var", ~ if (length(.) > 2L) {
+        "No more than two Annotation Variables are allowed"
+      })
+      iv$add_rule("anno_var", shinyvalidate::sv_in_set(
+        set = names(ADSL),
+        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", sl_dataname)
+      ))
+      iv$add_rule("anno_var", ~ if (isTRUE(input$id_var %in% .)) {
+        sprintf("Deselect %s in Annotation Variables", input$id_var)
+      })
+      iv$add_rule("heat_var", shinyvalidate::sv_required(
+        message = "Heat Variable is required"
+      ))
+      iv$enable()
+      iv
+    })
+    iv_cm <- reactive({
+      ADSL <- data[[sl_dataname]]() # nolint
+      ADEX <- data[[ex_dataname]]() # nolint
+      ADAE <- data[[ae_dataname]]() # nolint
+      if (isTRUE(input$plot_cm)) {
+        ADCM <- data[[cm_dataname]]() # nolint
+      }
+
+      iv_cm <- shinyvalidate::InputValidator$new()
+      iv_cm$condition(~ isTRUE(input$plot_cm))
+      iv_cm$add_rule("conmed_var", shinyvalidate::sv_required(
+        message = "Conmed Variable is required"
+      ))
+      iv_cm$add_rule("conmed_var", shinyvalidate::sv_in_set(
+        set = names(ADCM),
+        message_fmt = sprintf("Conmed Variable must be a variable in %s", cm_dataname)
+      ))
+      iv_cm$add_rule("conmed_var", ~ if (!is.factor(ADCM[[.]])) {
+        "Study Ongoing Status must be a factor variable"
+      })
+      iv_cm$add_rule("conmed_level", ~ if (length(.) > 3L) {
+        "No more than three Conmed Levels are allowed"
+      })
+      iv_cm$enable()
+      iv_cm
+    })
+
     decorate_output <- srv_g_decorate(
       id = NULL,
       plt = plot_r,
@@ -359,63 +431,9 @@ srv_g_heatmap_bygrade <- function(id,
 
       teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s contains no data", sl_dataname))
 
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("id_var", shinyvalidate::sv_required(
-        message = "ID Variable is required"
-      ))
-      iv$add_rule("visit_var", shinyvalidate::sv_required(
-        message = "Visit Variable is required"
-      ))
-      iv$add_rule("ongo_var", shinyvalidate::sv_required(
-        message = "Study Ongoing Status Variable is required"
-      ))
-      iv$add_rule("ongo_var", shinyvalidate::sv_in_set(
-        set = names(ADEX),
-        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", ex_dataname)
-      ))
-      iv$add_rule("ongo_var", ~ if (!is.logical(ADEX[[req(.)]])) {
-        "Study Ongoing Status must be a logical variable"
-      })
-      iv$add_rule("anno_var", shinyvalidate::sv_required(
-        message = "Annotation Variables is required"
-      ))
-      iv$add_rule("anno_var", ~ if (length(.) > 2L) {
-        "No more than two Annotation Variables are allowed"
-      })
-      iv$add_rule("anno_var", shinyvalidate::sv_in_set(
-        set = names(ADSL),
-        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", sl_dataname)
-      ))
-      iv$add_rule("anno_var", ~ if (isTRUE(input$id_var %in% .)) {
-        sprintf("Deselect %s in Annotation Variables", input$id_var)
-      })
-      iv$add_rule("heat_var", shinyvalidate::sv_required(
-        message = "Heat Variable is required"
-      ))
-      iv$enable()
+      teal::validate_inputs(iv(), iv_cm())
 
-      iv_cm <- shinyvalidate::InputValidator$new()
-      iv_cm$condition(~ isTRUE(input$plot_cm))
-      iv_cm$add_rule("conmed_var", shinyvalidate::sv_required(
-        message = "Conmed Variable is required"
-      ))
-      iv_cm$add_rule("conmed_var", shinyvalidate::sv_in_set(
-        set = names(ADCM),
-        message_fmt = sprintf("Conmed Variable must be a variable in %s", cm_dataname)
-      ))
-      iv_cm$add_rule("conmed_var", ~ if (!is.factor(ADCM[[.]])) {
-        "Study Ongoing Status must be a factor variable"
-      })
-      iv_cm$add_rule("conmed_level", ~ if (length(.) > 3L) {
-        "No more than three Conmed Levels are allowed"
-      })
-      iv_cm$add_rule("conmed_level", shinyvalidate::sv_in_set(
-        set = unique(ADCM[[req(input$conmed_var)]]),
-        message_fmt = "Updating Conmed Levels"
-      ))
-      iv_cm$enable()
-
-      teal::validate_inputs(iv, iv_cm)
+      validate(need(input$conmed_level %in% unique(ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
 
       q1 <- if (isTRUE(input$plot_cm)) {
         conmed_var <- input$conmed_var

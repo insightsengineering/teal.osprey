@@ -54,7 +54,7 @@
 #'
 #' ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
 #'
-#' x <- teal::init(
+#' app <- teal::init(
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL,
 #'       code = "ADSL <- rADSL
@@ -87,7 +87,7 @@
 #'   )
 #' )
 #' if (interactive()) {
-#'   shinyApp(x$ui, x$server)
+#'   shinyApp(app$ui, app$server)
 #' }
 tm_g_waterfall <- function(label,
                            dataname_tr = "ADTR",
@@ -292,30 +292,10 @@ srv_g_waterfall <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-    output_q <- reactive({
+    iv <- reactive({
       adsl <- data[["ADSL"]]()
       adtr <- data[[dataname_tr]]()
       adrs <- data[[dataname_rs]]()
-
-      # validate data rows
-      teal::validate_has_data(adsl, min_nrow = 2)
-      teal::validate_has_data(adtr, min_nrow = 2)
-      teal::validate_has_data(adrs, min_nrow = 2)
-
-      adsl_vars <- unique(
-        c(
-          "USUBJID", "STUDYID",
-          input$bar_color_var, input$sort_var, input$add_label_var_sl, input$anno_txt_var_sl, input$facet_var
-        )
-      )
-      adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", input$bar_var))
-      adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
-      adrs_paramcd <- unique(c(input$add_label_paramcd_rs, input$anno_txt_paramcd_rs))
-
-      # validate data input
-      teal::validate_has_variable(adsl, adsl_vars)
-      teal::validate_has_variable(adrs, adrs_vars)
-      teal::validate_has_variable(adtr, adtr_vars)
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
@@ -360,9 +340,35 @@ srv_g_waterfall <- function(id,
         "Break High Bars must be a single positive number"
       })
       iv$enable()
+      iv
+    })
 
-      teal::validate_inputs(iv)
+    output_q <- reactive({
+      adsl <- data[["ADSL"]]()
+      adtr <- data[[dataname_tr]]()
+      adrs <- data[[dataname_rs]]()
 
+      # validate data rows
+      teal::validate_has_data(adsl, min_nrow = 2)
+      teal::validate_has_data(adtr, min_nrow = 2)
+      teal::validate_has_data(adrs, min_nrow = 2)
+
+      adsl_vars <- unique(
+        c(
+          "USUBJID", "STUDYID",
+          input$bar_color_var, input$sort_var, input$add_label_var_sl, input$anno_txt_var_sl, input$facet_var
+        )
+      )
+      adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", input$bar_var))
+      adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
+      adrs_paramcd <- unique(c(input$add_label_paramcd_rs, input$anno_txt_paramcd_rs))
+
+      # validate data input
+      teal::validate_has_variable(adsl, adsl_vars)
+      teal::validate_has_variable(adrs, adrs_vars)
+      teal::validate_has_variable(adtr, adtr_vars)
+
+      teal::validate_inputs(iv())
 
       # get variables
       bar_var <- input$bar_var

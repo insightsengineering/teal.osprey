@@ -235,6 +235,32 @@ srv_g_ae_oview <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+
+    iv <- reactive({
+      ANL <- data[[dataname]]() # nolint
+
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("arm_var", shinyvalidate::sv_required(
+        message = "Arm Variable is required"
+      ))
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
+        "Arm Var must be a factor variable"
+      })
+      iv$add_rule("arm_var", ~ if (length(levels(ANL[[.]])) < 2L) {
+        "Selected Arm Var must have at least two levels"
+      })
+      iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
+        message = "At least one Flag is required"
+      ))
+      rule_diff <- function(value, other) {
+        if (isTRUE(value == other)) "Control and Treatment must be different"
+      }
+      iv$add_rule("arm_trt", rule_diff, other = input$arm_ref)
+      iv$add_rule("arm_ref", rule_diff, other = input$arm_trt)
+      iv$enable()
+      iv
+    })
+
     decorate_output <- srv_g_decorate(
       id = NULL, plt = plot_r,
       plot_height = plot_height, plot_width = plot_width
@@ -287,30 +313,7 @@ srv_g_ae_oview <- function(id,
 
       teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("arm_var", shinyvalidate::sv_required(
-        message = "Arm Variable is required"
-      ))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
-        "Arm Var must be a factor variable"
-      })
-      iv$add_rule("arm_var", ~ if (length(levels(ANL[[.]])) < 2L) {
-        "Selected Arm Var must have at least two levels"
-      })
-      iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
-        message = "At least one Flag is required"
-      ))
-      iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
-        input$arm_ref,
-        message_fmt = "Control and Treatment must be different"
-      ))
-      iv$add_rule("arm_ref", shinyvalidate::sv_not_equal(
-        input$arm_trt,
-        message_fmt = "Control and Treatment must be different"
-      ))
-      iv$enable()
-
-      teal::validate_inputs(iv)
+      teal::validate_inputs(iv())
 
       validate(need(
         input$arm_trt %in% unique(ANL[[input$arm_var]]) ||

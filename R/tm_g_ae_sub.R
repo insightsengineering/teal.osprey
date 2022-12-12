@@ -184,6 +184,35 @@ srv_g_ae_sub <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
+
+    iv <- reactive({
+      ANL <- data[[dataname]]() # nolint
+      ADSL <- data[["ADSL"]]() # nolint
+
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("arm_var", shinyvalidate::sv_required(
+        message = "Arm Variable is required"
+      ))
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
+        "Arm Var must be a factor variable, contact developer"
+      })
+      rule_diff <- function(value, other) {
+        if (isTRUE(value == other)) "Control and Treatment must be different"
+      }
+      iv$add_rule("arm_trt", rule_diff, other = input$arm_ref)
+      iv$add_rule("arm_ref", rule_diff, other = input$arm_trt)
+      iv$add_rule("groups", shinyvalidate::sv_in_set(
+        names(ANL),
+        message_fmt = sprintf("Groups must be a variable in %s", dataname)
+      ))
+      iv$add_rule("groups", shinyvalidate::sv_in_set(
+        names(ADSL),
+        message_fmt = "Groups must be a variable in ADSL"
+      ))
+      iv$enable()
+      iv
+    })
+
     decorate_output <- srv_g_decorate(
       id = NULL,
       plt = plot_r,
@@ -288,32 +317,7 @@ srv_g_ae_sub <- function(id,
 
       teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("arm_var", shinyvalidate::sv_required(
-        message = "Arm Variable is required"
-      ))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[req(.)]])) {
-        "Arm Var must be a factor variable, contact developer"
-      })
-      iv$add_rule("arm_trt", shinyvalidate::sv_not_equal(
-        input$arm_ref,
-        message_fmt = "Control and Treatment must be different"
-      ))
-      iv$add_rule("arm_ref", shinyvalidate::sv_not_equal(
-        input$arm_trt,
-        message_fmt = "Control and Treatment must be different"
-      ))
-      iv$add_rule("groups", shinyvalidate::sv_in_set(
-        names(ANL),
-        message_fmt = sprintf("Groups must be a variable in %s", dataname)
-      ))
-      iv$add_rule("groups", shinyvalidate::sv_in_set(
-        names(ADSL),
-        message_fmt = "Groups must be a variable in ADSL"
-      ))
-      iv$enable()
-
-      teal::validate_inputs(iv)
+      teal::validate_inputs(iv())
 
       validate(need(
         input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
