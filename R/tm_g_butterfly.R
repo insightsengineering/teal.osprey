@@ -269,7 +269,6 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     iv <- reactive({
       ADSL <- data[["ADSL"]]() # nolint
       ANL <- data[[dataname]]() # nolint

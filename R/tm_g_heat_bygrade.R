@@ -315,7 +315,6 @@ srv_g_heatmap_bygrade <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     iv <- reactive({
       ADSL <- data[[sl_dataname]]() # nolint
       ADEX <- data[[ex_dataname]]() # nolint

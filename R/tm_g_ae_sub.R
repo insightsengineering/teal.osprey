@@ -184,7 +184,6 @@ srv_g_ae_sub <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     iv <- reactive({
       ANL <- data[[dataname]]() # nolint
       ADSL <- data[["ADSL"]]() # nolint

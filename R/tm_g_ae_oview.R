@@ -235,7 +235,6 @@ srv_g_ae_oview <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     iv <- reactive({
       ANL <- data[[dataname]]() # nolint
 

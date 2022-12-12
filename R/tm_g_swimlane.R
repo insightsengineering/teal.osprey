@@ -275,7 +275,6 @@ srv_g_swimlane <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     iv <- reactive({
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
@@ -319,7 +318,6 @@ srv_g_swimlane <- function(id,
 
     # create plot
     output_q <- reactive({
-
       teal::validate_inputs(iv())
 
       validate(need("ADSL" %in% names(data), "'ADSL' not included in data"))

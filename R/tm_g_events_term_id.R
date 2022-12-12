@@ -213,7 +213,6 @@ srv_g_events_term_id <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-
     iv <- reactive({
       ANL <- data[[dataname]]() # nolint
 
