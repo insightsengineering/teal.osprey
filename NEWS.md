@@ -4,6 +4,7 @@
 * Fixed crash in `tm_g_heat_bygrade` when not plotting `Conmed`. 
 * Added validation to `tm_g_spiderplot.R` that checks if there are duplicates in X and Y facet variables.
 * Improved input validation and used the `teal::validate_inputs` mechanism to send validation messages to the output panel.
+* Removed `purrr` from dependencies.
 
 ### Breaking changes
 
