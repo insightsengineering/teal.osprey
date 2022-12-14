@@ -319,8 +319,7 @@ srv_g_ae_sub <- function(id,
       teal::validate_inputs(iv())
 
       validate(need(
-        input$arm_trt %in% unique(ANL[[input$arm_var]]) ||
-          input$arm_ref %in% unique(ANL[[input$arm_var]]),
+        input$arm_trt %in% ANL[[input$arm_var]] && input$arm_ref %in% ANL[[input$arm_var]],
         "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
       ))
 
