@@ -585,7 +585,7 @@ srv_g_patient_profile <- function(id,
       }
       ADAE <- NULL # nolint
       if ((ae_dataname %in% input$select_ADaM) && !is.na(ae_dataname)) {
-        ADAE <- data[[ae_dataname]]()
+        ADAE <- data[[ae_dataname]]() # nolint
         teal::validate_has_variable(ADAE, adae_vars)
       }
       ADRS <- NULL # nolint
