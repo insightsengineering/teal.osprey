@@ -5,6 +5,7 @@
 * Added validation to `tm_g_spiderplot.R` that checks if there are duplicates in X and Y facet variables.
 * Improved input validation and used the `teal::validate_inputs` mechanism to send validation messages to the output panel.
 * Removed `purrr` from dependencies.
+* Removed redundant formal arguments from add added argument checks to `tm_g_patient_profile`.
 
 ### Breaking changes
 
