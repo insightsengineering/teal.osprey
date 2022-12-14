@@ -288,7 +288,7 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          condition = "input['select_ADaM'].includes('ADEX')",
+          condition = sprintf("input['select_ADaM'].includes('%s')", a$ex_dataname),
           ns = ns,
           selectInput(
             ns("ex_var"),
@@ -299,7 +299,7 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          condition = "input['select_ADaM'].includes('ADAE')",
+          condition = sprintf("input['select_ADaM'].includes('%s')", a$ae_dataname),
           ns = ns,
           teal.widgets::optionalSelectInput(
             ns("ae_var"),
@@ -317,7 +317,7 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          condition = "input['select_ADaM'].includes('ADRS')",
+          condition = sprintf("input['select_ADaM'].includes('%s')", a$rs_dataname),
           ns = ns,
           teal.widgets::optionalSelectInput(
             ns("rs_var"),
@@ -328,7 +328,7 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          condition = "input['select_ADaM'].includes('ADCM')",
+          condition = sprintf("input['select_ADaM'].includes('%s')", a$cm_dataname),
           ns = ns,
           teal.widgets::optionalSelectInput(
             ns("cm_var"),
@@ -339,7 +339,7 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          condition = "input['select_ADaM'].includes('ADLB')",
+          condition = sprintf("input['select_ADaM'].includes('%s')", a$lb_dataname),
           ns = ns,
           teal.widgets::optionalSelectInput(
             ns("lb_var"),
@@ -394,9 +394,17 @@ srv_g_patient_profile <- function(id,
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
   checkmate::assert_class(data, "tdata")
 
+  checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
+
+  if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
+  if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
+  if (!is.na(rs_dataname)) checkmate::assert_names(rs_dataname, subset.of = names(data))
+  if (!is.na(lb_dataname)) checkmate::assert_names(lb_dataname, subset.of = names(data))
+  if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
+
+
   moduleServer(id, function(input, output, session) {
     # only show the check box when domain data is available
-    checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
     output$select_ADaM_output <- renderUI({
       tagList(
         helpText("Select", tags$code("ADaM"), "Domains"),
@@ -829,7 +837,8 @@ srv_g_patient_profile <- function(id,
                     ) %>%
                     mutate(ASTDT_dur = as.numeric(
                       as.Date(substr(as.character(ASTDT), 1, 10)) -
-                        as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10))
+                        as.Date(substr(as.character(
+                          eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10))
                     )
                     + (as.Date(substr(as.character(ASTDT), 1, 10)) >=
                         as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))))
@@ -879,7 +888,8 @@ srv_g_patient_profile <- function(id,
               ADLB <- ADLB %>% # nolint
                 mutate(ADY = as.numeric(difftime(
                   .data$ADT,
-                  as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
+                  as.Date(substr(as.character(
+                    eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
                   units = "days"
                 ))
                 + (ADT >= as.Date(substr(
@@ -906,7 +916,8 @@ srv_g_patient_profile <- function(id,
       # Check the subject has information in at least one selected domain
       empty_data_check <- structure(
         c(empty_ex, empty_ae, empty_rs, empty_lb, empty_cm),
-        names = checkboxes
+        # names = checkboxes
+        names = names(checkboxes)
       )
 
       validate(need(
