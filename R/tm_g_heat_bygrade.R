@@ -395,17 +395,15 @@ srv_g_heatmap_bygrade <- function(id,
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
-    observeEvent(cm_dataname, {
-      if (!is.na(cm_dataname)) {
-        output$plot_cm_output <- renderUI({
-          checkboxInput(
-            session$ns("plot_cm"),
-            "Yes",
-            value = !is.na(cm_dataname)
-          )
-        })
-      }
-    })
+    if (!is.na(cm_dataname)) {
+      output$plot_cm_output <- renderUI({
+        checkboxInput(
+          session$ns("plot_cm"),
+          "Yes",
+          value = !is.na(cm_dataname)
+        )
+      })
+    }
 
     observeEvent(input$plot_cm, {
       ADCM <- data[[cm_dataname]]() # nolint
@@ -428,7 +426,7 @@ srv_g_heatmap_bygrade <- function(id,
         ADCM <- data[[cm_dataname]]() # nolint
       }
 
-      teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s contains no data", sl_dataname))
+      teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
 
       teal::validate_inputs(iv(), iv_cm())
 
