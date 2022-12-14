@@ -211,7 +211,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
   checkmate::assert_string(cm_dataname, na.ok = TRUE)
   checkmate::assert_string(lb_dataname, na.ok = TRUE)
   checkmate::assert_character(c(sl_dataname, ex_dataname, rs_dataname, cm_dataname, lb_dataname),
-                              any.missing = TRUE, all.missing = FALSE)
+    any.missing = TRUE, all.missing = FALSE
+  )
   checkmate::assert_class(sl_start_date, classes = "choices_selected")
   checkmate::assert_class(ex_var, classes = "choices_selected", null.ok = TRUE)
   checkmate::assert_class(ae_var, classes = "choices_selected", null.ok = TRUE)
@@ -838,7 +839,8 @@ srv_g_patient_profile <- function(id,
                     mutate(ASTDT_dur = as.numeric(
                       as.Date(substr(as.character(ASTDT), 1, 10)) -
                         as.Date(substr(as.character(
-                          eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10))
+                          eval(parse(text = .(sl_start_date), keep.source = FALSE))
+                        ), 1, 10))
                     )
                     + (as.Date(substr(as.character(ASTDT), 1, 10)) >=
                         as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))))
@@ -889,7 +891,8 @@ srv_g_patient_profile <- function(id,
                 mutate(ADY = as.numeric(difftime(
                   .data$ADT,
                   as.Date(substr(as.character(
-                    eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
+                    eval(parse(text = .(sl_start_date), keep.source = FALSE))
+                  ), 1, 10)),
                   units = "days"
                 ))
                 + (ADT >= as.Date(substr(
