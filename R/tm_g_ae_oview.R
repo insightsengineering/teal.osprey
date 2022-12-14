@@ -120,7 +120,10 @@ tm_g_ae_oview <- function(label,
     )
   )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
-  checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
+  checkmate::assert_numeric(plot_height[1],
+    lower = plot_height[2], upper = plot_height[3],
+    .var.name = "plot_height"
+  )
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
   checkmate::assert_numeric(
     plot_width[1],
@@ -232,14 +235,35 @@ srv_g_ae_oview <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-    iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("arm_var", shinyvalidate::sv_required())
-    iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
-      message = "Please select at least one flag"
-    ))
-    iv$enable()
+    iv <- reactive({
+      ANL <- data[[dataname]]() # nolint
 
-    decorate_output <- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width)
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("arm_var", shinyvalidate::sv_required(
+        message = "Arm Variable is required"
+      ))
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
+        "Arm Var must be a factor variable"
+      })
+      iv$add_rule("arm_var", ~ if (nlevels(ANL[[.]]) < 2L) {
+        "Selected Arm Var must have at least two levels"
+      })
+      iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
+        message = "At least one Flag is required"
+      ))
+      rule_diff <- function(value, other) {
+        if (isTRUE(value == other)) "Control and Treatment must be different"
+      }
+      iv$add_rule("arm_trt", rule_diff, other = input$arm_ref)
+      iv$add_rule("arm_ref", rule_diff, other = input$arm_trt)
+      iv$enable()
+      iv
+    })
+
+    decorate_output <- srv_g_decorate(
+      id = NULL, plt = plot_r,
+      plot_height = plot_height, plot_width = plot_width
+    )
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
@@ -285,34 +309,15 @@ srv_g_ae_oview <- function(id,
 
     output_q <- reactive({
       ANL <- data[[dataname]]() # nolint
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-      validate(need(
-        is.factor(ANL[[input$arm_var]]),
-        "Selected arm variable needs to be a factor."
-      ))
-      validate(need(input$flag_var_anl, "Please select at least one flag."))
-      iv_comp <- shinyvalidate::InputValidator$new()
-      iv_comp$add_rule("arm_trt", shinyvalidate::sv_not_equal(
-        input$arm_ref,
-        message_fmt = "Must not be equal to Control"
-      ))
-      iv_comp$add_rule("arm_ref", shinyvalidate::sv_not_equal(
-        input$arm_trt,
-        message_fmt = "Must not be equal to Treatment"
-      ))
-      iv_comp$enable()
 
-      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-      validate(need(nlevels(ANL[[input$arm_var]]) > 1, "Arm needs to have at least 2 levels"))
-      validate_has_data(ANL, min_nrow = 10)
-      if (all(c(input$arm_trt, input$arm_ref) %in% ANL[[input$arm_var]])) {
-        iv_an <- shinyvalidate::InputValidator$new()
-        iv_an$add_rule("arm_ref", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
-        iv_an$add_rule("arm_trt", shinyvalidate::sv_in_set(set = ANL[[input$arm_var]]))
-        iv_an$enable()
-        validate(need(iv_an$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-      }
-      validate(need(all(c(input$arm_trt, input$arm_ref) %in% unique(ANL[[input$arm_var]])), "Plot loading"))
+      teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
+
+      teal::validate_inputs(iv())
+
+      validate(need(
+        input$arm_trt %in% ANL[[input$arm_var]] && input$arm_ref %in% ANL[[input$arm_var]],
+        "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
+      ))
 
       q1 <- teal.code::eval_code(
         teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
