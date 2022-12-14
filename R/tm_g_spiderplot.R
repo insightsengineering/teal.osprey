@@ -273,8 +273,8 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
       teal::validate_inputs(iv())
 
-      teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s data has zero rows", "ADSL"))
-      teal::validate_has_data(ADTR, min_nrow = 0, msg = sprintf("%s data has zero rows", dataname))
+      teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s data has zero rows", "ADSL"))
+      teal::validate_has_data(ADTR, min_nrow = 1, msg = sprintf("%s data has zero rows", dataname))
 
       paramcd <- input$paramcd # nolint
       x_var <- input$x_var
