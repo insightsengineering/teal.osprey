@@ -432,7 +432,7 @@ srv_g_heatmap_bygrade <- function(id,
 
       teal::validate_inputs(iv(), iv_cm())
 
-      validate(need(input$conmed_level %in% unique(ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
+      validate(need(input$conmed_level %in% ADCM[[input$conmed_var]], "Updating Conmed Levels"))
 
       q1 <- if (isTRUE(input$plot_cm)) {
         conmed_var <- input$conmed_var
