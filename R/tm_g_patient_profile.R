@@ -11,57 +11,35 @@
 #' @param sl_dataname (\code{character}) subject level dataset name,
 #' needs to be available in the list passed to the \code{data}
 #' argument of \code{\link[teal]{init}}
-#' @param ex_dataname (\code{character}) exposures dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no exposure data is available
-#' @param ae_dataname (\code{character}) adverse events dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no adverse events data is available
-#' @param rs_dataname (\code{character}) response dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no response data is available
-#' @param cm_dataname (\code{character}) concomitant medications dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no concomitant medications data is available
-#' @param lb_dataname (\code{character}) labs dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no labs data is available
-#' @param show_ex_plot boolean value of whether exposures plot is shown,
-#' default is \code{TRUE}
-#' @param show_ae_plot boolean value of whether adverse events plot is shown,
-#' default is \code{TRUE}
-#' @param show_rs_plot boolean value of whether response plot is shown,
-#' default is \code{TRUE}
-#' @param show_cm_plot boolean value of whether concomitant medications
-#' plot is shown, default is \code{TRUE}
-#' @param show_lb_plot boolean value of whether labs plot is shown,
-#' default is \code{TRUE}
-#' @param sl_start_date (\code{choices_selected}) study start date variable, usually set to treatment
-#' start date or randomization date
+#' @param ex_dataname,ae_dataname,rs_dataname,cm_dataname,lb_dataname
+#'        (\code{character(1)}) names of exposure, adverse events, response,
+#'        concomitant medications, and labs datasets, respectively;
+#'        must be available in the list passed to the \code{data}
+#'        argument of \code{\link[teal]{init}}\cr
+#'        set to NA (default) to omit from analysis
+#' @param sl_start_date (\code{choices_selected}) study start date variable, usually set to
+#'                      treatment start date or randomization date
 #' @param ex_var (\code{choices_selected}) exposure variable to plot as each line \cr
-#' leave unspecified or set to \code{NULL} if exposure data is not available
+#'               leave unspecified or set to \code{NULL} if exposure data is not available
 #' @param ae_var (\code{choices_selected}) adverse event variable to plot as each line \cr
-#' leave unspecified or set to \code{NULL} if adverse events data is not available
+#'               leave unspecified or set to \code{NULL} if adverse events data is not available
 #' @param ae_line_col_var (\code{choices_selected}) variable for coloring AE lines \cr
-#' leave unspecified or set to \code{NULL} if adverse events data is not available
-#' @param ae_line_col_opt aesthetic values to map color values (named vector to map color values to each name).
-#'      If not \code{NULL}, please make sure this contains all possible values for \code{ae_line_col_var} values. \cr
-#' leave unspecified or set to \code{NULL} if adverse events data is not available
+#'                        leave unspecified or set to \code{NULL} if adverse events data is not available
+#' @param ae_line_col_opt aesthetic values to map color values
+#'                        (named vector to map color values to each name).
+#'                        If not \code{NULL}, please make sure this contains all possible
+#'                        values for \code{ae_line_col_var} values. \cr
+#'                        leave unspecified or set to \code{NULL} if adverse events data is not available
 #' @param rs_var (\code{choices_selected}) response variable to plot as each line \cr
-#' leave unspecified or set to \code{NULL} if response data is not available
+#'               leave unspecified or set to \code{NULL} if response data is not available
 #' @param cm_var (\code{choices_selected}) concomitant medication variable
-#' to plot as each line \cr
-#' leave unspecified or set to \code{NULL} if concomitant medications data is not available
+#'               to plot as each line \cr
+#'               leave unspecified or set to \code{NULL} if concomitant medications data is not available
 #' @param lb_var (\code{choices_selected}) lab variable to plot as each line \cr
-#' leave unspecified or set to \code{NULL} if labs data is not available
+#'               leave unspecified or set to \code{NULL} if labs data is not available
 #' @param x_limit a single \code{character} string with two numbers
-#' separated by a comma indicating the x-axis limit,
-#' default is \code{"-28, 365"}
+#'                separated by a comma indicating the x-axis limit,
+#'                default is \code{"-28, 365"}
 #'
 #' @author Xuefeng Hou (houx14) \email{houx14@gene.com}
 #' @author Tina Cho (chot) \email{tina.cho@roche.com}
@@ -165,11 +143,6 @@
 #'       rs_dataname = "ADRS",
 #'       cm_dataname = "ADCM",
 #'       lb_dataname = "ADLB",
-#'       show_ex_plot = TRUE,
-#'       show_ae_plot = TRUE,
-#'       show_rs_plot = TRUE,
-#'       show_cm_plot = FALSE,
-#'       show_lb_plot = TRUE,
 #'       sl_start_date = choices_selected(
 #'         selected = "TRTSDTM",
 #'         choices = c("TRTSDTM", "RANDDT")
@@ -211,16 +184,11 @@
 tm_g_patient_profile <- function(label = "Patient Profile Plot",
                                  patient_id,
                                  sl_dataname,
-                                 ex_dataname,
-                                 ae_dataname,
-                                 rs_dataname,
-                                 cm_dataname,
-                                 lb_dataname,
-                                 show_ex_plot = TRUE,
-                                 show_ae_plot = TRUE,
-                                 show_rs_plot = TRUE,
-                                 show_cm_plot = TRUE,
-                                 show_lb_plot = TRUE,
+                                 ex_dataname = NA,
+                                 ae_dataname = NA,
+                                 rs_dataname = NA,
+                                 cm_dataname = NA,
+                                 lb_dataname = NA,
                                  sl_start_date,
                                  ex_var = NULL,
                                  ae_var = NULL,
@@ -242,6 +210,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
   checkmate::assert_string(rs_dataname, na.ok = TRUE)
   checkmate::assert_string(cm_dataname, na.ok = TRUE)
   checkmate::assert_string(lb_dataname, na.ok = TRUE)
+  checkmate::assert_character(c(sl_dataname, ex_dataname, rs_dataname, cm_dataname, lb_dataname),
+                              any.missing = TRUE, all.missing = FALSE)
   checkmate::assert_class(sl_start_date, classes = "choices_selected")
   checkmate::assert_class(ex_var, classes = "choices_selected", null.ok = TRUE)
   checkmate::assert_class(ae_var, classes = "choices_selected", null.ok = TRUE)
@@ -285,7 +255,6 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
 ui_g_patient_profile <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
-
 
   shiny::tagList(
     include_css_files("custom"),
@@ -444,13 +413,8 @@ srv_g_patient_profile <- function(id,
       vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
     })
 
-    observeEvent(
-      {
-        select_plot()
-        input$lb_var
-      },
-      {
-        req(select_plot()[lb_dataname])
+    if (!is.na(lb_dataname)) {
+      observeEvent(input$lb_var, {
         req(input$lb_var)
         ADLB <- data[[lb_dataname]]() # nolint
         choices <- unique(ADLB[[input$lb_var]])
@@ -462,8 +426,8 @@ srv_g_patient_profile <- function(id,
           selected = choices_selected,
           choices = choices
         )
-      }
-    )
+      })
+    }
 
     iv <- reactive({
       iv <- shinyvalidate::InputValidator$new()
@@ -579,27 +543,27 @@ srv_g_patient_profile <- function(id,
       ADSL <- data[[sl_dataname]]() # nolint
 
       ADEX <- NULL # nolint
-      if ((ex_dataname %in% input$select_ADaM) && !is.na(ex_dataname)) {
+      if (isTRUE(select_plot()[ex_dataname])) {
         ADEX <- data[[ex_dataname]]() # nolint
         teal::validate_has_variable(ADEX, adex_vars)
       }
       ADAE <- NULL # nolint
-      if ((ae_dataname %in% input$select_ADaM) && !is.na(ae_dataname)) {
+      if (isTRUE(select_plot()[ae_dataname])) {
         ADAE <- data[[ae_dataname]]() # nolint
         teal::validate_has_variable(ADAE, adae_vars)
       }
       ADRS <- NULL # nolint
-      if ((rs_dataname %in% input$select_ADaM) && !is.na(rs_dataname)) {
+      if (isTRUE(select_plot()[rs_dataname])) {
         ADRS <- data[[rs_dataname]]() # nolint
         teal::validate_has_variable(ADRS, adrs_vars)
       }
       ADCM <- NULL # nolint
-      if ((cm_dataname %in% input$select_ADaM) && !is.na(cm_dataname)) {
+      if (isTRUE(select_plot()[cm_dataname])) {
         ADCM <- data[[cm_dataname]]() # nolint
         teal::validate_has_variable(ADCM, adcm_vars)
       }
       ADLB <- NULL # nolint
-      if ((lb_dataname %in% input$select_ADaM) && !is.na(lb_dataname)) {
+      if (isTRUE(select_plot()[lb_dataname])) {
         ADLB <- data[[lb_dataname]]() # nolint
         teal::validate_has_variable(ADLB, adlb_vars)
       }
