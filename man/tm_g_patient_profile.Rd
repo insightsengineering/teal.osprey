@@ -8,16 +8,11 @@ tm_g_patient_profile(
   label = "Patient Profile Plot",
   patient_id,
   sl_dataname,
-  ex_dataname,
-  ae_dataname,
-  rs_dataname,
-  cm_dataname,
-  lb_dataname,
-  show_ex_plot = TRUE,
-  show_ae_plot = TRUE,
-  show_rs_plot = TRUE,
-  show_cm_plot = TRUE,
-  show_lb_plot = TRUE,
+  ex_dataname = NA,
+  ae_dataname = NA,
+  rs_dataname = NA,
+  cm_dataname = NA,
+  lb_dataname = NA,
   sl_start_date,
   ex_var = NULL,
   ae_var = NULL,
@@ -43,48 +38,14 @@ menu item label of the module in the teal app.}
 needs to be available in the list passed to the \code{data}
 argument of \code{\link[teal]{init}}}
 
-\item{ex_dataname}{(\code{character}) exposures dataset name,
-needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}} \cr
-specify to \code{NA} if no exposure data is available}
+\item{ex_dataname, ae_dataname, rs_dataname, cm_dataname, lb_dataname}{(\code{character(1)}) names of exposure, adverse events, response,
+concomitant medications, and labs datasets, respectively;
+must be available in the list passed to the \code{data}
+argument of \code{\link[teal]{init}}\cr
+set to NA to omit from analysis}
 
-\item{ae_dataname}{(\code{character}) adverse events dataset name,
-needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}} \cr
-specify to \code{NA} if no adverse events data is available}
-
-\item{rs_dataname}{(\code{character}) response dataset name,
-needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}} \cr
-specify to \code{NA} if no response data is available}
-
-\item{cm_dataname}{(\code{character}) concomitant medications dataset name,
-needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}} \cr
-specify to \code{NA} if no concomitant medications data is available}
-
-\item{lb_dataname}{(\code{character}) labs dataset name,
-needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}} \cr
-specify to \code{NA} if no labs data is available}
-
-\item{show_ex_plot}{boolean value of whether exposures plot is shown,
-default is \code{TRUE}}
-
-\item{show_ae_plot}{boolean value of whether adverse events plot is shown,
-default is \code{TRUE}}
-
-\item{show_rs_plot}{boolean value of whether response plot is shown,
-default is \code{TRUE}}
-
-\item{show_cm_plot}{boolean value of whether concomitant medications
-plot is shown, default is \code{TRUE}}
-
-\item{show_lb_plot}{boolean value of whether labs plot is shown,
-default is \code{TRUE}}
-
-\item{sl_start_date}{(\code{choices_selected}) study start date variable, usually set to treatment
-start date or randomization date}
+\item{sl_start_date}{(\code{choices_selected}) study start date variable, usually set to
+treatment start date or randomization date}
 
 \item{ex_var}{(\code{choices_selected}) exposure variable to plot as each line \cr
 leave unspecified or set to \code{NULL} if exposure data is not available}
@@ -95,8 +56,10 @@ leave unspecified or set to \code{NULL} if adverse events data is not available}
 \item{ae_line_col_var}{(\code{choices_selected}) variable for coloring AE lines \cr
 leave unspecified or set to \code{NULL} if adverse events data is not available}
 
-\item{ae_line_col_opt}{aesthetic values to map color values (named vector to map color values to each name).
-If not \code{NULL}, please make sure this contains all possible values for \code{ae_line_col_var} values. \cr
+\item{ae_line_col_opt}{aesthetic values to map color values
+(named vector to map color values to each name).
+If not \code{NULL}, please make sure this contains all possible
+values for \code{ae_line_col_var} values. \cr
 leave unspecified or set to \code{NULL} if adverse events data is not available}
 
 \item{rs_var}{(\code{choices_selected}) response variable to plot as each line \cr
@@ -180,7 +143,7 @@ ADLB <- latest_data$adlb \%>\%
     LBSTRESN = as.numeric(LBSTRESC)
   )
 
-x <- init(
+app <- init(
   data = cdisc_data(
     cdisc_dataset("ADSL", ADSL,
       code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"
@@ -226,11 +189,6 @@ x <- init(
       rs_dataname = "ADRS",
       cm_dataname = "ADCM",
       lb_dataname = "ADLB",
-      show_ex_plot = TRUE,
-      show_ae_plot = TRUE,
-      show_rs_plot = TRUE,
-      show_cm_plot = FALSE,
-      show_lb_plot = TRUE,
       sl_start_date = choices_selected(
         selected = "TRTSDTM",
         choices = c("TRTSDTM", "RANDDT")

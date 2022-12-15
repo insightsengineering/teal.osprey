@@ -107,7 +107,7 @@ ADTR <- rADTR
 
 ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
 
-x <- teal::init(
+app <- teal::init(
   data = cdisc_data(
     cdisc_dataset("ADSL", ADSL,
       code = "ADSL <- rADSL
@@ -140,7 +140,7 @@ x <- teal::init(
   )
 )
 if (interactive()) {
-  shinyApp(x$ui, x$server)
+  shinyApp(app$ui, app$server)
 }
 }
 \author{

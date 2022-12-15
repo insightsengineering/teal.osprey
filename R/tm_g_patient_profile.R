@@ -11,57 +11,35 @@
 #' @param sl_dataname (\code{character}) subject level dataset name,
 #' needs to be available in the list passed to the \code{data}
 #' argument of \code{\link[teal]{init}}
-#' @param ex_dataname (\code{character}) exposures dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no exposure data is available
-#' @param ae_dataname (\code{character}) adverse events dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no adverse events data is available
-#' @param rs_dataname (\code{character}) response dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no response data is available
-#' @param cm_dataname (\code{character}) concomitant medications dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no concomitant medications data is available
-#' @param lb_dataname (\code{character}) labs dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no labs data is available
-#' @param show_ex_plot boolean value of whether exposures plot is shown,
-#' default is \code{TRUE}
-#' @param show_ae_plot boolean value of whether adverse events plot is shown,
-#' default is \code{TRUE}
-#' @param show_rs_plot boolean value of whether response plot is shown,
-#' default is \code{TRUE}
-#' @param show_cm_plot boolean value of whether concomitant medications
-#' plot is shown, default is \code{TRUE}
-#' @param show_lb_plot boolean value of whether labs plot is shown,
-#' default is \code{TRUE}
-#' @param sl_start_date (\code{choices_selected}) study start date variable, usually set to treatment
-#' start date or randomization date
+#' @param ex_dataname,ae_dataname,rs_dataname,cm_dataname,lb_dataname
+#'        (\code{character(1)}) names of exposure, adverse events, response,
+#'        concomitant medications, and labs datasets, respectively;
+#'        must be available in the list passed to the \code{data}
+#'        argument of \code{\link[teal]{init}}\cr
+#'        set to NA (default) to omit from analysis
+#' @param sl_start_date (\code{choices_selected}) study start date variable, usually set to
+#'                      treatment start date or randomization date
 #' @param ex_var (\code{choices_selected}) exposure variable to plot as each line \cr
-#' leave unspecified or set to \code{NULL} if exposure data is not available
+#'               leave unspecified or set to \code{NULL} if exposure data is not available
 #' @param ae_var (\code{choices_selected}) adverse event variable to plot as each line \cr
-#' leave unspecified or set to \code{NULL} if adverse events data is not available
+#'               leave unspecified or set to \code{NULL} if adverse events data is not available
 #' @param ae_line_col_var (\code{choices_selected}) variable for coloring AE lines \cr
-#' leave unspecified or set to \code{NULL} if adverse events data is not available
-#' @param ae_line_col_opt aesthetic values to map color values (named vector to map color values to each name).
-#'      If not \code{NULL}, please make sure this contains all possible values for \code{ae_line_col_var} values. \cr
-#' leave unspecified or set to \code{NULL} if adverse events data is not available
+#'                        leave unspecified or set to \code{NULL} if adverse events data is not available
+#' @param ae_line_col_opt aesthetic values to map color values
+#'                        (named vector to map color values to each name).
+#'                        If not \code{NULL}, please make sure this contains all possible
+#'                        values for \code{ae_line_col_var} values. \cr
+#'                        leave unspecified or set to \code{NULL} if adverse events data is not available
 #' @param rs_var (\code{choices_selected}) response variable to plot as each line \cr
-#' leave unspecified or set to \code{NULL} if response data is not available
+#'               leave unspecified or set to \code{NULL} if response data is not available
 #' @param cm_var (\code{choices_selected}) concomitant medication variable
-#' to plot as each line \cr
-#' leave unspecified or set to \code{NULL} if concomitant medications data is not available
+#'               to plot as each line \cr
+#'               leave unspecified or set to \code{NULL} if concomitant medications data is not available
 #' @param lb_var (\code{choices_selected}) lab variable to plot as each line \cr
-#' leave unspecified or set to \code{NULL} if labs data is not available
+#'               leave unspecified or set to \code{NULL} if labs data is not available
 #' @param x_limit a single \code{character} string with two numbers
-#' separated by a comma indicating the x-axis limit,
-#' default is \code{"-28, 365"}
+#'                separated by a comma indicating the x-axis limit,
+#'                default is \code{"-28, 365"}
 #'
 #' @author Xuefeng Hou (houx14) \email{houx14@gene.com}
 #' @author Tina Cho (chot) \email{tina.cho@roche.com}
@@ -119,7 +97,7 @@
 #'     LBSTRESN = as.numeric(LBSTRESC)
 #'   )
 #'
-#' x <- init(
+#' app <- init(
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL,
 #'       code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"
@@ -165,11 +143,6 @@
 #'       rs_dataname = "ADRS",
 #'       cm_dataname = "ADCM",
 #'       lb_dataname = "ADLB",
-#'       show_ex_plot = TRUE,
-#'       show_ae_plot = TRUE,
-#'       show_rs_plot = TRUE,
-#'       show_cm_plot = FALSE,
-#'       show_lb_plot = TRUE,
 #'       sl_start_date = choices_selected(
 #'         selected = "TRTSDTM",
 #'         choices = c("TRTSDTM", "RANDDT")
@@ -211,16 +184,11 @@
 tm_g_patient_profile <- function(label = "Patient Profile Plot",
                                  patient_id,
                                  sl_dataname,
-                                 ex_dataname,
-                                 ae_dataname,
-                                 rs_dataname,
-                                 cm_dataname,
-                                 lb_dataname,
-                                 show_ex_plot = TRUE,
-                                 show_ae_plot = TRUE,
-                                 show_rs_plot = TRUE,
-                                 show_cm_plot = TRUE,
-                                 show_lb_plot = TRUE,
+                                 ex_dataname = NA,
+                                 ae_dataname = NA,
+                                 rs_dataname = NA,
+                                 cm_dataname = NA,
+                                 lb_dataname = NA,
                                  sl_start_date,
                                  ex_var = NULL,
                                  ae_var = NULL,
@@ -242,6 +210,9 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
   checkmate::assert_string(rs_dataname, na.ok = TRUE)
   checkmate::assert_string(cm_dataname, na.ok = TRUE)
   checkmate::assert_string(lb_dataname, na.ok = TRUE)
+  checkmate::assert_character(c(sl_dataname, ex_dataname, rs_dataname, cm_dataname, lb_dataname),
+    any.missing = TRUE, all.missing = FALSE
+  )
   checkmate::assert_class(sl_start_date, classes = "choices_selected")
   checkmate::assert_class(ex_var, classes = "choices_selected", null.ok = TRUE)
   checkmate::assert_class(ae_var, classes = "choices_selected", null.ok = TRUE)
@@ -285,7 +256,7 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
 ui_g_patient_profile <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
-
+  checkboxes <- c(a$ex_dataname, a$ae_dataname, a$rs_dataname, a$lb_dataname, a$cm_dataname)
 
   shiny::tagList(
     include_css_files("custom"),
@@ -304,14 +275,16 @@ ui_g_patient_profile <- function(id, ...) {
           choices = a$patient_id$choices,
           selected = a$patient_id$selected
         ),
-        helpText("Select", tags$code("ADaM"), "Domains"),
         div(
-          class = "pretty-left-border",
-          uiOutput(ns("select_ae_output")),
-          uiOutput(ns("select_ex_output")),
-          uiOutput(ns("select_rs_output")),
-          uiOutput(ns("select_cm_output")),
-          uiOutput(ns("select_lb_output"))
+          tagList(
+            helpText("Select", tags$code("ADaM"), "Domains"),
+            checkboxGroupInput(
+              inputId = ns("select_ADaM"),
+              label = NULL,
+              choices = checkboxes[!is.na(checkboxes)],
+              selected = checkboxes[!is.na(checkboxes)]
+            )
+          )
         ),
         teal.widgets::optionalSelectInput(
           ns("sl_start_date"),
@@ -324,7 +297,8 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          paste0("input['", ns("select_ex"), "']"),
+          condition = sprintf("input['select_ADaM'].includes('%s')", a$ex_dataname),
+          ns = ns,
           selectInput(
             ns("ex_var"),
             "Exposure variable",
@@ -334,7 +308,8 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          paste0("input['", ns("select_ae"), "']"),
+          condition = sprintf("input['select_ADaM'].includes('%s')", a$ae_dataname),
+          ns = ns,
           teal.widgets::optionalSelectInput(
             ns("ae_var"),
             "Adverse Event variable",
@@ -351,7 +326,8 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          paste0("input['", ns("select_rs"), "']"),
+          condition = sprintf("input['select_ADaM'].includes('%s')", a$rs_dataname),
+          ns = ns,
           teal.widgets::optionalSelectInput(
             ns("rs_var"),
             "Tumor response variable",
@@ -361,7 +337,8 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          paste0("input['", ns("select_cm"), "']"),
+          condition = sprintf("input['select_ADaM'].includes('%s')", a$cm_dataname),
+          ns = ns,
           teal.widgets::optionalSelectInput(
             ns("cm_var"),
             "Concomitant medicine variable",
@@ -371,7 +348,8 @@ ui_g_patient_profile <- function(id, ...) {
           )
         ),
         conditionalPanel(
-          paste0("input['", ns("select_lb"), "']"),
+          condition = sprintf("input['select_ADaM'].includes('%s')", a$lb_dataname),
+          ns = ns,
           teal.widgets::optionalSelectInput(
             ns("lb_var"),
             "Lab variable",
@@ -425,90 +403,103 @@ srv_g_patient_profile <- function(id,
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
   checkmate::assert_class(data, "tdata")
 
+  checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
+
+  if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
+  if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
+  if (!is.na(rs_dataname)) checkmate::assert_names(rs_dataname, subset.of = names(data))
+  if (!is.na(lb_dataname)) checkmate::assert_names(lb_dataname, subset.of = names(data))
+  if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
+
+
   moduleServer(id, function(input, output, session) {
-    iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("sl_start_date", shinyvalidate::sv_required())
-    iv$add_rule("lb_var_show", shinyvalidate::sv_required())
-    iv$add_rule("ae_var", shinyvalidate::sv_required())
-    iv$enable()
-
-    # only show the check box when domain data is available
-    observeEvent(ae_dataname, {
-      if (!is.na(ae_dataname)) {
-        output$select_ae_output <- renderUI({
-          checkboxInput(
-            session$ns("select_ae"),
-            "ADAE",
-            value = !is.na(ae_dataname)
-          )
-        })
-      }
+    select_plot <- reactive({
+      vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
     })
 
-    observeEvent(ex_dataname, {
-      if (!is.na(ex_dataname)) {
-        output$select_ex_output <- renderUI({
-          checkboxInput(
-            session$ns("select_ex"),
-            "ADEX",
-            value = !is.na(ex_dataname)
-          )
+    if (!is.na(lb_dataname)) {
+      observeEvent(input$lb_var, {
+        req(input$lb_var)
+        ADLB <- data[[lb_dataname]]() # nolint
+        choices <- unique(ADLB[[input$lb_var]])
+        choices_selected <- if (length(choices) > 5) choices[1:5] else choices
+
+        updateSelectInput(
+          session,
+          "lb_var_show",
+          selected = choices_selected,
+          choices = choices
+        )
+      })
+    }
+
+    iv <- reactive({
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("select_ADaM", shinyvalidate::sv_required(
+        message = "At least one ADaM data set is required"
+      ))
+      iv$add_rule("sl_start_date", shinyvalidate::sv_required(
+        message = "Date variable is required"
+      ))
+      if (isTRUE(select_plot()[ex_dataname])) {
+        iv$add_rule("ex_var", shinyvalidate::sv_required(
+          message = "Exposure variable is required"
+        ))
+      }
+      if (isTRUE(select_plot()[ae_dataname])) {
+        iv$add_rule("ae_var", shinyvalidate::sv_required(
+          message = "Adverse Event variable is required"
+        ))
+        iv$add_rule("ae_line_var", shinyvalidate::sv_optional())
+        iv$add_rule("ae_line_var", ~ if (length(levels(ADAE[[.]])) > length(ae_line_col_opt)) {
+          "Not enough colors provided Adverse Event line color, unselect"
         })
       }
-    })
-
-    observeEvent(rs_dataname, {
-      if (!is.na(rs_dataname)) {
-        output$select_rs_output <- renderUI({
-          checkboxInput(
-            session$ns("select_rs"),
-            "ADRS",
-            value = !is.na(rs_dataname)
-          )
-        })
+      if (isTRUE(select_plot()[rs_dataname])) {
+        iv$add_rule("rs_var", shinyvalidate::sv_required(
+          message = "Tumor response variable is required"
+        ))
       }
-    })
-
-    observeEvent(cm_dataname, {
-      if (!is.na(cm_dataname)) {
-        output$select_cm_output <- renderUI({
-          checkboxInput(
-            session$ns("select_cm"),
-            "ADCM",
-            value = !is.na(cm_dataname)
-          )
-        })
+      if (isTRUE(select_plot()[cm_dataname])) {
+        iv$add_rule("cm_var", shinyvalidate::sv_required(
+          message = "Concomitant medicine variable is required"
+        ))
       }
-    })
-
-    observeEvent(lb_dataname, {
-      if (!is.na(lb_dataname)) {
-        output$select_lb_output <- renderUI({
-          checkboxInput(
-            session$ns("select_lb"),
-            "ADLB",
-            value = !is.na(lb_dataname)
-          )
-        })
+      if (isTRUE(select_plot()[lb_dataname])) {
+        iv$add_rule("lb_var", shinyvalidate::sv_required(
+          message = "Lab variable is required"
+        ))
+        iv$add_rule("lb_var_show", shinyvalidate::sv_required(
+          message = "At least one Lab value is required"
+        ))
+        rule_diff <- function(value, other) {
+          if (isTRUE(any(value == other))) {
+            "Lab variable and Lab value must be different"
+          }
+        }
+        iv$add_rule("lb_var", rule_diff, other = input$lb_var_show)
+        iv$add_rule("lb_var_show", rule_diff, other = input$lb_var)
       }
-    })
-
-    observeEvent(input$select_lb, {
-      req(input$select_lb == TRUE && !is.null(input$lb_var))
-      ADLB <- data[[lb_dataname]]() # nolint
-      choices <- unique(ADLB[[input$lb_var]])
-      choices_selected <- if (length(choices) > 5) choices[1:5] else choices
-
-      updateSelectInput(
-        session,
-        "lb_var_show",
-        selected = choices_selected,
-        choices = choices
-      )
+      iv$add_rule("x_limit", shinyvalidate::sv_required(
+        message = "Study Days Range is required"
+      ))
+      iv$add_rule("x_limit", ~ if (anyNA(suppressWarnings(as_numeric_from_comma_sep_str(.)))) {
+        "Study Days Range is invalid"
+      })
+      iv$add_rule("x_limit", ~ if (length(suppressWarnings(as_numeric_from_comma_sep_str(.))) != 2L) {
+        "Study Days Range must be two values"
+      })
+      iv$add_rule("x_limit", ~ if (!identical(order(suppressWarnings(as_numeric_from_comma_sep_str(.))), 1:2)) {
+        "Study Days Range mut be: first lower, then upper limit"
+      })
+      iv$enable()
+      iv
     })
 
     # render plot
     output_q <- reactive({
+      teal::validate_inputs(iv())
+
       # get inputs ---
       patient_id <- input$patient_id # nolint
       sl_start_date <- input$sl_start_date # nolint
@@ -520,13 +511,6 @@ srv_g_patient_profile <- function(id,
       lb_var <- input$lb_var
       x_limit <- input$x_limit
       lb_var_show <- input$lb_var_show
-
-      iv$add_rule("cm_var", shinyvalidate::sv_required())
-      iv$add_rule("rs_var", shinyvalidate::sv_required())
-      iv$add_rule("ex_var", shinyvalidate::sv_required())
-      iv$add_rule("lb_var", shinyvalidate::sv_required())
-      iv$add_rule("x_limit", shinyvalidate::sv_required())
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
 
       adrs_vars <- unique(c(
         "USUBJID", "STUDYID", "PARAMCD",
@@ -562,93 +546,31 @@ srv_g_patient_profile <- function(id,
       # get ADSL dataset ---
       ADSL <- data[[sl_dataname]]() # nolint
 
-      if (!is.null(input$select_ex)) {
-        if (input$select_ex == FALSE | is.na(ex_dataname)) {
-          ADEX <- NULL # nolint
-        } else {
-          ADEX <- data[[ex_dataname]]() # nolint
-          validate_has_variable(ADEX, adex_vars)
-        }
-      } else {
-        ADEX <- NULL # nolint
+      ADEX <- NULL # nolint
+      if (isTRUE(select_plot()[ex_dataname])) {
+        ADEX <- data[[ex_dataname]]() # nolint
+        teal::validate_has_variable(ADEX, adex_vars)
       }
-
-      if (!is.null(input$select_ae)) {
-        if (input$select_ae == FALSE | is.na(ae_dataname)) {
-          ADAE <- NULL # nolint
-        } else {
-          ADAE <- data[[ae_dataname]]() # nolint
-          validate_has_variable(ADAE, adae_vars)
-        }
-      } else {
-        ADAE <- NULL # nolint
+      ADAE <- NULL # nolint
+      if (isTRUE(select_plot()[ae_dataname])) {
+        ADAE <- data[[ae_dataname]]() # nolint
+        teal::validate_has_variable(ADAE, adae_vars)
       }
-
-      if (!is.null(input$select_rs)) {
-        if (input$select_rs == FALSE | is.na(rs_dataname)) {
-          ADRS <- NULL # nolint
-        } else {
-          ADRS <- data[[rs_dataname]]() # nolint
-          validate_has_variable(ADRS, adrs_vars)
-        }
-      } else {
-        ADRS <- NULL # nolint
+      ADRS <- NULL # nolint
+      if (isTRUE(select_plot()[rs_dataname])) {
+        ADRS <- data[[rs_dataname]]() # nolint
+        teal::validate_has_variable(ADRS, adrs_vars)
       }
-
-      if (!is.null(input$select_cm)) {
-        if (input$select_cm == FALSE | is.na(cm_dataname)) {
-          ADCMD <- NULL # nolint
-        } else {
-          ADCM <- data[[cm_dataname]]() # nolint
-          validate_has_variable(ADCM, adcm_vars)
-        }
-      } else {
-        ADCM <- NULL # nolint
+      ADCM <- NULL # nolint
+      if (isTRUE(select_plot()[cm_dataname])) {
+        ADCM <- data[[cm_dataname]]() # nolint
+        teal::validate_has_variable(ADCM, adcm_vars)
       }
-
-      if (!is.null(input$select_lb)) {
-        if (input$select_lb == FALSE | is.na(lb_dataname)) {
-          ADLB <- NULL # nolint
-        } else {
-          ADLB <- data[[lb_dataname]]() # nolint
-          validate_has_variable(ADLB, adlb_vars)
-        }
-      } else {
-        ADLB <- NULL # nolint
+      ADLB <- NULL # nolint
+      if (isTRUE(select_plot()[lb_dataname])) {
+        ADLB <- data[[lb_dataname]]() # nolint
+        teal::validate_has_variable(ADLB, adlb_vars)
       }
-
-      # check color assignment
-      if (!is.null(ae_line_col_opt)) {
-        validate(need(
-          is.null(ae_line_col_var) || length(levels(ADAE[[ae_line_col_var]])) <= length(ae_line_col_opt),
-          paste(
-            "Please check ae_line_col_opt contains all possible values for ae_line_col_var values.",
-            "Or specify ae_line_col_opt as NULL.",
-            sep = "\n"
-          )
-        ))
-      }
-
-      possible_plot <- c("ex", "ae", "rs", "cm", "lb")
-      datanames <- c(
-        ex_dataname,
-        ae_dataname,
-        rs_dataname,
-        cm_dataname,
-        lb_dataname
-      )
-      input_select <- purrr::map_lgl(datanames, is.na)
-
-      select_plot <- purrr::map2_lgl(
-        input_select, possible_plot,
-        ~ if (!.x && paste("select", .y, sep = "_") %in% names(input)) {
-          input[[paste("select", .y, sep = "_")]]
-        } else {
-          FALSE
-        }
-      )
-
-      names(select_plot) <- possible_plot
 
       empty_rs <- FALSE
       empty_ae <- FALSE
@@ -658,26 +580,23 @@ srv_g_patient_profile <- function(id,
 
       q1 <- teal.code::eval_code(
         teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
-        code = bquote({
-          ADSL <- ADSL %>% # nolint
-            group_by(.data$USUBJID)
-          ADSL$max_date <- pmax( # nolint
-            as.Date(ADSL$LSTALVDT),
-            as.Date(ADSL$DTHDT),
-            na.rm = TRUE
-          )
-          ADSL <- ADSL %>% # nolint
-            mutate(
-              max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
-              max_day = as.numeric(
-                as.Date(.data$max_date) - as.Date(
-                  eval(parse(text = .(sl_start_date), keep.source = FALSE))
-                )
+        code = substitute(
+          env = list(
+            ADSL = as.name(sl_dataname),
+            sl_start_date = as.name(sl_start_date),
+            patient_id = patient_id
+          ),
+          expr = {
+            ADSL <- ADSL %>% # nolint
+              filter(USUBJID == patient_id) %>%
+              group_by(.data$USUBJID) %>%
+              mutate(
+                max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
+                max_day = as.numeric(difftime(as.Date(.data$max_date), as.Date(sl_start_date), units = "days")) +
+                  (as.Date(.data$max_date) >= as.Date(sl_start_date))
               )
-              + (as.Date(.data$max_date) >= as.Date(eval(parse(text = .(sl_start_date)))))
-            ) %>%
-            filter(USUBJID == .(patient_id))
-        })
+          }
+        )
       )
 
       # ADSL with single subject
@@ -687,7 +606,7 @@ srv_g_patient_profile <- function(id,
           paste(
             "Subject",
             patient_id,
-            "not found in the dataset. Have they been filtered out by filtering in the filter panel?"
+            "not found in the dataset. Perhaps they have been filtered out by the filter panel?"
           )
         )
       )
@@ -696,187 +615,153 @@ srv_g_patient_profile <- function(id,
       q1 <- if (!is.null(ae_line_col_var) && is.data.frame(ADAE)) {
         teal.code::eval_code(
           q1,
-          code =
-            bquote(ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)])
+          code = substitute(
+            env = list(ADAE = as.name(ae_dataname), ae_line_col_var = ae_line_col_var),
+            expr = ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var]
+          )
         )
       } else {
         teal.code::eval_code(q1, code = quote(ae_line_col_name <- NULL))
       }
 
-      q1 <- if (select_plot["ae"]) {
-        validate(
-          need(!is.null(input$ae_var), "Please select an adverse event variable.")
-        )
+      q1 <- if (isTRUE(select_plot()[ae_dataname])) {
         if (all(ADAE$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
-            code = bquote({
-              # ADAE
-              ADAE <- ADAE[, .(adae_vars)] # nolint
+            code = substitute(
+              env = list(
+                ADSL = as.name(sl_dataname),
+                ADAE = as.name(ae_dataname),
+                sl_start_date = as.name(sl_start_date),
+                ae_line_col_var = ae_line_col_var,
+                adae_vars = adae_vars
+              ),
+              expr = {
+                # ADAE
+                ADAE <- ADAE[, adae_vars] # nolint
 
-              ADAE <- ADSL %>% # nolint
-                left_join(ADAE, by = c("STUDYID", "USUBJID")) %>% # nolint
-                as.data.frame() %>%
-                filter(!is.na(ASTDT)) %>%
-                mutate(ASTDY = as.numeric(
-                  difftime(
-                    ASTDT,
-                    as.Date(substr(
-                      as.character(eval(parse(
-                        text = .(sl_start_date)
-                      ))), 1, 10
-                    )),
-                    units = "days"
-                  )
-                )
-                + (ASTDT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
-                filter(!is.na(AENDT)) %>%
-                mutate(AENDY = as.numeric(
-                  difftime(
-                    AENDT,
-                    as.Date(substr(
-                      as.character(eval(parse(
-                        text = .(sl_start_date)
-                      ))), 1, 10
-                    )),
-                    units = "days"
-                  )
-                )
-                + (AENDT >= as.Date(substr( # nolint
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
-                select(c(.(adae_vars), ASTDY, AENDY))
-              formatters::var_labels(ADAE)[.(ae_line_col_var)] <- # nolint
-                formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)]
-            })
+                ADAE <- ADSL %>% # nolint
+                  left_join(ADAE, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  as.data.frame() %>%
+                  filter(!is.na(ASTDT), !is.na(AENDT)) %>%
+                  mutate(
+                    ASTDY = as.numeric(difftime(ASTDT, as.Date(sl_start_date), units = "days")) +
+                      (ASTDT >= as.Date(sl_start_date)),
+                    AENDY = as.numeric(difftime(AENDT, as.Date(sl_start_date), units = "days")) +
+                      (AENDT >= as.Date(sl_start_date))
+                   ) %>%
+                  select(c(adae_vars, ASTDY, AENDY))
+                formatters::var_labels(ADAE)[ae_line_col_var] <- # nolint
+                  formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var]
+              }
+            )
           ) %>%
             teal.code::eval_code(
-              code = call(
-                "<-",
-                as.name("ae"),
-                call(
-                  "list",
-                  data = bquote(data.frame(ADAE)),
-                  var = bquote(as.vector(ADAE[, .(ae_var)])),
-                  line_col = if (!is.null(ae_line_col_var)) {
-                    bquote(as.vector(ADAE[, .(ae_line_col_var)]))
-                  } else {
-                    NULL
-                  },
-                  line_col_legend = if (!is.null(ae_line_col_var)) {
-                    quote(ae_line_col_name)
-                  } else {
-                    NULL
-                  },
-                  line_col_opt = if (is.null(ae_line_col_var)) {
-                    NULL
-                  } else {
-                    bquote(.(ae_line_col_opt))
-                  }
+              code = substitute(
+                env = list(
+                  ADAE = as.name(ae_dataname),
+                  ae_var = ae_var,
+                  line_col = if (!is.null(ae_line_col_var)) bquote(as.vector(ADAE[, .(ae_line_col_var)])) else NULL,
+                  line_col_legend = ae_line_col_var,
+                  line_col_opt = ae_line_col_opt
+                ),
+                expr = ae <- list(
+                  data = data.frame(ADAE),
+                  var = as.vector(ADAE[, ae_var]),
+                  line_col = line_col,
+                  line_col_legend = line_col_legend,
+                  line_col_opt = line_col_opt
                 )
               )
             )
-          ADAE <- qq[["ADAE"]] # nolint
+          ADAE <- qq[[ae_dataname]] # nolint
           if (is.null(ADAE) | nrow(ADAE) == 0) {
             empty_ae <- TRUE
           }
           qq
         } else {
           empty_ae <- TRUE
-          teal.code::eval_code(q1, code = bquote(ae <- NULL))
+          teal.code::eval_code(q1, code = quote(ae <- NULL))
         }
       } else {
-        teal.code::eval_code(q1, code = bquote(ae <- NULL))
+        teal.code::eval_code(q1, code = quote(ae <- NULL))
       }
 
-      q1 <- if (select_plot["rs"]) {
-        validate(
-          need(!is.null(rs_var), "Please select a tumor response variable.")
-        )
+      q1 <- if (isTRUE(select_plot()[rs_dataname])) {
         if (all(ADRS$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
-            code = bquote({
-              ADRS <- ADRS[, .(adrs_vars)] # nolint
-              ADRS <- ADSL %>% # nolint
-                left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
-                as.data.frame() %>%
-                mutate(
-                  ADY = as.numeric(difftime(
-                    ADT,
-                    as.Date(substr(
-                      as.character(eval(parse(
-                        text = .(sl_start_date),
-                        keep.source = FALSE
-                      ))), 1, 10
-                    )),
-                    units = "days"
-                  ))
-                  + (ADT >= as.Date(substr(
-                      as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                    )))
-                ) %>%
-                select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
-                filter(is.na(ADY) == FALSE)
-              rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, .(rs_var)]))
-            })
+            code = substitute(
+              env = list(
+                ADRS = as.name(rs_dataname),
+                adrs_vars = adrs_vars,
+                sl_start_date = as.name(sl_start_date),
+                rs_var = rs_var
+              ),
+              expr = {
+                ADRS <- ADRS[, adrs_vars] # nolint
+                ADRS <- ADSL %>% # nolint
+                  left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  as.data.frame() %>%
+                  mutate(
+                    ADY = as.numeric(difftime(ADT, as.Date(sl_start_date), units = "days")) +
+                      (ADT >= as.Date(sl_start_date))
+                  ) %>%
+                  select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
+                  filter(is.na(ADY) == FALSE)
+                rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, rs_var]))
+              }
+            )
           )
-          ADRS <- qq[["ADRS"]] # nolint
+          ADRS <- qq[[rs_dataname]] # nolint
           if (is.null(ADRS) || nrow(ADRS) == 0) {
             empty_rs <- TRUE
           }
           qq
         } else {
           empty_rs <- TRUE
-          teal.code::eval_code(q1, id = "rs call", expression = bquote(rs <- NULL))
+          teal.code::eval_code(q1, expression = quote(rs <- NULL))
         }
       } else {
-        teal.code::eval_code(q1, code = bquote(rs <- NULL))
+        teal.code::eval_code(q1, code = quote(rs <- NULL))
       }
 
-      q1 <- if (select_plot["cm"]) {
-        validate(
-          need(!is.null(cm_var), "Please select a concomitant medication variable.")
-        )
+      q1 <- if (isTRUE(select_plot()[cm_dataname])) {
         if (all(ADCM$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
-            code = bquote({
-              # ADCM
-              ADCM <- ADCM[, .(adcm_vars)] # nolint
-              ADCM <- ADSL %>% # nolint
-                left_join(ADCM, by = c("STUDYID", "USUBJID")) %>% # nolint
-                as.data.frame() %>%
-                filter(!is.na(ASTDT)) %>%
-                mutate(ASTDY = as.numeric(difftime(
-                  ASTDT,
-                  as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-                  units = "days"
-                ))
-                + (ASTDT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
-                filter(!is.na(AENDT)) %>%
-                mutate(AENDY = as.numeric(difftime(
-                  AENDT,
-                  as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-                  units = "days"
-                ))
-                + (AENDT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
-                select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(.(cm_var)))
-              if (length(unique(ADCM$USUBJID)) > 0) {
-                ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
-                & is.na(ADCM$ASTDY) == FALSE), ]
+            code = substitute(
+              env = list(
+                ADSL = as.name(sl_dataname),
+                ADCM = as.name(cm_dataname),
+                sl_start_date = as.name(sl_start_date),
+                adcm_vars = adcm_vars,
+                cm_var = cm_var
+              ),
+              expr = {
+                # ADCM
+                ADCM <- ADCM[, adcm_vars] # nolint
+                ADCM <- ADSL %>% # nolint
+                  left_join(ADCM, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  as.data.frame() %>%
+                  filter(!is.na(ASTDT), !is.na(AENDT)) %>%
+                  mutate(
+                    ASTDY = as.numeric(difftime(ASTDT, as.Date(sl_start_date), units = "days")) +
+                      (ASTDT >= as.Date(sl_start_date)),
+                    AENDY = as.numeric(difftime(AENDT, as.Date(sl_start_date), units = "days")) +
+                      (AENDT >= as.Date(sl_start_date))
+                  ) %>%
+                  select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(cm_var))
+                if (length(unique(ADCM$USUBJID)) > 0) {
+                  ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
+                  & is.na(ADCM$ASTDY) == FALSE), ]
+                }
+                cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, cm_var]))
               }
-              cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, .(cm_var)]))
-            })
+            )
           )
 
-          ADCM <- qq[["ADCM"]] # nolint
+          ADCM <- qq[[cm_dataname]] # nolint
           if (is.null(ADCM) | nrow(ADCM) == 0) {
             empty_cm <- TRUE
           }
@@ -886,55 +771,54 @@ srv_g_patient_profile <- function(id,
           teal.code::eval_code(q1, code = quote(cm <- NULL))
         }
       } else {
-        teal.code::eval_code(q1, code = bquote(cm <- NULL))
+        teal.code::eval_code(q1, code = quote(cm <- NULL))
       }
 
-      q1 <- if (select_plot["ex"]) {
-        validate(
-          need(!is.null(ex_var), "Please select an exposure variable.")
-        )
+      q1 <- if (isTRUE(select_plot()[ex_dataname])) {
         if (all(ADEX$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
-            code = bquote({
-              # ADEX
-              ADEX <- ADEX[, .(adex_vars)] # nolint
-              ADEX <- ADSL %>% # nolint
-                left_join(ADEX, by = c("STUDYID", "USUBJID")) %>% # nolint
-                as.data.frame() %>%
-                filter(PARCAT1 == "INDIVIDUAL" & PARAMCD == "DOSE" & !is.na(AVAL)) %>%
-                filter(!is.na(ASTDT)) %>%
-                select(
-                  USUBJID, ASTDT, PARCAT2,
-                  AVAL, AVALU, PARAMCD, !!quo(.(sl_start_date))
-                )
-              ADEX <- split(ADEX, ADEX$USUBJID) %>% # nolint
-                lapply(function(pinfo) {
-                  pinfo %>%
-                    arrange(PARCAT2, PARAMCD, ASTDT) %>%
-                    ungroup() %>%
-                    mutate(diff = c(0, diff(AVAL, lag = 1))) %>%
-                    mutate(
-                      Modification = case_when(
-                        diff < 0 ~ "Decrease",
-                        diff > 0 ~ "Increase",
-                        diff == 0 ~ "None"
+            code = substitute(
+              env = list(
+                ADSL = as.name(sl_dataname),
+                ADEX = as.name(ex_dataname),
+                adex_vars = adex_vars,
+                sl_start_date = as.name(sl_start_date),
+                ex_var = ex_var
+              ),
+              expr = {
+                # ADEX
+                ADEX <- ADEX[, adex_vars] # nolint
+                ADEX <- ADSL %>% # nolint
+                  left_join(ADEX, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  as.data.frame() %>%
+                  filter(PARCAT1 == "INDIVIDUAL" & PARAMCD == "DOSE" & !is.na(AVAL) & !is.na(ASTDT)) %>%
+                  select(USUBJID, ASTDT, PARCAT2, AVAL, AVALU, PARAMCD, sl_start_date)
+
+                ADEX <- split(ADEX, ADEX$USUBJID) %>% # nolint
+                  lapply(function(pinfo) {
+                    pinfo %>%
+                      arrange(PARCAT2, PARAMCD, ASTDT) %>%
+                      ungroup() %>%
+                      mutate(
+                        diff = c(0, diff(AVAL, lag = 1)),
+                        Modification = case_when(
+                          diff < 0 ~ "Decrease",
+                          diff > 0 ~ "Increase",
+                          diff == 0 ~ "None"
+                        ),
+                        ASTDT_dur = as.numeric(difftime(as.Date(ASTDT), as.Date(sl_start_date), unit = "days")) +
+                          (as.Date(ASTDT) >= as.Date(sl_start_date))
                       )
-                    ) %>%
-                    mutate(ASTDT_dur = as.numeric(
-                      as.Date(substr(as.character(ASTDT), 1, 10)) -
-                        as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10))
-                    )
-                    + (as.Date(substr(as.character(ASTDT), 1, 10)) >=
-                        as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))))
-                }) %>%
-                Reduce(rbind, .) %>%
-                as.data.frame() %>%
-                select(-diff)
-              ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, .(ex_var)]))
-            })
+                  }) %>%
+                  Reduce(rbind, .) %>%
+                  as.data.frame() %>%
+                  select(-diff)
+                ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, ex_var]))
+              }
+            )
           )
-          ADEX <- qq[["ADEX"]] # nolint
+          ADEX <- qq[[ex_dataname]] # nolint
           if (is.null(ADEX) | nrow(ADEX) == 0) {
             empty_ex <- TRUE
           }
@@ -947,48 +831,42 @@ srv_g_patient_profile <- function(id,
         teal.code::eval_code(q1, code = quote(ex <- NULL))
       }
 
-      q1 <- if (select_plot["lb"]) {
-        validate(
-          need(!is.null(lb_var), "Please select a lab variable.")
-        )
+      q1 <- if (isTRUE(select_plot()[lb_dataname])) {
         if (all(ADLB$USUBJID %in% ADSL$USUBJID)) {
-          validate(need(lb_var_show != lb_var, "Lab variable and lab values must differ"))
           qq <- teal.code::eval_code(
             q1,
-            code = bquote({
-              ADLB <- ADLB[, .(adlb_vars)] # nolint
-              ADLB <- ADSL %>% # nolint
-                left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
-                as.data.frame() %>%
-                group_by(USUBJID) %>%
-                mutate(ANRIND = factor(
-                  .data$ANRIND,
-                  levels = c("HIGH", "LOW", "NORMAL")
-                )) %>%
-                filter(
-                  !is.na(.data$LBSTRESN) & !is.na(.data$ANRIND)
-                ) %>%
-                as.data.frame() %>%
-                select(
-                  USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, !!quo(.(sl_start_date)),
-                  LBTESTCD, ANRIND, !!quo(.(lb_var))
-                )
-
-              ADLB <- ADLB %>% # nolint
-                mutate(ADY = as.numeric(difftime(
-                  .data$ADT,
-                  as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-                  units = "days"
-                ))
-                + (ADT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
-                filter(.data[[.(lb_var)]] %in% .(lb_var_show))
-              lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
-            })
+            code = substitute(
+              env = list(
+                ADLB = as.name(lb_dataname),
+                ADSL = as.name(sl_dataname),
+                adlb_vars = adlb_vars,
+                sl_start_date = as.name(sl_start_date),
+                lb_var = lb_var,
+                lb_var_show = lb_var_show
+              ),
+              expr = {
+                ADLB <- ADLB[, adlb_vars] # nolint
+                ADLB <- ADSL %>% # nolint
+                  left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
+                  as.data.frame() %>%
+                  mutate(
+                    ANRIND = factor(.data$ANRIND, levels = c("HIGH", "LOW", "NORMAL"))
+                  ) %>%
+                  filter(!is.na(.data$LBSTRESN) & !is.na(.data$ANRIND) & .data[[lb_var]] %in% lb_var_show) %>%
+                  as.data.frame() %>%
+                  select(
+                    USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, sl_start_date, LBTESTCD, ANRIND, lb_var
+                  ) %>% # nolint
+                  mutate(
+                    ADY = as.numeric(difftime(.data$ADT, as.Date(sl_start_date), units = "days")) +
+                      (ADT >= as.Date(sl_start_date))
+                   )
+                lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, lb_var]))
+              }
+            )
           )
 
-          ADLB <- qq[["ADLB"]] # nolint
+          ADLB <- qq[[lb_dataname]] # nolint
           if (is.null(ADLB) | nrow(ADLB) == 0) {
             empty_lb <- TRUE
           }
@@ -998,30 +876,27 @@ srv_g_patient_profile <- function(id,
           teal.code::eval_code(q1, code = quote(lb <- NULL))
         }
       } else {
-        teal.code::eval_code(q1, code = bquote(lb <- NULL))
+        teal.code::eval_code(q1, code = quote(lb <- NULL))
       }
 
-
-      # Check that at least 1 dataset is selected
-
-      validate(
-        need(any(select_plot), "Please select an ADaM dataset.")
+      # Check the subject has information in at least one selected domain
+      empty_data_check <- structure(
+        c(empty_ex, empty_ae, empty_rs, empty_lb, empty_cm),
+        # names = checkboxes
+        names = names(checkboxes)
       )
 
-      # Check the subject has information in at least one selected domain
-      empty_data_check <- c(empty_ex, empty_ae, empty_rs, empty_cm, empty_lb)
-
       validate(need(
-        any(!empty_data_check & select_plot),
+        any(!empty_data_check & select_plot()),
         "The subject does not have information in any selected domain."
       ))
 
       # Check the subject has information in all the selected domains
-      if (any(empty_data_check & select_plot)) {
+      if (any(empty_data_check & select_plot())) {
         showNotification(
           paste0(
             "This subject does not have information in the ",
-            paste(c(possible_plot[(empty_data_check & select_plot)]), collapse = ", "),
+            paste(checkboxes[empty_data_check & select_plot()], collapse = ", "),
             " domain."
           ),
           duration = 8,
@@ -1038,31 +913,25 @@ srv_g_patient_profile <- function(id,
         x_limit <- q1[["x_limit"]]
       }
 
-      validate(need(
-        all(!is.na(x_limit)) & all(!is.infinite(x_limit)),
-        "Not all values entered for study days range were numeric."
-      ))
-      validate(need(
-        x_limit[1] < x_limit[2],
-        "The lower limit for study days range should come first."
-      ))
-
       q1 <- teal.code::eval_code(
         q1,
-        code = bquote({
-          plot <- osprey::g_patient_profile(
-            ex = ex,
-            ae = ae,
-            rs = rs,
-            cm = cm,
-            lb = lb,
-            arrow_end_day = ADSL$max_day,
-            xlim = x_limit,
-            xlab = "Study Day",
-            title = paste("Patient Profile: ", .(patient_id))
-          )
-          plot
-        })
+        code = substitute(
+          env = list(patient_id = patient_id),
+          expr = {
+            plot <- osprey::g_patient_profile(
+              ex = ex,
+              ae = ae,
+              rs = rs,
+              cm = cm,
+              lb = lb,
+              arrow_end_day = ADSL$max_day,
+              xlim = x_limit,
+              xlab = "Study Day",
+              title = paste("Patient Profile: ", patient_id)
+            )
+            plot
+          }
+        )
       )
     })
 

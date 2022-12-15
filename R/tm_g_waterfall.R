@@ -54,7 +54,7 @@
 #'
 #' ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
 #'
-#' x <- teal::init(
+#' app <- teal::init(
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL,
 #'       code = "ADSL <- rADSL
@@ -87,7 +87,7 @@
 #'   )
 #' )
 #' if (interactive()) {
-#'   shinyApp(x$ui, x$server)
+#'   shinyApp(app$ui, app$server)
 #' }
 tm_g_waterfall <- function(label,
                            dataname_tr = "ADTR",
@@ -292,16 +292,85 @@ srv_g_waterfall <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-    output_q <- reactive({
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("bar_var", shinyvalidate::sv_required())
-      iv$add_rule("bar_paramcd", shinyvalidate::sv_required())
-      iv$enable()
-
+    iv <- reactive({
       adsl <- data[["ADSL"]]()
       adtr <- data[[dataname_tr]]()
       adrs <- data[[dataname_rs]]()
 
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("bar_var", shinyvalidate::sv_required(
+        message = "Bar Height is required"
+      ))
+      iv$add_rule("bar_paramcd", shinyvalidate::sv_required(
+        message = "Tumor Burden Parameter is required"
+      ))
+      iv$add_rule("bar_paramcd", shinyvalidate::sv_in_set(
+        set = adtr$PARAMCD,
+        message_fmt = "All values of Tumor Burden Parameter must be elements of ADTR PARAMCD"
+      ))
+      iv$add_rule("add_label_paramcd_rs", shinyvalidate::sv_optional())
+      iv$add_rule("add_label_paramcd_rs", shinyvalidate::sv_in_set(
+        set = adrs$PARAMCD,
+        message_fmt = "ADRS Label must be an element of ADRS PARAMCD"
+      ))
+      rule_excl <- function(value, other) {
+        if (length(value) > 0L && length(other) > 0L) {
+          "Only one \"Label to Bars\" is allowed"
+        }
+      }
+      iv$add_rule("add_label_paramcd_rs", rule_excl, other = input$add_label_var_sl)
+      iv$add_rule("add_label_var_sl", rule_excl, other = input$add_label_paramcd_rs)
+      iv$add_rule("anno_txt_paramcd_rs", shinyvalidate::sv_optional())
+      iv$add_rule("anno_txt_paramcd_rs", shinyvalidate::sv_in_set(
+        set = adrs$PARAMCD,
+        message_fmt = "Annotation Parameters must be elements of ADRS PARAMCD"
+      ))
+      iv$add_rule("href_line", shinyvalidate::sv_optional())
+      iv$add_rule("href_line", ~ if (anyNA(suppressWarnings(as_numeric_from_comma_sep_str(.)))) {
+        "Horizontal Reference Line(s) are invalid"
+      })
+      iv$add_rule("ytick_at", shinyvalidate::sv_required(
+        message = "Y-axis Interval is required"
+      ))
+      iv$add_rule("ytick_at", ~ if (!checkmate::test_number(suppressWarnings(as.numeric(.)), lower = 1)) {
+        "Y-axis Interval must be a single positive number"
+      })
+      iv$add_rule("gap_point_val", shinyvalidate::sv_optional())
+      iv$add_rule("gap_point_val", ~ if (!checkmate::test_number(suppressWarnings(as.numeric(.)), lower = 1)) {
+        "Break High Bars must be a single positive number"
+      })
+      iv$enable()
+      iv
+    })
+
+    output_q <- reactive({
+      adsl <- data[["ADSL"]]()
+      adtr <- data[[dataname_tr]]()
+      adrs <- data[[dataname_rs]]()
+
+      # validate data rows
+      teal::validate_has_data(adsl, min_nrow = 2)
+      teal::validate_has_data(adtr, min_nrow = 2)
+      teal::validate_has_data(adrs, min_nrow = 2)
+
+      adsl_vars <- unique(
+        c(
+          "USUBJID", "STUDYID",
+          input$bar_color_var, input$sort_var, input$add_label_var_sl, input$anno_txt_var_sl, input$facet_var
+        )
+      )
+      adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", input$bar_var))
+      adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
+      adrs_paramcd <- unique(c(input$add_label_paramcd_rs, input$anno_txt_paramcd_rs))
+
+      # validate data input
+      teal::validate_has_variable(adsl, adsl_vars)
+      teal::validate_has_variable(adrs, adrs_vars)
+      teal::validate_has_variable(adtr, adtr_vars)
+
+      teal::validate_inputs(iv())
+
+      # get variables
       bar_var <- input$bar_var
       bar_paramcd <- input$bar_paramcd
       add_label_var_sl <- input$add_label_var_sl
@@ -312,30 +381,15 @@ srv_g_waterfall <- function(id,
       href_line <- input$href_line
       gap_point_val <- input$gap_point_val
       show_value <- input$show_value # nolint
+      href_line <- suppressWarnings(as_numeric_from_comma_sep_str(href_line))
 
-      validate(need(
-        length(add_label_paramcd_rs) == 0 || length(add_label_var_sl) == 0,
-        "`Add ADSL Label to Bars` and `Add ADRS Label to Bars` fields cannot both have values simultaneously."
-      ))
-
-      # validate data rows
-      validate_has_data(adsl, min_nrow = 2)
-      validate_has_data(adtr, min_nrow = 2)
-      validate_has_data(adrs, min_nrow = 2)
-
-      validate_in(
-        bar_paramcd,
-        adtr$PARAMCD,
-        "Tumor burden parameter is not selected or is not found in ADTR PARAMCD."
-      )
-      if (!is.null(add_label_paramcd_rs)) {
-        validate_in(add_label_paramcd_rs, adrs$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
+      if (gap_point_val == "") {
+        gap_point_val <- NULL
+      } else {
+        gap_point_val <- as.numeric(gap_point_val)
       }
-      if (!is.null(anno_txt_paramcd_rs)) {
-        validate_in(anno_txt_paramcd_rs, adrs$PARAMCD, "Response parameter cannot be found in ADRS PARAMCD.")
-      }
+      ytick_at <- as.numeric(ytick_at)
 
-      # get variables
       bar_color_var <- if (!is.null(input$bar_color_var) &&
         input$bar_color_var != "None" &&
         input$bar_color_var != "") {
@@ -353,44 +407,6 @@ srv_g_waterfall <- function(id,
       } else {
         NULL
       }
-
-      # If reference lines are requested
-      href_line <- as_numeric_from_comma_sep_str(href_line)
-      validate(need(
-        all(!is.na(href_line)),
-        "Please enter a comma separated set of numeric values for the reference line(s)"
-      ))
-
-      # If gap point is requested
-      if (gap_point_val != "" || is.null(gap_point_val)) {
-        gap_point_val <- as.numeric(gap_point_val)
-        validate(need(
-          !anyNA(gap_point_val),
-          "Value entered for break point was not numeric"
-        ))
-      } else {
-        gap_point_val <- NULL
-      }
-
-      # If y tick is requested
-      if (ytick_at != "" || is.null(ytick_at)) {
-        ytick_at <- as.numeric(ytick_at)
-        validate(need(!anyNA(ytick_at), "Value entered for Y-axis interval was not numeric"))
-      } else {
-        ytick_at <- 20
-      }
-
-      adsl_vars <- unique(
-        c("USUBJID", "STUDYID", bar_color_var, sort_var, add_label_var_sl, anno_txt_var_sl, facet_var)
-      )
-      adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", bar_var))
-      adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
-      adrs_paramcd <- unique(c(add_label_paramcd_rs, anno_txt_paramcd_rs))
-
-      # validate data input
-      validate_has_variable(adsl, adsl_vars)
-      validate_has_variable(adrs, adrs_vars)
-      validate_has_variable(adtr, adtr_vars)
 
       # write variables to qenv
       q1 <- teal.code::eval_code(
@@ -444,7 +460,7 @@ srv_g_waterfall <- function(id,
           )
         )
 
-        validate_one_row_per_id(qq1[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
+        teal::validate_one_row_per_id(qq1[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
 
         teal.code::eval_code(
           qq1,
