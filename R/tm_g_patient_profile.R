@@ -882,8 +882,7 @@ srv_g_patient_profile <- function(id,
       # Check the subject has information in at least one selected domain
       empty_data_check <- structure(
         c(empty_ex, empty_ae, empty_rs, empty_lb, empty_cm),
-        # names = checkboxes
-        names = names(checkboxes)
+        names = checkboxes
       )
 
       validate(need(
