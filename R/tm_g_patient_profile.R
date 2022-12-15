@@ -402,19 +402,19 @@ srv_g_patient_profile <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
   checkmate::assert_class(data, "tdata")
-
-  checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
-
   if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
   if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
   if (!is.na(rs_dataname)) checkmate::assert_names(rs_dataname, subset.of = names(data))
   if (!is.na(lb_dataname)) checkmate::assert_names(lb_dataname, subset.of = names(data))
   if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
 
-
   moduleServer(id, function(input, output, session) {
     select_plot <- reactive({
-      vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
+      vapply(
+        c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname),
+        function(x) x %in% input$select_ADaM,
+        logical(1L)
+      )
     })
 
     if (!is.na(lb_dataname)) {
