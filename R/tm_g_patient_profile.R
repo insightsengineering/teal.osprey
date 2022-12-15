@@ -649,7 +649,7 @@ srv_g_patient_profile <- function(id,
                       (ASTDT >= as.Date(sl_start_date)),
                     AENDY = as.numeric(difftime(AENDT, as.Date(sl_start_date), units = "days")) +
                       (AENDT >= as.Date(sl_start_date))
-                   ) %>%
+                  ) %>%
                   select(c(adae_vars, ASTDY, AENDY))
                 formatters::var_labels(ADAE)[ae_line_col_var] <- # nolint
                   formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var]
@@ -860,7 +860,7 @@ srv_g_patient_profile <- function(id,
                   mutate(
                     ADY = as.numeric(difftime(.data$ADT, as.Date(sl_start_date), units = "days")) +
                       (ADT >= as.Date(sl_start_date))
-                   )
+                  )
                 lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, lb_var]))
               }
             )
