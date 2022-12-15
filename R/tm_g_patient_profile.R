@@ -256,6 +256,7 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
 ui_g_patient_profile <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
+  checkboxes <- c(a$ex_dataname, a$ae_dataname, a$rs_dataname, a$lb_dataname, a$cm_dataname)
 
   shiny::tagList(
     include_css_files("custom"),
@@ -275,8 +276,15 @@ ui_g_patient_profile <- function(id, ...) {
           selected = a$patient_id$selected
         ),
         div(
-          class = "pretty-left-border",
-          uiOutput(ns("select_ADaM_output"))
+          tagList(
+            helpText("Select", tags$code("ADaM"), "Domains"),
+            checkboxGroupInput(
+              inputId = ns("select_ADaM"),
+              label = NULL,
+              choices = checkboxes[!is.na(checkboxes)],
+              selected = checkboxes[!is.na(checkboxes)]
+            )
+          )
         ),
         teal.widgets::optionalSelectInput(
           ns("sl_start_date"),
@@ -405,19 +413,6 @@ srv_g_patient_profile <- function(id,
 
 
   moduleServer(id, function(input, output, session) {
-    # only show the check box when domain data is available
-    output$select_ADaM_output <- renderUI({
-      tagList(
-        helpText("Select", tags$code("ADaM"), "Domains"),
-        checkboxGroupInput(
-          inputId = session$ns("select_ADaM"),
-          label = NULL,
-          choices = checkboxes[!is.na(checkboxes)],
-          selected = checkboxes[!is.na(checkboxes)]
-        )
-      )
-    })
-
     select_plot <- reactive({
       vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
     })
