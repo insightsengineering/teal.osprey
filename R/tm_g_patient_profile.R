@@ -407,19 +407,14 @@ srv_g_patient_profile <- function(id,
   if (!is.na(rs_dataname)) checkmate::assert_names(rs_dataname, subset.of = names(data))
   if (!is.na(lb_dataname)) checkmate::assert_names(lb_dataname, subset.of = names(data))
   if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
-
+  checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
   moduleServer(id, function(input, output, session) {
-    select_plot <- reactive({
-      vapply(
-        c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname),
-        function(x) x %in% input$select_ADaM,
-        logical(1L)
-      )
-    })
+    select_plot <- reactive(
+      vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
+    )
 
     if (!is.na(lb_dataname)) {
-      observeEvent(input$lb_var, {
-        req(input$lb_var)
+      observeEvent(input$lb_var, ignoreNULL = TRUE, {
         ADLB <- data[[lb_dataname]]() # nolint
         choices <- unique(ADLB[[input$lb_var]])
         choices_selected <- if (length(choices) > 5) choices[1:5] else choices
