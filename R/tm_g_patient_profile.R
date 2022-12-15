@@ -916,7 +916,10 @@ srv_g_patient_profile <- function(id,
       q1 <- teal.code::eval_code(
         q1,
         code = substitute(
-          env = list(patient_id = patient_id),
+          env = list(
+            patient_id = patient_id,
+            ADSL = as.name(sl_dataname)
+          ),
           expr = {
             plot <- osprey::g_patient_profile(
               ex = ex,
@@ -924,7 +927,7 @@ srv_g_patient_profile <- function(id,
               rs = rs,
               cm = cm,
               lb = lb,
-              arrow_end_day = ADSL$max_day,
+              arrow_end_day = ADSL[["max_day"]],
               xlim = x_limit,
               xlab = "Study Day",
               title = paste("Patient Profile: ", patient_id)
