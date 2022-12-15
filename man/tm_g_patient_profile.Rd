@@ -42,7 +42,7 @@ argument of \code{\link[teal]{init}}}
 concomitant medications, and labs datasets, respectively;
 must be available in the list passed to the \code{data}
 argument of \code{\link[teal]{init}}\cr
-set to NA to omit from analysis}
+set to NA (default) to omit from analysis}
 
 \item{sl_start_date}{(\code{choices_selected}) study start date variable, usually set to
 treatment start date or randomization date}
