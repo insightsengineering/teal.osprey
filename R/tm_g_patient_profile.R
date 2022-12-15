@@ -580,26 +580,23 @@ srv_g_patient_profile <- function(id,
 
       q1 <- teal.code::eval_code(
         teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
-        code = bquote({
-          ADSL <- ADSL %>% # nolint
-            group_by(.data$USUBJID)
-          ADSL$max_date <- pmax( # nolint
-            as.Date(ADSL$LSTALVDT),
-            as.Date(ADSL$DTHDT),
-            na.rm = TRUE
-          )
-          ADSL <- ADSL %>% # nolint
-            mutate(
-              max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
-              max_day = as.numeric(
-                as.Date(.data$max_date) - as.Date(
-                  eval(parse(text = .(sl_start_date), keep.source = FALSE))
-                )
+        code = substitute(
+          env = list(
+            ADSL = as.name(sl_dataname),
+            sl_start_date = as.name(sl_start_date),
+            patient_id = patient_id
+          ),
+          expr = {
+            ADSL <- ADSL %>% # nolint
+              filter(USUBJID == patient_id) %>%
+              group_by(.data$USUBJID) %>%
+              mutate(
+                max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
+                max_day = as.numeric(difftime(as.Date(.data$max_date), as.Date(sl_start_date), units = "days")) +
+                  (as.Date(.data$max_date) >= as.Date(sl_start_date))
               )
-              + (as.Date(.data$max_date) >= as.Date(eval(parse(text = .(sl_start_date)))))
-            ) %>%
-            filter(USUBJID == .(patient_id))
-        })
+          }
+        )
       )
 
       # ADSL with single subject
@@ -618,8 +615,10 @@ srv_g_patient_profile <- function(id,
       q1 <- if (!is.null(ae_line_col_var) && is.data.frame(ADAE)) {
         teal.code::eval_code(
           q1,
-          code =
-            bquote(ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)])
+          code = substitute(
+            env = list(ADAE = as.name(ae_dataname), ae_line_col_var = ae_line_col_var),
+            expr = ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var]
+          )
         )
       } else {
         teal.code::eval_code(q1, code = quote(ae_line_col_name <- NULL))
@@ -629,71 +628,49 @@ srv_g_patient_profile <- function(id,
         if (all(ADAE$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
-            code = bquote({
-              # ADAE
-              ADAE <- ADAE[, .(adae_vars)] # nolint
+            code = substitute(
+              env = list(
+                ADSL = as.name(sl_dataname),
+                ADAE = as.name(ae_dataname),
+                sl_start_date = as.name(sl_start_date),
+                ae_line_col_var = ae_line_col_var,
+                adae_vars = adae_vars
+              ),
+              expr = {
+                # ADAE
+                ADAE <- ADAE[, adae_vars] # nolint
 
-              ADAE <- ADSL %>% # nolint
-                left_join(ADAE, by = c("STUDYID", "USUBJID")) %>% # nolint
-                as.data.frame() %>%
-                filter(!is.na(ASTDT)) %>%
-                mutate(ASTDY = as.numeric(
-                  difftime(
-                    ASTDT,
-                    as.Date(substr(
-                      as.character(eval(parse(
-                        text = .(sl_start_date)
-                      ))), 1, 10
-                    )),
-                    units = "days"
-                  )
-                )
-                + (ASTDT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
-                filter(!is.na(AENDT)) %>%
-                mutate(AENDY = as.numeric(
-                  difftime(
-                    AENDT,
-                    as.Date(substr(
-                      as.character(eval(parse(
-                        text = .(sl_start_date)
-                      ))), 1, 10
-                    )),
-                    units = "days"
-                  )
-                )
-                + (AENDT >= as.Date(substr( # nolint
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
-                select(c(.(adae_vars), ASTDY, AENDY))
-              formatters::var_labels(ADAE)[.(ae_line_col_var)] <- # nolint
-                formatters::var_labels(ADAE, fill = FALSE)[.(ae_line_col_var)]
-            })
+                ADAE <- ADSL %>% # nolint
+                  left_join(ADAE, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  as.data.frame() %>%
+                  filter(!is.na(ASTDT), !is.na(AENDT)) %>%
+                  mutate(
+                    ASTDY = as.numeric(difftime(ASTDT, as.Date(sl_start_date), units = "days")) +
+                      (ASTDT >= as.Date(sl_start_date)),
+                    AENDY = as.numeric(difftime(AENDT, as.Date(sl_start_date), units = "days")) +
+                      (AENDT >= as.Date(sl_start_date))
+                   ) %>%
+                  select(c(adae_vars, ASTDY, AENDY))
+                formatters::var_labels(ADAE)[ae_line_col_var] <- # nolint
+                  formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var]
+              }
+            )
           ) %>%
             teal.code::eval_code(
-              code = call(
-                "<-",
-                as.name("ae"),
-                call(
-                  "list",
-                  data = bquote(data.frame(ADAE)),
-                  var = bquote(as.vector(ADAE[, .(ae_var)])),
-                  line_col = if (!is.null(ae_line_col_var)) {
-                    bquote(as.vector(ADAE[, .(ae_line_col_var)]))
-                  } else {
-                    NULL
-                  },
-                  line_col_legend = if (!is.null(ae_line_col_var)) {
-                    quote(ae_line_col_name)
-                  } else {
-                    NULL
-                  },
-                  line_col_opt = if (is.null(ae_line_col_var)) {
-                    NULL
-                  } else {
-                    bquote(.(ae_line_col_opt))
-                  }
+              code = substitute(
+                env = list(
+                  ADAE = as.name(ae_dataname),
+                  ae_var = ae_var,
+                  line_col = if (!is.null(ae_line_col_var)) bquote(as.vector(ADAE[, .(ae_line_col_var)])) else NULL,
+                  line_col_legend = ae_line_col_var,
+                  line_col_opt = ae_line_col_opt
+                ),
+                expr = ae <- list(
+                  data = data.frame(ADAE),
+                  var = as.vector(ADAE[, ae_var]),
+                  line_col = line_col,
+                  line_col_legend = line_col_legend,
+                  line_col_opt = line_col_opt
                 )
               )
             )
@@ -704,40 +681,37 @@ srv_g_patient_profile <- function(id,
           qq
         } else {
           empty_ae <- TRUE
-          teal.code::eval_code(q1, code = bquote(ae <- NULL))
+          teal.code::eval_code(q1, code = quote(ae <- NULL))
         }
       } else {
-        teal.code::eval_code(q1, code = bquote(ae <- NULL))
+        teal.code::eval_code(q1, code = quote(ae <- NULL))
       }
 
       q1 <- if (isTRUE(select_plot()[rs_dataname])) {
         if (all(ADRS$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
-            code = bquote({
-              ADRS <- ADRS[, .(adrs_vars)] # nolint
-              ADRS <- ADSL %>% # nolint
-                left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
-                as.data.frame() %>%
-                mutate(
-                  ADY = as.numeric(difftime(
-                    ADT,
-                    as.Date(substr(
-                      as.character(eval(parse(
-                        text = .(sl_start_date),
-                        keep.source = FALSE
-                      ))), 1, 10
-                    )),
-                    units = "days"
-                  ))
-                  + (ADT >= as.Date(substr(
-                      as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                    )))
-                ) %>%
-                select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
-                filter(is.na(ADY) == FALSE)
-              rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, .(rs_var)]))
-            })
+            code = substitute(
+              env = list(
+                ADRS = as.name(rs_dataname),
+                adrs_vars = adrs_vars,
+                sl_start_date = as.name(sl_start_date),
+                rs_var = rs_var
+              ),
+              expr = {
+                ADRS <- ADRS[, adrs_vars] # nolint
+                ADRS <- ADSL %>% # nolint
+                  left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  as.data.frame() %>%
+                  mutate(
+                    ADY = as.numeric(difftime(ADT, as.Date(sl_start_date), units = "days")) +
+                      (ADT >= as.Date(sl_start_date))
+                  ) %>%
+                  select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
+                  filter(is.na(ADY) == FALSE)
+                rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, rs_var]))
+              }
+            )
           )
           ADRS <- qq[[rs_dataname]] # nolint
           if (is.null(ADRS) || nrow(ADRS) == 0) {
@@ -746,47 +720,45 @@ srv_g_patient_profile <- function(id,
           qq
         } else {
           empty_rs <- TRUE
-          teal.code::eval_code(q1, id = "rs call", expression = bquote(rs <- NULL))
+          teal.code::eval_code(q1, expression = quote(rs <- NULL))
         }
       } else {
-        teal.code::eval_code(q1, code = bquote(rs <- NULL))
+        teal.code::eval_code(q1, code = quote(rs <- NULL))
       }
 
       q1 <- if (isTRUE(select_plot()[cm_dataname])) {
         if (all(ADCM$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
-            code = bquote({
-              # ADCM
-              ADCM <- ADCM[, .(adcm_vars)] # nolint
-              ADCM <- ADSL %>% # nolint
-                left_join(ADCM, by = c("STUDYID", "USUBJID")) %>% # nolint
-                as.data.frame() %>%
-                filter(!is.na(ASTDT)) %>%
-                mutate(ASTDY = as.numeric(difftime(
-                  ASTDT,
-                  as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-                  units = "days"
-                ))
-                + (ASTDT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
-                filter(!is.na(AENDT)) %>%
-                mutate(AENDY = as.numeric(difftime(
-                  AENDT,
-                  as.Date(substr(as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10)),
-                  units = "days"
-                ))
-                + (AENDT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
-                select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(.(cm_var)))
-              if (length(unique(ADCM$USUBJID)) > 0) {
-                ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
-                & is.na(ADCM$ASTDY) == FALSE), ]
+            code = substitute(
+              env = list(
+                ADSL = as.name(sl_dataname),
+                ADCM = as.name(cm_dataname),
+                sl_start_date = as.name(sl_start_date),
+                adcm_vars = adcm_vars,
+                cm_var = cm_var
+              ),
+              expr = {
+                # ADCM
+                ADCM <- ADCM[, adcm_vars] # nolint
+                ADCM <- ADSL %>% # nolint
+                  left_join(ADCM, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  as.data.frame() %>%
+                  filter(!is.na(ASTDT), !is.na(AENDT)) %>%
+                  mutate(
+                    ASTDY = as.numeric(difftime(ASTDT, as.Date(sl_start_date), units = "days")) +
+                      (ASTDT >= as.Date(sl_start_date)),
+                    AENDY = as.numeric(difftime(AENDT, as.Date(sl_start_date), units = "days")) +
+                      (AENDT >= as.Date(sl_start_date))
+                  ) %>%
+                  select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(cm_var))
+                if (length(unique(ADCM$USUBJID)) > 0) {
+                  ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
+                  & is.na(ADCM$ASTDY) == FALSE), ]
+                }
+                cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, cm_var]))
               }
-              cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, .(cm_var)]))
-            })
+            )
           )
 
           ADCM <- qq[[cm_dataname]] # nolint
@@ -799,52 +771,52 @@ srv_g_patient_profile <- function(id,
           teal.code::eval_code(q1, code = quote(cm <- NULL))
         }
       } else {
-        teal.code::eval_code(q1, code = bquote(cm <- NULL))
+        teal.code::eval_code(q1, code = quote(cm <- NULL))
       }
 
       q1 <- if (isTRUE(select_plot()[ex_dataname])) {
         if (all(ADEX$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
-            code = bquote({
-              # ADEX
-              ADEX <- ADEX[, .(adex_vars)] # nolint
-              ADEX <- ADSL %>% # nolint
-                left_join(ADEX, by = c("STUDYID", "USUBJID")) %>% # nolint
-                as.data.frame() %>%
-                filter(PARCAT1 == "INDIVIDUAL" & PARAMCD == "DOSE" & !is.na(AVAL)) %>%
-                filter(!is.na(ASTDT)) %>%
-                select(
-                  USUBJID, ASTDT, PARCAT2,
-                  AVAL, AVALU, PARAMCD, !!quo(.(sl_start_date))
-                )
-              ADEX <- split(ADEX, ADEX$USUBJID) %>% # nolint
-                lapply(function(pinfo) {
-                  pinfo %>%
-                    arrange(PARCAT2, PARAMCD, ASTDT) %>%
-                    ungroup() %>%
-                    mutate(diff = c(0, diff(AVAL, lag = 1))) %>%
-                    mutate(
-                      Modification = case_when(
-                        diff < 0 ~ "Decrease",
-                        diff > 0 ~ "Increase",
-                        diff == 0 ~ "None"
+            code = substitute(
+              env = list(
+                ADSL = as.name(sl_dataname),
+                ADEX = as.name(ex_dataname),
+                adex_vars = adex_vars,
+                sl_start_date = as.name(sl_start_date),
+                ex_var = ex_var
+              ),
+              expr = {
+                # ADEX
+                ADEX <- ADEX[, adex_vars] # nolint
+                ADEX <- ADSL %>% # nolint
+                  left_join(ADEX, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  as.data.frame() %>%
+                  filter(PARCAT1 == "INDIVIDUAL" & PARAMCD == "DOSE" & !is.na(AVAL) & !is.na(ASTDT)) %>%
+                  select(USUBJID, ASTDT, PARCAT2, AVAL, AVALU, PARAMCD, sl_start_date)
+
+                ADEX <- split(ADEX, ADEX$USUBJID) %>% # nolint
+                  lapply(function(pinfo) {
+                    pinfo %>%
+                      arrange(PARCAT2, PARAMCD, ASTDT) %>%
+                      ungroup() %>%
+                      mutate(
+                        diff = c(0, diff(AVAL, lag = 1)),
+                        Modification = case_when(
+                          diff < 0 ~ "Decrease",
+                          diff > 0 ~ "Increase",
+                          diff == 0 ~ "None"
+                        ),
+                        ASTDT_dur = as.numeric(difftime(as.Date(ASTDT), as.Date(sl_start_date), unit = "days")) +
+                          (as.Date(ASTDT) >= as.Date(sl_start_date))
                       )
-                    ) %>%
-                    mutate(ASTDT_dur = as.numeric(
-                      as.Date(substr(as.character(ASTDT), 1, 10)) -
-                        as.Date(substr(as.character(
-                          eval(parse(text = .(sl_start_date), keep.source = FALSE))
-                        ), 1, 10))
-                    )
-                    + (as.Date(substr(as.character(ASTDT), 1, 10)) >=
-                        as.Date(substr(as.character(eval(parse(text = .(sl_start_date)))), 1, 10))))
-                }) %>%
-                Reduce(rbind, .) %>%
-                as.data.frame() %>%
-                select(-diff)
-              ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, .(ex_var)]))
-            })
+                  }) %>%
+                  Reduce(rbind, .) %>%
+                  as.data.frame() %>%
+                  select(-diff)
+                ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, ex_var]))
+              }
+            )
           )
           ADEX <- qq[[ex_dataname]] # nolint
           if (is.null(ADEX) | nrow(ADEX) == 0) {
@@ -863,39 +835,35 @@ srv_g_patient_profile <- function(id,
         if (all(ADLB$USUBJID %in% ADSL$USUBJID)) {
           qq <- teal.code::eval_code(
             q1,
-            code = bquote({
-              ADLB <- ADLB[, .(adlb_vars)] # nolint
-              ADLB <- ADSL %>% # nolint
-                left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
-                as.data.frame() %>%
-                group_by(USUBJID) %>%
-                mutate(ANRIND = factor(
-                  .data$ANRIND,
-                  levels = c("HIGH", "LOW", "NORMAL")
-                )) %>%
-                filter(
-                  !is.na(.data$LBSTRESN) & !is.na(.data$ANRIND)
-                ) %>%
-                as.data.frame() %>%
-                select(
-                  USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, !!quo(.(sl_start_date)),
-                  LBTESTCD, ANRIND, !!quo(.(lb_var))
-                )
-
-              ADLB <- ADLB %>% # nolint
-                mutate(ADY = as.numeric(difftime(
-                  .data$ADT,
-                  as.Date(substr(as.character(
-                    eval(parse(text = .(sl_start_date), keep.source = FALSE))
-                  ), 1, 10)),
-                  units = "days"
-                ))
-                + (ADT >= as.Date(substr(
-                    as.character(eval(parse(text = .(sl_start_date), keep.source = FALSE))), 1, 10
-                  )))) %>%
-                filter(.data[[.(lb_var)]] %in% .(lb_var_show))
-              lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, .(lb_var)]))
-            })
+            code = substitute(
+              env = list(
+                ADLB = as.name(lb_dataname),
+                ADSL = as.name(sl_dataname),
+                adlb_vars = adlb_vars,
+                sl_start_date = as.name(sl_start_date),
+                lb_var = lb_var,
+                lb_var_show = lb_var_show
+              ),
+              expr = {
+                ADLB <- ADLB[, adlb_vars] # nolint
+                ADLB <- ADSL %>% # nolint
+                  left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
+                  as.data.frame() %>%
+                  mutate(
+                    ANRIND = factor(.data$ANRIND, levels = c("HIGH", "LOW", "NORMAL"))
+                  ) %>%
+                  filter(!is.na(.data$LBSTRESN) & !is.na(.data$ANRIND) & .data[[lb_var]] %in% lb_var_show) %>%
+                  as.data.frame() %>%
+                  select(
+                    USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, sl_start_date, LBTESTCD, ANRIND, lb_var
+                  ) %>% # nolint
+                  mutate(
+                    ADY = as.numeric(difftime(.data$ADT, as.Date(sl_start_date), units = "days")) +
+                      (ADT >= as.Date(sl_start_date))
+                   )
+                lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, lb_var]))
+              }
+            )
           )
 
           ADLB <- qq[[lb_dataname]] # nolint
@@ -908,7 +876,7 @@ srv_g_patient_profile <- function(id,
           teal.code::eval_code(q1, code = quote(lb <- NULL))
         }
       } else {
-        teal.code::eval_code(q1, code = bquote(lb <- NULL))
+        teal.code::eval_code(q1, code = quote(lb <- NULL))
       }
 
       # Check the subject has information in at least one selected domain
@@ -947,20 +915,23 @@ srv_g_patient_profile <- function(id,
 
       q1 <- teal.code::eval_code(
         q1,
-        code = bquote({
-          plot <- osprey::g_patient_profile(
-            ex = ex,
-            ae = ae,
-            rs = rs,
-            cm = cm,
-            lb = lb,
-            arrow_end_day = ADSL$max_day,
-            xlim = x_limit,
-            xlab = "Study Day",
-            title = paste("Patient Profile: ", .(patient_id))
-          )
-          plot
-        })
+        code = substitute(
+          env = list(patient_id = patient_id),
+          expr = {
+            plot <- osprey::g_patient_profile(
+              ex = ex,
+              ae = ae,
+              rs = rs,
+              cm = cm,
+              lb = lb,
+              arrow_end_day = ADSL$max_day,
+              xlim = x_limit,
+              xlab = "Study Day",
+              title = paste("Patient Profile: ", patient_id)
+            )
+            plot
+          }
+        )
       )
     })
 
