@@ -178,7 +178,7 @@
 #'   )
 #' )
 #' if (interactive()) {
-#'   shinyApp(x$ui, x$server)
+#'   shinyApp(app$ui, app$server)
 #' }
 #'
 tm_g_patient_profile <- function(label = "Patient Profile Plot",
