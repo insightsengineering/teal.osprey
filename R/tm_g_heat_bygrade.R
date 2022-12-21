@@ -389,6 +389,8 @@ srv_g_heatmap_bygrade <- function(id,
       iv_cm$add_rule("conmed_var", ~ if (!is.factor(ADCM[[.]])) {
         "Study Ongoing Status must be a factor variable"
       })
+      iv_cm$add_rule("conmed_level", shinyvalidate::sv_required(
+        "Select Conmed Levels"))
       iv_cm$add_rule("conmed_level", ~ if (length(.) > 3L) {
         "No more than three Conmed Levels are allowed"
       })
