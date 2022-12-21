@@ -310,66 +310,69 @@ srv_g_ae_sub <- function(id,
       })
     })
 
-    output_q <- reactive({
-      ANL <- data[[dataname]]() # nolint
-      ADSL <- data[["ADSL"]]() # nolint
+    output_q <- shiny::debounce(
+      millis = 200,
+      r = reactive({
+        ANL <- data[[dataname]]() # nolint
+        ADSL <- data[["ADSL"]]() # nolint
 
-      teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
+        teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
-      teal::validate_inputs(iv())
+        teal::validate_inputs(iv())
 
-      validate(need(
-        input$arm_trt %in% ANL[[input$arm_var]] && input$arm_ref %in% ANL[[input$arm_var]],
-        "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
-      ))
-
-      group_labels <- lapply(seq_along(input$groups), function(x) {
-        items <- input[[sprintf("groups__%s", x)]]
-        if (length(items) > 0) {
-          l <- lapply(seq_along(items), function(y) {
-            input[[sprintf("groups__%s__level__%s", x, y)]]
-          })
-          names(l) <- items
-          l[["Total"]] <- input[[sprintf("groups__%s__level__%s", x, "all")]]
-          l
-        }
-      })
-
-      group_labels_call <- if (length(unlist(group_labels)) == 0) {
-        quote(group_labels <- NULL)
-      } else {
-        bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
-      }
-
-      q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
-        code = group_labels_call
-      )
-      q2 <- teal.code::eval_code(q1, code = "")
-      teal.code::eval_code(
-        q2,
-        code = as.expression(c(
-          bquote(
-            plot <- osprey::g_ae_sub(
-              id = .(as.name(dataname))$USUBJID,
-              arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
-              arm_sl = as.character(ADSL[[.(input$arm_var)]]),
-              trt = .(input$arm_trt),
-              ref = .(input$arm_ref),
-              subgroups = .(as.name(dataname))[.(input$groups)],
-              subgroups_sl = ADSL[.(input$groups)],
-              subgroups_levels = group_labels,
-              conf_level = .(input$conf_level),
-              diff_ci_method = .(input$ci),
-              fontsize = .(font_size()),
-              arm_n = .(input$arm_n),
-              draw = TRUE
-            )
-          ),
-          quote(plot)
+        validate(need(
+          input$arm_trt %in% ANL[[input$arm_var]] && input$arm_ref %in% ANL[[input$arm_var]],
+          "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
         ))
-      )
-    })
+
+        group_labels <- lapply(seq_along(input$groups), function(x) {
+          items <- input[[sprintf("groups__%s", x)]]
+          if (length(items) > 0) {
+            l <- lapply(seq_along(items), function(y) {
+              input[[sprintf("groups__%s__level__%s", x, y)]]
+            })
+            names(l) <- items
+            l[["Total"]] <- input[[sprintf("groups__%s__level__%s", x, "all")]]
+            l
+          }
+        })
+
+        group_labels_call <- if (length(unlist(group_labels)) == 0) {
+          quote(group_labels <- NULL)
+        } else {
+          bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
+        }
+
+        q1 <- teal.code::eval_code(
+          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+          code = group_labels_call
+        )
+        q2 <- teal.code::eval_code(q1, code = "")
+        teal.code::eval_code(
+          q2,
+          code = as.expression(c(
+            bquote(
+              plot <- osprey::g_ae_sub(
+                id = .(as.name(dataname))$USUBJID,
+                arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
+                arm_sl = as.character(ADSL[[.(input$arm_var)]]),
+                trt = .(input$arm_trt),
+                ref = .(input$arm_ref),
+                subgroups = .(as.name(dataname))[.(input$groups)],
+                subgroups_sl = ADSL[.(input$groups)],
+                subgroups_levels = group_labels,
+                conf_level = .(input$conf_level),
+                diff_ci_method = .(input$ci),
+                fontsize = .(font_size()),
+                arm_n = .(input$arm_n),
+                draw = TRUE
+              )
+            ),
+            quote(plot)
+          ))
+        )
+      })
+    )
 
     plot_r <- reactive(output_q()[["plot"]])
 
