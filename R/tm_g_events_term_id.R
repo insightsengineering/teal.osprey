@@ -214,8 +214,6 @@ srv_g_events_term_id <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ANL <- data[[dataname]]() # nolint
-
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("term", shinyvalidate::sv_required(
         message = "Term Variable is required"
@@ -223,9 +221,6 @@ srv_g_events_term_id <- function(id,
       iv$add_rule("arm_var", shinyvalidate::sv_required(
         message = "Arm Variable is required"
       ))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
-        "Arm Var must be a factor variable, contact developer"
-      })
       rule_diff <- function(value, other) {
         if (isTRUE(value == other)) "Control and Treatment must be different"
       }
@@ -311,10 +306,12 @@ srv_g_events_term_id <- function(id,
 
       teal::validate_inputs(iv())
 
-      validate(need(
-        input$arm_trt %in% ANL[[req(input$arm_var)]] && input$arm_ref %in% ANL[[req(input$arm_var)]],
-        "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
-      ))
+      shiny::validate(
+        shiny::need(is.factor(ANL[[input$arm_var]]), "Arm Var must be a factor variable. Contact developer."),
+        shiny::need(
+          input$arm_trt %in% ANL[[req(input$arm_var)]] && input$arm_ref %in% ANL[[req(input$arm_var)]],
+          "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
+        ))
 
       adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
