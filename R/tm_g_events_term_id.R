@@ -311,7 +311,8 @@ srv_g_events_term_id <- function(id,
         shiny::need(
           input$arm_trt %in% ANL[[req(input$arm_var)]] && input$arm_ref %in% ANL[[req(input$arm_var)]],
           "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
-        ))
+        )
+      )
 
       adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
       anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint

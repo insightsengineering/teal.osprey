@@ -326,8 +326,8 @@ srv_g_ae_oview <- function(id,
           code = as.expression(c(
             bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
             bquote(flags <- .(as.name(dataname)) %>%
-                     select(all_of(.(input$flag_var_anl))) %>%
-                     rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x])))
+              select(all_of(.(input$flag_var_anl))) %>%
+              rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x])))
           ))
         )
 
