@@ -9,7 +9,7 @@ tm_g_heat_bygrade(
   sl_dataname,
   ex_dataname,
   ae_dataname,
-  cm_dataname,
+  cm_dataname = NA,
   id_var,
   visit_var,
   ongo_var,

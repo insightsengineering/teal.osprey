@@ -184,9 +184,33 @@ srv_g_ae_sub <- function(id,
   checkmate::assert_class(data, "tdata")
 
   moduleServer(id, function(input, output, session) {
-    iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("arm_var", shinyvalidate::sv_required())
-    iv$enable()
+    iv <- reactive({
+      ANL <- data[[dataname]]() # nolint
+      ADSL <- data[["ADSL"]]() # nolint
+
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("arm_var", shinyvalidate::sv_required(
+        message = "Arm Variable is required"
+      ))
+      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
+        "Arm Var must be a factor variable, contact developer"
+      })
+      rule_diff <- function(value, other) {
+        if (isTRUE(value == other)) "Control and Treatment must be different"
+      }
+      iv$add_rule("arm_trt", rule_diff, other = input$arm_ref)
+      iv$add_rule("arm_ref", rule_diff, other = input$arm_trt)
+      iv$add_rule("groups", shinyvalidate::sv_in_set(
+        names(ANL),
+        message_fmt = sprintf("Groups must be a variable in %s", dataname)
+      ))
+      iv$add_rule("groups", shinyvalidate::sv_in_set(
+        names(ADSL),
+        message_fmt = "Groups must be a variable in ADSL"
+      ))
+      iv$enable()
+      iv
+    })
 
     decorate_output <- srv_g_decorate(
       id = NULL,
@@ -286,91 +310,69 @@ srv_g_ae_sub <- function(id,
       })
     })
 
-    output_q <- reactive({
-      ANL <- data[[dataname]]() # nolint
-      ADSL <- data[["ADSL"]]() # nolint
-      validate_has_data(ANL, min_nrow = 10)
-      iv_comp <- shinyvalidate::InputValidator$new()
-      iv_comp$add_rule("arm_trt", shinyvalidate::sv_not_equal(
-        input$arm_ref,
-        message_fmt = "Must not be equal to Control"
-      ))
-      iv_comp$add_rule("arm_ref", shinyvalidate::sv_not_equal(
-        input$arm_trt,
-        message_fmt = "Must not be equal to Treatment"
-      ))
-      iv_comp$enable()
-      validate(need(iv_comp$is_valid(), "Misspecification error: please observe red flags in the encodings."))
+    output_q <- shiny::debounce(
+      millis = 200,
+      r = reactive({
+        ANL <- data[[dataname]]() # nolint
+        ADSL <- data[["ADSL"]]() # nolint
 
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-      validate(need(
-        is.factor(ANL[[input$arm_var]]),
-        "Selected arm variable needs to be a factor. Contact the app developer."
-      ))
-      validate(
-        need(
-          all(c(input$arm_trt, input$arm_ref) %in% levels(ADSL[[input$arm_var]])),
-          "Updating treatment and control selections."
-        )
-      )
-      validate(
-        need(
-          all(c(input$arm_trt, input$arm_ref) %in% levels(ANL[[input$arm_var]])),
-          "The dataset does not contain subjects with AE events from both the control and treatment arms."
-        ),
-        need(
-          all(input$groups %in% names(ANL)) & all(input$groups %in% names(ADSL)),
-          "Check all selected subgroups are columns in ADAE and ADSL."
-        )
-      )
+        teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
-      group_labels <- lapply(seq_along(input$groups), function(x) {
-        items <- input[[sprintf("groups__%s", x)]]
-        if (length(items) > 0) {
-          l <- lapply(seq_along(items), function(y) {
-            input[[sprintf("groups__%s__level__%s", x, y)]]
-          })
-          names(l) <- items
-          l[["Total"]] <- input[[sprintf("groups__%s__level__%s", x, "all")]]
-          l
-        }
-      })
+        teal::validate_inputs(iv())
 
-      group_labels_call <- if (length(unlist(group_labels)) == 0) {
-        quote(group_labels <- NULL)
-      } else {
-        bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
-      }
-
-      q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
-        code = group_labels_call
-      )
-      q2 <- teal.code::eval_code(q1, code = "")
-      teal.code::eval_code(
-        q2,
-        code = as.expression(c(
-          bquote(
-            plot <- osprey::g_ae_sub(
-              id = .(as.name(dataname))$USUBJID,
-              arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
-              arm_sl = as.character(ADSL[[.(input$arm_var)]]),
-              trt = .(input$arm_trt),
-              ref = .(input$arm_ref),
-              subgroups = .(as.name(dataname))[.(input$groups)],
-              subgroups_sl = ADSL[.(input$groups)],
-              subgroups_levels = group_labels,
-              conf_level = .(input$conf_level),
-              diff_ci_method = .(input$ci),
-              fontsize = .(font_size()),
-              arm_n = .(input$arm_n),
-              draw = TRUE
-            )
-          ),
-          quote(plot)
+        validate(need(
+          input$arm_trt %in% ANL[[input$arm_var]] && input$arm_ref %in% ANL[[input$arm_var]],
+          "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
         ))
-      )
-    })
+
+        group_labels <- lapply(seq_along(input$groups), function(x) {
+          items <- input[[sprintf("groups__%s", x)]]
+          if (length(items) > 0) {
+            l <- lapply(seq_along(items), function(y) {
+              input[[sprintf("groups__%s__level__%s", x, y)]]
+            })
+            names(l) <- items
+            l[["Total"]] <- input[[sprintf("groups__%s__level__%s", x, "all")]]
+            l
+          }
+        })
+
+        group_labels_call <- if (length(unlist(group_labels)) == 0) {
+          quote(group_labels <- NULL)
+        } else {
+          bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
+        }
+
+        q1 <- teal.code::eval_code(
+          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+          code = group_labels_call
+        )
+        q2 <- teal.code::eval_code(q1, code = "")
+        teal.code::eval_code(
+          q2,
+          code = as.expression(c(
+            bquote(
+              plot <- osprey::g_ae_sub(
+                id = .(as.name(dataname))$USUBJID,
+                arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
+                arm_sl = as.character(ADSL[[.(input$arm_var)]]),
+                trt = .(input$arm_trt),
+                ref = .(input$arm_ref),
+                subgroups = .(as.name(dataname))[.(input$groups)],
+                subgroups_sl = ADSL[.(input$groups)],
+                subgroups_levels = group_labels,
+                conf_level = .(input$conf_level),
+                diff_ci_method = .(input$ci),
+                fontsize = .(font_size()),
+                arm_n = .(input$arm_n),
+                draw = TRUE
+              )
+            ),
+            quote(plot)
+          ))
+        )
+      })
+    )
 
     plot_r <- reactive(output_q()[["plot"]])
 
