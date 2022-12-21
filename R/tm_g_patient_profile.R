@@ -932,7 +932,7 @@ srv_g_patient_profile <- function(id,
         )
       })
 
-    plot_r <- reactive(output_q()[["plot"]])
+    plot_r <- shiny::debounce(reactive(output_q()[["plot"]]), millis = 200)
 
     pws <- teal.widgets::plot_with_settings_srv(
       id = "patientprofileplot",
