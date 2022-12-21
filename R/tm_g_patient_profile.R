@@ -492,7 +492,9 @@ srv_g_patient_profile <- function(id,
     })
 
     # render plot
-    output_q <- reactive({
+    output_q <- shiny::debounce(
+      millis = 200,
+      r = reactive({
         teal::validate_inputs(iv())
 
         # get inputs ---
@@ -931,8 +933,9 @@ srv_g_patient_profile <- function(id,
           )
         )
       })
+    )
 
-    plot_r <- shiny::debounce(reactive(output_q()[["plot"]]), millis = 200)
+    plot_r <- reactive(output_q()[["plot"]])
 
     pws <- teal.widgets::plot_with_settings_srv(
       id = "patientprofileplot",
