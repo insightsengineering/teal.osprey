@@ -307,50 +307,53 @@ srv_g_ae_oview <- function(id,
       )
     })
 
-    output_q <- reactive({
-      ANL <- data[[dataname]]() # nolint
+    output_q <- shiny::debounce(
+      millis = 200,
+      r = reactive({
+        ANL <- data[[dataname]]() # nolint
 
-      teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
+        teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
-      teal::validate_inputs(iv())
+        teal::validate_inputs(iv())
 
-      validate(need(
-        input$arm_trt %in% ANL[[input$arm_var]] && input$arm_ref %in% ANL[[input$arm_var]],
-        "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
-      ))
-
-      q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
-        code = as.expression(c(
-          bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
-          bquote(flags <- .(as.name(dataname)) %>%
-            select(all_of(.(input$flag_var_anl))) %>%
-            rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x])))
+        validate(need(
+          input$arm_trt %in% ANL[[input$arm_var]] && input$arm_ref %in% ANL[[input$arm_var]],
+          "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
         ))
-      )
 
-      teal.code::eval_code(
-        q1,
-        code = as.expression(c(
-          bquote(
-            plot <- osprey::g_events_term_id(
-              term = flags,
-              id = .(as.name(dataname))[["USUBJID"]],
-              arm = .(as.name(dataname))[[.(input$arm_var)]],
-              arm_N = table(ADSL[[.(input$arm_var)]]),
-              ref = .(input$arm_ref),
-              trt = .(input$arm_trt),
-              diff_ci_method = .(input$diff_ci_method),
-              conf_level = .(input$conf_level),
-              axis_side = .(input$axis),
-              fontsize = .(font_size()),
-              draw = TRUE
-            )
-          ),
-          quote(plot)
-        ))
-      )
-    })
+        q1 <- teal.code::eval_code(
+          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+          code = as.expression(c(
+            bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
+            bquote(flags <- .(as.name(dataname)) %>%
+                     select(all_of(.(input$flag_var_anl))) %>%
+                     rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x])))
+          ))
+        )
+
+        teal.code::eval_code(
+          q1,
+          code = as.expression(c(
+            bquote(
+              plot <- osprey::g_events_term_id(
+                term = flags,
+                id = .(as.name(dataname))[["USUBJID"]],
+                arm = .(as.name(dataname))[[.(input$arm_var)]],
+                arm_N = table(ADSL[[.(input$arm_var)]]),
+                ref = .(input$arm_ref),
+                trt = .(input$arm_trt),
+                diff_ci_method = .(input$diff_ci_method),
+                conf_level = .(input$conf_level),
+                axis_side = .(input$axis),
+                fontsize = .(font_size()),
+                draw = TRUE
+              )
+            ),
+            quote(plot)
+          ))
+        )
+      })
+    )
 
     plot_r <- reactive(output_q()[["plot"]])
 
