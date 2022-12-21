@@ -380,115 +380,118 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       ignoreNULL = FALSE
     )
 
-    output_q <- reactive({
-      ADSL <- data[["ADSL"]]() # nolint
-      ANL <- data[[dataname]]() # nolint
+    output_q <- shiny::debounce(
+      millis = 200,
+      r = reactive({
+        ADSL <- data[["ADSL"]]() # nolint
+        ANL <- data[[dataname]]() # nolint
 
-      teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s Data is empty", "ADSL"))
-      teal::validate_has_data(ANL, min_nrow = 0, msg = sprintf("%s Data is empty", dataname))
+        teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s Data is empty", "ADSL"))
+        teal::validate_has_data(ANL, min_nrow = 0, msg = sprintf("%s Data is empty", dataname))
 
-      teal::validate_inputs(iv())
+        teal::validate_inputs(iv())
 
-      validate(
-        need(
-          all(input$right_val %in% ADSL[[input$right_var]]) &&
-            all(input$left_val %in% ADSL[[input$left_var]]),
-          "No observations for selected dichotomization values (filtered out?)"
-        )
-      )
-
-      right_var <- isolate(input$right_var)
-      left_var <- isolate(input$left_var)
-      right_val <- input$right_val
-      left_val <- input$left_val
-      category_var <- input$category_var
-      color_by_var <- input$color_by_var
-      count_by_var <- input$count_by_var
-      legend_on <- input$legend_on
-      facet_var <- input$facet_var
-      sort_by_var <- input$sort_by_var
-      filter_var <- input$filter_var
-
-      # if variable is not in ADSL, then take from domain VADs
-      varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)
-      varlist_from_adsl <- intersect(varlist, names(ADSL))
-      varlist_from_anl <- intersect(varlist, setdiff(names(ANL), names(ADSL)))
-
-      adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
-      anl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
-
-      q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
-        code = bquote({
-          ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
-          ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame() # nolint
-        })
-      )
-
-      if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
-        q1 <- teal.code::eval_code(
-          q1,
-          code = bquote(
-            ANL <- quick_filter(.(filter_var), ANL) %>% # nolint
-              droplevels() %>%
-              as.data.frame()
+        validate(
+          need(
+            all(input$right_val %in% ADSL[[input$right_var]]) &&
+              all(input$left_val %in% ADSL[[input$left_var]]),
+            "No observations for selected dichotomization values (filtered out?)"
           )
         )
-      }
 
-      q1 <- teal.code::eval_code(
-        q1,
-        code = bquote({
-          ANL_f <- left_join(ADSL, ANL, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
-          ANL_f <- na.omit(ANL_f) # nolint
-        })
-      )
+        right_var <- isolate(input$right_var)
+        left_var <- isolate(input$left_var)
+        right_val <- input$right_val
+        left_val <- input$left_val
+        category_var <- input$category_var
+        color_by_var <- input$color_by_var
+        count_by_var <- input$count_by_var
+        legend_on <- input$legend_on
+        facet_var <- input$facet_var
+        sort_by_var <- input$sort_by_var
+        filter_var <- input$filter_var
 
-      if (!is.null(right_val) && !is.null(right_val)) {
+        # if variable is not in ADSL, then take from domain VADs
+        varlist <- c(category_var, color_by_var, facet_var, filter_var, right_var, left_var)
+        varlist_from_adsl <- intersect(varlist, names(ADSL))
+        varlist_from_anl <- intersect(varlist, setdiff(names(ANL), names(ADSL)))
+
+        adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
+        anl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
+
+        q1 <- teal.code::eval_code(
+          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+          code = bquote({
+            ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
+            ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame() # nolint
+          })
+        )
+
+        if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
+          q1 <- teal.code::eval_code(
+            q1,
+            code = bquote(
+              ANL <- quick_filter(.(filter_var), ANL) %>% # nolint
+                droplevels() %>%
+                as.data.frame()
+            )
+          )
+        }
+
         q1 <- teal.code::eval_code(
           q1,
           code = bquote({
-            right <- ANL_f[, .(right_var)] %in% .(right_val)
-            right_name <- paste(.(right_val), collapse = " - ")
-            left <- ANL_f[, .(left_var)] %in% .(left_val)
-            left_name <- paste(.(left_val), collapse = " - ")
+            ANL_f <- left_join(ADSL, ANL, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
+            ANL_f <- na.omit(ANL_f) # nolint
           })
         )
-      }
 
-      if (!is.null(right_val) && !is.null(left_val)) {
-        q1 <- teal.code::eval_code(
-          q1,
-          code = bquote(
-            plot <- osprey::g_butterfly(
-              category = ANL_f[, .(category_var)],
-              right_flag = right,
-              left_flag = left,
-              group_names = c(right_name, left_name),
-              block_count = .(count_by_var),
-              block_color = .(if (color_by_var != "None") {
-                bquote(ANL_f[, .(color_by_var)])
-              } else {
-                NULL
-              }),
-              id = ANL_f$USUBJID,
-              facet_rows = .(if (!is.null(facet_var)) {
-                bquote(ANL_f[, .(facet_var)])
-              } else {
-                NULL
-              }),
-              x_label = .(count_by_var),
-              y_label = .(category_var),
-              legend_label = .(color_by_var),
-              sort_by = .(sort_by_var),
-              show_legend = .(legend_on)
+        if (!is.null(right_val) && !is.null(right_val)) {
+          q1 <- teal.code::eval_code(
+            q1,
+            code = bquote({
+              right <- ANL_f[, .(right_var)] %in% .(right_val)
+              right_name <- paste(.(right_val), collapse = " - ")
+              left <- ANL_f[, .(left_var)] %in% .(left_val)
+              left_name <- paste(.(left_val), collapse = " - ")
+            })
+          )
+        }
+
+        if (!is.null(right_val) && !is.null(left_val)) {
+          q1 <- teal.code::eval_code(
+            q1,
+            code = bquote(
+              plot <- osprey::g_butterfly(
+                category = ANL_f[, .(category_var)],
+                right_flag = right,
+                left_flag = left,
+                group_names = c(right_name, left_name),
+                block_count = .(count_by_var),
+                block_color = .(if (color_by_var != "None") {
+                  bquote(ANL_f[, .(color_by_var)])
+                } else {
+                  NULL
+                }),
+                id = ANL_f$USUBJID,
+                facet_rows = .(if (!is.null(facet_var)) {
+                  bquote(ANL_f[, .(facet_var)])
+                } else {
+                  NULL
+                }),
+                x_label = .(count_by_var),
+                y_label = .(category_var),
+                legend_label = .(color_by_var),
+                sort_by = .(sort_by_var),
+                show_legend = .(legend_on)
+              )
             )
           )
-        )
-      }
+        }
 
-      teal.code::eval_code(q1, quote(plot))
-    })
+        teal.code::eval_code(q1, quote(plot))
+      })
+    )
 
     plot_r <- reactive(output_q()[["plot"]])
 
