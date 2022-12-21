@@ -419,59 +419,64 @@ srv_g_heatmap_bygrade <- function(id,
       })
     }
 
-    output_q <- reactive({
-      ADSL <- data[[sl_dataname]]() # nolint
-      ADEX <- data[[ex_dataname]]() # nolint
-      ADAE <- data[[ae_dataname]]() # nolint
+    output_q <- shiny::debounce(
+      millis = 200,
+      r = reactive({
+        ADSL <- data[[sl_dataname]]() # nolint
+        ADEX <- data[[ex_dataname]]() # nolint
+        ADAE <- data[[ae_dataname]]() # nolint
 
-      teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
-      teal::validate_inputs(iv(), iv_cm())
-      validate(need(input$conmed_level %in% ADCM[[input$conmed_var]], "Updating Conmed Levels"))
+        teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
+        teal::validate_inputs(iv(), iv_cm())
+        if (isTRUE(input$plot_cm)) {
+          shiny::validate(shiny::need(all(input$conmed_level %in% ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
+        }
 
-      qenv <- teal.code::new_qenv(tdata2env(data), code = teal::get_code_tdata(data))
-      if (isTRUE(input$plot_cm)) {
-        ADCM <- data[[cm_dataname]]() # nolint
+        qenv <- teal.code::new_qenv(tdata2env(data), code = teal::get_code_tdata(data))
+        if (isTRUE(input$plot_cm)) {
+          ADCM <- data[[cm_dataname]]() # nolint
+          qenv <- teal.code::eval_code(
+            qenv,
+            code = substitute(
+              env = list(
+                ADCM = as.name(cm_dataname),
+                conmed_var = input$conmed_var,
+                conmed_var_name = as.name(input$conmed_var),
+                conmed_level = input$conmed_level
+              ),
+              expr = {
+                conmed_data <- ADCM %>%
+                  filter(conmed_var_name %in% conmed_level)
+                conmed_data[[conmed_var]] <-
+                  factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
+                formatters::var_labels(conmed_data)[conmed_var] <-
+                  formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
+              }
+            )
+          )
+        }
+
         qenv <- teal.code::eval_code(
           qenv,
-          code = substitute(
-            env = list(
-              ADCM = as.name(cm_dataname),
-              conmed_var = input$conmed_var,
-              conmed_var_name = as.name(input$conmed_var),
-              conmed_level = input$conmed_level
-            ),
-            expr = {
-              conmed_data <- ADCM %>%
-                filter(conmed_var_name %in% conmed_level)
-              conmed_data[[conmed_var]] <-
-                factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
-              formatters::var_labels(conmed_data)[conmed_var] <-
-                formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
-            }
+          code = bquote(
+            plot <- osprey::g_heat_bygrade(
+              id_var = .(input$id_var),
+              exp_data = .(as.name(ex_dataname)) %>% filter(PARCAT1 == "INDIVIDUAL"),
+              visit_var = .(input$visit_var),
+              ongo_var = .(input$ongo_var),
+              anno_data = .(as.name(sl_dataname))[c(.(input$anno_var), .(input$id_var))],
+              anno_var = .(input$anno_var),
+              heat_data = .(as.name(ae_dataname)) %>%
+                select(.(as.name(input$id_var)), .(as.name(input$visit_var)), .(as.name(input$heat_var))),
+              heat_color_var = .(input$heat_var),
+              conmed_data = .(if (isTRUE(input$plot_cm)) as.name("conmed_data")),
+              conmed_var = .(if (isTRUE(input$plot_cm)) input$conmed_var),
+            )
           )
         )
-      }
-
-      qenv <- teal.code::eval_code(
-        qenv,
-        code = bquote(
-          plot <- osprey::g_heat_bygrade(
-            id_var = .(input$id_var),
-            exp_data = .(as.name(ex_dataname)) %>% filter(PARCAT1 == "INDIVIDUAL"),
-            visit_var = .(input$visit_var),
-            ongo_var = .(input$ongo_var),
-            anno_data = .(as.name(sl_dataname))[c(.(input$anno_var), .(input$id_var))],
-            anno_var = .(input$anno_var),
-            heat_data = .(as.name(ae_dataname)) %>%
-              select(.(as.name(input$id_var)), .(as.name(input$visit_var)), .(as.name(input$heat_var))),
-            heat_color_var = .(input$heat_var),
-            conmed_data = .(if (isTRUE(input$plot_cm)) as.name("conmed_data")),
-            conmed_var = .(if (isTRUE(input$plot_cm)) input$conmed_var),
-          )
-        )
-      )
-      teal.code::eval_code(qenv, quote(plot))
-    })
+        teal.code::eval_code(qenv, quote(plot))
+      })
+    )
 
     plot_r <- reactive(output_q()[["plot"]])
 
