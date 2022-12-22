@@ -446,8 +446,8 @@ srv_g_patient_profile <- function(id,
           message = "Adverse Event variable is required"
         ))
         iv$add_rule("ae_line_var", shinyvalidate::sv_optional())
-        iv$add_rule("ae_line_var", ~ if (length(levels(ADAE[[.]])) > length(ae_line_col_opt)) {
-          "Not enough colors provided Adverse Event line color, unselect"
+        iv$add_rule("ae_line_var", ~ if (length(levels(data[[ae_dataname]]()[[.]])) > length(ae_line_col_opt)) {
+          "Not enough colors provided for Adverse Event line color, unselect"
         })
       }
       if (isTRUE(select_plot()[rs_dataname])) {
