@@ -151,7 +151,7 @@ tm_g_heat_bygrade <- function(label,
                               sl_dataname,
                               ex_dataname,
                               ae_dataname,
-                              cm_dataname,
+                              cm_dataname = NA,
                               id_var,
                               visit_var,
                               ongo_var,
@@ -265,7 +265,13 @@ ui_g_heatmap_bygrade <- function(id, ...) {
         helpText("Plot conmed"),
         div(
           class = "pretty-left-border",
-          uiOutput(ns("plot_cm_output"))
+          if (!is.na(args$cm_dataname)) {
+            checkboxInput(
+              ns("plot_cm"),
+              "Yes",
+              value = !is.na(args$cm_dataname)
+            )
+          }
         ),
         conditionalPanel(
           paste0("input['", ns("plot_cm"), "']"),
@@ -313,144 +319,167 @@ srv_g_heatmap_bygrade <- function(id,
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
   checkmate::assert_class(data, "tdata")
+  if (!is.na(sl_dataname)) checkmate::assert_names(sl_dataname, subset.of = names(data))
+  if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
+  if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
+  if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
 
   moduleServer(id, function(input, output, session) {
-    iv <- shinyvalidate::InputValidator$new()
-    iv$add_rule("heat_var", shinyvalidate::sv_required())
-    iv$add_rule("id_var", shinyvalidate::sv_required())
-    iv$add_rule("visit_var", shinyvalidate::sv_required())
-    iv$add_rule("ongo_var", shinyvalidate::sv_required())
-    iv$enable()
-
-    decorate_output <- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width) # nolint
-    font_size <- decorate_output$font_size
-    pws <- decorate_output$pws
-
-    observeEvent(cm_dataname, {
-      if (!is.na(cm_dataname)) {
-        output$plot_cm_output <- renderUI({
-          checkboxInput(
-            session$ns("plot_cm"),
-            "Yes",
-            value = !is.na(cm_dataname)
-          )
-        })
-      }
-    })
-
-    observeEvent(input$plot_cm, {
-      ADCM <- data[[cm_dataname]]() # nolint
-      req(input$conmed_var)
-      choices <- levels(ADCM[[input$conmed_var]])
-
-      updateSelectInput(
-        session,
-        "conmed_level",
-        selected = choices[1:3],
-        choices = choices
-      )
-    })
-
-    output_q <- reactive({
-      iv_len <- shinyvalidate::InputValidator$new()
-      anno_var <- input$anno_var
-      iv_len$add_rule("anno_var", function(x) if (length(x) > 2) "Please include no more than 2 annotation variables.")
-      iv_len$enable()
-      validate(need(iv_len$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-      validate(need(iv$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-
+    iv <- reactive({
       ADSL <- data[[sl_dataname]]() # nolint
       ADEX <- data[[ex_dataname]]() # nolint
       ADAE <- data[[ae_dataname]]() # nolint
-
-      validate(need(nrow(ADSL) > 0, "Please select at least one subject"))
-      validate(need(
-        input$ongo_var %in% names(ADEX),
-        paste("Study Ongoing Status must be a variable in", ex_dataname, sep = " ")
-      ))
-
-      validate(need(
-        checkmate::test_logical(ADEX[[input$ongo_var]], min.len = 1, any.missing = FALSE),
-        "Study Ongoing Status must be a logical variable"
-      ))
-
-      validate(need(
-        all(anno_var %in% names(ADSL)),
-        paste("Please only select annotation variable(s) in", sl_dataname, sep = " ")
-      ))
-
-      validate(need(
-        !(input$id_var %in% anno_var),
-        paste("Please de-select", input$id_var, "in annotation variable(s)", sep = " ")
-      ))
-
       if (isTRUE(input$plot_cm)) {
         ADCM <- data[[cm_dataname]]() # nolint
-        validate(
-          need(
-            input$conmed_var %in% names(ADCM),
-            paste("Please select a Conmed Variable in", cm_dataname, sep = " ")
-          )
-        )
-        validate(need(
-          is.factor(ADCM[[input$conmed_var]]),
-          "Conmed Variable should be a factor"
-        ))
-        validate(need(
-          all(input$conmed_level %in% levels(ADCM[[input$conmed_var]])),
-          "Updating Conmed Levels"
-        ))
       }
 
-      q1 <- if (isTRUE(input$plot_cm)) {
-        iv_cm <- shinyvalidate::InputValidator$new()
-        conmed_var <- input$conmed_var
-        iv_cm$add_rule("conmed_var", shinyvalidate::sv_required())
-        iv_cm$enable()
-        validate(need(iv_cm$is_valid(), "Misspecification error: please observe red flags in the encodings."))
-
-        teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = teal::get_code_tdata(data)),
-          code = bquote({
-            conmed_data <- ADCM %>%
-              filter(!!sym(.(conmed_var)) %in% .(input$conmed_level))
-            conmed_var <- .(conmed_var)
-            conmed_data[[conmed_var]] <-
-              factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
-            formatters::var_labels(conmed_data)[conmed_var] <-
-              formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
-          })
-        )
-      } else {
-        teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = teal.code::get_code(data)),
-          code = quote(conmed_data <- conmed_var <- NULL)
-        )
-      }
-
-      validate(
-        need(length(input$conmed_level) <= 3, "Please select no more than 3 conmed levels")
-      )
-
-      q2 <- teal.code::eval_code(
-        q1,
-        code = bquote({
-          plot <- osprey::g_heat_bygrade(
-            id_var = .(input$id_var),
-            exp_data = ADEX %>% filter(PARCAT1 == "INDIVIDUAL"),
-            visit_var = .(input$visit_var),
-            ongo_var = .(input$ongo_var),
-            anno_data = ADSL[c(.(input$anno_var), .(input$id_var))],
-            anno_var = .(input$anno_var),
-            heat_data = ADAE %>% select(!!.(input$id_var), !!.(input$visit_var), !!.(input$heat_var)),
-            heat_color_var = .(input$heat_var),
-            conmed_data = conmed_data,
-            conmed_var = conmed_var
-          )
-        })
-      )
-      teal.code::eval_code(q2, quote(plot))
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("id_var", shinyvalidate::sv_required(
+        message = "ID Variable is required"
+      ))
+      iv$add_rule("visit_var", shinyvalidate::sv_required(
+        message = "Visit Variable is required"
+      ))
+      iv$add_rule("ongo_var", shinyvalidate::sv_required(
+        message = "Study Ongoing Status Variable is required"
+      ))
+      iv$add_rule("ongo_var", shinyvalidate::sv_in_set(
+        set = names(ADEX),
+        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", ex_dataname)
+      ))
+      iv$add_rule("ongo_var", ~ if (!is.logical(ADEX[[req(.)]])) {
+        "Study Ongoing Status must be a logical variable"
+      })
+      iv$add_rule("anno_var", shinyvalidate::sv_required(
+        message = "Annotation Variables is required"
+      ))
+      iv$add_rule("anno_var", ~ if (length(.) > 2L) {
+        "No more than two Annotation Variables are allowed"
+      })
+      iv$add_rule("anno_var", shinyvalidate::sv_in_set(
+        set = names(ADSL),
+        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", sl_dataname)
+      ))
+      iv$add_rule("anno_var", ~ if (isTRUE(input$id_var %in% .)) {
+        sprintf("Deselect %s in Annotation Variables", input$id_var)
+      })
+      iv$add_rule("heat_var", shinyvalidate::sv_required(
+        message = "Heat Variable is required"
+      ))
+      iv$enable()
+      iv
     })
+    iv_cm <- reactive({
+      ADSL <- data[[sl_dataname]]() # nolint
+      ADEX <- data[[ex_dataname]]() # nolint
+      ADAE <- data[[ae_dataname]]() # nolint
+      if (isTRUE(input$plot_cm)) {
+        ADCM <- data[[cm_dataname]]() # nolint
+      }
+
+      iv_cm <- shinyvalidate::InputValidator$new()
+      iv_cm$condition(~ isTRUE(input$plot_cm))
+      iv_cm$add_rule("conmed_var", shinyvalidate::sv_required(
+        message = "Conmed Variable is required"
+      ))
+      iv_cm$add_rule("conmed_var", shinyvalidate::sv_in_set(
+        set = names(ADCM),
+        message_fmt = sprintf("Conmed Variable must be a variable in %s", cm_dataname)
+      ))
+      iv_cm$add_rule("conmed_var", ~ if (!is.factor(ADCM[[.]])) {
+        "Study Ongoing Status must be a factor variable"
+      })
+      iv_cm$add_rule("conmed_level", shinyvalidate::sv_required(
+        "Select Conmed Levels"
+      ))
+      iv_cm$add_rule("conmed_level", ~ if (length(.) > 3L) {
+        "No more than three Conmed Levels are allowed"
+      })
+      iv_cm$enable()
+      iv_cm
+    })
+
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
+    ) # nolint
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
+
+    if (!is.na(cm_dataname)) {
+      observeEvent(input$conmed_var, {
+        ADCM <- data[[cm_dataname]]() # nolint
+        choices <- levels(ADCM[[input$conmed_var]])
+
+        updateSelectInput(
+          session,
+          "conmed_level",
+          selected = choices[1:3],
+          choices = choices
+        )
+      })
+    }
+
+    output_q <- shiny::debounce(
+      millis = 200,
+      r = reactive({
+        ADSL <- data[[sl_dataname]]() # nolint
+        ADEX <- data[[ex_dataname]]() # nolint
+        ADAE <- data[[ae_dataname]]() # nolint
+
+        teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
+        teal::validate_inputs(iv(), iv_cm())
+        if (isTRUE(input$plot_cm)) {
+          shiny::validate(shiny::need(all(input$conmed_level %in% ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
+        }
+
+        qenv <- teal.code::new_qenv(tdata2env(data), code = teal::get_code_tdata(data))
+        if (isTRUE(input$plot_cm)) {
+          ADCM <- data[[cm_dataname]]() # nolint
+          qenv <- teal.code::eval_code(
+            qenv,
+            code = substitute(
+              env = list(
+                ADCM = as.name(cm_dataname),
+                conmed_var = input$conmed_var,
+                conmed_var_name = as.name(input$conmed_var),
+                conmed_level = input$conmed_level
+              ),
+              expr = {
+                conmed_data <- ADCM %>%
+                  filter(conmed_var_name %in% conmed_level)
+                conmed_data[[conmed_var]] <-
+                  factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
+                formatters::var_labels(conmed_data)[conmed_var] <-
+                  formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
+              }
+            )
+          )
+        }
+
+        qenv <- teal.code::eval_code(
+          qenv,
+          code = bquote(
+            plot <- osprey::g_heat_bygrade(
+              id_var = .(input$id_var),
+              exp_data = .(as.name(ex_dataname)) %>% filter(PARCAT1 == "INDIVIDUAL"),
+              visit_var = .(input$visit_var),
+              ongo_var = .(input$ongo_var),
+              anno_data = .(as.name(sl_dataname))[c(.(input$anno_var), .(input$id_var))],
+              anno_var = .(input$anno_var),
+              heat_data = .(as.name(ae_dataname)) %>%
+                select(.(as.name(input$id_var)), .(as.name(input$visit_var)), .(as.name(input$heat_var))),
+              heat_color_var = .(input$heat_var),
+              conmed_data = .(if (isTRUE(input$plot_cm)) as.name("conmed_data")),
+              conmed_var = .(if (isTRUE(input$plot_cm)) input$conmed_var),
+            )
+          )
+        )
+        teal.code::eval_code(qenv, quote(plot))
+      })
+    )
 
     plot_r <- reactive(output_q()[["plot"]])
 

@@ -127,11 +127,11 @@ app <- init(
       dataname = "ADAE",
       right_var = choices_selected(
         selected = "SEX",
-        choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")
+        choices = c("SEX", "ARM", "RACE")
       ),
       left_var = choices_selected(
         selected = "RACE",
-        choices = c("DOSE", "SEX", "ARM", "RACE", "flag1", "flag2", "flag3")
+        choices = c("SEX", "ARM", "RACE")
       ),
       category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
       color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),

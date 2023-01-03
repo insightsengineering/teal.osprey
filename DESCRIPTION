@@ -23,7 +23,7 @@ Depends:
     osprey (>= 0.1.15),
     R (>= 3.6),
     shiny,
-    teal (>= 0.12.0)
+    teal (>= 0.12.0.9013)
 Imports:
     checkmate,
     dplyr,
@@ -31,7 +31,6 @@ Imports:
     ggplot2,
     lifecycle,
     logger (>= 0.2.0),
-    purrr,
     shinyvalidate,
     teal.code (>= 0.2.0),
     teal.logger (>= 0.1.1),
@@ -65,4 +64,4 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
