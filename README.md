@@ -2,10 +2,10 @@
 
 <!-- start badges -->
 [![Release 🎈](https://github.com/insightsengineering/teal.osprey/actions/workflows/release.yaml/badge.svg)](https://github.com/insightsengineering/teal.osprey/releases)
-[![Check 🛠](https://github.com/insightsengineering/teal.osprey/actions/workflows/check.yaml/badge.svg)](https://github.com/insightsengineering/teal.osprey/actions/workflows/check.yaml)
+[![Check 🛠](https://github.com/insightsengineering/teal.osprey/actions/workflows/check.yaml/badge.svg)](https://insightsengineering.github.io/teal.osprey/main/unit-test-report/)
 [![Docs 📚](https://github.com/insightsengineering/teal.osprey/actions/workflows/docs.yaml/badge.svg)](https://insightsengineering.github.io/teal.osprey/)
 
-[![Code Coverage 📔](https://raw.githubusercontent.com/insightsengineering/teal.osprey/_xml_coverage_reports/data/main/badge.svg)](https://raw.githubusercontent.com/insightsengineering/teal.osprey/_xml_coverage_reports/data/main/coverage.xml)
+[![Code Coverage 📔](https://raw.githubusercontent.com/insightsengineering/teal.osprey/_xml_coverage_reports/data/main/badge.svg)](https://insightsengineering.github.io/teal.osprey/main/coverage-report/)
 
 ![GitHub forks](https://img.shields.io/github/forks/insightsengineering/teal.osprey?style=social)
 ![GitHub Repo stars](https://img.shields.io/github/stars/insightsengineering/teal.osprey?style=social)
