@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage line-rate="0.00144009216589862" branch-rate="0" lines-covered="5" lines-valid="3472" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-02-13 17:17:50">
-  <sources/>
+<!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
+<coverage line-rate="0.00144009216589862" branch-rate="0" lines-covered="5" lines-valid="3472" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-06-01 17:39:02">
+  <sources>
+    <source>/__w/teal.osprey/teal.osprey/teal.osprey</source>
+  </sources>
   <packages>
     <package name="teal.osprey" line-rate="0.00144009216589862" branch-rate="0" complexity="0">
       <classes>
         <class name="tm_g_ae_oview.R" filename="R/tm_g_ae_oview.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name="tm_g_ae_oview" signature="" line-rate="0" branch-rate="0">
+            <method name="tm_g_ae_oview" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="110" hits="0" branch="false"/>
                 <line number="111" hits="0" branch="false"/>
@@ -46,7 +49,7 @@
                 <line number="147" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="ui_g_ae_oview" signature="" line-rate="0" branch-rate="0">
+            <method name="ui_g_ae_oview" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="151" hits="0" branch="false"/>
                 <line number="152" hits="0" branch="false"/>
@@ -120,7 +123,7 @@
                 <line number="222" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="srv_g_ae_oview" signature="" line-rate="0" branch-rate="0">
+            <method name="srv_g_ae_oview" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="233" hits="0" branch="false"/>
                 <line number="234" hits="0" branch="false"/>
@@ -518,7 +521,7 @@
         </class>
         <class name="tm_g_ae_sub.R" filename="R/tm_g_ae_sub.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name="tm_g_ae_sub" signature="" line-rate="0" branch-rate="0">
+            <method name="tm_g_ae_sub" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="58" hits="0" branch="false"/>
                 <line number="59" hits="0" branch="false"/>
@@ -558,7 +561,7 @@
                 <line number="94" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="ui_g_ae_sub" signature="" line-rate="0" branch-rate="0">
+            <method name="ui_g_ae_sub" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="98" hits="0" branch="false"/>
                 <line number="99" hits="0" branch="false"/>
@@ -634,7 +637,7 @@
                 <line number="171" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="srv_g_ae_sub" signature="" line-rate="0" branch-rate="0">
+            <method name="srv_g_ae_sub" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="182" hits="0" branch="false"/>
                 <line number="183" hits="0" branch="false"/>
@@ -1168,7 +1171,7 @@
         </class>
         <class name="tm_g_butterfly.R" filename="R/tm_g_butterfly.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name="tm_g_butterfly" signature="" line-rate="0" branch-rate="0">
+            <method name="tm_g_butterfly" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="124" hits="0" branch="false"/>
                 <line number="125" hits="0" branch="false"/>
@@ -1203,7 +1206,7 @@
                 <line number="156" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="ui_g_butterfly" signature="" line-rate="0" branch-rate="0">
+            <method name="ui_g_butterfly" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="160" hits="0" branch="false"/>
                 <line number="161" hits="0" branch="false"/>
@@ -1308,7 +1311,7 @@
                 <line number="263" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="srv_g_butterfly" signature="" line-rate="0" branch-rate="0">
+            <method name="srv_g_butterfly" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="267" hits="0" branch="false"/>
                 <line number="268" hits="0" branch="false"/>
@@ -1956,7 +1959,7 @@
         </class>
         <class name="tm_g_decorate.R" filename="R/tm_g_decorate.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name="ui_g_decorate" signature="" line-rate="0" branch-rate="0">
+            <method name="ui_g_decorate" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="18" hits="0" branch="false"/>
                 <line number="19" hits="0" branch="false"/>
@@ -1971,7 +1974,7 @@
                 <line number="28" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="srv_g_decorate" signature="" line-rate="0" branch-rate="0">
+            <method name="srv_g_decorate" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="49" hits="0" branch="false"/>
                 <line number="50" hits="0" branch="false"/>
@@ -2008,7 +2011,7 @@
                 <line number="85" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="plot_decorate_output" signature="" line-rate="0" branch-rate="0">
+            <method name="plot_decorate_output" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="97" hits="0" branch="false"/>
                 <line number="98" hits="0" branch="false"/>
@@ -2066,7 +2069,7 @@
         </class>
         <class name="tm_g_events_term_id.R" filename="R/tm_g_events_term_id.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name="tm_g_events_term_id" signature="" line-rate="0" branch-rate="0">
+            <method name="tm_g_events_term_id" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="63" hits="0" branch="false"/>
                 <line number="64" hits="0" branch="false"/>
@@ -2102,7 +2105,7 @@
                 <line number="96" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="ui_g_events_term_id" signature="" line-rate="0" branch-rate="0">
+            <method name="ui_g_events_term_id" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="100" hits="0" branch="false"/>
                 <line number="101" hits="0" branch="false"/>
@@ -2205,7 +2208,7 @@
                 <line number="200" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="srv_g_events_term_id" signature="" line-rate="0" branch-rate="0">
+            <method name="srv_g_events_term_id" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="211" hits="0" branch="false"/>
                 <line number="212" hits="0" branch="false"/>
@@ -2676,7 +2679,7 @@
         </class>
         <class name="tm_g_heat_bygrade.R" filename="R/tm_g_heat_bygrade.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name="tm_g_heat_bygrade" signature="" line-rate="0" branch-rate="0">
+            <method name="tm_g_heat_bygrade" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="164" hits="0" branch="false"/>
                 <line number="165" hits="0" branch="false"/>
@@ -2728,7 +2731,7 @@
                 <line number="213" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="ui_g_heatmap_bygrade" signature="" line-rate="0" branch-rate="0">
+            <method name="ui_g_heatmap_bygrade" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="217" hits="0" branch="false"/>
                 <line number="218" hits="0" branch="false"/>
@@ -2818,7 +2821,7 @@
                 <line number="305" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="srv_g_heatmap_bygrade" signature="" line-rate="0" branch-rate="0">
+            <method name="srv_g_heatmap_bygrade" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="319" hits="0" branch="false"/>
                 <line number="320" hits="0" branch="false"/>
@@ -3330,7 +3333,7 @@
         </class>
         <class name="tm_g_patient_profile.R" filename="R/tm_g_patient_profile.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name="tm_g_patient_profile" signature="" line-rate="0" branch-rate="0">
+            <method name="tm_g_patient_profile" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="205" hits="0" branch="false"/>
                 <line number="206" hits="0" branch="false"/>
@@ -3382,7 +3385,7 @@
                 <line number="253" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="ui_g_patient_profile" signature="" line-rate="0" branch-rate="0">
+            <method name="ui_g_patient_profile" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="257" hits="0" branch="false"/>
                 <line number="258" hits="0" branch="false"/>
@@ -3512,7 +3515,7 @@
                 <line number="385" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="srv_g_patient_profile" signature="" line-rate="0" branch-rate="0">
+            <method name="srv_g_patient_profile" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="402" hits="0" branch="false"/>
                 <line number="403" hits="0" branch="false"/>
@@ -4764,7 +4767,7 @@
         </class>
         <class name="tm_g_spiderplot.R" filename="R/tm_g_spiderplot.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name="tm_g_spiderplot" signature="" line-rate="0" branch-rate="0">
+            <method name="tm_g_spiderplot" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="83" hits="0" branch="false"/>
                 <line number="84" hits="0" branch="false"/>
@@ -4799,7 +4802,7 @@
                 <line number="114" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="ui_g_spider" signature="" line-rate="0" branch-rate="0">
+            <method name="ui_g_spider" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="118" hits="0" branch="false"/>
                 <line number="119" hits="0" branch="false"/>
@@ -4904,7 +4907,7 @@
                 <line number="221" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="srv_g_spider" signature="" line-rate="0" branch-rate="0">
+            <method name="srv_g_spider" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="225" hits="0" branch="false"/>
                 <line number="226" hits="0" branch="false"/>
@@ -5424,7 +5427,7 @@
         </class>
         <class name="tm_g_swimlane.R" filename="R/tm_g_swimlane.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name="tm_g_swimlane" signature="" line-rate="0" branch-rate="0">
+            <method name="tm_g_swimlane" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="120" hits="0" branch="false"/>
                 <line number="121" hits="0" branch="false"/>
@@ -5471,7 +5474,7 @@
                 <line number="165" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="ui_g_swimlane" signature="" line-rate="0" branch-rate="0">
+            <method name="ui_g_swimlane" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="170" hits="0" branch="false"/>
                 <line number="171" hits="0" branch="false"/>
@@ -5559,7 +5562,7 @@
                 <line number="256" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="srv_g_swimlane" signature="" line-rate="0" branch-rate="0">
+            <method name="srv_g_swimlane" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="273" hits="0" branch="false"/>
                 <line number="274" hits="0" branch="false"/>
@@ -6192,7 +6195,7 @@
         </class>
         <class name="tm_g_waterfall.R" filename="R/tm_g_waterfall.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name="tm_g_waterfall" signature="" line-rate="0" branch-rate="0">
+            <method name="tm_g_waterfall" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="113" hits="0" branch="false"/>
                 <line number="114" hits="0" branch="false"/>
@@ -6235,7 +6238,7 @@
                 <line number="153" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="ui_g_waterfall" signature="" line-rate="0" branch-rate="0">
+            <method name="ui_g_waterfall" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="157" hits="0" branch="false"/>
                 <line number="158" hits="0" branch="false"/>
@@ -6357,7 +6360,7 @@
                 <line number="277" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="srv_g_waterfall" signature="" line-rate="0" branch-rate="0">
+            <method name="srv_g_waterfall" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="290" hits="0" branch="false"/>
                 <line number="291" hits="0" branch="false"/>
@@ -7054,14 +7057,14 @@
         </class>
         <class name="utils.R" filename="R/utils.R" line-rate="0.135135135135135" branch-rate="0" complexity="0">
           <methods>
-            <method name="quick_filter" signature="" line-rate="0" branch-rate="0">
+            <method name="quick_filter" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="32" hits="0" branch="false"/>
                 <line number="33" hits="0" branch="false"/>
                 <line number="35" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="label_aevar" signature="" line-rate="0" branch-rate="0">
+            <method name="label_aevar" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="45" hits="0" branch="false"/>
                 <line number="46" hits="0" branch="false"/>
@@ -7085,13 +7088,13 @@
                 <line number="67" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="name_ci" signature="" line-rate="0" branch-rate="0">
+            <method name="name_ci" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="90" hits="0" branch="false"/>
                 <line number="91" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="as_numeric_from_comma_sep_str" signature="" line-rate="1" branch-rate="0">
+            <method name="as_numeric_from_comma_sep_str" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
                 <line number="104" hits="10" branch="false"/>
                 <line number="105" hits="7" branch="false"/>
@@ -7100,7 +7103,7 @@
                 <line number="110" hits="10" branch="false"/>
               </lines>
             </method>
-            <method name="include_css_files" signature="" line-rate="0" branch-rate="0">
+            <method name="include_css_files" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="124" hits="0" branch="false"/>
                 <line number="125" hits="0" branch="false"/>
@@ -7154,7 +7157,7 @@
         </class>
         <class name="zzz.R" filename="R/zzz.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
-            <method name=".onLoad" signature="" line-rate="0" branch-rate="0">
+            <method name=".onLoad" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="2" hits="0" branch="false"/>
               </lines>
