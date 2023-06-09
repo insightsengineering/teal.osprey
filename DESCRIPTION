@@ -25,7 +25,7 @@ Depends:
     shiny,
     teal (>= 0.12.0.9013)
 Imports:
-    checkmate,
+    checkmate (>= 2.0.0),
     dplyr,
     formatters (>= 0.3.1),
     ggplot2,
@@ -59,6 +59,30 @@ Remotes:
     insightsengineering/teal.widgets@*release,
     insightsengineering/teal@*release,
     insightsengineering/tern@*release
+Config/Needs/verdepcheck:
+    insightsengineering/osprey,
+    rstudio/shiny,
+    insightsengineering/teal,
+    mllg/checkmate,
+    tidyverse/dplyr,
+    insightsengineering/formatters,
+    tidyverse/ggplot2,
+    r-lib/lifecycle,
+    daroczig/logger,
+    rstudio/shinyvalidate,
+    insightsengineering/teal.code,
+    insightsengineering/teal.logger,
+    insightsengineering/teal.reporter,
+    insightsengineering/teal.widgets,
+    insightsengineering/tern,
+    tidyverse/tidyr,
+    yihui/knitr,
+    insightsengineering/nestcolor,
+    rstudio/rmarkdown,
+    insightsengineering/scda,
+    insightsengineering/scda.2022,
+    insightsengineering/teal.data,
+    r-lib/testthat
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
