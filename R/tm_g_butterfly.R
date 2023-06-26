@@ -29,7 +29,7 @@
 #'   \code{filter_var_choices} is expected to contain values of either "Y" or
 #'   "N". If multiple variables are selected as \code{filter_var}, only
 #'   observations with "Y" value in each and every selected variables will be
-#'   used for subsequent analysis. Flag variables (from ADaM datasets) can be
+#'   used for subsequent analysis. Flag variables (from `ADaM` datasets) can be
 #'   used directly as filter.
 #'
 #' @inherit argument_convention return

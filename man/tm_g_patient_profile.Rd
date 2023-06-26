@@ -53,7 +53,7 @@ leave unspecified or set to \code{NULL} if exposure data is not available}
 \item{ae_var}{(\code{choices_selected}) adverse event variable to plot as each line \cr
 leave unspecified or set to \code{NULL} if adverse events data is not available}
 
-\item{ae_line_col_var}{(\code{choices_selected}) variable for coloring AE lines \cr
+\item{ae_line_col_var}{(\code{choices_selected}) variable for coloring \code{AE} lines \cr
 leave unspecified or set to \code{NULL} if adverse events data is not available}
 
 \item{ae_line_col_opt}{aesthetic values to map color values

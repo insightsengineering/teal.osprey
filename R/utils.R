@@ -8,7 +8,7 @@
 #' @param plot_width optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
 #'   the width of the main plot and renders a slider on the plot to interactively adjust the plot width.
 #' @param label (\code{character}) module label in the teal app. Please note that this module is developed based on
-#' ADaM data structure and ADaM variables.
+#' `ADaM` data structure and `ADaM` variables.
 #'
 #' @name shared_params
 #' @keywords internal
@@ -35,7 +35,7 @@ quick_filter <- function(filter_opt, ANL) { # nolint
   return(ANL)
 }
 
-#' Automatically switch variable labels for standard AE variables in AE osprey functions
+#' Automatically switch variable labels for standard `AE` variables in `AE` osprey functions
 #' `r lifecycle::badge("stable")`
 #'
 #' @param x variable key

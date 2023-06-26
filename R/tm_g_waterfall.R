@@ -3,7 +3,7 @@
 #' @description
 #' `r lifecycle::badge("stable")`
 #'
-#' This is teal module that generates a waterfall plot for ADaM data
+#' This is teal module that generates a waterfall plot for `ADaM` data
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
@@ -13,7 +13,7 @@
 #' be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}
 #' @param bar_paramcd (\code{choices_selected}) parameter in tumor burden data that will be plotted as
 #' bar height
-#' @param bar_var (\code{choices_selected}) numeric variable from dataset to plot the bar height, e.g., PCHG
+#' @param bar_var (\code{choices_selected}) numeric variable from dataset to plot the bar height, e.g., `PCHG`
 #' @param bar_color_var (\code{choices_selected}) color by variable (subject level), \code{None} corresponds
 #' to \code{NULL}
 #' @param bar_color_opt aesthetic values to map color values (named vector to map color values to each name).
