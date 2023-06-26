@@ -2,7 +2,7 @@
 % Please edit documentation in R/tm_g_swimlane.R
 \name{tm_g_swimlane}
 \alias{tm_g_swimlane}
-\title{Teal Module for Swimlane Plot}
+\title{Teal Module for \code{Swimlane} Plot}
 \usage{
 tm_g_swimlane(
   label,
@@ -78,7 +78,7 @@ the \code{\link[teal:module]{teal::module()}} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-This is teal module that generates a swimlane plot (bar plot with markers) for ADaM data
+This is teal module that generates a \code{swimlane} plot (bar plot with markers) for ADaM data
 }
 \examples{
 

@@ -21,7 +21,7 @@
 
 ### Enhancements
 * Added `teal.reporter` to all modules.
-* Updated `shiny::validate` calls to `shinyvalidate` for better UI overview.
+* Updated `shiny::validate` calls to `shinyvalidate` for better `UI` overview.
 * Implemented `nestcolor` with slight refactoring to `tm_g_swimlane`. Added `nestcolor` in examples.
 
 ### Miscellaneous
@@ -59,7 +59,7 @@
 * Updated `tm_g_ae_sub` so that it no longer displays label inputs for group variables with no values selected.
 
 ### Bug fixes
-* Fixed a bug in `tm_g_waterfall` so that the `Tumor Burden Parameter` UI element is now respected.
+* Fixed a bug in `tm_g_waterfall` so that the `Tumor Burden Parameter` `UI` element is now respected.
 
 ### Miscellaneous
 * Updated R version requirement to `R >= 3.6`.
@@ -119,9 +119,9 @@
 
 ### Miscellaneous
 * Retired the following `teal` modules due to duplication in `teal.modules.clinical`:
-  - Teal module for AE overview summary table - can be replaced with `teal.modules.clinical::tm_t_events_summary`.
-  - Teal module for AE summary table by preferred terms - can be replaced with `teal.modules.clinical::tm_t_events`.
-  - Teal module for AE summary table by highest NCI-CTCAE grade - can be replaced with `teal.modules.clinical::tm_t_events_by_grade`.
+  - Teal module for `AE` overview summary table - can be replaced with `teal.modules.clinical::tm_t_events_summary`.
+  - Teal module for `AE` summary table by preferred terms - can be replaced with `teal.modules.clinical::tm_t_events`.
+  - Teal module for `AE` summary table by highest `NCI-CTCAE` grade - can be replaced with `teal.modules.clinical::tm_t_events_by_grade`.
   - Teal module for Disposition table - can be replaced with `teal.modules.clinical::tm_t_summary`.
 * Moved `code` argument to `cdisc_dataset` (from `cdisc_data`) in examples.
 
@@ -163,10 +163,10 @@
 # teal.osprey 0.1.0
 
 * First versioned release of teal.osprey package, which include the following seven new functions to create `teal` modules for analysis functions in `osprey` v0.1.0:
-  - Teal module for AE overview summary table.
-  - Teal module for AE summary table by preferred terms.
-  - Teal module for AE summary table by highest NCI-CTCAE grade.
+  - Teal module for `AE` overview summary table.
+  - Teal module for `AE` summary table by preferred terms.
+  - Teal module for `AE` summary table by highest `NCI-CTCAE` grade.
   - Teal module for Disposition table.
-  - Teal module for AE butterfly plot.
-  - Teal module for Swimlane plot.
+  - Teal module for `AE` butterfly plot.
+  - Teal module for `Swimlane` plot.
   - Teal module for Spider plot.
