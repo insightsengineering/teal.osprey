@@ -113,7 +113,7 @@ tm_g_butterfly <- function(label,
                            color_by_var,
                            count_by_var,
                            facet_var = NULL,
-                           sort_by_var = teal.widgets::choices_selected(
+                           sort_by_var = teal.transform::choices_selected(
                              selected = "count", choices = c("count", "alphabetical")
                            ),
                            legend_on = TRUE,
