@@ -417,12 +417,12 @@ srv_g_patient_profile <- function(id,
       observeEvent(input$lb_var, ignoreNULL = TRUE, {
         ADLB <- data[[lb_dataname]]() # nolint
         choices <- unique(ADLB[[input$lb_var]])
-        teal.transform::choices_selected <- if (length(choices) > 5) choices[1:5] else choices
+        choices_selected <- if (length(choices) > 5) choices[1:5] else choices
 
         updateSelectInput(
           session,
           "lb_var_show",
-          selected = teal.transform::choices_selected,
+          selected = choices_selected,
           choices = choices
         )
       })

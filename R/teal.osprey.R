@@ -9,6 +9,3 @@
 #' @keywords internal
 #'
 NULL
-
-# Needed to avoid R CMD note on no visible binding
-utils::globalVariables("count")
