@@ -152,7 +152,7 @@ app <- init(
       sort_by_var = teal.transform::choices_selected(
         selected = "count",
         choices = c("count", "alphabetical")
-       ),
+      ),
       legend_on = TRUE,
       plot_height = c(600, 200, 2000)
     )
