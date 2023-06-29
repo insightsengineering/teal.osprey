@@ -47,13 +47,34 @@
 #'     tm_g_spiderplot(
 #'       label = "Spider plot",
 #'       dataname = "ADTR",
-#'       paramcd = choices_selected(choices = "SLDINV", selected = "SLDINV"),
-#'       x_var = choices_selected(choices = "ADY", selected = "ADY"),
-#'       y_var = choices_selected(choices = c("PCHG", "CHG", "AVAL"), selected = "PCHG"),
-#'       marker_var = choices_selected(choices = c("SEX", "RACE", "USUBJID"), selected = "SEX"),
-#'       line_colorby_var = choices_selected(choices = c("SEX", "USUBJID", "RACE"), selected = "SEX"),
-#'       xfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "SEX"),
-#'       yfacet_var = choices_selected(choices = c("SEX", "ARM"), selected = "ARM"),
+#'       paramcd = teal.transform::choices_selected(
+#'         choices = "SLDINV",
+#'         selected = "SLDINV"
+#'       ),
+#'       x_var = teal.transform::choices_selected(
+#'         choices = "ADY",
+#'         selected = "ADY"
+#'       ),
+#'       y_var = teal.transform::choices_selected(
+#'         choices = c("PCHG", "CHG", "AVAL"),
+#'         selected = "PCHG"
+#'       ),
+#'       marker_var = teal.transform::choices_selected(
+#'         choices = c("SEX", "RACE", "USUBJID"),
+#'         selected = "SEX"
+#'       ),
+#'       line_colorby_var = teal.transform::choices_selected(
+#'         choices = c("SEX", "USUBJID", "RACE"),
+#'         selected = "SEX"
+#'       ),
+#'       xfacet_var = teal.transform::choices_selected(
+#'         choices = c("SEX", "ARM"),
+#'         selected = "SEX"
+#'       ),
+#'       yfacet_var = teal.transform::choices_selected(
+#'         choices = c("SEX", "ARM"),
+#'         selected = "ARM"
+#'       ),
 #'       vref_line = "10, 37",
 #'       href_line = "-20, 0"
 #'     )
