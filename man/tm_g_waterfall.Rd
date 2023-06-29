@@ -41,7 +41,7 @@ be available in the list passed to the \code{data} argument of \code{\link[teal]
 \item{bar_paramcd}{(\code{choices_selected}) parameter in tumor burden data that will be plotted as
 bar height}
 
-\item{bar_var}{(\code{choices_selected}) numeric variable from dataset to plot the bar height, e.g., PCHG}
+\item{bar_var}{(\code{choices_selected}) numeric variable from dataset to plot the bar height, e.g., \code{PCHG}}
 
 \item{bar_color_var}{(\code{choices_selected}) color by variable (subject level), \code{None} corresponds
 to \code{NULL}}
@@ -97,7 +97,7 @@ the \code{\link[teal:module]{teal::module()}} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-This is teal module that generates a waterfall plot for ADaM data
+This is teal module that generates a waterfall plot for \code{ADaM} data
 }
 \examples{
 library(nestcolor)

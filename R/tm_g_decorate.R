@@ -85,7 +85,7 @@ srv_g_decorate <- function(id,
   })
 }
 
-#' Helper function to plot decorated output ui
+#' Helper function to plot decorated output UI
 #'
 #' @description
 #' `r lifecycle::badge("stable")`

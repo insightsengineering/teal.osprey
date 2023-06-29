@@ -1,9 +1,9 @@
-#' teal module for the AE by subgroups
+#' teal module for the `AE` by subgroups
 #'
 #' @description
 #' `r lifecycle::badge("stable")`
 #'
-#' Display the AE by subgroups plot as a teal module
+#' Display the `AE` by subgroups plot as a teal module
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tm_g_ae_oview.R
 \name{tm_g_ae_oview}
 \alias{tm_g_ae_oview}
-\title{Teal module for the AE overview}
+\title{Teal module for the \code{AE} overview}
 \usage{
 tm_g_ae_oview(
   label,
@@ -48,7 +48,7 @@ the \code{\link[teal:module]{teal::module()}} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Display the AE overview plot as a shiny module
+Display the \code{AE} overview plot as a shiny module
 }
 \examples{
 library(scda)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tm_g_ae_sub.R
 \name{tm_g_ae_sub}
 \alias{tm_g_ae_sub}
-\title{teal module for the AE by subgroups}
+\title{teal module for the \code{AE} by subgroups}
 \usage{
 tm_g_ae_sub(
   label,
@@ -46,7 +46,7 @@ the \code{\link[teal:module]{teal::module()}} object.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Display the AE by subgroups plot as a teal module
+Display the \code{AE} by subgroups plot as a teal module
 }
 \examples{
 # Example using stream (ADaM) dataset

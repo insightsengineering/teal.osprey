@@ -11,7 +11,7 @@ the height of the main plot.}
 the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 
 \item{label}{(\code{character}) module label in the teal app. Please note that this module is developed based on
-ADaM data structure and ADaM variables.}
+\code{ADaM} data structure and \code{ADaM} variables.}
 }
 \description{
 Contains arguments that are shared between multiple functions
