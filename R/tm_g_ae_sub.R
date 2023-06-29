@@ -33,11 +33,11 @@
 #'     tm_g_ae_sub(
 #'       label = "AE by Subgroup",
 #'       dataname = "ADAE",
-#'       arm_var = choices_selected(
+#'       arm_var = teal.transform::choices_selected(
 #'         selected = "ACTARMCD",
 #'         choices = c("ACTARM", "ACTARMCD")
 #'       ),
-#'       group_var = choices_selected(
+#'       group_var = teal.transform::choices_selected(
 #'         selected = c("SEX", "REGION1", "RACE"),
 #'         choices = c("SEX", "REGION1", "RACE")
 #'       ),

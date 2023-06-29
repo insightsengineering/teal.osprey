@@ -35,6 +35,7 @@ Imports:
     teal.code (>= 0.2.0),
     teal.logger (>= 0.1.1),
     teal.reporter (>= 0.1.1),
+    teal.transform (>= 0.3.0),
     teal.widgets (>= 0.2.0),
     tern (>= 0.7.10),
     tidyr
@@ -56,6 +57,7 @@ Remotes:
     insightsengineering/teal.logger@*release,
     insightsengineering/teal.logger@*release,
     insightsengineering/teal.reporter@*release,
+    insightsengineering/teal.transform@*release,
     insightsengineering/teal.widgets@*release,
     insightsengineering/teal@*release,
     insightsengineering/tern@*release

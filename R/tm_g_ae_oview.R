@@ -82,13 +82,13 @@
 #'     tm_g_ae_oview(
 #'       label = "AE Overview",
 #'       dataname = "ADAE",
-#'       arm_var = choices_selected(
+#'       arm_var = teal.transform::choices_selected(
 #'         selected = "ACTARM",
 #'         choices = c("ACTARM", "ACTARMCD")
 #'       ),
-#'       flag_var_anl = choices_selected(
+#'       flag_var_anl = teal.transform::choices_selected(
 #'         selected = "AEREL1",
-#'         choices = variable_choices(
+#'         choices = teal.transform::variable_choices(
 #'           ADAE,
 #'           c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
 #'         ),
