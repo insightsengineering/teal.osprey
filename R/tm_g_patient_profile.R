@@ -133,7 +133,7 @@
 #'   modules = modules(
 #'     tm_g_patient_profile(
 #'       label = "Patient Profile Plot",
-#'       patient_id = choices_selected(
+#'       patient_id = teal.transform::choices_selected(
 #'         choices = unique(ADSL$USUBJID),
 #'         selected = unique(ADSL$USUBJID)[1]
 #'       ),
@@ -143,32 +143,32 @@
 #'       rs_dataname = "ADRS",
 #'       cm_dataname = "ADCM",
 #'       lb_dataname = "ADLB",
-#'       sl_start_date = choices_selected(
+#'       sl_start_date = teal.transform::choices_selected(
 #'         selected = "TRTSDTM",
 #'         choices = c("TRTSDTM", "RANDDT")
 #'       ),
-#'       ex_var = choices_selected(
+#'       ex_var = teal.transform::choices_selected(
 #'         selected = "PARCAT2",
 #'         choices = "PARCAT2"
 #'       ),
-#'       ae_var = choices_selected(
+#'       ae_var = teal.transform::choices_selected(
 #'         selected = "AEDECOD",
 #'         choices = c("AEDECOD", "AESOC")
 #'       ),
-#'       ae_line_col_var = choices_selected(
+#'       ae_line_col_var = teal.transform::choices_selected(
 #'         selected = "AESER",
 #'         choices = c("AESER", "AEREL")
 #'       ),
 #'       ae_line_col_opt = c("Y" = "red", "N" = "blue"),
-#'       rs_var = choices_selected(
+#'       rs_var = teal.transform::choices_selected(
 #'         selected = "PARAMCD",
 #'         choices = "PARAMCD"
 #'       ),
-#'       cm_var = choices_selected(
+#'       cm_var = teal.transform::choices_selected(
 #'         selected = "CMDECOD",
 #'         choices = c("CMDECOD", "CMCAT")
 #'       ),
-#'       lb_var = choices_selected(
+#'       lb_var = teal.transform::choices_selected(
 #'         selected = "LBTESTCD",
 #'         choices = c("LBTESTCD", "LBCAT")
 #'       ),
@@ -578,21 +578,21 @@ srv_g_patient_profile <- function(id,
         q1 <- teal.code::eval_code(
           teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
           code = substitute(
+            expr = {
+              ADSL <- ADSL %>% # nolint
+                filter(USUBJID == patient_id) %>%
+                group_by(USUBJID) %>%
+                mutate(
+                  max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
+                  max_day = as.numeric(difftime(as.Date(max_date), as.Date(sl_start_date), units = "days")) +
+                    (as.Date(max_date) >= as.Date(sl_start_date))
+                )
+            },
             env = list(
               ADSL = as.name(sl_dataname),
               sl_start_date = as.name(sl_start_date),
               patient_id = patient_id
-            ),
-            expr = {
-              ADSL <- ADSL %>% # nolint
-                filter(USUBJID == patient_id) %>%
-                group_by(.data$USUBJID) %>%
-                mutate(
-                  max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
-                  max_day = as.numeric(difftime(as.Date(.data$max_date), as.Date(sl_start_date), units = "days")) +
-                    (as.Date(.data$max_date) >= as.Date(sl_start_date))
-                )
-            }
+            )
           )
         )
 
@@ -613,8 +613,8 @@ srv_g_patient_profile <- function(id,
           teal.code::eval_code(
             q1,
             code = substitute(
-              env = list(ADAE = as.name(ae_dataname), ae_line_col_var = ae_line_col_var),
-              expr = ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var]
+              expr = ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var],
+              env = list(ADAE = as.name(ae_dataname), ae_line_col_var = ae_line_col_var)
             )
           )
         } else {
@@ -626,13 +626,6 @@ srv_g_patient_profile <- function(id,
             qq <- teal.code::eval_code(
               q1,
               code = substitute(
-                env = list(
-                  ADSL = as.name(sl_dataname),
-                  ADAE = as.name(ae_dataname),
-                  sl_start_date = as.name(sl_start_date),
-                  ae_line_col_var = ae_line_col_var,
-                  adae_vars = adae_vars
-                ),
                 expr = {
                   # ADAE
                   ADAE <- ADAE[, adae_vars] # nolint
@@ -650,24 +643,31 @@ srv_g_patient_profile <- function(id,
                     select(c(adae_vars, ASTDY, AENDY))
                   formatters::var_labels(ADAE)[ae_line_col_var] <- # nolint
                     formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var]
-                }
+                },
+                env = list(
+                  ADSL = as.name(sl_dataname),
+                  ADAE = as.name(ae_dataname),
+                  sl_start_date = as.name(sl_start_date),
+                  ae_line_col_var = ae_line_col_var,
+                  adae_vars = adae_vars
+                )
               )
             ) %>%
               teal.code::eval_code(
                 code = substitute(
-                  env = list(
-                    ADAE = as.name(ae_dataname),
-                    ae_var = ae_var,
-                    line_col = if (!is.null(ae_line_col_var)) bquote(as.vector(ADAE[, .(ae_line_col_var)])) else NULL,
-                    line_col_legend = ae_line_col_var,
-                    line_col_opt = ae_line_col_opt
-                  ),
                   expr = ae <- list(
                     data = data.frame(ADAE),
                     var = as.vector(ADAE[, ae_var]),
                     line_col = line_col,
                     line_col_legend = line_col_legend,
                     line_col_opt = line_col_opt
+                  ),
+                  env = list(
+                    ADAE = as.name(ae_dataname),
+                    ae_var = ae_var,
+                    line_col = if (!is.null(ae_line_col_var)) bquote(as.vector(ADAE[, .(ae_line_col_var)])) else NULL,
+                    line_col_legend = ae_line_col_var,
+                    line_col_opt = ae_line_col_opt
                   )
                 )
               )
@@ -689,12 +689,6 @@ srv_g_patient_profile <- function(id,
             qq <- teal.code::eval_code(
               q1,
               code = substitute(
-                env = list(
-                  ADRS = as.name(rs_dataname),
-                  adrs_vars = adrs_vars,
-                  sl_start_date = as.name(sl_start_date),
-                  rs_var = rs_var
-                ),
                 expr = {
                   ADRS <- ADRS[, adrs_vars] # nolint
                   ADRS <- ADSL %>% # nolint
@@ -707,7 +701,13 @@ srv_g_patient_profile <- function(id,
                     select(USUBJID, PARAMCD, PARAM, AVALC, AVAL, ADY, ADT) %>%
                     filter(is.na(ADY) == FALSE)
                   rs <- list(data = data.frame(ADRS), var = as.vector(ADRS[, rs_var]))
-                }
+                },
+                env = list(
+                  ADRS = as.name(rs_dataname),
+                  adrs_vars = adrs_vars,
+                  sl_start_date = as.name(sl_start_date),
+                  rs_var = rs_var
+                )
               )
             )
             ADRS <- qq[[rs_dataname]] # nolint
@@ -728,13 +728,6 @@ srv_g_patient_profile <- function(id,
             qq <- teal.code::eval_code(
               q1,
               code = substitute(
-                env = list(
-                  ADSL = as.name(sl_dataname),
-                  ADCM = as.name(cm_dataname),
-                  sl_start_date = as.name(sl_start_date),
-                  adcm_vars = adcm_vars,
-                  cm_var = cm_var
-                ),
                 expr = {
                   # ADCM
                   ADCM <- ADCM[, adcm_vars] # nolint
@@ -754,7 +747,14 @@ srv_g_patient_profile <- function(id,
                     & is.na(ADCM$ASTDY) == FALSE), ]
                   }
                   cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, cm_var]))
-                }
+                },
+                env = list(
+                  ADSL = as.name(sl_dataname),
+                  ADCM = as.name(cm_dataname),
+                  sl_start_date = as.name(sl_start_date),
+                  adcm_vars = adcm_vars,
+                  cm_var = cm_var
+                )
               )
             )
 
@@ -776,13 +776,6 @@ srv_g_patient_profile <- function(id,
             qq <- teal.code::eval_code(
               q1,
               code = substitute(
-                env = list(
-                  ADSL = as.name(sl_dataname),
-                  ADEX = as.name(ex_dataname),
-                  adex_vars = adex_vars,
-                  sl_start_date = as.name(sl_start_date),
-                  ex_var = ex_var
-                ),
                 expr = {
                   # ADEX
                   ADEX <- ADEX[, adex_vars] # nolint
@@ -812,7 +805,14 @@ srv_g_patient_profile <- function(id,
                     as.data.frame() %>%
                     select(-diff)
                   ex <- list(data = data.frame(ADEX), var = as.vector(ADEX[, ex_var]))
-                }
+                },
+                env = list(
+                  ADSL = as.name(sl_dataname),
+                  ADEX = as.name(ex_dataname),
+                  adex_vars = adex_vars,
+                  sl_start_date = as.name(sl_start_date),
+                  ex_var = ex_var
+                )
               )
             )
             ADEX <- qq[[ex_dataname]] # nolint
@@ -833,6 +833,25 @@ srv_g_patient_profile <- function(id,
             qq <- teal.code::eval_code(
               q1,
               code = substitute(
+                expr = {
+                  ADLB <- ADLB[, adlb_vars] # nolint
+                  ADLB <- ADSL %>% # nolint
+                    left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
+                    as.data.frame() %>%
+                    mutate(
+                      ANRIND = factor(ANRIND, levels = c("HIGH", "LOW", "NORMAL"))
+                    ) %>%
+                    filter(!is.na(LBSTRESN) & !is.na(ANRIND) & .data[[lb_var]] %in% lb_var_show) %>%
+                    as.data.frame() %>%
+                    select(
+                      USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, sl_start_date, LBTESTCD, ANRIND, lb_var
+                    ) %>% # nolint
+                    mutate(
+                      ADY = as.numeric(difftime(ADT, as.Date(sl_start_date), units = "days")) +
+                        (ADT >= as.Date(sl_start_date))
+                    )
+                  lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, lb_var]))
+                },
                 env = list(
                   ADLB = as.name(lb_dataname),
                   ADSL = as.name(sl_dataname),
@@ -840,26 +859,7 @@ srv_g_patient_profile <- function(id,
                   sl_start_date = as.name(sl_start_date),
                   lb_var = lb_var,
                   lb_var_show = lb_var_show
-                ),
-                expr = {
-                  ADLB <- ADLB[, adlb_vars] # nolint
-                  ADLB <- ADSL %>% # nolint
-                    left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
-                    as.data.frame() %>%
-                    mutate(
-                      ANRIND = factor(.data$ANRIND, levels = c("HIGH", "LOW", "NORMAL"))
-                    ) %>%
-                    filter(!is.na(.data$LBSTRESN) & !is.na(.data$ANRIND) & .data[[lb_var]] %in% lb_var_show) %>%
-                    as.data.frame() %>%
-                    select(
-                      USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, sl_start_date, LBTESTCD, ANRIND, lb_var
-                    ) %>% # nolint
-                    mutate(
-                      ADY = as.numeric(difftime(.data$ADT, as.Date(sl_start_date), units = "days")) +
-                        (ADT >= as.Date(sl_start_date))
-                    )
-                  lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, lb_var]))
-                }
+                )
               )
             )
 
@@ -912,10 +912,6 @@ srv_g_patient_profile <- function(id,
         q1 <- teal.code::eval_code(
           q1,
           code = substitute(
-            env = list(
-              patient_id = patient_id,
-              ADSL = as.name(sl_dataname)
-            ),
             expr = {
               plot <- osprey::g_patient_profile(
                 ex = ex,
@@ -929,7 +925,11 @@ srv_g_patient_profile <- function(id,
                 title = paste("Patient Profile: ", patient_id)
               )
               plot
-            }
+            },
+            env = list(
+              patient_id = patient_id,
+              ADSL = as.name(sl_dataname)
+            )
           )
         )
       })

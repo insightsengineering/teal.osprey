@@ -158,27 +158,27 @@ app <- init(
       ex_dataname = "ADEX",
       ae_dataname = "ADAE",
       cm_dataname = "ADCM",
-      id_var = choices_selected(
+      id_var = teal.transform::choices_selected(
         selected = "USUBJID",
         choices = c("USUBJID", "SUBJID")
       ),
-      visit_var = choices_selected(
+      visit_var = teal.transform::choices_selected(
         selected = "AVISIT",
         choices = c("AVISIT")
       ),
-      ongo_var = choices_selected(
+      ongo_var = teal.transform::choices_selected(
         selected = "ongo_status",
         choices = c("ongo_status")
       ),
-      anno_var = choices_selected(
+      anno_var = teal.transform::choices_selected(
         selected = c("SEX", "COUNTRY"),
         choices = c("SEX", "COUNTRY", "USUBJID")
       ),
-      heat_var = choices_selected(
+      heat_var = teal.transform::choices_selected(
         selected = "AETOXGR",
         choices = c("AETOXGR")
       ),
-      conmed_var = choices_selected(
+      conmed_var = teal.transform::choices_selected(
         selected = "CMDECOD",
         choices = c("CMDECOD")
       ),

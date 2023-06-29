@@ -34,14 +34,14 @@
 #'     tm_g_events_term_id(
 #'       label = "Common AE",
 #'       dataname = "ADAE",
-#'       term_var = choices_selected(
+#'       term_var = teal.transform::choices_selected(
 #'         selected = "AEDECOD",
 #'         choices = c(
 #'           "AEDECOD", "AETERM",
 #'           "AEHLT", "AELLT", "AEBODSYS"
 #'         )
 #'       ),
-#'       arm_var = choices_selected(
+#'       arm_var = teal.transform::choices_selected(
 #'         selected = "ACTARMCD",
 #'         choices = c("ACTARM", "ACTARMCD")
 #'       ),
