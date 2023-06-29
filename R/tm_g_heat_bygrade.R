@@ -441,20 +441,20 @@ srv_g_heatmap_bygrade <- function(id,
           qenv <- teal.code::eval_code(
             qenv,
             code = substitute(
+              expr = {
+                conmed_data <- ADCM %>%
+                  filter(.data$conmed_var_name %in% conmed_level)
+                conmed_data[[conmed_var]] <-
+                  factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
+                formatters::var_labels(conmed_data)[conmed_var] <-
+                  formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
+              },
               env = list(
                 ADCM = as.name(cm_dataname),
                 conmed_var = input$conmed_var,
                 conmed_var_name = as.name(input$conmed_var),
                 conmed_level = input$conmed_level
-              ),
-              expr = {
-                conmed_data <- ADCM %>%
-                  filter(conmed_var_name %in% conmed_level)
-                conmed_data[[conmed_var]] <-
-                  factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
-                formatters::var_labels(conmed_data)[conmed_var] <-
-                  formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
-              }
+              )
             )
           )
         }
