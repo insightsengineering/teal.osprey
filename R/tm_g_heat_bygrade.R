@@ -116,27 +116,27 @@
 #'       ex_dataname = "ADEX",
 #'       ae_dataname = "ADAE",
 #'       cm_dataname = "ADCM",
-#'       id_var = choices_selected(
+#'       id_var = teal.transform::choices_selected(
 #'         selected = "USUBJID",
 #'         choices = c("USUBJID", "SUBJID")
 #'       ),
-#'       visit_var = choices_selected(
+#'       visit_var = teal.transform::choices_selected(
 #'         selected = "AVISIT",
 #'         choices = c("AVISIT")
 #'       ),
-#'       ongo_var = choices_selected(
+#'       ongo_var = teal.transform::choices_selected(
 #'         selected = "ongo_status",
 #'         choices = c("ongo_status")
 #'       ),
-#'       anno_var = choices_selected(
+#'       anno_var = teal.transform::choices_selected(
 #'         selected = c("SEX", "COUNTRY"),
 #'         choices = c("SEX", "COUNTRY", "USUBJID")
 #'       ),
-#'       heat_var = choices_selected(
+#'       heat_var = teal.transform::choices_selected(
 #'         selected = "AETOXGR",
 #'         choices = c("AETOXGR")
 #'       ),
-#'       conmed_var = choices_selected(
+#'       conmed_var = teal.transform::choices_selected(
 #'         selected = "CMDECOD",
 #'         choices = c("CMDECOD")
 #'       ),
@@ -441,12 +441,6 @@ srv_g_heatmap_bygrade <- function(id,
           qenv <- teal.code::eval_code(
             qenv,
             code = substitute(
-              env = list(
-                ADCM = as.name(cm_dataname),
-                conmed_var = input$conmed_var,
-                conmed_var_name = as.name(input$conmed_var),
-                conmed_level = input$conmed_level
-              ),
               expr = {
                 conmed_data <- ADCM %>%
                   filter(conmed_var_name %in% conmed_level)
@@ -454,7 +448,13 @@ srv_g_heatmap_bygrade <- function(id,
                   factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
                 formatters::var_labels(conmed_data)[conmed_var] <-
                   formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
-              }
+              },
+              env = list(
+                ADCM = as.name(cm_dataname),
+                conmed_var = input$conmed_var,
+                conmed_var_name = as.name(input$conmed_var),
+                conmed_level = input$conmed_level
+              )
             )
           )
         }

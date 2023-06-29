@@ -79,22 +79,22 @@
 #'     tm_g_butterfly(
 #'       label = "Butterfly Plot",
 #'       dataname = "ADAE",
-#'       right_var = choices_selected(
+#'       right_var = teal.transform::choices_selected(
 #'         selected = "SEX",
 #'         choices = c("SEX", "ARM", "RACE")
 #'       ),
-#'       left_var = choices_selected(
+#'       left_var = teal.transform::choices_selected(
 #'         selected = "RACE",
 #'         choices = c("SEX", "ARM", "RACE")
 #'       ),
-#'       category_var = choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
-#'       color_by_var = choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
-#'       count_by_var = choices_selected(
+#'       category_var = teal.transform::choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
+#'       color_by_var = teal.transform::choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
+#'       count_by_var = teal.transform::choices_selected(
 #'         selected = "# of patients",
 #'         choices = c("# of patients", "# of AEs")
 #'       ),
-#'       facet_var = choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
-#'       sort_by_var = choices_selected(selected = "count", choices = c("count", "alphabetical")),
+#'       facet_var = teal.transform::choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
+#'       sort_by_var = teal.transform::choices_selected(selected = "count", choices = c("count", "alphabetical")),
 #'       legend_on = TRUE,
 #'       plot_height = c(600, 200, 2000)
 #'     )
@@ -113,7 +113,7 @@ tm_g_butterfly <- function(label,
                            color_by_var,
                            count_by_var,
                            facet_var = NULL,
-                           sort_by_var = teal.widgets::choices_selected(
+                           sort_by_var = teal.transform::choices_selected(
                              selected = "count", choices = c("count", "alphabetical")
                            ),
                            legend_on = TRUE,
