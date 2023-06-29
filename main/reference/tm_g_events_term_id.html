@@ -12,7 +12,7 @@ Display Events by Term plot as a shiny module"><!-- mathjax --><script src="http
     
     <a class="navbar-brand me-2" href="../index.html">teal.osprey</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.15.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.15.9011</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,14 +26,6 @@ Display Events by Term plot as a shiny module"><!-- mathjax --><script src="http
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/v0.1.15">v0.1.15</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -152,14 +144,14 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <span class="r-in"><span>    <span class="fu">tm_g_events_term_id</span><span class="op">(</span></span></span>
 <span class="r-in"><span>      label <span class="op">=</span> <span class="st">"Common AE"</span>,</span></span>
 <span class="r-in"><span>      dataname <span class="op">=</span> <span class="st">"ADAE"</span>,</span></span>
-<span class="r-in"><span>      term_var <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      term_var <span class="op">=</span> <span class="fu">teal.transform</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        selected <span class="op">=</span> <span class="st">"AEDECOD"</span>,</span></span>
 <span class="r-in"><span>        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>          <span class="st">"AEDECOD"</span>, <span class="st">"AETERM"</span>,</span></span>
 <span class="r-in"><span>          <span class="st">"AEHLT"</span>, <span class="st">"AELLT"</span>, <span class="st">"AEBODSYS"</span></span></span>
 <span class="r-in"><span>        <span class="op">)</span></span></span>
 <span class="r-in"><span>      <span class="op">)</span>,</span></span>
-<span class="r-in"><span>      arm_var <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      arm_var <span class="op">=</span> <span class="fu">teal.transform</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        selected <span class="op">=</span> <span class="st">"ACTARMCD"</span>,</span></span>
 <span class="r-in"><span>        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ACTARM"</span>, <span class="st">"ACTARMCD"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>      <span class="op">)</span>,</span></span>
@@ -167,7 +159,7 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2023-06-29 03:14:27.1293 pid:1177 token:[] teal.osprey Initializing tm_g_events_term_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2023-06-29 17:39:49.2407 pid:1177 token:[] teal.osprey Initializing tm_g_events_term_id</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu">shinyApp</span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="va">ui</span>, <span class="va">app</span><span class="op">$</span><span class="va">server</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>

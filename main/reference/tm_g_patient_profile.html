@@ -12,7 +12,7 @@ Display patient profile plot as a shiny module"><!-- mathjax --><script src="htt
     
     <a class="navbar-brand me-2" href="../index.html">teal.osprey</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.15.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.15.9011</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,14 +26,6 @@ Display patient profile plot as a shiny module"><!-- mathjax --><script src="htt
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/v0.1.15">v0.1.15</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -289,7 +281,7 @@ the start date</p></li>
 <span class="r-in"><span>  modules <span class="op">=</span> <span class="fu">modules</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu">tm_g_patient_profile</span><span class="op">(</span></span></span>
 <span class="r-in"><span>      label <span class="op">=</span> <span class="st">"Patient Profile Plot"</span>,</span></span>
-<span class="r-in"><span>      patient_id <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      patient_id <span class="op">=</span> <span class="fu">teal.transform</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">$</span><span class="va">USUBJID</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">$</span><span class="va">USUBJID</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span></span>
 <span class="r-in"><span>      <span class="op">)</span>,</span></span>
@@ -299,32 +291,32 @@ the start date</p></li>
 <span class="r-in"><span>      rs_dataname <span class="op">=</span> <span class="st">"ADRS"</span>,</span></span>
 <span class="r-in"><span>      cm_dataname <span class="op">=</span> <span class="st">"ADCM"</span>,</span></span>
 <span class="r-in"><span>      lb_dataname <span class="op">=</span> <span class="st">"ADLB"</span>,</span></span>
-<span class="r-in"><span>      sl_start_date <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      sl_start_date <span class="op">=</span> <span class="fu">teal.transform</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        selected <span class="op">=</span> <span class="st">"TRTSDTM"</span>,</span></span>
 <span class="r-in"><span>        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TRTSDTM"</span>, <span class="st">"RANDDT"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>      <span class="op">)</span>,</span></span>
-<span class="r-in"><span>      ex_var <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      ex_var <span class="op">=</span> <span class="fu">teal.transform</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        selected <span class="op">=</span> <span class="st">"PARCAT2"</span>,</span></span>
 <span class="r-in"><span>        choices <span class="op">=</span> <span class="st">"PARCAT2"</span></span></span>
 <span class="r-in"><span>      <span class="op">)</span>,</span></span>
-<span class="r-in"><span>      ae_var <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      ae_var <span class="op">=</span> <span class="fu">teal.transform</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        selected <span class="op">=</span> <span class="st">"AEDECOD"</span>,</span></span>
 <span class="r-in"><span>        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AEDECOD"</span>, <span class="st">"AESOC"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>      <span class="op">)</span>,</span></span>
-<span class="r-in"><span>      ae_line_col_var <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      ae_line_col_var <span class="op">=</span> <span class="fu">teal.transform</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        selected <span class="op">=</span> <span class="st">"AESER"</span>,</span></span>
 <span class="r-in"><span>        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AESER"</span>, <span class="st">"AEREL"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>      <span class="op">)</span>,</span></span>
 <span class="r-in"><span>      ae_line_col_opt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Y"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"N"</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>      rs_var <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      rs_var <span class="op">=</span> <span class="fu">teal.transform</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        selected <span class="op">=</span> <span class="st">"PARAMCD"</span>,</span></span>
 <span class="r-in"><span>        choices <span class="op">=</span> <span class="st">"PARAMCD"</span></span></span>
 <span class="r-in"><span>      <span class="op">)</span>,</span></span>
-<span class="r-in"><span>      cm_var <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      cm_var <span class="op">=</span> <span class="fu">teal.transform</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        selected <span class="op">=</span> <span class="st">"CMDECOD"</span>,</span></span>
 <span class="r-in"><span>        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CMDECOD"</span>, <span class="st">"CMCAT"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>      <span class="op">)</span>,</span></span>
-<span class="r-in"><span>      lb_var <span class="op">=</span> <span class="fu">choices_selected</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      lb_var <span class="op">=</span> <span class="fu">teal.transform</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.transform/man/choices_selected.html" class="external-link">choices_selected</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        selected <span class="op">=</span> <span class="st">"LBTESTCD"</span>,</span></span>
 <span class="r-in"><span>        choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"LBTESTCD"</span>, <span class="st">"LBCAT"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>      <span class="op">)</span>,</span></span>
