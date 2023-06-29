@@ -580,12 +580,12 @@ srv_g_patient_profile <- function(id,
           code = substitute(
             expr = {
               ADSL <- ADSL %>% # nolint
-                filter(.data$USUBJID == patient_id) %>%
-                group_by(.data$USUBJID) %>%
+                filter(USUBJID == patient_id) %>%
+                group_by(USUBJID) %>%
                 mutate(
-                  max_date = pmax(as.Date(.data$LSTALVDT), as.Date(.data$DTHDT), na.rm = TRUE),
-                  max_day = as.numeric(difftime(as.Date(.data$max_date), as.Date(sl_start_date), units = "days")) +
-                    (as.Date(.data$max_date) >= as.Date(sl_start_date))
+                  max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
+                  max_day = as.numeric(difftime(as.Date(max_date), as.Date(sl_start_date), units = "days")) +
+                    (as.Date(max_date) >= as.Date(sl_start_date))
                 )
             },
             env = list(
@@ -839,15 +839,15 @@ srv_g_patient_profile <- function(id,
                     left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
                     as.data.frame() %>%
                     mutate(
-                      ANRIND = factor(.data$ANRIND, levels = c("HIGH", "LOW", "NORMAL"))
+                      ANRIND = factor(ANRIND, levels = c("HIGH", "LOW", "NORMAL"))
                     ) %>%
-                    filter(!is.na(.data$LBSTRESN) & !is.na(.data$ANRIND) & .data[[lb_var]] %in% lb_var_show) %>%
+                    filter(!is.na(LBSTRESN) & !is.na(ANRIND) & .data[[lb_var]] %in% lb_var_show) %>%
                     as.data.frame() %>%
                     select(
                       USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, sl_start_date, LBTESTCD, ANRIND, lb_var
                     ) %>% # nolint
                     mutate(
-                      ADY = as.numeric(difftime(.data$ADT, as.Date(sl_start_date), units = "days")) +
+                      ADY = as.numeric(difftime(ADT, as.Date(sl_start_date), units = "days")) +
                         (ADT >= as.Date(sl_start_date))
                     )
                   lb <- list(data = data.frame(ADLB), var = as.vector(ADLB[, lb_var]))

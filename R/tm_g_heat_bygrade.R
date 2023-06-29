@@ -443,7 +443,7 @@ srv_g_heatmap_bygrade <- function(id,
             code = substitute(
               expr = {
                 conmed_data <- ADCM %>%
-                  filter(.data$conmed_var_name %in% conmed_level)
+                  filter(conmed_var_name %in% conmed_level)
                 conmed_data[[conmed_var]] <-
                   factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
                 formatters::var_labels(conmed_data)[conmed_var] <-

@@ -31,7 +31,6 @@ Imports:
     ggplot2,
     lifecycle,
     logger (>= 0.2.0),
-    rlang,
     shinyvalidate,
     teal.code (>= 0.2.0),
     teal.logger (>= 0.1.1),
