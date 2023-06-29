@@ -4,6 +4,7 @@
 #'
 #' @import dplyr osprey shiny teal formatters
 #' @importFrom rlang .data
+#' @importFrom teal.transform choices_selected
 #' @docType package
 #' @name teal.osprey
 #' @keywords internal
