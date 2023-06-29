@@ -111,7 +111,10 @@ app <- init(
     tm_g_swimlane(
       label = "Swimlane Plot",
       dataname = "ADRS",
-      bar_var = teal.transform::choices_selected(selected = "TRTDURD", choices = c("TRTDURD", "EOSDY")),
+      bar_var = teal.transform::choices_selected(
+        selected = "TRTDURD",
+        choices = c("TRTDURD", "EOSDY")
+      ),
       bar_color_var = teal.transform::choices_selected(
         selected = "EOSSTT",
         choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1", "SEX")
@@ -120,8 +123,14 @@ app <- init(
         selected = "ACTARMCD",
         choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD")
       ),
-      marker_pos_var = teal.transform::choices_selected(selected = "ADY", choices = c("ADY")),
-      marker_shape_var = teal.transform::choices_selected(selected = "AVALC", c("AVALC", "AVISIT")),
+      marker_pos_var = teal.transform::choices_selected(
+        selected = "ADY",
+        choices = c("ADY")
+      ),
+      marker_shape_var = teal.transform::choices_selected(
+        selected = "AVALC",
+        c("AVALC", "AVISIT")
+      ),
       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
       marker_color_var = teal.transform::choices_selected(
         selected = "AVALC",

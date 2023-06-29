@@ -133,14 +133,26 @@ app <- init(
         selected = "RACE",
         choices = c("SEX", "ARM", "RACE")
       ),
-      category_var = teal.transform::choices_selected(selected = "AEBODSYS", choices = c("AEDECOD", "AEBODSYS")),
-      color_by_var = teal.transform::choices_selected(selected = "AETOXGR", choices = c("AETOXGR", "None")),
+      category_var = teal.transform::choices_selected(
+        selected = "AEBODSYS",
+        choices = c("AEDECOD", "AEBODSYS")
+      ),
+      color_by_var = teal.transform::choices_selected(
+        selected = "AETOXGR",
+        choices = c("AETOXGR", "None")
+      ),
       count_by_var = teal.transform::choices_selected(
         selected = "# of patients",
         choices = c("# of patients", "# of AEs")
       ),
-      facet_var = teal.transform::choices_selected(selected = NULL, choices = c("RACE", "SEX", "ARM")),
-      sort_by_var = teal.transform::choices_selected(selected = "count", choices = c("count", "alphabetical")),
+      facet_var = teal.transform::choices_selected(
+        selected = NULL,
+        choices = c("RACE", "SEX", "ARM")
+      ),
+      sort_by_var = teal.transform::choices_selected(
+        selected = "count",
+        choices = c("count", "alphabetical")
+       ),
       legend_on = TRUE,
       plot_height = c(600, 200, 2000)
     )
