@@ -133,7 +133,7 @@
 #'   modules = modules(
 #'     tm_g_patient_profile(
 #'       label = "Patient Profile Plot",
-#'       patient_id = choices_selected(
+#'       patient_id = teal.transform::choices_selected(
 #'         choices = unique(ADSL$USUBJID),
 #'         selected = unique(ADSL$USUBJID)[1]
 #'       ),
@@ -143,32 +143,32 @@
 #'       rs_dataname = "ADRS",
 #'       cm_dataname = "ADCM",
 #'       lb_dataname = "ADLB",
-#'       sl_start_date = choices_selected(
+#'       sl_start_date = teal.transform::choices_selected(
 #'         selected = "TRTSDTM",
 #'         choices = c("TRTSDTM", "RANDDT")
 #'       ),
-#'       ex_var = choices_selected(
+#'       ex_var = teal.transform::choices_selected(
 #'         selected = "PARCAT2",
 #'         choices = "PARCAT2"
 #'       ),
-#'       ae_var = choices_selected(
+#'       ae_var = teal.transform::choices_selected(
 #'         selected = "AEDECOD",
 #'         choices = c("AEDECOD", "AESOC")
 #'       ),
-#'       ae_line_col_var = choices_selected(
+#'       ae_line_col_var = teal.transform::choices_selected(
 #'         selected = "AESER",
 #'         choices = c("AESER", "AEREL")
 #'       ),
 #'       ae_line_col_opt = c("Y" = "red", "N" = "blue"),
-#'       rs_var = choices_selected(
+#'       rs_var = teal.transform::choices_selected(
 #'         selected = "PARAMCD",
 #'         choices = "PARAMCD"
 #'       ),
-#'       cm_var = choices_selected(
+#'       cm_var = teal.transform::choices_selected(
 #'         selected = "CMDECOD",
 #'         choices = c("CMDECOD", "CMCAT")
 #'       ),
-#'       lb_var = choices_selected(
+#'       lb_var = teal.transform::choices_selected(
 #'         selected = "LBTESTCD",
 #'         choices = c("LBTESTCD", "LBCAT")
 #'       ),
@@ -417,12 +417,12 @@ srv_g_patient_profile <- function(id,
       observeEvent(input$lb_var, ignoreNULL = TRUE, {
         ADLB <- data[[lb_dataname]]() # nolint
         choices <- unique(ADLB[[input$lb_var]])
-        choices_selected <- if (length(choices) > 5) choices[1:5] else choices
+       teal.transform::choices_selected <- if (length(choices) > 5) choices[1:5] else choices
 
         updateSelectInput(
           session,
           "lb_var_show",
-          selected = choices_selected,
+          selected = teal.transform::choices_selected,
           choices = choices
         )
       })

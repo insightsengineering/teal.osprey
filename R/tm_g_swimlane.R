@@ -65,19 +65,19 @@
 #'     tm_g_swimlane(
 #'       label = "Swimlane Plot",
 #'       dataname = "ADRS",
-#'       bar_var = choices_selected(selected = "TRTDURD", choices = c("TRTDURD", "EOSDY")),
-#'       bar_color_var = choices_selected(
+#'       bar_var = teal.transform::choices_selected(selected = "TRTDURD", choices = c("TRTDURD", "EOSDY")),
+#'       bar_color_var = teal.transform::choices_selected(
 #'         selected = "EOSSTT",
 #'         choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1", "SEX")
 #'       ),
-#'       sort_var = choices_selected(
+#'       sort_var = teal.transform::choices_selected(
 #'         selected = "ACTARMCD",
 #'         choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD")
 #'       ),
-#'       marker_pos_var = choices_selected(selected = "ADY", choices = c("ADY")),
-#'       marker_shape_var = choices_selected(selected = "AVALC", c("AVALC", "AVISIT")),
+#'       marker_pos_var = teal.transform::choices_selected(selected = "ADY", choices = c("ADY")),
+#'       marker_shape_var = teal.transform::choices_selected(selected = "AVALC", c("AVALC", "AVISIT")),
 #'       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-#'       marker_color_var = choices_selected(
+#'       marker_color_var = teal.transform::choices_selected(
 #'         selected = "AVALC",
 #'         choices = c("AVALC", "AVISIT")
 #'       ),
@@ -86,7 +86,7 @@
 #'         "PD" = "red", "Death" = "black"
 #'       ),
 #'       vref_line = c(30, 60),
-#'       anno_txt_var = choices_selected(
+#'       anno_txt_var = teal.transform::choices_selected(
 #'         selected = c("ACTARM", "SEX"),
 #'         choices = c(
 #'           "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
