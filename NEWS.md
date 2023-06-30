@@ -10,7 +10,7 @@
 ### Breaking changes
 
 * Replaced `chunks` with simpler `qenv` class.
-* Replaced `datasets` argument containing `FilteredData` with the new arguments `data` (`tdata` object) and `filter_panel_api` (`FilterPanelAPI`).
+* In all `tm_xyz_srv` modules `datasets` argument containing `FilteredData` have been replaced with the new argument `data` (`tdata` object) and `filter_panel_api` (`FilterPanelAPI`).
 * Updated `arm_var` to point to the factor column in `ANL`. It can't be a character column anymore.
 * Removed redundant formal arguments from `tm_g_patient_profile`.
 
