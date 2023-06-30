@@ -34,14 +34,12 @@
 #' @export
 #'
 #' @examples
-#' library(scda)
 #' library(dplyr)
 #' library(nestcolor)
-#' latest_data <- synthetic_cdisc_data("latest")
-#' ADSL <- latest_data$adsl %>% slice(1:30)
-#' ADEX <- latest_data$adex %>% filter(USUBJID %in% ADSL$USUBJID)
-#' ADAE <- latest_data$adae %>% filter(USUBJID %in% ADSL$USUBJID)
-#' ADCM <- latest_data$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
+#' ADSL <- osprey::rADSL %>% slice(1:30)
+#' ADEX <- osprey::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
+#' ADAE <- osprey::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
+#' ADCM <- osprey::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
 #'
 #' # This preprocess is only to force legacy standard on ADCM
 #' ADCM <- ADCM %>%
@@ -80,11 +78,10 @@
 #'     cdisc_dataset("ADAE", ADAE),
 #'     cdisc_dataset("ADCM", ADCM, keys = c("STUDYID", "USUBJID", "ASTDTM", "CMSEQ", "CMDECOD")),
 #'     code = "
-#'     latest_data <- synthetic_cdisc_data('latest')
-#'     ADSL <- latest_data$adsl %>% slice(1:30)
-#'     ADEX <- latest_data$adex %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADAE <- latest_data$adae %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADCM <- latest_data$adcm %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADSL <- osprey::rADSL %>% slice(1:30)
+#'     ADEX <- osprey::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADAE <- osprey::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADCM <- osprey::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
 #'     ADCM <- ADCM %>% select(-starts_with(\"ATC\")) %>% unique()
 #'     ADEX  <- ADEX %>%
 #'       filter(PARCAT1 == 'INDIVIDUAL') %>%

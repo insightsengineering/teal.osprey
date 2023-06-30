@@ -62,18 +62,15 @@
 #' @export
 #'
 #' @examples
-#' library(scda)
 #' library(nestcolor)
 #'
-#' latest_data <- synthetic_cdisc_data("latest")
-#'
-#' ADSL <- latest_data$adsl
-#' ADAE <- latest_data$adae %>%
+#' ADSL <- osprey::rADSL
+#' ADAE <- osprey::rADAE %>%
 #'   mutate(
 #'     ASTDT = as.Date(ASTDTM),
 #'     AENDT = as.Date(AENDTM)
 #'   )
-#' ADCM <- latest_data$adcm %>%
+#' ADCM <- osprey::rADCM %>%
 #'   mutate(
 #'     ASTDT = as.Date(ASTDTM),
 #'     AENDT = as.Date(AENDTM)
@@ -84,14 +81,14 @@
 #'   select(-starts_with("ATC")) %>%
 #'   unique()
 #'
-#' ADRS <- latest_data$adrs %>%
+#' ADRS <- osprey::rADRS %>%
 #'   mutate(ADT = as.Date(ADTM))
-#' ADEX <- latest_data$adex %>%
+#' ADEX <- osprey::rADEX %>%
 #'   mutate(
 #'     ASTDT = as.Date(ASTDTM),
 #'     AENDT = as.Date(AENDTM)
 #'   )
-#' ADLB <- latest_data$adlb %>%
+#' ADLB <- osprey::rADLB %>%
 #'   mutate(
 #'     ADT = as.Date(ADTM),
 #'     LBSTRESN = as.numeric(LBSTRESC)
@@ -99,32 +96,27 @@
 #'
 #' app <- init(
 #'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL,
-#'       code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"
-#'     ),
-#'     cdisc_dataset("ADRS", ADRS,
-#'       code = "ADRS <- synthetic_cdisc_data(\"latest\")$adrs %>%
-#'               mutate(ADT = as.Date(ADTM))"
-#'     ),
+#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
+#'     cdisc_dataset("ADRS", ADRS, code = "ADRS <- osprey::rADRS %>% mutate(ADT = as.Date(ADTM))"),
 #'     cdisc_dataset("ADAE", ADAE,
-#'       code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae %>%
+#'       code = "ADAE <- osprey::rADAE %>%
 #'               mutate(ASTDT = as.Date(ASTDTM),
 #'                      AENDT = as.Date(AENDTM))"
 #'     ),
 #'     cdisc_dataset("ADCM", ADCM,
-#'       code = "ADCM <- synthetic_cdisc_data(\"latest\")$adcm %>%
+#'       code = "ADCM <- osprey::rADCM %>%
 #'               mutate(ASTDT = as.Date(ASTDTM),
 #'                      AENDT = as.Date(AENDTM))
 #'               ADCM <- ADCM %>% select(-starts_with(\"ATC\")) %>% unique()",
 #'       keys = c("STUDYID", "USUBJID", "ASTDTM", "CMSEQ", "CMDECOD")
 #'     ),
 #'     cdisc_dataset("ADLB", ADLB,
-#'       code = "ADLB <- synthetic_cdisc_data(\"latest\")$adlb %>%
+#'       code = "ADLB <- osprey::rADLB %>%
 #'               mutate(ADT = as.Date(ADTM),
 #'                      LBSTRESN = as.numeric(LBSTRESC))"
 #'     ),
 #'     cdisc_dataset("ADEX", ADEX,
-#'       code = "ADEX <- synthetic_cdisc_data(\"latest\")$adex %>%
+#'       code = "ADEX <- osprey::rADEX %>%
 #'               mutate(ASTDT = as.Date(ASTDTM),
 #'                      AENDT = as.Date(AENDTM))"
 #'     ),

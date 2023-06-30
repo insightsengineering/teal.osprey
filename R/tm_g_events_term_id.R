@@ -18,16 +18,15 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
 #' @examples
-#' library(scda)
 #' library(nestcolor)
 #'
-#' ADSL <- synthetic_cdisc_data("latest")$adsl
-#' ADAE <- synthetic_cdisc_data("latest")$adae
+#' ADSL <- osprey::rADSL
+#' ADAE <- osprey::rADAE
 #'
 #' app <- init(
 #'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
-#'     cdisc_dataset("ADAE", ADAE, code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae"),
+#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
+#'     cdisc_dataset("ADAE", ADAE, code = "ADAE <- osprey::rADAE"),
 #'     check = TRUE
 #'   ),
 #'   modules = modules(
