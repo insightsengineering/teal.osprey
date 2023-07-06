@@ -12,7 +12,7 @@ Display the heatmap by grade as a shiny module"><!-- mathjax --><script src="htt
     
     <a class="navbar-brand me-2" href="../index.html">teal.osprey</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.15.9012</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.15.9013</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,14 +26,6 @@ Display the heatmap by grade as a shiny module"><!-- mathjax --><script src="htt
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/v0.1.15">v0.1.15</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -171,14 +163,12 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">scda</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/insightsengineering/nestcolor/" class="external-link">nestcolor</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">latest_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html" class="external-link">synthetic_cdisc_data</a></span><span class="op">(</span><span class="st">"latest"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ADSL</span> <span class="op">&lt;-</span> <span class="va">latest_data</span><span class="op">$</span><span class="va">adsl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ADEX</span> <span class="op">&lt;-</span> <span class="va">latest_data</span><span class="op">$</span><span class="va">adex</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">USUBJID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">ADSL</span><span class="op">$</span><span class="va">USUBJID</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ADAE</span> <span class="op">&lt;-</span> <span class="va">latest_data</span><span class="op">$</span><span class="va">adae</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">USUBJID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">ADSL</span><span class="op">$</span><span class="va">USUBJID</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ADCM</span> <span class="op">&lt;-</span> <span class="va">latest_data</span><span class="op">$</span><span class="va">adcm</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">USUBJID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">ADSL</span><span class="op">$</span><span class="va">USUBJID</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ADSL</span> <span class="op">&lt;-</span> <span class="fu">osprey</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/osprey/man/rADSL.html" class="external-link">rADSL</a></span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ADEX</span> <span class="op">&lt;-</span> <span class="fu">osprey</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/osprey/man/rADEX.html" class="external-link">rADEX</a></span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">USUBJID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">ADSL</span><span class="op">$</span><span class="va">USUBJID</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ADAE</span> <span class="op">&lt;-</span> <span class="fu">osprey</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/osprey/man/rADAE.html" class="external-link">rADAE</a></span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">USUBJID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">ADSL</span><span class="op">$</span><span class="va">USUBJID</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ADCM</span> <span class="op">&lt;-</span> <span class="fu">osprey</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/osprey/man/rADCM.html" class="external-link">rADCM</a></span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">USUBJID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">ADSL</span><span class="op">$</span><span class="va">USUBJID</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># This preprocess is only to force legacy standard on ADCM</span></span></span>
 <span class="r-in"><span><span class="va">ADCM</span> <span class="op">&lt;-</span> <span class="va">ADCM</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
@@ -229,11 +219,10 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <span class="r-in"><span>    <span class="fu">cdisc_dataset</span><span class="op">(</span><span class="st">"ADAE"</span>, <span class="va">ADAE</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu">cdisc_dataset</span><span class="op">(</span><span class="st">"ADCM"</span>, <span class="va">ADCM</span>, keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span>, <span class="st">"ASTDTM"</span>, <span class="st">"CMSEQ"</span>, <span class="st">"CMDECOD"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    code <span class="op">=</span> <span class="st">"</span></span></span>
-<span class="r-in"><span><span class="st">    latest_data &lt;- synthetic_cdisc_data('latest')</span></span></span>
-<span class="r-in"><span><span class="st">    ADSL &lt;- latest_data$adsl %&gt;% slice(1:30)</span></span></span>
-<span class="r-in"><span><span class="st">    ADEX &lt;- latest_data$adex %&gt;% filter(USUBJID %in% ADSL$USUBJID)</span></span></span>
-<span class="r-in"><span><span class="st">    ADAE &lt;- latest_data$adae %&gt;% filter(USUBJID %in% ADSL$USUBJID)</span></span></span>
-<span class="r-in"><span><span class="st">    ADCM &lt;- latest_data$adcm %&gt;% filter(USUBJID %in% ADSL$USUBJID)</span></span></span>
+<span class="r-in"><span><span class="st">    ADSL &lt;- osprey::rADSL %&gt;% slice(1:30)</span></span></span>
+<span class="r-in"><span><span class="st">    ADEX &lt;- osprey::rADEX %&gt;% filter(USUBJID %in% ADSL$USUBJID)</span></span></span>
+<span class="r-in"><span><span class="st">    ADAE &lt;- osprey::rADAE %&gt;% filter(USUBJID %in% ADSL$USUBJID)</span></span></span>
+<span class="r-in"><span><span class="st">    ADCM &lt;- osprey::rADCM %&gt;% filter(USUBJID %in% ADSL$USUBJID)</span></span></span>
 <span class="r-in"><span><span class="st">    ADCM &lt;- ADCM %&gt;% select(-starts_with(\"ATC\")) %&gt;% unique()</span></span></span>
 <span class="r-in"><span><span class="st">    ADEX  &lt;- ADEX %&gt;%</span></span></span>
 <span class="r-in"><span><span class="st">      filter(PARCAT1 == 'INDIVIDUAL') %&gt;%</span></span></span>
@@ -295,7 +284,7 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(USUBJID, ASTDTM)`</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(USUBJID, ASTDTM)`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2023-06-29 19:00:48.0408 pid:1176 token:[] teal.osprey Initializing tm_g_heat_bygrade</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2023-07-06 08:15:30.9937 pid:1175 token:[] teal.osprey Initializing tm_g_heat_bygrade</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu">shinyApp</span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="va">ui</span>, <span class="va">app</span><span class="op">$</span><span class="va">server</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
