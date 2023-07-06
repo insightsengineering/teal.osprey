@@ -80,17 +80,16 @@ Display spider plot as a shiny module
 
 # Example using stream (ADaM) dataset
 library(dplyr)
-library(scda)
 library(nestcolor)
 
-ADSL <- synthetic_cdisc_data("latest")$adsl
-ADTR <- synthetic_cdisc_data("latest")$adtr
+ADSL <- osprey::rADSL
+ADTR <- osprey::rADTR
 
 app <- teal::init(
   data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
+    cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
     cdisc_dataset("ADTR", ADTR,
-      code = "ADTR <- synthetic_cdisc_data(\"latest\")$adtr",
+      code = "ADTR <- osprey::rADTR",
       keys = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
     ),
     check = TRUE

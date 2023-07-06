@@ -89,12 +89,11 @@ used directly as filter.
 
 # Example using stream (ADaM) dataset
 library(dplyr)
-library(scda)
 library(nestcolor)
 
 set.seed(23)
-ADSL <- synthetic_cdisc_data("latest")$adsl
-ADAE <- synthetic_cdisc_data("latest")$adae
+ADSL <- osprey::rADSL
+ADAE <- osprey::rADAE
 ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
 ADAE <- mutate(
   ADAE,
@@ -107,12 +106,12 @@ ADAE <- mutate(
 app <- init(
   data = cdisc_data(
     cdisc_dataset("ADSL", ADSL,
-      code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl
+      code = "ADSL <- osprey::rADSL
               set.seed(23)
               ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), 'UG'))"
     ),
     cdisc_dataset("ADAE", ADAE,
-      code = "ADAE <- synthetic_cdisc_data(\"latest\")$adae
+      code = "ADAE <- osprey::rADAE
               ADAE <- mutate(ADAE,
               flag1 = ifelse(AETOXGR == 1, 1, 0),
               flag2 = ifelse(AETOXGR == 2, 1, 0),

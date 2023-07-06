@@ -51,12 +51,10 @@ the \code{\link[teal:module]{teal::module()}} object.
 Display the \code{AE} overview plot as a shiny module
 }
 \examples{
-library(scda)
 library(nestcolor)
 
-latest_data <- synthetic_cdisc_data("latest")
-ADSL <- latest_data$adsl
-ADAE <- latest_data$adae
+ADSL <- osprey::rADSL
+ADAE <- osprey::rADAE
 
 # Add additional dummy causality flags.
 add_event_flags <- function(dat) {
@@ -82,10 +80,10 @@ ADAE <- ADAE \%>\% add_event_flags()
 
 app <- init(
   data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL, code = "ADSL <- synthetic_cdisc_data(\"latest\")$adsl"),
+    cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
     cdisc_dataset("ADAE", ADAE,
       code =
-        "ADAE <- synthetic_cdisc_data('latest')$adae
+        "ADAE <- osprey::rADAE
            add_event_flags <- function(dat) {
              dat <- dat \%>\%
                dplyr::mutate(
