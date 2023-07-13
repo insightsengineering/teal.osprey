@@ -86,8 +86,8 @@ This is teal module that generates a \code{swimlane} plot (bar plot with markers
 library(dplyr)
 library(nestcolor)
 
-ADSL <- rADSL
-ADRS <- rADRS
+ADSL <- osprey::rADSL
+ADRS <- osprey::rADRS
 
 ADRS <- ADRS \%>\%
   dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
@@ -117,7 +117,7 @@ app <- init(
       ),
       bar_color_var = teal.transform::choices_selected(
         selected = "EOSSTT",
-        choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1", "SEX")
+        choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX")
       ),
       sort_var = teal.transform::choices_selected(
         selected = "ACTARMCD",

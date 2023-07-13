@@ -101,9 +101,9 @@ This is teal module that generates a waterfall plot for \code{ADaM} data
 }
 \examples{
 library(nestcolor)
-ADSL <- rADSL
-ADRS <- rADRS
-ADTR <- rADTR
+ADSL <- osprey::rADSL
+ADRS <- osprey::rADRS
+ADTR <- osprey::rADTR
 
 ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
 
