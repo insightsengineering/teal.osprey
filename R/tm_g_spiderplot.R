@@ -439,7 +439,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment) {
-        card <- teal.reporter::TealReportCard$new()
+        card <- teal::TealReportCard$new()
         card$set_name("Spider Plot")
         card$append_text("Spider Plot", "header2")
         if (with_filter) card$append_fs(filter_panel_api$get_filter_state())

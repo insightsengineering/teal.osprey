@@ -530,7 +530,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment) {
-        card <- teal.reporter::TealReportCard$new()
+        card <- teal::TealReportCard$new()
         card$set_name("Butterfly")
         card$append_text("Butterfly Plot", "header2")
         if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
