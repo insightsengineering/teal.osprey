@@ -40,7 +40,7 @@
 #' library(dplyr)
 #' library(nestcolor)
 #'
-#' ADSL <- rADSL %>%
+#' ADSL <- osprey::rADSL %>%
 #'   dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1)
 #' ADRS <- osprey::rADRS
 #'
@@ -51,7 +51,7 @@
 #'   arrange(USUBJID)
 #'
 #' app <- init(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- rADSL %>%
+#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL %>%
 #'       dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1)"),
 #'     cdisc_dataset("ADRS", ADRS,
 #'       code = "ADRS <- rADRS
