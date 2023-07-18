@@ -27,9 +27,6 @@ upstream_repos:
   insightsengineering/teal:
     repo: insightsengineering/teal
     host: https://github.com
-  insightsengineering/formatters:
-    repo: insightsengineering/formatters
-    host: https://github.com
   insightsengineering/nestcolor:
     repo: insightsengineering/nestcolor
     host: https://github.com

@@ -2,7 +2,7 @@
 #'
 #' The \code{teal.osprey} R package contains interactive \code{\link{teal}} modules for the outputs
 #'
-#' @import dplyr osprey shiny teal formatters
+#' @import dplyr osprey shiny teal
 #' @importFrom teal.transform choices_selected
 #' @docType package
 #' @name teal.osprey

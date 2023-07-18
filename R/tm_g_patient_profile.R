@@ -605,7 +605,7 @@ srv_g_patient_profile <- function(id,
           teal.code::eval_code(
             q1,
             code = substitute(
-              expr = ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var],
+              expr = ae_line_col_name <- teal.widgets::formatters_var_labels(ADAE, fill = FALSE)[ae_line_col_var],
               env = list(ADAE = as.name(ae_dataname), ae_line_col_var = ae_line_col_var)
             )
           )
@@ -633,8 +633,8 @@ srv_g_patient_profile <- function(id,
                         (AENDT >= as.Date(sl_start_date))
                     ) %>%
                     select(c(adae_vars, ASTDY, AENDY))
-                  formatters::var_labels(ADAE)[ae_line_col_var] <- # nolint
-                    formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var]
+                  teal.widgets::formatters_var_labels(ADAE)[ae_line_col_var] <- # nolint
+                    teal.widgets::formatters_var_labels(ADAE, fill = FALSE)[ae_line_col_var]
                 },
                 env = list(
                   ADSL = as.name(sl_dataname),
