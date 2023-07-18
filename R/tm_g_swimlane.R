@@ -51,7 +51,7 @@
 #'   arrange(USUBJID)
 #'
 #' app <- init(
-#'    data = cdisc_data(
+#'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL %>%
 #'       dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1)"),
 #'     cdisc_dataset("ADRS", ADRS,
