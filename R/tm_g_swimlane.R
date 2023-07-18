@@ -50,6 +50,11 @@
 #'   base::rbind(ADRS %>% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
 #'   arrange(USUBJID)
 #'
+#' data_filters <- teal.slice::teal_slices(
+#'   teal.slice::teal_slice(dataname = "ADSL", varname = "STRATA1", selected = "A"),
+#'   teal.slice::teal_slice(dataname = "ADSL", varname = "ARMCD", selected = "ARM A")
+#' )
+#'
 #' app <- init(
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL %>%
@@ -105,7 +110,8 @@
 #'         )
 #'       )
 #'     )
-#'   )
+#'   ),
+#'   filter = data_filters
 #' )
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
