@@ -55,7 +55,7 @@
 #'   data = cdisc_data(
 #'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL %>%
 #'       dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-#'       dplyr::filter(STRATA1 == "A" & ARMCD == "ARM A")"),
+#'       dplyr::filter(STRATA1 == 'A' & ARMCD == 'ARM A')"),
 #'     cdisc_dataset("ADRS", ADRS,
 #'       code = "ADRS <- rADRS
 #'               ADRS <- ADRS %>% dplyr::filter(PARAMCD == 'LSTASDI' & DCSREAS == 'Death') %>%
