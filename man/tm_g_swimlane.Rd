@@ -86,7 +86,9 @@ This is teal module that generates a \code{swimlane} plot (bar plot with markers
 library(dplyr)
 library(nestcolor)
 
-ADSL <- osprey::rADSL
+ADSL <- osprey::rADSL \%>\%
+  dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
+  dplyr::filter(STRATA1 == "A" & ARMCD == "ARM A")
 ADRS <- osprey::rADRS
 
 ADRS <- ADRS \%>\%
@@ -97,7 +99,9 @@ ADRS <- ADRS \%>\%
 
 app <- init(
   data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL, code = "ADSL <- rADSL"),
+    cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL \%>\%
+      dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
+      dplyr::filter(STRATA1 == 'A' & ARMCD == 'ARM A')"),
     cdisc_dataset("ADRS", ADRS,
       code = "ADRS <- rADRS
               ADRS <- ADRS \%>\% dplyr::filter(PARAMCD == 'LSTASDI' & DCSREAS == 'Death') \%>\%
