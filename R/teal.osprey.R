@@ -4,7 +4,7 @@
 #'
 #' @import dplyr osprey shiny teal formatters
 #' @importFrom teal.transform choices_selected
-#' @importFrom teal.reporter TealReportCard
+#' @importFrom teal.reporter simple_reporter_ui simple_reporter_srv
 #' @docType package
 #' @name teal.osprey
 #' @keywords internal
