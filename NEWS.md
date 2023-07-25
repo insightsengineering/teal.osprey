@@ -16,6 +16,10 @@
 * Updated `arm_var` to point to the factor column in `ANL`. It can't be a character column anymore.
 * Removed redundant formal arguments from `tm_g_patient_profile`.
 
+### Miscellaneous
+
+* Specify minimal version of dependent packages.
+
 # teal.osprey 0.1.15
 
 ### Breaking changes
