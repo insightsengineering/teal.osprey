@@ -30,10 +30,10 @@ From July 2023 `insightsengineering` packages are available on [r-universe](http
 
 ```r
 # stable versions
-install.packages('teal.modules.general', repos = c('https://insightsengineering.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages('teal.osprey', repos = c('https://insightsengineering.r-universe.dev', 'https://cloud.r-project.org'))
 
 # beta versions
-install.packages('teal.modules.general', repos = c('https://pharmaverse.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages('teal.osprey', repos = c('https://pharmaverse.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 ## Stargazers and Forkers
