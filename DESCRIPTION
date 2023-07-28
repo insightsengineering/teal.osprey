@@ -1,17 +1,17 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Version: 0.1.15.9016
-Date: 2023-07-19
+Version: 0.1.15.9019
+Date: 2023-07-27
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
-    person("Konrad", "Pagacz", , "konrad.pagacz@contractors.roche.com", role = "aut"),
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
     person("Chendi", "Liao", , "chendi.liao@roche.com", role = "aut"),
     person("Liming", "Li", , "liming.li@roche.com", role = "aut"),
-    person("F. Hoffmann-La Roche AG", role = c("cph", "fnd")),
+    person("Konrad", "Pagacz", role = "aut"),
     person("Molly", "He", role = "ctb"),
     person("Carolyn", "Zhang", role = "ctb"),
-    person("Tina", "Cho", role = "ctb")
+    person("Tina", "Cho", role = "ctb"),
+    person("F. Hoffmann-La Roche AG", role = c("cph", "fnd"))
   )
 Description: Community efforts to collect teal modules for TLGs defined in
     the osprey package.  The teal modules add an encoding panel to
@@ -44,18 +44,6 @@ Suggests:
     rmarkdown,
     teal.data (>= 0.1.2),
     testthat (>= 2.0)
-Remotes:
-    insightsengineering/osprey@*release,
-    insightsengineering/osprey@*release,
-    insightsengineering/teal.code@*release,
-    insightsengineering/teal.data@*release,
-    insightsengineering/teal.logger@*release,
-    insightsengineering/teal.logger@*release,
-    insightsengineering/teal.reporter@*release,
-    insightsengineering/teal.transform@*release,
-    insightsengineering/teal.widgets@*release,
-    insightsengineering/teal@*release,
-    insightsengineering/tern@*release
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
