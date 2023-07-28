@@ -396,15 +396,15 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
             }),
             vref_line = .(vref_line),
             href_line = .(href_line),
-            x_label = if (is.null(teal.widgets::formatters_var_labels(ADTR[.(x_var)], fill = FALSE))) {
+            x_label = if (is.null(teal.data::formatters_var_labels(ADTR[.(x_var)], fill = FALSE))) {
               .(x_var)
             } else {
-              teal.widgets::formatters_var_labels(ADTR[.(x_var)], fill = FALSE)
+              teal.data::formatters_var_labels(ADTR[.(x_var)], fill = FALSE)
             },
-            y_label = if (is.null(teal.widgets::formatters_var_labels(ADTR[.(y_var)], fill = FALSE))) {
+            y_label = if (is.null(teal.data::formatters_var_labels(ADTR[.(y_var)], fill = FALSE))) {
               .(y_var)
             } else {
-              teal.widgets::formatters_var_labels(ADTR[.(y_var)], fill = FALSE)
+              teal.data::formatters_var_labels(ADTR[.(y_var)], fill = FALSE)
             },
             show_legend = .(legend_on)
           )
