@@ -88,7 +88,7 @@ tm_g_ae_sub <- function(label,
       group_var = group_var,
       fontsize = fontsize
     ),
-    filters = c("ADSL", dataname)
+    datanames = c("ADSL", dataname)
   )
 }
 

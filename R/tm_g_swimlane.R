@@ -174,7 +174,7 @@ tm_g_swimlane <- function(label,
       plot_width = plot_width,
       x_label = x_label
     ),
-    filters = c("ADSL", dataname)
+    datanames = c("ADSL", dataname)
   )
 }
 

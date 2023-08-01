@@ -206,7 +206,7 @@ tm_g_heat_bygrade <- function(label,
     ),
     ui = ui_g_heatmap_bygrade,
     ui_args = args,
-    filters = "all"
+    datanames = "all"
   )
 }
 

@@ -149,7 +149,7 @@ tm_g_waterfall <- function(label,
       plot_height = plot_height,
       plot_width = plot_width
     ),
-    filters = "all"
+    datanames = "all"
   )
 }
 
