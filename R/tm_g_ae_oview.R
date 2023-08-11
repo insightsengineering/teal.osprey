@@ -141,7 +141,7 @@ tm_g_ae_oview <- function(label,
     ),
     ui = ui_g_ae_oview,
     ui_args = args,
-    filters = c("ADSL", dataname)
+    datanames = c("ADSL", dataname)
   )
 }
 

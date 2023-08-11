@@ -126,7 +126,7 @@ tm_g_spiderplot <- function(label,
   args <- as.list(environment())
   module(
     label = label,
-    filters = c("ADSL", dataname),
+    datanames = c("ADSL", dataname),
     server = srv_g_spider,
     server_args = list(dataname = dataname, label = label, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_spider,

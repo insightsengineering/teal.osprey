@@ -159,7 +159,7 @@ tm_g_butterfly <- function(label,
 
   module(
     label = label,
-    filters = c("ADSL", dataname),
+    datanames = c("ADSL", dataname),
     server = srv_g_butterfly,
     server_args = list(dataname = dataname, label = label, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_butterfly,

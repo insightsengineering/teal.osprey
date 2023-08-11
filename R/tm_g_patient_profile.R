@@ -241,7 +241,7 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
       plot_height = plot_height,
       plot_width = plot_width
     ),
-    filters = "all"
+    datanames = "all"
   )
 }
 

@@ -91,7 +91,7 @@ tm_g_events_term_id <- function(label,
     server_args = list(label = label, dataname = dataname, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_events_term_id,
     ui_args = args,
-    filters = c("ADSL", dataname)
+    datanames = c("ADSL", dataname)
   )
 }
 
