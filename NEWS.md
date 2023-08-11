@@ -1,4 +1,4 @@
-# teal.osprey 0.1.15.9019
+# teal.osprey 0.1.15.9020
 
 * Removed `scda` package dependency from examples.
 * Fixed crash in `tm_g_heat_bygrade` when not plotting `Conmed`. 
