@@ -40,23 +40,10 @@ Imports:
     tern (>= 0.7.10),
     tidyr (>= 0.8.3)
 Suggests:
-    knitr (>= 1.34),
+    knitr (>= 1.42),
     nestcolor (>= 0.1.0),
-    rmarkdown (>= 2.19),
     teal.data (>= 0.3.0),
     testthat (>= 3.0.4)
-Remotes:
-    insightsengineering/osprey@*release,
-    insightsengineering/osprey@*release,
-    insightsengineering/teal.code@*release,
-    insightsengineering/teal.data@*release,
-    insightsengineering/teal.logger@*release,
-    insightsengineering/teal.logger@*release,
-    insightsengineering/teal.reporter@*release,
-    insightsengineering/teal.transform@*release,
-    insightsengineering/teal.widgets@*release,
-    insightsengineering/teal@*release,
-    insightsengineering/tern@*release
 Config/Needs/verdepcheck:
     insightsengineering/osprey,
     rstudio/shiny,
@@ -76,7 +63,6 @@ Config/Needs/verdepcheck:
     insightsengineering/tern,
     tidyverse/tidyr,
     yihui/knitr,
-    rstudio/rmarkdown,
     insightsengineering/nestcolor,
     insightsengineering/teal.data,
     r-lib/testthat
