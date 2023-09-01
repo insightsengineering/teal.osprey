@@ -1,5 +1,9 @@
 # teal.osprey 0.1.16.9001
 
+### Miscellaneous
+
+* Specify minimal version of dependent packages.
+
 # teal.osprey 0.1.16
 
 * Removed `scda` package dependency from examples.
@@ -15,10 +19,6 @@
 * In all `tm_xyz_srv` modules `datasets` argument containing `FilteredData` have been replaced with the new argument `data` (`tdata` object) and `filter_panel_api` (`FilterPanelAPI`).
 * Updated `arm_var` to point to the factor column in `ANL`. It can't be a character column anymore.
 * Removed redundant formal arguments from `tm_g_patient_profile`.
-
-### Miscellaneous
-
-* Specify minimal version of dependent packages.
 
 # teal.osprey 0.1.15
 
