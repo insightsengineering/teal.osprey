@@ -155,4 +155,3 @@ card_template <- function(title, label, description = NULL, with_filter, filter_
   }
   card
 }
-
