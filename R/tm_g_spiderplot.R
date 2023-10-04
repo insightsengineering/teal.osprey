@@ -438,11 +438,14 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
     ### REPORTER
     if (with_reporter) {
-      card_fun <- function(comment) {
-        card <- teal::TealReportCard$new()
-        card$set_name("Spider Plot")
-        card$append_text("Spider Plot", "header2")
-        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
+      card_fun <- function(comment, label) {
+        card <- card_template(
+          title = "Spider Plot",
+          label = label,
+          description = NULL,
+          with_filter = with_filter,
+          filter_panel_api = filter_panel_api
+        )
         if (!is.null(input$paramcd) || !is.null(input$xfacet_var) || !is.null(input$yfacet_var)) {
           card$append_text("Selected Options", "header3")
         }
