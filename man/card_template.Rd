@@ -15,8 +15,6 @@ card_template(title, label, with_filter, filter_panel_api)
 
 \item{filter_panel_api}{(\code{FilterPanelAPI}) object with API that allows the generation
 of the filter state in the report}
-
-\item{description}{(\code{character(1)}) optional additional description}
 }
 \value{
 (\code{TealReportCard}) populated with a title, description and filter state
