@@ -381,7 +381,6 @@ srv_g_events_term_id <- function(id,
         card <- card_template(
           title = "Events by Term",
           label = label,
-          description = NULL,
           with_filter = with_filter,
           filter_panel_api = filter_panel_api
         )

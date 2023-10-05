@@ -499,7 +499,6 @@ srv_g_heatmap_bygrade <- function(id,
         card <- card_template(
           title = "Heatmap by Grade",
           label = label,
-          description = NULL,
           with_filter = with_filter,
           filter_panel_api = filter_panel_api
         )

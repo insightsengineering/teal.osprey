@@ -955,7 +955,6 @@ srv_g_patient_profile <- function(id,
         card <- card_template(
           title = "Patient Profile",
           label = label,
-          description = NULL,
           with_filter = with_filter,
           filter_panel_api = filter_panel_api
         )

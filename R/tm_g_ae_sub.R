@@ -393,7 +393,6 @@ srv_g_ae_sub <- function(id,
         card <- card_template(
           title = "AE Subgroups",
           label = label,
-          description = NULL,
           with_filter = with_filter,
           filter_panel_api = filter_panel_api
         )

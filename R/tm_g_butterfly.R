@@ -533,7 +533,6 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         card <- card_template(
           title = "Butterfly Plot",
           label = label,
-          description = NULL,
           with_filter = with_filter,
           filter_panel_api = filter_panel_api
         )

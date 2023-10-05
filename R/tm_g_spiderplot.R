@@ -442,7 +442,6 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
         card <- card_template(
           title = "Spider Plot",
           label = label,
-          description = NULL,
           with_filter = with_filter,
           filter_panel_api = filter_panel_api
         )
