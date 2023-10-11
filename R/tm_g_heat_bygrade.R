@@ -496,7 +496,7 @@ srv_g_heatmap_bygrade <- function(id,
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment, label) {
-        card <- card_template(
+        card <- teal.reporter::card_template(
           title = "Heatmap by Grade",
           label = label,
           with_filter = with_filter,

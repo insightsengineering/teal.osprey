@@ -543,7 +543,7 @@ srv_g_swimlane <- function(id,
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment, label) {
-        card <- card_template(
+        card <- teal.reporter::card_template(
           title = "Swimlane Plot",
           label = label,
           with_filter = with_filter,

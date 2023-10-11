@@ -130,29 +130,3 @@ include_css_files <- function(pattern = "*") {
   }
   return(shiny::singleton(shiny::tags$head(lapply(css_files, shiny::includeCSS))))
 }
-
-#' Template function to generate reporter card for `teal.osprey`
-#' @param title (`character(1)`) title of the card (unless overwritten by label)
-#' @param label (`character(1)`) label provided by the user when adding the card
-#' @param with_filter (`logical(1)`) flag indicating to add filter state
-#' @param filter_panel_api (`FilterPanelAPI`) object with API that allows the generation
-#' of the filter state in the report
-#'
-#' @return (`TealReportCard`) populated with a title, description and filter state
-#'
-#' @keywords internal
-card_template <- function(title, label, with_filter, filter_panel_api) {
-  checkmate::assert_string(title)
-  checkmate::assert_string(label)
-  checkmate::assert_flag(with_filter)
-  checkmate::assert_class(filter_panel_api, classes = "FilterPanelAPI")
-
-  card <- teal::TealReportCard$new()
-  title <- if (label == "") title else label
-  card$set_name(title)
-  card$append_text(title, "header2")
-  if (with_filter) {
-    card$append_fs(filter_panel_api$get_filter_state())
-  }
-  card
-}
