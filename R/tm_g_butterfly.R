@@ -530,7 +530,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment, label) {
-        card <- teal.reporter::card_template(
+        card <- teal::report_card_template(
           title = "Butterfly Plot",
           label = label,
           with_filter = with_filter,

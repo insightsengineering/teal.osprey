@@ -952,7 +952,7 @@ srv_g_patient_profile <- function(id,
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment, label) {
-        card <- teal.reporter::card_template(
+        card <- teal::report_card_template(
           title = "Patient Profile",
           label = label,
           with_filter = with_filter,

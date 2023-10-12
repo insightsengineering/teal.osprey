@@ -370,7 +370,7 @@ srv_g_ae_oview <- function(id,
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment, label) {
-        card <- teal.reporter::card_template(
+        card <- teal::report_card_template(
           title = "AE Overview",
           label = label,
           with_filter = with_filter,

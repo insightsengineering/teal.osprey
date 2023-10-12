@@ -560,7 +560,7 @@ srv_g_waterfall <- function(id,
     ### REPORTER
     if (with_reporter) {
       card_fun <- function(comment, label) {
-        card <- teal.reporter::card_template(
+        card <- teal::report_card_template(
           title = "Waterfall Plot",
           label = label,
           with_filter = with_filter,
