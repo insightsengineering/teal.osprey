@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.00457012282205084" branch-rate="0" lines-covered="16" lines-valid="3501" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-10-06 08:17:42.333449">
+<coverage line-rate="0.00143266475644699" branch-rate="0" lines-covered="5" lines-valid="3490" branches-covered="0" branches-valid="0" complexity="0" version="3.6.3" timestamp="2023-10-12 18:08:26.68295">
   <sources>
     <source>/__w/teal.osprey/teal.osprey/teal.osprey</source>
   </sources>
   <packages>
-    <package name="teal.osprey" line-rate="0.00457012282205084" branch-rate="0" complexity="0">
+    <package name="teal.osprey" line-rate="0.00143266475644699" branch-rate="0" complexity="0">
       <classes>
         <class name="tm_g_ae_oview.R" filename="R/tm_g_ae_oview.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
@@ -7091,7 +7091,7 @@
             <line number="588" hits="0" branch="false"/>
           </lines>
         </class>
-        <class name="utils.R" filename="R/utils.R" line-rate="0.333333333333333" branch-rate="0" complexity="0">
+        <class name="utils.R" filename="R/utils.R" line-rate="0.135135135135135" branch-rate="0" complexity="0">
           <methods>
             <method name="quick_filter" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
@@ -7150,21 +7150,6 @@
                 <line number="131" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="card_template" signature="" line-rate="1" branch-rate="0" complexity="0">
-              <lines>
-                <line number="145" hits="2" branch="false"/>
-                <line number="146" hits="2" branch="false"/>
-                <line number="147" hits="2" branch="false"/>
-                <line number="148" hits="2" branch="false"/>
-                <line number="150" hits="2" branch="false"/>
-                <line number="151" hits="2" branch="false"/>
-                <line number="152" hits="2" branch="false"/>
-                <line number="153" hits="2" branch="false"/>
-                <line number="154" hits="2" branch="false"/>
-                <line number="155" hits="1" branch="false"/>
-                <line number="157" hits="2" branch="false"/>
-              </lines>
-            </method>
           </methods>
           <lines>
             <line number="32" hits="0" branch="false"/>
@@ -7204,17 +7189,6 @@
             <line number="128" hits="0" branch="false"/>
             <line number="129" hits="0" branch="false"/>
             <line number="131" hits="0" branch="false"/>
-            <line number="145" hits="2" branch="false"/>
-            <line number="146" hits="2" branch="false"/>
-            <line number="147" hits="2" branch="false"/>
-            <line number="148" hits="2" branch="false"/>
-            <line number="150" hits="2" branch="false"/>
-            <line number="151" hits="2" branch="false"/>
-            <line number="152" hits="2" branch="false"/>
-            <line number="153" hits="2" branch="false"/>
-            <line number="154" hits="2" branch="false"/>
-            <line number="155" hits="1" branch="false"/>
-            <line number="157" hits="2" branch="false"/>
           </lines>
         </class>
         <class name="zzz.R" filename="R/zzz.R" line-rate="0" branch-rate="0" complexity="0">
