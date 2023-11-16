@@ -76,8 +76,8 @@ data <- cdisc_data() |>
   }) |>
   within(ADAE <- add_event_flags(ADAE))
 
-datanames(data) <- c("ADSL", "ADAE")
-join_keys(data) <- default_cdisc_join_keys[datanames(data)]
+teal.data::datanames(data) <- c("ADSL", "ADAE")
+teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[datanames(data)]
 
 ADAE <- data[["ADAE"]]
 
