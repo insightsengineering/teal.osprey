@@ -110,10 +110,6 @@ data <- teal.data::cdisc_data() |>
 teal.data::datanames(data) <- c("ADSL", "ADTR", "ADRS")
 teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
 
-ADSL <- data[["ADSL"]]
-ADTR <- data[["ADTR"]]
-ADRS <- data[["ADRS"]]
-
 app <- teal::init(
   data = data,
   modules = teal::modules(
@@ -138,7 +134,7 @@ app <- teal::init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-#'
+
 }
 \author{
 Ting Qi (qit3) \email{qit3@gene.com}

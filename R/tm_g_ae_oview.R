@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @examples
-#' data <- teal.data::cdisc_data() |>
+#' data <- cdisc_data() |>
 #'   within(library(nestcolor)) |>
 #'   within(ADSL <- osprey::rADSL) |>
 #'   within(ADAE <- osprey::rADAE) |>
@@ -41,10 +41,9 @@
 #'   }) |>
 #'   within(ADAE <- add_event_flags(ADAE))
 #'
-#' teal.data::datanames(data) <- c("ADSL", "ADAE")
-#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+#' datanames(data) <- c("ADSL", "ADAE")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
-#' ADSL <- data[["ADSL"]]
 #' ADAE <- data[["ADAE"]]
 #'
 #' app <- teal::init(

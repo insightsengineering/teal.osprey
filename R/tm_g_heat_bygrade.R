@@ -69,9 +69,6 @@
 #' teal.data::datanames(data) <- c("ADSL", "ADEX", "ADAE", "ADCM")
 #' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
 #'
-#' ADSL <- data[["ADSL"]]
-#' ADEX <- data[["ADEX"]]
-#' ADAE <- data[["ADAE"]]
 #' ADCM <- data[["ADCM"]]
 #'
 #' app <- teal::init(
