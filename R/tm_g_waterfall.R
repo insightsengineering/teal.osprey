@@ -48,8 +48,8 @@
 #'
 #' @examples
 #' data <- cdisc_data() |>
-#'   within(library(nestcolor)) |>
 #'   within({
+#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADRS <- rADRS
 #'     ADTR <- rADTR

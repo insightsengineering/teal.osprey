@@ -45,8 +45,6 @@
 #'   within({
 #'     library(dplyr)
 #'     library(nestcolor)
-#'   }) |>
-#'   within({
 #'     set.seed(23)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE

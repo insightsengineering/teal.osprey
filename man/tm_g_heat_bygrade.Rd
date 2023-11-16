@@ -80,8 +80,6 @@ data <- cdisc_data() |>
   within({
     library(dplyr)
     library(nestcolor)
-  }) |>
-  within({
     ADSL <- rADSL \%>\% slice(1:30)
     ADEX <- rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
     ADAE <- rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)

@@ -63,8 +63,8 @@
 #'
 #' @examples
 #' data <- cdisc_data() |>
-#'   within(library(nestcolor)) |>
 #'   within({
+#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
 #'     ADCM <- rADCM %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))

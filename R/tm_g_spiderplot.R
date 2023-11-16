@@ -28,10 +28,7 @@
 #' # Example using stream (ADaM) dataset
 #' data <- cdisc_data() |>
 #'   within({
-#'     library(dplyr)
 #'     library(nestcolor)
-#'   }) |>
-#'   within({
 #'     ADSL <- rADSL
 #'     ADTR <- rADTR
 #'   })

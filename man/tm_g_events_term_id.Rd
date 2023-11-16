@@ -51,8 +51,8 @@ Display Events by Term plot as a shiny module
 }
 \examples{
 data <- cdisc_data() |>
-  within(library(nestcolor)) |>
   within({
+    library(nestcolor)
     ADSL <- rADSL
     ADAE <- rADAE
   })
