@@ -35,37 +35,29 @@
 #' @template author_qit3
 #'
 #' @examples
-#'
 #' # Example using stream (ADaM) dataset
-#' library(dplyr)
-#' library(nestcolor)
+#' data <- teal.data::cdisc_data() |>
+#'   within(library(dplyr)) |>
+#'   within(library(nestcolor)) |>
+#'   within(ADSL <- osprey::rADSL %>%
+#'            dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+#'            dplyr::filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
+#'   within(ADRS <- osprey::rADRS) |>
+#'   within(ADRS <- ADRS %>%
+#'            dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+#'            mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+#'            base::rbind(ADRS %>% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+#'            arrange(USUBJID))
 #'
-#' ADSL <- osprey::rADSL %>%
-#'   dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-#'   dplyr::filter(STRATA1 == "A" & ARMCD == "ARM A")
-#' ADRS <- osprey::rADRS
+#' teal.data::datanames(data) <- c("ADSL", "ADRS")
+#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
 #'
-#' ADRS <- ADRS %>%
-#'   dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-#'   mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-#'   base::rbind(ADRS %>% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-#'   arrange(USUBJID)
+#' ADSL <- data[["ADSL"]]
+#' ADRS <- data[["ADRS"]]
 #'
-#' app <- init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL %>%
-#'       dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-#'       dplyr::filter(STRATA1 == 'A' & ARMCD == 'ARM A')"),
-#'     cdisc_dataset("ADRS", ADRS,
-#'       code = "ADRS <- rADRS
-#'               ADRS <- ADRS %>% dplyr::filter(PARAMCD == 'LSTASDI' & DCSREAS == 'Death') %>%
-#'                       mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-#'               rbind(ADRS %>% dplyr::filter(PARAMCD == 'OVRINV' & AVALC != 'NE')) %>%
-#'               arrange(USUBJID)"
-#'     ),
-#'     check = TRUE
-#'   ),
-#'   modules = modules(
+#' app <- teal::init(
+#'   data = data,
+#'   modules = teal::modules(
 #'     tm_g_swimlane(
 #'       label = "Swimlane Plot",
 #'       dataname = "ADRS",

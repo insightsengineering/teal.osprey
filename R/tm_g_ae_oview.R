@@ -16,67 +16,40 @@
 #' @export
 #'
 #' @examples
-#' library(nestcolor)
-#'
-#' ADSL <- osprey::rADSL
-#' ADAE <- osprey::rADAE
-#'
-#' # Add additional dummy causality flags.
-#' add_event_flags <- function(dat) {
-#'   dat <- dat %>%
-#'     dplyr::mutate(
-#'       TMPFL_SER = AESER == "Y",
-#'       TMPFL_REL = AEREL == "Y",
-#'       TMPFL_GR5 = AETOXGR == "5",
-#'       AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
-#'       AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
+#' data <- teal.data::cdisc_data() |>
+#'   within(library(nestcolor)) |>
+#'   within(ADSL <- osprey::rADSL) |>
+#'   within(ADAE <- osprey::rADAE) |>
+#'   within(add_event_flags <- function(dat) {
+#'     dat <- dat |>
+#'       dplyr::mutate(
+#'         TMPFL_SER = AESER == "Y",
+#'         TMPFL_REL = AEREL == "Y",
+#'         TMPFL_GR5 = AETOXGR == "5",
+#'         AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
+#'         AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
+#'       )
+#'     labels <- c(
+#'       "Serious AE", "Related AE", "Grade 5 AE",
+#'       "AE related to A: Drug X", "AE related to B: Placebo"
 #'     )
-#'   labels <- c(
-#'     "Serious AE", "Related AE", "Grade 5 AE",
-#'     "AE related to A: Drug X", "AE related to B: Placebo"
-#'   )
-#'   cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
-#'   for (i in seq_along(labels)) {
-#'     attr(dat[[cols[i]]], "label") <- labels[i]
-#'   }
-#'   dat
-#' }
-#' ADAE <- ADAE %>% add_event_flags()
+#'     cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
+#'     for (i in seq_along(labels)) {
+#'       attr(dat[[cols[i]]], "label") <- labels[i]
+#'     }
+#'     dat
+#'   }) |>
+#'   within(ADAE <- add_event_flags(ADAE))
 #'
-#' app <- init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
-#'     cdisc_dataset("ADAE", ADAE,
-#'       code =
-#'         "ADAE <- osprey::rADAE
-#'            add_event_flags <- function(dat) {
-#'              dat <- dat %>%
-#'                dplyr::mutate(
-#'                  TMPFL_SER = AESER == 'Y',
-#'                  TMPFL_REL = AEREL == 'Y',
-#'                  TMPFL_GR5 = AETOXGR == '5',
-#'                  AEREL1 = (AEREL == 'Y' & ACTARM == 'A: Drug X'),
-#'                  AEREL2 = (AEREL == 'Y' & ACTARM == 'B: Placebo')
-#'                )
-#'              labels <- c(
-#'                'Serious AE',
-#'                'Related AE',
-#'                'Grade 5 AE',
-#'                'AE related to A: Drug X',
-#'                'AE related to B: Placebo'
-#'              )
-#'              cols <- c('TMPFL_SER', 'TMPFL_REL', 'TMPFL_GR5', 'AEREL1', 'AEREL2')
-#'              for (i in seq_along(labels)) {
-#'               attr(dat[[cols[i]]], 'label') <- labels[i]
-#'              }
-#'              dat
-#'            }
-#'            # Generating user-defined event flags.
-#'            ADAE <- ADAE %>% add_event_flags()"
-#'     ),
-#'     check = TRUE
-#'   ),
-#'   modules = modules(
+#' teal.data::datanames(data) <- c("ADSL", "ADAE")
+#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+#'
+#' ADSL <- data[["ADSL"]]
+#' ADAE <- data[["ADAE"]]
+#'
+#' app <- teal::init(
+#'   data = data,
+#'   modules = teal::modules(
 #'     tm_g_ae_oview(
 #'       label = "AE Overview",
 #'       dataname = "ADAE",
@@ -98,6 +71,7 @@
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
+#'
 tm_g_ae_oview <- function(label,
                           dataname,
                           arm_var,

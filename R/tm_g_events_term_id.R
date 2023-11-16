@@ -18,18 +18,20 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
 #' @examples
-#' library(nestcolor)
+#' data <- teal.data::cdisc_data() |>
+#'   within(library(nestcolor)) |>
+#'   within(ADSL <- osprey::rADSL) |>
+#'   within(ADAE <- osprey::rADAE)
 #'
-#' ADSL <- osprey::rADSL
-#' ADAE <- osprey::rADAE
+#' teal.data::datanames(data) <- c("ADSL", "ADAE")
+#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
 #'
-#' app <- init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
-#'     cdisc_dataset("ADAE", ADAE, code = "ADAE <- osprey::rADAE"),
-#'     check = TRUE
-#'   ),
-#'   modules = modules(
+#' ADSL <- data[["ADSL"]]
+#' ADAE <- data[["ADAE"]]
+#'
+#' app <- teal::init(
+#'   data = data,
+#'   modules = teal::modules(
 #'     tm_g_events_term_id(
 #'       label = "Common AE",
 #'       dataname = "ADAE",
