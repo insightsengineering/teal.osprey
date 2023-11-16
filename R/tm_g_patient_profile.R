@@ -71,7 +71,7 @@
 #'   within(ADCM <- ADCM %>% select(-starts_with("ATC")) %>% unique()) |>
 #'   within(ADRS <- osprey::rADRS %>% mutate(ADT = as.Date(ADTM))) |>
 #'   within(ADEX <- osprey::rADEX %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))) |>
-#'   within(ADLB <- osprey::rADLB %>% mutate(ADT = as.Date(ADTM),LBSTRESN = as.numeric(LBSTRESC)))
+#'   within(ADLB <- osprey::rADLB %>% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC)))
 #'
 #' teal.data::datanames(data) <- c("ADSL", "ADAE", "ADCM", "ADRS", "ADEX", "ADLB")
 #' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
