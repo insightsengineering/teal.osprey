@@ -76,16 +76,16 @@ the \code{\link[teal:module]{teal::module()}} object.
 Display the heatmap by grade as a shiny module
 }
 \examples{
-data <- teal.data::cdisc_data() |>
+data <- cdisc_data() |>
   within({
     library(dplyr)
     library(nestcolor)
     }) |>
   within({
-    ADSL <- osprey::rADSL \%>\% slice(1:30)
-    ADEX <- osprey::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADAE <- osprey::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADCM <- osprey::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+    ADSL <- rADSL \%>\% slice(1:30)
+    ADEX <- rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+    ADAE <- rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+    ADCM <- rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
     # This preprocess is only to force legacy standard on ADCM
     ADCM <- ADCM \%>\% select(-starts_with("ATC")) \%>\% unique()
     # function to derive AVISIT from ADEX
@@ -112,41 +112,41 @@ data <- teal.data::cdisc_data() |>
     ADEX <- ADEX \%>\% filter(PARCAT1 == "INDIVIDUAL") \%>\% mutate(ongo_status = (EOSSTT == "ONGOING"))
   })
 
-teal.data::datanames(data) <- c("ADSL", "ADEX", "ADAE", "ADCM")
-teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+datanames(data) <- c("ADSL", "ADEX", "ADAE", "ADCM")
+join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 
 ADCM <- data[["ADCM"]]
 
-app <- teal::init(
+app <- init(
   data = data,
-  modules = teal::modules(
+  modules = modules(
     tm_g_heat_bygrade(
       label = "Heatmap by grade",
       sl_dataname = "ADSL",
       ex_dataname = "ADEX",
       ae_dataname = "ADAE",
       cm_dataname = "ADCM",
-      id_var = teal.transform::choices_selected(
+      id_var = choices_selected(
         selected = "USUBJID",
         choices = c("USUBJID", "SUBJID")
       ),
-      visit_var = teal.transform::choices_selected(
+      visit_var = choices_selected(
         selected = "AVISIT",
         choices = c("AVISIT")
       ),
-      ongo_var = teal.transform::choices_selected(
+      ongo_var = choices_selected(
         selected = "ongo_status",
         choices = c("ongo_status")
       ),
-      anno_var = teal.transform::choices_selected(
+      anno_var = choices_selected(
         selected = c("SEX", "COUNTRY"),
         choices = c("SEX", "COUNTRY", "USUBJID")
       ),
-      heat_var = teal.transform::choices_selected(
+      heat_var = choices_selected(
         selected = "AETOXGR",
         choices = c("AETOXGR")
       ),
-      conmed_var = teal.transform::choices_selected(
+      conmed_var = choices_selected(
         selected = "CMDECOD",
         choices = c("CMDECOD")
       ),

@@ -78,50 +78,50 @@ Display spider plot as a shiny module
 }
 \examples{
 # Example using stream (ADaM) dataset
-data <- teal.data::cdisc_data() |>
+data <- cdisc_data() |>
   within({
     library(dplyr)
     library(nestcolor)
   }) |>
   within({
-    ADSL <- osprey::rADSL
-    ADTR <- osprey::rADTR
+    ADSL <- rADSL
+    ADTR <- rADTR
   })
 
-teal.data::datanames(data) <- c("ADSL", "ADTR")
-teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+datanames(data) <- c("ADSL", "ADTR")
+join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 
-app <- teal::init(
+app <- init(
   data = data,
-  modules = teal::modules(
+  modules = modules(
     tm_g_spiderplot(
       label = "Spider plot",
       dataname = "ADTR",
-      paramcd = teal.transform::choices_selected(
+      paramcd = choices_selected(
         choices = "SLDINV",
         selected = "SLDINV"
       ),
-      x_var = teal.transform::choices_selected(
+      x_var = choices_selected(
         choices = "ADY",
         selected = "ADY"
       ),
-      y_var = teal.transform::choices_selected(
+      y_var = choices_selected(
         choices = c("PCHG", "CHG", "AVAL"),
         selected = "PCHG"
       ),
-      marker_var = teal.transform::choices_selected(
+      marker_var = choices_selected(
         choices = c("SEX", "RACE", "USUBJID"),
         selected = "SEX"
       ),
-      line_colorby_var = teal.transform::choices_selected(
+      line_colorby_var = choices_selected(
         choices = c("SEX", "USUBJID", "RACE"),
         selected = "SEX"
       ),
-      xfacet_var = teal.transform::choices_selected(
+      xfacet_var = choices_selected(
         choices = c("SEX", "ARM"),
         selected = "SEX"
       ),
-      yfacet_var = teal.transform::choices_selected(
+      yfacet_var = choices_selected(
         choices = c("SEX", "ARM"),
         selected = "ARM"
       ),

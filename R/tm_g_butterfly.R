@@ -41,15 +41,15 @@
 #'
 #' @examples
 # Example using stream (ADaM) dataset
-#' data <- teal.data::cdisc_data() |>
+#' data <- cdisc_data() |>
 #'   within({
 #'     library(dplyr)
 #'     library(nestcolor)
 #'   }) |>
 #'   within({
 #'     set.seed(23)
-#'     ADSL <- osprey::rADSL
-#'     ADAE <- osprey::rADAE
+#'     ADSL <- rADSL
+#'     ADAE <- rADAE
 #'     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
 #'     ADAE <- mutate(
 #'       ADAE,
@@ -60,40 +60,40 @@
 #'     )
 #'   })
 #'
-#' teal.data::datanames(data) <- c("ADSL", "ADAE")
-#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+#' datanames(data) <- c("ADSL", "ADAE")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
-#' app <- teal::init(
+#' app <- init(
 #'   data = data,
-#'   modules = teal::modules(
+#'   modules = modules(
 #'     tm_g_butterfly(
 #'       label = "Butterfly Plot",
 #'       dataname = "ADAE",
-#'       right_var = teal.transform::choices_selected(
+#'       right_var = choices_selected(
 #'         selected = "SEX",
 #'         choices = c("SEX", "ARM", "RACE")
 #'       ),
-#'       left_var = teal.transform::choices_selected(
+#'       left_var = choices_selected(
 #'         selected = "RACE",
 #'         choices = c("SEX", "ARM", "RACE")
 #'       ),
-#'       category_var = teal.transform::choices_selected(
+#'       category_var = choices_selected(
 #'         selected = "AEBODSYS",
 #'         choices = c("AEDECOD", "AEBODSYS")
 #'       ),
-#'       color_by_var = teal.transform::choices_selected(
+#'       color_by_var = choices_selected(
 #'         selected = "AETOXGR",
 #'         choices = c("AETOXGR", "None")
 #'       ),
-#'       count_by_var = teal.transform::choices_selected(
+#'       count_by_var = choices_selected(
 #'         selected = "# of patients",
 #'         choices = c("# of patients", "# of AEs")
 #'       ),
-#'       facet_var = teal.transform::choices_selected(
+#'       facet_var = choices_selected(
 #'         selected = NULL,
 #'         choices = c("RACE", "SEX", "ARM")
 #'       ),
-#'       sort_by_var = teal.transform::choices_selected(
+#'       sort_by_var = choices_selected(
 #'         selected = "count",
 #'         choices = c("count", "alphabetical")
 #'       ),

@@ -54,11 +54,11 @@ Display the \code{AE} overview plot as a shiny module
 data <- cdisc_data() |>
   within(library(nestcolor)) |>
   within({
-    ADSL <- osprey::rADSL
-    ADAE <- osprey::rADAE
+    ADSL <- rADSL
+    ADAE <- rADAE
     add_event_flags <- function(dat) {
       dat <- dat |>
-        dplyr::mutate(
+        mutate(
           TMPFL_SER = AESER == "Y",
           TMPFL_REL = AEREL == "Y",
           TMPFL_GR5 = AETOXGR == "5",
@@ -78,24 +78,24 @@ data <- cdisc_data() |>
     ADAE <- add_event_flags(ADAE)
   })
 
-teal.data::datanames(data) <- c("ADSL", "ADAE")
-teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[datanames(data)]
+datanames(data) <- c("ADSL", "ADAE")
+join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 
 ADAE <- data[["ADAE"]]
 
-app <- teal::init(
+app <- init(
   data = data,
-  modules = teal::modules(
+  modules = modules(
     tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
-      arm_var = teal.transform::choices_selected(
+      arm_var = choices_selected(
         selected = "ACTARM",
         choices = c("ACTARM", "ACTARMCD")
       ),
-      flag_var_anl = teal.transform::choices_selected(
+      flag_var_anl = choices_selected(
         selected = "AEREL1",
-        choices = teal.transform::variable_choices(
+        choices = variable_choices(
           ADAE,
           c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
         ),

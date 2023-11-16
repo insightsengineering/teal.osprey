@@ -18,18 +18,18 @@
 #'
 #' @examples
 # Example using stream (ADaM) dataset
-#' data <- teal.data::cdisc_data() |>
+#' data <- cdisc_data() |>
 #'   within({
-#'     ADSL <- osprey::rADSL
-#'     ADAE <- osprey::rADAE
+#'     ADSL <- rADSL
+#'     ADAE <- rADAE
 #'   })
 #'
-#' teal.data::datanames(data) <- c("ADSL", "ADAE")
-#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+#' datanames(data) <- c("ADSL", "ADAE")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
-#' app <- teal::init(
+#' app <- init(
 #'   data = data,
-#'   modules = teal::modules(
+#'   modules = modules(
 #'     tm_g_ae_sub(
 #'       label = "AE by Subgroup",
 #'       dataname = "ADAE",

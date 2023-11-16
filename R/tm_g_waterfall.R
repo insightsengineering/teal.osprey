@@ -47,35 +47,35 @@
 #' @author houx14 \email{houx14@gene.com}
 #'
 #' @examples
-#' data <- teal.data::cdisc_data() |>
+#' data <- cdisc_data() |>
 #'   within(library(nestcolor)) |>
 #'   within({
-#'     ADSL <- osprey::rADSL
-#'     ADRS <- osprey::rADRS
-#'     ADTR <- osprey::rADTR
+#'     ADSL <- rADSL
+#'     ADRS <- rADRS
+#'     ADTR <- rADTR
 #'     ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
 #'   })
 #'
-#' teal.data::datanames(data) <- c("ADSL", "ADTR", "ADRS")
-#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+#' datanames(data) <- c("ADSL", "ADTR", "ADRS")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
-#' app <- teal::init(
+#' app <- init(
 #'   data = data,
-#'   modules = teal::modules(
+#'   modules = modules(
 #'     tm_g_waterfall(
 #'       label = "Waterfall",
 #'       dataname_tr = "ADTR",
 #'       dataname_rs = "ADRS",
-#'       bar_paramcd = teal.transform::choices_selected(c("SLDINV"), "SLDINV"),
-#'       bar_var = teal.transform::choices_selected(c("PCHG", "AVAL"), "PCHG"),
-#'       bar_color_var = teal.transform::choices_selected(c("ARMCD", "SEX"), "ARMCD"),
+#'       bar_paramcd = choices_selected(c("SLDINV"), "SLDINV"),
+#'       bar_var = choices_selected(c("PCHG", "AVAL"), "PCHG"),
+#'       bar_color_var = choices_selected(c("ARMCD", "SEX"), "ARMCD"),
 #'       bar_color_opt = NULL,
-#'       sort_var = teal.transform::choices_selected(c("ARMCD", "SEX"), NULL),
-#'       add_label_var_sl = teal.transform::choices_selected(c("SEX", "EOSDY"), NULL),
-#'       add_label_paramcd_rs = teal.transform::choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-#'       anno_txt_var_sl = teal.transform::choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
-#'       anno_txt_paramcd_rs = teal.transform::choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-#'       facet_var = teal.transform::choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
+#'       sort_var = choices_selected(c("ARMCD", "SEX"), NULL),
+#'       add_label_var_sl = choices_selected(c("SEX", "EOSDY"), NULL),
+#'       add_label_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
+#'       anno_txt_var_sl = choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
+#'       anno_txt_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
+#'       facet_var = choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
 #'       href_line = "-30, 20"
 #'     )
 #'   )

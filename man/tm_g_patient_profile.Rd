@@ -108,31 +108,31 @@ the start date
 }
 }
 \examples{
-data <- teal.data::cdisc_data() |>
+data <- cdisc_data() |>
   within(library(nestcolor)) |>
   within({
-    ADSL <- osprey::rADSL
-    ADAE <- osprey::rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-    ADCM <- osprey::rADCM \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+    ADSL <- rADSL
+    ADAE <- rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+    ADCM <- rADCM \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
     # The step below is to pre-process ADCM to legacy standard
     ADCM <- ADCM \%>\% select(-starts_with("ATC")) \%>\% unique()
-    ADRS <- osprey::rADRS \%>\% mutate(ADT = as.Date(ADTM))
-    ADEX <- osprey::rADEX \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-    ADLB <- osprey::rADLB \%>\% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
+    ADRS <- rADRS \%>\% mutate(ADT = as.Date(ADTM))
+    ADEX <- rADEX \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+    ADLB <- rADLB \%>\% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
 
   })
 
-teal.data::datanames(data) <- c("ADSL", "ADAE", "ADCM", "ADRS", "ADEX", "ADLB")
-teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+datanames(data) <- c("ADSL", "ADAE", "ADCM", "ADRS", "ADEX", "ADLB")
+join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 
 ADSL <- data[["ADSL"]]
 
-app <- teal::init(
+app <- init(
   data = data,
-  modules = teal::modules(
+  modules = modules(
     tm_g_patient_profile(
       label = "Patient Profile Plot",
-      patient_id = teal.transform::choices_selected(
+      patient_id = choices_selected(
         choices = unique(ADSL$USUBJID),
         selected = unique(ADSL$USUBJID)[1]
       ),
@@ -142,32 +142,32 @@ app <- teal::init(
       rs_dataname = "ADRS",
       cm_dataname = "ADCM",
       lb_dataname = "ADLB",
-      sl_start_date = teal.transform::choices_selected(
+      sl_start_date = choices_selected(
         selected = "TRTSDTM",
         choices = c("TRTSDTM", "RANDDT")
       ),
-      ex_var = teal.transform::choices_selected(
+      ex_var = choices_selected(
         selected = "PARCAT2",
         choices = "PARCAT2"
       ),
-      ae_var = teal.transform::choices_selected(
+      ae_var = choices_selected(
         selected = "AEDECOD",
         choices = c("AEDECOD", "AESOC")
       ),
-      ae_line_col_var = teal.transform::choices_selected(
+      ae_line_col_var = choices_selected(
         selected = "AESER",
         choices = c("AESER", "AEREL")
       ),
       ae_line_col_opt = c("Y" = "red", "N" = "blue"),
-      rs_var = teal.transform::choices_selected(
+      rs_var = choices_selected(
         selected = "PARAMCD",
         choices = "PARAMCD"
       ),
-      cm_var = teal.transform::choices_selected(
+      cm_var = choices_selected(
         selected = "CMDECOD",
         choices = c("CMDECOD", "CMCAT")
       ),
-      lb_var = teal.transform::choices_selected(
+      lb_var = choices_selected(
         selected = "LBTESTCD",
         choices = c("LBTESTCD", "LBCAT")
       ),

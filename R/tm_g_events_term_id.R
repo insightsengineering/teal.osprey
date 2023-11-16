@@ -18,30 +18,30 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
 #' @examples
-#' data <- teal.data::cdisc_data() |>
+#' data <- cdisc_data() |>
 #'   within(library(nestcolor)) |>
 #'   within({
-#'     ADSL <- osprey::rADSL
-#'     ADAE <- osprey::rADAE
+#'     ADSL <- rADSL
+#'     ADAE <- rADAE
 #'   })
 #'
-#' teal.data::datanames(data) <- c("ADSL", "ADAE")
-#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+#' datanames(data) <- c("ADSL", "ADAE")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
-#' app <- teal::init(
+#' app <- init(
 #'   data = data,
-#'   modules = teal::modules(
+#'   modules = modules(
 #'     tm_g_events_term_id(
 #'       label = "Common AE",
 #'       dataname = "ADAE",
-#'       term_var = teal.transform::choices_selected(
+#'       term_var = choices_selected(
 #'         selected = "AEDECOD",
 #'         choices = c(
 #'           "AEDECOD", "AETERM",
 #'           "AEHLT", "AELLT", "AEBODSYS"
 #'         )
 #'       ),
-#'       arm_var = teal.transform::choices_selected(
+#'       arm_var = choices_selected(
 #'         selected = "ACTARMCD",
 #'         choices = c("ACTARM", "ACTARMCD")
 #'       ),
