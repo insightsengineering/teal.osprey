@@ -77,24 +77,22 @@ the \code{\link[teal:module]{teal::module()}} object.
 Display spider plot as a shiny module
 }
 \examples{
-
 # Example using stream (ADaM) dataset
-library(dplyr)
-library(nestcolor)
+data <- teal.data::cdisc_data() |>
+  within(library(dplyr)) |>
+  within(library(nestcolor)) |>
+  within(ADSL <- osprey::rADSL) |>
+  within(ADTR <- osprey::rADTR)
 
-ADSL <- osprey::rADSL
-ADTR <- osprey::rADTR
+teal.data::datanames(data) <- c("ADSL", "ADTR")
+teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+
+ADSL <- data[["ADSL"]]
+ADTR <- data[["ADTR"]]
 
 app <- teal::init(
-  data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
-    cdisc_dataset("ADTR", ADTR,
-      code = "ADTR <- osprey::rADTR",
-      keys = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
-    ),
-    check = TRUE
-  ),
-  modules = modules(
+  data = data,
+  modules = teal::modules(
     tm_g_spiderplot(
       label = "Spider plot",
       dataname = "ADTR",

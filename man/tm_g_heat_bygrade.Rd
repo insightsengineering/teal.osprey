@@ -76,79 +76,49 @@ the \code{\link[teal:module]{teal::module()}} object.
 Display the heatmap by grade as a shiny module
 }
 \examples{
-library(dplyr)
-library(nestcolor)
-ADSL <- osprey::rADSL \%>\% slice(1:30)
-ADEX <- osprey::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-ADAE <- osprey::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-ADCM <- osprey::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+data <- teal.data::cdisc_data() |>
+  within(library(dplyr)) |>
+  within(library(nestcolor)) |>
+  within(ADSL <- osprey::rADSL \%>\% slice(1:30)) |>
+  within(ADEX <- osprey::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)) |>
+  within(ADAE <- osprey::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)) |>
+  within(ADCM <- osprey::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)) |>
+  # This preprocess is only to force legacy standard on ADCM
+  within(ADCM <- ADCM \%>\% select(-starts_with("ATC")) \%>\% unique()) |>
+  # function to derive AVISIT from ADEX
+  within(add_visit <- function(data_need_visit) {
+    visit_dates <- ADEX \%>\%
+      filter(PARAMCD == "DOSE") \%>\%
+      distinct(USUBJID, AVISIT, ASTDTM) \%>\%
+      group_by(USUBJID) \%>\%
+      arrange(ASTDTM) \%>\%
+      mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
+      rename(this_vis = ASTDTM)
+    data_visit <- data_need_visit \%>\%
+      select(USUBJID, ASTDTM) \%>\%
+      left_join(visit_dates, by = "USUBJID") \%>\%
+      filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
+      left_join(data_need_visit) \%>\%
+      distinct()
+    return(data_visit)
+  }) |>
+  # derive AVISIT for ADAE and ADCM
+  within(ADAE <- add_visit(ADAE)) |>
+  within(ADCM <- add_visit(ADCM)) |>
+  # derive ongoing status variable for ADEX
+  within(ADEX <- ADEX \%>\% filter(PARCAT1 == "INDIVIDUAL") \%>\% mutate(ongo_status = (EOSSTT == "ONGOING")))
 
-# This preprocess is only to force legacy standard on ADCM
-ADCM <- ADCM \%>\%
-  select(-starts_with("ATC")) \%>\%
-  unique()
+teal.data::datanames(data) <- c("ADSL", "ADEX", "ADAE", "ADCM")
+teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
 
-# function to derive AVISIT from ADEX
-add_visit <- function(data_need_visit) {
-  visit_dates <- ADEX \%>\%
-    filter(PARAMCD == "DOSE") \%>\%
-    distinct(USUBJID, AVISIT, ASTDTM) \%>\%
-    group_by(USUBJID) \%>\%
-    arrange(ASTDTM) \%>\%
-    mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
-    rename(this_vis = ASTDTM)
-  data_visit <- data_need_visit \%>\%
-    select(USUBJID, ASTDTM) \%>\%
-    left_join(visit_dates, by = "USUBJID") \%>\%
-    filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
-    left_join(data_need_visit) \%>\%
-    distinct()
-  return(data_visit)
-}
-# derive AVISIT for ADAE and ADCM
-ADAE <- add_visit(ADAE)
-ADCM <- add_visit(ADCM)
-# derive ongoing status variable for ADEX
-ADEX <- ADEX \%>\%
-  filter(PARCAT1 == "INDIVIDUAL") \%>\%
-  mutate(ongo_status = (EOSSTT == "ONGOING"))
+ADSL <- data[["ADSL"]]
+ADEX <- data[["ADEX"]]
+ADAE <- data[["ADAE"]]
+ADCM <- data[["ADCM"]]
 
-app <- init(
-  data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL),
-    cdisc_dataset("ADEX", ADEX),
-    cdisc_dataset("ADAE", ADAE),
-    cdisc_dataset("ADCM", ADCM, keys = c("STUDYID", "USUBJID", "ASTDTM", "CMSEQ", "CMDECOD")),
-    code = "
-    ADSL <- osprey::rADSL \%>\% slice(1:30)
-    ADEX <- osprey::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADAE <- osprey::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADCM <- osprey::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADCM <- ADCM \%>\% select(-starts_with(\"ATC\")) \%>\% unique()
-    ADEX  <- ADEX \%>\%
-      filter(PARCAT1 == 'INDIVIDUAL') \%>\%
-      mutate(ongo_status = (EOSSTT == 'ONGOING'))
-    add_visit <- function(data_need_visit) {
-      visit_dates <- ADEX \%>\%
-        filter(PARAMCD == 'DOSE') \%>\%
-        distinct(USUBJID, AVISIT, ASTDTM) \%>\%
-        group_by(USUBJID) \%>\%
-        arrange(ASTDTM) \%>\%
-        mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
-        rename(this_vis = ASTDTM)
-      data_visit <- data_need_visit \%>\%
-        select(USUBJID, ASTDTM) \%>\%
-        left_join(visit_dates, by = 'USUBJID') \%>\%
-        filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
-        left_join(data_need_visit) \%>\% distinct()
-      return(data_visit)
-    }
-    ADAE <- add_visit(ADAE)
-    ADCM <- add_visit(ADCM)
-    ",
-    check = TRUE
-  ),
-  modules = modules(
+app <- teal::init(
+  data = data,
+  modules = teal::modules(
     tm_g_heat_bygrade(
       label = "Heatmap by grade",
       sl_dataname = "ADSL",
@@ -186,4 +156,5 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
+
 }
