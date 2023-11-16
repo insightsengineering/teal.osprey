@@ -47,27 +47,23 @@
 #' @author houx14 \email{houx14@gene.com}
 #'
 #' @examples
-#' library(nestcolor)
-#' ADSL <- osprey::rADSL
-#' ADRS <- osprey::rADRS
-#' ADTR <- osprey::rADTR
+#' data <- teal.data::cdisc_data() |>
+#'   within(library(nestcolor)) |>
+#'   within(ADSL <- osprey::rADSL) |>
+#'   within(ADRS <- osprey::rADRS) |>
+#'   within(ADTR <- osprey::rADTR) |>
+#'   within(ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX)))
 #'
-#' ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+#' teal.data::datanames(data) <- c("ADSL", "ADTR", "ADRS")
+#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+#'
+#' ADSL <- data[["ADSL"]]
+#' ADTR <- data[["ADTR"]]
+#' ADRS <- data[["ADRS"]]
 #'
 #' app <- teal::init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL,
-#'       code = "ADSL <- rADSL
-#'               ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))"
-#'     ),
-#'     cdisc_dataset("ADRS", ADRS, code = "ADRS <- rADRS"),
-#'     cdisc_dataset("ADTR", ADTR,
-#'       code = " ADTR <- rADTR",
-#'       c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
-#'     ),
-#'     check = TRUE
-#'   ),
-#'   modules = modules(
+#'   data = data,
+#'   modules = teal::modules(
 #'     tm_g_waterfall(
 #'       label = "Waterfall",
 #'       dataname_tr = "ADTR",
@@ -89,6 +85,7 @@
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
+#' #'
 tm_g_waterfall <- function(label,
                            dataname_tr = "ADTR",
                            dataname_rs = "ADRS",

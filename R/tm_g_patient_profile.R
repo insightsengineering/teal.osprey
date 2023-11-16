@@ -62,67 +62,30 @@
 #' @export
 #'
 #' @examples
-#' library(nestcolor)
+#' data <- teal.data::cdisc_data() |>
+#'   within(library(nestcolor)) |>
+#'   within(ADSL <- osprey::rADSL) |>
+#'   within(ADAE <- osprey::rADAE %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))) |>
+#'   within(ADCM <- osprey::rADCM %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))) |>
+#'   # The step below is to pre-process ADCM to legacy standard
+#'   within(ADCM <- ADCM %>% select(-starts_with("ATC")) %>% unique()) |>
+#'   within(ADRS <- osprey::rADRS %>% mutate(ADT = as.Date(ADTM))) |>
+#'   within(ADEX <- osprey::rADEX %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))) |>
+#'   within(ADLB <- osprey::rADLB %>% mutate(ADT = as.Date(ADTM),LBSTRESN = as.numeric(LBSTRESC)))
 #'
-#' ADSL <- osprey::rADSL
-#' ADAE <- osprey::rADAE %>%
-#'   mutate(
-#'     ASTDT = as.Date(ASTDTM),
-#'     AENDT = as.Date(AENDTM)
-#'   )
-#' ADCM <- osprey::rADCM %>%
-#'   mutate(
-#'     ASTDT = as.Date(ASTDTM),
-#'     AENDT = as.Date(AENDTM)
-#'   )
+#' teal.data::datanames(data) <- c("ADSL", "ADAE", "ADCM", "ADRS", "ADEX", "ADLB")
+#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
 #'
-#' # The step below is to pre-process ADCM to legacy standard
-#' ADCM <- ADCM %>%
-#'   select(-starts_with("ATC")) %>%
-#'   unique()
+#' ADSL <- data[["ADSL"]]
+#' ADAE <- data[["ADAE"]]
+#' ADCM <- data[["ADCM"]]
+#' ADRS <- data[["ADRS"]]
+#' ADEX <- data[["ADEX"]]
+#' ADLB <- data[["ADLB"]]
 #'
-#' ADRS <- osprey::rADRS %>%
-#'   mutate(ADT = as.Date(ADTM))
-#' ADEX <- osprey::rADEX %>%
-#'   mutate(
-#'     ASTDT = as.Date(ASTDTM),
-#'     AENDT = as.Date(AENDTM)
-#'   )
-#' ADLB <- osprey::rADLB %>%
-#'   mutate(
-#'     ADT = as.Date(ADTM),
-#'     LBSTRESN = as.numeric(LBSTRESC)
-#'   )
-#'
-#' app <- init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
-#'     cdisc_dataset("ADRS", ADRS, code = "ADRS <- osprey::rADRS %>% mutate(ADT = as.Date(ADTM))"),
-#'     cdisc_dataset("ADAE", ADAE,
-#'       code = "ADAE <- osprey::rADAE %>%
-#'               mutate(ASTDT = as.Date(ASTDTM),
-#'                      AENDT = as.Date(AENDTM))"
-#'     ),
-#'     cdisc_dataset("ADCM", ADCM,
-#'       code = "ADCM <- osprey::rADCM %>%
-#'               mutate(ASTDT = as.Date(ASTDTM),
-#'                      AENDT = as.Date(AENDTM))
-#'               ADCM <- ADCM %>% select(-starts_with(\"ATC\")) %>% unique()",
-#'       keys = c("STUDYID", "USUBJID", "ASTDTM", "CMSEQ", "CMDECOD")
-#'     ),
-#'     cdisc_dataset("ADLB", ADLB,
-#'       code = "ADLB <- osprey::rADLB %>%
-#'               mutate(ADT = as.Date(ADTM),
-#'                      LBSTRESN = as.numeric(LBSTRESC))"
-#'     ),
-#'     cdisc_dataset("ADEX", ADEX,
-#'       code = "ADEX <- osprey::rADEX %>%
-#'               mutate(ASTDT = as.Date(ASTDTM),
-#'                      AENDT = as.Date(AENDTM))"
-#'     ),
-#'     check = FALSE # set FALSE here to keep run time of example short, should be set to TRUE
-#'   ),
-#'   modules = modules(
+#' app <- teal::init(
+#'   data = data,
+#'   modules = teal::modules(
 #'     tm_g_patient_profile(
 #'       label = "Patient Profile Plot",
 #'       patient_id = teal.transform::choices_selected(
