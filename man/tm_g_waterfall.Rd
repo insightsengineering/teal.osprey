@@ -102,10 +102,12 @@ This is teal module that generates a waterfall plot for \code{ADaM} data
 \examples{
 data <- teal.data::cdisc_data() |>
   within(library(nestcolor)) |>
-  within(ADSL <- osprey::rADSL) |>
-  within(ADRS <- osprey::rADRS) |>
-  within(ADTR <- osprey::rADTR) |>
-  within(ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX)))
+  within({
+    ADSL <- osprey::rADSL
+    ADRS <- osprey::rADRS
+    ADTR <- osprey::rADTR
+    ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+  })
 
 teal.data::datanames(data) <- c("ADSL", "ADTR", "ADRS")
 teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]

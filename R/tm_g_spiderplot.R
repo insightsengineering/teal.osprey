@@ -27,10 +27,14 @@
 #' @examples
 #' # Example using stream (ADaM) dataset
 #' data <- teal.data::cdisc_data() |>
-#'   within(library(dplyr)) |>
-#'   within(library(nestcolor)) |>
-#'   within(ADSL <- osprey::rADSL) |>
-#'   within(ADTR <- osprey::rADTR)
+#'   within({
+#'     library(dplyr)
+#'     library(nestcolor)
+#'   }) |>
+#'   within({
+#'     ADSL <- osprey::rADSL
+#'     ADTR <- osprey::rADTR
+#'   })
 #'
 #' teal.data::datanames(data) <- c("ADSL", "ADTR")
 #' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]

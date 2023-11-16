@@ -20,8 +20,10 @@
 #' @examples
 #' data <- teal.data::cdisc_data() |>
 #'   within(library(nestcolor)) |>
-#'   within(ADSL <- osprey::rADSL) |>
-#'   within(ADAE <- osprey::rADAE)
+#'   within({
+#'     ADSL <- osprey::rADSL
+#'     ADAE <- osprey::rADAE
+#'   })
 #'
 #' teal.data::datanames(data) <- c("ADSL", "ADAE")
 #' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]

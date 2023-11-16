@@ -110,14 +110,17 @@ the start date
 \examples{
 data <- teal.data::cdisc_data() |>
   within(library(nestcolor)) |>
-  within(ADSL <- osprey::rADSL) |>
-  within(ADAE <- osprey::rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))) |>
-  within(ADCM <- osprey::rADCM \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))) |>
-  # The step below is to pre-process ADCM to legacy standard
-  within(ADCM <- ADCM \%>\% select(-starts_with("ATC")) \%>\% unique()) |>
-  within(ADRS <- osprey::rADRS \%>\% mutate(ADT = as.Date(ADTM))) |>
-  within(ADEX <- osprey::rADEX \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))) |>
-  within(ADLB <- osprey::rADLB \%>\% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC)))
+  within({
+    ADSL <- osprey::rADSL
+    ADAE <- osprey::rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+    ADCM <- osprey::rADCM \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+    # The step below is to pre-process ADCM to legacy standard
+    ADCM <- ADCM \%>\% select(-starts_with("ATC")) \%>\% unique()
+    ADRS <- osprey::rADRS \%>\% mutate(ADT = as.Date(ADTM))
+    ADEX <- osprey::rADEX \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+    ADLB <- osprey::rADLB \%>\% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
+
+  })
 
 teal.data::datanames(data) <- c("ADSL", "ADAE", "ADCM", "ADRS", "ADEX", "ADLB")
 teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]

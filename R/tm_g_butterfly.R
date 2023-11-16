@@ -40,23 +40,25 @@
 #' @template author_liaoc10
 #'
 #' @examples
-#' # Example using stream (ADaM) dataset
+# Example using stream (ADaM) dataset
 #' data <- teal.data::cdisc_data() |>
 #'   within({
 #'     library(dplyr)
 #'     library(nestcolor)
 #'   }) |>
-#'   within(set.seed(23)) |>
-#'   within(ADSL <- osprey::rADSL) |>
-#'   within(ADAE <- osprey::rADAE) |>
-#'   within(ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))) |>
-#'   within(ADAE <- mutate(
-#'     ADAE,
-#'     flag1 = ifelse(AETOXGR == 1, 1, 0),
-#'     flag2 = ifelse(AETOXGR == 2, 1, 0),
-#'     flag3 = ifelse(AETOXGR == 3, 1, 0),
-#'     flag1_filt = rep("Y", n())
-#'   ))
+#'   within({
+#'     set.seed(23)
+#'     ADSL <- osprey::rADSL
+#'     ADAE <- osprey::rADAE
+#'     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
+#'     ADAE <- mutate(
+#'       ADAE,
+#'       flag1 = ifelse(AETOXGR == 1, 1, 0),
+#'       flag2 = ifelse(AETOXGR == 2, 1, 0),
+#'       flag3 = ifelse(AETOXGR == 3, 1, 0),
+#'       flag1_filt = rep("Y", n())
+#'     )
+#'   })
 #'
 #' teal.data::datanames(data) <- c("ADSL", "ADAE")
 #' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
