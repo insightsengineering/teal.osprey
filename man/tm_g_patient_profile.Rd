@@ -115,11 +115,12 @@ data <- cdisc_data() |>
     ADAE <- rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
     ADCM <- rADCM \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
     # The step below is to pre-process ADCM to legacy standard
-    ADCM <- ADCM \%>\% select(-starts_with("ATC")) \%>\% unique()
+    ADCM <- ADCM \%>\%
+      select(-starts_with("ATC")) \%>\%
+      unique()
     ADRS <- rADRS \%>\% mutate(ADT = as.Date(ADTM))
     ADEX <- rADEX \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
     ADLB <- rADLB \%>\% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
-
   })
 
 datanames(data) <- c("ADSL", "ADAE", "ADCM", "ADRS", "ADEX", "ADLB")

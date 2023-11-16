@@ -80,14 +80,16 @@ data <- cdisc_data() |>
   within({
     library(dplyr)
     library(nestcolor)
-    }) |>
+  }) |>
   within({
     ADSL <- rADSL \%>\% slice(1:30)
     ADEX <- rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
     ADAE <- rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
     ADCM <- rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
     # This preprocess is only to force legacy standard on ADCM
-    ADCM <- ADCM \%>\% select(-starts_with("ATC")) \%>\% unique()
+    ADCM <- ADCM \%>\%
+      select(-starts_with("ATC")) \%>\%
+      unique()
     # function to derive AVISIT from ADEX
     add_visit <- function(data_need_visit) {
       visit_dates <- ADEX \%>\%
@@ -109,7 +111,9 @@ data <- cdisc_data() |>
     ADAE <- add_visit(ADAE)
     ADCM <- add_visit(ADCM)
     # derive ongoing status variable for ADEX
-    ADEX <- ADEX \%>\% filter(PARCAT1 == "INDIVIDUAL") \%>\% mutate(ongo_status = (EOSSTT == "ONGOING"))
+    ADEX <- ADEX \%>\%
+      filter(PARCAT1 == "INDIVIDUAL") \%>\%
+      mutate(ongo_status = (EOSSTT == "ONGOING"))
   })
 
 datanames(data) <- c("ADSL", "ADEX", "ADAE", "ADCM")
