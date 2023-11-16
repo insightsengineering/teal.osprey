@@ -25,52 +25,51 @@
 #' @template author_liaoc10
 #'
 #' @examples
-#'
 #' # Example using stream (ADaM) dataset
-#' library(dplyr)
-#' library(nestcolor)
+#' data <- cdisc_data() |>
+#'   within({
+#'     library(dplyr)
+#'     library(nestcolor)
+#'   }) |>
+#'   within({
+#'     ADSL <- rADSL
+#'     ADTR <- rADTR
+#'   })
 #'
-#' ADSL <- osprey::rADSL
-#' ADTR <- osprey::rADTR
+#' datanames(data) <- c("ADSL", "ADTR")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
-#' app <- teal::init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
-#'     cdisc_dataset("ADTR", ADTR,
-#'       code = "ADTR <- osprey::rADTR",
-#'       keys = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
-#'     ),
-#'     check = TRUE
-#'   ),
+#' app <- init(
+#'   data = data,
 #'   modules = modules(
 #'     tm_g_spiderplot(
 #'       label = "Spider plot",
 #'       dataname = "ADTR",
-#'       paramcd = teal.transform::choices_selected(
+#'       paramcd = choices_selected(
 #'         choices = "SLDINV",
 #'         selected = "SLDINV"
 #'       ),
-#'       x_var = teal.transform::choices_selected(
+#'       x_var = choices_selected(
 #'         choices = "ADY",
 #'         selected = "ADY"
 #'       ),
-#'       y_var = teal.transform::choices_selected(
+#'       y_var = choices_selected(
 #'         choices = c("PCHG", "CHG", "AVAL"),
 #'         selected = "PCHG"
 #'       ),
-#'       marker_var = teal.transform::choices_selected(
+#'       marker_var = choices_selected(
 #'         choices = c("SEX", "RACE", "USUBJID"),
 #'         selected = "SEX"
 #'       ),
-#'       line_colorby_var = teal.transform::choices_selected(
+#'       line_colorby_var = choices_selected(
 #'         choices = c("SEX", "USUBJID", "RACE"),
 #'         selected = "SEX"
 #'       ),
-#'       xfacet_var = teal.transform::choices_selected(
+#'       xfacet_var = choices_selected(
 #'         choices = c("SEX", "ARM"),
 #'         selected = "SEX"
 #'       ),
-#'       yfacet_var = teal.transform::choices_selected(
+#'       yfacet_var = choices_selected(
 #'         choices = c("SEX", "ARM"),
 #'         selected = "ARM"
 #'       ),

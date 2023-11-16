@@ -100,41 +100,35 @@ the \code{\link[teal:module]{teal::module()}} object.
 This is teal module that generates a waterfall plot for \code{ADaM} data
 }
 \examples{
-library(nestcolor)
-ADSL <- osprey::rADSL
-ADRS <- osprey::rADRS
-ADTR <- osprey::rADTR
+data <- cdisc_data() |>
+  within(library(nestcolor)) |>
+  within({
+    ADSL <- rADSL
+    ADRS <- rADRS
+    ADTR <- rADTR
+    ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+  })
 
-ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+datanames(data) <- c("ADSL", "ADTR", "ADRS")
+join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 
-app <- teal::init(
-  data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL,
-      code = "ADSL <- rADSL
-              ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))"
-    ),
-    cdisc_dataset("ADRS", ADRS, code = "ADRS <- rADRS"),
-    cdisc_dataset("ADTR", ADTR,
-      code = " ADTR <- rADTR",
-      c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
-    ),
-    check = TRUE
-  ),
+app <- init(
+  data = data,
   modules = modules(
     tm_g_waterfall(
       label = "Waterfall",
       dataname_tr = "ADTR",
       dataname_rs = "ADRS",
-      bar_paramcd = teal.transform::choices_selected(c("SLDINV"), "SLDINV"),
-      bar_var = teal.transform::choices_selected(c("PCHG", "AVAL"), "PCHG"),
-      bar_color_var = teal.transform::choices_selected(c("ARMCD", "SEX"), "ARMCD"),
+      bar_paramcd = choices_selected(c("SLDINV"), "SLDINV"),
+      bar_var = choices_selected(c("PCHG", "AVAL"), "PCHG"),
+      bar_color_var = choices_selected(c("ARMCD", "SEX"), "ARMCD"),
       bar_color_opt = NULL,
-      sort_var = teal.transform::choices_selected(c("ARMCD", "SEX"), NULL),
-      add_label_var_sl = teal.transform::choices_selected(c("SEX", "EOSDY"), NULL),
-      add_label_paramcd_rs = teal.transform::choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-      anno_txt_var_sl = teal.transform::choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
-      anno_txt_paramcd_rs = teal.transform::choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-      facet_var = teal.transform::choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
+      sort_var = choices_selected(c("ARMCD", "SEX"), NULL),
+      add_label_var_sl = choices_selected(c("SEX", "EOSDY"), NULL),
+      add_label_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
+      anno_txt_var_sl = choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
+      anno_txt_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
+      facet_var = choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
       href_line = "-30, 20"
     )
   )
@@ -142,6 +136,7 @@ app <- teal::init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
+
 }
 \author{
 Ting Qi (qit3) \email{qit3@gene.com}
