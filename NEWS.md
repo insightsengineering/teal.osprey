@@ -8,6 +8,7 @@
 * Improved input validation and used the `teal::validate_inputs` mechanism to send validation messages to the output panel.
 * Removed `purrr` from dependencies.
 * Added argument checks to `tm_g_patient_profile`.
+* Modified examples to utilize new `teal_data` and `join_keys` solutions.
 
 ### Breaking changes
 
