@@ -40,69 +40,58 @@
 #' @template author_liaoc10
 #'
 #' @examples
+# Example using stream (ADaM) dataset
+#' data <- cdisc_data() |>
+#'   within({
+#'     library(dplyr)
+#'     library(nestcolor)
+#'     set.seed(23)
+#'     ADSL <- rADSL
+#'     ADAE <- rADAE
+#'     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
+#'     ADAE <- mutate(
+#'       ADAE,
+#'       flag1 = ifelse(AETOXGR == 1, 1, 0),
+#'       flag2 = ifelse(AETOXGR == 2, 1, 0),
+#'       flag3 = ifelse(AETOXGR == 3, 1, 0),
+#'       flag1_filt = rep("Y", n())
+#'     )
+#'   })
 #'
-#' # Example using stream (ADaM) dataset
-#' library(dplyr)
-#' library(nestcolor)
-#'
-#' set.seed(23)
-#' ADSL <- osprey::rADSL
-#' ADAE <- osprey::rADAE
-#' ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
-#' ADAE <- mutate(
-#'   ADAE,
-#'   flag1 = ifelse(AETOXGR == 1, 1, 0),
-#'   flag2 = ifelse(AETOXGR == 2, 1, 0),
-#'   flag3 = ifelse(AETOXGR == 3, 1, 0),
-#'   flag1_filt = rep("Y", n())
-#' )
+#' datanames(data) <- c("ADSL", "ADAE")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
 #' app <- init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL,
-#'       code = "ADSL <- osprey::rADSL
-#'               set.seed(23)
-#'               ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), 'UG'))"
-#'     ),
-#'     cdisc_dataset("ADAE", ADAE,
-#'       code = "ADAE <- osprey::rADAE
-#'               ADAE <- mutate(ADAE,
-#'               flag1 = ifelse(AETOXGR == 1, 1, 0),
-#'               flag2 = ifelse(AETOXGR == 2, 1, 0),
-#'               flag3 = ifelse(AETOXGR == 3, 1, 0),
-#'               flag1_filt = rep('Y', n()))"
-#'     ),
-#'     check = TRUE
-#'   ),
+#'   data = data,
 #'   modules = modules(
 #'     tm_g_butterfly(
 #'       label = "Butterfly Plot",
 #'       dataname = "ADAE",
-#'       right_var = teal.transform::choices_selected(
+#'       right_var = choices_selected(
 #'         selected = "SEX",
 #'         choices = c("SEX", "ARM", "RACE")
 #'       ),
-#'       left_var = teal.transform::choices_selected(
+#'       left_var = choices_selected(
 #'         selected = "RACE",
 #'         choices = c("SEX", "ARM", "RACE")
 #'       ),
-#'       category_var = teal.transform::choices_selected(
+#'       category_var = choices_selected(
 #'         selected = "AEBODSYS",
 #'         choices = c("AEDECOD", "AEBODSYS")
 #'       ),
-#'       color_by_var = teal.transform::choices_selected(
+#'       color_by_var = choices_selected(
 #'         selected = "AETOXGR",
 #'         choices = c("AETOXGR", "None")
 #'       ),
-#'       count_by_var = teal.transform::choices_selected(
+#'       count_by_var = choices_selected(
 #'         selected = "# of patients",
 #'         choices = c("# of patients", "# of AEs")
 #'       ),
-#'       facet_var = teal.transform::choices_selected(
+#'       facet_var = choices_selected(
 #'         selected = NULL,
 #'         choices = c("RACE", "SEX", "ARM")
 #'       ),
-#'       sort_by_var = teal.transform::choices_selected(
+#'       sort_by_var = choices_selected(
 #'         selected = "count",
 #'         choices = c("count", "alphabetical")
 #'       ),

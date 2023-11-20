@@ -49,16 +49,17 @@ the \code{\link[teal:module]{teal::module()}} object.
 Display the \code{AE} by subgroups plot as a teal module
 }
 \examples{
-# Example using stream (ADaM) dataset
-ADSL <- osprey::rADSL
-ADAE <- osprey::rADAE
+data <- cdisc_data() |>
+  within({
+    ADSL <- rADSL
+    ADAE <- rADAE
+  })
+
+datanames(data) <- c("ADSL", "ADAE")
+join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 
 app <- init(
-  data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
-    cdisc_dataset("ADAE", ADAE, code = "ADAE <- osprey::rADAE"),
-    check = TRUE
-  ),
+  data = data,
   modules = modules(
     tm_g_ae_sub(
       label = "AE by Subgroup",
@@ -78,6 +79,7 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
+
 }
 \author{
 Liming Li (Lil128) \email{liming.li@roche.com}

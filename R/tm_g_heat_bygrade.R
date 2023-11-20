@@ -34,61 +34,22 @@
 #' @export
 #'
 #' @examples
-#' library(dplyr)
-#' library(nestcolor)
-#' ADSL <- osprey::rADSL %>% slice(1:30)
-#' ADEX <- osprey::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
-#' ADAE <- osprey::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
-#' ADCM <- osprey::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
-#'
-#' # This preprocess is only to force legacy standard on ADCM
-#' ADCM <- ADCM %>%
-#'   select(-starts_with("ATC")) %>%
-#'   unique()
-#'
-#' # function to derive AVISIT from ADEX
-#' add_visit <- function(data_need_visit) {
-#'   visit_dates <- ADEX %>%
-#'     filter(PARAMCD == "DOSE") %>%
-#'     distinct(USUBJID, AVISIT, ASTDTM) %>%
-#'     group_by(USUBJID) %>%
-#'     arrange(ASTDTM) %>%
-#'     mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) %>%
-#'     rename(this_vis = ASTDTM)
-#'   data_visit <- data_need_visit %>%
-#'     select(USUBJID, ASTDTM) %>%
-#'     left_join(visit_dates, by = "USUBJID") %>%
-#'     filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) %>%
-#'     left_join(data_need_visit) %>%
-#'     distinct()
-#'   return(data_visit)
-#' }
-#' # derive AVISIT for ADAE and ADCM
-#' ADAE <- add_visit(ADAE)
-#' ADCM <- add_visit(ADCM)
-#' # derive ongoing status variable for ADEX
-#' ADEX <- ADEX %>%
-#'   filter(PARCAT1 == "INDIVIDUAL") %>%
-#'   mutate(ongo_status = (EOSSTT == "ONGOING"))
-#'
-#' app <- init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL),
-#'     cdisc_dataset("ADEX", ADEX),
-#'     cdisc_dataset("ADAE", ADAE),
-#'     cdisc_dataset("ADCM", ADCM, keys = c("STUDYID", "USUBJID", "ASTDTM", "CMSEQ", "CMDECOD")),
-#'     code = "
-#'     ADSL <- osprey::rADSL %>% slice(1:30)
-#'     ADEX <- osprey::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADAE <- osprey::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADCM <- osprey::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADCM <- ADCM %>% select(-starts_with(\"ATC\")) %>% unique()
-#'     ADEX  <- ADEX %>%
-#'       filter(PARCAT1 == 'INDIVIDUAL') %>%
-#'       mutate(ongo_status = (EOSSTT == 'ONGOING'))
+#' data <- cdisc_data() |>
+#'   within({
+#'     library(dplyr)
+#'     library(nestcolor)
+#'     ADSL <- rADSL %>% slice(1:30)
+#'     ADEX <- rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADAE <- rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADCM <- rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     # This preprocess is only to force legacy standard on ADCM
+#'     ADCM <- ADCM %>%
+#'       select(-starts_with("ATC")) %>%
+#'       unique()
+#'     # function to derive AVISIT from ADEX
 #'     add_visit <- function(data_need_visit) {
 #'       visit_dates <- ADEX %>%
-#'         filter(PARAMCD == 'DOSE') %>%
+#'         filter(PARAMCD == "DOSE") %>%
 #'         distinct(USUBJID, AVISIT, ASTDTM) %>%
 #'         group_by(USUBJID) %>%
 #'         arrange(ASTDTM) %>%
@@ -96,16 +57,28 @@
 #'         rename(this_vis = ASTDTM)
 #'       data_visit <- data_need_visit %>%
 #'         select(USUBJID, ASTDTM) %>%
-#'         left_join(visit_dates, by = 'USUBJID') %>%
+#'         left_join(visit_dates, by = "USUBJID") %>%
 #'         filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) %>%
-#'         left_join(data_need_visit) %>% distinct()
+#'         left_join(data_need_visit) %>%
+#'         distinct()
 #'       return(data_visit)
 #'     }
+#'     # derive AVISIT for ADAE and ADCM
 #'     ADAE <- add_visit(ADAE)
 #'     ADCM <- add_visit(ADCM)
-#'     ",
-#'     check = TRUE
-#'   ),
+#'     # derive ongoing status variable for ADEX
+#'     ADEX <- ADEX %>%
+#'       filter(PARCAT1 == "INDIVIDUAL") %>%
+#'       mutate(ongo_status = (EOSSTT == "ONGOING"))
+#'   })
+#'
+#' datanames(data) <- c("ADSL", "ADEX", "ADAE", "ADCM")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
+#'
+#' ADCM <- data[["ADCM"]]
+#'
+#' app <- init(
+#'   data = data,
 #'   modules = modules(
 #'     tm_g_heat_bygrade(
 #'       label = "Heatmap by grade",
@@ -113,27 +86,27 @@
 #'       ex_dataname = "ADEX",
 #'       ae_dataname = "ADAE",
 #'       cm_dataname = "ADCM",
-#'       id_var = teal.transform::choices_selected(
+#'       id_var = choices_selected(
 #'         selected = "USUBJID",
 #'         choices = c("USUBJID", "SUBJID")
 #'       ),
-#'       visit_var = teal.transform::choices_selected(
+#'       visit_var = choices_selected(
 #'         selected = "AVISIT",
 #'         choices = c("AVISIT")
 #'       ),
-#'       ongo_var = teal.transform::choices_selected(
+#'       ongo_var = choices_selected(
 #'         selected = "ongo_status",
 #'         choices = c("ongo_status")
 #'       ),
-#'       anno_var = teal.transform::choices_selected(
+#'       anno_var = choices_selected(
 #'         selected = c("SEX", "COUNTRY"),
 #'         choices = c("SEX", "COUNTRY", "USUBJID")
 #'       ),
-#'       heat_var = teal.transform::choices_selected(
+#'       heat_var = choices_selected(
 #'         selected = "AETOXGR",
 #'         choices = c("AETOXGR")
 #'       ),
-#'       conmed_var = teal.transform::choices_selected(
+#'       conmed_var = choices_selected(
 #'         selected = "CMDECOD",
 #'         choices = c("CMDECOD")
 #'       ),
@@ -144,6 +117,7 @@
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
+#'
 tm_g_heat_bygrade <- function(label,
                               sl_dataname,
                               ex_dataname,
