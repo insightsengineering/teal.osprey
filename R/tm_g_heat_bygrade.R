@@ -289,7 +289,8 @@ srv_g_heatmap_bygrade <- function(id,
                                   plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
   if (!is.na(sl_dataname)) checkmate::assert_names(sl_dataname, subset.of = names(data))
   if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
   if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
@@ -297,11 +298,11 @@ srv_g_heatmap_bygrade <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ADSL <- data[[sl_dataname]]() # nolint
-      ADEX <- data[[ex_dataname]]() # nolint
-      ADAE <- data[[ae_dataname]]() # nolint
+      ADSL <- data()[[sl_dataname]] # nolint
+      ADEX <- data()[[ex_dataname]] # nolint
+      ADAE <- data()[[ae_dataname]] # nolint
       if (isTRUE(input$plot_cm)) {
-        ADCM <- data[[cm_dataname]]() # nolint
+        ADCM <- data()[[cm_dataname]] # nolint
       }
 
       iv <- shinyvalidate::InputValidator$new()
@@ -341,11 +342,11 @@ srv_g_heatmap_bygrade <- function(id,
       iv
     })
     iv_cm <- reactive({
-      ADSL <- data[[sl_dataname]]() # nolint
-      ADEX <- data[[ex_dataname]]() # nolint
-      ADAE <- data[[ae_dataname]]() # nolint
+      ADSL <- data()[[sl_dataname]] # nolint
+      ADEX <- data()[[ex_dataname]] # nolint
+      ADAE <- data()[[ae_dataname]] # nolint
       if (isTRUE(input$plot_cm)) {
-        ADCM <- data[[cm_dataname]]() # nolint
+        ADCM <- data()[[cm_dataname]] # nolint
       }
 
       iv_cm <- shinyvalidate::InputValidator$new()
@@ -381,7 +382,7 @@ srv_g_heatmap_bygrade <- function(id,
 
     if (!is.na(cm_dataname)) {
       observeEvent(input$conmed_var, {
-        ADCM <- data[[cm_dataname]]() # nolint
+        ADCM <- data()[[cm_dataname]] # nolint
         choices <- levels(ADCM[[input$conmed_var]])
 
         updateSelectInput(
@@ -396,9 +397,9 @@ srv_g_heatmap_bygrade <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ADSL <- data[[sl_dataname]]() # nolint
-        ADEX <- data[[ex_dataname]]() # nolint
-        ADAE <- data[[ae_dataname]]() # nolint
+        ADSL <- data()[[sl_dataname]] # nolint
+        ADEX <- data()[[ex_dataname]] # nolint
+        ADAE <- data()[[ae_dataname]] # nolint
 
         teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
         teal::validate_inputs(iv(), iv_cm())
@@ -406,11 +407,10 @@ srv_g_heatmap_bygrade <- function(id,
           shiny::validate(shiny::need(all(input$conmed_level %in% ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
         }
 
-        qenv <- teal.code::new_qenv(tdata2env(data), code = teal::get_code_tdata(data))
         if (isTRUE(input$plot_cm)) {
-          ADCM <- data[[cm_dataname]]() # nolint
+          ADCM <- data()[[cm_dataname]] # nolint
           qenv <- teal.code::eval_code(
-            qenv,
+            data(),
             code = substitute(
               expr = {
                 conmed_data <- ADCM %>%
