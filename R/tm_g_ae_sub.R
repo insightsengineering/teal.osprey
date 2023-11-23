@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-# Example using stream (ADaM) dataset
+#' Example using stream (ADaM) dataset
 #' data <- cdisc_data() |>
 #'   within({
 #'     ADSL <- rADSL
@@ -182,12 +182,13 @@ srv_g_ae_sub <- function(id,
                          plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ANL <- data[[dataname]]() # nolint
-      ADSL <- data[["ADSL"]]() # nolint
+      ANL <- data()[[dataname]] # nolint
+      ADSL <- data()[["ADSL"]] # nolint
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
@@ -224,7 +225,7 @@ srv_g_ae_sub <- function(id,
 
     observeEvent(input$arm_var, ignoreNULL = TRUE, {
       arm_var <- input$arm_var
-      ANL <- data[[dataname]]() # nolint
+      ANL <- data()[[dataname]] # nolint
 
       anl_val <- ANL[[arm_var]]
       choices <- levels(anl_val)
@@ -268,7 +269,7 @@ srv_g_ae_sub <- function(id,
     })
 
     observeEvent(input$groups, {
-      ANL <- data[[dataname]]() # nolint
+      ANL <- data()[[dataname]] # nolint
       output$grouplabel_output <- renderUI({
         grps <- input$groups
         lo <- lapply(seq_along(grps), function(index) {
@@ -314,8 +315,8 @@ srv_g_ae_sub <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ANL <- data[[dataname]]() # nolint
-        ADSL <- data[["ADSL"]]() # nolint
+        ANL <- data()[[dataname]] # nolint
+        ADSL <- data()[["ADSL"]] # nolint
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
@@ -344,13 +345,9 @@ srv_g_ae_sub <- function(id,
           bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
         }
 
-        q1 <- teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
-          code = group_labels_call
-        )
-        q2 <- teal.code::eval_code(q1, code = "")
+        teal.code::eval_code(data(), code = group_labels_call) %>%
+        teal.code::eval_code(code = "") %>%
         teal.code::eval_code(
-          q2,
           code = as.expression(c(
             bquote(
               plot <- osprey::g_ae_sub(
