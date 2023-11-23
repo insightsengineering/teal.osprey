@@ -244,8 +244,8 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ADSL <- data[["ADSL"]]() # nolint
-      ADTR <- data[[dataname]]() # nolint
+      ADSL <- data()[["ADSL"]] # nolint
+      ADTR <- data()[[dataname]] # nolint
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("paramcd", shinyvalidate::sv_required(
@@ -284,8 +284,8 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
     # render plot
     output_q <- reactive({
       # get datasets ---
-      ADSL <- data[["ADSL"]]() # nolint
-      ADTR <- data[[dataname]]() # nolint
+      ADSL <- data()[["ADSL"]] # nolint
+      ADTR <- data()[[dataname]] # nolint
 
       teal::validate_inputs(iv())
 
@@ -325,7 +325,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
       # merge
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+        data(),
         code = bquote({
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
           ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame() # nolint
