@@ -288,9 +288,9 @@ srv_g_waterfall <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      adsl <- data[["ADSL"]]()
-      adtr <- data[[dataname_tr]]()
-      adrs <- data[[dataname_rs]]()
+      adsl <- data()[["ADSL"]]
+      adtr <- data()[[dataname_tr]]
+      adrs <- data()[[dataname_rs]]
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
@@ -339,9 +339,9 @@ srv_g_waterfall <- function(id,
     })
 
     output_q <- reactive({
-      adsl <- data[["ADSL"]]()
-      adtr <- data[[dataname_tr]]()
-      adrs <- data[[dataname_rs]]()
+      adsl <- data()[["ADSL"]]
+      adtr <- data()[[dataname_tr]]
+      adrs <- data()[[dataname_rs]]
 
       # validate data rows
       teal::validate_has_data(adsl, min_nrow = 2)
@@ -405,7 +405,7 @@ srv_g_waterfall <- function(id,
 
       # write variables to qenv
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+        data(),
         code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
