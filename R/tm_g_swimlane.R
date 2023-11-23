@@ -334,7 +334,7 @@ srv_g_swimlane <- function(id,
         )
       ))
 
-      ADSL <- data[["ADSL"]]() # nolint
+      ADSL <- data()[["ADSL"]] # nolint
 
       anl_vars <- unique(c(
         "USUBJID", "STUDYID",
@@ -349,7 +349,7 @@ srv_g_swimlane <- function(id,
         teal::validate_has_data(ADSL, min_nrow = 3)
         teal::validate_has_variable(ADSL, adsl_vars)
       } else {
-        anl <- data[[dataname]]()
+        anl <- data()[[dataname]]
         teal::validate_has_data(anl, min_nrow = 3)
         teal::validate_has_variable(anl, anl_vars)
 
@@ -378,7 +378,7 @@ srv_g_swimlane <- function(id,
       }
       vref_line <- suppressWarnings(as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)()))
 
-      q1 <- teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data))
+      q1 <- data()
 
       q2 <- teal.code::eval_code(
         q1,
