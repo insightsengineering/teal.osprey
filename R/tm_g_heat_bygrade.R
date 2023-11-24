@@ -407,10 +407,12 @@ srv_g_heatmap_bygrade <- function(id,
           shiny::validate(shiny::need(all(input$conmed_level %in% ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
         }
 
+        qenv <- data()
+
         if (isTRUE(input$plot_cm)) {
-          ADCM <- data()[[cm_dataname]] # nolint
+          ADCM <- qenv[[cm_dataname]] # nolint
           qenv <- teal.code::eval_code(
-            data(),
+            qenv,
             code = substitute(
               expr = {
                 conmed_data <- ADCM %>%
