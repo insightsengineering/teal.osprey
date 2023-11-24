@@ -86,7 +86,7 @@ used for subsequent analysis. Flag variables (from \code{ADaM} datasets) can be
 used directly as filter.
 }
 \examples{
-Example using stream (ADaM) dataset
+# Example using stream (ADaM) dataset
 data <- cdisc_data() |>
   within({
     library(dplyr)

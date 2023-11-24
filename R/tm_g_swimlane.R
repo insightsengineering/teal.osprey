@@ -326,10 +326,10 @@ srv_g_swimlane <- function(id,
     output_q <- reactive({
       teal::validate_inputs(iv())
 
-      validate(need("ADSL" %in% datanames(data()), "'ADSL' not included in data"))
+      validate(need("ADSL" %in% teal.data::datanames(data()), "'ADSL' not included in data"))
       validate(need(
-        (length(datanames(data())) == 1 && dataname == "ADSL") ||
-          (length(datanames(data())) >= 2 && dataname != "ADSL"), paste(
+        (length(teal.data::datanames(data())) == 1 && dataname == "ADSL") ||
+          (length(teal.data::datanames(data())) >= 2 && dataname != "ADSL"), paste(
           "Please either add just 'ADSL' as dataname when just ADSL is available.",
           "In case 2 datasets are available ADSL is not supposed to be the dataname."
         )

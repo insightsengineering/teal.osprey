@@ -40,7 +40,7 @@
 #' @template author_liaoc10
 #'
 #' @examples
-#' Example using stream (ADaM) dataset
+#' # Example using stream (ADaM) dataset
 #' data <- cdisc_data() |>
 #'   within({
 #'     library(dplyr)
