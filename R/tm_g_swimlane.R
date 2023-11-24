@@ -277,7 +277,8 @@ srv_g_swimlane <- function(id,
                            x_label) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
@@ -325,10 +326,10 @@ srv_g_swimlane <- function(id,
     output_q <- reactive({
       teal::validate_inputs(iv())
 
-      validate(need("ADSL" %in% names(data), "'ADSL' not included in data"))
+      validate(need("ADSL" %in% datanames(data()), "'ADSL' not included in data"))
       validate(need(
-        (length(data) == 1 && dataname == "ADSL") ||
-          (length(data) >= 2 && dataname != "ADSL"), paste(
+        (length(datanames(data())) == 1 && dataname == "ADSL") ||
+          (length(datanames(data())) >= 2 && dataname != "ADSL"), paste(
           "Please either add just 'ADSL' as dataname when just ADSL is available.",
           "In case 2 datasets are available ADSL is not supposed to be the dataname."
         )
