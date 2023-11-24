@@ -385,9 +385,11 @@ srv_g_waterfall <- function(id,
       }
       ytick_at <- as.numeric(ytick_at)
 
-      bar_color_var <- if (!is.null(input$bar_color_var) &&
-        input$bar_color_var != "None" &&
-        input$bar_color_var != "") {
+      bar_color_var <- if (
+        !is.null(input$bar_color_var) &&
+          input$bar_color_var != "None" &&
+          input$bar_color_var != ""
+      ) {
         input$bar_color_var
       } else {
         NULL
