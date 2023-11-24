@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-#' Example using stream (ADaM) dataset
+#' # Example using stream (ADaM) dataset
 #' data <- cdisc_data() |>
 #'   within({
 #'     ADSL <- rADSL
@@ -346,29 +346,29 @@ srv_g_ae_sub <- function(id,
         }
 
         teal.code::eval_code(data(), code = group_labels_call) %>%
-        teal.code::eval_code(code = "") %>%
-        teal.code::eval_code(
-          code = as.expression(c(
-            bquote(
-              plot <- osprey::g_ae_sub(
-                id = .(as.name(dataname))$USUBJID,
-                arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
-                arm_sl = as.character(ADSL[[.(input$arm_var)]]),
-                trt = .(input$arm_trt),
-                ref = .(input$arm_ref),
-                subgroups = .(as.name(dataname))[.(input$groups)],
-                subgroups_sl = ADSL[.(input$groups)],
-                subgroups_levels = group_labels,
-                conf_level = .(input$conf_level),
-                diff_ci_method = .(input$ci),
-                fontsize = .(font_size()),
-                arm_n = .(input$arm_n),
-                draw = TRUE
-              )
-            ),
-            quote(plot)
-          ))
-        )
+          teal.code::eval_code(code = "") %>%
+          teal.code::eval_code(
+            code = as.expression(c(
+              bquote(
+                plot <- osprey::g_ae_sub(
+                  id = .(as.name(dataname))$USUBJID,
+                  arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
+                  arm_sl = as.character(ADSL[[.(input$arm_var)]]),
+                  trt = .(input$arm_trt),
+                  ref = .(input$arm_ref),
+                  subgroups = .(as.name(dataname))[.(input$groups)],
+                  subgroups_sl = ADSL[.(input$groups)],
+                  subgroups_levels = group_labels,
+                  conf_level = .(input$conf_level),
+                  diff_ci_method = .(input$ci),
+                  fontsize = .(font_size()),
+                  arm_n = .(input$arm_n),
+                  draw = TRUE
+                )
+              ),
+              quote(plot)
+            ))
+          )
       })
     )
 
