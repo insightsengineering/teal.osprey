@@ -49,6 +49,7 @@ the \code{\link[teal:module]{teal::module()}} object.
 Display the \code{AE} by subgroups plot as a teal module
 }
 \examples{
+# Example using stream (ADaM) dataset
 data <- cdisc_data() |>
   within({
     ADSL <- rADSL
