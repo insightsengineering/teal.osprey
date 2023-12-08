@@ -355,7 +355,8 @@ srv_g_patient_profile <- function(id,
                                   plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
   if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
   if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
   if (!is.na(rs_dataname)) checkmate::assert_names(rs_dataname, subset.of = names(data))
@@ -369,7 +370,7 @@ srv_g_patient_profile <- function(id,
 
     if (!is.na(lb_dataname)) {
       observeEvent(input$lb_var, ignoreNULL = TRUE, {
-        ADLB <- data[[lb_dataname]]() # nolint
+        ADLB <- data()[[lb_dataname]] # nolint
         choices <- unique(ADLB[[input$lb_var]])
         choices_selected <- if (length(choices) > 5) choices[1:5] else choices
 
@@ -400,7 +401,7 @@ srv_g_patient_profile <- function(id,
           message = "Adverse Event variable is required"
         ))
         iv$add_rule("ae_line_var", shinyvalidate::sv_optional())
-        iv$add_rule("ae_line_var", ~ if (length(levels(data[[ae_dataname]]()[[.]])) > length(ae_line_col_opt)) {
+        iv$add_rule("ae_line_var", ~ if (length(levels(data()[[ae_dataname]][[.]])) > length(ae_line_col_opt)) {
           "Not enough colors provided for Adverse Event line color, unselect"
         })
       }
@@ -495,31 +496,31 @@ srv_g_patient_profile <- function(id,
         ))
 
         # get ADSL dataset ---
-        ADSL <- data[[sl_dataname]]() # nolint
+        ADSL <- data()[[sl_dataname]] # nolint
 
         ADEX <- NULL # nolint
         if (isTRUE(select_plot()[ex_dataname])) {
-          ADEX <- data[[ex_dataname]]() # nolint
+          ADEX <- data()[[ex_dataname]] # nolint
           teal::validate_has_variable(ADEX, adex_vars)
         }
         ADAE <- NULL # nolint
         if (isTRUE(select_plot()[ae_dataname])) {
-          ADAE <- data[[ae_dataname]]() # nolint
+          ADAE <- data()[[ae_dataname]] # nolint
           teal::validate_has_variable(ADAE, adae_vars)
         }
         ADRS <- NULL # nolint
         if (isTRUE(select_plot()[rs_dataname])) {
-          ADRS <- data[[rs_dataname]]() # nolint
+          ADRS <- data()[[rs_dataname]] # nolint
           teal::validate_has_variable(ADRS, adrs_vars)
         }
         ADCM <- NULL # nolint
         if (isTRUE(select_plot()[cm_dataname])) {
-          ADCM <- data[[cm_dataname]]() # nolint
+          ADCM <- data()[[cm_dataname]] # nolint
           teal::validate_has_variable(ADCM, adcm_vars)
         }
         ADLB <- NULL # nolint
         if (isTRUE(select_plot()[lb_dataname])) {
-          ADLB <- data[[lb_dataname]]() # nolint
+          ADLB <- data()[[lb_dataname]] # nolint
           teal::validate_has_variable(ADLB, adlb_vars)
         }
 
@@ -530,7 +531,7 @@ srv_g_patient_profile <- function(id,
         empty_lb <- FALSE
 
         q1 <- teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+          data(),
           code = substitute(
             expr = {
               ADSL <- ADSL %>% # nolint
@@ -698,7 +699,7 @@ srv_g_patient_profile <- function(id,
                     select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(cm_var))
                   if (length(unique(ADCM$USUBJID)) > 0) {
                     ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
-                    & is.na(ADCM$ASTDY) == FALSE), ]
+                    & is.na(ADCM$ASTDY) == FALSE), ] # nolint
                   }
                   cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, cm_var]))
                 },
@@ -926,7 +927,7 @@ srv_g_patient_profile <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

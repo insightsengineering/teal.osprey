@@ -277,7 +277,8 @@ srv_g_swimlane <- function(id,
                            x_label) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
@@ -325,16 +326,16 @@ srv_g_swimlane <- function(id,
     output_q <- reactive({
       teal::validate_inputs(iv())
 
-      validate(need("ADSL" %in% names(data), "'ADSL' not included in data"))
+      validate(need("ADSL" %in% teal.data::datanames(data()), "'ADSL' not included in data"))
       validate(need(
-        (length(data) == 1 && dataname == "ADSL") ||
-          (length(data) >= 2 && dataname != "ADSL"), paste(
+        (length(teal.data::datanames(data())) == 1 && dataname == "ADSL") ||
+          (length(teal.data::datanames(data())) >= 2 && dataname != "ADSL"), paste(
           "Please either add just 'ADSL' as dataname when just ADSL is available.",
           "In case 2 datasets are available ADSL is not supposed to be the dataname."
         )
       ))
 
-      ADSL <- data[["ADSL"]]() # nolint
+      ADSL <- data()[["ADSL"]] # nolint
 
       anl_vars <- unique(c(
         "USUBJID", "STUDYID",
@@ -349,7 +350,7 @@ srv_g_swimlane <- function(id,
         teal::validate_has_data(ADSL, min_nrow = 3)
         teal::validate_has_variable(ADSL, adsl_vars)
       } else {
-        anl <- data[[dataname]]()
+        anl <- data()[[dataname]]
         teal::validate_has_data(anl, min_nrow = 3)
         teal::validate_has_variable(anl, anl_vars)
 
@@ -378,7 +379,7 @@ srv_g_swimlane <- function(id,
       }
       vref_line <- suppressWarnings(as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)()))
 
-      q1 <- teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data))
+      q1 <- data()
 
       q2 <- teal.code::eval_code(
         q1,
@@ -474,7 +475,7 @@ srv_g_swimlane <- function(id,
             marker_shape_opt = .(if (length(marker_shape_var) == 0) {
               NULL
             } else if (length(marker_shape_var) > 0 &
-              all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt)) == TRUE) {
+              all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt)) == TRUE) { # nolint
               bquote(.(marker_shape_opt))
             } else {
               NULL
@@ -487,7 +488,7 @@ srv_g_swimlane <- function(id,
             marker_color_opt = .(if (length(marker_color_var) == 0) {
               NULL
             } else if (length(marker_color_var) > 0 &
-              all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt)) == TRUE) {
+              all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt)) == TRUE) { # nolint
               bquote(.(marker_color_opt))
             } else {
               NULL
@@ -551,7 +552,7 @@ srv_g_swimlane <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

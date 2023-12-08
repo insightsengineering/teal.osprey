@@ -205,11 +205,12 @@ srv_g_ae_oview <- function(id,
                            plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ANL <- data[[dataname]]() # nolint
+      ANL <- data()[[dataname]] # nolint
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
@@ -255,7 +256,7 @@ srv_g_ae_oview <- function(id,
     })
 
     observeEvent(input$arm_var, ignoreNULL = TRUE, {
-      ANL <- data[[dataname]]() # nolint
+      ANL <- data()[[dataname]] # nolint
       arm_var <- input$arm_var
       arm_val <- ANL[[arm_var]]
       choices <- levels(arm_val)
@@ -283,7 +284,7 @@ srv_g_ae_oview <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ANL <- data[[dataname]]() # nolint
+        ANL <- data()[[dataname]] # nolint
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
@@ -295,12 +296,14 @@ srv_g_ae_oview <- function(id,
         ))
 
         q1 <- teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+          data(),
           code = as.expression(c(
             bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
-            bquote(flags <- .(as.name(dataname)) %>%
-              select(all_of(.(input$flag_var_anl))) %>%
-              rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x])))
+            bquote(
+              flags <- .(as.name(dataname)) %>%
+                select(all_of(.(input$flag_var_anl))) %>%
+                rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
+            )
           ))
         )
 
@@ -357,7 +360,7 @@ srv_g_ae_oview <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

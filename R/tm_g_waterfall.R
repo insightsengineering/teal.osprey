@@ -284,13 +284,14 @@ srv_g_waterfall <- function(id,
                             plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      adsl <- data[["ADSL"]]()
-      adtr <- data[[dataname_tr]]()
-      adrs <- data[[dataname_rs]]()
+      adsl <- data()[["ADSL"]]
+      adtr <- data()[[dataname_tr]]
+      adrs <- data()[[dataname_rs]]
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
@@ -339,9 +340,9 @@ srv_g_waterfall <- function(id,
     })
 
     output_q <- reactive({
-      adsl <- data[["ADSL"]]()
-      adtr <- data[[dataname_tr]]()
-      adrs <- data[[dataname_rs]]()
+      adsl <- data()[["ADSL"]]
+      adtr <- data()[[dataname_tr]]
+      adrs <- data()[[dataname_rs]]
 
       # validate data rows
       teal::validate_has_data(adsl, min_nrow = 2)
@@ -385,9 +386,11 @@ srv_g_waterfall <- function(id,
       }
       ytick_at <- as.numeric(ytick_at)
 
-      bar_color_var <- if (!is.null(input$bar_color_var) &&
-        input$bar_color_var != "None" &&
-        input$bar_color_var != "") {
+      bar_color_var <- if (
+        !is.null(input$bar_color_var) &&
+          input$bar_color_var != "None" &&
+          input$bar_color_var != ""
+      ) {
         input$bar_color_var
       } else {
         NULL
@@ -405,7 +408,7 @@ srv_g_waterfall <- function(id,
 
       # write variables to qenv
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+        data(),
         code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
@@ -575,7 +578,7 @@ srv_g_waterfall <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

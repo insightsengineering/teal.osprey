@@ -40,7 +40,7 @@
 #' @template author_liaoc10
 #'
 #' @examples
-# Example using stream (ADaM) dataset
+#' # Example using stream (ADaM) dataset
 #' data <- cdisc_data() |>
 #'   within({
 #'     library(dplyr)
@@ -266,12 +266,13 @@ ui_g_butterfly <- function(id, ...) {
 srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, label, plot_height, plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ADSL <- data[["ADSL"]]() # nolint
-      ANL <- data[[dataname]]() # nolint
+      ADSL <- data()[["ADSL"]] # nolint
+      ANL <- data()[[dataname]] # nolint
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("category_var", shinyvalidate::sv_required(
@@ -316,10 +317,10 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
             selected = character(0)
           )
         } else {
-          options$r <- if (right_var %in% names(data[["ADSL"]]())) {
-            levels(data[["ADSL"]]()[[right_var]])
+          options$r <- if (right_var %in% names(data()[["ADSL"]])) {
+            levels(data()[["ADSL"]][[right_var]])
           } else {
-            levels(data[[dataname]]()[[right_var]])
+            levels(data()[[dataname]][[right_var]])
           }
 
           selected <- if (length(right_val) > 0) {
@@ -353,10 +354,10 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
             choices = character(0), selected = character(0)
           )
         } else {
-          options$l <- if (left_var %in% names(data[["ADSL"]]())) {
-            levels(data[["ADSL"]]()[[left_var]])
+          options$l <- if (left_var %in% names(data()[["ADSL"]])) {
+            levels(data()[["ADSL"]][[left_var]])
           } else {
-            levels(data[[dataname]]()[[left_var]])
+            levels(data()[[dataname]][[left_var]])
           }
 
           selected <- if (length(left_val) > 0) {
@@ -383,8 +384,8 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ADSL <- data[["ADSL"]]() # nolint
-        ANL <- data[[dataname]]() # nolint
+        ADSL <- data()[["ADSL"]] # nolint
+        ANL <- data()[[dataname]] # nolint
 
         teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s Data is empty", "ADSL"))
         teal::validate_has_data(ANL, min_nrow = 0, msg = sprintf("%s Data is empty", dataname))
@@ -420,7 +421,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         anl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
 
         q1 <- teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+          data(),
           code = bquote({
             ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
             ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame() # nolint
@@ -543,7 +544,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
