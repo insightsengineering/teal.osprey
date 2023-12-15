@@ -24,6 +24,9 @@ upstream_repos:
   insightsengineering/teal.reporter:
     repo: insightsengineering/teal.reporter
     host: https://github.com
+  insightsengineering/teal.transform:
+    repo: insightsengineering/teal.transform
+    host: https://github.com
   insightsengineering/teal:
     repo: insightsengineering/teal
     host: https://github.com

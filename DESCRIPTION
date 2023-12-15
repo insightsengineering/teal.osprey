@@ -23,7 +23,8 @@ Depends:
     osprey (>= 0.1.16),
     R (>= 3.6),
     shiny,
-    teal (>= 0.14.0.9027)
+    teal (>= 0.14.0.9027),
+    teal.transform (>= 0.4.0.9011)
 Imports:
     checkmate,
     dplyr,
@@ -35,7 +36,6 @@ Imports:
     teal.code (>= 0.4.1.9009),
     teal.logger (>= 0.1.1),
     teal.reporter (>= 0.2.0),
-    teal.transform (>= 0.4.0.9011),
     teal.widgets (>= 0.4.0),
     tern (>= 0.7.10),
     tidyr
