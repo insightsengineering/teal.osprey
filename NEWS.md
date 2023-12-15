@@ -1,4 +1,4 @@
-# teal.osprey 0.1.16.9005
+# teal.osprey 0.1.16.9006
 
 ### Breaking Changes
 * Adapted all modules to use `teal_data` objects.
