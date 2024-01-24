@@ -44,10 +44,11 @@ Suggests:
     nestcolor (>= 0.1.0),
     rmarkdown,
     teal.data (>= 0.3.0.9018),
-    testthat (>= 2.0)
+    testthat (>= 2.0),
+    withr (>= 2.0.0)
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.0
