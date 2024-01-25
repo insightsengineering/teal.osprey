@@ -2,9 +2,38 @@
 % Please edit documentation in R/teal.osprey.R
 \docType{package}
 \name{teal.osprey}
+\alias{teal.osprey-package}
 \alias{teal.osprey}
 \title{teal.osprey: Enabling you to write modules in teal}
 \description{
 The \code{teal.osprey} R package contains interactive \code{\link{teal}} modules for the outputs
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/insightsengineering/teal.osprey/}
+  \item Report bugs at \url{https://github.com/insightsengineering/teal.osprey/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Nina Qi \email{qit3@gene.com}
+
+Authors:
+\itemize{
+  \item Dawid Kaledkowski \email{dawid.kaledkowski@roche.com}
+  \item Chendi Liao \email{chendi.liao@roche.com}
+  \item Liming Li \email{liming.li@roche.com}
+  \item Konrad Pagacz
+}
+
+Other contributors:
+\itemize{
+  \item Molly He [contributor]
+  \item Carolyn Zhang [contributor]
+  \item Tina Cho [contributor]
+  \item F. Hoffmann-La Roche AG [copyright holder, funder]
+}
+
 }
 \keyword{internal}
