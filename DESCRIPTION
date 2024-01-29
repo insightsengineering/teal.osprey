@@ -1,7 +1,7 @@
 Package: teal.osprey
 Title: R Package of Teal Module for TLG Functions in Osprey
-Version: 0.1.16.9006
-Date: 2023-12-15
+Version: 0.1.16.9007
+Date: 2024-01-25
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
@@ -44,7 +44,7 @@ Suggests:
     nestcolor (>= 0.1.0),
     rmarkdown,
     teal.data (>= 0.3.0.9018),
-    testthat (>= 2.0),
+    testthat (>= 3.1.5),
     withr (>= 2.0.0)
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
