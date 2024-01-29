@@ -107,7 +107,7 @@ app <- init(
     tm_g_swimlane(
       label = "Swimlane Plot",
       dataname = "ADRS",
-      bar_var = hoices_selected(
+      bar_var = choices_selected(
         selected = "TRTDURD",
         choices = c("TRTDURD", "EOSDY")
       ),
