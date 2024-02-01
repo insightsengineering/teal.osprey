@@ -31,16 +31,16 @@ Imports:
     formatters (>= 0.3.1),
     ggplot2,
     lifecycle,
-    logger (>= 0.2.0),
     shinyvalidate,
     teal.code (>= 0.4.1.9009),
-    teal.logger (>= 0.1.1),
+    teal.logger (>= 0.1.3.9010),
     teal.reporter (>= 0.2.0),
     teal.widgets (>= 0.4.0),
     tern (>= 0.7.10),
     tidyr
 Suggests:
     knitr,
+    logger (>= 0.2.0),
     nestcolor (>= 0.1.0),
     rmarkdown,
     teal.data (>= 0.3.0.9018),

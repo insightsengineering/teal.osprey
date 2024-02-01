@@ -96,7 +96,7 @@ tm_g_spiderplot <- function(label,
                             plot_width = NULL,
                             pre_output = NULL,
                             post_output = NULL) {
-  logger::log_info("Initializing tm_g_spiderplot")
+  message("Initializing tm_g_spiderplot")
   checkmate::assert_class(paramcd, classes = "choices_selected")
   checkmate::assert_class(x_var, classes = "choices_selected")
   checkmate::assert_class(y_var, classes = "choices_selected")
