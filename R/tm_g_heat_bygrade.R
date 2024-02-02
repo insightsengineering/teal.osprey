@@ -298,6 +298,7 @@ srv_g_heatmap_bygrade <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
+      browser
       ADSL <- data()[[sl_dataname]] # nolint
       ADEX <- data()[[ex_dataname]] # nolint
       ADAE <- data()[[ae_dataname]] # nolint
@@ -400,6 +401,7 @@ srv_g_heatmap_bygrade <- function(id,
         ADSL <- data()[[sl_dataname]] # nolint
         ADEX <- data()[[ex_dataname]] # nolint
         ADAE <- data()[[ae_dataname]] # nolint
+        ADCM <- data()[[cm_dataname]] # nolint
 
         teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
         teal::validate_inputs(iv(), iv_cm())
