@@ -11,6 +11,7 @@ The \code{teal.osprey} R package contains interactive \code{\link{teal}} modules
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://insightsengineering.github.io/teal.osprey/}
   \item \url{https://github.com/insightsengineering/teal.osprey/}
   \item Report bugs at \url{https://github.com/insightsengineering/teal.osprey/issues}
 }

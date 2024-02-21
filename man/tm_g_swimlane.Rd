@@ -73,7 +73,7 @@ into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} el
 \item{x_label}{the label of the x axis}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object.
+the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
