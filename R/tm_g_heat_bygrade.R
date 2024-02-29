@@ -298,7 +298,6 @@ srv_g_heatmap_bygrade <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      browser
       ADSL <- data()[[sl_dataname]] # nolint
       ADEX <- data()[[ex_dataname]] # nolint
       ADAE <- data()[[ae_dataname]] # nolint
