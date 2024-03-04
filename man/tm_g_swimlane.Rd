@@ -82,53 +82,52 @@ This is teal module that generates a \code{swimlane} plot (bar plot with markers
 }
 \examples{
 # Example using stream (ADaM) dataset
-data <- teal.data::cdisc_data() |>
+data <- cdisc_data() |>
   within(library(dplyr)) |>
   within(library(nestcolor)) |>
-  within(ADSL <- osprey::rADSL \%>\%
-    dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
-    dplyr::filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
-  within(ADRS <- osprey::rADRS) |>
-  within(ADRS <- ADRS \%>\%
-    dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
+  within(ADSL <- rADSL \%>\%
+    mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
+    filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
+  within(ADRS <- rADRS \%>\%
+    filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
     mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
-    base::rbind(ADRS \%>\% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+    rbind(rADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
     arrange(USUBJID))
 
-teal.data::datanames(data) <- c("ADSL", "ADRS")
-teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+datanames(data) <- c("ADSL", "ADRS")
+join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 
 ADSL <- data[["ADSL"]]
 ADRS <- data[["ADRS"]]
 
-app <- teal::init(
+app <- init(
   data = data,
-  modules = teal::modules(
+  modules = modules(
     tm_g_swimlane(
       label = "Swimlane Plot",
       dataname = "ADRS",
-      bar_var = teal.transform::choices_selected(
+      bar_var = choices_selected(
         selected = "TRTDURD",
         choices = c("TRTDURD", "EOSDY")
       ),
-      bar_color_var = teal.transform::choices_selected(
+      bar_color_var = choices_selected(
         selected = "EOSSTT",
         choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX")
       ),
-      sort_var = teal.transform::choices_selected(
+      sort_var = choices_selected(
         selected = "ACTARMCD",
         choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD")
       ),
-      marker_pos_var = teal.transform::choices_selected(
+      marker_pos_var = choices_selected(
         selected = "ADY",
         choices = c("ADY")
       ),
-      marker_shape_var = teal.transform::choices_selected(
+      marker_shape_var = choices_selected(
         selected = "AVALC",
         c("AVALC", "AVISIT")
       ),
       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-      marker_color_var = teal.transform::choices_selected(
+      marker_color_var = choices_selected(
         selected = "AVALC",
         choices = c("AVALC", "AVISIT")
       ),
@@ -137,7 +136,7 @@ app <- teal::init(
         "PD" = "red", "Death" = "black"
       ),
       vref_line = c(30, 60),
-      anno_txt_var = teal.transform::choices_selected(
+      anno_txt_var = choices_selected(
         selected = c("ACTARM", "SEX"),
         choices = c(
           "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
