@@ -85,14 +85,13 @@ This is teal module that generates a \code{swimlane} plot (bar plot with markers
 data <- cdisc_data() |>
   within(library(dplyr)) |>
   within(library(nestcolor)) |>
-  within(ADSL <- osprey::rADSL \%>\%
-    dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
-    dplyr::filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
-  within(ADRS <- osprey::rADRS) |>
-  within(ADRS <- ADRS \%>\%
-    dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
+  within(ADSL <- rADSL \%>\%
+    mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
+    filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
+  within(ADRS <- rADRS \%>\%
+    filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
     mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
-    base::rbind(ADRS \%>\% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+    rbind(ADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
     arrange(USUBJID))
 
 datanames(data) <- c("ADSL", "ADRS")
