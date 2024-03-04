@@ -400,6 +400,7 @@ srv_g_heatmap_bygrade <- function(id,
         ADSL <- data()[[sl_dataname]]
         ADEX <- data()[[ex_dataname]]
         ADAE <- data()[[ae_dataname]]
+        ADCM <- data()[[cm_dataname]]
 
         teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
         teal::validate_inputs(iv(), iv_cm())
