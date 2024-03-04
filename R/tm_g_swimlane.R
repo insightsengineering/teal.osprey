@@ -45,7 +45,7 @@
 #'   within(ADRS <- rADRS %>%
 #'     filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
 #'     mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-#'     rbind(ADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+#'     rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
 #'     arrange(USUBJID))
 #'
 #' datanames(data) <- c("ADSL", "ADRS")
