@@ -12,7 +12,7 @@ Display the AE overview plot as a shiny module"><!-- mathjax --><script src="htt
     
     <a class="navbar-brand me-2" href="../index.html">teal.osprey</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.16.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.16.9010</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,15 +26,6 @@ Display the AE overview plot as a shiny module"><!-- mathjax --><script src="htt
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/v0.1.16">v0.1.16</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.osprey/v0.1.15">v0.1.15</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -91,18 +82,18 @@ menu item label of the module in the teal app.</p></dd>
 <dt>dataname</dt>
 <dd><p>(<code>character(1)</code>)<br>
 analysis data used in the teal module, needs to be
-available in the list passed to the <code>data</code> argument of <code><a href="https://rdrr.io/pkg/teal/man/init.html" class="external-link">teal::init()</a></code>.</p></dd>
+available in the list passed to the <code>data</code> argument of <code><a href="https://insightsengineering.github.io/teal/latest-tag/reference/init.html" class="external-link">teal::init()</a></code>.</p></dd>
 
 
 <dt>arm_var</dt>
 <dd><p>(<code>choices_selected</code>)<br>
 object with all available choices and the pre-selected option for variable
-names that can be used as <code>arm_var</code>. See <code><a href="https://insightsengineering.github.io/teal.transform/reference/choices_selected.html" class="external-link">teal.transform::choices_selected()</a></code> for
+names that can be used as <code>arm_var</code>. See <code><a href="https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html" class="external-link">teal.transform::choices_selected()</a></code> for
 details. Column <code>arm_var</code> in the <code>dataname</code> has to be a factor.</p></dd>
 
 
 <dt>flag_var_anl</dt>
-<dd><p>(<code><a href="https://insightsengineering.github.io/teal.transform/reference/choices_selected.html" class="external-link">teal.transform::choices_selected</a></code>)
+<dd><p>(<code><a href="https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html" class="external-link">teal.transform::choices_selected</a></code>)
 <code>choices_selected</code> object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)</p></dd>
 
@@ -128,7 +119,7 @@ vector to indicate default value, minimum and maximum values.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>the <code><a href="https://rdrr.io/pkg/teal/man/teal_modules.html" class="external-link">teal::module()</a></code> object.</p>
+<p>the <code><a href="https://insightsengineering.github.io/teal/latest-tag/reference/teal_modules.html" class="external-link">teal::module()</a></code> object.</p>
     </div>
 
     <div class="section level2">
@@ -186,7 +177,7 @@ vector to indicate default value, minimum and maximum values.</p></dd>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2024-02-09 12:42:04.7002 pid:1278 token:[] teal.osprey Initializing tm_g_ae_oview</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [INFO] 2024-03-04 15:51:03.8009 pid:1345 token:[] teal.osprey Initializing tm_g_ae_oview</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>'package:nestcolor' may not be available when loading</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu">shinyApp</span><span class="op">(</span><span class="va">app</span><span class="op">$</span><span class="va">ui</span>, <span class="va">app</span><span class="op">$</span><span class="va">server</span><span class="op">)</span></span></span>
