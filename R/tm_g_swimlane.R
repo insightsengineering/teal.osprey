@@ -335,12 +335,12 @@ srv_g_swimlane <- function(id,
         )
       ))
 
-      ADSL <- data()[["ADSL"]] # nolint
+      ADSL <- data()[["ADSL"]]
 
       anl_vars <- unique(c(
         "USUBJID", "STUDYID",
         input$marker_pos_var, input$marker_shape_var, input$marker_color_var
-      )) # nolint
+      ))
       adsl_vars <- unique(c(
         "USUBJID", "STUDYID",
         input$bar_var, input$bar_color_var, input$sort_var, input$anno_txt_var
@@ -399,29 +399,29 @@ srv_g_swimlane <- function(id,
         teal.code::eval_code(
           q2,
           code = bquote({
-            ADSL_p <- ADSL # nolint
-            ADSL <- ADSL_p[, .(adsl_vars)] # nolint
+            ADSL_p <- ADSL
+            ADSL <- ADSL_p[, .(adsl_vars)]
             # only take last part of USUBJID
-            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
       } else {
         teal.code::eval_code(
           q2,
           code = bquote({
-            ADSL_p <- ADSL # nolint
-            ANL_p <- .(as.name(dataname)) # nolint
+            ADSL_p <- ADSL
+            ANL_p <- .(as.name(dataname))
 
-            ADSL <- ADSL_p[, .(adsl_vars)] # nolint
-            ANL <- merge( # nolint
+            ADSL <- ADSL_p[, .(adsl_vars)]
+            ANL <- merge(
               x = ADSL,
               y = ANL_p[, .(anl_vars)],
               all.x = FALSE, all.y = FALSE,
               by = c("USUBJID", "STUDYID")
             )
             # only take last part of USUBJID
-            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-            ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
+            ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
       }
@@ -474,8 +474,7 @@ srv_g_swimlane <- function(id,
             }),
             marker_shape_opt = .(if (length(marker_shape_var) == 0) {
               NULL
-            } else if (length(marker_shape_var) > 0 &
-              all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt)) == TRUE) { # nolint
+            } else if (length(marker_shape_var) > 0 & all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt))) { # nolint: line_length.
               bquote(.(marker_shape_opt))
             } else {
               NULL
@@ -487,8 +486,7 @@ srv_g_swimlane <- function(id,
             }),
             marker_color_opt = .(if (length(marker_color_var) == 0) {
               NULL
-            } else if (length(marker_color_var) > 0 &
-              all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt)) == TRUE) { # nolint
+            } else if (length(marker_color_var) > 0 & all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt))) { # nolint: line_length.
               bquote(.(marker_color_opt))
             } else {
               NULL

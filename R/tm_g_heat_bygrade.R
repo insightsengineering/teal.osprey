@@ -298,11 +298,11 @@ srv_g_heatmap_bygrade <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ADSL <- data()[[sl_dataname]] # nolint
-      ADEX <- data()[[ex_dataname]] # nolint
-      ADAE <- data()[[ae_dataname]] # nolint
+      ADSL <- data()[[sl_dataname]]
+      ADEX <- data()[[ex_dataname]]
+      ADAE <- data()[[ae_dataname]]
       if (isTRUE(input$plot_cm)) {
-        ADCM <- data()[[cm_dataname]] # nolint
+        ADCM <- data()[[cm_dataname]]
       }
 
       iv <- shinyvalidate::InputValidator$new()
@@ -342,11 +342,11 @@ srv_g_heatmap_bygrade <- function(id,
       iv
     })
     iv_cm <- reactive({
-      ADSL <- data()[[sl_dataname]] # nolint
-      ADEX <- data()[[ex_dataname]] # nolint
-      ADAE <- data()[[ae_dataname]] # nolint
+      ADSL <- data()[[sl_dataname]]
+      ADEX <- data()[[ex_dataname]]
+      ADAE <- data()[[ae_dataname]]
       if (isTRUE(input$plot_cm)) {
-        ADCM <- data()[[cm_dataname]] # nolint
+        ADCM <- data()[[cm_dataname]]
       }
 
       iv_cm <- shinyvalidate::InputValidator$new()
@@ -376,13 +376,13 @@ srv_g_heatmap_bygrade <- function(id,
       plt = plot_r,
       plot_height = plot_height,
       plot_width = plot_width
-    ) # nolint
+    )
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
     if (!is.na(cm_dataname)) {
       observeEvent(input$conmed_var, {
-        ADCM <- data()[[cm_dataname]] # nolint
+        ADCM <- data()[[cm_dataname]]
         choices <- levels(ADCM[[input$conmed_var]])
 
         updateSelectInput(
@@ -397,9 +397,9 @@ srv_g_heatmap_bygrade <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ADSL <- data()[[sl_dataname]] # nolint
-        ADEX <- data()[[ex_dataname]] # nolint
-        ADAE <- data()[[ae_dataname]] # nolint
+        ADSL <- data()[[sl_dataname]]
+        ADEX <- data()[[ex_dataname]]
+        ADAE <- data()[[ae_dataname]]
 
         teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
         teal::validate_inputs(iv(), iv_cm())
@@ -410,7 +410,7 @@ srv_g_heatmap_bygrade <- function(id,
         qenv <- data()
 
         if (isTRUE(input$plot_cm)) {
-          ADCM <- qenv[[cm_dataname]] # nolint
+          ADCM <- qenv[[cm_dataname]]
           qenv <- teal.code::eval_code(
             qenv,
             code = substitute(

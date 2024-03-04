@@ -271,8 +271,8 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ADSL <- data()[["ADSL"]] # nolint
-      ANL <- data()[[dataname]] # nolint
+      ADSL <- data()[["ADSL"]]
+      ANL <- data()[[dataname]]
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("category_var", shinyvalidate::sv_required(
@@ -384,8 +384,8 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ADSL <- data()[["ADSL"]] # nolint
-        ANL <- data()[[dataname]] # nolint
+        ADSL <- data()[["ADSL"]]
+        ANL <- data()[[dataname]]
 
         teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s Data is empty", "ADSL"))
         teal::validate_has_data(ANL, min_nrow = 0, msg = sprintf("%s Data is empty", dataname))
@@ -417,14 +417,14 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         varlist_from_adsl <- intersect(varlist, names(ADSL))
         varlist_from_anl <- intersect(varlist, setdiff(names(ANL), names(ADSL)))
 
-        adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
-        anl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl)) # nolint
+        adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl))
+        anl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl))
 
         q1 <- teal.code::eval_code(
           data(),
           code = bquote({
-            ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
-            ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame() # nolint
+            ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
+            ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame()
           })
         )
 
@@ -432,7 +432,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
           q1 <- teal.code::eval_code(
             q1,
             code = bquote(
-              ANL <- quick_filter(.(filter_var), ANL) %>% # nolint
+              ANL <- quick_filter(.(filter_var), ANL) %>%
                 droplevels() %>%
                 as.data.frame()
             )
@@ -442,8 +442,8 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         q1 <- teal.code::eval_code(
           q1,
           code = bquote({
-            ANL_f <- left_join(ADSL, ANL, by = c("USUBJID", "STUDYID")) %>% as.data.frame() # nolint
-            ANL_f <- na.omit(ANL_f) # nolint
+            ANL_f <- left_join(ADSL, ANL, by = c("USUBJID", "STUDYID")) %>% as.data.frame()
+            ANL_f <- na.omit(ANL_f)
           })
         )
 
