@@ -699,8 +699,8 @@ srv_g_patient_profile <- function(id,
                     ) %>%
                     select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(cm_var))
                   if (length(unique(ADCM$USUBJID)) > 0) {
-                    ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE
-                                       & is.na(ADCM$ASTDY) == FALSE), ]
+                    ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE &
+                      is.na(ADCM$ASTDY) == FALSE), ]
                   }
                   cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, cm_var]))
                 },
