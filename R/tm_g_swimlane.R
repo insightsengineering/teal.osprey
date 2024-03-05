@@ -473,7 +473,7 @@ srv_g_swimlane <- function(id,
             }),
             marker_shape_opt = .(if (length(marker_shape_var) == 0) {
               NULL
-            } else if (length(marker_shape_var) > 0 & all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt))) { # nolint: line_length.
+            } else if (length(marker_shape_var) > 0 && all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt))) { # nolint: line_length.
               bquote(.(marker_shape_opt))
             } else {
               NULL
@@ -485,7 +485,7 @@ srv_g_swimlane <- function(id,
             }),
             marker_color_opt = .(if (length(marker_color_var) == 0) {
               NULL
-            } else if (length(marker_color_var) > 0 & all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt))) { # nolint: line_length.
+            } else if (length(marker_color_var) > 0 && all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt))) { # nolint: line_length.
               bquote(.(marker_color_opt))
             } else {
               NULL
