@@ -187,8 +187,8 @@ srv_g_ae_sub <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ANL <- data()[[dataname]] # nolint
-      ADSL <- data()[["ADSL"]] # nolint
+      ANL <- data()[[dataname]]
+      ADSL <- data()[["ADSL"]]
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
@@ -225,7 +225,7 @@ srv_g_ae_sub <- function(id,
 
     observeEvent(input$arm_var, ignoreNULL = TRUE, {
       arm_var <- input$arm_var
-      ANL <- data()[[dataname]] # nolint
+      ANL <- data()[[dataname]]
 
       anl_val <- ANL[[arm_var]]
       choices <- levels(anl_val)
@@ -269,7 +269,7 @@ srv_g_ae_sub <- function(id,
     })
 
     observeEvent(input$groups, {
-      ANL <- data()[[dataname]] # nolint
+      ANL <- data()[[dataname]]
       output$grouplabel_output <- renderUI({
         grps <- input$groups
         lo <- lapply(seq_along(grps), function(index) {
@@ -315,8 +315,8 @@ srv_g_ae_sub <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ANL <- data()[[dataname]] # nolint
-        ADSL <- data()[["ADSL"]] # nolint
+        ANL <- data()[[dataname]]
+        ADSL <- data()[["ADSL"]]
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 

@@ -245,8 +245,8 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ADSL <- data()[["ADSL"]] # nolint
-      ADTR <- data()[[dataname]] # nolint
+      ADSL <- data()[["ADSL"]]
+      ADTR <- data()[[dataname]]
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("paramcd", shinyvalidate::sv_required(
@@ -280,26 +280,26 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       iv$enable()
     })
 
-    vals <- reactiveValues(spiderplot = NULL) # nolint
+    vals <- reactiveValues(spiderplot = NULL)
 
     # render plot
     output_q <- reactive({
       # get datasets ---
-      ADSL <- data()[["ADSL"]] # nolint
-      ADTR <- data()[[dataname]] # nolint
+      ADSL <- data()[["ADSL"]]
+      ADTR <- data()[[dataname]]
 
       teal::validate_inputs(iv())
 
       teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s data has zero rows", "ADSL"))
       teal::validate_has_data(ADTR, min_nrow = 1, msg = sprintf("%s data has zero rows", dataname))
 
-      paramcd <- input$paramcd # nolint
+      paramcd <- input$paramcd
       x_var <- input$x_var
       y_var <- input$y_var
       marker_var <- input$marker_var
       line_colorby_var <- input$line_colorby_var
       anno_txt_var <- input$anno_txt_var
-      legend_on <- input$legend_on # nolint
+      legend_on <- input$legend_on
       xfacet_var <- input$xfacet_var
       yfacet_var <- input$yfacet_var
       vref_line <- input$vref_line
@@ -315,7 +315,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       varlist_from_adsl <- varlist[varlist %in% names(ADSL)]
       varlist_from_anl <- varlist[!varlist %in% names(ADSL)]
 
-      adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
+      adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl))
       adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
 
       # preprocessing of datasets to qenv ---
@@ -328,11 +328,11 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       q1 <- teal.code::eval_code(
         data(),
         code = bquote({
-          ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
-          ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame() # nolint
+          ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
+          ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame()
 
-          ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID")) # nolint
-          ANL <- ANL %>% # nolint
+          ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID"))
+          ANL <- ANL %>%
             group_by(USUBJID, PARAMCD) %>%
             arrange(ANL[, .(x_var)]) %>%
             as.data.frame()
@@ -343,8 +343,8 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       q1 <- teal.code::eval_code(
         q1,
         code = bquote({
-          ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-          ANL_f <- ANL %>% # nolint
+          ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1))
+          ANL_f <- ANL %>%
             filter(PARAMCD == .(paramcd)) %>%
             as.data.frame()
         })
