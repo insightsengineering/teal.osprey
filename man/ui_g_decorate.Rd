@@ -27,5 +27,5 @@ plot.}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-This is used in \link{tm_g_ae_oview} and \link{tm_g_events_term_id}.
+This is used in \code{\link[=tm_g_ae_oview]{tm_g_ae_oview()}} and \code{\link[=tm_g_events_term_id]{tm_g_events_term_id()}}.
 }

@@ -3,7 +3,7 @@
 #' @description
 #' `r lifecycle::badge("stable")`
 #'
-#' This is used in [tm_g_ae_oview] and [tm_g_events_term_id].
+#' This is used in [tm_g_ae_oview()] and [tm_g_events_term_id()].
 #'
 #' @param id (`character`) id of this module. set to `NULL` if you want to make it identical
 #' to the module who called it.
@@ -33,7 +33,7 @@ ui_g_decorate <- function(id,
 #' @description
 #' `r lifecycle::badge("stable")`
 #'
-#' This is used in [tm_g_ae_oview] and [tm_g_events_term_id].
+#' This is used in [tm_g_ae_oview()] and [tm_g_events_term_id()].
 #'
 #' @inheritParams shared_params
 #' @param id (`character`) id of the module
