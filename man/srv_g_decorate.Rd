@@ -19,14 +19,14 @@ srv_g_decorate(
 
 \item{plt}{(\code{reactive}) a reactive object of graph object}
 
-\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+\item{plot_height}{(\code{numeric}) optional, a vector of length three with \code{c(value, min, max)}. Specifies
 the height of the main plot.}
 
-\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+\item{plot_width}{(\code{numeric}) optional, a vector of length three with \code{c(value, min, max)}. Specifies
 the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.
+This is used in \link{tm_g_ae_oview} and \link{tm_g_events_term_id}.
 }

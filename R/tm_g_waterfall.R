@@ -8,36 +8,36 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param dataname_tr tumor burden analysis data used in teal module to plot as bar height, needs to
-#' be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}
+#' be available in the list passed to the `data` argument of [teal::init()]
 #' @param dataname_rs response analysis data used in teal module to label response parameters, needs to
-#' be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}
-#' @param bar_paramcd (\code{choices_selected}) parameter in tumor burden data that will be plotted as
+#' be available in the list passed to the `data` argument of [teal::init()]
+#' @param bar_paramcd `choices_selected` parameter in tumor burden data that will be plotted as
 #' bar height
-#' @param bar_var (\code{choices_selected}) numeric variable from dataset to plot the bar height, e.g., `PCHG`
-#' @param bar_color_var (\code{choices_selected}) color by variable (subject level), \code{None} corresponds
-#' to \code{NULL}
+#' @param bar_var `choices_selected` numeric variable from dataset to plot the bar height, e.g., `PCHG`
+#' @param bar_color_var `choices_selected` color by variable (subject level), `None` corresponds
+#' to `NULL`
 #' @param bar_color_opt aesthetic values to map color values (named vector to map color values to each name).
-#' If not \code{NULL}, please make sure this contains all possible values for \code{bar_color_var} values,
-#' otherwise color will be assigned by \code{ggplot} default, please note that \code{NULL} needs to be specified
+#' If not `NULL`, please make sure this contains all possible values for `bar_color_var` values,
+#' otherwise color will be assigned by `ggplot` default, please note that `NULL` needs to be specified
 #' in this case
-#' @param sort_var (\code{choices_selected}) sort by variable (subject level), \code{None} corresponds
-#' to \code{NULL}
-#' @param add_label_var_sl (\code{choices_selected}) add label to bars (subject level), \code{None}
-#' corresponds to \code{NULL}
-#' @param add_label_paramcd_rs (\code{choices_selected}) add label to bars (response dataset), \code{None}
-#' corresponds to \code{NULL}. At least one of \code{add_label_var_sl} and \code{add_label_paramcd_rs} needs
-#' to be \code{NULL}
-#' @param anno_txt_var_sl (\code{choices_selected}) subject level variables to be displayed in the annotation
-#' table, default is \code{NULL}
-#' @param anno_txt_paramcd_rs (\code{choices_selected}) analysis dataset variables to be displayed in the
-#' annotation table, default is \code{NULL}
-#' @param facet_var (\code{choices_selected}) facet by variable (subject level), \code{None} corresponds to
-#' \code{NULL}
-#' @param ytick_at bar height axis interval, default is \code{20}
-#' @param href_line numeric vector to plot horizontal reference lines, default is \code{NULL}
+#' @param sort_var `choices_selected` sort by variable (subject level), `None` corresponds
+#' to `NULL`
+#' @param add_label_var_sl `choices_selected` add label to bars (subject level), `None`
+#' corresponds to `NULL`
+#' @param add_label_paramcd_rs `choices_selected` add label to bars (response dataset), `None`
+#' corresponds to `NULL`. At least one of `add_label_var_sl` and `add_label_paramcd_rs` needs
+#' to be `NULL`
+#' @param anno_txt_var_sl `choices_selected` subject level variables to be displayed in the annotation
+#' table, default is `NULL`
+#' @param anno_txt_paramcd_rs `choices_selected` analysis dataset variables to be displayed in the
+#' annotation table, default is `NULL`
+#' @param facet_var `choices_selected` facet by variable (subject level), `None` corresponds to
+#' `NULL`
+#' @param ytick_at bar height axis interval, default is 20
+#' @param href_line numeric vector to plot horizontal reference lines, default is `NULL`
 #' @param gap_point_val singular numeric value for adding bar break when some bars are significantly higher
-#' than others, default is \code{NULL}
-#' @param show_value boolean of whether value of bar height is shown, default is \code{TRUE}
+#' than others, default is `NULL`
+#' @param show_value boolean of whether value of bar height is shown, default is `TRUE`
 #'
 #' @inherit argument_convention return
 #'

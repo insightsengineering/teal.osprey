@@ -32,7 +32,7 @@ analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
 \item{filter_var}{(\code{choices_selected}) variable name of data filter, please see details regarding
-expected values, default is \code{NULL}. \code{choices}
+expected values, default is\code{NULL}.\code{choices}
 vector with \code{filter_var} choices, default is
 \code{NULL}}
 
