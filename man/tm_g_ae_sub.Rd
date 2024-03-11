@@ -41,7 +41,7 @@ Defines initial possible range of font-size. \code{fontsize} is set for
 plot.}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object.
+the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -65,11 +65,11 @@ app <- init(
     tm_g_ae_sub(
       label = "AE by Subgroup",
       dataname = "ADAE",
-      arm_var = teal.transform::choices_selected(
+      arm_var = choices_selected(
         selected = "ACTARMCD",
         choices = c("ACTARM", "ACTARMCD")
       ),
-      group_var = teal.transform::choices_selected(
+      group_var = choices_selected(
         selected = c("SEX", "REGION1", "RACE"),
         choices = c("SEX", "REGION1", "RACE")
       ),

@@ -276,7 +276,7 @@ srv_g_events_term_id <- function(id,
     observeEvent(input$arm_var,
       {
         arm_var <- input$arm_var
-        ANL <- data()[[dataname]] # nolint
+        ANL <- data()[[dataname]]
 
         choices <- levels(ANL[[arm_var]])
 
@@ -303,7 +303,7 @@ srv_g_events_term_id <- function(id,
     )
 
     output_q <- reactive({
-      ANL <- data()[[dataname]] # nolint
+      ANL <- data()[[dataname]]
 
       teal::validate_inputs(iv())
 
@@ -315,13 +315,13 @@ srv_g_events_term_id <- function(id,
         )
       )
 
-      adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var)) # nolint
-      anl_vars <- c("USUBJID", "STUDYID", input$term) # nolint
+      adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var))
+      anl_vars <- c("USUBJID", "STUDYID", input$term)
 
       q1 <- teal.code::eval_code(
         data(),
         code = bquote(
-          ANL <- merge( # nolint
+          ANL <- merge(
             x = ADSL[, .(adsl_vars), drop = FALSE],
             y = .(as.name(dataname))[, .(anl_vars), drop = FALSE],
             all.x = FALSE,

@@ -164,7 +164,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
   checkmate::assert_string(rs_dataname, na.ok = TRUE)
   checkmate::assert_string(cm_dataname, na.ok = TRUE)
   checkmate::assert_string(lb_dataname, na.ok = TRUE)
-  checkmate::assert_character(c(sl_dataname, ex_dataname, rs_dataname, cm_dataname, lb_dataname),
+  checkmate::assert_character(
+    c(sl_dataname, ex_dataname, rs_dataname, cm_dataname, lb_dataname),
     any.missing = TRUE, all.missing = FALSE
   )
   checkmate::assert_class(sl_start_date, classes = "choices_selected")
@@ -370,7 +371,7 @@ srv_g_patient_profile <- function(id,
 
     if (!is.na(lb_dataname)) {
       observeEvent(input$lb_var, ignoreNULL = TRUE, {
-        ADLB <- data()[[lb_dataname]] # nolint
+        ADLB <- data()[[lb_dataname]]
         choices <- unique(ADLB[[input$lb_var]])
         choices_selected <- if (length(choices) > 5) choices[1:5] else choices
 
@@ -453,8 +454,8 @@ srv_g_patient_profile <- function(id,
         teal::validate_inputs(iv())
 
         # get inputs ---
-        patient_id <- input$patient_id # nolint
-        sl_start_date <- input$sl_start_date # nolint
+        patient_id <- input$patient_id
+        sl_start_date <- input$sl_start_date
         ae_var <- input$ae_var
         ae_line_col_var <- input$ae_line_var
         rs_var <- input$rs_var
@@ -496,31 +497,31 @@ srv_g_patient_profile <- function(id,
         ))
 
         # get ADSL dataset ---
-        ADSL <- data()[[sl_dataname]] # nolint
+        ADSL <- data()[[sl_dataname]]
 
-        ADEX <- NULL # nolint
+        ADEX <- NULL
         if (isTRUE(select_plot()[ex_dataname])) {
-          ADEX <- data()[[ex_dataname]] # nolint
+          ADEX <- data()[[ex_dataname]]
           teal::validate_has_variable(ADEX, adex_vars)
         }
-        ADAE <- NULL # nolint
+        ADAE <- NULL
         if (isTRUE(select_plot()[ae_dataname])) {
-          ADAE <- data()[[ae_dataname]] # nolint
+          ADAE <- data()[[ae_dataname]]
           teal::validate_has_variable(ADAE, adae_vars)
         }
-        ADRS <- NULL # nolint
+        ADRS <- NULL
         if (isTRUE(select_plot()[rs_dataname])) {
-          ADRS <- data()[[rs_dataname]] # nolint
+          ADRS <- data()[[rs_dataname]]
           teal::validate_has_variable(ADRS, adrs_vars)
         }
-        ADCM <- NULL # nolint
+        ADCM <- NULL
         if (isTRUE(select_plot()[cm_dataname])) {
-          ADCM <- data()[[cm_dataname]] # nolint
+          ADCM <- data()[[cm_dataname]]
           teal::validate_has_variable(ADCM, adcm_vars)
         }
-        ADLB <- NULL # nolint
+        ADLB <- NULL
         if (isTRUE(select_plot()[lb_dataname])) {
-          ADLB <- data()[[lb_dataname]] # nolint
+          ADLB <- data()[[lb_dataname]]
           teal::validate_has_variable(ADLB, adlb_vars)
         }
 
@@ -534,7 +535,7 @@ srv_g_patient_profile <- function(id,
           data(),
           code = substitute(
             expr = {
-              ADSL <- ADSL %>% # nolint
+              ADSL <- ADSL %>%
                 filter(USUBJID == patient_id) %>%
                 group_by(USUBJID) %>%
                 mutate(
@@ -583,10 +584,10 @@ srv_g_patient_profile <- function(id,
               code = substitute(
                 expr = {
                   # ADAE
-                  ADAE <- ADAE[, adae_vars] # nolint
+                  ADAE <- ADAE[, adae_vars]
 
-                  ADAE <- ADSL %>% # nolint
-                    left_join(ADAE, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  ADAE <- ADSL %>%
+                    left_join(ADAE, by = c("STUDYID", "USUBJID")) %>%
                     as.data.frame() %>%
                     filter(!is.na(ASTDT), !is.na(AENDT)) %>%
                     mutate(
@@ -596,7 +597,7 @@ srv_g_patient_profile <- function(id,
                         (AENDT >= as.Date(sl_start_date))
                     ) %>%
                     select(c(adae_vars, ASTDY, AENDY))
-                  formatters::var_labels(ADAE)[ae_line_col_var] <- # nolint
+                  formatters::var_labels(ADAE)[ae_line_col_var] <-
                     formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var]
                 },
                 env = list(
@@ -626,7 +627,7 @@ srv_g_patient_profile <- function(id,
                   )
                 )
               )
-            ADAE <- qq[[ae_dataname]] # nolint
+            ADAE <- qq[[ae_dataname]]
             if (is.null(ADAE) | nrow(ADAE) == 0) {
               empty_ae <- TRUE
             }
@@ -645,9 +646,9 @@ srv_g_patient_profile <- function(id,
               q1,
               code = substitute(
                 expr = {
-                  ADRS <- ADRS[, adrs_vars] # nolint
-                  ADRS <- ADSL %>% # nolint
-                    left_join(ADRS, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  ADRS <- ADRS[, adrs_vars]
+                  ADRS <- ADSL %>%
+                    left_join(ADRS, by = c("STUDYID", "USUBJID")) %>%
                     as.data.frame() %>%
                     mutate(
                       ADY = as.numeric(difftime(ADT, as.Date(sl_start_date), units = "days")) +
@@ -665,7 +666,7 @@ srv_g_patient_profile <- function(id,
                 )
               )
             )
-            ADRS <- qq[[rs_dataname]] # nolint
+            ADRS <- qq[[rs_dataname]]
             if (is.null(ADRS) || nrow(ADRS) == 0) {
               empty_rs <- TRUE
             }
@@ -685,9 +686,9 @@ srv_g_patient_profile <- function(id,
               code = substitute(
                 expr = {
                   # ADCM
-                  ADCM <- ADCM[, adcm_vars] # nolint
-                  ADCM <- ADSL %>% # nolint
-                    left_join(ADCM, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  ADCM <- ADCM[, adcm_vars]
+                  ADCM <- ADSL %>%
+                    left_join(ADCM, by = c("STUDYID", "USUBJID")) %>%
                     as.data.frame() %>%
                     filter(!is.na(ASTDT), !is.na(AENDT)) %>%
                     mutate(
@@ -698,8 +699,7 @@ srv_g_patient_profile <- function(id,
                     ) %>%
                     select(USUBJID, ASTDT, AENDT, ASTDY, AENDY, !!quo(cm_var))
                   if (length(unique(ADCM$USUBJID)) > 0) {
-                    ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE # nolint
-                    & is.na(ADCM$ASTDY) == FALSE), ] # nolint
+                    ADCM <- ADCM[which(ADCM$AENDY >= -28 | is.na(ADCM$AENDY) == TRUE & is.na(ADCM$ASTDY) == FALSE), ]
                   }
                   cm <- list(data = data.frame(ADCM), var = as.vector(ADCM[, cm_var]))
                 },
@@ -713,7 +713,7 @@ srv_g_patient_profile <- function(id,
               )
             )
 
-            ADCM <- qq[[cm_dataname]] # nolint
+            ADCM <- qq[[cm_dataname]]
             if (is.null(ADCM) | nrow(ADCM) == 0) {
               empty_cm <- TRUE
             }
@@ -733,14 +733,14 @@ srv_g_patient_profile <- function(id,
               code = substitute(
                 expr = {
                   # ADEX
-                  ADEX <- ADEX[, adex_vars] # nolint
-                  ADEX <- ADSL %>% # nolint
-                    left_join(ADEX, by = c("STUDYID", "USUBJID")) %>% # nolint
+                  ADEX <- ADEX[, adex_vars]
+                  ADEX <- ADSL %>%
+                    left_join(ADEX, by = c("STUDYID", "USUBJID")) %>%
                     as.data.frame() %>%
                     filter(PARCAT1 == "INDIVIDUAL" & PARAMCD == "DOSE" & !is.na(AVAL) & !is.na(ASTDT)) %>%
                     select(USUBJID, ASTDT, PARCAT2, AVAL, AVALU, PARAMCD, sl_start_date)
 
-                  ADEX <- split(ADEX, ADEX$USUBJID) %>% # nolint
+                  ADEX <- split(ADEX, ADEX$USUBJID) %>%
                     lapply(function(pinfo) {
                       pinfo %>%
                         arrange(PARCAT2, PARAMCD, ASTDT) %>%
@@ -770,7 +770,7 @@ srv_g_patient_profile <- function(id,
                 )
               )
             )
-            ADEX <- qq[[ex_dataname]] # nolint
+            ADEX <- qq[[ex_dataname]]
             if (is.null(ADEX) | nrow(ADEX) == 0) {
               empty_ex <- TRUE
             }
@@ -789,8 +789,8 @@ srv_g_patient_profile <- function(id,
               q1,
               code = substitute(
                 expr = {
-                  ADLB <- ADLB[, adlb_vars] # nolint
-                  ADLB <- ADSL %>% # nolint
+                  ADLB <- ADLB[, adlb_vars]
+                  ADLB <- ADSL %>%
                     left_join(ADLB, by = c("STUDYID", "USUBJID")) %>%
                     as.data.frame() %>%
                     mutate(
@@ -800,7 +800,7 @@ srv_g_patient_profile <- function(id,
                     as.data.frame() %>%
                     select(
                       USUBJID, STUDYID, LBSEQ, PARAMCD, BASETYPE, ADT, AVISITN, sl_start_date, LBTESTCD, ANRIND, lb_var
-                    ) %>% # nolint
+                    ) %>%
                     mutate(
                       ADY = as.numeric(difftime(ADT, as.Date(sl_start_date), units = "days")) +
                         (ADT >= as.Date(sl_start_date))
@@ -818,7 +818,7 @@ srv_g_patient_profile <- function(id,
               )
             )
 
-            ADLB <- qq[[lb_dataname]] # nolint
+            ADLB <- qq[[lb_dataname]]
             if (is.null(ADLB) | nrow(ADLB) == 0) {
               empty_lb <- TRUE
             }

@@ -376,7 +376,7 @@ srv_g_waterfall <- function(id,
       ytick_at <- input$ytick_at
       href_line <- input$href_line
       gap_point_val <- input$gap_point_val
-      show_value <- input$show_value # nolint
+      show_value <- input$show_value
       href_line <- suppressWarnings(as_numeric_from_comma_sep_str(href_line))
 
       if (gap_point_val == "") {
@@ -429,8 +429,8 @@ srv_g_waterfall <- function(id,
         q1,
         code = bquote({
           adsl <- ADSL[, .(adsl_vars)]
-          adtr <- .(as.name(dataname_tr))[, .(adtr_vars)] # nolint
-          adrs <- .(as.name(dataname_rs))[, .(adrs_vars)] # nolint
+          adtr <- .(as.name(dataname_tr))[, .(adtr_vars)]
+          adrs <- .(as.name(dataname_rs))[, .(adrs_vars)]
 
           bar_tr <- .(as.name(dataname_tr)) %>%
             dplyr::filter(PARAMCD == .(bar_paramcd)) %>%
@@ -446,7 +446,7 @@ srv_g_waterfall <- function(id,
           q1,
           code = bquote({
             anl <- bar_data
-            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
       } else {
@@ -467,13 +467,13 @@ srv_g_waterfall <- function(id,
               dplyr::select(USUBJID, PARAMCD, AVALC) %>%
               tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
             anl <- bar_data %>% dplyr::left_join(rs_label, by = c("USUBJID"))
-            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
       }
 
       # write plotting code to qenv
-      anl <- q1[["anl"]] # nolint
+      anl <- q1[["anl"]]
 
       q1 <- teal.code::eval_code(
         q1,

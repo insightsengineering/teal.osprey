@@ -68,7 +68,7 @@ vector to indicate default value, minimum and maximum values.}
 vector to indicate default value, minimum and maximum values.}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object.
+the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

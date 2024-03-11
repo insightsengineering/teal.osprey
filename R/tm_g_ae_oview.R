@@ -210,7 +210,7 @@ srv_g_ae_oview <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ANL <- data()[[dataname]] # nolint
+      ANL <- data()[[dataname]]
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
@@ -256,7 +256,7 @@ srv_g_ae_oview <- function(id,
     })
 
     observeEvent(input$arm_var, ignoreNULL = TRUE, {
-      ANL <- data()[[dataname]] # nolint
+      ANL <- data()[[dataname]]
       arm_var <- input$arm_var
       arm_val <- ANL[[arm_var]]
       choices <- levels(arm_val)
@@ -284,7 +284,7 @@ srv_g_ae_oview <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ANL <- data()[[dataname]] # nolint
+        ANL <- data()[[dataname]]
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 

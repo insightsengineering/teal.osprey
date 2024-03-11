@@ -32,7 +32,7 @@ vector to indicate default value, minimum and maximum values.}
 vector to indicate default value, minimum and maximum values.}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object.
+the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
 The documentation to this function lists all the arguments in teal modules

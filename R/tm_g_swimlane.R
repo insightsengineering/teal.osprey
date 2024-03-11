@@ -36,53 +36,52 @@
 #'
 #' @examples
 #' # Example using stream (ADaM) dataset
-#' data <- teal.data::cdisc_data() |>
+#' data <- cdisc_data() |>
 #'   within(library(dplyr)) |>
 #'   within(library(nestcolor)) |>
-#'   within(ADSL <- osprey::rADSL %>%
-#'     dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-#'     dplyr::filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
-#'   within(ADRS <- osprey::rADRS) |>
-#'   within(ADRS <- ADRS %>%
-#'     dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+#'   within(ADSL <- rADSL %>%
+#'     mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+#'     filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
+#'   within(ADRS <- rADRS %>%
+#'     filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
 #'     mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-#'     base::rbind(ADRS %>% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+#'     rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
 #'     arrange(USUBJID))
 #'
-#' teal.data::datanames(data) <- c("ADSL", "ADRS")
-#' teal.data::join_keys(data) <- teal.data::default_cdisc_join_keys[teal.data::datanames(data)]
+#' datanames(data) <- c("ADSL", "ADRS")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
 #' ADSL <- data[["ADSL"]]
 #' ADRS <- data[["ADRS"]]
 #'
-#' app <- teal::init(
+#' app <- init(
 #'   data = data,
-#'   modules = teal::modules(
+#'   modules = modules(
 #'     tm_g_swimlane(
 #'       label = "Swimlane Plot",
 #'       dataname = "ADRS",
-#'       bar_var = teal.transform::choices_selected(
+#'       bar_var = choices_selected(
 #'         selected = "TRTDURD",
 #'         choices = c("TRTDURD", "EOSDY")
 #'       ),
-#'       bar_color_var = teal.transform::choices_selected(
+#'       bar_color_var = choices_selected(
 #'         selected = "EOSSTT",
 #'         choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX")
 #'       ),
-#'       sort_var = teal.transform::choices_selected(
+#'       sort_var = choices_selected(
 #'         selected = "ACTARMCD",
 #'         choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD")
 #'       ),
-#'       marker_pos_var = teal.transform::choices_selected(
+#'       marker_pos_var = choices_selected(
 #'         selected = "ADY",
 #'         choices = c("ADY")
 #'       ),
-#'       marker_shape_var = teal.transform::choices_selected(
+#'       marker_shape_var = choices_selected(
 #'         selected = "AVALC",
 #'         c("AVALC", "AVISIT")
 #'       ),
 #'       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-#'       marker_color_var = teal.transform::choices_selected(
+#'       marker_color_var = choices_selected(
 #'         selected = "AVALC",
 #'         choices = c("AVALC", "AVISIT")
 #'       ),
@@ -91,7 +90,7 @@
 #'         "PD" = "red", "Death" = "black"
 #'       ),
 #'       vref_line = c(30, 60),
-#'       anno_txt_var = teal.transform::choices_selected(
+#'       anno_txt_var = choices_selected(
 #'         selected = c("ACTARM", "SEX"),
 #'         choices = c(
 #'           "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
@@ -335,12 +334,12 @@ srv_g_swimlane <- function(id,
         )
       ))
 
-      ADSL <- data()[["ADSL"]] # nolint
+      ADSL <- data()[["ADSL"]]
 
       anl_vars <- unique(c(
         "USUBJID", "STUDYID",
         input$marker_pos_var, input$marker_shape_var, input$marker_color_var
-      )) # nolint
+      ))
       adsl_vars <- unique(c(
         "USUBJID", "STUDYID",
         input$bar_var, input$bar_color_var, input$sort_var, input$anno_txt_var
@@ -399,29 +398,29 @@ srv_g_swimlane <- function(id,
         teal.code::eval_code(
           q2,
           code = bquote({
-            ADSL_p <- ADSL # nolint
-            ADSL <- ADSL_p[, .(adsl_vars)] # nolint
+            ADSL_p <- ADSL
+            ADSL <- ADSL_p[, .(adsl_vars)]
             # only take last part of USUBJID
-            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
       } else {
         teal.code::eval_code(
           q2,
           code = bquote({
-            ADSL_p <- ADSL # nolint
-            ANL_p <- .(as.name(dataname)) # nolint
+            ADSL_p <- ADSL
+            ANL_p <- .(as.name(dataname))
 
-            ADSL <- ADSL_p[, .(adsl_vars)] # nolint
-            ANL <- merge( # nolint
+            ADSL <- ADSL_p[, .(adsl_vars)]
+            ANL <- merge(
               x = ADSL,
               y = ANL_p[, .(anl_vars)],
               all.x = FALSE, all.y = FALSE,
               by = c("USUBJID", "STUDYID")
             )
             # only take last part of USUBJID
-            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-            ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
+            ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
       }
@@ -474,8 +473,7 @@ srv_g_swimlane <- function(id,
             }),
             marker_shape_opt = .(if (length(marker_shape_var) == 0) {
               NULL
-            } else if (length(marker_shape_var) > 0 &
-              all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt)) == TRUE) { # nolint
+            } else if (length(marker_shape_var) > 0 && all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt))) { # nolint: line_length.
               bquote(.(marker_shape_opt))
             } else {
               NULL
@@ -487,8 +485,7 @@ srv_g_swimlane <- function(id,
             }),
             marker_color_opt = .(if (length(marker_color_var) == 0) {
               NULL
-            } else if (length(marker_color_var) > 0 &
-              all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt)) == TRUE) { # nolint
+            } else if (length(marker_color_var) > 0 && all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt))) { # nolint: line_length.
               bquote(.(marker_color_opt))
             } else {
               NULL

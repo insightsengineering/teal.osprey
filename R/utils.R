@@ -28,9 +28,9 @@ NULL
 #'
 #' @template author_zhanc107
 #'
-quick_filter <- function(filter_opt, ANL) { # nolint
+quick_filter <- function(filter_opt, ANL) {
   for (i in seq_along(filter_opt)) {
-    ANL <- ANL[ANL[, filter_opt[i]] == "Y", ] # nolint
+    ANL <- ANL[ANL[, filter_opt[i]] == "Y", ]
   }
   return(ANL)
 }
