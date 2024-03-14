@@ -4,9 +4,11 @@
 \name{teal.osprey-package}
 \alias{teal.osprey}
 \alias{teal.osprey-package}
-\title{teal.osprey: Enabling you to write modules in teal}
+\title{\code{teal.osprey}: \code{teal} modules for 'osprey'}
 \description{
-The \code{teal.osprey} R package contains interactive \code{\link{teal}} modules for the outputs
+\code{teal.osprey} provides community contributed \code{\link{teal}} modules of the analysis functions from
+\code{\link{osprey}} package. See package \href{https://insightsengineering.github.io/osprey/}{website}.
+This enables \code{teal} app developers to easily create applications making use of the \code{osprey} analysis functions.
 }
 \seealso{
 Useful links:
