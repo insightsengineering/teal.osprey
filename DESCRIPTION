@@ -1,7 +1,7 @@
 Package: teal.osprey
 Title: 'teal' Modules for TLG Functions in Osprey
-Version: 0.1.16.9012
-Date: 2024-03-06
+Version: 0.1.16.9013
+Date: 2024-03-14
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
@@ -13,8 +13,9 @@ Authors@R: c(
     person("Tina", "Cho", role = "ctb"),
     person("F. Hoffmann-La Roche AG", role = c("cph", "fnd"))
   )
-Description: Community efforts to collect 'teal' modules for TLGs defined in 'osprey' package.
-    Enables 'teal' app developers to create 'shiny' applications with a use of 'osprey' analysis functions.
+Description: Community efforts to collect 'teal' modules for TLGs defined
+    in 'osprey' package.  Enables 'teal' app developers to create 'shiny'
+    applications with a use of 'osprey' analysis functions.
 License: Apache License 2.0
 URL: https://insightsengineering.github.io/teal.osprey/,
     https://github.com/insightsengineering/teal.osprey/
