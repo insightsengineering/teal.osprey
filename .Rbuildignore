@@ -1,6 +1,7 @@
 ^renv$
 ^renv\.lock$
 CODE_OF_CONDUCT.md
+LICENSE
 SECURITY.md
 ^_dev$
 ^.*\.Rproj$

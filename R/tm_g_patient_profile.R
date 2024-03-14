@@ -7,39 +7,39 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param patient_id (\code{choices_seleced}) unique subject ID variable
-#' @param sl_dataname (\code{character}) subject level dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}}
+#' @param patient_id (`choices_seleced`) unique subject ID variable
+#' @param sl_dataname (`character`) subject level dataset name,
+#' needs to be available in the list passed to the `data`
+#' argument of [teal::init()]
 #' @param ex_dataname,ae_dataname,rs_dataname,cm_dataname,lb_dataname
-#'        (\code{character(1)}) names of exposure, adverse events, response,
+#'        (`character(1)`) names of exposure, adverse events, response,
 #'        concomitant medications, and labs datasets, respectively;
-#'        must be available in the list passed to the \code{data}
-#'        argument of \code{\link[teal]{init}}\cr
+#'        must be available in the list passed to the `data`
+#'        argument of [teal::init()]\cr
 #'        set to NA (default) to omit from analysis
-#' @param sl_start_date (\code{choices_selected}) study start date variable, usually set to
+#' @param sl_start_date `choices_selected` study start date variable, usually set to
 #'                      treatment start date or randomization date
-#' @param ex_var (\code{choices_selected}) exposure variable to plot as each line \cr
-#'               leave unspecified or set to \code{NULL} if exposure data is not available
-#' @param ae_var (\code{choices_selected}) adverse event variable to plot as each line \cr
-#'               leave unspecified or set to \code{NULL} if adverse events data is not available
-#' @param ae_line_col_var (\code{choices_selected}) variable for coloring `AE` lines \cr
-#'                        leave unspecified or set to \code{NULL} if adverse events data is not available
+#' @param ex_var `choices_selected` exposure variable to plot as each line \cr
+#'               leave unspecified or set to `NULL` if exposure data is not available
+#' @param ae_var `choices_selected` adverse event variable to plot as each line \cr
+#'               leave unspecified or set to `NULL` if adverse events data is not available
+#' @param ae_line_col_var `choices_selected` variable for coloring `AE` lines \cr
+#'                        leave unspecified or set to `NULL` if adverse events data is not available
 #' @param ae_line_col_opt aesthetic values to map color values
 #'                        (named vector to map color values to each name).
-#'                        If not \code{NULL}, please make sure this contains all possible
-#'                        values for \code{ae_line_col_var} values. \cr
-#'                        leave unspecified or set to \code{NULL} if adverse events data is not available
-#' @param rs_var (\code{choices_selected}) response variable to plot as each line \cr
-#'               leave unspecified or set to \code{NULL} if response data is not available
-#' @param cm_var (\code{choices_selected}) concomitant medication variable
+#'                        If not `NULL`, please make sure this contains all possible
+#'                        values for `ae_line_col_var` values. \cr
+#'                        leave unspecified or set to `NULL` if adverse events data is not available
+#' @param rs_var `choices_selected` response variable to plot as each line \cr
+#'               leave unspecified or set to `NULL` if response data is not available
+#' @param cm_var `choices_selected` concomitant medication variable
 #'               to plot as each line \cr
-#'               leave unspecified or set to \code{NULL} if concomitant medications data is not available
-#' @param lb_var (\code{choices_selected}) lab variable to plot as each line \cr
-#'               leave unspecified or set to \code{NULL} if labs data is not available
-#' @param x_limit a single \code{character} string with two numbers
+#'               leave unspecified or set to `NULL` if concomitant medications data is not available
+#' @param lb_var `choices_selected` lab variable to plot as each line \cr
+#'               leave unspecified or set to `NULL` if labs data is not available
+#' @param x_limit a single `character` string with two numbers
 #'                separated by a comma indicating the x-axis limit,
-#'                default is \code{"-28, 365"}
+#'                default is "-28, 365"
 #'
 #' @author Xuefeng Hou (houx14) \email{houx14@gene.com}
 #' @author Tina Cho (chot) \email{tina.cho@roche.com}
@@ -51,13 +51,11 @@
 #' @details
 #' As the patient profile module plots different domains in one plot, the study day (x-axis)
 #' is derived for consistency based the start date of user's choice in the app (for example,
-#' \code{ADSL.RANDDT} or \code{ADSL.TRTSDT}):
-#' \itemize{
-#' \item In \code{ADAE}, \code{ADEX}, and \code{ADCM}, it would be study day based on \code{ASTDT} and/or
-#'     \code{AENDT} in reference to the start date
-#' \item In \code{ADRS} and \code{ADLB}, it would be study day based on \code{ADT} in reference to
+#' `ADSL.RANDDT` or `ADSL.TRTSDT`):
+#' - In `ADAE`, `ADEX`, and `ADCM`, it would be study day based on `ASTDT` and/or
+#'     `AENDT` in reference to the start date
+#' - In `ADRS` and `ADLB`, it would be study day based on `ADT` in reference to
 #'     the start date
-#' }
 #'
 #' @export
 #'
