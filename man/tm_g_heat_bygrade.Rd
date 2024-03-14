@@ -46,7 +46,7 @@ specify to \code{NA} if no concomitant medications data is available}
 
 \item{visit_var}{(\code{choices_seleced}) analysis visit variable}
 
-\item{ongo_var}{(\code{choices_seleced}) study ongoing status variable,
+\item{ongo_var}{(\code{choices_seleced}) study ongoing status variable.
 This variable is a derived logical variable. Usually it can be derived from \code{EOSSTT}.}
 
 \item{anno_var}{(\code{choices_seleced}) annotation variable}

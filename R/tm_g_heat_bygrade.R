@@ -22,7 +22,7 @@
 #' specify to `NA` if no concomitant medications data is available
 #' @param id_var (`choices_seleced`) unique subject ID variable
 #' @param visit_var (`choices_seleced`) analysis visit variable
-#' @param ongo_var (`choices_seleced`) study ongoing status variable,
+#' @param ongo_var (`choices_seleced`) study ongoing status variable.
 #' This variable is a derived logical variable. Usually it can be derived from `EOSSTT`.
 #' @param anno_var (`choices_seleced`) annotation variable
 #' @param heat_var (`choices_seleced`) heatmap variable
