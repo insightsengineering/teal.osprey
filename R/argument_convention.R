@@ -12,7 +12,7 @@
 #' @param label (`character(1)`)\cr
 #'  menu item label of the module in the teal app.
 #'
-#' @param dataname (\code{character(1)})\cr
+#' @param dataname (`character(1)`)\cr
 #'  analysis data used in the teal module, needs to be
 #'  available in the list passed to the `data` argument of [teal::init()].
 #'
