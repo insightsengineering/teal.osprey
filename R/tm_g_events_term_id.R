@@ -7,7 +7,7 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param term_var \code{\link[teal.transform]{choices_selected}} object with all available choices
+#' @param term_var [teal.transform::choices_selected] object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
 #'
 #' @inherit argument_convention return

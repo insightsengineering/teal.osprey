@@ -21,8 +21,8 @@
 [![Open Issues](https://img.shields.io/github/issues-raw/insightsengineering/teal.osprey?color=red\&label=open%20issues)](https://github.com/insightsengineering/teal.osprey/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 <!-- end badges -->
 
-The teal.osprey package provides community contributed `teal` modules of the analysis functions from the [osprey](https://insightsengineering.github.io/osprey/) R package.
-This enables `teal` app developers to easily create applications making use of the `osprey` analysis functions.
+`teal.osprey` provides community contributed `teal` modules of analysis functions from [`osprey`](https://insightsengineering.github.io/osprey/) package.
+This enables `teal` app developers to easily create applications making use of `osprey`.
 
 ## Installation
 
