@@ -59,14 +59,14 @@ vector to indicate default value, minimum and maximum values.}
 \item{plot_width}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
 
-\item{pre_output}{(\code{shiny.tag}, optional)\cr
+\item{pre_output}{(\code{shiny.tag}) optional,\cr
 with text placed before the output to put the output into context. For example a title.}
 
-\item{post_output}{(\code{shiny.tag}, optional) with text placed after the output to put the output
+\item{post_output}{(\code{shiny.tag}) optional, with text placed after the output to put the output
 into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} elements are useful.}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object.
+the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
