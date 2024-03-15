@@ -103,7 +103,7 @@ ui_g_events_term_id <- function(id, ...) {
     output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
     ),
-    encoding = div(
+    encoding = tags$div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###
