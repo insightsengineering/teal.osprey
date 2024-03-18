@@ -250,7 +250,7 @@ srv_g_ae_oview <- function(id,
       updateTextAreaInput(
         inputId = "foot",
         value = restoreInput(
-          ns(foot),
+          ns("foot"),
           sprintf(
             "Note: %d%% CI is calculated using %s",
             round(conf_level * 100),
