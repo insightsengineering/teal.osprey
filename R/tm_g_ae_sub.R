@@ -186,6 +186,8 @@ srv_g_ae_sub <- function(id,
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
     iv <- reactive({
       ANL <- data()[[dataname]]
       ADSL <- data()[["ADSL"]]
