@@ -239,16 +239,14 @@ srv_g_ae_sub <- function(id,
       }
 
       updateSelectInput(
-        session,
-        "arm_trt",
-        selected = choices[1],
-        choices = choices
+        inputId = "arm_trt",
+        choices = choices,
+        selected = restoreInput(ns("arm_trt", choices[1L]))
       )
       updateSelectInput(
-        session,
-        "arm_ref",
-        selected = choices[ref_index],
-        choices = choices
+        inputId = "arm_ref",
+        choices = choices,
+        selected = restoreInput(ns("arm_ref", choices[ref_index]))
       )
     })
 
@@ -258,14 +256,16 @@ srv_g_ae_sub <- function(id,
       trt <- input$arm_trt
       ref <- input$arm_ref
       updateTextAreaInput(
-        session,
-        "foot",
-        value = sprintf(
-          "Note: %d%% CI is calculated using %s\nTRT: %s; CONT: %s",
-          round(conf_level * 100),
-          name_ci(diff_ci_method),
-          trt,
-          ref
+        inputId = "foot",
+        value = restoreInput(
+          ns("foot"),
+          sprintf(
+            "Note: %d%% CI is calculated using %s\nTRT: %s; CONT: %s",
+            round(conf_level * 100),
+            name_ci(diff_ci_method),
+            trt,
+            ref
+          )
         )
       )
     })
@@ -273,34 +273,32 @@ srv_g_ae_sub <- function(id,
     observeEvent(input$groups, {
       ANL <- data()[[dataname]]
       output$grouplabel_output <- renderUI({
-        grps <- input$groups
+        grps <- req(input$groups)
         lo <- lapply(seq_along(grps), function(index) {
           grp <- grps[index]
           choices <- levels(ANL[[grp]])
           sel <- teal.widgets::optionalSelectInput(
-            session$ns(sprintf("groups__%s", index)),
+            ns(sprintf("groups__%s", index)),
             grp,
             choices,
             multiple = TRUE,
             selected = choices
           )
           textname <- sprintf("text_%s_out", index)
-          txt <- uiOutput(session$ns(textname))
+          txt <- uiOutput(ns(textname))
           observeEvent(
             eventExpr = input[[sprintf("groups__%s", index)]],
             handlerExpr = {
               output[[textname]] <- renderUI({
-                if (!is.null(input[[sprintf("groups__%s", index)]])) {
-                  l <- input[[sprintf("groups__%s", index)]]
-                  l2 <- lapply(seq_along(l), function(i) {
+                grps <- req(input[[sprintf("groups__%s", index)]])
+                if (!is.null(grps)) {
+                  l2 <- lapply(seq_along(grps), function(i) {
                     nm <- sprintf("groups__%s__level__%s", index, i)
-                    label <- sprintf("Label for %s, Level %s", grp, l[i])
-                    textInput(session$ns(nm), label, l[i])
+                    label <- sprintf("Label for %s, Level %s", grp, grps[i])
+                    textInput(ns(nm), label, grps[i])
                   })
                   tagList(textInput(
-                    session$ns(
-                      sprintf("groups__%s__level__%s", index, "all")
-                    ),
+                    ns(sprintf("groups__%s__level__%s", index, "all")),
                     sprintf("Label for %s", grp), grp
                   ), l2)
                 }

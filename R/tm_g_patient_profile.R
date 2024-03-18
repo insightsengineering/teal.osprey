@@ -377,10 +377,9 @@ srv_g_patient_profile <- function(id,
         choices_selected <- if (length(choices) > 5) choices[1:5] else choices
 
         updateSelectInput(
-          session,
-          "lb_var_show",
-          selected = choices_selected,
-          choices = choices
+          inputId = "lb_var_show",
+          choices = choices,
+          selected = restoreInput(ns("lb_var_show"), choices_selected)
         )
       })
     }

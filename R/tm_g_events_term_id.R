@@ -244,12 +244,14 @@ srv_g_events_term_id <- function(id,
       diff_ci_method <- input$diff_ci_method
       conf_level <- input$conf_level
       updateTextAreaInput(
-        session,
-        "foot",
-        value = sprintf(
-          "Note: %d%% CI is calculated using %s",
-          round(conf_level * 100),
-          name_ci(diff_ci_method)
+        inputId = "foot",
+        value = restoreInput(
+          ns("foot"),
+          sprintf(
+            "Note: %d%% CI is calculated using %s",
+            round(conf_level * 100),
+            name_ci(diff_ci_method)
+          )
         )
       )
     })
@@ -259,16 +261,18 @@ srv_g_events_term_id <- function(id,
       {
         sort <- if (is.null(input$sort)) " " else input$sort
         updateTextInput(
-          session,
-          "title",
-          value = sprintf(
-            "Common AE Table %s",
-            c(
-              "term" = "Sorted by Term",
-              "riskdiff" = "Sorted by Risk Difference",
-              "meanrisk" = "Sorted by Mean Risk",
-              " " = ""
-            )[sort]
+          inputId = "title",
+          value = restoreInput(
+            ns("title"),
+            sprintf(
+              "Common AE Table %s",
+              c(
+                "term" = "Sorted by Term",
+                "riskdiff" = "Sorted by Risk Difference",
+                "meanrisk" = "Sorted by Mean Risk",
+                " " = ""
+              )[sort]
+            )
           )
         )
       },
@@ -289,16 +293,14 @@ srv_g_events_term_id <- function(id,
         }
 
         updateSelectInput(
-          session,
-          "arm_ref",
-          selected = choices[1],
-          choices = choices
+          inputId = "arm_ref",
+          choices = choices,
+          selected = restoreInput(ns("arm_ref"), choices[1])
         )
         updateSelectInput(
-          session,
-          "arm_trt",
-          selected = choices[trt_index],
-          choices = choices
+          inputId = "arm_trt",
+          choices = choices,
+          selected = restoreInput(ns("arm_trt"), choices[trt_index])
         )
       },
       ignoreNULL = TRUE

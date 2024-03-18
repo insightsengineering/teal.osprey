@@ -388,10 +388,9 @@ srv_g_heatmap_bygrade <- function(id,
         choices <- levels(ADCM[[input$conmed_var]])
 
         updateSelectInput(
-          session,
-          "conmed_level",
-          selected = choices[1:3],
-          choices = choices
+          inputId = "conmed_level",
+          choices = choices,
+          selected = restoreInput(ns("conmed_level"), choices[1:3])
         )
       })
     }

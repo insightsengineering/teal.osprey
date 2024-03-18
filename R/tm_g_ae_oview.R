@@ -247,12 +247,15 @@ srv_g_ae_oview <- function(id,
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
       diff_ci_method <- input$diff_ci_method
       conf_level <- input$conf_level
-      updateTextAreaInput(session,
-        "foot",
-        value = sprintf(
-          "Note: %d%% CI is calculated using %s",
-          round(conf_level * 100),
-          name_ci(diff_ci_method)
+      updateTextAreaInput(
+        inputId = "foot",
+        value = restoreInput(
+          ns(foot),
+          sprintf(
+            "Note: %d%% CI is calculated using %s",
+            round(conf_level * 100),
+            name_ci(diff_ci_method)
+          )
         )
       )
     })
@@ -270,15 +273,13 @@ srv_g_ae_oview <- function(id,
       }
 
       updateSelectInput(
-        session,
-        "arm_ref",
-        selected = choices[1],
-        choices = choices
+        inputId = "arm_ref",
+        choices = choices,
+        selected = restoreInput(ns("arm_ref", choices[1L]))
       )
       updateSelectInput(
-        session,
-        "arm_trt",
-        selected = choices[trt_index],
+        inputId = "arm_trt",
+        selected = restoreInput(ns("arm_trt", choices[trt_index])),
         choices = choices
       )
     })

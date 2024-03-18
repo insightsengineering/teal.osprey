@@ -316,7 +316,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
             session,
             "right_val",
             choices = character(0),
-            selected = character(0)
+            selected = restoreInput(ns("right_val"), character(0))
           )
         } else {
           options$r <- if (right_var %in% names(data()[["ADSL"]])) {
@@ -336,8 +336,10 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
             options$r[1]
           }
           teal.widgets::updateOptionalSelectInput(
-            session, "right_val",
-            choices = as.character(options$r), selected = selected, label = "Choose Up To 2:"
+            inputId = "right_val",
+            label = "Choose Up To 2:",
+            choices = as.character(options$r),
+            selected = restoreInput(ns("right_val"), selected)
           )
         }
         vars$r <- right_var
@@ -352,8 +354,9 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         current_l_var <- isolate(vars$l)
         if (is.null(left_var)) {
           teal.widgets::updateOptionalSelectInput(
-            session, "left_val",
-            choices = character(0), selected = character(0)
+            inputId = "left_val",
+            choices = character(0),
+            selected = restoreInput(ns("left_val"), character(0))
           )
         } else {
           options$l <- if (left_var %in% names(data()[["ADSL"]])) {
@@ -374,8 +377,10 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
           }
 
           teal.widgets::updateOptionalSelectInput(
-            session, "left_val",
-            choices = as.character(options$l), selected = selected, label = "Choose Up To 2:"
+            inputId = "left_val",
+            label = "Choose Up To 2:",
+            choices = as.character(options$l),
+            selected = restoreInput(ns("left_val"), selected)
           )
         }
         vars$l <- left_var
