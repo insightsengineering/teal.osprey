@@ -194,7 +194,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
       output = teal.widgets::white_small_well(
         plot_decorate_output(id = ns(NULL))
       ),
-      encoding = div(
+      encoding = tags$div(
         ### Reporter
         teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
@@ -234,7 +234,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
           multiple = FALSE
         ),
         helpText("Plot conmed"),
-        div(
+        tags$div(
           class = "pretty-left-border",
           if (!is.na(args$cm_dataname)) {
             checkboxInput(
