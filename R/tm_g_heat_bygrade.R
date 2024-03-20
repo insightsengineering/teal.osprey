@@ -132,7 +132,7 @@ tm_g_heat_bygrade <- function(label,
                               fontsize = c(5, 3, 7),
                               plot_height = c(600L, 200L, 2000L),
                               plot_width = NULL) {
-  logger::log_info("Initializing tm_g_heat_bygrade")
+  message("Initializing tm_g_heat_bygrade")
   args <- as.list(environment())
 
   checkmate::assert_string(label)
