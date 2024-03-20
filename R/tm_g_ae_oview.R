@@ -80,7 +80,7 @@ tm_g_ae_oview <- function(label,
                           fontsize = c(5, 3, 7),
                           plot_height = c(600L, 200L, 2000L),
                           plot_width = NULL) {
-  logger::log_info("Initializing tm_g_ae_oview")
+  message("Initializing tm_g_ae_oview")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(flag_var_anl, classes = "choices_selected")
   checkmate::assert(

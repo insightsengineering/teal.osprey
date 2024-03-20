@@ -105,7 +105,7 @@ tm_g_waterfall <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
-  logger::log_info("Initializing tm_g_waterfall")
+  message("Initializing tm_g_waterfall")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname_tr)
   checkmate::assert_string(dataname_rs)
