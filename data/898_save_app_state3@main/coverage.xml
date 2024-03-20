@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.00142571998859424" branch-rate="0" lines-covered="5" lines-valid="3507" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-03-18 10:15:48.112061">
+<coverage line-rate="0.00142531356898518" branch-rate="0" lines-covered="5" lines-valid="3508" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-03-20 14:51:28.167871">
   <sources>
     <source>/__w/teal.osprey/teal.osprey/teal.osprey</source>
   </sources>
   <packages>
-    <package name="teal.osprey" line-rate="0.00142571998859424" branch-rate="0" complexity="0">
+    <package name="teal.osprey" line-rate="0.00142531356898518" branch-rate="0" complexity="0">
       <classes>
         <class name="tm_g_ae_oview.R" filename="R/tm_g_ae_oview.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
@@ -7230,11 +7230,13 @@
             <method name=".onLoad" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="2" hits="0" branch="false"/>
+                <line number="3" hits="0" branch="false"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="2" hits="0" branch="false"/>
+            <line number="3" hits="0" branch="false"/>
           </lines>
         </class>
       </classes>
