@@ -93,7 +93,7 @@ tm_g_ae_sub <- function(label,
     ),
     datanames = c("ADSL", dataname)
   )
-  attr(ans, "teal_bookmarkable") <- NULL
+  attr(ans, "teal_bookmarkable") <- TRUE
   ans
 }
 
@@ -116,18 +116,7 @@ ui_g_ae_sub <- function(id, ...) {
         choices = args$arm_var$choices,
         selected = args$arm_var$selected
       ),
-      selectInput(
-        ns("arm_trt"),
-        "Treatment",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
-      selectInput(
-        ns("arm_ref"),
-        "Control",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
+      uiOutput(ns("arm_container")),
       checkboxInput(
         ns("arm_n"),
         "Show N in each arm",
@@ -227,7 +216,8 @@ srv_g_ae_sub <- function(id,
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
-    observeEvent(input$arm_var, ignoreNULL = TRUE, {
+    output$arm_container <- renderUI({
+      req(input$arm_var)
       arm_var <- input$arm_var
       ANL <- data()[[dataname]]
 
@@ -240,15 +230,9 @@ srv_g_ae_sub <- function(id,
         ref_index <- 2
       }
 
-      updateSelectInput(
-        inputId = "arm_trt",
-        choices = choices,
-        selected = restoreInput(ns("arm_trt"), choices[1L])
-      )
-      updateSelectInput(
-        inputId = "arm_ref",
-        choices = choices,
-        selected = restoreInput(ns("arm_ref"), choices[ref_index])
+      tagList(
+        selectInput(ns("arm_trt"), "Treatment", choices = choices, selected = choices[1L]),
+        selectInput(ns("arm_ref"), "Control", choices = choices, selected = choices[ref_index])
       )
     })
 
