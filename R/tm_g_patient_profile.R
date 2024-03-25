@@ -204,7 +204,7 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     ),
     datanames = "all"
   )
-  attr(ans, "teal_bookmarkable") <- NULL
+  attr(ans, "teal_bookmarkable") <- TRUE
   ans
 }
 
@@ -312,13 +312,7 @@ ui_g_patient_profile <- function(id, ...) {
             selected = a$lb_var$selected,
             multiple = FALSE
           ),
-          selectInput(
-            ns("lb_var_show"),
-            "Lab values",
-            choices = a$lb_var$choices,
-            selected = a$lb_var$selected,
-            multiple = TRUE
-          )
+          uiOutput(ns("container_lb_var_show")),
         ),
         textInput(
           ns("x_limit"),
@@ -372,19 +366,22 @@ srv_g_patient_profile <- function(id,
       vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
     )
 
-    if (!is.na(lb_dataname)) {
-      observeEvent(input$lb_var, ignoreNULL = TRUE, {
-        ADLB <- data()[[lb_dataname]]
-        choices <- unique(ADLB[[input$lb_var]])
-        choices_selected <- if (length(choices) > 5) choices[1:5] else choices
 
-        updateSelectInput(
-          inputId = "lb_var_show",
-          choices = choices,
-          selected = restoreInput(ns("lb_var_show"), choices_selected)
-        )
-      })
-    }
+    output$container_lb_var_show <- renderUI({
+      req(!is.na(lb_dataname))
+      req(input$lb_var)
+
+      ADLB <- data()[[lb_dataname]]
+      choices <- unique(ADLB[[input$lb_var]])
+
+      selectInput(
+        ns("lb_var_show"),
+        "Lab values",
+        choices = choices,
+        selected = choices[1:5],
+        multiple = TRUE
+      )
+    })
 
     iv <- reactive({
       iv <- shinyvalidate::InputValidator$new()
