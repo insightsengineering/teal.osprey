@@ -146,7 +146,7 @@ tm_g_waterfall <- function(label,
     ),
     datanames = "all"
   )
-  attr(ans, "teal_bookmarkable") <- NULL
+  attr(ans, "teal_bookmarkable") <- TRUE
   ans
 }
 
