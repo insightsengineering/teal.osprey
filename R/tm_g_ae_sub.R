@@ -241,12 +241,12 @@ srv_g_ae_sub <- function(id,
       updateSelectInput(
         inputId = "arm_trt",
         choices = choices,
-        selected = restoreInput(ns("arm_trt", choices[1L]))
+        selected = restoreInput(ns("arm_trt"), choices[1L])
       )
       updateSelectInput(
         inputId = "arm_ref",
         choices = choices,
-        selected = restoreInput(ns("arm_ref", choices[ref_index]))
+        selected = restoreInput(ns("arm_ref"), choices[ref_index])
       )
     })
 

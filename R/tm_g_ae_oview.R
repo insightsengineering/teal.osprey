@@ -275,12 +275,12 @@ srv_g_ae_oview <- function(id,
       updateSelectInput(
         inputId = "arm_ref",
         choices = choices,
-        selected = restoreInput(ns("arm_ref", choices[1L]))
+        selected = restoreInput(ns("arm_ref"), choices[1L])
       )
       updateSelectInput(
         inputId = "arm_trt",
-        selected = restoreInput(ns("arm_trt", choices[trt_index])),
-        choices = choices
+        choices = choices,
+        selected = restoreInput(ns("arm_trt"), choices[trt_index])
       )
     })
 
