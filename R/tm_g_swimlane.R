@@ -167,7 +167,7 @@ tm_g_swimlane <- function(label,
     ),
     datanames = c("ADSL", dataname)
   )
-  attr(ans, "teal_bookmarkable") <- NULL
+  attr(ans, "teal_bookmarkable") <- TRUE
   ans
 }
 
