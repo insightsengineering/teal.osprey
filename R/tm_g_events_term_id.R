@@ -86,7 +86,7 @@ tm_g_events_term_id <- function(label,
 
   args <- as.list(environment())
 
-  module(
+  ans <- module(
     label = label,
     server = srv_g_events_term_id,
     server_args = list(label = label, dataname = dataname, plot_height = plot_height, plot_width = plot_width),
@@ -94,6 +94,8 @@ tm_g_events_term_id <- function(label,
     ui_args = args,
     datanames = c("ADSL", dataname)
   )
+  attr(ans, "teal_bookmarkable") <- NULL
+  ans
 }
 
 ui_g_events_term_id <- function(id, ...) {

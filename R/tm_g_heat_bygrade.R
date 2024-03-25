@@ -166,7 +166,7 @@ tm_g_heat_bygrade <- function(label,
     .var.name = "plot_width"
   )
 
-  module(
+  ans <- module(
     label = label,
     server = srv_g_heatmap_bygrade,
     server_args = list(
@@ -182,6 +182,8 @@ tm_g_heat_bygrade <- function(label,
     ui_args = args,
     datanames = "all"
   )
+  attr(ans, "teal_bookmarkable") <- NULL
+  ans
 }
 
 ui_g_heatmap_bygrade <- function(id, ...) {

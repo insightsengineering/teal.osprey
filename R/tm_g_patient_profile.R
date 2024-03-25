@@ -185,7 +185,7 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     .var.name = "plot_width"
   )
 
-  module(
+  ans <- module(
     label = label,
     ui = ui_g_patient_profile,
     ui_args = args,
@@ -204,6 +204,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     ),
     datanames = "all"
   )
+  attr(ans, "teal_bookmarkable") <- NULL
+  ans
 }
 
 ui_g_patient_profile <- function(id, ...) {

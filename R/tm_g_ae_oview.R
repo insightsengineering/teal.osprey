@@ -105,7 +105,7 @@ tm_g_ae_oview <- function(label,
 
   args <- as.list(environment())
 
-  module(
+  ans <- module(
     label = label,
     server = srv_g_ae_oview,
     server_args = list(
@@ -118,6 +118,8 @@ tm_g_ae_oview <- function(label,
     ui_args = args,
     datanames = c("ADSL", dataname)
   )
+  attr(ans, "teal_bookmarkable") <- NULL
+  ans
 }
 
 ui_g_ae_oview <- function(id, ...) {

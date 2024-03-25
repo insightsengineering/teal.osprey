@@ -148,7 +148,7 @@ tm_g_swimlane <- function(label,
   checkmate::assert_string(x_label)
 
 
-  module(
+  ans <- module(
     label = label,
     ui = ui_g_swimlane,
     ui_args = args,
@@ -167,6 +167,8 @@ tm_g_swimlane <- function(label,
     ),
     datanames = c("ADSL", dataname)
   )
+  attr(ans, "teal_bookmarkable") <- NULL
+  ans
 }
 
 

@@ -76,7 +76,7 @@ tm_g_ae_sub <- function(label,
     lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
   )
 
-  module(
+  ans <- module(
     label = label,
     server = srv_g_ae_sub,
     server_args = list(
@@ -93,6 +93,8 @@ tm_g_ae_sub <- function(label,
     ),
     datanames = c("ADSL", dataname)
   )
+  attr(ans, "teal_bookmarkable") <- NULL
+  ans
 }
 
 ui_g_ae_sub <- function(id, ...) {

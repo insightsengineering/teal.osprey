@@ -146,7 +146,7 @@ tm_g_butterfly <- function(label,
 
   args <- as.list(environment())
 
-  module(
+  ans <- module(
     label = label,
     datanames = c("ADSL", dataname),
     server = srv_g_butterfly,
@@ -154,6 +154,8 @@ tm_g_butterfly <- function(label,
     ui = ui_g_butterfly,
     ui_args = args
   )
+  attr(ans, "teal_bookmarkable") <- NULL
+  ans
 }
 
 ui_g_butterfly <- function(id, ...) {

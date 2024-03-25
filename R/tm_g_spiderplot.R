@@ -120,7 +120,7 @@ tm_g_spiderplot <- function(label,
   )
 
   args <- as.list(environment())
-  module(
+  ans <- module(
     label = label,
     datanames = c("ADSL", dataname),
     server = srv_g_spider,
@@ -128,6 +128,8 @@ tm_g_spiderplot <- function(label,
     ui = ui_g_spider,
     ui_args = args
   )
+  attr(ans, "teal_bookmarkable") <- NULL
+  ans
 }
 
 ui_g_spider <- function(id, ...) {
