@@ -128,7 +128,7 @@ tm_g_spiderplot <- function(label,
     ui = ui_g_spider,
     ui_args = args
   )
-  attr(ans, "teal_bookmarkable") <- NULL
+  attr(ans, "teal_bookmarkable") <- TRUE
   ans
 }
 
