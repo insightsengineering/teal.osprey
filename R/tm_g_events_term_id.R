@@ -94,6 +94,7 @@ tm_g_events_term_id <- function(label,
     ui_args = args,
     datanames = c("ADSL", dataname)
   )
+  # blocked by https://github.com/insightsengineering/teal.osprey/issues/263
   attr(ans, "teal_bookmarkable") <- NULL
   ans
 }
