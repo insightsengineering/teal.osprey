@@ -246,21 +246,23 @@ srv_g_events_term_id <- function(id,
       )
     })
 
-    observeEvent(input$sort, {
-      sort <- if (is.null(input$sort)) " " else input$sort
-      updateTextInput(
-        session,
-        "title",
-        value = sprintf(
-          "Common AE Table %s",
-          c(
-            "term" = "Sorted by Term",
-            "riskdiff" = "Sorted by Risk Difference",
-            "meanrisk" = "Sorted by Mean Risk",
-            " " = ""
-          )[sort]
+    observeEvent(input$sort,
+      {
+        sort <- if (is.null(input$sort)) " " else input$sort
+        updateTextInput(
+          session,
+          "title",
+          value = sprintf(
+            "Common AE Table %s",
+            c(
+              "term" = "Sorted by Term",
+              "riskdiff" = "Sorted by Risk Difference",
+              "meanrisk" = "Sorted by Mean Risk",
+              " " = ""
+            )[sort]
+          )
         )
-      )},
+      },
       ignoreNULL = FALSE
     )
 
