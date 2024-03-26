@@ -185,7 +185,7 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     .var.name = "plot_width"
   )
 
-  module(
+  ans <- module(
     label = label,
     ui = ui_g_patient_profile,
     ui_args = args,
@@ -204,6 +204,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     ),
     datanames = "all"
   )
+  attr(ans, "teal_bookmarkable") <- TRUE
+  ans
 }
 
 ui_g_patient_profile <- function(id, ...) {
@@ -310,13 +312,7 @@ ui_g_patient_profile <- function(id, ...) {
             selected = a$lb_var$selected,
             multiple = FALSE
           ),
-          selectInput(
-            ns("lb_var_show"),
-            "Lab values",
-            choices = a$lb_var$choices,
-            selected = a$lb_var$selected,
-            multiple = TRUE
-          )
+          uiOutput(ns("container_lb_var_show")),
         ),
         textInput(
           ns("x_limit"),
@@ -362,25 +358,30 @@ srv_g_patient_profile <- function(id,
   if (!is.na(lb_dataname)) checkmate::assert_names(lb_dataname, subset.of = names(data))
   if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
   checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
+
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
     select_plot <- reactive(
       vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
     )
 
-    if (!is.na(lb_dataname)) {
-      observeEvent(input$lb_var, ignoreNULL = TRUE, {
-        ADLB <- data()[[lb_dataname]]
-        choices <- unique(ADLB[[input$lb_var]])
-        choices_selected <- if (length(choices) > 5) choices[1:5] else choices
 
-        updateSelectInput(
-          session,
-          "lb_var_show",
-          selected = choices_selected,
-          choices = choices
-        )
-      })
-    }
+    output$container_lb_var_show <- renderUI({
+      req(!is.na(lb_dataname))
+      req(input$lb_var)
+
+      ADLB <- data()[[lb_dataname]]
+      choices <- unique(ADLB[[input$lb_var]])
+
+      selectInput(
+        ns("lb_var_show"),
+        "Lab values",
+        choices = choices,
+        selected = choices[1:5],
+        multiple = TRUE
+      )
+    })
 
     iv <- reactive({
       iv <- shinyvalidate::InputValidator$new()

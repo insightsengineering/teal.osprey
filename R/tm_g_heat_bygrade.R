@@ -166,7 +166,7 @@ tm_g_heat_bygrade <- function(label,
     .var.name = "plot_width"
   )
 
-  module(
+  ans <- module(
     label = label,
     server = srv_g_heatmap_bygrade,
     server_args = list(
@@ -182,6 +182,8 @@ tm_g_heat_bygrade <- function(label,
     ui_args = args,
     datanames = "all"
   )
+  attr(ans, "teal_bookmarkable") <- TRUE
+  ans
 }
 
 ui_g_heatmap_bygrade <- function(id, ...) {
@@ -253,13 +255,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
             selected = args$conmed_var$selected,
             multiple = FALSE
           ),
-          selectInput(
-            ns("conmed_level"),
-            "Conmed Levels",
-            choices = args$conmed_var$choices,
-            selected = args$conmed_var$selected,
-            multiple = TRUE
-          )
+          uiOutput(ns("container_conmed_level"))
         ),
         ui_g_decorate(
           ns(NULL),
@@ -297,6 +293,8 @@ srv_g_heatmap_bygrade <- function(id,
   if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
 
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
     iv <- reactive({
       ADSL <- data()[[sl_dataname]]
       ADEX <- data()[[ex_dataname]]
@@ -380,19 +378,21 @@ srv_g_heatmap_bygrade <- function(id,
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
-    if (!is.na(cm_dataname)) {
-      observeEvent(input$conmed_var, {
-        ADCM <- data()[[cm_dataname]]
-        choices <- levels(ADCM[[input$conmed_var]])
+    output$container_conmed_level <- renderUI({
+      req(!is.na(cm_dataname))
+      req(input$conmed_var)
 
-        updateSelectInput(
-          session,
-          "conmed_level",
-          selected = choices[1:3],
-          choices = choices
-        )
-      })
-    }
+      ADCM <- data()[[cm_dataname]]
+      choices <- levels(ADCM[[input$conmed_var]])
+
+      selectInput(
+        ns("conmed_level"),
+        "Conmed Levels",
+        choices = choices,
+        selected = choices[1:3],
+        multiple = TRUE
+      )
+    })
 
     output_q <- shiny::debounce(
       millis = 200,

@@ -86,7 +86,7 @@ tm_g_events_term_id <- function(label,
 
   args <- as.list(environment())
 
-  module(
+  ans <- module(
     label = label,
     server = srv_g_events_term_id,
     server_args = list(label = label, dataname = dataname, plot_height = plot_height, plot_width = plot_width),
@@ -94,6 +94,9 @@ tm_g_events_term_id <- function(label,
     ui_args = args,
     datanames = c("ADSL", dataname)
   )
+  # not bookmarkable: ui_g_decorate cannot be moved to server b/c of args$fontsize
+  attr(ans, "teal_bookmarkable") <- FALSE
+  ans
 }
 
 ui_g_events_term_id <- function(id, ...) {
@@ -119,18 +122,7 @@ ui_g_events_term_id <- function(id, ...) {
         choices = args$arm_var$choices,
         selected = args$arm_var$selected
       ),
-      selectInput(
-        ns("arm_ref"),
-        "Control",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
-      selectInput(
-        ns("arm_trt"),
-        "Treatment",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
+      uiOutput(ns("container_arm")),
       teal.widgets::optionalSelectInput(
         ns("sort"),
         "Sort By",
@@ -214,6 +206,8 @@ srv_g_events_term_id <- function(id,
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
     iv <- reactive({
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("term", shinyvalidate::sv_required(
@@ -252,7 +246,6 @@ srv_g_events_term_id <- function(id,
       )
     })
 
-
     observeEvent(input$sort,
       {
         sort <- if (is.null(input$sort)) " " else input$sort
@@ -273,34 +266,29 @@ srv_g_events_term_id <- function(id,
       ignoreNULL = FALSE
     )
 
-    observeEvent(input$arm_var,
-      {
-        arm_var <- input$arm_var
-        ANL <- data()[[dataname]]
+    output$container_arm <- renderUI({
+      req(input$arm_var)
 
-        choices <- levels(ANL[[arm_var]])
+      ANL <- data()[[dataname]]
+      choices <- levels(ANL[[input$arm_var]])
 
-        if (length(choices) == 1) {
-          trt_index <- 1
-        } else {
-          trt_index <- 2
-        }
+      trt_index <- if (length(choices) == 1) 1 else 2
 
-        updateSelectInput(
-          session,
-          "arm_ref",
-          selected = choices[1],
-          choices = choices
+      tagList(
+        selectInput(
+          ns("arm_ref"),
+          "Control",
+          choices = choices,
+          selected = choices[1L]
+        ),
+        selectInput(
+          ns("arm_trt"),
+          "Treatment",
+          choices = choices,
+          selected = choices[trt_index]
         )
-        updateSelectInput(
-          session,
-          "arm_trt",
-          selected = choices[trt_index],
-          choices = choices
-        )
-      },
-      ignoreNULL = TRUE
-    )
+      )
+    })
 
     output_q <- reactive({
       ANL <- data()[[dataname]]

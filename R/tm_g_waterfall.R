@@ -131,7 +131,7 @@ tm_g_waterfall <- function(label,
 
   args <- as.list(environment())
 
-  module(
+  ans <- module(
     label = label,
     ui = ui_g_waterfall,
     ui_args = args,
@@ -146,6 +146,8 @@ tm_g_waterfall <- function(label,
     ),
     datanames = "all"
   )
+  attr(ans, "teal_bookmarkable") <- TRUE
+  ans
 }
 
 ui_g_waterfall <- function(id, ...) {

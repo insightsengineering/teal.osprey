@@ -146,7 +146,7 @@ tm_g_butterfly <- function(label,
 
   args <- as.list(environment())
 
-  module(
+  ans <- module(
     label = label,
     datanames = c("ADSL", dataname),
     server = srv_g_butterfly,
@@ -154,6 +154,8 @@ tm_g_butterfly <- function(label,
     ui = ui_g_butterfly,
     ui_args = args
   )
+  attr(ans, "teal_bookmarkable") <- TRUE
+  ans
 }
 
 ui_g_butterfly <- function(id, ...) {
@@ -187,16 +189,7 @@ ui_g_butterfly <- function(id, ...) {
         a$right_var$selected,
         multiple = FALSE
       ),
-      teal.widgets::optionalSelectInput(
-        ns("right_val"),
-        "Choose Up To 2:",
-        multiple = TRUE,
-        options = list(
-          `max-options` = 2L,
-          `max-options-text` = "no more than 2",
-          `actions-box` = FALSE
-        )
-      ),
+      uiOutput(ns("right_val_container")),
       teal.widgets::optionalSelectInput(
         ns("left_var"),
         "Left Dichotomization Variable",
@@ -204,16 +197,7 @@ ui_g_butterfly <- function(id, ...) {
         a$left_var$selected,
         multiple = FALSE
       ),
-      teal.widgets::optionalSelectInput(
-        ns("left_val"),
-        "Choose Up To 2:",
-        multiple = TRUE,
-        options = list(
-          `max-options` = 2L,
-          `max-options-text` = "no more than 2",
-          `actions-box` = FALSE
-        )
-      ),
+      uiOutput(ns("left_val_container")),
       teal.widgets::optionalSelectInput(
         ns("category_var"),
         "Category Variable",
@@ -270,6 +254,8 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
     iv <- reactive({
       ADSL <- data()[["ADSL"]]
       ANL <- data()[[dataname]]
@@ -303,83 +289,99 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
     options <- reactiveValues(r = NULL, l = NULL)
     vars <- reactiveValues(r = NULL, l = NULL)
 
-    # dynamic options for dichotomization variable
-    observeEvent(input$right_var,
-      handlerExpr = {
-        right_var <- input$right_var
-        right_val <- isolate(input$right_val)
-        current_r_var <- isolate(vars$r)
-        if (is.null(right_var)) {
-          teal.widgets::updateOptionalSelectInput(
-            session,
-            "right_val",
-            choices = character(0),
-            selected = character(0)
-          )
-        } else {
-          options$r <- if (right_var %in% names(data()[["ADSL"]])) {
-            levels(data()[["ADSL"]][[right_var]])
-          } else {
-            levels(data()[[dataname]][[right_var]])
-          }
+    # Dynamic UI for dichotomization variables.
+    output$right_val_container <- renderUI({
+      req(input$right_var)
 
-          selected <- if (length(right_val) > 0) {
-            left_over <- right_val[right_val %in% options$r]
-            if (length(left_over) > 0 && !is.null(current_r_var) && current_r_var == right_var) {
-              left_over
-            } else {
-              options$r[1]
-            }
+      right_var <- input$right_var
+      right_val <- isolate(input$right_val)
+      current_r_var <- isolate(vars$r)
+
+      if (is.null(right_var)) {
+        choices <- character(0L)
+        selected <- character(0L)
+      } else {
+        options$r <- if (right_var %in% names(data()[["ADSL"]])) {
+          levels(data()[["ADSL"]][[right_var]])
+        } else {
+          levels(data()[[dataname]][[right_var]])
+        }
+        choices <- options$r
+
+        selected <- if (length(right_val) > 0) {
+          left_over <- right_val[right_val %in% options$r]
+          if (length(left_over) > 0 && !is.null(current_r_var) && current_r_var == right_var) {
+            left_over
           } else {
             options$r[1]
           }
-          teal.widgets::updateOptionalSelectInput(
-            session, "right_val",
-            choices = as.character(options$r), selected = selected, label = "Choose Up To 2:"
-          )
-        }
-        vars$r <- right_var
-      },
-      ignoreNULL = FALSE
-    )
-
-    observeEvent(input$left_var,
-      handlerExpr = {
-        left_var <- input$left_var
-        left_val <- isolate(input$left_val)
-        current_l_var <- isolate(vars$l)
-        if (is.null(left_var)) {
-          teal.widgets::updateOptionalSelectInput(
-            session, "left_val",
-            choices = character(0), selected = character(0)
-          )
         } else {
-          options$l <- if (left_var %in% names(data()[["ADSL"]])) {
-            levels(data()[["ADSL"]][[left_var]])
-          } else {
-            levels(data()[[dataname]][[left_var]])
-          }
+          options$r[1]
+        }
+      }
 
-          selected <- if (length(left_val) > 0) {
-            left_over <- left_val[left_val %in% options$l]
-            if (length(left_over) > 0 && !is.null(current_l_var) && current_l_var == left_var) {
-              left_over
-            } else {
-              options$l[1]
-            }
+      vars$r <- right_var
+
+      teal.widgets::optionalSelectInput(
+        inputId = ns("right_val"),
+        label = "Choose Up To 2:",
+        choices = choices,
+        selected = selected,
+        multiple = TRUE,
+        options = list(
+          `max-options` = 2L,
+          `max-options-text` = "no more than 2",
+          `actions-box` = FALSE
+        )
+      )
+    })
+
+
+    output$left_val_container <- renderUI({
+      req(input$left_var)
+
+      left_var <- input$left_var
+      left_val <- isolate(input$left_val)
+      current_l_var <- isolate(vars$l)
+
+      if (is.null(left_var)) {
+        choices <- character(0L)
+        selected <- character(0L)
+      } else {
+        options$l <- if (left_var %in% names(data()[["ADSL"]])) {
+          levels(data()[["ADSL"]][[left_var]])
+        } else {
+          levels(data()[[dataname]][[left_var]])
+        }
+        choices <- options$l
+
+        selected <- if (length(left_val) > 0) {
+          left_over <- left_val[left_val %in% options$l]
+          if (length(left_over) > 0 && !is.null(current_l_var) && current_l_var == left_var) {
+            left_over
           } else {
             options$l[1]
           }
-
-          teal.widgets::updateOptionalSelectInput(
-            session, "left_val",
-            choices = as.character(options$l), selected = selected, label = "Choose Up To 2:"
-          )
+        } else {
+          options$l[1]
         }
-        vars$l <- left_var
-      },
-      ignoreNULL = FALSE
-    )
+      }
+
+      vars$l <- left_var
+
+      teal.widgets::optionalSelectInput(
+        ns("left_val"),
+        "Choose Up To 2:",
+        choices = choices,
+        selected = selected,
+        multiple = TRUE,
+        options = list(
+          `max-options` = 2L,
+          `max-options-text` = "no more than 2",
+          `actions-box` = FALSE
+        )
+      )
+    })
 
     output_q <- shiny::debounce(
       millis = 200,

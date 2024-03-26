@@ -148,7 +148,7 @@ tm_g_swimlane <- function(label,
   checkmate::assert_string(x_label)
 
 
-  module(
+  ans <- module(
     label = label,
     ui = ui_g_swimlane,
     ui_args = args,
@@ -167,6 +167,8 @@ tm_g_swimlane <- function(label,
     ),
     datanames = c("ADSL", dataname)
   )
+  attr(ans, "teal_bookmarkable") <- TRUE
+  ans
 }
 
 
@@ -280,6 +282,8 @@ srv_g_swimlane <- function(id,
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
     iv <- reactive({
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
@@ -298,7 +302,6 @@ srv_g_swimlane <- function(id,
       if (dataname == "ADSL" || is.null(marker_shape_var) || is.null(input$marker_pos_var)) {
         NULL
       } else {
-        ns <- session$ns
         teal.widgets::optionalSelectInput(
           ns("marker_shape_var"), "Marker Shape",
           choices = marker_shape_var$choices,
@@ -311,7 +314,6 @@ srv_g_swimlane <- function(id,
       if (dataname == "ADSL" || is.null(marker_color_var) || is.null(input$marker_pos_var)) {
         NULL
       } else {
-        ns <- session$ns
         teal.widgets::optionalSelectInput(
           ns("marker_color_var"), "Marker Color",
           choices = marker_color_var$choices,

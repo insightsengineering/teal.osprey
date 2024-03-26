@@ -76,7 +76,7 @@ tm_g_ae_sub <- function(label,
     lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
   )
 
-  module(
+  ans <- module(
     label = label,
     server = srv_g_ae_sub,
     server_args = list(
@@ -93,6 +93,9 @@ tm_g_ae_sub <- function(label,
     ),
     datanames = c("ADSL", dataname)
   )
+  # not bookmarkable: ui_g_decorate cannot be moved to server b/c of args$fontsize
+  attr(ans, "teal_bookmarkable") <- FALSE
+  ans
 }
 
 ui_g_ae_sub <- function(id, ...) {
@@ -114,18 +117,7 @@ ui_g_ae_sub <- function(id, ...) {
         choices = args$arm_var$choices,
         selected = args$arm_var$selected
       ),
-      selectInput(
-        ns("arm_trt"),
-        "Treatment",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
-      selectInput(
-        ns("arm_ref"),
-        "Control",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
+      uiOutput(ns("arm_container")),
       checkboxInput(
         ns("arm_n"),
         "Show N in each arm",
@@ -186,6 +178,8 @@ srv_g_ae_sub <- function(id,
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
     iv <- reactive({
       ANL <- data()[[dataname]]
       ADSL <- data()[["ADSL"]]
@@ -223,7 +217,8 @@ srv_g_ae_sub <- function(id,
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
-    observeEvent(input$arm_var, ignoreNULL = TRUE, {
+    output$arm_container <- renderUI({
+      req(input$arm_var)
       arm_var <- input$arm_var
       ANL <- data()[[dataname]]
 
@@ -236,17 +231,9 @@ srv_g_ae_sub <- function(id,
         ref_index <- 2
       }
 
-      updateSelectInput(
-        session,
-        "arm_trt",
-        selected = choices[1],
-        choices = choices
-      )
-      updateSelectInput(
-        session,
-        "arm_ref",
-        selected = choices[ref_index],
-        choices = choices
+      tagList(
+        selectInput(ns("arm_trt"), "Treatment", choices = choices, selected = choices[1L]),
+        selectInput(ns("arm_ref"), "Control", choices = choices, selected = choices[ref_index])
       )
     })
 
@@ -271,34 +258,32 @@ srv_g_ae_sub <- function(id,
     observeEvent(input$groups, {
       ANL <- data()[[dataname]]
       output$grouplabel_output <- renderUI({
-        grps <- input$groups
+        grps <- req(input$groups)
         lo <- lapply(seq_along(grps), function(index) {
           grp <- grps[index]
           choices <- levels(ANL[[grp]])
           sel <- teal.widgets::optionalSelectInput(
-            session$ns(sprintf("groups__%s", index)),
+            ns(sprintf("groups__%s", index)),
             grp,
             choices,
             multiple = TRUE,
             selected = choices
           )
           textname <- sprintf("text_%s_out", index)
-          txt <- uiOutput(session$ns(textname))
+          txt <- uiOutput(ns(textname))
           observeEvent(
             eventExpr = input[[sprintf("groups__%s", index)]],
             handlerExpr = {
               output[[textname]] <- renderUI({
-                if (!is.null(input[[sprintf("groups__%s", index)]])) {
-                  l <- input[[sprintf("groups__%s", index)]]
-                  l2 <- lapply(seq_along(l), function(i) {
+                grps <- req(input[[sprintf("groups__%s", index)]])
+                if (!is.null(grps)) {
+                  l2 <- lapply(seq_along(grps), function(i) {
                     nm <- sprintf("groups__%s__level__%s", index, i)
-                    label <- sprintf("Label for %s, Level %s", grp, l[i])
-                    textInput(session$ns(nm), label, l[i])
+                    label <- sprintf("Label for %s, Level %s", grp, grps[i])
+                    textInput(ns(nm), label, grps[i])
                   })
                   tagList(textInput(
-                    session$ns(
-                      sprintf("groups__%s__level__%s", index, "all")
-                    ),
+                    ns(sprintf("groups__%s__level__%s", index, "all")),
                     sprintf("Label for %s", grp), grp
                   ), l2)
                 }

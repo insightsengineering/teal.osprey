@@ -105,7 +105,7 @@ tm_g_ae_oview <- function(label,
 
   args <- as.list(environment())
 
-  module(
+  ans <- module(
     label = label,
     server = srv_g_ae_oview,
     server_args = list(
@@ -118,6 +118,9 @@ tm_g_ae_oview <- function(label,
     ui_args = args,
     datanames = c("ADSL", dataname)
   )
+  # not bookmarkable: ui_g_decorate cannot be moved to server b/c of args$fontsize
+  attr(ans, "teal_bookmarkable") <- FALSE
+  ans
 }
 
 ui_g_ae_oview <- function(id, ...) {
@@ -138,18 +141,7 @@ ui_g_ae_oview <- function(id, ...) {
         selected = args$arm_var$selected,
         multiple = FALSE
       ),
-      selectInput(
-        ns("arm_ref"),
-        "Control",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
-      selectInput(
-        ns("arm_trt"),
-        "Treatment",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
+      uiOutput(ns("container_arm")),
       selectInput(
         ns("flag_var_anl"),
         "Flags",
@@ -209,6 +201,8 @@ srv_g_ae_oview <- function(id,
   checkmate::assert_class(isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
     iv <- reactive({
       ANL <- data()[[dataname]]
 
@@ -241,43 +235,42 @@ srv_g_ae_oview <- function(id,
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
+    output$container_arm <- renderUI({
+      req(input$arm_var)
+
+      ANL <- data()[[dataname]]
+      choices <- levels(ANL[[input$arm_var]])
+
+      trt_index <- if (length(choices) == 1) 1 else 2
+
+      tagList(
+        selectInput(
+          ns("arm_ref"),
+          "Control",
+          choices = choices,
+          selected = choices[1L]
+        ),
+        selectInput(
+          ns("arm_trt"),
+          "Treatment",
+          choices = choices,
+          selected = choices[trt_index]
+        )
+      )
+    })
+
     observeEvent(list(input$diff_ci_method, input$conf_level), {
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
       diff_ci_method <- input$diff_ci_method
       conf_level <- input$conf_level
-      updateTextAreaInput(session,
+      updateTextAreaInput(
+        session,
         "foot",
         value = sprintf(
           "Note: %d%% CI is calculated using %s",
           round(conf_level * 100),
           name_ci(diff_ci_method)
         )
-      )
-    })
-
-    observeEvent(input$arm_var, ignoreNULL = TRUE, {
-      ANL <- data()[[dataname]]
-      arm_var <- input$arm_var
-      arm_val <- ANL[[arm_var]]
-      choices <- levels(arm_val)
-
-      if (length(choices) == 1) {
-        trt_index <- 1
-      } else {
-        trt_index <- 2
-      }
-
-      updateSelectInput(
-        session,
-        "arm_ref",
-        selected = choices[1],
-        choices = choices
-      )
-      updateSelectInput(
-        session,
-        "arm_trt",
-        selected = choices[trt_index],
-        choices = choices
       )
     })
 
