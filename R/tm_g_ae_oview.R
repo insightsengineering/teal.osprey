@@ -118,8 +118,8 @@ tm_g_ae_oview <- function(label,
     ui_args = args,
     datanames = c("ADSL", dataname)
   )
-  # blocked by https://github.com/insightsengineering/teal.osprey/issues/263
-  attr(ans, "teal_bookmarkable") <- NULL
+  # not bookmarkable: ui_g_decorate cannot be moved to server b/c of args$fontsize
+  attr(ans, "teal_bookmarkable") <- FALSE
   ans
 }
 
@@ -141,18 +141,7 @@ ui_g_ae_oview <- function(id, ...) {
         selected = args$arm_var$selected,
         multiple = FALSE
       ),
-      selectInput(
-        ns("arm_ref"),
-        "Control",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
-      selectInput(
-        ns("arm_trt"),
-        "Treatment",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
+      uiOutput(ns("container_arm")),
       selectInput(
         ns("flag_var_anl"),
         "Flags",
@@ -246,44 +235,42 @@ srv_g_ae_oview <- function(id,
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
+    output$container_arm <- renderUI({
+      req(input$arm_var)
+
+      ANL <- data()[[dataname]]
+      choices <- levels(ANL[[input$arm_var]])
+
+      trt_index <- if (length(choices) == 1) 1 else 2
+
+      tagList(
+        selectInput(
+          ns("arm_ref"),
+          "Control",
+          choices = choices,
+          selected = choices[1L]
+        ),
+        selectInput(
+          ns("arm_trt"),
+          "Treatment",
+          choices = choices,
+          selected = choices[trt_index]
+        )
+      )
+    })
+
     observeEvent(list(input$diff_ci_method, input$conf_level), {
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
       diff_ci_method <- input$diff_ci_method
       conf_level <- input$conf_level
       updateTextAreaInput(
-        inputId = "foot",
-        value = restoreInput(
-          ns("foot"),
-          sprintf(
-            "Note: %d%% CI is calculated using %s",
-            round(conf_level * 100),
-            name_ci(diff_ci_method)
-          )
+        session,
+        "foot",
+        value = sprintf(
+          "Note: %d%% CI is calculated using %s",
+          round(conf_level * 100),
+          name_ci(diff_ci_method)
         )
-      )
-    })
-
-    observeEvent(input$arm_var, ignoreNULL = TRUE, {
-      ANL <- data()[[dataname]]
-      arm_var <- input$arm_var
-      arm_val <- ANL[[arm_var]]
-      choices <- levels(arm_val)
-
-      if (length(choices) == 1) {
-        trt_index <- 1
-      } else {
-        trt_index <- 2
-      }
-
-      updateSelectInput(
-        inputId = "arm_ref",
-        choices = choices,
-        selected = restoreInput(ns("arm_ref"), choices[1L])
-      )
-      updateSelectInput(
-        inputId = "arm_trt",
-        choices = choices,
-        selected = restoreInput(ns("arm_trt"), choices[trt_index])
       )
     })
 
