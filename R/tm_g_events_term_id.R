@@ -94,8 +94,8 @@ tm_g_events_term_id <- function(label,
     ui_args = args,
     datanames = c("ADSL", dataname)
   )
-  # blocked by https://github.com/insightsengineering/teal.osprey/issues/263
-  attr(ans, "teal_bookmarkable") <- NULL
+  # not bookmarkable: ui_g_decorate cannot be moved to server b/c of args$fontsize
+  attr(ans, "teal_bookmarkable") <- FALSE
   ans
 }
 
@@ -122,18 +122,7 @@ ui_g_events_term_id <- function(id, ...) {
         choices = args$arm_var$choices,
         selected = args$arm_var$selected
       ),
-      selectInput(
-        ns("arm_ref"),
-        "Control",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
-      selectInput(
-        ns("arm_trt"),
-        "Treatment",
-        choices = args$arm_var$choices,
-        selected = args$arm_var$selected
-      ),
+      uiOutput(ns("container_arm")),
       teal.widgets::optionalSelectInput(
         ns("sort"),
         "Sort By",
@@ -247,67 +236,57 @@ srv_g_events_term_id <- function(id,
       diff_ci_method <- input$diff_ci_method
       conf_level <- input$conf_level
       updateTextAreaInput(
-        inputId = "foot",
-        value = restoreInput(
-          ns("foot"),
-          sprintf(
-            "Note: %d%% CI is calculated using %s",
-            round(conf_level * 100),
-            name_ci(diff_ci_method)
-          )
+        session,
+        "foot",
+        value = sprintf(
+          "Note: %d%% CI is calculated using %s",
+          round(conf_level * 100),
+          name_ci(diff_ci_method)
         )
       )
     })
 
-
-    observeEvent(input$sort,
-      {
-        sort <- if (is.null(input$sort)) " " else input$sort
-        updateTextInput(
-          inputId = "title",
-          value = restoreInput(
-            ns("title"),
-            sprintf(
-              "Common AE Table %s",
-              c(
-                "term" = "Sorted by Term",
-                "riskdiff" = "Sorted by Risk Difference",
-                "meanrisk" = "Sorted by Mean Risk",
-                " " = ""
-              )[sort]
-            )
-          )
+    observeEvent(input$sort, {
+      sort <- if (is.null(input$sort)) " " else input$sort
+      updateTextInput(
+        session,
+        "title",
+        value = sprintf(
+          "Common AE Table %s",
+          c(
+            "term" = "Sorted by Term",
+            "riskdiff" = "Sorted by Risk Difference",
+            "meanrisk" = "Sorted by Mean Risk",
+            " " = ""
+          )[sort]
         )
-      },
+      )},
       ignoreNULL = FALSE
     )
 
-    observeEvent(input$arm_var,
-      {
-        arm_var <- input$arm_var
-        ANL <- data()[[dataname]]
+    output$container_arm <- renderUI({
+      req(input$arm_var)
 
-        choices <- levels(ANL[[arm_var]])
+      ANL <- data()[[dataname]]
+      choices <- levels(ANL[[input$arm_var]])
 
-        if (length(choices) == 1) {
-          trt_index <- 1
-        } else {
-          trt_index <- 2
-        }
+      trt_index <- if (length(choices) == 1) 1 else 2
 
-        updateSelectInput(
-          inputId = "arm_ref",
+      tagList(
+        selectInput(
+          ns("arm_ref"),
+          "Control",
           choices = choices,
-          selected = restoreInput(ns("arm_ref"), choices[1])
-        )
-        updateSelectInput(
-          inputId = "arm_trt",
+          selected = choices[1L]
+        ),
+        selectInput(
+          ns("arm_trt"),
+          "Treatment",
           choices = choices,
-          selected = restoreInput(ns("arm_trt"), choices[trt_index])
+          selected = choices[trt_index]
         )
-      },
-      ignoreNULL = TRUE
-    )
+      )
+    })
 
     output_q <- reactive({
       ANL <- data()[[dataname]]
