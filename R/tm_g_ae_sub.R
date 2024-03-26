@@ -93,7 +93,8 @@ tm_g_ae_sub <- function(label,
     ),
     datanames = c("ADSL", dataname)
   )
-  attr(ans, "teal_bookmarkable") <- TRUE
+  # not bookmarkable: ui_g_decorate cannot be moved to server b/c of args$fontsize
+  attr(ans, "teal_bookmarkable") <- FALSE
   ans
 }
 
@@ -242,16 +243,14 @@ srv_g_ae_sub <- function(id,
       trt <- input$arm_trt
       ref <- input$arm_ref
       updateTextAreaInput(
-        inputId = "foot",
-        value = restoreInput(
-          ns("foot"),
-          sprintf(
-            "Note: %d%% CI is calculated using %s\nTRT: %s; CONT: %s",
-            round(conf_level * 100),
-            name_ci(diff_ci_method),
-            trt,
-            ref
-          )
+        session,
+        "foot",
+        value = sprintf(
+          "Note: %d%% CI is calculated using %s\nTRT: %s; CONT: %s",
+          round(conf_level * 100),
+          name_ci(diff_ci_method),
+          trt,
+          ref
         )
       )
     })
