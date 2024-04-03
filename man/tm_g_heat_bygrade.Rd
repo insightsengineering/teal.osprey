@@ -27,26 +27,26 @@ menu item label of the module in the teal app.}
 
 \item{sl_dataname}{(\code{character}) subject level dataset name,
 needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}}}
+argument of \code{\link[teal:init]{teal::init()}}}
 
 \item{ex_dataname}{(\code{character}) exposures dataset name,
 needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}} \cr}
+argument of \code{\link[teal:init]{teal::init()}} \cr}
 
 \item{ae_dataname}{(\code{character}) adverse events dataset name,
 needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}} \cr}
+argument of \code{\link[teal:init]{teal::init()}} \cr}
 
 \item{cm_dataname}{(\code{character}) concomitant medications dataset name,
 needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}} \cr
+argument of \code{\link[teal:init]{teal::init()}} \cr
 specify to \code{NA} if no concomitant medications data is available}
 
 \item{id_var}{(\code{choices_seleced}) unique subject ID variable}
 
 \item{visit_var}{(\code{choices_seleced}) analysis visit variable}
 
-\item{ongo_var}{(\code{choices_seleced}) study ongoing status variable,
+\item{ongo_var}{(\code{choices_seleced}) study ongoing status variable.
 This variable is a derived logical variable. Usually it can be derived from \code{EOSSTT}.}
 
 \item{anno_var}{(\code{choices_seleced}) annotation variable}

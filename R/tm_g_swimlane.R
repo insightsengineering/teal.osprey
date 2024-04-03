@@ -7,23 +7,23 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param dataname analysis data used for plotting, needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, `"ADSL"` should be
+#' @param dataname analysis data used for plotting, needs to be available in the list passed to the `data`
+#' argument of [teal::init()]. If no markers are to be plotted in the module, `"ADSL"` should be
 #' the input. If markers are to be plotted, data name for the marker data should be the input
-#' @param bar_var (\code{\link[teal.transform]{choices_selected}}) subject-level numeric variable from dataset
+#' @param bar_var [teal.transform::choices_selected] subject-level numeric variable from dataset
 #' to plot as the bar length
-#' @param bar_color_var (\code{\link[teal.transform]{choices_selected}}) color by variable (subject-level)
-#' @param sort_var (\code{choices_selected}) sort by variable (subject-level)
-#' @param marker_pos_var (\code{\link[teal.transform]{choices_selected}}) variable for marker position from marker data
-#' (Note: make sure that marker position has the same relative start day as bar length variable \code{bar_var})
-#' @param marker_shape_var (\code{\link[teal.transform]{choices_selected}}) marker shape variable from marker data
+#' @param bar_color_var [teal.transform::choices_selected] color by variable (subject-level)
+#' @param sort_var `choices_selected` sort by variable (subject-level)
+#' @param marker_pos_var [teal.transform::choices_selected] variable for marker position from marker data
+#' (Note: make sure that marker position has the same relative start day as bar length variable `bar_var`
+#' @param marker_shape_var [teal.transform::choices_selected] marker shape variable from marker data
 #' @param marker_shape_opt aesthetic values to map shape values (named vector to map shape values to each name).
-#' If not \code{NULL}, please make sure this contains all possible values for \code{marker_shape_var} values,
-#' otherwise shape will be assigned by \code{ggplot} default
+#' If not `NULL`, please make sure this contains all possible values for `marker_shape_var` values,
+#' otherwise shape will be assigned by `ggplot` default
 #' @param marker_color_var marker color variable from marker data
 #' @param marker_color_opt aesthetic values to map color values (named vector to map color values to each name).
-#' If not \code{NULL}, please make sure this contains all possible values for \code{marker_color_var} values,
-#' otherwise color will be assigned by \code{ggplot} default
+#' If not `NULL`, please make sure this contains all possible values for `marker_color_var` values,
+#' otherwise color will be assigned by `ggplot` default
 #' @param vref_line vertical reference lines
 #' @param anno_txt_var character vector with subject-level variable names that are selected as annotation
 #' @param x_label the label of the x axis
@@ -121,7 +121,7 @@ tm_g_swimlane <- function(label,
                           pre_output = NULL,
                           post_output = NULL,
                           x_label = "Time from First Treatment (Day)") {
-  logger::log_info("Initializing tm_g_swimlane")
+  message("Initializing tm_g_swimlane")
   args <- as.list(environment())
 
   checkmate::assert_string(label)
@@ -180,13 +180,13 @@ ui_g_swimlane <- function(id, ...) {
       output = teal.widgets::white_small_well(
         teal.widgets::plot_with_settings_ui(id = ns("swimlaneplot"))
       ),
-      encoding = div(
+      encoding = tags$div(
         ### Reporter
         teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
         tags$label("Encodings", class = "text-primary"),
-        helpText("Analysis data:", code(a$dataname)),
-        div(
+        helpText("Analysis data:", tags$code(a$dataname)),
+        tags$div(
           class = "pretty-left-border",
           teal.widgets::optionalSelectInput(
             ns("bar_var"),
@@ -194,7 +194,7 @@ ui_g_swimlane <- function(id, ...) {
             choices = a$bar_var$choices,
             selected = a$bar_var$selected,
             multiple = FALSE,
-            label_help = helpText("from ", code("ADSL"))
+            label_help = helpText("from ", tags$code("ADSL"))
           ),
           teal.widgets::optionalSelectInput(
             ns("bar_color_var"),
@@ -202,7 +202,7 @@ ui_g_swimlane <- function(id, ...) {
             choices = a$bar_color_var$choices,
             selected = a$bar_color_var$selected,
             multiple = FALSE,
-            label_help = helpText("from ", code("ADSL"))
+            label_help = helpText("from ", tags$code("ADSL"))
           )
         ),
         teal.widgets::optionalSelectInput(
@@ -211,9 +211,9 @@ ui_g_swimlane <- function(id, ...) {
           choices = a$sort_var$choices,
           selected = a$sort_var$selected,
           multiple = FALSE,
-          label_help = helpText("from ", code("ADSL"))
+          label_help = helpText("from ", tags$code("ADSL"))
         ),
-        div(
+        tags$div(
           class = "pretty-left-border",
           if (a$dataname == "ADSL") {
             NULL
@@ -226,7 +226,7 @@ ui_g_swimlane <- function(id, ...) {
               choices = a$marker_pos_var$choices,
               selected = a$marker_pos_var$selected,
               multiple = FALSE,
-              label_help = helpText("from ", code(a$dataname))
+              label_help = helpText("from ", tags$code(a$dataname))
             )
           },
           uiOutput(ns("marker_shape_sel")),
@@ -238,11 +238,11 @@ ui_g_swimlane <- function(id, ...) {
           choices = a$anno_txt_var$choices,
           selected = a$anno_txt_var$selected,
           multiple = TRUE,
-          label_help = helpText("from ", code("ADSL"))
+          label_help = helpText("from ", tags$code("ADSL"))
         ),
         textInput(
           ns("vref_line"),
-          label = div(
+          label = tags$div(
             "Vertical Reference Line(s)",
             tags$br(),
             helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
@@ -303,7 +303,7 @@ srv_g_swimlane <- function(id,
           ns("marker_shape_var"), "Marker Shape",
           choices = marker_shape_var$choices,
           selected = marker_shape_var$selected, multiple = FALSE,
-          label_help = helpText("from ", code(dataname))
+          label_help = helpText("from ", tags$code(dataname))
         )
       }
     })
@@ -316,7 +316,7 @@ srv_g_swimlane <- function(id,
           ns("marker_color_var"), "Marker Color",
           choices = marker_color_var$choices,
           selected = marker_color_var$selected, multiple = FALSE,
-          label_help = helpText("from ", code(dataname))
+          label_help = helpText("from ", tags$code(dataname))
         )
       }
     })

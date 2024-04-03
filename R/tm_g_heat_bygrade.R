@@ -7,27 +7,27 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param sl_dataname (\code{character}) subject level dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}}
-#' @param ex_dataname (\code{character}) exposures dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' @param ae_dataname (\code{character}) adverse events dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' @param cm_dataname (\code{character}) concomitant medications dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no concomitant medications data is available
-#' @param id_var (\code{choices_seleced}) unique subject ID variable
-#' @param visit_var (\code{choices_seleced}) analysis visit variable
-#' @param ongo_var (\code{choices_seleced}) study ongoing status variable,
-#' This variable is a derived logical variable. Usually it can be derived from \code{EOSSTT}.
-#' @param anno_var (\code{choices_seleced}) annotation variable
-#' @param heat_var (\code{choices_seleced}) heatmap variable
-#' @param conmed_var (\code{choices_seleced}) concomitant medications variable,
-#' specify to \code{NA} if no concomitant medications data is available
+#' @param sl_dataname (`character`) subject level dataset name,
+#' needs to be available in the list passed to the `data`
+#' argument of [teal::init()]
+#' @param ex_dataname (`character`) exposures dataset name,
+#' needs to be available in the list passed to the `data`
+#' argument of [teal::init()] \cr
+#' @param ae_dataname (`character`) adverse events dataset name,
+#' needs to be available in the list passed to the `data`
+#' argument of [teal::init()] \cr
+#' @param cm_dataname (`character`) concomitant medications dataset name,
+#' needs to be available in the list passed to the `data`
+#' argument of [teal::init()] \cr
+#' specify to `NA` if no concomitant medications data is available
+#' @param id_var (`choices_seleced`) unique subject ID variable
+#' @param visit_var (`choices_seleced`) analysis visit variable
+#' @param ongo_var (`choices_seleced`) study ongoing status variable.
+#' This variable is a derived logical variable. Usually it can be derived from `EOSSTT`.
+#' @param anno_var (`choices_seleced`) annotation variable
+#' @param heat_var (`choices_seleced`) heatmap variable
+#' @param conmed_var (`choices_seleced`) concomitant medications variable,
+#' specify to `NA` if no concomitant medications data is available
 #'
 #' @inherit argument_convention return
 #'
@@ -132,7 +132,7 @@ tm_g_heat_bygrade <- function(label,
                               fontsize = c(5, 3, 7),
                               plot_height = c(600L, 200L, 2000L),
                               plot_width = NULL) {
-  logger::log_info("Initializing tm_g_heat_bygrade")
+  message("Initializing tm_g_heat_bygrade")
   args <- as.list(environment())
 
   checkmate::assert_string(label)
@@ -194,7 +194,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
       output = teal.widgets::white_small_well(
         plot_decorate_output(id = ns(NULL))
       ),
-      encoding = div(
+      encoding = tags$div(
         ### Reporter
         teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
@@ -234,7 +234,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
           multiple = FALSE
         ),
         helpText("Plot conmed"),
-        div(
+        tags$div(
           class = "pretty-left-border",
           if (!is.na(args$cm_dataname)) {
             checkboxInput(

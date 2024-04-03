@@ -7,27 +7,27 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param filter_var (\code{choices_selected}) variable name of data filter, please see details regarding
-#'   expected values, default is \code{NULL}. \code{choices}
-#'   vector with \code{filter_var} choices, default is
-#'   \code{NULL}
-#' @param right_var (\code{choices_selected}) dichotomization variable for right side
-#' @param left_var (\code{choices_selected}) dichotomization variable for left side
-#' @param category_var (\code{choices_selected}) category (y axis) variable
-#' @param color_by_var (\code{choices_selected}) variable defines color blocks within each bar
-#' @param count_by_var (\code{choices_selected}) variable defines how x axis is calculated
-#' @param facet_var (\code{choices_selected}) variable for row facets
-#' @param sort_by_var (\code{choices_selected}) argument for order of class and term elements in table,
+#' @param filter_var (`choices_selected`) variable name of data filter, please see details regarding
+#'   expected values, default is`NULL`.`choices`
+#'   vector with `filter_var` choices, default is
+#'   `NULL`
+#' @param right_var (`choices_selected`) dichotomization variable for right side
+#' @param left_var (`choices_selected`) dichotomization variable for left side
+#' @param category_var (`choices_selected`) category (y axis) variable
+#' @param color_by_var (`choices_selected`) variable defines color blocks within each bar
+#' @param count_by_var (`choices_selected`) variable defines how x axis is calculated
+#' @param facet_var (`choices_selected`) variable for row facets
+#' @param sort_by_var (`choices_selected`) argument for order of class and term elements in table,
 #'   default here is "count"
-#' @param legend_on (\code{boolean}) value for whether legend is displayed
+#' @param legend_on (`boolean`) value for whether legend is displayed
 #'
-#' @details \code{filter_var} option is designed to work in conjunction with
-#'   filtering function provided by \code{teal} (encoding panel on the right
+#' @details `filter_var` option is designed to work in conjunction with
+#'   filtering function provided by `teal` (encoding panel on the right
 #'   hand side of the shiny app). It can be used as quick access to predefined
 #'   subsets of the domain datasets (not subject-level dataset) to be used for
 #'   analysis, denoted by an value of "Y". Each variable within the
-#'   \code{filter_var_choices} is expected to contain values of either "Y" or
-#'   "N". If multiple variables are selected as \code{filter_var}, only
+#'   `filter_var_choices` is expected to contain values of either "Y" or
+#'   "N". If multiple variables are selected as `filter_var`, only
 #'   observations with "Y" value in each and every selected variables will be
 #'   used for subsequent analysis. Flag variables (from `ADaM` datasets) can be
 #'   used directly as filter.
@@ -121,7 +121,7 @@ tm_g_butterfly <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
-  logger::log_info("Initializing tm_g_butterfly")
+  message("Initializing tm_g_butterfly")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
   checkmate::assert_class(filter_var, classes = "choices_selected", null.ok = TRUE)
@@ -164,7 +164,7 @@ ui_g_butterfly <- function(id, ...) {
     output = teal.widgets::white_small_well(
       teal.widgets::plot_with_settings_ui(id = ns("butterflyplot"))
     ),
-    encoding = div(
+    encoding = tags$div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###

@@ -3,12 +3,12 @@
 #' @description
 #' `r lifecycle::badge("stable")`
 #'
-#' This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.
+#' This is used in [tm_g_ae_oview()] and [tm_g_events_term_id()].
 #'
-#' @param id (\code{character}) id of this module. set to `NULL` if you want to make it identical
+#' @param id (`character`) id of this module. set to `NULL` if you want to make it identical
 #' to the module who called it.
-#' @param titles (\code{character}) default titles
-#' @param footnotes (\code{character}) default footnotes
+#' @param titles (`character`) default titles
+#' @param footnotes (`character`) default footnotes
 #' @inheritParams argument_convention
 #' @export
 ui_g_decorate <- function(id,
@@ -33,12 +33,12 @@ ui_g_decorate <- function(id,
 #' @description
 #' `r lifecycle::badge("stable")`
 #'
-#' This is used in \code{\link{tm_g_ae_oview}} and \code{\link{tm_g_events_term_id}}.
+#' This is used in [tm_g_ae_oview()] and [tm_g_events_term_id()].
 #'
 #' @inheritParams shared_params
-#' @param id (\code{character}) id of the module
-#' @param plot_id (\code{character}) id for plot output
-#' @param plt (\code{reactive}) a reactive object of graph object
+#' @param id (`character`) id of the module
+#' @param plot_id (`character`) id for plot output
+#' @param plt (`reactive`) a reactive object of graph object
 #'
 #' @export
 srv_g_decorate <- function(id,
@@ -90,7 +90,7 @@ srv_g_decorate <- function(id,
 #' @description
 #' `r lifecycle::badge("stable")`
 #'
-#' @param id (\code{character}) id of this element
+#' @param id (`character`) id of this element
 #'
 #' @export
 plot_decorate_output <- function(id) {

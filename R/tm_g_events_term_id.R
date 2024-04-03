@@ -7,7 +7,7 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param term_var \code{\link[teal.transform]{choices_selected}} object with all available choices
+#' @param term_var [teal.transform::choices_selected] object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
 #'
 #' @inherit argument_convention return
@@ -60,7 +60,7 @@ tm_g_events_term_id <- function(label,
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
                                 plot_width = NULL) {
-  logger::log_info("Initializing tm_g_events_term_id")
+  message("Initializing tm_g_events_term_id")
   checkmate::assert_string(label)
   checkmate::assert_class(term_var, classes = "choices_selected")
   checkmate::assert_class(arm_var, classes = "choices_selected")
@@ -103,7 +103,7 @@ ui_g_events_term_id <- function(id, ...) {
     output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
     ),
-    encoding = div(
+    encoding = tags$div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###

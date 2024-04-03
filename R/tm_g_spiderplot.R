@@ -96,7 +96,7 @@ tm_g_spiderplot <- function(label,
                             plot_width = NULL,
                             pre_output = NULL,
                             post_output = NULL) {
-  logger::log_info("Initializing tm_g_spiderplot")
+  message("Initializing tm_g_spiderplot")
   checkmate::assert_class(paramcd, classes = "choices_selected")
   checkmate::assert_class(x_var, classes = "choices_selected")
   checkmate::assert_class(y_var, classes = "choices_selected")
@@ -140,13 +140,13 @@ ui_g_spider <- function(id, ...) {
       output = teal.widgets::white_small_well(
         teal.widgets::plot_with_settings_ui(id = ns("spiderplot"))
       ),
-      encoding = div(
+      encoding = tags$div(
         ### Reporter
         teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
         tags$label("Encodings", class = "text-primary"),
         helpText("Analysis data:", tags$code(a$dataname)),
-        div(
+        tags$div(
           class = "pretty-left-border",
           teal.widgets::optionalSelectInput(
             ns("paramcd"),
@@ -210,7 +210,7 @@ ui_g_spider <- function(id, ...) {
         ),
         textInput(
           ns("vref_line"),
-          label = div(
+          label = tags$div(
             "Vertical Reference Line(s)",
             tags$br(),
             helpText("Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)")
@@ -219,7 +219,7 @@ ui_g_spider <- function(id, ...) {
         ),
         textInput(
           ns("href_line"),
-          label = div(
+          label = tags$div(
             "Hortizontal Reference Line(s)",
             tags$br(),
             helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")

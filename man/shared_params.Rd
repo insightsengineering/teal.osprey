@@ -4,10 +4,10 @@
 \alias{shared_params}
 \title{Shared Parameters}
 \arguments{
-\item{plot_height}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+\item{plot_height}{(\code{numeric}) optional vector of length three with \code{c(value, min, max)}. Specifies
 the height of the main plot.}
 
-\item{plot_width}{optional, (\code{numeric}) a vector of length three with \code{c(value, min, max)}. Specifies
+\item{plot_width}{(\code{numeric}) optional vector of length three with \code{c(value, min, max)}. Specifies
 the width of the main plot and renders a slider on the plot to interactively adjust the plot width.}
 
 \item{label}{(\code{character}) module label in the teal app. Please note that this module is developed based on
