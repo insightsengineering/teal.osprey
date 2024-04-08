@@ -18,24 +18,26 @@
 #'
 #' @examples
 #' # Example using stream (ADaM) dataset
-#' ADSL <- osprey::rADSL
-#' ADAE <- osprey::rADAE
+#' data <- cdisc_data() |>
+#'   within({
+#'     ADSL <- rADSL
+#'     ADAE <- rADAE
+#'   })
+#'
+#' datanames(data) <- c("ADSL", "ADAE")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
 #' app <- init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
-#'     cdisc_dataset("ADAE", ADAE, code = "ADAE <- osprey::rADAE"),
-#'     check = TRUE
-#'   ),
+#'   data = data,
 #'   modules = modules(
 #'     tm_g_ae_sub(
 #'       label = "AE by Subgroup",
 #'       dataname = "ADAE",
-#'       arm_var = teal.transform::choices_selected(
+#'       arm_var = choices_selected(
 #'         selected = "ACTARMCD",
 #'         choices = c("ACTARM", "ACTARMCD")
 #'       ),
-#'       group_var = teal.transform::choices_selected(
+#'       group_var = choices_selected(
 #'         selected = c("SEX", "REGION1", "RACE"),
 #'         choices = c("SEX", "REGION1", "RACE")
 #'       ),
@@ -46,6 +48,7 @@
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
+#'
 tm_g_ae_sub <- function(label,
                         dataname,
                         arm_var,
@@ -53,7 +56,7 @@ tm_g_ae_sub <- function(label,
                         plot_height = c(600L, 200L, 2000L),
                         plot_width = NULL,
                         fontsize = c(5, 3, 7)) {
-  logger::log_info("Initializing tm_g_ae_sub")
+  message("Initializing tm_g_ae_sub")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(group_var, classes = "choices_selected")
   checkmate::assert(
@@ -99,7 +102,7 @@ ui_g_ae_sub <- function(id, ...) {
     output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
     ),
-    encoding = div(
+    encoding = tags$div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###
@@ -179,12 +182,13 @@ srv_g_ae_sub <- function(id,
                          plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ANL <- data[[dataname]]() # nolint
-      ADSL <- data[["ADSL"]]() # nolint
+      ANL <- data()[[dataname]]
+      ADSL <- data()[["ADSL"]]
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
@@ -221,7 +225,7 @@ srv_g_ae_sub <- function(id,
 
     observeEvent(input$arm_var, ignoreNULL = TRUE, {
       arm_var <- input$arm_var
-      ANL <- data[[dataname]]() # nolint
+      ANL <- data()[[dataname]]
 
       anl_val <- ANL[[arm_var]]
       choices <- levels(anl_val)
@@ -265,7 +269,7 @@ srv_g_ae_sub <- function(id,
     })
 
     observeEvent(input$groups, {
-      ANL <- data[[dataname]]() # nolint
+      ANL <- data()[[dataname]]
       output$grouplabel_output <- renderUI({
         grps <- input$groups
         lo <- lapply(seq_along(grps), function(index) {
@@ -311,8 +315,8 @@ srv_g_ae_sub <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ANL <- data[[dataname]]() # nolint
-        ADSL <- data[["ADSL"]]() # nolint
+        ANL <- data()[[dataname]]
+        ADSL <- data()[["ADSL"]]
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
@@ -341,34 +345,30 @@ srv_g_ae_sub <- function(id,
           bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
         }
 
-        q1 <- teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
-          code = group_labels_call
-        )
-        q2 <- teal.code::eval_code(q1, code = "")
-        teal.code::eval_code(
-          q2,
-          code = as.expression(c(
-            bquote(
-              plot <- osprey::g_ae_sub(
-                id = .(as.name(dataname))$USUBJID,
-                arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
-                arm_sl = as.character(ADSL[[.(input$arm_var)]]),
-                trt = .(input$arm_trt),
-                ref = .(input$arm_ref),
-                subgroups = .(as.name(dataname))[.(input$groups)],
-                subgroups_sl = ADSL[.(input$groups)],
-                subgroups_levels = group_labels,
-                conf_level = .(input$conf_level),
-                diff_ci_method = .(input$ci),
-                fontsize = .(font_size()),
-                arm_n = .(input$arm_n),
-                draw = TRUE
-              )
-            ),
-            quote(plot)
-          ))
-        )
+        teal.code::eval_code(data(), code = group_labels_call) %>%
+          teal.code::eval_code(code = "") %>%
+          teal.code::eval_code(
+            code = as.expression(c(
+              bquote(
+                plot <- osprey::g_ae_sub(
+                  id = .(as.name(dataname))$USUBJID,
+                  arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
+                  arm_sl = as.character(ADSL[[.(input$arm_var)]]),
+                  trt = .(input$arm_trt),
+                  ref = .(input$arm_ref),
+                  subgroups = .(as.name(dataname))[.(input$groups)],
+                  subgroups_sl = ADSL[.(input$groups)],
+                  subgroups_levels = group_labels,
+                  conf_level = .(input$conf_level),
+                  diff_ci_method = .(input$ci),
+                  fontsize = .(font_size()),
+                  arm_n = .(input$arm_n),
+                  draw = TRUE
+                )
+              ),
+              quote(plot)
+            ))
+          )
       })
     )
 
@@ -389,18 +389,20 @@ srv_g_ae_sub <- function(id,
 
     ### REPORTER
     if (with_reporter) {
-      card_fun <- function(comment) {
-        card <- teal::TealReportCard$new()
-        card$set_name("AE Subgroups")
-        card$append_text("AE Subgroups", "header2")
-        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
+      card_fun <- function(comment, label) {
+        card <- teal::report_card_template(
+          title = "AE Subgroups",
+          label = label,
+          with_filter = with_filter,
+          filter_panel_api = filter_panel_api
+        )
         card$append_text("Plot", "header3")
         card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

@@ -25,52 +25,48 @@
 #' @template author_liaoc10
 #'
 #' @examples
-#'
 #' # Example using stream (ADaM) dataset
-#' library(dplyr)
-#' library(nestcolor)
+#' data <- cdisc_data() |>
+#'   within({
+#'     library(nestcolor)
+#'     ADSL <- rADSL
+#'     ADTR <- rADTR
+#'   })
 #'
-#' ADSL <- osprey::rADSL
-#' ADTR <- osprey::rADTR
+#' datanames(data) <- c("ADSL", "ADTR")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
-#' app <- teal::init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
-#'     cdisc_dataset("ADTR", ADTR,
-#'       code = "ADTR <- osprey::rADTR",
-#'       keys = c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
-#'     ),
-#'     check = TRUE
-#'   ),
+#' app <- init(
+#'   data = data,
 #'   modules = modules(
 #'     tm_g_spiderplot(
 #'       label = "Spider plot",
 #'       dataname = "ADTR",
-#'       paramcd = teal.transform::choices_selected(
+#'       paramcd = choices_selected(
 #'         choices = "SLDINV",
 #'         selected = "SLDINV"
 #'       ),
-#'       x_var = teal.transform::choices_selected(
+#'       x_var = choices_selected(
 #'         choices = "ADY",
 #'         selected = "ADY"
 #'       ),
-#'       y_var = teal.transform::choices_selected(
+#'       y_var = choices_selected(
 #'         choices = c("PCHG", "CHG", "AVAL"),
 #'         selected = "PCHG"
 #'       ),
-#'       marker_var = teal.transform::choices_selected(
+#'       marker_var = choices_selected(
 #'         choices = c("SEX", "RACE", "USUBJID"),
 #'         selected = "SEX"
 #'       ),
-#'       line_colorby_var = teal.transform::choices_selected(
+#'       line_colorby_var = choices_selected(
 #'         choices = c("SEX", "USUBJID", "RACE"),
 #'         selected = "SEX"
 #'       ),
-#'       xfacet_var = teal.transform::choices_selected(
+#'       xfacet_var = choices_selected(
 #'         choices = c("SEX", "ARM"),
 #'         selected = "SEX"
 #'       ),
-#'       yfacet_var = teal.transform::choices_selected(
+#'       yfacet_var = choices_selected(
 #'         choices = c("SEX", "ARM"),
 #'         selected = "ARM"
 #'       ),
@@ -100,7 +96,7 @@ tm_g_spiderplot <- function(label,
                             plot_width = NULL,
                             pre_output = NULL,
                             post_output = NULL) {
-  logger::log_info("Initializing tm_g_spiderplot")
+  message("Initializing tm_g_spiderplot")
   checkmate::assert_class(paramcd, classes = "choices_selected")
   checkmate::assert_class(x_var, classes = "choices_selected")
   checkmate::assert_class(y_var, classes = "choices_selected")
@@ -144,13 +140,13 @@ ui_g_spider <- function(id, ...) {
       output = teal.widgets::white_small_well(
         teal.widgets::plot_with_settings_ui(id = ns("spiderplot"))
       ),
-      encoding = div(
+      encoding = tags$div(
         ### Reporter
         teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
         tags$label("Encodings", class = "text-primary"),
         helpText("Analysis data:", tags$code(a$dataname)),
-        div(
+        tags$div(
           class = "pretty-left-border",
           teal.widgets::optionalSelectInput(
             ns("paramcd"),
@@ -214,7 +210,7 @@ ui_g_spider <- function(id, ...) {
         ),
         textInput(
           ns("vref_line"),
-          label = div(
+          label = tags$div(
             "Vertical Reference Line(s)",
             tags$br(),
             helpText("Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)")
@@ -223,7 +219,7 @@ ui_g_spider <- function(id, ...) {
         ),
         textInput(
           ns("href_line"),
-          label = div(
+          label = tags$div(
             "Hortizontal Reference Line(s)",
             tags$br(),
             helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")
@@ -244,12 +240,13 @@ ui_g_spider <- function(id, ...) {
 srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, plot_height, plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ADSL <- data[["ADSL"]]() # nolint
-      ADTR <- data[[dataname]]() # nolint
+      ADSL <- data()[["ADSL"]]
+      ADTR <- data()[[dataname]]
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("paramcd", shinyvalidate::sv_required(
@@ -283,26 +280,26 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       iv$enable()
     })
 
-    vals <- reactiveValues(spiderplot = NULL) # nolint
+    vals <- reactiveValues(spiderplot = NULL)
 
     # render plot
     output_q <- reactive({
       # get datasets ---
-      ADSL <- data[["ADSL"]]() # nolint
-      ADTR <- data[[dataname]]() # nolint
+      ADSL <- data()[["ADSL"]]
+      ADTR <- data()[[dataname]]
 
       teal::validate_inputs(iv())
 
       teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s data has zero rows", "ADSL"))
       teal::validate_has_data(ADTR, min_nrow = 1, msg = sprintf("%s data has zero rows", dataname))
 
-      paramcd <- input$paramcd # nolint
+      paramcd <- input$paramcd
       x_var <- input$x_var
       y_var <- input$y_var
       marker_var <- input$marker_var
       line_colorby_var <- input$line_colorby_var
       anno_txt_var <- input$anno_txt_var
-      legend_on <- input$legend_on # nolint
+      legend_on <- input$legend_on
       xfacet_var <- input$xfacet_var
       yfacet_var <- input$yfacet_var
       vref_line <- input$vref_line
@@ -318,7 +315,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       varlist_from_adsl <- varlist[varlist %in% names(ADSL)]
       varlist_from_anl <- varlist[!varlist %in% names(ADSL)]
 
-      adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl)) # nolint
+      adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl))
       adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", x_var, y_var, varlist_from_anl))
 
       # preprocessing of datasets to qenv ---
@@ -329,13 +326,13 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
       # merge
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+        data(),
         code = bquote({
-          ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame() # nolint
-          ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame() # nolint
+          ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
+          ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame()
 
-          ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID")) # nolint
-          ANL <- ANL %>% # nolint
+          ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID"))
+          ANL <- ANL %>%
             group_by(USUBJID, PARAMCD) %>%
             arrange(ANL[, .(x_var)]) %>%
             as.data.frame()
@@ -346,8 +343,8 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
       q1 <- teal.code::eval_code(
         q1,
         code = bquote({
-          ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-          ANL_f <- ANL %>% # nolint
+          ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1))
+          ANL_f <- ANL %>%
             filter(PARAMCD == .(paramcd)) %>%
             as.data.frame()
         })
@@ -438,11 +435,13 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
     ### REPORTER
     if (with_reporter) {
-      card_fun <- function(comment) {
-        card <- teal::TealReportCard$new()
-        card$set_name("Spider Plot")
-        card$append_text("Spider Plot", "header2")
-        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
+      card_fun <- function(comment, label) {
+        card <- teal::report_card_template(
+          title = "Spider Plot",
+          label = label,
+          with_filter = with_filter,
+          filter_panel_api = filter_panel_api
+        )
         if (!is.null(input$paramcd) || !is.null(input$xfacet_var) || !is.null(input$yfacet_var)) {
           card$append_text("Selected Options", "header3")
         }
@@ -461,7 +460,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

@@ -16,77 +16,51 @@
 #' @export
 #'
 #' @examples
-#' library(nestcolor)
+#' data <- cdisc_data() |>
+#'   within({
+#'     library(nestcolor)
+#'     ADSL <- rADSL
+#'     ADAE <- rADAE
+#'     add_event_flags <- function(dat) {
+#'       dat <- dat |>
+#'         mutate(
+#'           TMPFL_SER = AESER == "Y",
+#'           TMPFL_REL = AEREL == "Y",
+#'           TMPFL_GR5 = AETOXGR == "5",
+#'           AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
+#'           AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
+#'         )
+#'       labels <- c(
+#'         "Serious AE", "Related AE", "Grade 5 AE",
+#'         "AE related to A: Drug X", "AE related to B: Placebo"
+#'       )
+#'       cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
+#'       for (i in seq_along(labels)) {
+#'         attr(dat[[cols[i]]], "label") <- labels[i]
+#'       }
+#'       dat
+#'     }
+#'     ADAE <- add_event_flags(ADAE)
+#'   })
 #'
-#' ADSL <- osprey::rADSL
-#' ADAE <- osprey::rADAE
+#' datanames(data) <- c("ADSL", "ADAE")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
-#' # Add additional dummy causality flags.
-#' add_event_flags <- function(dat) {
-#'   dat <- dat %>%
-#'     dplyr::mutate(
-#'       TMPFL_SER = AESER == "Y",
-#'       TMPFL_REL = AEREL == "Y",
-#'       TMPFL_GR5 = AETOXGR == "5",
-#'       AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
-#'       AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
-#'     )
-#'   labels <- c(
-#'     "Serious AE", "Related AE", "Grade 5 AE",
-#'     "AE related to A: Drug X", "AE related to B: Placebo"
-#'   )
-#'   cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
-#'   for (i in seq_along(labels)) {
-#'     attr(dat[[cols[i]]], "label") <- labels[i]
-#'   }
-#'   dat
-#' }
-#' ADAE <- ADAE %>% add_event_flags()
+#' ADAE <- data[["ADAE"]]
 #'
 #' app <- init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
-#'     cdisc_dataset("ADAE", ADAE,
-#'       code =
-#'         "ADAE <- osprey::rADAE
-#'            add_event_flags <- function(dat) {
-#'              dat <- dat %>%
-#'                dplyr::mutate(
-#'                  TMPFL_SER = AESER == 'Y',
-#'                  TMPFL_REL = AEREL == 'Y',
-#'                  TMPFL_GR5 = AETOXGR == '5',
-#'                  AEREL1 = (AEREL == 'Y' & ACTARM == 'A: Drug X'),
-#'                  AEREL2 = (AEREL == 'Y' & ACTARM == 'B: Placebo')
-#'                )
-#'              labels <- c(
-#'                'Serious AE',
-#'                'Related AE',
-#'                'Grade 5 AE',
-#'                'AE related to A: Drug X',
-#'                'AE related to B: Placebo'
-#'              )
-#'              cols <- c('TMPFL_SER', 'TMPFL_REL', 'TMPFL_GR5', 'AEREL1', 'AEREL2')
-#'              for (i in seq_along(labels)) {
-#'               attr(dat[[cols[i]]], 'label') <- labels[i]
-#'              }
-#'              dat
-#'            }
-#'            # Generating user-defined event flags.
-#'            ADAE <- ADAE %>% add_event_flags()"
-#'     ),
-#'     check = TRUE
-#'   ),
+#'   data = data,
 #'   modules = modules(
 #'     tm_g_ae_oview(
 #'       label = "AE Overview",
 #'       dataname = "ADAE",
-#'       arm_var = teal.transform::choices_selected(
+#'       arm_var = choices_selected(
 #'         selected = "ACTARM",
 #'         choices = c("ACTARM", "ACTARMCD")
 #'       ),
-#'       flag_var_anl = teal.transform::choices_selected(
+#'       flag_var_anl = choices_selected(
 #'         selected = "AEREL1",
-#'         choices = teal.transform::variable_choices(
+#'         choices = variable_choices(
 #'           ADAE,
 #'           c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
 #'         ),
@@ -98,6 +72,7 @@
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
+#'
 tm_g_ae_oview <- function(label,
                           dataname,
                           arm_var,
@@ -105,7 +80,7 @@ tm_g_ae_oview <- function(label,
                           fontsize = c(5, 3, 7),
                           plot_height = c(600L, 200L, 2000L),
                           plot_width = NULL) {
-  logger::log_info("Initializing tm_g_ae_oview")
+  message("Initializing tm_g_ae_oview")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(flag_var_anl, classes = "choices_selected")
   checkmate::assert(
@@ -152,7 +127,7 @@ ui_g_ae_oview <- function(id, ...) {
     output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
     ),
-    encoding = div(
+    encoding = tags$div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###
@@ -230,11 +205,12 @@ srv_g_ae_oview <- function(id,
                            plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ANL <- data[[dataname]]() # nolint
+      ANL <- data()[[dataname]]
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("arm_var", shinyvalidate::sv_required(
@@ -280,7 +256,7 @@ srv_g_ae_oview <- function(id,
     })
 
     observeEvent(input$arm_var, ignoreNULL = TRUE, {
-      ANL <- data[[dataname]]() # nolint
+      ANL <- data()[[dataname]]
       arm_var <- input$arm_var
       arm_val <- ANL[[arm_var]]
       choices <- levels(arm_val)
@@ -308,7 +284,7 @@ srv_g_ae_oview <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ANL <- data[[dataname]]() # nolint
+        ANL <- data()[[dataname]]
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
@@ -320,12 +296,14 @@ srv_g_ae_oview <- function(id,
         ))
 
         q1 <- teal.code::eval_code(
-          teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+          data(),
           code = as.expression(c(
             bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
-            bquote(flags <- .(as.name(dataname)) %>%
-              select(all_of(.(input$flag_var_anl))) %>%
-              rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x])))
+            bquote(
+              flags <- .(as.name(dataname)) %>%
+                select(all_of(.(input$flag_var_anl))) %>%
+                rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
+            )
           ))
         )
 
@@ -369,18 +347,20 @@ srv_g_ae_oview <- function(id,
     )
     ### REPORTER
     if (with_reporter) {
-      card_fun <- function(comment) {
-        card <- teal::TealReportCard$new()
-        card$set_name("AE Overview")
-        card$append_text("AE Overview", "header2")
-        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
+      card_fun <- function(comment, label) {
+        card <- teal::report_card_template(
+          title = "AE Overview",
+          label = label,
+          with_filter = with_filter,
+          filter_panel_api = filter_panel_api
+        )
         card$append_text("Plot", "header3")
         card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

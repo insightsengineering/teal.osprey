@@ -1,4 +1,7 @@
-# teal.osprey 0.1.16.9001
+# teal.osprey 0.1.16.9015
+
+### Breaking Changes
+* Adapted all modules to use `teal_data` objects.
 
 ### Miscellaneous
 
@@ -12,6 +15,7 @@
 * Improved input validation and used the `teal::validate_inputs` mechanism to send validation messages to the output panel.
 * Removed `purrr` from dependencies.
 * Added argument checks to `tm_g_patient_profile`.
+* Modified example apps to use new `teal_data` and `join_keys` solutions.
 
 ### Breaking changes
 

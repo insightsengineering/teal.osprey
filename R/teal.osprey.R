@@ -1,11 +1,9 @@
-#' teal.osprey: Enabling you to write modules in teal
+#' `teal.osprey`: `teal` modules for 'osprey'
 #'
-#' The \code{teal.osprey} R package contains interactive \code{\link{teal}} modules for the outputs
+#' `teal.osprey` provides community contributed [`teal`] modules of the analysis functions from
+#' [`osprey`] package. See package [website](https://insightsengineering.github.io/osprey/).
+#' This enables `teal` app developers to easily create applications making use of the `osprey` analysis functions.
 #'
-#' @import dplyr osprey shiny teal formatters
-#' @importFrom teal.transform choices_selected
-#' @docType package
-#' @name teal.osprey
+#' @import dplyr osprey shiny teal formatters teal.transform
 #' @keywords internal
-#'
-NULL
+"_PACKAGE"

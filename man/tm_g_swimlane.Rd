@@ -29,20 +29,20 @@ tm_g_swimlane(
 menu item label of the module in the teal app.}
 
 \item{dataname}{analysis data used for plotting, needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, \code{"ADSL"} should be
+argument of \code{\link[teal:init]{teal::init()}}. If no markers are to be plotted in the module, \code{"ADSL"} should be
 the input. If markers are to be plotted, data name for the marker data should be the input}
 
-\item{bar_var}{(\code{\link[teal.transform]{choices_selected}}) subject-level numeric variable from dataset
+\item{bar_var}{\link[teal.transform:choices_selected]{teal.transform::choices_selected} subject-level numeric variable from dataset
 to plot as the bar length}
 
-\item{bar_color_var}{(\code{\link[teal.transform]{choices_selected}}) color by variable (subject-level)}
+\item{bar_color_var}{\link[teal.transform:choices_selected]{teal.transform::choices_selected} color by variable (subject-level)}
 
-\item{sort_var}{(\code{choices_selected}) sort by variable (subject-level)}
+\item{sort_var}{\code{choices_selected} sort by variable (subject-level)}
 
-\item{marker_pos_var}{(\code{\link[teal.transform]{choices_selected}}) variable for marker position from marker data
-(Note: make sure that marker position has the same relative start day as bar length variable \code{bar_var})}
+\item{marker_pos_var}{\link[teal.transform:choices_selected]{teal.transform::choices_selected} variable for marker position from marker data
+(Note: make sure that marker position has the same relative start day as bar length variable \code{bar_var}}
 
-\item{marker_shape_var}{(\code{\link[teal.transform]{choices_selected}}) marker shape variable from marker data}
+\item{marker_shape_var}{\link[teal.transform:choices_selected]{teal.transform::choices_selected} marker shape variable from marker data}
 
 \item{marker_shape_opt}{aesthetic values to map shape values (named vector to map shape values to each name).
 If not \code{NULL}, please make sure this contains all possible values for \code{marker_shape_var} values,
@@ -64,16 +64,16 @@ vector to indicate default value, minimum and maximum values.}
 \item{plot_width}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
 
-\item{pre_output}{(\code{shiny.tag}, optional)\cr
+\item{pre_output}{(\code{shiny.tag}) optional,\cr
 with text placed before the output to put the output into context. For example a title.}
 
-\item{post_output}{(\code{shiny.tag}, optional) with text placed after the output to put the output
+\item{post_output}{(\code{shiny.tag}) optional, with text placed after the output to put the output
 into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} elements are useful.}
 
 \item{x_label}{the label of the x axis}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object.
+the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -81,62 +81,53 @@ the \code{\link[teal:module]{teal::module()}} object.
 This is teal module that generates a \code{swimlane} plot (bar plot with markers) for \code{ADaM} data
 }
 \examples{
-
 # Example using stream (ADaM) dataset
-library(dplyr)
-library(nestcolor)
+data <- cdisc_data() |>
+  within(library(dplyr)) |>
+  within(library(nestcolor)) |>
+  within(ADSL <- rADSL \%>\%
+    mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
+    filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
+  within(ADRS <- rADRS \%>\%
+    filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
+    mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
+    rbind(rADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+    arrange(USUBJID))
 
-ADSL <- osprey::rADSL \%>\%
-  dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
-  dplyr::filter(STRATA1 == "A" & ARMCD == "ARM A")
-ADRS <- osprey::rADRS
+datanames(data) <- c("ADSL", "ADRS")
+join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 
-ADRS <- ADRS \%>\%
-  dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
-  mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
-  base::rbind(ADRS \%>\% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
-  arrange(USUBJID)
+ADSL <- data[["ADSL"]]
+ADRS <- data[["ADRS"]]
 
 app <- init(
-  data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL \%>\%
-      dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
-      dplyr::filter(STRATA1 == 'A' & ARMCD == 'ARM A')"),
-    cdisc_dataset("ADRS", ADRS,
-      code = "ADRS <- rADRS
-              ADRS <- ADRS \%>\% dplyr::filter(PARAMCD == 'LSTASDI' & DCSREAS == 'Death') \%>\%
-                      mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
-              rbind(ADRS \%>\% dplyr::filter(PARAMCD == 'OVRINV' & AVALC != 'NE')) \%>\%
-              arrange(USUBJID)"
-    ),
-    check = TRUE
-  ),
+  data = data,
   modules = modules(
     tm_g_swimlane(
       label = "Swimlane Plot",
       dataname = "ADRS",
-      bar_var = teal.transform::choices_selected(
+      bar_var = choices_selected(
         selected = "TRTDURD",
         choices = c("TRTDURD", "EOSDY")
       ),
-      bar_color_var = teal.transform::choices_selected(
+      bar_color_var = choices_selected(
         selected = "EOSSTT",
         choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX")
       ),
-      sort_var = teal.transform::choices_selected(
+      sort_var = choices_selected(
         selected = "ACTARMCD",
         choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD")
       ),
-      marker_pos_var = teal.transform::choices_selected(
+      marker_pos_var = choices_selected(
         selected = "ADY",
         choices = c("ADY")
       ),
-      marker_shape_var = teal.transform::choices_selected(
+      marker_shape_var = choices_selected(
         selected = "AVALC",
         c("AVALC", "AVISIT")
       ),
       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-      marker_color_var = teal.transform::choices_selected(
+      marker_color_var = choices_selected(
         selected = "AVALC",
         choices = c("AVALC", "AVISIT")
       ),
@@ -145,7 +136,7 @@ app <- init(
         "PD" = "red", "Death" = "black"
       ),
       vref_line = c(30, 60),
-      anno_txt_var = teal.transform::choices_selected(
+      anno_txt_var = choices_selected(
         selected = c("ACTARM", "SEX"),
         choices = c(
           "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",

@@ -7,88 +7,49 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param sl_dataname (\code{character}) subject level dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}}
-#' @param ex_dataname (\code{character}) exposures dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' @param ae_dataname (\code{character}) adverse events dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' @param cm_dataname (\code{character}) concomitant medications dataset name,
-#' needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}} \cr
-#' specify to \code{NA} if no concomitant medications data is available
-#' @param id_var (\code{choices_seleced}) unique subject ID variable
-#' @param visit_var (\code{choices_seleced}) analysis visit variable
-#' @param ongo_var (\code{choices_seleced}) study ongoing status variable,
-#' This variable is a derived logical variable. Usually it can be derived from \code{EOSSTT}.
-#' @param anno_var (\code{choices_seleced}) annotation variable
-#' @param heat_var (\code{choices_seleced}) heatmap variable
-#' @param conmed_var (\code{choices_seleced}) concomitant medications variable,
-#' specify to \code{NA} if no concomitant medications data is available
+#' @param sl_dataname (`character`) subject level dataset name,
+#' needs to be available in the list passed to the `data`
+#' argument of [teal::init()]
+#' @param ex_dataname (`character`) exposures dataset name,
+#' needs to be available in the list passed to the `data`
+#' argument of [teal::init()] \cr
+#' @param ae_dataname (`character`) adverse events dataset name,
+#' needs to be available in the list passed to the `data`
+#' argument of [teal::init()] \cr
+#' @param cm_dataname (`character`) concomitant medications dataset name,
+#' needs to be available in the list passed to the `data`
+#' argument of [teal::init()] \cr
+#' specify to `NA` if no concomitant medications data is available
+#' @param id_var (`choices_seleced`) unique subject ID variable
+#' @param visit_var (`choices_seleced`) analysis visit variable
+#' @param ongo_var (`choices_seleced`) study ongoing status variable.
+#' This variable is a derived logical variable. Usually it can be derived from `EOSSTT`.
+#' @param anno_var (`choices_seleced`) annotation variable
+#' @param heat_var (`choices_seleced`) heatmap variable
+#' @param conmed_var (`choices_seleced`) concomitant medications variable,
+#' specify to `NA` if no concomitant medications data is available
 #'
 #' @inherit argument_convention return
 #'
 #' @export
 #'
 #' @examples
-#' library(dplyr)
-#' library(nestcolor)
-#' ADSL <- osprey::rADSL %>% slice(1:30)
-#' ADEX <- osprey::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
-#' ADAE <- osprey::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
-#' ADCM <- osprey::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
-#'
-#' # This preprocess is only to force legacy standard on ADCM
-#' ADCM <- ADCM %>%
-#'   select(-starts_with("ATC")) %>%
-#'   unique()
-#'
-#' # function to derive AVISIT from ADEX
-#' add_visit <- function(data_need_visit) {
-#'   visit_dates <- ADEX %>%
-#'     filter(PARAMCD == "DOSE") %>%
-#'     distinct(USUBJID, AVISIT, ASTDTM) %>%
-#'     group_by(USUBJID) %>%
-#'     arrange(ASTDTM) %>%
-#'     mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) %>%
-#'     rename(this_vis = ASTDTM)
-#'   data_visit <- data_need_visit %>%
-#'     select(USUBJID, ASTDTM) %>%
-#'     left_join(visit_dates, by = "USUBJID") %>%
-#'     filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) %>%
-#'     left_join(data_need_visit) %>%
-#'     distinct()
-#'   return(data_visit)
-#' }
-#' # derive AVISIT for ADAE and ADCM
-#' ADAE <- add_visit(ADAE)
-#' ADCM <- add_visit(ADCM)
-#' # derive ongoing status variable for ADEX
-#' ADEX <- ADEX %>%
-#'   filter(PARCAT1 == "INDIVIDUAL") %>%
-#'   mutate(ongo_status = (EOSSTT == "ONGOING"))
-#'
-#' app <- init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL),
-#'     cdisc_dataset("ADEX", ADEX),
-#'     cdisc_dataset("ADAE", ADAE),
-#'     cdisc_dataset("ADCM", ADCM, keys = c("STUDYID", "USUBJID", "ASTDTM", "CMSEQ", "CMDECOD")),
-#'     code = "
-#'     ADSL <- osprey::rADSL %>% slice(1:30)
-#'     ADEX <- osprey::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADAE <- osprey::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADCM <- osprey::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADCM <- ADCM %>% select(-starts_with(\"ATC\")) %>% unique()
-#'     ADEX  <- ADEX %>%
-#'       filter(PARCAT1 == 'INDIVIDUAL') %>%
-#'       mutate(ongo_status = (EOSSTT == 'ONGOING'))
+#' data <- cdisc_data() |>
+#'   within({
+#'     library(dplyr)
+#'     library(nestcolor)
+#'     ADSL <- rADSL %>% slice(1:30)
+#'     ADEX <- rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADAE <- rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADCM <- rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     # This preprocess is only to force legacy standard on ADCM
+#'     ADCM <- ADCM %>%
+#'       select(-starts_with("ATC")) %>%
+#'       unique()
+#'     # function to derive AVISIT from ADEX
 #'     add_visit <- function(data_need_visit) {
 #'       visit_dates <- ADEX %>%
-#'         filter(PARAMCD == 'DOSE') %>%
+#'         filter(PARAMCD == "DOSE") %>%
 #'         distinct(USUBJID, AVISIT, ASTDTM) %>%
 #'         group_by(USUBJID) %>%
 #'         arrange(ASTDTM) %>%
@@ -96,16 +57,28 @@
 #'         rename(this_vis = ASTDTM)
 #'       data_visit <- data_need_visit %>%
 #'         select(USUBJID, ASTDTM) %>%
-#'         left_join(visit_dates, by = 'USUBJID') %>%
+#'         left_join(visit_dates, by = "USUBJID") %>%
 #'         filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) %>%
-#'         left_join(data_need_visit) %>% distinct()
+#'         left_join(data_need_visit) %>%
+#'         distinct()
 #'       return(data_visit)
 #'     }
+#'     # derive AVISIT for ADAE and ADCM
 #'     ADAE <- add_visit(ADAE)
 #'     ADCM <- add_visit(ADCM)
-#'     ",
-#'     check = TRUE
-#'   ),
+#'     # derive ongoing status variable for ADEX
+#'     ADEX <- ADEX %>%
+#'       filter(PARCAT1 == "INDIVIDUAL") %>%
+#'       mutate(ongo_status = (EOSSTT == "ONGOING"))
+#'   })
+#'
+#' datanames(data) <- c("ADSL", "ADEX", "ADAE", "ADCM")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
+#'
+#' ADCM <- data[["ADCM"]]
+#'
+#' app <- init(
+#'   data = data,
 #'   modules = modules(
 #'     tm_g_heat_bygrade(
 #'       label = "Heatmap by grade",
@@ -113,27 +86,27 @@
 #'       ex_dataname = "ADEX",
 #'       ae_dataname = "ADAE",
 #'       cm_dataname = "ADCM",
-#'       id_var = teal.transform::choices_selected(
+#'       id_var = choices_selected(
 #'         selected = "USUBJID",
 #'         choices = c("USUBJID", "SUBJID")
 #'       ),
-#'       visit_var = teal.transform::choices_selected(
+#'       visit_var = choices_selected(
 #'         selected = "AVISIT",
 #'         choices = c("AVISIT")
 #'       ),
-#'       ongo_var = teal.transform::choices_selected(
+#'       ongo_var = choices_selected(
 #'         selected = "ongo_status",
 #'         choices = c("ongo_status")
 #'       ),
-#'       anno_var = teal.transform::choices_selected(
+#'       anno_var = choices_selected(
 #'         selected = c("SEX", "COUNTRY"),
 #'         choices = c("SEX", "COUNTRY", "USUBJID")
 #'       ),
-#'       heat_var = teal.transform::choices_selected(
+#'       heat_var = choices_selected(
 #'         selected = "AETOXGR",
 #'         choices = c("AETOXGR")
 #'       ),
-#'       conmed_var = teal.transform::choices_selected(
+#'       conmed_var = choices_selected(
 #'         selected = "CMDECOD",
 #'         choices = c("CMDECOD")
 #'       ),
@@ -144,6 +117,7 @@
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
+#'
 tm_g_heat_bygrade <- function(label,
                               sl_dataname,
                               ex_dataname,
@@ -158,7 +132,7 @@ tm_g_heat_bygrade <- function(label,
                               fontsize = c(5, 3, 7),
                               plot_height = c(600L, 200L, 2000L),
                               plot_width = NULL) {
-  logger::log_info("Initializing tm_g_heat_bygrade")
+  message("Initializing tm_g_heat_bygrade")
   args <- as.list(environment())
 
   checkmate::assert_string(label)
@@ -220,7 +194,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
       output = teal.widgets::white_small_well(
         plot_decorate_output(id = ns(NULL))
       ),
-      encoding = div(
+      encoding = tags$div(
         ### Reporter
         teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
@@ -260,7 +234,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
           multiple = FALSE
         ),
         helpText("Plot conmed"),
-        div(
+        tags$div(
           class = "pretty-left-border",
           if (!is.na(args$cm_dataname)) {
             checkboxInput(
@@ -315,7 +289,8 @@ srv_g_heatmap_bygrade <- function(id,
                                   plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
   if (!is.na(sl_dataname)) checkmate::assert_names(sl_dataname, subset.of = names(data))
   if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
   if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
@@ -323,11 +298,11 @@ srv_g_heatmap_bygrade <- function(id,
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      ADSL <- data[[sl_dataname]]() # nolint
-      ADEX <- data[[ex_dataname]]() # nolint
-      ADAE <- data[[ae_dataname]]() # nolint
+      ADSL <- data()[[sl_dataname]]
+      ADEX <- data()[[ex_dataname]]
+      ADAE <- data()[[ae_dataname]]
       if (isTRUE(input$plot_cm)) {
-        ADCM <- data[[cm_dataname]]() # nolint
+        ADCM <- data()[[cm_dataname]]
       }
 
       iv <- shinyvalidate::InputValidator$new()
@@ -367,11 +342,11 @@ srv_g_heatmap_bygrade <- function(id,
       iv
     })
     iv_cm <- reactive({
-      ADSL <- data[[sl_dataname]]() # nolint
-      ADEX <- data[[ex_dataname]]() # nolint
-      ADAE <- data[[ae_dataname]]() # nolint
+      ADSL <- data()[[sl_dataname]]
+      ADEX <- data()[[ex_dataname]]
+      ADAE <- data()[[ae_dataname]]
       if (isTRUE(input$plot_cm)) {
-        ADCM <- data[[cm_dataname]]() # nolint
+        ADCM <- data()[[cm_dataname]]
       }
 
       iv_cm <- shinyvalidate::InputValidator$new()
@@ -401,13 +376,13 @@ srv_g_heatmap_bygrade <- function(id,
       plt = plot_r,
       plot_height = plot_height,
       plot_width = plot_width
-    ) # nolint
+    )
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
     if (!is.na(cm_dataname)) {
       observeEvent(input$conmed_var, {
-        ADCM <- data[[cm_dataname]]() # nolint
+        ADCM <- data()[[cm_dataname]]
         choices <- levels(ADCM[[input$conmed_var]])
 
         updateSelectInput(
@@ -422,9 +397,10 @@ srv_g_heatmap_bygrade <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ADSL <- data[[sl_dataname]]() # nolint
-        ADEX <- data[[ex_dataname]]() # nolint
-        ADAE <- data[[ae_dataname]]() # nolint
+        ADSL <- data()[[sl_dataname]]
+        ADEX <- data()[[ex_dataname]]
+        ADAE <- data()[[ae_dataname]]
+        ADCM <- data()[[cm_dataname]]
 
         teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
         teal::validate_inputs(iv(), iv_cm())
@@ -432,9 +408,10 @@ srv_g_heatmap_bygrade <- function(id,
           shiny::validate(shiny::need(all(input$conmed_level %in% ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
         }
 
-        qenv <- teal.code::new_qenv(tdata2env(data), code = teal::get_code_tdata(data))
+        qenv <- data()
+
         if (isTRUE(input$plot_cm)) {
-          ADCM <- data[[cm_dataname]]() # nolint
+          ADCM <- qenv[[cm_dataname]]
           qenv <- teal.code::eval_code(
             qenv,
             code = substitute(
@@ -495,18 +472,20 @@ srv_g_heatmap_bygrade <- function(id,
 
     ### REPORTER
     if (with_reporter) {
-      card_fun <- function(comment) {
-        card <- teal::TealReportCard$new()
-        card$set_name("Heatmap by Grade")
-        card$append_text("Heatmap by Grade", "header2")
-        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
+      card_fun <- function(comment, label) {
+        card <- teal::report_card_template(
+          title = "Heatmap by Grade",
+          label = label,
+          with_filter = with_filter,
+          filter_panel_api = filter_panel_api
+        )
         card$append_text("Plot", "header3")
         card$append_plot(plot_r(), dim = pws$dim())
         if (!comment == "") {
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

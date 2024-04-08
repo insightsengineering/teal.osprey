@@ -41,7 +41,7 @@ Defines initial possible range of font-size. \code{fontsize} is set for
 plot.}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object.
+the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -50,24 +50,26 @@ Display the \code{AE} by subgroups plot as a teal module
 }
 \examples{
 # Example using stream (ADaM) dataset
-ADSL <- osprey::rADSL
-ADAE <- osprey::rADAE
+data <- cdisc_data() |>
+  within({
+    ADSL <- rADSL
+    ADAE <- rADAE
+  })
+
+datanames(data) <- c("ADSL", "ADAE")
+join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 
 app <- init(
-  data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL"),
-    cdisc_dataset("ADAE", ADAE, code = "ADAE <- osprey::rADAE"),
-    check = TRUE
-  ),
+  data = data,
   modules = modules(
     tm_g_ae_sub(
       label = "AE by Subgroup",
       dataname = "ADAE",
-      arm_var = teal.transform::choices_selected(
+      arm_var = choices_selected(
         selected = "ACTARMCD",
         choices = c("ACTARM", "ACTARMCD")
       ),
-      group_var = teal.transform::choices_selected(
+      group_var = choices_selected(
         selected = c("SEX", "REGION1", "RACE"),
         choices = c("SEX", "REGION1", "RACE")
       ),
@@ -78,6 +80,7 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
+
 }
 \author{
 Liming Li (Lil128) \email{liming.li@roche.com}

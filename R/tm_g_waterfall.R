@@ -8,36 +8,36 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
 #' @param dataname_tr tumor burden analysis data used in teal module to plot as bar height, needs to
-#' be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}
+#' be available in the list passed to the `data` argument of [teal::init()]
 #' @param dataname_rs response analysis data used in teal module to label response parameters, needs to
-#' be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}
-#' @param bar_paramcd (\code{choices_selected}) parameter in tumor burden data that will be plotted as
+#' be available in the list passed to the `data` argument of [teal::init()]
+#' @param bar_paramcd `choices_selected` parameter in tumor burden data that will be plotted as
 #' bar height
-#' @param bar_var (\code{choices_selected}) numeric variable from dataset to plot the bar height, e.g., `PCHG`
-#' @param bar_color_var (\code{choices_selected}) color by variable (subject level), \code{None} corresponds
-#' to \code{NULL}
+#' @param bar_var `choices_selected` numeric variable from dataset to plot the bar height, e.g., `PCHG`
+#' @param bar_color_var `choices_selected` color by variable (subject level), `None` corresponds
+#' to `NULL`
 #' @param bar_color_opt aesthetic values to map color values (named vector to map color values to each name).
-#' If not \code{NULL}, please make sure this contains all possible values for \code{bar_color_var} values,
-#' otherwise color will be assigned by \code{ggplot} default, please note that \code{NULL} needs to be specified
+#' If not `NULL`, please make sure this contains all possible values for `bar_color_var` values,
+#' otherwise color will be assigned by `ggplot` default, please note that `NULL` needs to be specified
 #' in this case
-#' @param sort_var (\code{choices_selected}) sort by variable (subject level), \code{None} corresponds
-#' to \code{NULL}
-#' @param add_label_var_sl (\code{choices_selected}) add label to bars (subject level), \code{None}
-#' corresponds to \code{NULL}
-#' @param add_label_paramcd_rs (\code{choices_selected}) add label to bars (response dataset), \code{None}
-#' corresponds to \code{NULL}. At least one of \code{add_label_var_sl} and \code{add_label_paramcd_rs} needs
-#' to be \code{NULL}
-#' @param anno_txt_var_sl (\code{choices_selected}) subject level variables to be displayed in the annotation
-#' table, default is \code{NULL}
-#' @param anno_txt_paramcd_rs (\code{choices_selected}) analysis dataset variables to be displayed in the
-#' annotation table, default is \code{NULL}
-#' @param facet_var (\code{choices_selected}) facet by variable (subject level), \code{None} corresponds to
-#' \code{NULL}
-#' @param ytick_at bar height axis interval, default is \code{20}
-#' @param href_line numeric vector to plot horizontal reference lines, default is \code{NULL}
+#' @param sort_var `choices_selected` sort by variable (subject level), `None` corresponds
+#' to `NULL`
+#' @param add_label_var_sl `choices_selected` add label to bars (subject level), `None`
+#' corresponds to `NULL`
+#' @param add_label_paramcd_rs `choices_selected` add label to bars (response dataset), `None`
+#' corresponds to `NULL`. At least one of `add_label_var_sl` and `add_label_paramcd_rs` needs
+#' to be `NULL`
+#' @param anno_txt_var_sl `choices_selected` subject level variables to be displayed in the annotation
+#' table, default is `NULL`
+#' @param anno_txt_paramcd_rs `choices_selected` analysis dataset variables to be displayed in the
+#' annotation table, default is `NULL`
+#' @param facet_var `choices_selected` facet by variable (subject level), `None` corresponds to
+#' `NULL`
+#' @param ytick_at bar height axis interval, default is 20
+#' @param href_line numeric vector to plot horizontal reference lines, default is `NULL`
 #' @param gap_point_val singular numeric value for adding bar break when some bars are significantly higher
-#' than others, default is \code{NULL}
-#' @param show_value boolean of whether value of bar height is shown, default is \code{TRUE}
+#' than others, default is `NULL`
+#' @param show_value boolean of whether value of bar height is shown, default is `TRUE`
 #'
 #' @inherit argument_convention return
 #'
@@ -47,41 +47,35 @@
 #' @author houx14 \email{houx14@gene.com}
 #'
 #' @examples
-#' library(nestcolor)
-#' ADSL <- osprey::rADSL
-#' ADRS <- osprey::rADRS
-#' ADTR <- osprey::rADTR
+#' data <- cdisc_data() |>
+#'   within({
+#'     library(nestcolor)
+#'     ADSL <- rADSL
+#'     ADRS <- rADRS
+#'     ADTR <- rADTR
+#'     ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+#'   })
 #'
-#' ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+#' datanames(data) <- c("ADSL", "ADTR", "ADRS")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
-#' app <- teal::init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL,
-#'       code = "ADSL <- rADSL
-#'               ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))"
-#'     ),
-#'     cdisc_dataset("ADRS", ADRS, code = "ADRS <- rADRS"),
-#'     cdisc_dataset("ADTR", ADTR,
-#'       code = " ADTR <- rADTR",
-#'       c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
-#'     ),
-#'     check = TRUE
-#'   ),
+#' app <- init(
+#'   data = data,
 #'   modules = modules(
 #'     tm_g_waterfall(
 #'       label = "Waterfall",
 #'       dataname_tr = "ADTR",
 #'       dataname_rs = "ADRS",
-#'       bar_paramcd = teal.transform::choices_selected(c("SLDINV"), "SLDINV"),
-#'       bar_var = teal.transform::choices_selected(c("PCHG", "AVAL"), "PCHG"),
-#'       bar_color_var = teal.transform::choices_selected(c("ARMCD", "SEX"), "ARMCD"),
+#'       bar_paramcd = choices_selected(c("SLDINV"), "SLDINV"),
+#'       bar_var = choices_selected(c("PCHG", "AVAL"), "PCHG"),
+#'       bar_color_var = choices_selected(c("ARMCD", "SEX"), "ARMCD"),
 #'       bar_color_opt = NULL,
-#'       sort_var = teal.transform::choices_selected(c("ARMCD", "SEX"), NULL),
-#'       add_label_var_sl = teal.transform::choices_selected(c("SEX", "EOSDY"), NULL),
-#'       add_label_paramcd_rs = teal.transform::choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-#'       anno_txt_var_sl = teal.transform::choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
-#'       anno_txt_paramcd_rs = teal.transform::choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-#'       facet_var = teal.transform::choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
+#'       sort_var = choices_selected(c("ARMCD", "SEX"), NULL),
+#'       add_label_var_sl = choices_selected(c("SEX", "EOSDY"), NULL),
+#'       add_label_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
+#'       anno_txt_var_sl = choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
+#'       anno_txt_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
+#'       facet_var = choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
 #'       href_line = "-30, 20"
 #'     )
 #'   )
@@ -89,6 +83,7 @@
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
+#'
 tm_g_waterfall <- function(label,
                            dataname_tr = "ADTR",
                            dataname_rs = "ADRS",
@@ -110,7 +105,7 @@ tm_g_waterfall <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
-  logger::log_info("Initializing tm_g_waterfall")
+  message("Initializing tm_g_waterfall")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname_tr)
   checkmate::assert_string(dataname_rs)
@@ -161,7 +156,7 @@ ui_g_waterfall <- function(id, ...) {
     output = teal.widgets::white_small_well(
       teal.widgets::plot_with_settings_ui(id = ns("waterfallplot"))
     ),
-    encoding = div(
+    encoding = tags$div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###
@@ -242,7 +237,7 @@ ui_g_waterfall <- function(id, ...) {
       ),
       textInput(
         ns("href_line"),
-        label = div(
+        label = tags$div(
           "Horizontal Reference Line(s)",
           tags$br(),
           helpText("Enter numeric value(s) of reference lines, separated by comma (eg. -10, 20)")
@@ -251,7 +246,7 @@ ui_g_waterfall <- function(id, ...) {
       ),
       textInput(
         ns("ytick_at"),
-        label = div(
+        label = tags$div(
           "Y-axis Interval",
           tags$br(),
           helpText("Enter a numeric value of Y axis interval")
@@ -260,7 +255,7 @@ ui_g_waterfall <- function(id, ...) {
       ),
       textInput(
         ns("gap_point_val"),
-        label = div(
+        label = tags$div(
           "Break High Bars",
           tags$br(),
           helpText("Enter a numeric value to break very high bars")
@@ -289,13 +284,14 @@ srv_g_waterfall <- function(id,
                             plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
-      adsl <- data[["ADSL"]]()
-      adtr <- data[[dataname_tr]]()
-      adrs <- data[[dataname_rs]]()
+      adsl <- data()[["ADSL"]]
+      adtr <- data()[[dataname_tr]]
+      adrs <- data()[[dataname_rs]]
 
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("bar_var", shinyvalidate::sv_required(
@@ -344,9 +340,9 @@ srv_g_waterfall <- function(id,
     })
 
     output_q <- reactive({
-      adsl <- data[["ADSL"]]()
-      adtr <- data[[dataname_tr]]()
-      adrs <- data[[dataname_rs]]()
+      adsl <- data()[["ADSL"]]
+      adtr <- data()[[dataname_tr]]
+      adrs <- data()[[dataname_rs]]
 
       # validate data rows
       teal::validate_has_data(adsl, min_nrow = 2)
@@ -380,7 +376,7 @@ srv_g_waterfall <- function(id,
       ytick_at <- input$ytick_at
       href_line <- input$href_line
       gap_point_val <- input$gap_point_val
-      show_value <- input$show_value # nolint
+      show_value <- input$show_value
       href_line <- suppressWarnings(as_numeric_from_comma_sep_str(href_line))
 
       if (gap_point_val == "") {
@@ -390,9 +386,11 @@ srv_g_waterfall <- function(id,
       }
       ytick_at <- as.numeric(ytick_at)
 
-      bar_color_var <- if (!is.null(input$bar_color_var) &&
-        input$bar_color_var != "None" &&
-        input$bar_color_var != "") {
+      bar_color_var <- if (
+        !is.null(input$bar_color_var) &&
+          input$bar_color_var != "None" &&
+          input$bar_color_var != ""
+      ) {
         input$bar_color_var
       } else {
         NULL
@@ -410,7 +408,7 @@ srv_g_waterfall <- function(id,
 
       # write variables to qenv
       q1 <- teal.code::eval_code(
-        teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data)),
+        data(),
         code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
@@ -431,8 +429,8 @@ srv_g_waterfall <- function(id,
         q1,
         code = bquote({
           adsl <- ADSL[, .(adsl_vars)]
-          adtr <- .(as.name(dataname_tr))[, .(adtr_vars)] # nolint
-          adrs <- .(as.name(dataname_rs))[, .(adrs_vars)] # nolint
+          adtr <- .(as.name(dataname_tr))[, .(adtr_vars)]
+          adrs <- .(as.name(dataname_rs))[, .(adrs_vars)]
 
           bar_tr <- .(as.name(dataname_tr)) %>%
             dplyr::filter(PARAMCD == .(bar_paramcd)) %>%
@@ -448,7 +446,7 @@ srv_g_waterfall <- function(id,
           q1,
           code = bquote({
             anl <- bar_data
-            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
       } else {
@@ -469,13 +467,13 @@ srv_g_waterfall <- function(id,
               dplyr::select(USUBJID, PARAMCD, AVALC) %>%
               tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
             anl <- bar_data %>% dplyr::left_join(rs_label, by = c("USUBJID"))
-            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
       }
 
       # write plotting code to qenv
-      anl <- q1[["anl"]] # nolint
+      anl <- q1[["anl"]]
 
       q1 <- teal.code::eval_code(
         q1,
@@ -559,11 +557,13 @@ srv_g_waterfall <- function(id,
 
     ### REPORTER
     if (with_reporter) {
-      card_fun <- function(comment) {
-        card <- teal::TealReportCard$new()
-        card$set_name("Waterfall")
-        card$append_text("Waterfall Plot", "header2")
-        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
+      card_fun <- function(comment, label) {
+        card <- teal::report_card_template(
+          title = "Waterfall Plot",
+          label = label,
+          with_filter = with_filter,
+          filter_panel_api = filter_panel_api
+        )
         card$append_text("Selected Options", "header3")
         card$append_text(paste0("Tumor Burden Parameter: ", input$bar_paramcd, "."))
         if (!is.null(input$sort_var)) {
@@ -578,7 +578,7 @@ srv_g_waterfall <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)

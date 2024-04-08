@@ -33,17 +33,17 @@ tm_g_waterfall(
 menu item label of the module in the teal app.}
 
 \item{dataname_tr}{tumor burden analysis data used in teal module to plot as bar height, needs to
-be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}}
+be available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}}
 
 \item{dataname_rs}{response analysis data used in teal module to label response parameters, needs to
-be available in the list passed to the \code{data} argument of \code{\link[teal]{init}}}
+be available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}}
 
-\item{bar_paramcd}{(\code{choices_selected}) parameter in tumor burden data that will be plotted as
+\item{bar_paramcd}{\code{choices_selected} parameter in tumor burden data that will be plotted as
 bar height}
 
-\item{bar_var}{(\code{choices_selected}) numeric variable from dataset to plot the bar height, e.g., \code{PCHG}}
+\item{bar_var}{\code{choices_selected} numeric variable from dataset to plot the bar height, e.g., \code{PCHG}}
 
-\item{bar_color_var}{(\code{choices_selected}) color by variable (subject level), \code{None} corresponds
+\item{bar_color_var}{\code{choices_selected} color by variable (subject level), \code{None} corresponds
 to \code{NULL}}
 
 \item{bar_color_opt}{aesthetic values to map color values (named vector to map color values to each name).
@@ -51,26 +51,26 @@ If not \code{NULL}, please make sure this contains all possible values for \code
 otherwise color will be assigned by \code{ggplot} default, please note that \code{NULL} needs to be specified
 in this case}
 
-\item{sort_var}{(\code{choices_selected}) sort by variable (subject level), \code{None} corresponds
+\item{sort_var}{\code{choices_selected} sort by variable (subject level), \code{None} corresponds
 to \code{NULL}}
 
-\item{add_label_var_sl}{(\code{choices_selected}) add label to bars (subject level), \code{None}
+\item{add_label_var_sl}{\code{choices_selected} add label to bars (subject level), \code{None}
 corresponds to \code{NULL}}
 
-\item{add_label_paramcd_rs}{(\code{choices_selected}) add label to bars (response dataset), \code{None}
+\item{add_label_paramcd_rs}{\code{choices_selected} add label to bars (response dataset), \code{None}
 corresponds to \code{NULL}. At least one of \code{add_label_var_sl} and \code{add_label_paramcd_rs} needs
 to be \code{NULL}}
 
-\item{anno_txt_var_sl}{(\code{choices_selected}) subject level variables to be displayed in the annotation
+\item{anno_txt_var_sl}{\code{choices_selected} subject level variables to be displayed in the annotation
 table, default is \code{NULL}}
 
-\item{anno_txt_paramcd_rs}{(\code{choices_selected}) analysis dataset variables to be displayed in the
+\item{anno_txt_paramcd_rs}{\code{choices_selected} analysis dataset variables to be displayed in the
 annotation table, default is \code{NULL}}
 
-\item{facet_var}{(\code{choices_selected}) facet by variable (subject level), \code{None} corresponds to
+\item{facet_var}{\code{choices_selected} facet by variable (subject level), \code{None} corresponds to
 \code{NULL}}
 
-\item{ytick_at}{bar height axis interval, default is \code{20}}
+\item{ytick_at}{bar height axis interval, default is 20}
 
 \item{href_line}{numeric vector to plot horizontal reference lines, default is \code{NULL}}
 
@@ -85,14 +85,14 @@ vector to indicate default value, minimum and maximum values.}
 \item{plot_width}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
 
-\item{pre_output}{(\code{shiny.tag}, optional)\cr
+\item{pre_output}{(\code{shiny.tag}) optional,\cr
 with text placed before the output to put the output into context. For example a title.}
 
-\item{post_output}{(\code{shiny.tag}, optional) with text placed after the output to put the output
+\item{post_output}{(\code{shiny.tag}) optional, with text placed after the output to put the output
 into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} elements are useful.}
 }
 \value{
-the \code{\link[teal:module]{teal::module()}} object.
+the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -100,41 +100,35 @@ the \code{\link[teal:module]{teal::module()}} object.
 This is teal module that generates a waterfall plot for \code{ADaM} data
 }
 \examples{
-library(nestcolor)
-ADSL <- osprey::rADSL
-ADRS <- osprey::rADRS
-ADTR <- osprey::rADTR
+data <- cdisc_data() |>
+  within({
+    library(nestcolor)
+    ADSL <- rADSL
+    ADRS <- rADRS
+    ADTR <- rADTR
+    ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+  })
 
-ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+datanames(data) <- c("ADSL", "ADTR", "ADRS")
+join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 
-app <- teal::init(
-  data = cdisc_data(
-    cdisc_dataset("ADSL", ADSL,
-      code = "ADSL <- rADSL
-              ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))"
-    ),
-    cdisc_dataset("ADRS", ADRS, code = "ADRS <- rADRS"),
-    cdisc_dataset("ADTR", ADTR,
-      code = " ADTR <- rADTR",
-      c("STUDYID", "USUBJID", "PARAMCD", "AVISIT")
-    ),
-    check = TRUE
-  ),
+app <- init(
+  data = data,
   modules = modules(
     tm_g_waterfall(
       label = "Waterfall",
       dataname_tr = "ADTR",
       dataname_rs = "ADRS",
-      bar_paramcd = teal.transform::choices_selected(c("SLDINV"), "SLDINV"),
-      bar_var = teal.transform::choices_selected(c("PCHG", "AVAL"), "PCHG"),
-      bar_color_var = teal.transform::choices_selected(c("ARMCD", "SEX"), "ARMCD"),
+      bar_paramcd = choices_selected(c("SLDINV"), "SLDINV"),
+      bar_var = choices_selected(c("PCHG", "AVAL"), "PCHG"),
+      bar_color_var = choices_selected(c("ARMCD", "SEX"), "ARMCD"),
       bar_color_opt = NULL,
-      sort_var = teal.transform::choices_selected(c("ARMCD", "SEX"), NULL),
-      add_label_var_sl = teal.transform::choices_selected(c("SEX", "EOSDY"), NULL),
-      add_label_paramcd_rs = teal.transform::choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-      anno_txt_var_sl = teal.transform::choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
-      anno_txt_paramcd_rs = teal.transform::choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-      facet_var = teal.transform::choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
+      sort_var = choices_selected(c("ARMCD", "SEX"), NULL),
+      add_label_var_sl = choices_selected(c("SEX", "EOSDY"), NULL),
+      add_label_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
+      anno_txt_var_sl = choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
+      anno_txt_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
+      facet_var = choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
       href_line = "-30, 20"
     )
   )
@@ -142,6 +136,7 @@ app <- teal::init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
+
 }
 \author{
 Ting Qi (qit3) \email{qit3@gene.com}

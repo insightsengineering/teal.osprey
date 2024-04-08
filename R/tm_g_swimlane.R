@@ -7,23 +7,23 @@
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams argument_convention
-#' @param dataname analysis data used for plotting, needs to be available in the list passed to the \code{data}
-#' argument of \code{\link[teal]{init}}. If no markers are to be plotted in the module, `"ADSL"` should be
+#' @param dataname analysis data used for plotting, needs to be available in the list passed to the `data`
+#' argument of [teal::init()]. If no markers are to be plotted in the module, `"ADSL"` should be
 #' the input. If markers are to be plotted, data name for the marker data should be the input
-#' @param bar_var (\code{\link[teal.transform]{choices_selected}}) subject-level numeric variable from dataset
+#' @param bar_var [teal.transform::choices_selected] subject-level numeric variable from dataset
 #' to plot as the bar length
-#' @param bar_color_var (\code{\link[teal.transform]{choices_selected}}) color by variable (subject-level)
-#' @param sort_var (\code{choices_selected}) sort by variable (subject-level)
-#' @param marker_pos_var (\code{\link[teal.transform]{choices_selected}}) variable for marker position from marker data
-#' (Note: make sure that marker position has the same relative start day as bar length variable \code{bar_var})
-#' @param marker_shape_var (\code{\link[teal.transform]{choices_selected}}) marker shape variable from marker data
+#' @param bar_color_var [teal.transform::choices_selected] color by variable (subject-level)
+#' @param sort_var `choices_selected` sort by variable (subject-level)
+#' @param marker_pos_var [teal.transform::choices_selected] variable for marker position from marker data
+#' (Note: make sure that marker position has the same relative start day as bar length variable `bar_var`
+#' @param marker_shape_var [teal.transform::choices_selected] marker shape variable from marker data
 #' @param marker_shape_opt aesthetic values to map shape values (named vector to map shape values to each name).
-#' If not \code{NULL}, please make sure this contains all possible values for \code{marker_shape_var} values,
-#' otherwise shape will be assigned by \code{ggplot} default
+#' If not `NULL`, please make sure this contains all possible values for `marker_shape_var` values,
+#' otherwise shape will be assigned by `ggplot` default
 #' @param marker_color_var marker color variable from marker data
 #' @param marker_color_opt aesthetic values to map color values (named vector to map color values to each name).
-#' If not \code{NULL}, please make sure this contains all possible values for \code{marker_color_var} values,
-#' otherwise color will be assigned by \code{ggplot} default
+#' If not `NULL`, please make sure this contains all possible values for `marker_color_var` values,
+#' otherwise color will be assigned by `ggplot` default
 #' @param vref_line vertical reference lines
 #' @param anno_txt_var character vector with subject-level variable names that are selected as annotation
 #' @param x_label the label of the x axis
@@ -35,62 +35,53 @@
 #' @template author_qit3
 #'
 #' @examples
-#'
 #' # Example using stream (ADaM) dataset
-#' library(dplyr)
-#' library(nestcolor)
+#' data <- cdisc_data() |>
+#'   within(library(dplyr)) |>
+#'   within(library(nestcolor)) |>
+#'   within(ADSL <- rADSL %>%
+#'     mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+#'     filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
+#'   within(ADRS <- rADRS %>%
+#'     filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+#'     mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+#'     rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+#'     arrange(USUBJID))
 #'
-#' ADSL <- osprey::rADSL %>%
-#'   dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-#'   dplyr::filter(STRATA1 == "A" & ARMCD == "ARM A")
-#' ADRS <- osprey::rADRS
+#' datanames(data) <- c("ADSL", "ADRS")
+#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
 #'
-#' ADRS <- ADRS %>%
-#'   dplyr::filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-#'   mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-#'   base::rbind(ADRS %>% dplyr::filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-#'   arrange(USUBJID)
+#' ADSL <- data[["ADSL"]]
+#' ADRS <- data[["ADRS"]]
 #'
 #' app <- init(
-#'   data = cdisc_data(
-#'     cdisc_dataset("ADSL", ADSL, code = "ADSL <- osprey::rADSL %>%
-#'       dplyr::mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-#'       dplyr::filter(STRATA1 == 'A' & ARMCD == 'ARM A')"),
-#'     cdisc_dataset("ADRS", ADRS,
-#'       code = "ADRS <- rADRS
-#'               ADRS <- ADRS %>% dplyr::filter(PARAMCD == 'LSTASDI' & DCSREAS == 'Death') %>%
-#'                       mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-#'               rbind(ADRS %>% dplyr::filter(PARAMCD == 'OVRINV' & AVALC != 'NE')) %>%
-#'               arrange(USUBJID)"
-#'     ),
-#'     check = TRUE
-#'   ),
+#'   data = data,
 #'   modules = modules(
 #'     tm_g_swimlane(
 #'       label = "Swimlane Plot",
 #'       dataname = "ADRS",
-#'       bar_var = teal.transform::choices_selected(
+#'       bar_var = choices_selected(
 #'         selected = "TRTDURD",
 #'         choices = c("TRTDURD", "EOSDY")
 #'       ),
-#'       bar_color_var = teal.transform::choices_selected(
+#'       bar_color_var = choices_selected(
 #'         selected = "EOSSTT",
 #'         choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX")
 #'       ),
-#'       sort_var = teal.transform::choices_selected(
+#'       sort_var = choices_selected(
 #'         selected = "ACTARMCD",
 #'         choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD")
 #'       ),
-#'       marker_pos_var = teal.transform::choices_selected(
+#'       marker_pos_var = choices_selected(
 #'         selected = "ADY",
 #'         choices = c("ADY")
 #'       ),
-#'       marker_shape_var = teal.transform::choices_selected(
+#'       marker_shape_var = choices_selected(
 #'         selected = "AVALC",
 #'         c("AVALC", "AVISIT")
 #'       ),
 #'       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-#'       marker_color_var = teal.transform::choices_selected(
+#'       marker_color_var = choices_selected(
 #'         selected = "AVALC",
 #'         choices = c("AVALC", "AVISIT")
 #'       ),
@@ -99,7 +90,7 @@
 #'         "PD" = "red", "Death" = "black"
 #'       ),
 #'       vref_line = c(30, 60),
-#'       anno_txt_var = teal.transform::choices_selected(
+#'       anno_txt_var = choices_selected(
 #'         selected = c("ACTARM", "SEX"),
 #'         choices = c(
 #'           "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
@@ -130,7 +121,7 @@ tm_g_swimlane <- function(label,
                           pre_output = NULL,
                           post_output = NULL,
                           x_label = "Time from First Treatment (Day)") {
-  logger::log_info("Initializing tm_g_swimlane")
+  message("Initializing tm_g_swimlane")
   args <- as.list(environment())
 
   checkmate::assert_string(label)
@@ -189,13 +180,13 @@ ui_g_swimlane <- function(id, ...) {
       output = teal.widgets::white_small_well(
         teal.widgets::plot_with_settings_ui(id = ns("swimlaneplot"))
       ),
-      encoding = div(
+      encoding = tags$div(
         ### Reporter
         teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
         tags$label("Encodings", class = "text-primary"),
-        helpText("Analysis data:", code(a$dataname)),
-        div(
+        helpText("Analysis data:", tags$code(a$dataname)),
+        tags$div(
           class = "pretty-left-border",
           teal.widgets::optionalSelectInput(
             ns("bar_var"),
@@ -203,7 +194,7 @@ ui_g_swimlane <- function(id, ...) {
             choices = a$bar_var$choices,
             selected = a$bar_var$selected,
             multiple = FALSE,
-            label_help = helpText("from ", code("ADSL"))
+            label_help = helpText("from ", tags$code("ADSL"))
           ),
           teal.widgets::optionalSelectInput(
             ns("bar_color_var"),
@@ -211,7 +202,7 @@ ui_g_swimlane <- function(id, ...) {
             choices = a$bar_color_var$choices,
             selected = a$bar_color_var$selected,
             multiple = FALSE,
-            label_help = helpText("from ", code("ADSL"))
+            label_help = helpText("from ", tags$code("ADSL"))
           )
         ),
         teal.widgets::optionalSelectInput(
@@ -220,9 +211,9 @@ ui_g_swimlane <- function(id, ...) {
           choices = a$sort_var$choices,
           selected = a$sort_var$selected,
           multiple = FALSE,
-          label_help = helpText("from ", code("ADSL"))
+          label_help = helpText("from ", tags$code("ADSL"))
         ),
-        div(
+        tags$div(
           class = "pretty-left-border",
           if (a$dataname == "ADSL") {
             NULL
@@ -235,7 +226,7 @@ ui_g_swimlane <- function(id, ...) {
               choices = a$marker_pos_var$choices,
               selected = a$marker_pos_var$selected,
               multiple = FALSE,
-              label_help = helpText("from ", code(a$dataname))
+              label_help = helpText("from ", tags$code(a$dataname))
             )
           },
           uiOutput(ns("marker_shape_sel")),
@@ -247,11 +238,11 @@ ui_g_swimlane <- function(id, ...) {
           choices = a$anno_txt_var$choices,
           selected = a$anno_txt_var$selected,
           multiple = TRUE,
-          label_help = helpText("from ", code("ADSL"))
+          label_help = helpText("from ", tags$code("ADSL"))
         ),
         textInput(
           ns("vref_line"),
-          label = div(
+          label = tags$div(
             "Vertical Reference Line(s)",
             tags$br(),
             helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
@@ -285,7 +276,8 @@ srv_g_swimlane <- function(id,
                            x_label) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
-  checkmate::assert_class(data, "tdata")
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     iv <- reactive({
@@ -311,7 +303,7 @@ srv_g_swimlane <- function(id,
           ns("marker_shape_var"), "Marker Shape",
           choices = marker_shape_var$choices,
           selected = marker_shape_var$selected, multiple = FALSE,
-          label_help = helpText("from ", code(dataname))
+          label_help = helpText("from ", tags$code(dataname))
         )
       }
     })
@@ -324,7 +316,7 @@ srv_g_swimlane <- function(id,
           ns("marker_color_var"), "Marker Color",
           choices = marker_color_var$choices,
           selected = marker_color_var$selected, multiple = FALSE,
-          label_help = helpText("from ", code(dataname))
+          label_help = helpText("from ", tags$code(dataname))
         )
       }
     })
@@ -333,21 +325,21 @@ srv_g_swimlane <- function(id,
     output_q <- reactive({
       teal::validate_inputs(iv())
 
-      validate(need("ADSL" %in% names(data), "'ADSL' not included in data"))
+      validate(need("ADSL" %in% teal.data::datanames(data()), "'ADSL' not included in data"))
       validate(need(
-        (length(data) == 1 && dataname == "ADSL") ||
-          (length(data) >= 2 && dataname != "ADSL"), paste(
+        (length(teal.data::datanames(data())) == 1 && dataname == "ADSL") ||
+          (length(teal.data::datanames(data())) >= 2 && dataname != "ADSL"), paste(
           "Please either add just 'ADSL' as dataname when just ADSL is available.",
           "In case 2 datasets are available ADSL is not supposed to be the dataname."
         )
       ))
 
-      ADSL <- data[["ADSL"]]() # nolint
+      ADSL <- data()[["ADSL"]]
 
       anl_vars <- unique(c(
         "USUBJID", "STUDYID",
         input$marker_pos_var, input$marker_shape_var, input$marker_color_var
-      )) # nolint
+      ))
       adsl_vars <- unique(c(
         "USUBJID", "STUDYID",
         input$bar_var, input$bar_color_var, input$sort_var, input$anno_txt_var
@@ -357,7 +349,7 @@ srv_g_swimlane <- function(id,
         teal::validate_has_data(ADSL, min_nrow = 3)
         teal::validate_has_variable(ADSL, adsl_vars)
       } else {
-        anl <- data[[dataname]]()
+        anl <- data()[[dataname]]
         teal::validate_has_data(anl, min_nrow = 3)
         teal::validate_has_variable(anl, anl_vars)
 
@@ -386,7 +378,7 @@ srv_g_swimlane <- function(id,
       }
       vref_line <- suppressWarnings(as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)()))
 
-      q1 <- teal.code::new_qenv(tdata2env(data), code = get_code_tdata(data))
+      q1 <- data()
 
       q2 <- teal.code::eval_code(
         q1,
@@ -406,29 +398,29 @@ srv_g_swimlane <- function(id,
         teal.code::eval_code(
           q2,
           code = bquote({
-            ADSL_p <- ADSL # nolint
-            ADSL <- ADSL_p[, .(adsl_vars)] # nolint
+            ADSL_p <- ADSL
+            ADSL <- ADSL_p[, .(adsl_vars)]
             # only take last part of USUBJID
-            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
       } else {
         teal.code::eval_code(
           q2,
           code = bquote({
-            ADSL_p <- ADSL # nolint
-            ANL_p <- .(as.name(dataname)) # nolint
+            ADSL_p <- ADSL
+            ANL_p <- .(as.name(dataname))
 
-            ADSL <- ADSL_p[, .(adsl_vars)] # nolint
-            ANL <- merge( # nolint
+            ADSL <- ADSL_p[, .(adsl_vars)]
+            ANL <- merge(
               x = ADSL,
               y = ANL_p[, .(anl_vars)],
               all.x = FALSE, all.y = FALSE,
               by = c("USUBJID", "STUDYID")
             )
             # only take last part of USUBJID
-            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
-            ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1)) # nolint
+            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
+            ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
       }
@@ -481,8 +473,7 @@ srv_g_swimlane <- function(id,
             }),
             marker_shape_opt = .(if (length(marker_shape_var) == 0) {
               NULL
-            } else if (length(marker_shape_var) > 0 &
-              all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt)) == TRUE) {
+            } else if (length(marker_shape_var) > 0 && all(unique(anl[[marker_shape_var]]) %in% names(marker_shape_opt))) { # nolint: line_length.
               bquote(.(marker_shape_opt))
             } else {
               NULL
@@ -494,8 +485,7 @@ srv_g_swimlane <- function(id,
             }),
             marker_color_opt = .(if (length(marker_color_var) == 0) {
               NULL
-            } else if (length(marker_color_var) > 0 &
-              all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt)) == TRUE) {
+            } else if (length(marker_color_var) > 0 && all(unique(anl[[marker_color_var]]) %in% names(marker_color_opt))) { # nolint: line_length.
               bquote(.(marker_color_opt))
             } else {
               NULL
@@ -542,11 +532,13 @@ srv_g_swimlane <- function(id,
 
     ### REPORTER
     if (with_reporter) {
-      card_fun <- function(comment) {
-        card <- teal::TealReportCard$new()
-        card$set_name("Swimlane")
-        card$append_text("Swimlane Plot", "header2")
-        if (with_filter) card$append_fs(filter_panel_api$get_filter_state())
+      card_fun <- function(comment, label) {
+        card <- teal::report_card_template(
+          title = "Swimlane Plot",
+          label = label,
+          with_filter = with_filter,
+          filter_panel_api = filter_panel_api
+        )
         if (!is.null(input$sort_var)) {
           card$append_text("Selected Options", "header3")
           card$append_text(paste("Sorted by:", input$sort_var))
@@ -557,7 +549,7 @@ srv_g_swimlane <- function(id,
           card$append_text("Comment", "header3")
           card$append_text(comment)
         }
-        card$append_src(paste(teal.code::get_code(output_q()), collapse = "\n"))
+        card$append_src(teal.code::get_code(output_q()))
         card
       }
       teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
