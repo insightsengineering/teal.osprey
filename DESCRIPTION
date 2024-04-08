@@ -1,7 +1,7 @@
 Package: teal.osprey
 Title: 'teal' Modules for TLG Functions in Osprey
-Version: 0.1.16.9015
-Date: 2024-03-20
+Version: 0.1.16.9016
+Date: 2024-04-08
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
@@ -47,30 +47,15 @@ Suggests:
     teal.data (>= 0.3.0.9018),
     testthat (>= 3.1.5),
     withr (>= 2.0.0)
-Config/Needs/verdepcheck:
-    insightsengineering/osprey,
-    rstudio/shiny,
-    insightsengineering/teal,
-    insightsengineering/teal.transform,
-    mllg/checkmate,
-    tidyverse/dplyr,
-    insightsengineering/formatters,
-    tidyverse/ggplot2,
-    r-lib/lifecycle,
-    rstudio/shinyvalidate,
-    insightsengineering/teal.code,
-    insightsengineering/teal.logger,
-    insightsengineering/teal.reporter,
-    insightsengineering/teal.widgets,
-    insightsengineering/tern,
-    tidyverse/tidyr,
-    yihui/knitr,
-    daroczig/logger,
-    insightsengineering/nestcolor,
-    rstudio/rmarkdown,
-    insightsengineering/teal.data,
-    r-lib/testthat,
-    r-lib/withr
+Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
+    insightsengineering/teal, insightsengineering/teal.transform,
+    mllg/checkmate, tidyverse/dplyr, insightsengineering/formatters,
+    tidyverse/ggplot2, r-lib/lifecycle, rstudio/shinyvalidate,
+    insightsengineering/teal.code, insightsengineering/teal.logger,
+    insightsengineering/teal.reporter, insightsengineering/teal.widgets,
+    insightsengineering/tern, tidyverse/tidyr, yihui/knitr,
+    daroczig/logger, insightsengineering/nestcolor, rstudio/rmarkdown,
+    insightsengineering/teal.data, r-lib/testthat, r-lib/withr
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
