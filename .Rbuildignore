@@ -44,3 +44,5 @@ SECURITY.md
 coverage.*
 ^\.pre-commit-config\.yaml
 ^pkgdown$
+^revdeprefs\.yaml$
+^revdep$
