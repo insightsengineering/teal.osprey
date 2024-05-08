@@ -105,7 +105,7 @@ tm_g_waterfall <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
-  logger::log_info("Initializing tm_g_waterfall")
+  message("Initializing tm_g_waterfall")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname_tr)
   checkmate::assert_string(dataname_rs)
@@ -156,7 +156,7 @@ ui_g_waterfall <- function(id, ...) {
     output = teal.widgets::white_small_well(
       teal.widgets::plot_with_settings_ui(id = ns("waterfallplot"))
     ),
-    encoding = div(
+    encoding = tags$div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###
@@ -237,7 +237,7 @@ ui_g_waterfall <- function(id, ...) {
       ),
       textInput(
         ns("href_line"),
-        label = div(
+        label = tags$div(
           "Horizontal Reference Line(s)",
           tags$br(),
           helpText("Enter numeric value(s) of reference lines, separated by comma (eg. -10, 20)")
@@ -246,7 +246,7 @@ ui_g_waterfall <- function(id, ...) {
       ),
       textInput(
         ns("ytick_at"),
-        label = div(
+        label = tags$div(
           "Y-axis Interval",
           tags$br(),
           helpText("Enter a numeric value of Y axis interval")
@@ -255,7 +255,7 @@ ui_g_waterfall <- function(id, ...) {
       ),
       textInput(
         ns("gap_point_val"),
-        label = div(
+        label = tags$div(
           "Break High Bars",
           tags$br(),
           helpText("Enter a numeric value to break very high bars")

@@ -217,7 +217,7 @@ ui_g_patient_profile <- function(id, ...) {
       output = teal.widgets::white_small_well(
         teal.widgets::plot_with_settings_ui(id = ns("patientprofileplot"))
       ),
-      encoding = div(
+      encoding = tags$div(
         ### Reporter
         teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
@@ -228,7 +228,7 @@ ui_g_patient_profile <- function(id, ...) {
           choices = a$patient_id$choices,
           selected = a$patient_id$selected
         ),
-        div(
+        tags$div(
           tagList(
             helpText("Select", tags$code("ADaM"), "Domains"),
             checkboxGroupInput(
@@ -320,7 +320,7 @@ ui_g_patient_profile <- function(id, ...) {
         ),
         textInput(
           ns("x_limit"),
-          label = div(
+          label = tags$div(
             "Study Days Range",
             tags$br(),
             helpText("Enter TWO numeric values of study days range, separated by comma (eg. -28, 750)")

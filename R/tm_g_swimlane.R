@@ -121,7 +121,7 @@ tm_g_swimlane <- function(label,
                           pre_output = NULL,
                           post_output = NULL,
                           x_label = "Time from First Treatment (Day)") {
-  logger::log_info("Initializing tm_g_swimlane")
+  message("Initializing tm_g_swimlane")
   args <- as.list(environment())
 
   checkmate::assert_string(label)
@@ -180,13 +180,13 @@ ui_g_swimlane <- function(id, ...) {
       output = teal.widgets::white_small_well(
         teal.widgets::plot_with_settings_ui(id = ns("swimlaneplot"))
       ),
-      encoding = div(
+      encoding = tags$div(
         ### Reporter
         teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
         tags$label("Encodings", class = "text-primary"),
-        helpText("Analysis data:", code(a$dataname)),
-        div(
+        helpText("Analysis data:", tags$code(a$dataname)),
+        tags$div(
           class = "pretty-left-border",
           teal.widgets::optionalSelectInput(
             ns("bar_var"),
@@ -194,7 +194,7 @@ ui_g_swimlane <- function(id, ...) {
             choices = a$bar_var$choices,
             selected = a$bar_var$selected,
             multiple = FALSE,
-            label_help = helpText("from ", code("ADSL"))
+            label_help = helpText("from ", tags$code("ADSL"))
           ),
           teal.widgets::optionalSelectInput(
             ns("bar_color_var"),
@@ -202,7 +202,7 @@ ui_g_swimlane <- function(id, ...) {
             choices = a$bar_color_var$choices,
             selected = a$bar_color_var$selected,
             multiple = FALSE,
-            label_help = helpText("from ", code("ADSL"))
+            label_help = helpText("from ", tags$code("ADSL"))
           )
         ),
         teal.widgets::optionalSelectInput(
@@ -211,9 +211,9 @@ ui_g_swimlane <- function(id, ...) {
           choices = a$sort_var$choices,
           selected = a$sort_var$selected,
           multiple = FALSE,
-          label_help = helpText("from ", code("ADSL"))
+          label_help = helpText("from ", tags$code("ADSL"))
         ),
-        div(
+        tags$div(
           class = "pretty-left-border",
           if (a$dataname == "ADSL") {
             NULL
@@ -226,7 +226,7 @@ ui_g_swimlane <- function(id, ...) {
               choices = a$marker_pos_var$choices,
               selected = a$marker_pos_var$selected,
               multiple = FALSE,
-              label_help = helpText("from ", code(a$dataname))
+              label_help = helpText("from ", tags$code(a$dataname))
             )
           },
           uiOutput(ns("marker_shape_sel")),
@@ -238,11 +238,11 @@ ui_g_swimlane <- function(id, ...) {
           choices = a$anno_txt_var$choices,
           selected = a$anno_txt_var$selected,
           multiple = TRUE,
-          label_help = helpText("from ", code("ADSL"))
+          label_help = helpText("from ", tags$code("ADSL"))
         ),
         textInput(
           ns("vref_line"),
-          label = div(
+          label = tags$div(
             "Vertical Reference Line(s)",
             tags$br(),
             helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
@@ -302,7 +302,7 @@ srv_g_swimlane <- function(id,
           ns("marker_shape_var"), "Marker Shape",
           choices = marker_shape_var$choices,
           selected = marker_shape_var$selected, multiple = FALSE,
-          label_help = helpText("from ", code(dataname))
+          label_help = helpText("from ", tags$code(dataname))
         )
       }
     })
@@ -315,7 +315,7 @@ srv_g_swimlane <- function(id,
           ns("marker_color_var"), "Marker Color",
           choices = marker_color_var$choices,
           selected = marker_color_var$selected, multiple = FALSE,
-          label_help = helpText("from ", code(dataname))
+          label_help = helpText("from ", tags$code(dataname))
         )
       }
     })

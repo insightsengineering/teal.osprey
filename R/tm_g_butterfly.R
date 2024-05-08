@@ -121,7 +121,7 @@ tm_g_butterfly <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL) {
-  logger::log_info("Initializing tm_g_butterfly")
+  message("Initializing tm_g_butterfly")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
   checkmate::assert_class(filter_var, classes = "choices_selected", null.ok = TRUE)
@@ -164,7 +164,7 @@ ui_g_butterfly <- function(id, ...) {
     output = teal.widgets::white_small_well(
       teal.widgets::plot_with_settings_ui(id = ns("butterflyplot"))
     ),
-    encoding = div(
+    encoding = tags$div(
       ### Reporter
       teal.reporter::simple_reporter_ui(ns("simple_reporter")),
       ###

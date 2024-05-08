@@ -132,7 +132,7 @@ tm_g_heat_bygrade <- function(label,
                               fontsize = c(5, 3, 7),
                               plot_height = c(600L, 200L, 2000L),
                               plot_width = NULL) {
-  logger::log_info("Initializing tm_g_heat_bygrade")
+  message("Initializing tm_g_heat_bygrade")
   args <- as.list(environment())
 
   checkmate::assert_string(label)
@@ -194,7 +194,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
       output = teal.widgets::white_small_well(
         plot_decorate_output(id = ns(NULL))
       ),
-      encoding = div(
+      encoding = tags$div(
         ### Reporter
         teal.reporter::simple_reporter_ui(ns("simple_reporter")),
         ###
@@ -234,7 +234,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
           multiple = FALSE
         ),
         helpText("Plot conmed"),
-        div(
+        tags$div(
           class = "pretty-left-border",
           if (!is.na(args$cm_dataname)) {
             checkboxInput(
