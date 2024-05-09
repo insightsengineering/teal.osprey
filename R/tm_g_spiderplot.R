@@ -244,6 +244,7 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
+logger::log_shiny_input_changes(input, namespace = "teal.osprey")
     iv <- reactive({
       ADSL <- data()[["ADSL"]]
       ADTR <- data()[[dataname]]
