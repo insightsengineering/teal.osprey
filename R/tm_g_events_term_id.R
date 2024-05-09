@@ -214,7 +214,7 @@ srv_g_events_term_id <- function(id,
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
-logger::log_shiny_input_changes(input, namespace = "teal.osprey")
+    logger::log_shiny_input_changes(input, namespace = "teal.osprey")
     iv <- reactive({
       iv <- shinyvalidate::InputValidator$new()
       iv$add_rule("term", shinyvalidate::sv_required(
