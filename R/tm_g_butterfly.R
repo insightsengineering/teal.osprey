@@ -255,7 +255,6 @@ ui_g_butterfly <- function(id, ...) {
       )
     ),
     forms = tagList(
-      teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
       teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
     ),
     pre_output = a$pre_output,
@@ -503,13 +502,6 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       plot_r = plot_r,
       height = plot_height,
       width = plot_width
-    )
-
-    teal.widgets::verbatim_popup_srv(
-      id = "warning",
-      verbatim_content = reactive(teal.code::get_warnings(output_q())),
-      title = "Warning",
-      disabled = reactive(is.null(teal.code::get_warnings(output_q())))
     )
 
     teal.widgets::verbatim_popup_srv(
