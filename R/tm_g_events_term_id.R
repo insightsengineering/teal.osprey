@@ -194,7 +194,6 @@ ui_g_events_term_id <- function(id, ...) {
       )
     ),
     forms = tagList(
-      teal.widgets::verbatim_popup_ui(ns("warning"), "Show Warnings"),
       teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
     )
   )
@@ -363,13 +362,6 @@ srv_g_events_term_id <- function(id,
     })
 
     plot_r <- reactive(output_q()[["plot"]])
-
-    teal.widgets::verbatim_popup_srv(
-      id = "warning",
-      verbatim_content = reactive(teal.code::get_warnings(output_q())),
-      title = "Warning",
-      disabled = reactive(is.null(teal.code::get_warnings(output_q())))
-    )
 
     teal.widgets::verbatim_popup_srv(
       id = "rcode",
