@@ -362,7 +362,7 @@ srv_g_patient_profile <- function(id,
   if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
   checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
   moduleServer(id, function(input, output, session) {
-    logger::log_shiny_input_changes(input, namespace = "teal.osprey")
+    if (shiny::isRunning()) logger::log_shiny_input_changes(input, namespace = "teal.osprey")
     select_plot <- reactive(
       vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
     )
