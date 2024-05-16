@@ -1,7 +1,7 @@
 Package: teal.osprey
 Title: 'teal' Modules for TLG Functions in Osprey
-Version: 0.1.16.9018
-Date: 2024-05-10
+Version: 0.1.16.9019
+Date: 2024-05-16
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
@@ -50,12 +50,13 @@ Suggests:
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal, insightsengineering/teal.transform,
     mllg/checkmate, tidyverse/dplyr, insightsengineering/formatters,
-    tidyverse/ggplot2, r-lib/lifecycle, daroczig/logger, rstudio/shinyvalidate,
-    insightsengineering/teal.code, insightsengineering/teal.logger,
-    insightsengineering/teal.reporter, insightsengineering/teal.widgets,
-    insightsengineering/tern, tidyverse/tidyr, yihui/knitr,
-    insightsengineering/nestcolor, rstudio/rmarkdown,
-    insightsengineering/teal.data, r-lib/testthat, r-lib/withr
+    tidyverse/ggplot2, r-lib/lifecycle, daroczig/logger,
+    rstudio/shinyvalidate, insightsengineering/teal.code,
+    insightsengineering/teal.logger, insightsengineering/teal.reporter,
+    insightsengineering/teal.widgets, insightsengineering/tern,
+    tidyverse/tidyr, yihui/knitr, insightsengineering/nestcolor,
+    rstudio/rmarkdown, insightsengineering/teal.data, r-lib/testthat,
+    r-lib/withr
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
