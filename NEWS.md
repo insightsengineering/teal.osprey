@@ -1,9 +1,12 @@
-# teal.osprey 0.1.16.9018
+# teal.osprey 0.1.16.9019
 
 * Removed `Show Warnings` modals from modules.
 
 ### Breaking Changes
 * Adapted all modules to use `teal_data` objects.
+
+### Enhancements
+* Added `logger` functionality for logging changes in shiny inputs in all modules. `logger` was added to Imports.
 
 ### Miscellaneous
 
