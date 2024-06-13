@@ -133,7 +133,6 @@ include_css_files <- function(pattern = "*") {
 
 to_track_shiny_input_changes <- function(input) {
   if (shiny::isRunning()) {
-
     plot_nss <- c("butterflyplot", "out", "patientprofileplot", "spiderplot", "swimlaneplot", "waterfallplot")
 
     elements <- c("plot_modal_width", "flex_width", "plot_modal_height", "flex_height")
