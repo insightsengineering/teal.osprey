@@ -131,7 +131,7 @@ include_css_files <- function(pattern = "*") {
   return(shiny::singleton(shiny::tags$head(lapply(css_files, shiny::includeCSS))))
 }
 
-to_track_shiny_input_changes <- function(input) {
+track_shiny_input_changes <- function(input) {
   if (shiny::isRunning()) {
     plot_nss <- c("butterflyplot", "out", "patientprofileplot", "spiderplot", "swimlaneplot", "waterfallplot")
 

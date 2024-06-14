@@ -208,7 +208,7 @@ srv_g_ae_oview <- function(id,
   checkmate::assert_class(isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
-    to_track_shiny_input_changes(input)
+    track_shiny_input_changes(input)
     iv <- reactive({
       ANL <- data()[[dataname]]
 

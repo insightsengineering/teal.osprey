@@ -47,7 +47,7 @@ srv_g_decorate <- function(id,
                            plot_height,
                            plot_width) {
   moduleServer(id, function(input, output, session) {
-    to_track_shiny_input_changes(input)
+    track_shiny_input_changes(input)
     plot_g <- reactive({
       g <- tern::decorate_grob(
         plt(),
