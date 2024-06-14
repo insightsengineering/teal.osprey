@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.00144675925925926" branch-rate="0" lines-covered="5" lines-valid="3456" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-06-13 11:52:33.923275">
+<coverage line-rate="0.00144675925925926" branch-rate="0" lines-covered="5" lines-valid="3456" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-06-14 10:05:32.920476">
   <sources>
     <source>/__w/teal.osprey/teal.osprey/teal.osprey</source>
   </sources>
@@ -7060,7 +7060,7 @@
                 <line number="131" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="to_track_shiny_input_changes" signature="" line-rate="0" branch-rate="0" complexity="0">
+            <method name="track_shiny_input_changes" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
                 <line number="135" hits="0" branch="false"/>
                 <line number="136" hits="0" branch="false"/>
