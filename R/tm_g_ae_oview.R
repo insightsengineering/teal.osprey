@@ -134,26 +134,26 @@ ui_g_ae_oview <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("arm_var"),
         "Arm Variable",
-        choices = args$arm_var$choices,
+        choices = get_choices(args$arm_var$choices),
         selected = args$arm_var$selected,
         multiple = FALSE
       ),
       selectInput(
         ns("arm_ref"),
         "Control",
-        choices = args$arm_var$choices,
+        choices = get_choices(args$arm_var$choices),
         selected = args$arm_var$selected
       ),
       selectInput(
         ns("arm_trt"),
         "Treatment",
-        choices = args$arm_var$choices,
+        choices = get_choices(args$arm_var$choices),
         selected = args$arm_var$selected
       ),
       selectInput(
         ns("flag_var_anl"),
         "Flags",
-        choices = args$flag_var_anl$choices,
+        choices = get_choices(args$flag_var_anl$choices),
         selected = args$flag_var_anl$selected,
         multiple = TRUE
       ),

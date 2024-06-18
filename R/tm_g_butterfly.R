@@ -175,7 +175,7 @@ ui_g_butterfly <- function(id, ...) {
           ns("filter_var"),
           label =
             "Preset Data Filters Observations with value of 'Y' for selected variable(s) will be used for analysis",
-          choices = a$filter_var$choices,
+          choices = get_choices(a$filter_var$choices),
           selected = a$filter_var$selected,
           multiple = TRUE
         )
@@ -183,7 +183,7 @@ ui_g_butterfly <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("right_var"),
         "Right Dichotomization Variable",
-        a$right_var$choices,
+        get_choices(a$right_var$choices),
         a$right_var$selected,
         multiple = FALSE
       ),
@@ -200,7 +200,7 @@ ui_g_butterfly <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("left_var"),
         "Left Dichotomization Variable",
-        a$left_var$choices,
+        get_choices(a$left_var$choices),
         a$left_var$selected,
         multiple = FALSE
       ),
@@ -217,27 +217,27 @@ ui_g_butterfly <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("category_var"),
         "Category Variable",
-        a$category_var$choices,
+        get_choices(a$category_var$choices),
         a$category_var$selected,
         multiple = FALSE
       ),
       radioButtons(
         ns("color_by_var"),
         "Color Block By Variable",
-        a$color_by_var$choices,
+        get_choices(a$color_by_var$choices),
         a$color_by_var$selected
       ),
       radioButtons(
         ns("count_by_var"),
         "Count By Variable",
-        a$count_by_var$choices,
+        get_choices(a$count_by_var$choices),
         a$count_by_var$selected
       ),
       if (!is.null(a$facet_var)) {
         teal.widgets::optionalSelectInput(
           ns("facet_var"),
           "Facet By Variable",
-          a$facet_var$choices,
+          get_choices(a$facet_var$choices),
           a$facet_var$selected,
           multiple = TRUE
         )
@@ -245,7 +245,7 @@ ui_g_butterfly <- function(id, ...) {
       radioButtons(
         ns("sort_by_var"),
         "Sort By Variable",
-        a$sort_by_var$choices,
+        get_choices(a$sort_by_var$choices),
         a$sort_by_var$selected
       ),
       checkboxInput(

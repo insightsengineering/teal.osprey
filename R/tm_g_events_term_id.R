@@ -110,25 +110,25 @@ ui_g_events_term_id <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("term"),
         "Term Variable",
-        choices = args$term_var$choices,
+        choices = get_choices(args$term_var$choices),
         selected = args$term_var$selected
       ),
       teal.widgets::optionalSelectInput(
         ns("arm_var"),
         "Arm Variable",
-        choices = args$arm_var$choices,
+        choices = get_choices(args$arm_var$choices),
         selected = args$arm_var$selected
       ),
       selectInput(
         ns("arm_ref"),
         "Control",
-        choices = args$arm_var$choices,
+        choices = get_choices(args$arm_var$choices),
         selected = args$arm_var$selected
       ),
       selectInput(
         ns("arm_trt"),
         "Treatment",
-        choices = args$arm_var$choices,
+        choices = get_choices(args$arm_var$choices),
         selected = args$arm_var$selected
       ),
       teal.widgets::optionalSelectInput(
