@@ -130,19 +130,3 @@ include_css_files <- function(pattern = "*") {
   }
   return(shiny::singleton(shiny::tags$head(lapply(css_files, shiny::includeCSS))))
 }
-
-track_shiny_input_changes <- function(input) {
-  if (shiny::isRunning()) {
-    plot_nss <- c("butterflyplot", "out", "patientprofileplot", "spiderplot", "swimlaneplot", "waterfallplot")
-
-    elements <- c("plot_modal_width", "flex_width", "plot_modal_height", "flex_height")
-
-    excluded_inputs <- unlist(lapply(plot_nss, paste, elements, sep = "-"))
-    logger::log_shiny_input_changes(
-      input,
-      level = logger::TRACE,
-      namespace = "teal.osprey",
-      excluded_inputs = excluded_inputs
-    )
-  }
-}
