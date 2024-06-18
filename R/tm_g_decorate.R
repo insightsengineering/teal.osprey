@@ -47,6 +47,7 @@ srv_g_decorate <- function(id,
                            plot_height,
                            plot_width) {
   moduleServer(id, function(input, output, session) {
+    if (shiny::isRunning()) logger::log_shiny_input_changes(input, namespace = "teal.osprey")
     plot_g <- reactive({
       g <- tern::decorate_grob(
         plt(),
