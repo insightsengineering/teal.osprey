@@ -151,49 +151,49 @@ ui_g_spider <- function(id, ...) {
           teal.widgets::optionalSelectInput(
             ns("paramcd"),
             paste("Parameter - from", a$dataname),
-            a$paramcd$choices,
+            get_choices(a$paramcd$choices),
             a$paramcd$selected,
             multiple = FALSE
           ),
           teal.widgets::optionalSelectInput(
             ns("x_var"),
             "X-axis Variable",
-            a$x_var$choices,
+            get_choices(a$x_var$choices),
             a$x_var$selected,
             multiple = FALSE
           ),
           teal.widgets::optionalSelectInput(
             ns("y_var"),
             "Y-axis Variable",
-            a$y_var$choices,
+            get_choices(a$y_var$choices),
             a$y_var$selected,
             multiple = FALSE
           ),
           teal.widgets::optionalSelectInput(
             ns("line_colorby_var"),
             "Color By Variable (Line)",
-            a$line_colorby_var$choices,
+            get_choices(a$line_colorby_var$choices),
             a$line_colorby_var$selected,
             multiple = FALSE
           ),
           teal.widgets::optionalSelectInput(
             ns("marker_var"),
             "Marker Symbol By Variable",
-            a$marker_var$choices,
+            get_choices(a$marker_var$choices),
             a$marker_var$selected,
             multiple = FALSE
           ),
           teal.widgets::optionalSelectInput(
             ns("xfacet_var"),
             "X-facet By Variable",
-            a$xfacet_var$choices,
+            get_choices(a$xfacet_var$choices),
             a$xfacet_var$selected,
             multiple = TRUE
           ),
           teal.widgets::optionalSelectInput(
             ns("yfacet_var"),
             "Y-facet By Variable",
-            a$yfacet_var$choices,
+            get_choices(a$yfacet_var$choices),
             a$yfacet_var$selected,
             multiple = TRUE
           )

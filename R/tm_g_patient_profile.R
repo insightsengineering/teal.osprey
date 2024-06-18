@@ -225,7 +225,7 @@ ui_g_patient_profile <- function(id, ...) {
         selectizeInput(
           ns("patient_id"),
           "Patient ID",
-          choices = a$patient_id$choices,
+          choices = get_choices(a$patient_id$choices),
           selected = a$patient_id$selected
         ),
         tags$div(
@@ -242,7 +242,7 @@ ui_g_patient_profile <- function(id, ...) {
         teal.widgets::optionalSelectInput(
           ns("sl_start_date"),
           "Start date variable",
-          choices = a$sl_start_date$choices,
+          choices = get_choices(a$sl_start_date$choices),
           selected = a$sl_start_date$selected,
           multiple = FALSE,
           label_help = helpText(
@@ -255,7 +255,7 @@ ui_g_patient_profile <- function(id, ...) {
           selectInput(
             ns("ex_var"),
             "Exposure variable",
-            choices = a$ex_var$choices,
+            choices = get_choices(a$ex_var$choices),
             selected = a$ex_var$selected,
             multiple = FALSE
           )
@@ -266,14 +266,14 @@ ui_g_patient_profile <- function(id, ...) {
           teal.widgets::optionalSelectInput(
             ns("ae_var"),
             "Adverse Event variable",
-            choices = a$ae_var$choices,
+            choices = get_choices(a$ae_var$choices),
             selected = a$ae_var$selected,
             multiple = FALSE
           ),
           teal.widgets::optionalSelectInput(
             ns("ae_line_var"),
             "Adverse Event line color variable",
-            choices = a$ae_line_col_var$choices,
+            choices = get_choices(a$ae_line_col_var$choices),
             selected = a$ae_line_col_var$selected,
             multiple = FALSE
           )
@@ -284,7 +284,7 @@ ui_g_patient_profile <- function(id, ...) {
           teal.widgets::optionalSelectInput(
             ns("rs_var"),
             "Tumor response variable",
-            choices = a$rs_var$choices,
+            choices = get_choices(a$rs_var$choices),
             selected = a$rs_var$selected,
             multiple = FALSE
           )
@@ -295,7 +295,7 @@ ui_g_patient_profile <- function(id, ...) {
           teal.widgets::optionalSelectInput(
             ns("cm_var"),
             "Concomitant medicine variable",
-            choices = a$cm_var$choices,
+            choices = get_choices(a$cm_var$choices),
             selected = a$cm_var$selected,
             multiple = FALSE
           )
@@ -306,14 +306,14 @@ ui_g_patient_profile <- function(id, ...) {
           teal.widgets::optionalSelectInput(
             ns("lb_var"),
             "Lab variable",
-            choices = a$lb_var$choices,
+            choices = get_choices(a$lb_var$choices),
             selected = a$lb_var$selected,
             multiple = FALSE
           ),
           selectInput(
             ns("lb_var_show"),
             "Lab values",
-            choices = a$lb_var$choices,
+            choices = get_choices(a$lb_var$choices),
             selected = a$lb_var$selected,
             multiple = TRUE
           )

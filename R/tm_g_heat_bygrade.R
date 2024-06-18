@@ -201,35 +201,35 @@ ui_g_heatmap_bygrade <- function(id, ...) {
         teal.widgets::optionalSelectInput(
           ns("id_var"),
           "ID Variable",
-          choices = args$id_var$choices,
+          choices = get_choices(args$id_var$choices),
           selected = args$id_var$selected,
           multiple = FALSE
         ),
         teal.widgets::optionalSelectInput(
           ns("visit_var"),
           "Visit Variable",
-          choices = args$visit_var$choices,
+          choices = get_choices(args$visit_var$choices),
           selected = args$visit_var$selected,
           multiple = FALSE
         ),
         teal.widgets::optionalSelectInput(
           ns("ongo_var"),
           "Study Ongoing Status Variable",
-          choices = args$ongo_var$choices,
+          choices = get_choices(args$ongo_var$choices),
           selected = args$ongo_var$selected,
           multiple = FALSE
         ),
         teal.widgets::optionalSelectInput(
           ns("anno_var"),
           "Annotation Variables",
-          choices = args$anno_var$choices,
+          choices = get_choices(args$anno_var$choices),
           selected = args$anno_var$selected,
           multiple = TRUE
         ),
         teal.widgets::optionalSelectInput(
           ns("heat_var"),
           "Heat Variable",
-          choices = args$heat_var$choices,
+          choices = get_choices(args$heat_var$choices),
           selected = args$heat_var$selected,
           multiple = FALSE
         ),
@@ -249,14 +249,14 @@ ui_g_heatmap_bygrade <- function(id, ...) {
           teal.widgets::optionalSelectInput(
             ns("conmed_var"),
             "Conmed Variable",
-            choices = args$conmed_var$choices,
+            choices = get_choices(args$conmed_var$choices),
             selected = args$conmed_var$selected,
             multiple = FALSE
           ),
           selectInput(
             ns("conmed_level"),
             "Conmed Levels",
-            choices = args$conmed_var$choices,
+            choices = get_choices(args$conmed_var$choices),
             selected = args$conmed_var$selected,
             multiple = TRUE
           )

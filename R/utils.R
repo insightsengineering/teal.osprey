@@ -130,3 +130,20 @@ include_css_files <- function(pattern = "*") {
   }
   return(shiny::singleton(shiny::tags$head(lapply(css_files, shiny::includeCSS))))
 }
+
+#' Get Choices
+#'
+#' This function returns choices based on the class of the input.
+#' If the input is of class `delayed_data`, it returns the `subset` of the input.
+#' Otherwise, it returns the input as is.
+#'
+#' @param choices An object that contains choices.
+#' @return A vector of choices.
+#' @keywords internal
+get_choices <- function(choices) {
+  if (inherits(choices, "delayed_data")) {
+    choices$subset
+  } else {
+    choices
+  }
+}
