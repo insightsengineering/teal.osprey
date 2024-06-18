@@ -111,19 +111,19 @@ ui_g_ae_sub <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("arm_var"),
         "Arm Variable",
-        choices = args$arm_var$choices,
+        choices = get_choices(args$arm_var$choices),
         selected = args$arm_var$selected
       ),
       selectInput(
         ns("arm_trt"),
         "Treatment",
-        choices = args$arm_var$choices,
+        choices = get_choices(args$arm_var$choices),
         selected = args$arm_var$selected
       ),
       selectInput(
         ns("arm_ref"),
         "Control",
-        choices = args$arm_var$choices,
+        choices = get_choices(args$arm_var$choices),
         selected = args$arm_var$selected
       ),
       checkboxInput(
@@ -134,7 +134,7 @@ ui_g_ae_sub <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("groups"),
         "Group Variable",
-        choices = args$group_var$choices,
+        choices = get_choices(args$group_var$choices),
         selected = args$group_var$selected,
         multiple = TRUE
       ),

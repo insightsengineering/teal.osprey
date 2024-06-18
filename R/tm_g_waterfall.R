@@ -165,14 +165,14 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("bar_paramcd"),
         "Tumor Burden Parameter",
-        choices = a$bar_paramcd$choices,
+        choices = get_choices(a$bar_paramcd$choices),
         selected = a$bar_paramcd$selected,
         multiple = FALSE
       ),
       teal.widgets::optionalSelectInput(
         ns("bar_var"),
         "Bar Height",
-        choices = a$bar_var$choices,
+        choices = get_choices(a$bar_var$choices),
         selected = a$bar_var$selected,
         multiple = FALSE,
         label_help = helpText("Tumor change variable from ", tags$code("ADTR"))
@@ -180,14 +180,14 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("bar_color_var"),
         "Bar Color",
-        choices = a$bar_color_var$choices,
+        choices = get_choices(a$bar_color_var$choices),
         selected = a$bar_color_var$selected,
         multiple = FALSE
       ),
       teal.widgets::optionalSelectInput(
         ns("sort_var"),
         "Sort by",
-        choices = a$sort_var$choices,
+        choices = get_choices(a$sort_var$choices),
         selected = a$sort_var$selected,
         multiple = FALSE,
         label_help = helpText("from ", tags$code("ADSL"))
@@ -195,21 +195,21 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("add_label_var_sl"),
         "Add ADSL Label to Bars",
-        choices = a$add_label_var_sl$choices,
+        choices = get_choices(a$add_label_var_sl$choices),
         selected = a$add_label_var_sl$selected,
         multiple = FALSE
       ),
       teal.widgets::optionalSelectInput(
         ns("add_label_paramcd_rs"),
         "Add ADRS Label to Bars",
-        choices = a$add_label_paramcd_rs$choices,
+        choices = get_choices(a$add_label_paramcd_rs$choices),
         selected = a$add_label_paramcd_rs$selected,
         multiple = FALSE
       ),
       teal.widgets::optionalSelectInput(
         ns("anno_txt_var_sl"),
         "Annotation Variables",
-        choices = a$anno_txt_var_sl$choices,
+        choices = get_choices(a$anno_txt_var_sl$choices),
         selected = a$anno_txt_var_sl$selected,
         multiple = TRUE,
         label_help = helpText("from ", tags$code("ADSL"))
@@ -217,7 +217,7 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("anno_txt_paramcd_rs"),
         "Annotation Parameters",
-        choices = a$anno_txt_paramcd_rs$choices,
+        choices = get_choices(a$anno_txt_paramcd_rs$choices),
         selected = a$anno_txt_paramcd_rs$selected,
         multiple = TRUE,
         label_help = helpText("from ", tags$code("ADRS"))
@@ -225,7 +225,7 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("facet_var"),
         "Facet by",
-        choices = a$facet_var$choices,
+        choices = get_choices(a$facet_var$choices),
         selected = NULL,
         multiple = FALSE,
         label_help = helpText("from ", tags$code("ADSL"))

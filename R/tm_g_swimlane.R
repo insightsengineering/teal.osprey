@@ -191,7 +191,7 @@ ui_g_swimlane <- function(id, ...) {
           teal.widgets::optionalSelectInput(
             ns("bar_var"),
             "Bar Length",
-            choices = a$bar_var$choices,
+            choices = get_choices(a$bar_var$choices),
             selected = a$bar_var$selected,
             multiple = FALSE,
             label_help = helpText("from ", tags$code("ADSL"))
@@ -199,7 +199,7 @@ ui_g_swimlane <- function(id, ...) {
           teal.widgets::optionalSelectInput(
             ns("bar_color_var"),
             "Bar Color",
-            choices = a$bar_color_var$choices,
+            choices = get_choices(a$bar_color_var$choices),
             selected = a$bar_color_var$selected,
             multiple = FALSE,
             label_help = helpText("from ", tags$code("ADSL"))
@@ -208,7 +208,7 @@ ui_g_swimlane <- function(id, ...) {
         teal.widgets::optionalSelectInput(
           ns("sort_var"),
           "Sort by",
-          choices = a$sort_var$choices,
+          choices = get_choices(a$sort_var$choices),
           selected = a$sort_var$selected,
           multiple = FALSE,
           label_help = helpText("from ", tags$code("ADSL"))
@@ -223,7 +223,7 @@ ui_g_swimlane <- function(id, ...) {
             teal.widgets::optionalSelectInput(
               ns("marker_pos_var"),
               "Marker Position",
-              choices = a$marker_pos_var$choices,
+              choices = get_choices(a$marker_pos_var$choices),
               selected = a$marker_pos_var$selected,
               multiple = FALSE,
               label_help = helpText("from ", tags$code(a$dataname))
@@ -235,7 +235,7 @@ ui_g_swimlane <- function(id, ...) {
         teal.widgets::optionalSelectInput(
           ns("anno_txt_var"),
           "Annotation Variables",
-          choices = a$anno_txt_var$choices,
+          choices = get_choices(a$anno_txt_var$choices),
           selected = a$anno_txt_var$selected,
           multiple = TRUE,
           label_help = helpText("from ", tags$code("ADSL"))
@@ -301,7 +301,7 @@ srv_g_swimlane <- function(id,
         ns <- session$ns
         teal.widgets::optionalSelectInput(
           ns("marker_shape_var"), "Marker Shape",
-          choices = marker_shape_var$choices,
+          choices = get_choices(marker_shape_var$choices),
           selected = marker_shape_var$selected, multiple = FALSE,
           label_help = helpText("from ", tags$code(dataname))
         )
@@ -314,7 +314,7 @@ srv_g_swimlane <- function(id,
         ns <- session$ns
         teal.widgets::optionalSelectInput(
           ns("marker_color_var"), "Marker Color",
-          choices = marker_color_var$choices,
+          choices = get_choices(marker_color_var$choices),
           selected = marker_color_var$selected, multiple = FALSE,
           label_help = helpText("from ", tags$code(dataname))
         )
