@@ -6,7 +6,7 @@
 * Adapted all modules to use `teal_data` objects.
 
 ### Enhancements
-* Added `logger` functionality for logging changes in shiny inputs in all modules. `logger` was added to Imports.
+* Added `teal.logger` functionality for logging changes in shiny inputs in all modules.
 
 ### Miscellaneous
 
