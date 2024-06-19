@@ -191,6 +191,7 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     ui_args = args,
     server = srv_g_patient_profile,
     server_args = list(
+      patient_id = patient_id,
       sl_dataname = sl_dataname,
       ex_dataname = ex_dataname,
       ae_dataname = ae_dataname,
@@ -223,10 +224,9 @@ ui_g_patient_profile <- function(id, ...) {
         ###
         tags$label("Encodings", class = "text-primary"),
         selectizeInput(
-          ns("patient_id"),
-          "Patient ID",
-          choices = get_choices(a$patient_id$choices),
-          selected = a$patient_id$selected
+          inputId = ns("patient_id"),
+          label = "Patient ID",
+          choices = NULL
         ),
         tags$div(
           tagList(
@@ -341,6 +341,7 @@ srv_g_patient_profile <- function(id,
                                   data,
                                   filter_panel_api,
                                   reporter,
+                                  patient_id,
                                   sl_dataname,
                                   ex_dataname,
                                   ae_dataname,
@@ -366,6 +367,17 @@ srv_g_patient_profile <- function(id,
     select_plot <- reactive(
       vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
     )
+
+    isolate({
+      resolved <- teal.transform::resolve_delayed(patient_id, as.list(data()@env))
+
+      updateSelectizeInput(
+        session = session,
+        inputId = "patient_id",
+        choices = resolved$choices,
+        selected = resolved$selected
+      )
+    })
 
     if (!is.na(lb_dataname)) {
       observeEvent(input$lb_var, ignoreNULL = TRUE, {
