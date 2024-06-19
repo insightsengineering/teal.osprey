@@ -296,7 +296,7 @@ srv_g_heatmap_bygrade <- function(id,
   if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
 
   moduleServer(id, function(input, output, session) {
-    if (shiny::isRunning()) logger::log_shiny_input_changes(input, namespace = "teal.osprey")
+    teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
     iv <- reactive({
       ADSL <- data()[[sl_dataname]]
       ADEX <- data()[[ex_dataname]]
