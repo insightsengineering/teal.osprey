@@ -28,7 +28,6 @@ repos:
           - formatters
           - ggplot2
           - lifecycle
-          - logger
           - shinyvalidate
           - insightsengineering/teal.code
           - insightsengineering/teal.logger
