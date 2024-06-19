@@ -41,6 +41,7 @@ Imports:
     tidyr (>= 0.8.3)
 Suggests:
     knitr (>= 1.42),
+    logger (>= 0.2.2),
     nestcolor (>= 0.1.0),
     rmarkdown (>= 2.23),
     teal.data (>= 0.3.0.9018),
@@ -49,7 +50,7 @@ Suggests:
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal, insightsengineering/teal.transform,
     mllg/checkmate, tidyverse/dplyr, insightsengineering/formatters,
-    tidyverse/ggplot2, r-lib/lifecycle, 
+    tidyverse/ggplot2, r-lib/lifecycle, daroczig/logger,
     rstudio/shinyvalidate, insightsengineering/teal.code,
     insightsengineering/teal.logger, insightsengineering/teal.reporter,
     insightsengineering/teal.widgets, insightsengineering/tern,
