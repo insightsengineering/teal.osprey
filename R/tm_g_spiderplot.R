@@ -124,7 +124,7 @@ tm_g_spiderplot <- function(label,
     label = label,
     datanames = c("ADSL", dataname),
     server = srv_g_spider,
-    server_args = list(dataname = dataname, label = label, plot_height = plot_height, plot_width = plot_width),
+    server_args = list(dataname = dataname, paramcd = paramcd, label = label, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_spider,
     ui_args = args
   )
@@ -133,7 +133,6 @@ tm_g_spiderplot <- function(label,
 ui_g_spider <- function(id, ...) {
   ns <- NS(id)
   a <- list(...)
-
   shiny::tagList(
     include_css_files("custom"),
     teal.widgets::standard_layout(
@@ -151,8 +150,6 @@ ui_g_spider <- function(id, ...) {
           teal.widgets::optionalSelectInput(
             ns("paramcd"),
             paste("Parameter - from", a$dataname),
-            get_choices(a$paramcd$choices),
-            a$paramcd$selected,
             multiple = FALSE
           ),
           teal.widgets::optionalSelectInput(
@@ -236,7 +233,7 @@ ui_g_spider <- function(id, ...) {
   )
 }
 
-srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, plot_height, plot_width) {
+srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname, label, plot_height, plot_width) {
   with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
   with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
   checkmate::assert_class(data, "reactive")
@@ -244,6 +241,19 @@ srv_g_spider <- function(id, data, filter_panel_api, reporter, dataname, label, 
 
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
+
+    isolate({
+      env <- as.list(data()@env)
+      resolved_paramcd <- teal.transform::resolve_delayed(paramcd, env)
+
+      teal.widgets::updateOptionalSelectInput(
+        session = session,
+        inputId = "paramcd",
+        choices = resolved_paramcd$choices,
+        selected = resolved_paramcd$selected
+      )
+    })
+
     iv <- reactive({
       ADSL <- data()[["ADSL"]]
       ADTR <- data()[[dataname]]

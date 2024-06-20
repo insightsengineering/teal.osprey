@@ -135,6 +135,8 @@ include_css_files <- function(pattern = "*") {
 #'
 #' This function returns choices based on the class of the input.
 #' If the input is of class `delayed_data`, it returns the `subset` of the input.
+#' If `subset` is NULL and the input contains `var_label` and `var_choices`,
+#' it throws an error prompting to resolve delayed inputs.
 #' Otherwise, it returns the input as is.
 #'
 #' @param choices An object that contains choices.
@@ -142,7 +144,15 @@ include_css_files <- function(pattern = "*") {
 #' @keywords internal
 get_choices <- function(choices) {
   if (inherits(choices, "delayed_data")) {
-    choices$subset
+    if (is.null(choices$subset)) {
+      if (!is.null(choices$var_label) && !is.null(choices$var_choices)) {
+        stop("This needs to be resolved: Resolve delayed inputs by evaluating the code within the provided datasets. Check ?teal.transform::resolve_delayed for more information.")
+      } else {
+        stop("Subset is NULL and necessary fields are missing.")
+      }
+    } else {
+      choices$subset
+    }
   } else {
     choices
   }

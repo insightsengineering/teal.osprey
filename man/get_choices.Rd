@@ -15,6 +15,8 @@ A vector of choices.
 \description{
 This function returns choices based on the class of the input.
 If the input is of class \code{delayed_data}, it returns the \code{subset} of the input.
+If \code{subset} is NULL and the input contains \code{var_label} and \code{var_choices},
+it throws an error prompting to resolve delayed inputs.
 Otherwise, it returns the input as is.
 }
 \keyword{internal}
