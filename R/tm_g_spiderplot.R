@@ -124,7 +124,13 @@ tm_g_spiderplot <- function(label,
     label = label,
     datanames = c("ADSL", dataname),
     server = srv_g_spider,
-    server_args = list(dataname = dataname, paramcd = paramcd, label = label, plot_height = plot_height, plot_width = plot_width),
+    server_args = list(
+      dataname = dataname,
+      paramcd = paramcd,
+      label = label,
+      plot_height = plot_height,
+      plot_width = plot_width
+    ),
     ui = ui_g_spider,
     ui_args = args
   )
