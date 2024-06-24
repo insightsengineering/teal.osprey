@@ -248,17 +248,15 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
 
-    isolate({
-      env <- as.list(data()@env)
-      resolved_paramcd <- teal.transform::resolve_delayed(paramcd, env)
+    env <- as.list(isolate(data())@env)
+    resolved_paramcd <- teal.transform::resolve_delayed(paramcd, env)
 
-      teal.widgets::updateOptionalSelectInput(
-        session = session,
-        inputId = "paramcd",
-        choices = resolved_paramcd$choices,
-        selected = resolved_paramcd$selected
-      )
-    })
+    teal.widgets::updateOptionalSelectInput(
+      session = session,
+      inputId = "paramcd",
+      choices = resolved_paramcd$choices,
+      selected = resolved_paramcd$selected
+    )
 
     iv <- reactive({
       ADSL <- data()[["ADSL"]]

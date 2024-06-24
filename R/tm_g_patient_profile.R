@@ -368,16 +368,14 @@ srv_g_patient_profile <- function(id,
       vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
     )
 
-    isolate({
-      resolved <- teal.transform::resolve_delayed(patient_id, as.list(data()@env))
+    resolved <- teal.transform::resolve_delayed(patient_id, as.list(isolate(data())@env))
 
-      updateSelectizeInput(
-        session = session,
-        inputId = "patient_id",
-        choices = resolved$choices,
-        selected = resolved$selected
-      )
-    })
+    updateSelectizeInput(
+      session = session,
+      inputId = "patient_id",
+      choices = resolved$choices,
+      selected = resolved$selected
+    )
 
     if (!is.na(lb_dataname)) {
       observeEvent(input$lb_var, ignoreNULL = TRUE, {

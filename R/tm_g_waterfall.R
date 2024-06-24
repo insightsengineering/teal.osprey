@@ -287,31 +287,30 @@ srv_g_waterfall <- function(id,
 
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
-    isolate({
-      env <- as.list(data()@env)
-      resolved_bar_paramcd <- teal.transform::resolve_delayed(bar_paramcd, env)
-      resolved_add_label_paramcd_rs <- teal.transform::resolve_delayed(add_label_paramcd_rs, env)
-      resolved_anno_txt_paramcd_rs <- teal.transform::resolve_delayed(anno_txt_paramcd_rs, env)
 
-      teal.widgets::updateOptionalSelectInput(
-        session = session,
-        inputId = "bar_paramcd",
-        choices = resolved_bar_paramcd$choices,
-        selected = resolved_bar_paramcd$selected
-      )
-      teal.widgets::updateOptionalSelectInput(
-        session = session,
-        inputId = "add_label_paramcd_rs",
-        choices = resolved_add_label_paramcd_rs$choices,
-        selected = resolved_add_label_paramcd_rs$selected
-      )
-      teal.widgets::updateOptionalSelectInput(
-        session = session,
-        inputId = "anno_txt_paramcd_rs",
-        choices = resolved_anno_txt_paramcd_rs$choices,
-        selected = resolved_anno_txt_paramcd_rs$selected
-      )
-    })
+    env <- as.list(isolate(data())@env)
+    resolved_bar_paramcd <- teal.transform::resolve_delayed(bar_paramcd, env)
+    resolved_add_label_paramcd_rs <- teal.transform::resolve_delayed(add_label_paramcd_rs, env)
+    resolved_anno_txt_paramcd_rs <- teal.transform::resolve_delayed(anno_txt_paramcd_rs, env)
+
+    teal.widgets::updateOptionalSelectInput(
+      session = session,
+      inputId = "bar_paramcd",
+      choices = resolved_bar_paramcd$choices,
+      selected = resolved_bar_paramcd$selected
+    )
+    teal.widgets::updateOptionalSelectInput(
+      session = session,
+      inputId = "add_label_paramcd_rs",
+      choices = resolved_add_label_paramcd_rs$choices,
+      selected = resolved_add_label_paramcd_rs$selected
+    )
+    teal.widgets::updateOptionalSelectInput(
+      session = session,
+      inputId = "anno_txt_paramcd_rs",
+      choices = resolved_anno_txt_paramcd_rs$choices,
+      selected = resolved_anno_txt_paramcd_rs$selected
+    )
 
     iv <- reactive({
       adsl <- data()[["ADSL"]]
