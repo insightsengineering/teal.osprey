@@ -139,6 +139,9 @@ tm_g_waterfall <- function(label,
     server_args = list(
       dataname_tr = dataname_tr,
       dataname_rs = dataname_rs,
+      bar_paramcd = bar_paramcd,
+      add_label_paramcd_rs = add_label_paramcd_rs,
+      anno_txt_paramcd_rs = anno_txt_paramcd_rs,
       label = label,
       bar_color_opt = bar_color_opt,
       plot_height = plot_height,
@@ -151,7 +154,6 @@ tm_g_waterfall <- function(label,
 ui_g_waterfall <- function(id, ...) {
   a <- list(...)
   ns <- NS(id)
-
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
       teal.widgets::plot_with_settings_ui(id = ns("waterfallplot"))
@@ -165,8 +167,6 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("bar_paramcd"),
         "Tumor Burden Parameter",
-        choices = get_choices(a$bar_paramcd$choices),
-        selected = a$bar_paramcd$selected,
         multiple = FALSE
       ),
       teal.widgets::optionalSelectInput(
@@ -202,8 +202,6 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("add_label_paramcd_rs"),
         "Add ADRS Label to Bars",
-        choices = get_choices(a$add_label_paramcd_rs$choices),
-        selected = a$add_label_paramcd_rs$selected,
         multiple = FALSE
       ),
       teal.widgets::optionalSelectInput(
@@ -217,8 +215,6 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::optionalSelectInput(
         ns("anno_txt_paramcd_rs"),
         "Annotation Parameters",
-        choices = get_choices(a$anno_txt_paramcd_rs$choices),
-        selected = a$anno_txt_paramcd_rs$selected,
         multiple = TRUE,
         label_help = helpText("from ", tags$code("ADRS"))
       ),
@@ -275,6 +271,9 @@ srv_g_waterfall <- function(id,
                             data,
                             filter_panel_api,
                             reporter,
+                            bar_paramcd,
+                            add_label_paramcd_rs,
+                            anno_txt_paramcd_rs,
                             dataname_tr,
                             dataname_rs,
                             bar_color_opt,
@@ -288,6 +287,31 @@ srv_g_waterfall <- function(id,
 
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
+
+    env <- as.list(isolate(data())@env)
+    resolved_bar_paramcd <- teal.transform::resolve_delayed(bar_paramcd, env)
+    resolved_add_label_paramcd_rs <- teal.transform::resolve_delayed(add_label_paramcd_rs, env)
+    resolved_anno_txt_paramcd_rs <- teal.transform::resolve_delayed(anno_txt_paramcd_rs, env)
+
+    teal.widgets::updateOptionalSelectInput(
+      session = session,
+      inputId = "bar_paramcd",
+      choices = resolved_bar_paramcd$choices,
+      selected = resolved_bar_paramcd$selected
+    )
+    teal.widgets::updateOptionalSelectInput(
+      session = session,
+      inputId = "add_label_paramcd_rs",
+      choices = resolved_add_label_paramcd_rs$choices,
+      selected = resolved_add_label_paramcd_rs$selected
+    )
+    teal.widgets::updateOptionalSelectInput(
+      session = session,
+      inputId = "anno_txt_paramcd_rs",
+      choices = resolved_anno_txt_paramcd_rs$choices,
+      selected = resolved_anno_txt_paramcd_rs$selected
+    )
+
     iv <- reactive({
       adsl <- data()[["ADSL"]]
       adtr <- data()[[dataname_tr]]
