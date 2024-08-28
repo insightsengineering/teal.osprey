@@ -26,14 +26,14 @@ This enables `teal` app developers to easily create applications making use of `
 
 ## Installation
 
-From July 2023 `insightsengineering` packages are available on [r-universe](https://r-universe.dev/).
-
 ```r
 # stable versions
-install.packages('teal.osprey', repos = c('https://insightsengineering.r-universe.dev', 'https://cloud.r-project.org'))
+# install.packages("pak")
+pak::pkg_install("insightsengineering/teal.osprey@*release")
 
 # beta versions
-install.packages('teal.osprey', repos = c('https://pharmaverse.r-universe.dev', 'https://cloud.r-project.org'))
+# install.packages("pak")
+pak::pkg_install("insightsengineering/teal.osprey")
 ```
 
 ## Stargazers and Forkers
