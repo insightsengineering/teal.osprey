@@ -34,7 +34,7 @@
 #'
 #' @template author_qit3
 #'
-#' @examples
+#' @examplesIf requireNamespace("nestcolor")
 #' # Example using stream (ADaM) dataset
 #' data <- cdisc_data() |>
 #'   within(library(dplyr)) |>

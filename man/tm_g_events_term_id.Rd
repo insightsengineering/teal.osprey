@@ -50,6 +50,7 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 Display Events by Term plot as a shiny module
 }
 \examples{
+\dontshow{if (requireNamespace("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 data <- cdisc_data() |>
   within({
     library(nestcolor)
@@ -84,7 +85,7 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-
+\dontshow{\}) # examplesIf}
 }
 \author{
 Liming Li (lil128) \email{liming.li@roche.com}

@@ -17,7 +17,7 @@
 #' @author Liming Li (lil128) \email{liming.li@roche.com}
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
-#' @examples
+#' @examplesIf requireNamespace("nestcolor")
 #' data <- cdisc_data() |>
 #'   within({
 #'     library(nestcolor)

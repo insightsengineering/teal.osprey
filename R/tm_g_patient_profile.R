@@ -59,7 +59,7 @@
 #'
 #' @export
 #'
-#' @examples
+#' @examplesIf requireNamespace("nestcolor")
 #' data <- cdisc_data() |>
 #'   within({
 #'     library(nestcolor)
