@@ -24,7 +24,7 @@
 #' @template author_zhanc107
 #' @template author_liaoc10
 #'
-#' @examplesIf requireNamespace("nestcolor")
+#' @examplesIf require("nestcolor")
 #' # Example using stream (ADaM) dataset
 #' data <- cdisc_data() |>
 #'   within({

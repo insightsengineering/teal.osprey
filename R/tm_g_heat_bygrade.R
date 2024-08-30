@@ -33,7 +33,7 @@
 #'
 #' @export
 #'
-#' @examplesIf requireNamespace("nestcolor")
+#' @examplesIf require("nestcolor")
 #' data <- cdisc_data() |>
 #'   within({
 #'     library(dplyr)

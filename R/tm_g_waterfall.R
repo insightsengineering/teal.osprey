@@ -46,7 +46,7 @@
 #' @template author_qit3
 #' @author houx14 \email{houx14@gene.com}
 #'
-#' @examplesIf requireNamespace("nestcolor")
+#' @examplesIf require("nestcolor")
 #' data <- cdisc_data() |>
 #'   within({
 #'     library(nestcolor)
