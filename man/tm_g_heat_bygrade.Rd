@@ -76,7 +76,7 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 Display the heatmap by grade as a shiny module
 }
 \examples{
-\dontshow{if (requireNamespace("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 data <- cdisc_data() |>
   within({
     library(dplyr)
