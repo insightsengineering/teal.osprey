@@ -59,10 +59,10 @@ vector to indicate default value, minimum and maximum values.}
 \item{plot_width}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
 
-\item{pre_output}{(\code{shiny.tag}, optional)\cr
+\item{pre_output}{(\code{shiny.tag}) optional,\cr
 with text placed before the output to put the output into context. For example a title.}
 
-\item{post_output}{(\code{shiny.tag}, optional) with text placed after the output to put the output
+\item{post_output}{(\code{shiny.tag}) optional, with text placed after the output to put the output
 into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} elements are useful.}
 }
 \value{
@@ -86,7 +86,7 @@ used for subsequent analysis. Flag variables (from \code{ADaM} datasets) can be
 used directly as filter.
 }
 \examples{
-\dontshow{if (requireNamespace("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example using stream (ADaM) dataset
 data <- cdisc_data() |>
   within({
