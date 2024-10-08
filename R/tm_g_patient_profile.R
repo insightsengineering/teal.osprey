@@ -60,7 +60,7 @@
 #' @export
 #'
 #' @examplesIf require("nestcolor")
-#' data <- cdisc_data() |>
+#' data <- teal_data() |>
 #'   within({
 #'     library(nestcolor)
 #'     ADSL <- rADSL

@@ -77,7 +77,7 @@ Display the heatmap by grade as a shiny module
 }
 \examples{
 \dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-data <- cdisc_data() |>
+data <- teal_data() |>
   within({
     library(dplyr)
     library(nestcolor)

@@ -47,7 +47,7 @@
 #' @author houx14 \email{houx14@gene.com}
 #'
 #' @examplesIf require("nestcolor")
-#' data <- cdisc_data() |>
+#' data <- teal_data() |>
 #'   within({
 #'     library(nestcolor)
 #'     ADSL <- rADSL

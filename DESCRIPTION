@@ -34,6 +34,7 @@ Imports:
     lifecycle (>= 0.2.0),
     shinyvalidate,
     teal.code (>= 0.4.1.9009),
+    teal.data (>= 0.3.0.9018),
     teal.logger (>= 0.2.0.9004),
     teal.reporter (>= 0.2.0),
     teal.widgets (>= 0.4.0),
@@ -44,7 +45,6 @@ Suggests:
     logger (>= 0.2.2),
     nestcolor (>= 0.1.0),
     rmarkdown (>= 2.23),
-    teal.data (>= 0.3.0.9018),
     testthat (>= 3.1.5),
     withr (>= 2.0.0)
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
