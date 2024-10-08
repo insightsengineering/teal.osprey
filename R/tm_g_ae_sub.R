@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' # Example using stream (ADaM) dataset
-#' data <- cdisc_data() |>
+#' data <- teal_data() |>
 #'   within({
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE

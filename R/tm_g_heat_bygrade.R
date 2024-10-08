@@ -34,10 +34,9 @@
 #' @export
 #'
 #' @examples
-#' data <- cdisc_data() |>
+#' data <- teal_data() |>
 #'   within({
 #'     library(dplyr)
-#'     library(nestcolor)
 #'     ADSL <- rADSL %>% slice(1:30)
 #'     ADEX <- rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
 #'     ADAE <- rADAE %>% filter(USUBJID %in% ADSL$USUBJID)

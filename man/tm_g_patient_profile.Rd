@@ -108,9 +108,8 @@ the start date
 }
 }
 \examples{
-data <- cdisc_data() |>
+data <- teal_data() |>
   within({
-    library(nestcolor)
     ADSL <- rADSL
     ADAE <- rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
     ADCM <- rADCM \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))

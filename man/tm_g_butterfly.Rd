@@ -87,10 +87,9 @@ used directly as filter.
 }
 \examples{
 # Example using stream (ADaM) dataset
-data <- cdisc_data() |>
+data <- teal_data() |>
   within({
     library(dplyr)
-    library(nestcolor)
     set.seed(23)
     ADSL <- rADSL
     ADAE <- rADAE

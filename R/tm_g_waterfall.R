@@ -47,9 +47,8 @@
 #' @author houx14 \email{houx14@gene.com}
 #'
 #' @examples
-#' data <- cdisc_data() |>
+#' data <- teal_data() |>
 #'   within({
-#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADRS <- rADRS
 #'     ADTR <- rADTR

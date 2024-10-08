@@ -100,9 +100,8 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 This is teal module that generates a waterfall plot for \code{ADaM} data
 }
 \examples{
-data <- cdisc_data() |>
+data <- teal_data() |>
   within({
-    library(nestcolor)
     ADSL <- rADSL
     ADRS <- rADRS
     ADTR <- rADTR

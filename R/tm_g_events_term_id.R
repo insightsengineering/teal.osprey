@@ -18,9 +18,8 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
 #' @examples
-#' data <- cdisc_data() |>
+#' data <- teal_data() |>
 #'   within({
-#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'   })

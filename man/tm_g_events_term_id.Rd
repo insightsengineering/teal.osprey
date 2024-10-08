@@ -50,9 +50,8 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 Display Events by Term plot as a shiny module
 }
 \examples{
-data <- cdisc_data() |>
+data <- teal_data() |>
   within({
-    library(nestcolor)
     ADSL <- rADSL
     ADAE <- rADAE
   })

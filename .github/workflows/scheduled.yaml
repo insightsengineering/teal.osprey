@@ -83,6 +83,7 @@ jobs:
         insightsengineering/teal.transform
         insightsengineering/formatters
         insightsengineering/teal.code
+        insightsengineering/teal.slice
         insightsengineering/teal.logger
         insightsengineering/teal.reporter
         insightsengineering/teal.widgets

@@ -51,9 +51,8 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 Display the \code{AE} overview plot as a shiny module
 }
 \examples{
-data <- cdisc_data() |>
+data <- teal_data() |>
   within({
-    library(nestcolor)
     ADSL <- rADSL
     ADAE <- rADAE
     add_event_flags <- function(dat) {
