@@ -26,7 +26,7 @@
 #'
 #' @examplesIf require("nestcolor")
 #' # Example using stream (ADaM) dataset
-#' data <- cdisc_data() |>
+#' data <- teal_data() |>
 #'   within({
 #'     library(nestcolor)
 #'     ADSL <- rADSL

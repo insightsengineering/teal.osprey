@@ -50,7 +50,7 @@ Display the \code{AE} by subgroups plot as a teal module
 }
 \examples{
 # Example using stream (ADaM) dataset
-data <- cdisc_data() |>
+data <- teal_data() |>
   within({
     ADSL <- rADSL
     ADAE <- rADAE
