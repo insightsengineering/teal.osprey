@@ -1,7 +1,7 @@
 # teal.osprey 0.1.16.9028
 
 * Removed `Show Warnings` modals from modules.
-* Moved `teal_data` from `Suggests` to `Imports` as it was used in `tm_g_swimlane`. 
+* Moved `teal.data` from `Suggests` to `Imports` as it was used in `tm_g_swimlane`. 
 * Changed examples from `cdisc_data()` to `teal_data()`.
 
 ### Breaking Changes
