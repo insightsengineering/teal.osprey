@@ -41,7 +41,7 @@
 #'
 #' @examplesIf require("nestcolor")
 #' # Example using stream (ADaM) dataset
-#' data <- teal_data() |>
+#' data <- cdisc_data() |>
 #'   within({
 #'     library(dplyr)
 #'     library(nestcolor)

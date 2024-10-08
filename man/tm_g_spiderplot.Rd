@@ -79,7 +79,7 @@ Display spider plot as a shiny module
 \examples{
 \dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example using stream (ADaM) dataset
-data <- teal_data() |>
+data <- cdisc_data() |>
   within({
     library(nestcolor)
     ADSL <- rADSL

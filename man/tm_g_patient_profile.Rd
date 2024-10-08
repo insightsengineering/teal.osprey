@@ -109,7 +109,7 @@ the start date
 }
 \examples{
 \dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-data <- teal_data() |>
+data <- cdisc_data() |>
   within({
     library(nestcolor)
     ADSL <- rADSL

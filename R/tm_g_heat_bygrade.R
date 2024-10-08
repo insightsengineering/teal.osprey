@@ -34,7 +34,7 @@
 #' @export
 #'
 #' @examplesIf require("nestcolor")
-#' data <- teal_data() |>
+#' data <- cdisc_data() |>
 #'   within({
 #'     library(dplyr)
 #'     library(nestcolor)

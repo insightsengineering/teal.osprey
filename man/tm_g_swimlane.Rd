@@ -83,7 +83,7 @@ This is teal module that generates a \code{swimlane} plot (bar plot with markers
 \examples{
 \dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example using stream (ADaM) dataset
-data <- teal_data() |>
+data <- cdisc_data() |>
   within(library(dplyr)) |>
   within(library(nestcolor)) |>
   within(ADSL <- rADSL \%>\%

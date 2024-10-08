@@ -51,8 +51,8 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 Display the \code{AE} overview plot as a shiny module
 }
 \examples{
-\dontshow{if (requireNamespace("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-data <- teal_data() |>
+\dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+data <- cdisc_data() |>
   within({
     library(nestcolor)
     ADSL <- rADSL

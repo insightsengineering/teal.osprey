@@ -101,7 +101,7 @@ This is teal module that generates a waterfall plot for \code{ADaM} data
 }
 \examples{
 \dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-data <- teal_data() |>
+data <- cdisc_data() |>
   within({
     library(nestcolor)
     ADSL <- rADSL
