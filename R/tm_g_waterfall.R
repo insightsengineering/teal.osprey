@@ -46,10 +46,9 @@
 #' @template author_qit3
 #' @author houx14 \email{houx14@gene.com}
 #'
-#' @examplesIf require("nestcolor")
+#' @examples
 #' data <- teal_data() |>
 #'   within({
-#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADRS <- rADRS
 #'     ADTR <- rADTR

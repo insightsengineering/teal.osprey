@@ -17,10 +17,9 @@
 #' @author Liming Li (lil128) \email{liming.li@roche.com}
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
-#' @examplesIf require("nestcolor")
+#' @examples
 #' data <- teal_data() |>
 #'   within({
-#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'   })

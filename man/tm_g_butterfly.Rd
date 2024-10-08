@@ -86,12 +86,10 @@ used for subsequent analysis. Flag variables (from \code{ADaM} datasets) can be
 used directly as filter.
 }
 \examples{
-\dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example using stream (ADaM) dataset
 data <- teal_data() |>
   within({
     library(dplyr)
-    library(nestcolor)
     set.seed(23)
     ADSL <- rADSL
     ADAE <- rADAE
@@ -150,7 +148,7 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-\dontshow{\}) # examplesIf}
+
 }
 \author{
 Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}

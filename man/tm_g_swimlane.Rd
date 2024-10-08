@@ -81,19 +81,19 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 This is teal module that generates a \code{swimlane} plot (bar plot with markers) for \code{ADaM} data
 }
 \examples{
-\dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example using stream (ADaM) dataset
 data <- teal_data() |>
-  within(library(dplyr)) |>
-  within(library(nestcolor)) |>
-  within(ADSL <- rADSL \%>\%
+  within({
+    library(dplyr)
+    ADSL <- rADSL \%>\%
     mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
-    filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
-  within(ADRS <- rADRS \%>\%
+    filter(STRATA1 == "A" & ARMCD == "ARM A")
+    ADRS <- rADRS \%>\%
     filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
     mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
     rbind(rADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
-    arrange(USUBJID))
+    arrange(USUBJID)
+ })
 
 datanames(data) <- c("ADSL", "ADRS")
 join_keys(data) <- default_cdisc_join_keys[datanames(data)]
@@ -150,7 +150,7 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-\dontshow{\}) # examplesIf}
+
 }
 \author{
 Ting Qi (qit3) \email{qit3@gene.com}

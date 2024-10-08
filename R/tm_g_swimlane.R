@@ -34,19 +34,20 @@
 #'
 #' @template author_qit3
 #'
-#' @examplesIf require("nestcolor")
+#' @examples
 #' # Example using stream (ADaM) dataset
 #' data <- teal_data() |>
-#'   within(library(dplyr)) |>
-#'   within(library(nestcolor)) |>
-#'   within(ADSL <- rADSL %>%
+#'   within({
+#'     library(dplyr)
+#'     ADSL <- rADSL %>%
 #'     mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-#'     filter(STRATA1 == "A" & ARMCD == "ARM A")) |>
-#'   within(ADRS <- rADRS %>%
+#'     filter(STRATA1 == "A" & ARMCD == "ARM A")
+#'     ADRS <- rADRS %>%
 #'     filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
 #'     mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
 #'     rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-#'     arrange(USUBJID))
+#'     arrange(USUBJID)
+#'  })
 #'
 #' datanames(data) <- c("ADSL", "ADRS")
 #' join_keys(data) <- default_cdisc_join_keys[datanames(data)]

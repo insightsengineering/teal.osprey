@@ -108,10 +108,8 @@ the start date
 }
 }
 \examples{
-\dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 data <- teal_data() |>
   within({
-    library(nestcolor)
     ADSL <- rADSL
     ADAE <- rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
     ADCM <- rADCM \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
@@ -181,7 +179,7 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-\dontshow{\}) # examplesIf}
+
 }
 \author{
 Xuefeng Hou (houx14) \email{houx14@gene.com}

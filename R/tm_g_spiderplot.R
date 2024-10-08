@@ -24,11 +24,10 @@
 #' @template author_zhanc107
 #' @template author_liaoc10
 #'
-#' @examplesIf require("nestcolor")
+#' @examples
 #' # Example using stream (ADaM) dataset
 #' data <- teal_data() |>
 #'   within({
-#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADTR <- rADTR
 #'   })

@@ -77,11 +77,9 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 Display spider plot as a shiny module
 }
 \examples{
-\dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Example using stream (ADaM) dataset
 data <- teal_data() |>
   within({
-    library(nestcolor)
     ADSL <- rADSL
     ADTR <- rADTR
   })
@@ -131,7 +129,7 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-\dontshow{\}) # examplesIf}
+
 }
 \author{
 Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}

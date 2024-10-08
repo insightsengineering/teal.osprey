@@ -51,10 +51,8 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 Display the \code{AE} overview plot as a shiny module
 }
 \examples{
-\dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 data <- teal_data() |>
   within({
-    library(nestcolor)
     ADSL <- rADSL
     ADAE <- rADAE
     add_event_flags <- function(dat) {
@@ -108,5 +106,5 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-\dontshow{\}) # examplesIf}
+
 }

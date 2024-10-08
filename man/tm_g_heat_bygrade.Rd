@@ -76,11 +76,9 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 Display the heatmap by grade as a shiny module
 }
 \examples{
-\dontshow{if (require("nestcolor")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 data <- teal_data() |>
   within({
     library(dplyr)
-    library(nestcolor)
     ADSL <- rADSL \%>\% slice(1:30)
     ADEX <- rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
     ADAE <- rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
@@ -160,5 +158,5 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-\dontshow{\}) # examplesIf}
+
 }

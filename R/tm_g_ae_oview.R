@@ -15,10 +15,9 @@
 #'
 #' @export
 #'
-#' @examplesIf require("nestcolor")
+#' @examples
 #' data <- teal_data() |>
 #'   within({
-#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'     add_event_flags <- function(dat) {
