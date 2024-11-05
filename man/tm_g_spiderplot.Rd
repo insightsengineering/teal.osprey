@@ -84,8 +84,7 @@ data <- teal_data() |>
     ADTR <- rADTR
   })
 
-datanames(data) <- c("ADSL", "ADTR")
-join_keys(data) <- default_cdisc_join_keys[datanames(data)]
+join_keys(data) <- default_cdisc_join_keys[names(data)]
 
 app <- init(
   data = data,

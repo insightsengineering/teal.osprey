@@ -20,7 +20,7 @@
 #'   within({
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
-#'     add_event_flags <- function(dat) {
+#'     .add_event_flags <- function(dat) {
 #'       dat <- dat |>
 #'         mutate(
 #'           TMPFL_SER = AESER == "Y",
@@ -39,11 +39,10 @@
 #'       }
 #'       dat
 #'     }
-#'     ADAE <- add_event_flags(ADAE)
+#'     ADAE <- .add_event_flags(ADAE)
 #'   })
 #'
-#' datanames(data) <- c("ADSL", "ADAE")
-#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
+#' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
 #' ADAE <- data[["ADAE"]]
 #'

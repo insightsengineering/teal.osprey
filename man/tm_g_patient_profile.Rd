@@ -122,8 +122,7 @@ data <- teal_data() |>
     ADLB <- rADLB \%>\% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
   })
 
-datanames(data) <- c("ADSL", "ADAE", "ADCM", "ADRS", "ADEX", "ADLB")
-join_keys(data) <- default_cdisc_join_keys[datanames(data)]
+join_keys(data) <- default_cdisc_join_keys[names(data)]
 
 ADSL <- data[["ADSL"]]
 
