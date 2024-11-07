@@ -327,8 +327,8 @@ srv_g_swimlane <- function(id,
 
       validate(need("ADSL" %in% names(data()), "'ADSL' not included in data"))
       validate(need(
-        (length(names(data())) == 1 && dataname == "ADSL") ||
-          (length(names(data())) >= 2 && dataname != "ADSL"), paste(
+        (length(data()) == 1 && dataname == "ADSL") ||
+          (length(data()) >= 2 && dataname != "ADSL"), paste(
           "Please either add just 'ADSL' as dataname when just ADSL is available.",
           "In case 2 datasets are available ADSL is not supposed to be the dataname."
         )
