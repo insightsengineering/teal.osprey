@@ -74,8 +74,7 @@
 #'     ADLB <- rADLB %>% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
 #'   })
 #'
-#' datanames(data) <- c("ADSL", "ADAE", "ADCM", "ADRS", "ADEX", "ADLB")
-#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
+#' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
 #' ADSL <- data[["ADSL"]]
 #'
@@ -367,7 +366,7 @@ srv_g_patient_profile <- function(id,
       vapply(checkboxes, function(x) x %in% input$select_ADaM, logical(1L))
     )
 
-    resolved <- teal.transform::resolve_delayed(patient_id, as.list(isolate(data())@env))
+    resolved <- teal.transform::resolve_delayed(patient_id, as.list(isolate(data())))
 
     updateSelectizeInput(
       session = session,

@@ -32,8 +32,7 @@
 #'     ADTR <- rADTR
 #'   })
 #'
-#' datanames(data) <- c("ADSL", "ADTR")
-#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
+#' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
 #' app <- init(
 #'   data = data,
@@ -247,7 +246,7 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
 
-    env <- as.list(isolate(data())@env)
+    env <- as.list(isolate(data()))
     resolved_paramcd <- teal.transform::resolve_delayed(paramcd, env)
 
     teal.widgets::updateOptionalSelectInput(

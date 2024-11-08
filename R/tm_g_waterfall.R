@@ -55,8 +55,7 @@
 #'     ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
 #'   })
 #'
-#' datanames(data) <- c("ADSL", "ADTR", "ADRS")
-#' join_keys(data) <- default_cdisc_join_keys[datanames(data)]
+#' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
 #' app <- init(
 #'   data = data,
@@ -287,7 +286,7 @@ srv_g_waterfall <- function(id,
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
 
-    env <- as.list(isolate(data())@env)
+    env <- as.list(isolate(data()))
     resolved_bar_paramcd <- teal.transform::resolve_delayed(bar_paramcd, env)
     resolved_add_label_paramcd_rs <- teal.transform::resolve_delayed(add_label_paramcd_rs, env)
     resolved_anno_txt_paramcd_rs <- teal.transform::resolve_delayed(anno_txt_paramcd_rs, env)

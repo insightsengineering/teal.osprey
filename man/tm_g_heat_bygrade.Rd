@@ -88,7 +88,7 @@ data <- teal_data() |>
       select(-starts_with("ATC")) \%>\%
       unique()
     # function to derive AVISIT from ADEX
-    add_visit <- function(data_need_visit) {
+    .add_visit <- function(data_need_visit) {
       visit_dates <- ADEX \%>\%
         filter(PARAMCD == "DOSE") \%>\%
         distinct(USUBJID, AVISIT, ASTDTM) \%>\%
@@ -105,16 +105,15 @@ data <- teal_data() |>
       return(data_visit)
     }
     # derive AVISIT for ADAE and ADCM
-    ADAE <- add_visit(ADAE)
-    ADCM <- add_visit(ADCM)
+    ADAE <- .add_visit(ADAE)
+    ADCM <- .add_visit(ADCM)
     # derive ongoing status variable for ADEX
     ADEX <- ADEX \%>\%
       filter(PARCAT1 == "INDIVIDUAL") \%>\%
       mutate(ongo_status = (EOSSTT == "ONGOING"))
   })
 
-datanames(data) <- c("ADSL", "ADEX", "ADAE", "ADCM")
-join_keys(data) <- default_cdisc_join_keys[datanames(data)]
+join_keys(data) <- default_cdisc_join_keys[names(data)]
 
 ADCM <- data[["ADCM"]]
 
