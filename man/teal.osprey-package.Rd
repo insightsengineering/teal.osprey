@@ -6,8 +6,8 @@
 \alias{teal.osprey-package}
 \title{\code{teal.osprey}: \code{teal} modules for 'osprey'}
 \description{
-\code{teal.osprey} provides community contributed \href{https://cran.r-project.org/package=teal}{\code{teal}} modules of the analysis functions from
-\code{osprey} package. See package \href{https://insightsengineering.github.io/osprey/}{website}.
+\code{teal.osprey} provides community contributed \href{https://cran.r-project.org/package=teal}{\code{teal}} modules of
+the analysis functions from \code{osprey} package. See package \href{https://insightsengineering.github.io/osprey/}{website}.
 This enables \code{teal} app developers to easily create applications making use of the \code{osprey} analysis functions.
 }
 \seealso{
