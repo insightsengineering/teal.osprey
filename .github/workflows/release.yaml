@@ -16,12 +16,43 @@ jobs:
       REPO_GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
     with:
       default-landing-page: latest-tag
+      deps-installation-method: setup-r-dependencies
+      lookup-refs: |
+        insightsengineering/osprey
+        insightsengineering/formatters
+        insightsengineering/rtables
+        insightsengineering/rtables.officer
+        insightsengineering/tern
+        insightsengineering/teal.logger
+        insightsengineering/teal.code
+        insightsengineering/teal.data
+        insightsengineering/teal.slice
+        insightsengineering/teal.reporter
+        insightsengineering/teal.widgets
+        insightsengineering/teal.transform
+        insightsengineering/teal
   validation:
     name: R Package Validation report 📃
     needs: release
     uses: insightsengineering/r.pkg.template/.github/workflows/validation.yaml@main
     secrets:
       REPO_GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
+    with:
+      deps-installation-method: setup-r-dependencies
+      lookup-refs: |
+        insightsengineering/osprey
+        insightsengineering/formatters
+        insightsengineering/rtables
+        insightsengineering/rtables.officer
+        insightsengineering/tern
+        insightsengineering/teal.logger
+        insightsengineering/teal.code
+        insightsengineering/teal.data
+        insightsengineering/teal.slice
+        insightsengineering/teal.reporter
+        insightsengineering/teal.widgets
+        insightsengineering/teal.transform
+        insightsengineering/teal
   release:
     name: Create release 🎉
     uses: insightsengineering/r.pkg.template/.github/workflows/release.yaml@main
@@ -46,6 +77,21 @@ jobs:
         checking top-level files .* NOTE
       unit-test-report-brand: >-
         https://raw.githubusercontent.com/insightsengineering/hex-stickers/main/thumbs/teal.png
+      deps-installation-method: setup-r-dependencies
+      lookup-refs: |
+        insightsengineering/osprey
+        insightsengineering/formatters
+        insightsengineering/rtables
+        insightsengineering/rtables.officer
+        insightsengineering/tern
+        insightsengineering/teal.logger
+        insightsengineering/teal.code
+        insightsengineering/teal.data
+        insightsengineering/teal.slice
+        insightsengineering/teal.reporter
+        insightsengineering/teal.widgets
+        insightsengineering/teal.transform
+        insightsengineering/teal
   coverage:
     name: Coverage 📔
     needs: [release, docs]
@@ -55,6 +101,21 @@ jobs:
     with:
       additional-env-vars: |
         NOT_CRAN=true
+      deps-installation-method: setup-r-dependencies
+      lookup-refs: |
+        insightsengineering/osprey
+        insightsengineering/formatters
+        insightsengineering/rtables
+        insightsengineering/rtables.officer
+        insightsengineering/tern
+        insightsengineering/teal.logger
+        insightsengineering/teal.code
+        insightsengineering/teal.data
+        insightsengineering/teal.slice
+        insightsengineering/teal.reporter
+        insightsengineering/teal.widgets
+        insightsengineering/teal.transform
+        insightsengineering/teal
   wasm:
     name: Build WASM packages 🧑‍🏭
     needs: release
