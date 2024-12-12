@@ -1,4 +1,4 @@
-# teal.osprey 0.1.16.9030
+# teal.osprey 0.1.16.9031
 
 * Removed `Show Warnings` modals from modules.
 * Moved `teal.data` from `Suggests` to `Imports`. 
