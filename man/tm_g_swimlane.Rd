@@ -21,12 +21,13 @@ tm_g_swimlane(
   plot_width = NULL,
   pre_output = NULL,
   post_output = NULL,
-  x_label = "Time from First Treatment (Day)"
+  x_label = "Time from First Treatment (Day)",
+  transformators = list()
 )
 }
 \arguments{
-\item{label}{(\code{character(1)})\cr
-menu item label of the module in the teal app.}
+\item{label}{(\code{character(1)}) Label shown in the navigation item for the module or module group.
+For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
 \item{dataname}{analysis data used for plotting, needs to be available in the list passed to the \code{data}
 argument of \code{\link[teal:init]{teal::init()}}. If no markers are to be plotted in the module, \code{"ADSL"} should be
@@ -71,6 +72,9 @@ with text placed before the output to put the output into context. For example a
 into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} elements are useful.}
 
 \item{x_label}{the label of the x axis}
+
+\item{transformators}{(\code{list} of \code{teal_transform_module}) that will be applied to transform module's data input.
+To learn more check \code{vignette("data-transform-as-shiny-module", package = "teal")}.}
 }
 \value{
 the \code{\link[teal:teal_modules]{teal::module()}} object.

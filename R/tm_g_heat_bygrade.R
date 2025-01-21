@@ -6,6 +6,7 @@
 #' Display the heatmap by grade as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout
+#' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param sl_dataname (`character`) subject level dataset name,
 #' needs to be available in the list passed to the `data`
@@ -129,7 +130,8 @@ tm_g_heat_bygrade <- function(label,
                               conmed_var = NULL,
                               fontsize = c(5, 3, 7),
                               plot_height = c(600L, 200L, 2000L),
-                              plot_width = NULL) {
+                              plot_width = NULL,
+                              transformators = list()) {
   message("Initializing tm_g_heat_bygrade")
   args <- as.list(environment())
 
@@ -178,6 +180,7 @@ tm_g_heat_bygrade <- function(label,
     ),
     ui = ui_g_heatmap_bygrade,
     ui_args = args,
+    transformators = transformators,
     datanames = "all"
   )
 }

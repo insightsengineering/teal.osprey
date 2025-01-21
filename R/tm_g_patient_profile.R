@@ -6,6 +6,7 @@
 #' Display patient profile plot as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout
+#' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param patient_id (`choices_seleced`) unique subject ID variable
 #' @param sl_dataname (`character`) subject level dataset name,
@@ -151,7 +152,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
                                  plot_height = c(1200L, 400L, 5000L),
                                  plot_width = NULL,
                                  pre_output = NULL,
-                                 post_output = NULL) {
+                                 post_output = NULL,
+                                 transformators = list()) {
   args <- as.list(environment())
   checkmate::assert_string(label)
   checkmate::assert_string(sl_dataname)
@@ -201,6 +203,7 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
       plot_height = plot_height,
       plot_width = plot_width
     ),
+    transformators = transformators,
     datanames = "all"
   )
 }

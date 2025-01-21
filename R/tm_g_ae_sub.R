@@ -6,6 +6,7 @@
 #' Display the `AE` by subgroups plot as a teal module
 #'
 #' @inheritParams teal.widgets::standard_layout
+#' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param group_var (`choices_selected`) subgroups variables. See [teal.transform::choices_selected()] for details.
 #'
@@ -54,7 +55,8 @@ tm_g_ae_sub <- function(label,
                         group_var,
                         plot_height = c(600L, 200L, 2000L),
                         plot_width = NULL,
-                        fontsize = c(5, 3, 7)) {
+                        fontsize = c(5, 3, 7),
+                        transformators = list()) {
   message("Initializing tm_g_ae_sub")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(group_var, classes = "choices_selected")
@@ -90,6 +92,7 @@ tm_g_ae_sub <- function(label,
       group_var = group_var,
       fontsize = fontsize
     ),
+    transformators = transformators,
     datanames = c("ADSL", dataname)
   )
 }
