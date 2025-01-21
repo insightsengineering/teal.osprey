@@ -11,12 +11,13 @@ tm_g_events_term_id(
   arm_var,
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
-  plot_width = NULL
+  plot_width = NULL,
+  transformators = list()
 )
 }
 \arguments{
-\item{label}{(\code{character(1)})\cr
-menu item label of the module in the teal app.}
+\item{label}{(\code{character(1)}) Label shown in the navigation item for the module or module group.
+For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
 \item{dataname}{(\code{character(1)})\cr
 analysis data used in the teal module, needs to be
@@ -40,6 +41,9 @@ vector to indicate default value, minimum and maximum values.}
 
 \item{plot_width}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
+
+\item{transformators}{(\code{list} of \code{teal_transform_module}) that will be applied to transform module's data input.
+To learn more check \code{vignette("data-transform-as-shiny-module", package = "teal")}.}
 }
 \value{
 the \code{\link[teal:teal_modules]{teal::module()}} object.

@@ -6,6 +6,7 @@
 #' This is teal module that generates a waterfall plot for `ADaM` data
 #'
 #' @inheritParams teal.widgets::standard_layout
+#' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param dataname_tr tumor burden analysis data used in teal module to plot as bar height, needs to
 #' be available in the list passed to the `data` argument of [teal::init()]
@@ -102,7 +103,8 @@ tm_g_waterfall <- function(label,
                            plot_height = c(1200L, 400L, 5000L),
                            plot_width = NULL,
                            pre_output = NULL,
-                           post_output = NULL) {
+                           post_output = NULL,
+                           transformators = list()) {
   message("Initializing tm_g_waterfall")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname_tr)
@@ -145,6 +147,7 @@ tm_g_waterfall <- function(label,
       plot_height = plot_height,
       plot_width = plot_width
     ),
+    transformators = transformators,
     datanames = "all"
   )
 }

@@ -6,6 +6,7 @@
 #' Display butterfly plot as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout
+#' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param filter_var (`choices_selected`) variable name of data filter, please see details regarding
 #'   expected values, default is`NULL`.`choices`
@@ -118,7 +119,8 @@ tm_g_butterfly <- function(label,
                            plot_height = c(600L, 200L, 2000L),
                            plot_width = NULL,
                            pre_output = NULL,
-                           post_output = NULL) {
+                           post_output = NULL,
+                           transformators = list()) {
   message("Initializing tm_g_butterfly")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
@@ -150,7 +152,8 @@ tm_g_butterfly <- function(label,
     server = srv_g_butterfly,
     server_args = list(dataname = dataname, label = label, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_butterfly,
-    ui_args = args
+    ui_args = args,
+    transformators = transformators
   )
 }
 

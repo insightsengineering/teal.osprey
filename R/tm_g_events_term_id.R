@@ -6,6 +6,7 @@
 #' Display Events by Term plot as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout
+#' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param term_var [teal.transform::choices_selected] object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
@@ -57,7 +58,8 @@ tm_g_events_term_id <- function(label,
                                 arm_var,
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
-                                plot_width = NULL) {
+                                plot_width = NULL,
+                                transformators = list()) {
   message("Initializing tm_g_events_term_id")
   checkmate::assert_string(label)
   checkmate::assert_class(term_var, classes = "choices_selected")
@@ -90,6 +92,7 @@ tm_g_events_term_id <- function(label,
     server_args = list(label = label, dataname = dataname, plot_height = plot_height, plot_width = plot_width),
     ui = ui_g_events_term_id,
     ui_args = args,
+    transformators = transformators,
     datanames = c("ADSL", dataname)
   )
 }

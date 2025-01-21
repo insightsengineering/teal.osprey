@@ -6,6 +6,7 @@
 #' This is teal module that generates a `swimlane` plot (bar plot with markers) for `ADaM` data
 #'
 #' @inheritParams teal.widgets::standard_layout
+#' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param dataname analysis data used for plotting, needs to be available in the list passed to the `data`
 #' argument of [teal::init()]. If no markers are to be plotted in the module, `"ADSL"` should be
@@ -120,7 +121,8 @@ tm_g_swimlane <- function(label,
                           plot_width = NULL,
                           pre_output = NULL,
                           post_output = NULL,
-                          x_label = "Time from First Treatment (Day)") {
+                          x_label = "Time from First Treatment (Day)",
+                          transformators = list()) {
   message("Initializing tm_g_swimlane")
   args <- as.list(environment())
 
@@ -165,6 +167,7 @@ tm_g_swimlane <- function(label,
       plot_width = plot_width,
       x_label = x_label
     ),
+    transformators = transformators,
     datanames = c("ADSL", dataname)
   )
 }

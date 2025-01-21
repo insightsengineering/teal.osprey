@@ -6,6 +6,7 @@
 #' Display spider plot as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout
+#' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param x_var x-axis variables
 #' @param y_var y-axis variables
@@ -93,7 +94,8 @@ tm_g_spiderplot <- function(label,
                             plot_height = c(600L, 200L, 2000L),
                             plot_width = NULL,
                             pre_output = NULL,
-                            post_output = NULL) {
+                            post_output = NULL,
+                            transformators = list()) {
   message("Initializing tm_g_spiderplot")
   checkmate::assert_class(paramcd, classes = "choices_selected")
   checkmate::assert_class(x_var, classes = "choices_selected")
@@ -130,7 +132,8 @@ tm_g_spiderplot <- function(label,
       plot_width = plot_width
     ),
     ui = ui_g_spider,
-    ui_args = args
+    ui_args = args,
+    transformators = transformators
   )
 }
 

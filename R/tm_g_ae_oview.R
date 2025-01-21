@@ -6,6 +6,7 @@
 #' Display the `AE` overview plot as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout
+#' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param flag_var_anl ([`teal.transform::choices_selected`])
 #'   `choices_selected` object with variables used to count adverse event
@@ -77,7 +78,8 @@ tm_g_ae_oview <- function(label,
                           flag_var_anl,
                           fontsize = c(5, 3, 7),
                           plot_height = c(600L, 200L, 2000L),
-                          plot_width = NULL) {
+                          plot_width = NULL,
+                          transformators = list()) {
   message("Initializing tm_g_ae_oview")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(flag_var_anl, classes = "choices_selected")
@@ -114,6 +116,7 @@ tm_g_ae_oview <- function(label,
     ),
     ui = ui_g_ae_oview,
     ui_args = args,
+    transformators = transformators,
     datanames = c("ADSL", dataname)
   )
 }
