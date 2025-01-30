@@ -58,21 +58,6 @@ jobs:
       )
     name: revdepcheck ↩️
     uses: insightsengineering/r.pkg.template/.github/workflows/revdepcheck.yaml@main
-    with:
-      lookup-refs: |
-        insightsengineering/osprey
-        insightsengineering/formatters
-        insightsengineering/rtables
-        insightsengineering/rtables.officer
-        insightsengineering/tern
-        insightsengineering/teal.logger
-        insightsengineering/teal.code
-        insightsengineering/teal.data
-        insightsengineering/teal.slice
-        insightsengineering/teal.reporter
-        insightsengineering/teal.widgets
-        insightsengineering/teal.transform
-        insightsengineering/teal
   rhub:
     if: >
       github.event_name == 'schedule' || (
@@ -81,18 +66,3 @@ jobs:
       )
     name: R-hub 🌐
     uses: insightsengineering/r.pkg.template/.github/workflows/rhub.yaml@main
-    with:
-      lookup-refs: |
-        insightsengineering/osprey
-        insightsengineering/formatters
-        insightsengineering/rtables
-        insightsengineering/rtables.officer
-        insightsengineering/tern
-        insightsengineering/teal.logger
-        insightsengineering/teal.code
-        insightsengineering/teal.data
-        insightsengineering/teal.slice
-        insightsengineering/teal.reporter
-        insightsengineering/teal.widgets
-        insightsengineering/teal.transform
-        insightsengineering/teal
