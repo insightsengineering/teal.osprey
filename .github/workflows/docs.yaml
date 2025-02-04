@@ -43,17 +43,3 @@ jobs:
       default-landing-page: latest-tag
       additional-unit-test-report-directories: unit-test-report-non-cran
       deps-installation-method: setup-r-dependencies
-      lookup-refs: |
-        insightsengineering/osprey
-        insightsengineering/formatters
-        insightsengineering/rtables
-        insightsengineering/rtables.officer
-        insightsengineering/tern
-        insightsengineering/teal.logger
-        insightsengineering/teal.code
-        insightsengineering/teal.data
-        insightsengineering/teal.slice
-        insightsengineering/teal.reporter
-        insightsengineering/teal.widgets
-        insightsengineering/teal.transform
-        insightsengineering/teal
