@@ -15,7 +15,7 @@
 
 # teal.osprey 0.1.16
 
-### Enchancements
+### Enhancements
 * Removed `scda` package dependency from examples.
 * Fixed crash in `tm_g_heat_bygrade` when not plotting `Conmed`.
 * Added validation to `tm_g_spiderplot.R` that checks if there are duplicates in X and Y facet variables.
