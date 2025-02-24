@@ -1,7 +1,7 @@
-# teal.osprey 0.1.16.9037
+# teal.osprey 0.2.0
 
 * Removed `Show Warnings` modals from modules.
-* Moved `teal.data` from `Suggests` to `Imports`. 
+* Moved `teal.data` from `Suggests` to `Imports`.
 * Changed examples from `cdisc_data()` to `teal_data()`.
 
 ### Breaking Changes
@@ -11,7 +11,6 @@
 * Added `teal.logger` functionality for logging changes in shiny inputs in all modules.
 
 ### Miscellaneous
-
 * Specified minimal version of package dependencies.
 
 # teal.osprey 0.1.16
