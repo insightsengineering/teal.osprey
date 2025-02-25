@@ -1,28 +1,27 @@
-# teal.osprey 0.1.16.9037
-
-* Removed `Show Warnings` modals from modules.
-* Moved `teal.data` from `Suggests` to `Imports`. 
-* Changed examples from `cdisc_data()` to `teal_data()`.
+# teal.osprey 0.2.0
 
 ### Breaking Changes
 * Adapted all modules to use `teal_data` objects.
 
 ### Enhancements
 * Added `teal.logger` functionality for logging changes in shiny inputs in all modules.
+* Modified example apps to use new `teal_data` and `join_keys` solutions.
+* Removed `Show Warnings` modals from modules.
+* Moved `teal.data` from `Suggests` to `Imports`.
+* Changed examples from `cdisc_data()` to `teal_data()`.
 
 ### Miscellaneous
-
 * Specified minimal version of package dependencies.
 
 # teal.osprey 0.1.16
 
+### Enhancements
 * Removed `scda` package dependency from examples.
 * Fixed crash in `tm_g_heat_bygrade` when not plotting `Conmed`.
 * Added validation to `tm_g_spiderplot.R` that checks if there are duplicates in X and Y facet variables.
 * Improved input validation and used the `teal::validate_inputs` mechanism to send validation messages to the output panel.
 * Removed `purrr` from dependencies.
 * Added argument checks to `tm_g_patient_profile`.
-* Modified example apps to use new `teal_data` and `join_keys` solutions.
 
 ### Breaking changes
 
