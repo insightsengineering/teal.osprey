@@ -190,7 +190,6 @@ ui_g_heatmap_bygrade <- function(id, ...) {
   args <- list(...)
 
   shiny::tagList(
-    include_css_files("custom"),
     teal.widgets::standard_layout(
       output = teal.widgets::white_small_well(
         plot_decorate_output(id = ns(NULL))
@@ -235,8 +234,7 @@ ui_g_heatmap_bygrade <- function(id, ...) {
           multiple = FALSE
         ),
         helpText("Plot conmed"),
-        tags$div(
-          class = "pretty-left-border",
+        left_bordered_div(
           if (!is.na(args$cm_dataname)) {
             checkboxInput(
               ns("plot_cm"),

@@ -178,7 +178,6 @@ ui_g_swimlane <- function(id, ...) {
   ns <- NS(id)
 
   shiny::tagList(
-    include_css_files("custom"),
     teal.widgets::standard_layout(
       output = teal.widgets::white_small_well(
         teal.widgets::plot_with_settings_ui(id = ns("swimlaneplot"))
@@ -189,8 +188,7 @@ ui_g_swimlane <- function(id, ...) {
         ###
         tags$label("Encodings", class = "text-primary"),
         helpText("Analysis data:", tags$code(a$dataname)),
-        tags$div(
-          class = "pretty-left-border",
+        left_bordered_div(
           teal.widgets::optionalSelectInput(
             ns("bar_var"),
             "Bar Length",
@@ -216,8 +214,7 @@ ui_g_swimlane <- function(id, ...) {
           multiple = FALSE,
           label_help = helpText("from ", tags$code("ADSL"))
         ),
-        tags$div(
-          class = "pretty-left-border",
+        left_bordered_div(
           if (a$dataname == "ADSL") {
             NULL
           } else if (is.null(a$marker_pos_var)) {
