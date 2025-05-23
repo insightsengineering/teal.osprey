@@ -141,7 +141,6 @@ ui_g_spider <- function(id, ...) {
   ns <- NS(id)
   a <- list(...)
   shiny::tagList(
-    include_css_files("custom"),
     teal.widgets::standard_layout(
       output = teal.widgets::white_small_well(
         teal.widgets::plot_with_settings_ui(id = ns("spiderplot"))
@@ -152,8 +151,7 @@ ui_g_spider <- function(id, ...) {
         ###
         tags$label("Encodings", class = "text-primary"),
         helpText("Analysis data:", tags$code(a$dataname)),
-        tags$div(
-          class = "pretty-left-border",
+        left_bordered_div(
           teal.widgets::optionalSelectInput(
             ns("paramcd"),
             paste("Parameter - from", a$dataname),
@@ -215,18 +213,26 @@ ui_g_spider <- function(id, ...) {
         textInput(
           ns("vref_line"),
           label = tags$div(
-            "Vertical Reference Line(s)",
-            tags$br(),
-            helpText("Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)")
+            "Vertical reference line(s)",
+            bslib::tooltip(
+              trigger = icon("circle-info"),
+              tags$span(
+                "Enter numeric value(s) of vertical reference lines, separated by comma (eg. -2, 1)"
+              )
+            )
           ),
           value = a$vref_line
         ),
         textInput(
           ns("href_line"),
           label = tags$div(
-            "Hortizontal Reference Line(s)",
-            tags$br(),
-            helpText("Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)")
+            "Hortizontal reference line(s)",
+            bslib::tooltip(
+              trigger = icon("circle-info"),
+              tags$span(
+                "Enter numeric value(s) of horizontal reference lines, separated by comma (eg. -2, 1)"
+              )
+            )
           ),
           value = a$href_line
         )
@@ -287,7 +293,7 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
       iv$add_rule("xfacet_var", fac_dupl, other = input$yfacet_var)
       iv$add_rule("yfacet_var", fac_dupl, other = input$xfacet_var)
       iv$add_rule("vref_line", ~ if (anyNA(suppressWarnings(as_numeric_from_comma_sep_str(.)))) {
-        "Vertical Reference Line(s) are invalid"
+        "Vertical reference line(s) are invalid"
       })
       iv$add_rule("href_line", ~ if (anyNA(suppressWarnings(as_numeric_from_comma_sep_str(.)))) {
         "Horizontal Reference Line(s) are invalid"

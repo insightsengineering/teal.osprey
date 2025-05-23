@@ -32,7 +32,7 @@ quick_filter <- function(filter_opt, ANL) {
   for (i in seq_along(filter_opt)) {
     ANL <- ANL[ANL[, filter_opt[i]] == "Y", ]
   }
-  return(ANL)
+  ANL
 }
 
 #' Automatically switch variable labels for standard `AE` variables in `AE` osprey functions
@@ -64,7 +64,7 @@ label_aevar <- function(x) {
 
   which_aevar <- match(x, names(ae_varlabel))
   out_label <- ifelse(is.na(which_aevar), x, ae_varlabel[which_aevar])
-  return(out_label)
+  out_label
 }
 
 #' retrieve name of ci method
@@ -107,28 +107,7 @@ as_numeric_from_comma_sep_str <- function(input_string) {
   } else {
     ref_line <- NULL
   }
-  return(ref_line)
-}
-
-#' Include `CSS` files from `/inst/css/` package directory to application header
-#'
-#' `system.file` should not be used to access files in other packages, it does
-#' not work with `devtools`. Therefore, we redefine this method in each package
-#' as needed. Thus, we do not export this method.
-#'
-#' @param pattern (`character`) pattern of files to be included
-#'
-#' @return HTML code that includes `CSS` files
-#' @keywords internal
-include_css_files <- function(pattern = "*") {
-  css_files <- list.files(
-    system.file("css", package = "teal.osprey", mustWork = TRUE),
-    pattern = pattern, full.names = TRUE
-  )
-  if (length(css_files) == 0) {
-    return(NULL)
-  }
-  return(shiny::singleton(shiny::tags$head(lapply(css_files, shiny::includeCSS))))
+  ref_line
 }
 
 #' Get Choices
@@ -159,4 +138,19 @@ get_choices <- function(choices) {
   } else {
     choices
   }
+}
+
+#' @keywords internal
+#' @noRd
+left_bordered_div <- function(...) {
+  tags$div(
+    style = "
+      border-left: 3px solid #e3e3e3;
+      padding-left: 0.6em;
+      border-radius: 5px;
+      margin-left: -0.6em;
+      margin-bottom: 0.5em;
+    ",
+    ...
+  )
 }

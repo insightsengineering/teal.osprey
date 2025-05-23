@@ -214,7 +214,6 @@ ui_g_patient_profile <- function(id, ...) {
   checkboxes <- c(a$ex_dataname, a$ae_dataname, a$rs_dataname, a$lb_dataname, a$cm_dataname)
 
   shiny::tagList(
-    include_css_files("custom"),
     teal.widgets::standard_layout(
       output = teal.widgets::white_small_well(
         teal.widgets::plot_with_settings_ui(id = ns("patientprofileplot"))
