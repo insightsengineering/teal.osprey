@@ -32,7 +32,7 @@ quick_filter <- function(filter_opt, ANL) {
   for (i in seq_along(filter_opt)) {
     ANL <- ANL[ANL[, filter_opt[i]] == "Y", ]
   }
-  return(ANL)
+  ANL
 }
 
 #' Automatically switch variable labels for standard `AE` variables in `AE` osprey functions
@@ -64,7 +64,7 @@ label_aevar <- function(x) {
 
   which_aevar <- match(x, names(ae_varlabel))
   out_label <- ifelse(is.na(which_aevar), x, ae_varlabel[which_aevar])
-  return(out_label)
+  out_label
 }
 
 #' retrieve name of ci method
@@ -107,7 +107,7 @@ as_numeric_from_comma_sep_str <- function(input_string) {
   } else {
     ref_line <- NULL
   }
-  return(ref_line)
+  ref_line
 }
 
 #' Get Choices
