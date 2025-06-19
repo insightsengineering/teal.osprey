@@ -45,7 +45,7 @@ Suggests:
     knitr (>= 1.42),
     logger (>= 0.2.2),
     rmarkdown (>= 2.23),
-    testthat (>= 3.1.5),
+    testthat (>= 3.2.3),
     withr (>= 2.0.0)
 Remotes:
     insightsengineering/osprey
