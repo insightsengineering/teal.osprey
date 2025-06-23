@@ -36,19 +36,20 @@ Imports:
     shinyvalidate,
     teal.code (>= 0.6.1),
     teal.data (>= 0.7.0),
-    teal.logger (>= 0.3.2),
+    teal.logger (>= 0.3.2.9001),
     teal.reporter (>= 0.4.0),
     teal.widgets (>= 0.4.3),
     tern (>= 0.9.7),
     tidyr (>= 0.8.3)
 Suggests:
     knitr (>= 1.42),
-    logger (>= 0.2.2),
+    logger (>= 0.4.0),
     rmarkdown (>= 2.23),
-    testthat (>= 3.1.5),
+    testthat (>= 3.2.3),
     withr (>= 2.0.0)
 Remotes:
-    insightsengineering/osprey
+    insightsengineering/osprey,
+    insightsengineering/teal.logger@main
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal, insightsengineering/teal.slice,
     insightsengineering/teal.transform, mllg/checkmate, tidyverse/dplyr,
