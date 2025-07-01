@@ -1,4 +1,5 @@
 # teal.osprey 0.2.0.9002
+* Updated `tm_g_waterfall` to only pass `ADSL`, `dataname_tr`, and `dataname_rs` into `datanames`.
 
 # teal.osprey 0.2.0
 
