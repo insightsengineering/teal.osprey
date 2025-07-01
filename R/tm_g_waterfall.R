@@ -148,7 +148,7 @@ tm_g_waterfall <- function(label,
       plot_width = plot_width
     ),
     transformators = transformators,
-    datanames = "all"
+    datanames = c("ADSL", dataname_tr, dataname_rs)
   )
 }
 
