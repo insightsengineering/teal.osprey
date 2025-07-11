@@ -279,7 +279,15 @@ srv_g_ae_oview <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ANL <- data()[[dataname]]
+        obj <- data()
+        teal.reporter::teal_card(obj) <- 
+          c(
+            teal.reporter::teal_card("# AE Overview"),
+            teal.reporter::teal_card(obj),
+            teal.reporter::teal_card("## Module's code")
+          )
+        
+        ANL <- obj[[dataname]]
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
@@ -291,7 +299,7 @@ srv_g_ae_oview <- function(id,
         ))
 
         q1 <- teal.code::eval_code(
-          data(),
+          obj,
           code = as.expression(c(
             bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
             bquote(
@@ -301,6 +309,8 @@ srv_g_ae_oview <- function(id,
             )
           ))
         )
+
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
         teal.code::eval_code(
           q1,
@@ -334,22 +344,5 @@ srv_g_ae_oview <- function(id,
       title = paste("R code for", label)
     )
     output_q
-
-    #   card_fun <- function(comment, label) {
-    #     card <- teal::report_card_template(
-    #       title = "AE Overview",
-    #       label = label,
-    #       with_filter = with_filter,
-    #       filter_panel_api = filter_panel_api
-    #     )
-    #     card$append_text("Plot", "header3")
-    #     card$append_plot(plot_r(), dim = pws$dim())
-    #     if (!comment == "") {
-    #       card$append_text("Comment", "header3")
-    #       card$append_text(comment)
-    #     }
-    #     card$append_src(teal.code::get_code(output_q()))
-    #     card
-    #   }
   })
 }

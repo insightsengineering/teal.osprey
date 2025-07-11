@@ -359,9 +359,17 @@ srv_g_waterfall <- function(id,
     })
 
     output_q <- reactive({
-      adsl <- data()[["ADSL"]]
-      adtr <- data()[[dataname_tr]]
-      adrs <- data()[[dataname_rs]]
+      obj <- data()
+      teal.reporter::teal_card(obj) <- 
+        c(
+          teal.reporter::teal_card("# Waterfall Plot"),
+          teal.reporter::teal_card(obj),
+          teal.reporter::teal_card("## Module's code")
+        )
+      
+      adsl <- obj[["ADSL"]]
+      adtr <- obj[[dataname_tr]]
+      adrs <- obj[[dataname_rs]]
 
       # validate data rows
       teal::validate_has_data(adsl, min_nrow = 2)
@@ -427,7 +435,7 @@ srv_g_waterfall <- function(id,
 
       # write variables to qenv
       q1 <- teal.code::eval_code(
-        data(),
+        obj,
         code = bquote({
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
@@ -493,6 +501,8 @@ srv_g_waterfall <- function(id,
 
       # write plotting code to qenv
       anl <- q1[["anl"]]
+
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
       q1 <- teal.code::eval_code(
         q1,
@@ -568,21 +578,5 @@ srv_g_waterfall <- function(id,
     )
 
     output_q
-    #   card_fun <- function(comment, label) {
-    #     card <- teal::report_card_template(
-    #       title = "Waterfall Plot",
-    #       label = label,
-    #       with_filter = with_filter,
-    #       filter_panel_api = filter_panel_api
-    #     )
-    #     card$append_text("Plot", "header3")
-    #     card$append_plot(plot_r(), dim = pws$dim())
-    #     if (!comment == "") {
-    #       card$append_text("Comment", "header3")
-    #       card$append_text(comment)
-    #     }
-    #     card$append_src(teal.code::get_code(output_q()))
-    #     card
-    #   }
   })
 }

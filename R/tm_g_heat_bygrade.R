@@ -390,10 +390,18 @@ srv_g_heatmap_bygrade <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ADSL <- data()[[sl_dataname]]
-        ADEX <- data()[[ex_dataname]]
-        ADAE <- data()[[ae_dataname]]
-        ADCM <- data()[[cm_dataname]]
+        obj <- data()
+        teal.reporter::teal_card(obj) <- 
+          c(
+            teal.reporter::teal_card("# Heatmap by Grade"),
+            teal.reporter::teal_card(obj),
+            teal.reporter::teal_card("## Module's code")
+          )
+        
+        ADSL <- obj[[sl_dataname]]
+        ADEX <- obj[[ex_dataname]]
+        ADAE <- obj[[ae_dataname]]
+        ADCM <- obj[[cm_dataname]]
 
         teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
         teal::validate_inputs(iv(), iv_cm())
@@ -401,7 +409,7 @@ srv_g_heatmap_bygrade <- function(id,
           shiny::validate(shiny::need(all(input$conmed_level %in% ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
         }
 
-        qenv <- data()
+        qenv <- obj
 
         if (isTRUE(input$plot_cm)) {
           ADCM <- qenv[[cm_dataname]]
@@ -425,6 +433,8 @@ srv_g_heatmap_bygrade <- function(id,
             )
           )
         }
+
+        teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "## Plot")
 
         qenv <- teal.code::eval_code(
           qenv,
@@ -457,21 +467,5 @@ srv_g_heatmap_bygrade <- function(id,
     )
 
     output_q
-    #   card_fun <- function(comment, label) {
-    #     card <- teal::report_card_template(
-    #       title = "Heatmap by Grade",
-    #       label = label,
-    #       with_filter = with_filter,
-    #       filter_panel_api = filter_panel_api
-    #     )
-    #     card$append_text("Plot", "header3")
-    #     card$append_plot(plot_r(), dim = pws$dim())
-    #     if (!comment == "") {
-    #       card$append_text("Comment", "header3")
-    #       card$append_text(comment)
-    #     }
-    #     card$append_src(teal.code::get_code(output_q()))
-    #     card
-    #   }
   })
 }

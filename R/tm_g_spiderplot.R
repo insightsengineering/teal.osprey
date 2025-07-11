@@ -301,9 +301,17 @@ srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_w
 
     # render plot
     output_q <- reactive({
+      obj <- data()
+      teal.reporter::teal_card(obj) <- 
+        c(
+          teal.reporter::teal_card("# Spider Plot"),
+          teal.reporter::teal_card(obj),
+          teal.reporter::teal_card("## Module's code")
+        )
+      
       # get datasets ---
-      ADSL <- data()[["ADSL"]]
-      ADTR <- data()[[dataname]]
+      ADSL <- obj[["ADSL"]]
+      ADTR <- obj[[dataname]]
 
       teal::validate_inputs(iv())
 
@@ -343,7 +351,7 @@ srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_w
 
       # merge
       q1 <- teal.code::eval_code(
-        data(),
+        obj,
         code = bquote({
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
           ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame()
@@ -378,6 +386,8 @@ srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_w
       }
 
       # plot code to qenv ---
+
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
       q1 <- teal.code::eval_code(
         q1,
@@ -444,21 +454,5 @@ srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_w
     )
 
     output_q
-    #   card_fun <- function(comment, label) {
-    #     card <- teal::report_card_template(
-    #       title = "Spider Plot",
-    #       label = label,
-    #       with_filter = with_filter,
-    #       filter_panel_api = filter_panel_api
-    #     )
-    #     card$append_text("Plot", "header3")
-    #     card$append_plot(plot_r(), dim = pws$dim())
-    #     if (!comment == "") {
-    #       card$append_text("Comment", "header3")
-    #       card$append_text(comment)
-    #     }
-    #     card$append_src(teal.code::get_code(output_q()))
-    #     card
-    #   }
   })
 }

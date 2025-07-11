@@ -298,7 +298,15 @@ srv_g_events_term_id <- function(id,
     )
 
     output_q <- reactive({
-      ANL <- data()[[dataname]]
+      obj <- data()
+      teal.reporter::teal_card(obj) <- 
+        c(
+          teal.reporter::teal_card("# Events by Term"),
+          teal.reporter::teal_card(obj),
+          teal.reporter::teal_card("## Module's code")
+        )
+      
+      ANL <- obj[[dataname]]
 
       teal::validate_inputs(iv())
 
@@ -314,7 +322,7 @@ srv_g_events_term_id <- function(id,
       anl_vars <- c("USUBJID", "STUDYID", input$term)
 
       q1 <- teal.code::eval_code(
-        data(),
+        obj,
         code = bquote(
           ANL <- merge(
             x = ADSL[, .(adsl_vars), drop = FALSE],
@@ -330,6 +338,8 @@ srv_g_events_term_id <- function(id,
         min_nrow = 10,
         msg = "Analysis data set must have at least 10 data points"
       )
+
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
       q2 <- teal.code::eval_code(
         q1,
@@ -366,21 +376,5 @@ srv_g_events_term_id <- function(id,
     )
 
     output_q
-    #   card_fun <- function(comment, label) {
-    #     card <- teal::report_card_template(
-    #       title = "Events by Term",
-    #       label = label,
-    #       with_filter = with_filter,
-    #       filter_panel_api = filter_panel_api
-    #     )
-    #     card$append_text("Plot", "header3")
-    #     card$append_plot(plot_r(), dim = pws$dim())
-    #     if (!comment == "") {
-    #       card$append_text("Comment", "header3")
-    #       card$append_text(comment)
-    #     }
-    #     card$append_src(teal.code::get_code(output_q()))
-    #     card
-    #   }
   })
 }

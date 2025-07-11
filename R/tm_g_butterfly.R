@@ -381,8 +381,16 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ADSL <- data()[["ADSL"]]
-        ANL <- data()[[dataname]]
+        obj <- data()
+        teal.reporter::teal_card(obj) <- 
+          c(
+            teal.reporter::teal_card("# Butterfly Plot"),
+            teal.reporter::teal_card(obj),
+            teal.reporter::teal_card("## Module's code")
+          )
+        
+        ADSL <- obj[["ADSL"]]
+        ANL <- obj[[dataname]]
 
         teal::validate_has_data(ADSL, min_nrow = 0, msg = sprintf("%s Data is empty", "ADSL"))
         teal::validate_has_data(ANL, min_nrow = 0, msg = sprintf("%s Data is empty", dataname))
@@ -418,7 +426,7 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
         anl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl))
 
         q1 <- teal.code::eval_code(
-          data(),
+          obj,
           code = bquote({
             ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
             ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame()
@@ -455,6 +463,8 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
             })
           )
         }
+
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
         if (!is.null(right_val) && !is.null(left_val)) {
           q1 <- teal.code::eval_code(
@@ -508,21 +518,5 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
     )
 
     output_q
-    #   card_fun <- function(comment, label) {
-    #     card <- teal::report_card_template(
-    #       title = "Butterfly Plot",
-    #       label = label,
-    #       with_filter = with_filter,
-    #       filter_panel_api = filter_panel_api
-    #     )
-    #     card$append_text("Plot", "header3")
-    #     card$append_plot(plot_r(), dim = pws$dim())
-    #     if (!comment == "") {
-    #       card$append_text("Comment", "header3")
-    #       card$append_text(comment)
-    #     }
-    #     card$append_src(teal.code::get_code(output_q()))
-    #     card
-    #   }
   })
 }

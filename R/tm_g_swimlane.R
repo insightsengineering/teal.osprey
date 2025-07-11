@@ -317,18 +317,26 @@ srv_g_swimlane <- function(id,
 
     # create plot
     output_q <- reactive({
+      obj <- data()
+      teal.reporter::teal_card(obj) <- 
+        c(
+          teal.reporter::teal_card("# Swimlane Plot"),
+          teal.reporter::teal_card(obj),
+          teal.reporter::teal_card("## Module's code")
+        )
+      
       teal::validate_inputs(iv())
 
-      validate(need("ADSL" %in% names(data()), "'ADSL' not included in data"))
+      validate(need("ADSL" %in% names(obj), "'ADSL' not included in data"))
       validate(need(
-        (length(data()) == 1 && dataname == "ADSL") ||
-          (length(data()) >= 2 && dataname != "ADSL"), paste(
+        (length(obj) == 1 && dataname == "ADSL") ||
+          (length(obj) >= 2 && dataname != "ADSL"), paste(
           "Please either add just 'ADSL' as dataname when just ADSL is available.",
           "In case 2 datasets are available ADSL is not supposed to be the dataname."
         )
       ))
 
-      ADSL <- data()[["ADSL"]]
+      ADSL <- obj[["ADSL"]]
 
       anl_vars <- unique(c(
         "USUBJID", "STUDYID",
@@ -343,7 +351,7 @@ srv_g_swimlane <- function(id,
         teal::validate_has_data(ADSL, min_nrow = 3)
         teal::validate_has_variable(ADSL, adsl_vars)
       } else {
-        anl <- data()[[dataname]]
+        anl <- obj[[dataname]]
         teal::validate_has_data(anl, min_nrow = 3)
         teal::validate_has_variable(anl, anl_vars)
 
@@ -372,7 +380,7 @@ srv_g_swimlane <- function(id,
       }
       vref_line <- suppressWarnings(as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)()))
 
-      q1 <- data()
+      q1 <- obj
 
       q2 <- teal.code::eval_code(
         q1,
@@ -497,6 +505,8 @@ srv_g_swimlane <- function(id,
         )
       }
 
+      teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), "## Plot")
+
       q4 <- teal.code::eval_code(q3, code = plot_call)
       teal.code::eval_code(q4, quote(plot))
     })
@@ -518,21 +528,5 @@ srv_g_swimlane <- function(id,
     )
 
     output_q
-    #   card_fun <- function(comment, label) {
-    #     card <- teal::report_card_template(
-    #       title = "Swimlane Plot",
-    #       label = label,
-    #       with_filter = with_filter,
-    #       filter_panel_api = filter_panel_api
-    #     )
-    #     card$append_text("Plot", "header3")
-    #     card$append_plot(plot_r(), dim = pws$dim())
-    #     if (!comment == "") {
-    #       card$append_text("Comment", "header3")
-    #       card$append_text(comment)
-    #     }
-    #     card$append_src(teal.code::get_code(output_q()))
-    #     card
-    #   }
   })
 }

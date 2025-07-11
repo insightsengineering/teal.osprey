@@ -311,8 +311,16 @@ srv_g_ae_sub <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ANL <- data()[[dataname]]
-        ADSL <- data()[["ADSL"]]
+        obj <- data()
+        teal.reporter::teal_card(obj) <- 
+          c(
+            teal.reporter::teal_card("# AE by Subgroups"),
+            teal.reporter::teal_card(obj),
+            teal.reporter::teal_card("## Module's code")
+          )
+        
+        ANL <- obj[[dataname]]
+        ADSL <- obj[["ADSL"]]
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
@@ -341,9 +349,13 @@ srv_g_ae_sub <- function(id,
           bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
         }
 
-        teal.code::eval_code(data(), code = group_labels_call) %>%
-          teal.code::eval_code(code = "") %>%
-          teal.code::eval_code(
+        q1 <- teal.code::eval_code(obj, code = group_labels_call) %>%
+          teal.code::eval_code(code = "")
+
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+
+        teal.code::eval_code(
+          q1,
             code = as.expression(c(
               bquote(
                 plot <- osprey::g_ae_sub(
@@ -377,21 +389,5 @@ srv_g_ae_sub <- function(id,
     )
 
     output_q
-    #   card_fun <- function(comment, label) {
-    #     card <- teal::report_card_template(
-    #       title = "AE by Subgroups",
-    #       label = label,
-    #       with_filter = with_filter,
-    #       filter_panel_api = filter_panel_api
-    #     )
-    #     card$append_text("Plot", "header3")
-    #     card$append_plot(plot_r(), dim = pws$dim())
-    #     if (!comment == "") {
-    #       card$append_text("Comment", "header3")
-    #       card$append_text(comment)
-    #     }
-    #     card$append_src(teal.code::get_code(output_q()))
-    #     card
-    #   }
   })
 }

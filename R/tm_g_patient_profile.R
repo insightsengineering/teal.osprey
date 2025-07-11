@@ -453,6 +453,14 @@ srv_g_patient_profile <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
+        obj <- data()
+        teal.reporter::teal_card(obj) <- 
+          c(
+            teal.reporter::teal_card("# Patient Profile"),
+            teal.reporter::teal_card(obj),
+            teal.reporter::teal_card("## Module's code")
+          )
+        
         teal::validate_inputs(iv())
 
         # get inputs ---
@@ -499,31 +507,31 @@ srv_g_patient_profile <- function(id,
         ))
 
         # get ADSL dataset ---
-        ADSL <- data()[[sl_dataname]]
+        ADSL <- obj[[sl_dataname]]
 
         ADEX <- NULL
         if (isTRUE(select_plot()[ex_dataname])) {
-          ADEX <- data()[[ex_dataname]]
+          ADEX <- obj[[ex_dataname]]
           teal::validate_has_variable(ADEX, adex_vars)
         }
         ADAE <- NULL
         if (isTRUE(select_plot()[ae_dataname])) {
-          ADAE <- data()[[ae_dataname]]
+          ADAE <- obj[[ae_dataname]]
           teal::validate_has_variable(ADAE, adae_vars)
         }
         ADRS <- NULL
         if (isTRUE(select_plot()[rs_dataname])) {
-          ADRS <- data()[[rs_dataname]]
+          ADRS <- obj[[rs_dataname]]
           teal::validate_has_variable(ADRS, adrs_vars)
         }
         ADCM <- NULL
         if (isTRUE(select_plot()[cm_dataname])) {
-          ADCM <- data()[[cm_dataname]]
+          ADCM <- obj[[cm_dataname]]
           teal::validate_has_variable(ADCM, adcm_vars)
         }
         ADLB <- NULL
         if (isTRUE(select_plot()[lb_dataname])) {
-          ADLB <- data()[[lb_dataname]]
+          ADLB <- obj[[lb_dataname]]
           teal::validate_has_variable(ADLB, adlb_vars)
         }
 
@@ -534,7 +542,7 @@ srv_g_patient_profile <- function(id,
         empty_lb <- FALSE
 
         q1 <- teal.code::eval_code(
-          data(),
+          obj,
           code = substitute(
             expr = {
               ADSL <- ADSL %>%
@@ -866,6 +874,8 @@ srv_g_patient_profile <- function(id,
           x_limit <- q1[["x_limit"]]
         }
 
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+
         q1 <- teal.code::eval_code(
           q1,
           code = substitute(
@@ -908,21 +918,5 @@ srv_g_patient_profile <- function(id,
     )
 
     output_q
-    #   card_fun <- function(comment, label) {
-    #     card <- teal::report_card_template(
-    #       title = "Patient Profile",
-    #       label = label,
-    #       with_filter = with_filter,
-    #       filter_panel_api = filter_panel_api
-    #     )
-    #     card$append_text("Plot", "header3")
-    #     card$append_plot(plot_r(), dim = pws$dim())
-    #     if (!comment == "") {
-    #       card$append_text("Comment", "header3")
-    #       card$append_text(comment)
-    #     }
-    #     card$append_src(teal.code::get_code(output_q()))
-    #     card
-    #   }
   })
 }
