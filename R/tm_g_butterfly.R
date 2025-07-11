@@ -34,6 +34,7 @@
 #'   used directly as filter.
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #'
 #' @export
 #'
@@ -166,9 +167,6 @@ ui_g_butterfly <- function(id, ...) {
       teal.widgets::plot_with_settings_ui(id = ns("butterflyplot"))
     ),
     encoding = tags$div(
-      ### Reporter
-      teal.reporter::simple_reporter_ui(ns("simple_reporter")),
-      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Dataset is:", tags$code(a$dataname)),
       if (!is.null(a$filter_var)) {
@@ -263,9 +261,7 @@ ui_g_butterfly <- function(id, ...) {
   )
 }
 
-srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, label, plot_height, plot_width) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -511,37 +507,22 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
 
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "Butterfly Plot",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        if (!is.null(input$filter_var) || !is.null(input$facet_var) || !is.null(input$sort_by_var)) {
-          card$append_text("Selected Options", "header3")
-        }
-        if (!is.null(input$filter_var)) {
-          card$append_text(paste0("Preset Data Filters: ", paste(input$filter_var, collapse = ", "), "."))
-        }
-        if (!is.null(input$facet_var)) {
-          card$append_text(paste0("Faceted by: ", paste(input$facet_var, collapse = ", "), "."))
-        }
-        if (!is.null(input$sort_by_var)) {
-          card$append_text(paste0("Sorted by: ", paste(input$sort_by_var, collapse = ", "), "."))
-        }
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    output_q
+    #   card_fun <- function(comment, label) {
+    #     card <- teal::report_card_template(
+    #       title = "Butterfly Plot",
+    #       label = label,
+    #       with_filter = with_filter,
+    #       filter_panel_api = filter_panel_api
+    #     )
+    #     card$append_text("Plot", "header3")
+    #     card$append_plot(plot_r(), dim = pws$dim())
+    #     if (!comment == "") {
+    #       card$append_text("Comment", "header3")
+    #       card$append_text(comment)
+    #     }
+    #     card$append_src(teal.code::get_code(output_q()))
+    #     card
+    #   }
   })
 }

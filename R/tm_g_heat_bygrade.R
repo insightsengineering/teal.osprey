@@ -31,6 +31,7 @@
 #' specify to `NA` if no concomitant medications data is available
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #'
 #' @export
 #'
@@ -195,9 +196,6 @@ ui_g_heatmap_bygrade <- function(id, ...) {
         plot_decorate_output(id = ns(NULL))
       ),
       encoding = tags$div(
-        ### Reporter
-        teal.reporter::simple_reporter_ui(ns("simple_reporter")),
-        ###
         teal.widgets::optionalSelectInput(
           ns("id_var"),
           "ID Variable",
@@ -276,8 +274,6 @@ ui_g_heatmap_bygrade <- function(id, ...) {
 
 srv_g_heatmap_bygrade <- function(id,
                                   data,
-                                  filter_panel_api,
-                                  reporter,
                                   sl_dataname,
                                   ex_dataname,
                                   ae_dataname,
@@ -285,8 +281,6 @@ srv_g_heatmap_bygrade <- function(id,
                                   label,
                                   plot_height,
                                   plot_width) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
   if (!is.na(sl_dataname)) checkmate::assert_names(sl_dataname, subset.of = names(data))
@@ -462,25 +456,22 @@ srv_g_heatmap_bygrade <- function(id,
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
 
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "Heatmap by Grade",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    output_q
+    #   card_fun <- function(comment, label) {
+    #     card <- teal::report_card_template(
+    #       title = "Heatmap by Grade",
+    #       label = label,
+    #       with_filter = with_filter,
+    #       filter_panel_api = filter_panel_api
+    #     )
+    #     card$append_text("Plot", "header3")
+    #     card$append_plot(plot_r(), dim = pws$dim())
+    #     if (!comment == "") {
+    #       card$append_text("Comment", "header3")
+    #       card$append_text(comment)
+    #     }
+    #     card$append_src(teal.code::get_code(output_q()))
+    #     card
+    #   }
   })
 }

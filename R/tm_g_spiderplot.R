@@ -20,6 +20,7 @@
 #' @param yfacet_var variable for y facets
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #' @export
 #'
 #' @template author_zhanc107
@@ -146,9 +147,6 @@ ui_g_spider <- function(id, ...) {
         teal.widgets::plot_with_settings_ui(id = ns("spiderplot"))
       ),
       encoding = tags$div(
-        ### Reporter
-        teal.reporter::simple_reporter_ui(ns("simple_reporter")),
-        ###
         tags$label("Encodings", class = "text-primary"),
         helpText("Analysis data:", tags$code(a$dataname)),
         left_bordered_div(
@@ -246,9 +244,7 @@ ui_g_spider <- function(id, ...) {
   )
 }
 
-srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname, label, plot_height, plot_width) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_width) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -447,37 +443,22 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
 
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "Spider Plot",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        if (!is.null(input$paramcd) || !is.null(input$xfacet_var) || !is.null(input$yfacet_var)) {
-          card$append_text("Selected Options", "header3")
-        }
-        if (!is.null(input$paramcd)) {
-          card$append_text(paste0("Parameter - (from ", dataname, "): ", input$paramcd, "."))
-        }
-        if (!is.null(input$xfacet_var)) {
-          card$append_text(paste0("Faceted horizontally by: ", paste(input$xfacet_var, collapse = ", "), "."))
-        }
-        if (!is.null(input$yfacet_var)) {
-          card$append_text(paste0("Faceted vertically by: ", paste(input$yfacet_var, collapse = ", "), "."))
-        }
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    output_q
+    #   card_fun <- function(comment, label) {
+    #     card <- teal::report_card_template(
+    #       title = "Spider Plot",
+    #       label = label,
+    #       with_filter = with_filter,
+    #       filter_panel_api = filter_panel_api
+    #     )
+    #     card$append_text("Plot", "header3")
+    #     card$append_plot(plot_r(), dim = pws$dim())
+    #     if (!comment == "") {
+    #       card$append_text("Comment", "header3")
+    #       card$append_text(comment)
+    #     }
+    #     card$append_src(teal.code::get_code(output_q()))
+    #     card
+    #   }
   })
 }

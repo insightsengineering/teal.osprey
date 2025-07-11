@@ -41,6 +41,7 @@
 #' @param show_value boolean of whether value of bar height is shown, default is `TRUE`
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #'
 #' @export
 #'
@@ -160,9 +161,6 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::plot_with_settings_ui(id = ns("waterfallplot"))
     ),
     encoding = tags$div(
-      ### Reporter
-      teal.reporter::simple_reporter_ui(ns("simple_reporter")),
-      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis Data: ", tags$code(a$dataname_tr), tags$code(a$dataname_rs)),
       teal.widgets::optionalSelectInput(
@@ -270,8 +268,6 @@ ui_g_waterfall <- function(id, ...) {
 
 srv_g_waterfall <- function(id,
                             data,
-                            filter_panel_api,
-                            reporter,
                             bar_paramcd,
                             add_label_paramcd_rs,
                             anno_txt_paramcd_rs,
@@ -281,8 +277,6 @@ srv_g_waterfall <- function(id,
                             label,
                             plot_height,
                             plot_width) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -573,33 +567,22 @@ srv_g_waterfall <- function(id,
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
 
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "Waterfall Plot",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        card$append_text("Selected Options", "header3")
-        card$append_text(paste0("Tumor Burden Parameter: ", input$bar_paramcd, "."))
-        if (!is.null(input$sort_var)) {
-          card$append_text(paste0("Sorted by: ", input$sort_var, "."))
-        }
-        if (!is.null(input$facet_var)) {
-          card$append_text(paste0("Faceted by: ", paste(input$facet_var, collapse = ", "), "."))
-        }
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    output_q
+    #   card_fun <- function(comment, label) {
+    #     card <- teal::report_card_template(
+    #       title = "Waterfall Plot",
+    #       label = label,
+    #       with_filter = with_filter,
+    #       filter_panel_api = filter_panel_api
+    #     )
+    #     card$append_text("Plot", "header3")
+    #     card$append_plot(plot_r(), dim = pws$dim())
+    #     if (!comment == "") {
+    #       card$append_text("Comment", "header3")
+    #       card$append_text(comment)
+    #     }
+    #     card$append_src(teal.code::get_code(output_q()))
+    #     card
+    #   }
   })
 }
