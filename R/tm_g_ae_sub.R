@@ -14,6 +14,7 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #'
 #' @export
 #'
@@ -105,9 +106,6 @@ ui_g_ae_sub <- function(id, ...) {
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = tags$div(
-      ### Reporter
-      teal.reporter::simple_reporter_ui(ns("simple_reporter")),
-      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code("ADAE")),
       teal.widgets::optionalSelectInput(
@@ -175,14 +173,10 @@ ui_g_ae_sub <- function(id, ...) {
 
 srv_g_ae_sub <- function(id,
                          data,
-                         filter_panel_api,
-                         reporter,
                          dataname,
                          label,
                          plot_height,
                          plot_width) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -317,8 +311,16 @@ srv_g_ae_sub <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ANL <- data()[[dataname]]
-        ADSL <- data()[["ADSL"]]
+        obj <- data()
+        teal.reporter::teal_card(obj) <-
+          c(
+            teal.reporter::teal_card("# AE by Subgroups"),
+            teal.reporter::teal_card(obj),
+            teal.reporter::teal_card("## Module's code")
+          )
+
+        ANL <- obj[[dataname]]
+        ADSL <- obj[["ADSL"]]
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
@@ -347,30 +349,34 @@ srv_g_ae_sub <- function(id,
           bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
         }
 
-        teal.code::eval_code(data(), code = group_labels_call) %>%
-          teal.code::eval_code(code = "") %>%
-          teal.code::eval_code(
-            code = as.expression(c(
-              bquote(
-                plot <- osprey::g_ae_sub(
-                  id = .(as.name(dataname))$USUBJID,
-                  arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
-                  arm_sl = as.character(ADSL[[.(input$arm_var)]]),
-                  trt = .(input$arm_trt),
-                  ref = .(input$arm_ref),
-                  subgroups = .(as.name(dataname))[.(input$groups)],
-                  subgroups_sl = ADSL[.(input$groups)],
-                  subgroups_levels = group_labels,
-                  conf_level = .(input$conf_level),
-                  diff_ci_method = .(input$ci),
-                  fontsize = .(font_size()),
-                  arm_n = .(input$arm_n),
-                  draw = TRUE
-                )
-              ),
-              quote(plot)
-            ))
-          )
+        q1 <- teal.code::eval_code(obj, code = group_labels_call) %>%
+          teal.code::eval_code(code = "")
+
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+
+        teal.code::eval_code(
+          q1,
+          code = as.expression(c(
+            bquote(
+              plot <- osprey::g_ae_sub(
+                id = .(as.name(dataname))$USUBJID,
+                arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
+                arm_sl = as.character(ADSL[[.(input$arm_var)]]),
+                trt = .(input$arm_trt),
+                ref = .(input$arm_ref),
+                subgroups = .(as.name(dataname))[.(input$groups)],
+                subgroups_sl = ADSL[.(input$groups)],
+                subgroups_levels = group_labels,
+                conf_level = .(input$conf_level),
+                diff_ci_method = .(input$ci),
+                fontsize = .(font_size()),
+                arm_n = .(input$arm_n),
+                draw = TRUE
+              )
+            ),
+            quote(plot)
+          ))
+        )
       })
     )
 
@@ -382,25 +388,6 @@ srv_g_ae_sub <- function(id,
       title = paste("R code for", label),
     )
 
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "AE Subgroups",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    output_q
   })
 }
