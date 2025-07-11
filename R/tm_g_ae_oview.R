@@ -280,13 +280,13 @@ srv_g_ae_oview <- function(id,
       millis = 200,
       r = reactive({
         obj <- data()
-        teal.reporter::teal_card(obj) <- 
+        teal.reporter::teal_card(obj) <-
           c(
             teal.reporter::teal_card("# AE Overview"),
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
-        
+
         ANL <- obj[[dataname]]
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))

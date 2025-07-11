@@ -318,13 +318,13 @@ srv_g_swimlane <- function(id,
     # create plot
     output_q <- reactive({
       obj <- data()
-      teal.reporter::teal_card(obj) <- 
+      teal.reporter::teal_card(obj) <-
         c(
           teal.reporter::teal_card("# Swimlane Plot"),
           teal.reporter::teal_card(obj),
           teal.reporter::teal_card("## Module's code")
         )
-      
+
       teal::validate_inputs(iv())
 
       validate(need("ADSL" %in% names(obj), "'ADSL' not included in data"))

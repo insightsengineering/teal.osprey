@@ -391,13 +391,13 @@ srv_g_heatmap_bygrade <- function(id,
       millis = 200,
       r = reactive({
         obj <- data()
-        teal.reporter::teal_card(obj) <- 
+        teal.reporter::teal_card(obj) <-
           c(
             teal.reporter::teal_card("# Heatmap by Grade"),
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
-        
+
         ADSL <- obj[[sl_dataname]]
         ADEX <- obj[[ex_dataname]]
         ADAE <- obj[[ae_dataname]]

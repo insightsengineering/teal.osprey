@@ -299,13 +299,13 @@ srv_g_events_term_id <- function(id,
 
     output_q <- reactive({
       obj <- data()
-      teal.reporter::teal_card(obj) <- 
+      teal.reporter::teal_card(obj) <-
         c(
           teal.reporter::teal_card("# Events by Term"),
           teal.reporter::teal_card(obj),
           teal.reporter::teal_card("## Module's code")
         )
-      
+
       ANL <- obj[[dataname]]
 
       teal::validate_inputs(iv())
