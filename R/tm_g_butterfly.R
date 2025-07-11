@@ -466,6 +466,19 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
 
         teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
+        if (!is.null(input$filter_var) || !is.null(input$facet_var) || !is.null(input$sort_by_var)) {
+          teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options")
+        }
+        if (!is.null(input$filter_var)) {
+          teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), paste0("Preset Data Filters: ", paste(input$filter_var, collapse = ", "), "."))
+        }
+        if (!is.null(input$facet_var)) {
+          teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), paste0("Faceted by: ", paste(input$facet_var, collapse = ", "), "."))
+        }
+        if (!is.null(input$sort_by_var)) {
+          teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), paste0("Sorted by: ", paste(input$sort_by_var, collapse = ", "), "."))
+        }
+
         if (!is.null(right_val) && !is.null(left_val)) {
           q1 <- teal.code::eval_code(
             q1,
