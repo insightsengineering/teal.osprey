@@ -302,13 +302,13 @@ srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_w
     # render plot
     output_q <- reactive({
       obj <- data()
-      teal.reporter::teal_card(obj) <- 
+      teal.reporter::teal_card(obj) <-
         c(
           teal.reporter::teal_card("# Spider Plot"),
           teal.reporter::teal_card(obj),
           teal.reporter::teal_card("## Module's code")
         )
-      
+
       # get datasets ---
       ADSL <- obj[["ADSL"]]
       ADTR <- obj[[dataname]]

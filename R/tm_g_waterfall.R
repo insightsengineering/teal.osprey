@@ -360,13 +360,13 @@ srv_g_waterfall <- function(id,
 
     output_q <- reactive({
       obj <- data()
-      teal.reporter::teal_card(obj) <- 
+      teal.reporter::teal_card(obj) <-
         c(
           teal.reporter::teal_card("# Waterfall Plot"),
           teal.reporter::teal_card(obj),
           teal.reporter::teal_card("## Module's code")
         )
-      
+
       adsl <- obj[["ADSL"]]
       adtr <- obj[[dataname_tr]]
       adrs <- obj[[dataname_rs]]

@@ -382,13 +382,13 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
       millis = 200,
       r = reactive({
         obj <- data()
-        teal.reporter::teal_card(obj) <- 
+        teal.reporter::teal_card(obj) <-
           c(
             teal.reporter::teal_card("# Butterfly Plot"),
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
-        
+
         ADSL <- obj[["ADSL"]]
         ANL <- obj[[dataname]]
 

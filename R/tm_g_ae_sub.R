@@ -312,13 +312,13 @@ srv_g_ae_sub <- function(id,
       millis = 200,
       r = reactive({
         obj <- data()
-        teal.reporter::teal_card(obj) <- 
+        teal.reporter::teal_card(obj) <-
           c(
             teal.reporter::teal_card("# AE by Subgroups"),
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
-        
+
         ANL <- obj[[dataname]]
         ADSL <- obj[["ADSL"]]
 
@@ -356,27 +356,27 @@ srv_g_ae_sub <- function(id,
 
         teal.code::eval_code(
           q1,
-            code = as.expression(c(
-              bquote(
-                plot <- osprey::g_ae_sub(
-                  id = .(as.name(dataname))$USUBJID,
-                  arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
-                  arm_sl = as.character(ADSL[[.(input$arm_var)]]),
-                  trt = .(input$arm_trt),
-                  ref = .(input$arm_ref),
-                  subgroups = .(as.name(dataname))[.(input$groups)],
-                  subgroups_sl = ADSL[.(input$groups)],
-                  subgroups_levels = group_labels,
-                  conf_level = .(input$conf_level),
-                  diff_ci_method = .(input$ci),
-                  fontsize = .(font_size()),
-                  arm_n = .(input$arm_n),
-                  draw = TRUE
-                )
-              ),
-              quote(plot)
-            ))
-          )
+          code = as.expression(c(
+            bquote(
+              plot <- osprey::g_ae_sub(
+                id = .(as.name(dataname))$USUBJID,
+                arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
+                arm_sl = as.character(ADSL[[.(input$arm_var)]]),
+                trt = .(input$arm_trt),
+                ref = .(input$arm_ref),
+                subgroups = .(as.name(dataname))[.(input$groups)],
+                subgroups_sl = ADSL[.(input$groups)],
+                subgroups_levels = group_labels,
+                conf_level = .(input$conf_level),
+                diff_ci_method = .(input$ci),
+                fontsize = .(font_size()),
+                arm_n = .(input$arm_n),
+                draw = TRUE
+              )
+            ),
+            quote(plot)
+          ))
+        )
       })
     )
 
