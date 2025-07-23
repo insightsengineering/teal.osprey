@@ -440,7 +440,7 @@ srv_g_swimlane <- function(id,
             marker_color_opt = NULL,
             anno_txt = .(if (length(anno_txt_var) > 0) quote(ADSL[, anno_txt_var]) else NULL),
             xref_line = .(vref_line),
-            xtick_at = waiver(),
+            xtick_at = ggplot2::waiver(),
             xlab = .(x_label),
             title = "Swimlane Plot"
           )
@@ -496,7 +496,7 @@ srv_g_swimlane <- function(id,
               NULL
             }),
             xref_line = .(vref_line),
-            xtick_at = waiver(),
+            xtick_at = ggplot2::waiver(),
             xlab = .(x_label),
             title = "Swimlane Plot"
           )
