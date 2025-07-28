@@ -196,7 +196,8 @@ ui_g_heatmap_bygrade <- function(id, ...) {
       ),
       encoding = tags$div(
         ### Reporter
-        teal.reporter::simple_reporter_ui(ns("simple_reporter")),
+        teal.reporter::add_card_button_ui(ns("add_reporter"), label = "Add Report Card"),
+        tags$br(), tags$br(),
         ###
         teal.widgets::optionalSelectInput(
           ns("id_var"),
@@ -480,7 +481,7 @@ srv_g_heatmap_bygrade <- function(id,
         card$append_src(teal.code::get_code(output_q()))
         card
       }
-      teal.reporter::simple_reporter_srv("simple_reporter", reporter = reporter, card_fun = card_fun)
+      teal.reporter::add_card_button_srv("add_reporter", reporter = reporter, card_fun = card_fun)
     }
   })
 }
