@@ -92,9 +92,10 @@ used directly as filter.
 \examples{
 # Example using stream (ADaM) dataset
 data <- teal_data() |>
+  eval_code("set.seed(23) # @linksto ADSL") |>
   within({
+    library(nestcolor)
     library(dplyr)
-    set.seed(23)
     ADSL <- rADSL
     ADAE <- rADAE
     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))

@@ -83,6 +83,7 @@ Display the heatmap by grade as a shiny module
 data <- teal_data() |>
   within({
     library(dplyr)
+    library(nestcolor)
     ADSL <- rADSL \%>\% slice(1:30)
     ADEX <- rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
     ADAE <- rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)

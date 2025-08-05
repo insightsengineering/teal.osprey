@@ -88,6 +88,7 @@ This is teal module that generates a \code{swimlane} plot (bar plot with markers
 # Example using stream (ADaM) dataset
 data <- teal_data() |>
   within({
+    library(nestcolor)
     library(dplyr)
     ADSL <- rADSL \%>\%
       mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%

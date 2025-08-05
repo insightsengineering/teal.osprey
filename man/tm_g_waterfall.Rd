@@ -106,6 +106,7 @@ This is teal module that generates a waterfall plot for \code{ADaM} data
 \examples{
 data <- teal_data() |>
   within({
+    library(nestcolor)
     ADSL <- rADSL
     ADRS <- rADRS
     ADTR <- rADTR

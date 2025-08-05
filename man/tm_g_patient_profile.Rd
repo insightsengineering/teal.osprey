@@ -114,6 +114,7 @@ the start date
 \examples{
 data <- teal_data() |>
   within({
+    library(nestcolor)
     library(dplyr)
     ADSL <- rADSL
     ADAE <- rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))

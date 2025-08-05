@@ -84,6 +84,7 @@ Display spider plot as a shiny module
 # Example using stream (ADaM) dataset
 data <- teal_data() |>
   within({
+    library(nestcolor)
     ADSL <- rADSL
     ADTR <- rADTR
   })
