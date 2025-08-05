@@ -63,6 +63,7 @@
 #' @examples
 #' data <- teal_data() |>
 #'   within({
+#'     library(dplyr)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
 #'     ADCM <- rADCM %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
