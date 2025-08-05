@@ -45,6 +45,7 @@
 #' data <- teal_data() |>
 #'   eval_code("set.seed(23) # @linksto ADSL") |> 
 #'   within({
+#'     library(nestcolor)
 #'     library(dplyr)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE

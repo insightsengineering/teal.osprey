@@ -50,6 +50,7 @@
 #' @examples
 #' data <- teal_data() |>
 #'   within({
+#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADRS <- rADRS
 #'     ADTR <- rADTR
