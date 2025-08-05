@@ -43,7 +43,7 @@
 #' @examples
 #' # Example using stream (ADaM) dataset
 #' data <- teal_data() |>
-#'   eval_code("set.seed(23) # @linksto ADSL") |> 
+#'   eval_code("set.seed(23) # @linksto ADSL") |>
 #'   within({
 #'     library(nestcolor)
 #'     library(dplyr)
