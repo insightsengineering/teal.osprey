@@ -301,6 +301,7 @@ srv_g_ae_oview <- function(id,
         q1 <- teal.code::eval_code(
           data(),
           code = as.expression(c(
+            bquote(library(dplyr)),
             bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
             bquote(
               flags <- .(as.name(dataname)) %>%

@@ -436,6 +436,7 @@ srv_g_waterfall <- function(id,
       q1 <- teal.code::eval_code(
         data(),
         code = bquote({
+          library(dplyr)
           bar_var <- .(bar_var)
           bar_color_var <- .(bar_color_var)
           sort_var <- .(sort_var)

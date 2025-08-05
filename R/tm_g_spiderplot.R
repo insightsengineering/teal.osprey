@@ -29,6 +29,7 @@
 #' # Example using stream (ADaM) dataset
 #' data <- teal_data() |>
 #'   within({
+#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADTR <- rADTR
 #'   })
@@ -350,6 +351,7 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
       q1 <- teal.code::eval_code(
         data(),
         code = bquote({
+          library(dplyr)
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
           ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame()
 

@@ -545,6 +545,7 @@ srv_g_patient_profile <- function(id,
           data(),
           code = substitute(
             expr = {
+              library(dplyr)
               ADSL <- ADSL %>%
                 filter(USUBJID == patient_id) %>%
                 group_by(USUBJID) %>%

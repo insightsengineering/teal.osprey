@@ -43,9 +43,9 @@
 #' @examples
 #' # Example using stream (ADaM) dataset
 #' data <- teal_data() |>
+#'   eval_code("set.seed(23) # @linksto ADSL") |> 
 #'   within({
 #'     library(dplyr)
-#'     set.seed(23)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
@@ -425,6 +425,7 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         q1 <- teal.code::eval_code(
           data(),
           code = bquote({
+            library(dplyr)
             ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
             ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame()
           })
