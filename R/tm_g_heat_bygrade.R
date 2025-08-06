@@ -453,7 +453,7 @@ srv_g_heatmap_bygrade <- function(id,
           )
         )
         teal.code::eval_code(qenv, quote(plot))
-        })
+      })
     )
 
     plot_r <- reactive(output_q()[["plot"]])

@@ -542,7 +542,7 @@ srv_g_patient_profile <- function(id,
         empty_ex <- FALSE
         empty_lb <- FALSE
 
-        q1 <- teal.code::eval_code(data(), "library(dplyr)") %>% 
+        q1 <- teal.code::eval_code(data(), "library(dplyr)") %>%
           teal.code::eval_code(
             code = substitute(
               expr = {
