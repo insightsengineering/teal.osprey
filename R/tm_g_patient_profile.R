@@ -542,27 +542,26 @@ srv_g_patient_profile <- function(id,
         empty_ex <- FALSE
         empty_lb <- FALSE
 
-        q1 <- teal.code::eval_code(
-          data(),
-          code = substitute(
-            expr = {
-              library(dplyr)
-              ADSL <- ADSL %>%
-                filter(USUBJID == patient_id) %>%
-                group_by(USUBJID) %>%
-                mutate(
-                  max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
-                  max_day = as.numeric(difftime(as.Date(max_date), as.Date(sl_start_date), units = "days")) +
-                    (as.Date(max_date) >= as.Date(sl_start_date))
-                )
-            },
-            env = list(
-              ADSL = as.name(sl_dataname),
-              sl_start_date = as.name(sl_start_date),
-              patient_id = patient_id
+        q1 <- teal.code::eval_code(data(), "library(dplyr)") %>% 
+          teal.code::eval_code(
+            code = substitute(
+              expr = {
+                ADSL <- ADSL %>%
+                  filter(USUBJID == patient_id) %>%
+                  group_by(USUBJID) %>%
+                  mutate(
+                    max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
+                    max_day = as.numeric(difftime(as.Date(max_date), as.Date(sl_start_date), units = "days")) +
+                      (as.Date(max_date) >= as.Date(sl_start_date))
+                  )
+              },
+              env = list(
+                ADSL = as.name(sl_dataname),
+                sl_start_date = as.name(sl_start_date),
+                patient_id = patient_id
+              )
             )
           )
-        )
 
         # ADSL with single subject
         validate(

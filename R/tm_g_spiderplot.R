@@ -348,20 +348,19 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
       adtr_vars <- adtr_vars[!is.null(adtr_vars)]
 
       # merge
-      q1 <- teal.code::eval_code(
-        data(),
-        code = bquote({
-          library(dplyr)
-          ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
-          ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame()
+      q1 <- teal.code::eval_code(data(), "library(dplyr)") %>%
+        teal.code::eval_code(
+          code = bquote({
+            ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
+            ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame()
 
-          ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID"))
-          ANL <- ANL %>%
-            group_by(USUBJID, PARAMCD) %>%
-            arrange(ANL[, .(x_var)]) %>%
-            as.data.frame()
-        })
-      )
+            ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID"))
+            ANL <- ANL %>%
+              group_by(USUBJID, PARAMCD) %>%
+              arrange(ANL[, .(x_var)]) %>%
+              as.data.frame()
+          })
+        )
 
       # format and filter
       q1 <- teal.code::eval_code(

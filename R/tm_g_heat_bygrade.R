@@ -409,7 +409,7 @@ srv_g_heatmap_bygrade <- function(id,
           shiny::validate(shiny::need(all(input$conmed_level %in% ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
         }
 
-        qenv <- within(data(), library(dplyr))
+        qenv <- teal.code::eval_code(data(), "library(dplyr)")
 
         if (isTRUE(input$plot_cm)) {
           ADCM <- qenv[[cm_dataname]]
@@ -453,7 +453,7 @@ srv_g_heatmap_bygrade <- function(id,
           )
         )
         teal.code::eval_code(qenv, quote(plot))
-      })
+        })
     )
 
     plot_r <- reactive(output_q()[["plot"]])
