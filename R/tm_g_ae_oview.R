@@ -325,7 +325,7 @@ srv_g_ae_oview <- function(id,
                 conf_level = .(input$conf_level),
                 axis_side = .(input$axis),
                 fontsize = .(font_size()),
-                draw = FALSE
+                draw = TRUE
               )
             ),
             quote(grid::grid.newpage()),

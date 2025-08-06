@@ -356,7 +356,7 @@ srv_g_events_term_id <- function(id,
             diff_ci_method = .(input$diff_ci_method),
             axis_side = .(input$axis),
             fontsize = .(font_size()),
-            draw = FALSE
+            draw = TRUE
           )
         )
       )

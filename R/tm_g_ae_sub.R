@@ -366,7 +366,7 @@ srv_g_ae_sub <- function(id,
                   diff_ci_method = .(input$ci),
                   fontsize = .(font_size()),
                   arm_n = .(input$arm_n),
-                  draw = FALSE
+                  draw = TRUE
                 )
               ),
               quote(grid::grid.newpage()),
