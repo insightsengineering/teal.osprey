@@ -327,9 +327,7 @@ srv_g_ae_oview <- function(id,
                 fontsize = .(font_size()),
                 draw = TRUE
               )
-            ),
-            quote(grid::grid.newpage()),
-            quote(grid::grid.draw(plot))
+            )
           ))
         )
       })

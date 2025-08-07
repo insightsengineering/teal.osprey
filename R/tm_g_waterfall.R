@@ -553,8 +553,6 @@ srv_g_waterfall <- function(id,
             y_label = "Tumor Burden Change from Baseline",
             title = "Waterfall Plot"
           )
-          grid::grid.newpage()
-          grid::grid.draw(plot)
         })
       )
     })
