@@ -19,6 +19,7 @@
 #' @examples
 #' data <- teal_data() |>
 #'   within({
+#'     library(dplyr)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'     .add_event_flags <- function(dat) {
@@ -297,17 +298,17 @@ srv_g_ae_oview <- function(id,
           "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
         ))
 
-        q1 <- teal.code::eval_code(
-          data(),
-          code = as.expression(c(
-            bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
-            bquote(
-              flags <- .(as.name(dataname)) %>%
-                select(all_of(.(input$flag_var_anl))) %>%
-                rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
-            )
-          ))
-        )
+        q1 <- teal.code::eval_code(data(), "library(dplyr)") %>%
+          teal.code::eval_code(
+            code = as.expression(c(
+              bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
+              bquote(
+                flags <- .(as.name(dataname)) %>%
+                  select(all_of(.(input$flag_var_anl))) %>%
+                  rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
+              )
+            ))
+          )
 
         teal.code::eval_code(
           q1,
@@ -326,8 +327,7 @@ srv_g_ae_oview <- function(id,
                 fontsize = .(font_size()),
                 draw = TRUE
               )
-            ),
-            quote(plot)
+            )
           ))
         )
       })

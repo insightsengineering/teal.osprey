@@ -38,6 +38,7 @@
 #' data <- teal_data() |>
 #'   within({
 #'     library(dplyr)
+#'     library(nestcolor)
 #'     ADSL <- rADSL %>% slice(1:30)
 #'     ADEX <- rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
 #'     ADAE <- rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
@@ -408,7 +409,7 @@ srv_g_heatmap_bygrade <- function(id,
           shiny::validate(shiny::need(all(input$conmed_level %in% ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
         }
 
-        qenv <- data()
+        qenv <- teal.code::eval_code(data(), "library(dplyr)")
 
         if (isTRUE(input$plot_cm)) {
           ADCM <- qenv[[cm_dataname]]

@@ -50,6 +50,7 @@
 #' @examples
 #' data <- teal_data() |>
 #'   within({
+#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADRS <- rADRS
 #'     ADTR <- rADTR
@@ -433,22 +434,22 @@ srv_g_waterfall <- function(id,
       }
 
       # write variables to qenv
-      q1 <- teal.code::eval_code(
-        data(),
-        code = bquote({
-          bar_var <- .(bar_var)
-          bar_color_var <- .(bar_color_var)
-          sort_var <- .(sort_var)
-          add_label_var_sl <- .(add_label_var_sl)
-          add_label_paramcd_rs <- .(add_label_paramcd_rs)
-          anno_txt_var_sl <- .(anno_txt_var_sl)
-          anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs)
-          facet_var <- .(facet_var)
-          href_line <- .(href_line)
-          gap_point_val <- .(gap_point_val)
-          show_value <- .(show_value)
-        })
-      )
+      q1 <- teal.code::eval_code(data(), "library(dplyr)") %>%
+        teal.code::eval_code(
+          code = bquote({
+            bar_var <- .(bar_var)
+            bar_color_var <- .(bar_color_var)
+            sort_var <- .(sort_var)
+            add_label_var_sl <- .(add_label_var_sl)
+            add_label_paramcd_rs <- .(add_label_paramcd_rs)
+            anno_txt_var_sl <- .(anno_txt_var_sl)
+            anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs)
+            facet_var <- .(facet_var)
+            href_line <- .(href_line)
+            gap_point_val <- .(gap_point_val)
+            show_value <- .(show_value)
+          })
+        )
 
       # data processing
       q1 <- teal.code::eval_code(
@@ -552,7 +553,6 @@ srv_g_waterfall <- function(id,
             y_label = "Tumor Burden Change from Baseline",
             title = "Waterfall Plot"
           )
-          plot
         })
       )
     })

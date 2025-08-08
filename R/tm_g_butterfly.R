@@ -43,9 +43,10 @@
 #' @examples
 #' # Example using stream (ADaM) dataset
 #' data <- teal_data() |>
+#'   eval_code("set.seed(23) # @linksto ADSL") |>
 #'   within({
+#'     library(nestcolor)
 #'     library(dplyr)
-#'     set.seed(23)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
@@ -422,13 +423,13 @@ srv_g_butterfly <- function(id, data, filter_panel_api, reporter, dataname, labe
         adsl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_adsl))
         anl_vars <- unique(c("USUBJID", "STUDYID", varlist_from_anl))
 
-        q1 <- teal.code::eval_code(
-          data(),
-          code = bquote({
-            ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
-            ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame()
-          })
-        )
+        q1 <- teal.code::eval_code(data(), "library(dplyr)") %>%
+          teal.code::eval_code(
+            code = bquote({
+              ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
+              ANL <- .(as.name(dataname))[, .(anl_vars)] %>% as.data.frame()
+            })
+          )
 
         if (!("NULL" %in% filter_var) && !is.null(filter_var)) {
           q1 <- teal.code::eval_code(

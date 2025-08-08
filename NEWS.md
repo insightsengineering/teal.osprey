@@ -1,5 +1,10 @@
 # teal.osprey 0.2.0.9006
+
+### Miscellaneous
+
 * Updated `tm_g_waterfall` to only pass `ADSL`, `dataname_tr`, and `dataname_rs` into `datanames`.
+* Fix module code reproducibility and remove the redundant `plot` print (#311).
+
 
 # teal.osprey 0.2.0
 

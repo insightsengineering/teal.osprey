@@ -368,8 +368,7 @@ srv_g_ae_sub <- function(id,
                   arm_n = .(input$arm_n),
                   draw = TRUE
                 )
-              ),
-              quote(plot)
+              )
             ))
           )
       })
