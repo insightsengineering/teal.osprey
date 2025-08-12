@@ -1,7 +1,6 @@
 #' Teal Module for Waterfall Plot
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' This is teal module that generates a waterfall plot for `ADaM` data
 #'

@@ -1,7 +1,6 @@
 #' Teal Module for `Swimlane` Plot
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' This is teal module that generates a `swimlane` plot (bar plot with markers) for `ADaM` data
 #'

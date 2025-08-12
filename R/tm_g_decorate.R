@@ -1,7 +1,6 @@
 #' Helper UI function to decorate plot output UI
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' This is used in [tm_g_ae_oview()] and [tm_g_events_term_id()].
 #'
@@ -31,7 +30,6 @@ ui_g_decorate <- function(id,
 #' Helper server function to decorate plot output
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' This is used in [tm_g_ae_oview()] and [tm_g_events_term_id()].
 #'
@@ -89,7 +87,6 @@ srv_g_decorate <- function(id,
 #' Helper function to plot decorated output UI
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' @param id (`character`) id of this element
 #'

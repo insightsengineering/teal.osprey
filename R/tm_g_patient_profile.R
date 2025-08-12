@@ -1,7 +1,6 @@
 #' Patient Profile plot teal module
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' Display patient profile plot as a shiny module
 #'

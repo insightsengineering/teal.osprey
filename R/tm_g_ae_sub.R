@@ -1,7 +1,6 @@
 #' teal module for the `AE` by subgroups
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' Display the `AE` by subgroups plot as a teal module
 #'
