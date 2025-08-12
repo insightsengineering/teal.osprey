@@ -16,7 +16,6 @@
 NULL
 
 #' Utility function for quick filter
-#' `r lifecycle::badge("stable")`
 #'
 #'
 #' @param filter_opt vector of string names of flag variable to filter (keep Y rows only)
@@ -36,35 +35,18 @@ quick_filter <- function(filter_opt, ANL) {
 }
 
 #' Automatically switch variable labels for standard `AE` variables in `AE` osprey functions
-#' `r lifecycle::badge("stable")`
+#' `r lifecycle::badge("deprecated")`
+#' `label_aevar` is deprecated and will be unexported in the next release.
 #'
 #' @param x variable key
 #'
 #' @export
 label_aevar <- function(x) {
-  lifecycle::deprecate_soft(
+  lifecycle::deprecate_stop(
     when = "0.1.15",
     what = "label_aevar()",
     details = "label_aevar is deprecated and will be unexported in the next release."
   )
-
-  # Display full variable labels for standard AE variables
-  ae_varlabel <- c(
-    AEBODSYS = "MedDRA System Organ Class",
-    AESOC = "MedDRA Primary System Organ Class",
-    AEHLGT = "MedDRA High Level Group Term",
-    AEHLT = "MedDRA High Level Term",
-    AELLT = "MedDRA Lowest Level Term",
-    AEDECOD = "MedDRA Preferred Term",
-    AETERM = "Reported Adverse Event Term",
-    AEMODIFY = "Modified Reported Term",
-    AETOXGR = "NCI-CTCAE Grade",
-    AEITOXGR = "Initial Toxicity Grade"
-  )
-
-  which_aevar <- match(x, names(ae_varlabel))
-  out_label <- ifelse(is.na(which_aevar), x, ae_varlabel[which_aevar])
-  out_label
 }
 
 #' retrieve name of ci method

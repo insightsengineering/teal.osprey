@@ -4,6 +4,7 @@
 
 * Updated `tm_g_waterfall` to only pass `ADSL`, `dataname_tr`, and `dataname_rs` into `datanames`.
 * Fix module code reproducibility and remove the redundant `plot` print (#311).
+* `label_aevar` was hard deprecated.
 
 
 # teal.osprey 0.2.0

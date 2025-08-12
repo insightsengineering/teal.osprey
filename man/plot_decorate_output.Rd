@@ -10,5 +10,5 @@ plot_decorate_output(id)
 \item{id}{(\code{character}) id of this element}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+Helper function to plot decorated output UI
 }

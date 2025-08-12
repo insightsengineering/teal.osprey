@@ -1,7 +1,6 @@
 #' Butterfly plot Teal Module
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' Display butterfly plot as a shiny module
 #'
