@@ -1,7 +1,7 @@
 Package: teal.osprey
 Title: 'teal' Modules for TLG Functions in Osprey
-Version: 0.2.0.9008
-Date: 2025-08-12
+Version: 0.2.0.9009
+Date: 2025-08-20
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
@@ -34,7 +34,7 @@ Imports:
     ggplot2 (>= 3.4.0),
     lifecycle (>= 0.2.0),
     shinyvalidate,
-    teal.code (>= 0.6.1),
+    teal.code (>= 0.7.0),
     teal.data (>= 0.7.0),
     teal.logger (>= 0.4.0),
     teal.reporter (>= 0.5.0),
