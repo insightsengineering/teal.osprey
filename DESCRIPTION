@@ -1,6 +1,6 @@
 Package: teal.osprey
 Title: 'teal' Modules for TLG Functions in Osprey
-Version: 0.2.0.9010
+Version: 0.3.0
 Date: 2025-08-20
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
@@ -24,8 +24,8 @@ Depends:
     osprey (>= 0.1.17),
     R (>= 3.6),
     shiny (>= 1.8.1),
-    teal (>= 0.16.0),
-    teal.transform (>= 0.6.0)
+    teal (>= 1.0.0),
+    teal.transform (>= 0.7.0)
 Imports:
     bslib (>= 0.8.0),
     checkmate (>= 2.1.0),
@@ -35,10 +35,10 @@ Imports:
     lifecycle (>= 0.2.0),
     shinyvalidate,
     teal.code (>= 0.7.0),
-    teal.data (>= 0.7.0),
+    teal.data (>= 0.8.0),
     teal.logger (>= 0.4.0),
     teal.reporter (>= 0.5.0),
-    teal.widgets (>= 0.4.3),
+    teal.widgets (>= 0.5.0),
     tern (>= 0.9.7),
     tidyr (>= 0.8.3)
 Suggests:
@@ -48,8 +48,6 @@ Suggests:
     rmarkdown (>= 2.23),
     testthat (>= 3.2.3),
     withr (>= 2.0.0)
-Remotes:
-    insightsengineering/osprey@main
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal, insightsengineering/teal.slice,
     insightsengineering/teal.transform, mllg/checkmate, tidyverse/dplyr,
