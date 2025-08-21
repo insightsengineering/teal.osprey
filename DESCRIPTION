@@ -47,7 +47,9 @@ Suggests:
     nestcolor (>= 0.1.0),
     rmarkdown (>= 2.23),
     testthat (>= 3.2.3),
-    withr (>= 2.0.0)
+    withr (>= 3.0.0)
+Remotes:
+    insightsengineering/osprey
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal, insightsengineering/teal.slice,
     insightsengineering/teal.transform, mllg/checkmate, tidyverse/dplyr,
