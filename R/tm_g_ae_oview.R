@@ -1,7 +1,6 @@
 #' Teal module for the `AE` overview
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' Display the `AE` overview plot as a shiny module
 #'
@@ -20,6 +19,7 @@
 #' @examples
 #' data <- teal_data() |>
 #'   within({
+#'     library(dplyr)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'     .add_event_flags <- function(dat) {
@@ -286,6 +286,7 @@ srv_g_ae_oview <- function(id,
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
+        obj <- teal.code::eval_code(obj, expression(library("dplyr")))
 
         ANL <- obj[[dataname]]
 
@@ -298,17 +299,17 @@ srv_g_ae_oview <- function(id,
           "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
         ))
 
-        q1 <- teal.code::eval_code(
-          obj,
-          code = as.expression(c(
-            bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
-            bquote(
-              flags <- .(as.name(dataname)) %>%
-                select(all_of(.(input$flag_var_anl))) %>%
-                rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
-            )
-          ))
-        )
+        q1 <- obj %>%
+          teal.code::eval_code(
+            code = as.expression(c(
+              bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
+              bquote(
+                flags <- .(as.name(dataname)) %>%
+                  select(all_of(.(input$flag_var_anl))) %>%
+                  rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
+              )
+            ))
+          )
 
         teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
@@ -329,8 +330,7 @@ srv_g_ae_oview <- function(id,
                 fontsize = .(font_size()),
                 draw = TRUE
               )
-            ),
-            quote(plot)
+            )
           ))
         )
       })

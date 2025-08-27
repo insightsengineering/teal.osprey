@@ -1,7 +1,6 @@
 #' Teal Module for Waterfall Plot
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' This is teal module that generates a waterfall plot for `ADaM` data
 #'
@@ -51,6 +50,7 @@
 #' @examples
 #' data <- teal_data() |>
 #'   within({
+#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADRS <- rADRS
 #'     ADTR <- rADTR
@@ -366,6 +366,7 @@ srv_g_waterfall <- function(id,
           teal.reporter::teal_card(obj),
           teal.reporter::teal_card("## Module's code")
         )
+      obj <- teal.code::eval_code(obj, expression(library("dplyr")))
 
       adsl <- obj[["ADSL"]]
       adtr <- obj[[dataname_tr]]
@@ -577,7 +578,6 @@ srv_g_waterfall <- function(id,
             y_label = "Tumor Burden Change from Baseline",
             title = "Waterfall Plot"
           )
-          plot
         })
       )
     })
@@ -598,7 +598,6 @@ srv_g_waterfall <- function(id,
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
     output_q
   })
 }

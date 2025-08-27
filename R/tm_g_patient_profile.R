@@ -1,7 +1,6 @@
 #' Patient Profile plot teal module
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' Display patient profile plot as a shiny module
 #'
@@ -64,6 +63,8 @@
 #' @examples
 #' data <- teal_data() |>
 #'   within({
+#'     library(nestcolor)
+#'     library(dplyr)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
 #'     ADCM <- rADCM %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
@@ -460,6 +461,7 @@ srv_g_patient_profile <- function(id,
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
+        obj <-  teal.code::eval_code(obj, expression(library("dplyr")))
 
         teal::validate_inputs(iv())
 
@@ -560,7 +562,6 @@ srv_g_patient_profile <- function(id,
               patient_id = patient_id
             )
           )
-        )
 
         # ADSL with single subject
         validate(
@@ -916,7 +917,6 @@ srv_g_patient_profile <- function(id,
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
     output_q
   })
 }

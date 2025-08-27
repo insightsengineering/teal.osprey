@@ -1,7 +1,6 @@
 #' Butterfly plot Teal Module
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' Display butterfly plot as a shiny module
 #'
@@ -44,9 +43,10 @@
 #' @examples
 #' # Example using stream (ADaM) dataset
 #' data <- teal_data() |>
+#'   eval_code("set.seed(23) # @linksto ADSL") |>
 #'   within({
+#'     library(nestcolor)
 #'     library(dplyr)
-#'     set.seed(23)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
@@ -388,6 +388,7 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
+        obj <- teal.code::eval_code(obj, expression(library("dplyr")))
 
         ADSL <- obj[["ADSL"]]
         ANL <- obj[[dataname]]
@@ -529,7 +530,6 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
     output_q
   })
 }

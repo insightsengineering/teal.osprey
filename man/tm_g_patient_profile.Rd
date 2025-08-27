@@ -96,8 +96,6 @@ To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
 Display patient profile plot as a shiny module
 }
 \details{
@@ -114,6 +112,8 @@ the start date
 \examples{
 data <- teal_data() |>
   within({
+    library(nestcolor)
+    library(dplyr)
     ADSL <- rADSL
     ADAE <- rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
     ADCM <- rADCM \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))

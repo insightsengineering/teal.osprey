@@ -80,14 +80,13 @@ To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
 This is teal module that generates a \code{swimlane} plot (bar plot with markers) for \code{ADaM} data
 }
 \examples{
 # Example using stream (ADaM) dataset
 data <- teal_data() |>
   within({
+    library(nestcolor)
     library(dplyr)
     ADSL <- rADSL \%>\%
       mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%

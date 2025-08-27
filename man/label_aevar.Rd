@@ -3,7 +3,8 @@
 \name{label_aevar}
 \alias{label_aevar}
 \title{Automatically switch variable labels for standard \code{AE} variables in \code{AE} osprey functions
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\code{label_aevar} is deprecated and will be unexported in the next release.}
 \usage{
 label_aevar(x)
 }
@@ -12,5 +13,6 @@ label_aevar(x)
 }
 \description{
 Automatically switch variable labels for standard \code{AE} variables in \code{AE} osprey functions
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\code{label_aevar} is deprecated and will be unexported in the next release.
 }

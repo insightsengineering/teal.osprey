@@ -73,8 +73,6 @@ To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
 Display butterfly plot as a shiny module
 }
 \details{
@@ -92,9 +90,10 @@ used directly as filter.
 \examples{
 # Example using stream (ADaM) dataset
 data <- teal_data() |>
+  eval_code("set.seed(23) # @linksto ADSL") |>
   within({
+    library(nestcolor)
     library(dplyr)
-    set.seed(23)
     ADSL <- rADSL
     ADAE <- rADAE
     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))

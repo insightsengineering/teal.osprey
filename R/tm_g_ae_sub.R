@@ -1,7 +1,6 @@
 #' teal module for the `AE` by subgroups
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' Display the `AE` by subgroups plot as a teal module
 #'
@@ -387,7 +386,6 @@ srv_g_ae_sub <- function(id,
       verbatim_content = reactive(teal.code::get_code(output_q())),
       title = paste("R code for", label),
     )
-
     output_q
   })
 }

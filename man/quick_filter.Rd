@@ -2,8 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{quick_filter}
 \alias{quick_filter}
-\title{Utility function for quick filter
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}}
+\title{Utility function for quick filter}
 \usage{
 quick_filter(filter_opt, ANL)
 }
@@ -17,7 +16,6 @@ a filtered dataframe
 }
 \description{
 Utility function for quick filter
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \author{
 Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}

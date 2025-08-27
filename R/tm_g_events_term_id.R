@@ -1,7 +1,6 @@
 #' Events by Term Plot Teal Module
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' Display Events by Term plot as a shiny module
 #'
@@ -363,8 +362,6 @@ srv_g_events_term_id <- function(id,
           )
         )
       )
-
-      teal.code::eval_code(q2, quote(plot))
     })
 
     plot_r <- reactive(output_q()[["plot"]])
@@ -374,7 +371,6 @@ srv_g_events_term_id <- function(id,
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
     output_q
   })
 }

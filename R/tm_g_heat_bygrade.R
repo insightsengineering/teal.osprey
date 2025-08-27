@@ -1,7 +1,6 @@
 #' Teal module for the heatmap by grade
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' Display the heatmap by grade as a shiny module
 #'
@@ -39,6 +38,7 @@
 #' data <- teal_data() |>
 #'   within({
 #'     library(dplyr)
+#'     library(nestcolor)
 #'     ADSL <- rADSL %>% slice(1:30)
 #'     ADEX <- rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
 #'     ADAE <- rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
@@ -397,6 +397,7 @@ srv_g_heatmap_bygrade <- function(id,
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
+        obj <- teal.code::eval_code(obj, expression(library("dplyr")))
 
         ADSL <- obj[[sl_dataname]]
         ADEX <- obj[[ex_dataname]]
@@ -465,7 +466,6 @@ srv_g_heatmap_bygrade <- function(id,
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
     output_q
   })
 }

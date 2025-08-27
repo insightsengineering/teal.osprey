@@ -1,7 +1,7 @@
 Package: teal.osprey
 Title: 'teal' Modules for TLG Functions in Osprey
-Version: 0.2.0.9004
-Date: 2025-07-11
+Version: 0.3.0.9000
+Date: 2025-08-21
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
@@ -23,9 +23,9 @@ BugReports: https://github.com/insightsengineering/teal.osprey/issues
 Depends:
     osprey (>= 0.1.17),
     R (>= 3.6),
-    shiny (>= 1.6.0),
-    teal (>= 0.16.0.9003),
-    teal.transform (>= 0.6.0)
+    shiny (>= 1.8.1),
+    teal (>= 1.0.0),
+    teal.transform (>= 0.7.0)
 Imports:
     bslib (>= 0.8.0),
     checkmate (>= 2.1.0),
@@ -34,26 +34,24 @@ Imports:
     ggplot2 (>= 3.4.0),
     lifecycle (>= 0.2.0),
     shinyvalidate,
-    teal.code (>= 0.6.1.9002),
-    teal.data (>= 0.7.0.9002),
+    teal.code (>= 0.7.0),
+    teal.data (>= 0.8.0),
     teal.logger (>= 0.4.0),
-    teal.reporter (>= 0.4.0.9004),
-    teal.widgets (>= 0.4.3.9001),
+    teal.reporter (>= 0.5.0),
+    teal.widgets (>= 0.5.0),
     tern (>= 0.9.7),
     tidyr (>= 0.8.3)
 Suggests:
     knitr (>= 1.42),
     logger (>= 0.4.0),
+    nestcolor (>= 0.1.0),
     rmarkdown (>= 2.23),
     testthat (>= 3.2.3),
-    withr (>= 2.0.0)
+    withr (>= 3.0.0)
 Remotes:
     insightsengineering/osprey,
-    insightsengineering/teal.code@main,
-    insightsengineering/teal.data@main,
     insightsengineering/teal@teal_reportable,
     insightsengineering/teal.reporter@teal_reportable,
-    insightsengineering/teal.widgets@main
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal, insightsengineering/teal.slice,
     insightsengineering/teal.transform, mllg/checkmate, tidyverse/dplyr,
@@ -61,8 +59,9 @@ Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     daroczig/logger, rstudio/shinyvalidate, insightsengineering/teal.code,
     insightsengineering/teal.logger, insightsengineering/teal.reporter,
     insightsengineering/teal.widgets, insightsengineering/tern,
-    tidyverse/tidyr, yihui/knitr, rstudio/rmarkdown,
-    insightsengineering/teal.data, r-lib/testthat, r-lib/withr
+    tidyverse/tidyr, yihui/knitr, insightsengineering/nestcolor,
+    rstudio/rmarkdown, insightsengineering/teal.data, r-lib/testthat,
+    r-lib/withr
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US

@@ -50,13 +50,12 @@ To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
 Display the \code{AE} overview plot as a shiny module
 }
 \examples{
 data <- teal_data() |>
   within({
+    library(dplyr)
     ADSL <- rADSL
     ADAE <- rADAE
     .add_event_flags <- function(dat) {

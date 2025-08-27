@@ -1,7 +1,6 @@
 #' Spider plot Teal Module
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
 #'
 #' Display spider plot as a shiny module
 #'
@@ -30,6 +29,7 @@
 #' # Example using stream (ADaM) dataset
 #' data <- teal_data() |>
 #'   within({
+#'     library(nestcolor)
 #'     ADSL <- rADSL
 #'     ADTR <- rADTR
 #'   })
@@ -308,6 +308,7 @@ srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_w
           teal.reporter::teal_card(obj),
           teal.reporter::teal_card("## Module's code")
         )
+      obj <- teal.code::eval_code(obj, expression(library("dplyr")))
 
       # get datasets ---
       ADSL <- obj[["ADSL"]]
@@ -355,7 +356,6 @@ srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_w
         code = bquote({
           ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
           ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame()
-
           ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID"))
           ANL <- ANL %>%
             group_by(USUBJID, PARAMCD) %>%
@@ -464,7 +464,6 @@ srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_w
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
     output_q
   })
 }
