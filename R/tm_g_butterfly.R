@@ -511,7 +511,7 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
           )
         }
 
-        teal.code::eval_code(q1, quote(plot))
+        q1
       })
     )
 

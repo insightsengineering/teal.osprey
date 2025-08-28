@@ -444,8 +444,6 @@ srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_w
             },
             show_legend = .(legend_on)
           )
-
-          plot
         })
       )
     })

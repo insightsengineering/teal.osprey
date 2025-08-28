@@ -437,7 +437,7 @@ srv_g_heatmap_bygrade <- function(id,
 
         teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "## Plot")
 
-        qenv <- teal.code::eval_code(
+        teal.code::eval_code(
           qenv,
           code = bquote(
             plot <- osprey::g_heat_bygrade(
@@ -455,7 +455,6 @@ srv_g_heatmap_bygrade <- function(id,
             )
           )
         )
-        teal.code::eval_code(qenv, quote(plot))
       })
     )
 

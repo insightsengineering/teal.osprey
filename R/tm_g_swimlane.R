@@ -512,8 +512,8 @@ srv_g_swimlane <- function(id,
         teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), paste("Sorted by:", input$sort_var))
       }
 
-      q4 <- teal.code::eval_code(q3, code = plot_call)
-      teal.code::eval_code(q4, quote(plot))
+      teal.code::eval_code(q3, code = plot_call)
+      
     })
 
     plot_r <- reactive(output_q()[["plot"]])
