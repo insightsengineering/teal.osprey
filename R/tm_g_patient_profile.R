@@ -562,6 +562,7 @@ srv_g_patient_profile <- function(id,
               patient_id = patient_id
             )
           )
+        )
 
         # ADSL with single subject
         validate(
