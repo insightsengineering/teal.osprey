@@ -461,7 +461,7 @@ srv_g_patient_profile <- function(id,
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
-        obj <- teal.code::eval_code(obj, expression(library("dplyr")))
+        obj <- teal.code::eval_code(obj, 'library("dplyr")') # nolint: quotes
 
         teal::validate_inputs(iv())
 
