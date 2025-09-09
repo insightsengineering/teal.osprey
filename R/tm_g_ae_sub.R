@@ -385,6 +385,6 @@ srv_g_ae_sub <- function(id,
       verbatim_content = reactive(teal.code::get_code(output_q())),
       title = paste("R code for", label),
     )
-    output_q
+    set_chunk_dims(pws, output_q)
   })
 }
