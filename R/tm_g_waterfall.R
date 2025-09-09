@@ -598,6 +598,6 @@ srv_g_waterfall <- function(id,
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-    output_q
+    set_chunk_dims(pws, output_q)
   })
 }

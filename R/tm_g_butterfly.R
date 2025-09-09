@@ -530,6 +530,6 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-    output_q
+    set_chunk_dims(pws, output_q)
   })
 }

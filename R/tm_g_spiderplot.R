@@ -462,6 +462,6 @@ srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_w
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-    output_q
+    set_chunk_dims(pws, output_q)
   })
 }
