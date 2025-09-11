@@ -244,7 +244,7 @@ ui_g_spider <- function(id, ...) {
   )
 }
 
-srv_g_spider <- function(id, data, paramcd, dataname, label, plot_height, plot_width) {
+srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_width) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
