@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.00145518044237485" branch-rate="0" lines-covered="5" lines-valid="3436" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2025-09-09 13:14:55.02794">
+<coverage line-rate="0.0014543339150669" branch-rate="0" lines-covered="5" lines-valid="3438" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2025-09-11 14:02:40.532718">
   <sources>
     <source>/__w/teal.osprey/teal.osprey/teal.osprey</source>
   </sources>
   <packages>
-    <package name="teal.osprey" line-rate="0.00145518044237485" branch-rate="0" complexity="0">
+    <package name="teal.osprey" line-rate="0.0014543339150669" branch-rate="0" complexity="0">
       <classes>
         <class name="tm_g_ae_oview.R" filename="R/tm_g_ae_oview.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
@@ -6887,7 +6887,7 @@
             <line number="602" hits="0" branch="false"/>
           </lines>
         </class>
-        <class name="utils.R" filename="R/utils.R" line-rate="0.0602409638554217" branch-rate="0" complexity="0">
+        <class name="utils.R" filename="R/utils.R" line-rate="0.0588235294117647" branch-rate="0" complexity="0">
           <methods>
             <method name="quick_filter" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
@@ -6970,26 +6970,24 @@
                 <line number="181" hits="0" branch="false"/>
                 <line number="182" hits="0" branch="false"/>
                 <line number="184" hits="0" branch="false"/>
-                <line number="187" hits="0" branch="false"/>
                 <line number="188" hits="0" branch="false"/>
-                <line number="191" hits="0" branch="false"/>
+                <line number="189" hits="0" branch="false"/>
+                <line number="190" hits="0" branch="false"/>
                 <line number="192" hits="0" branch="false"/>
-                <line number="193" hits="0" branch="false"/>
-                <line number="194" hits="0" branch="false"/>
+                <line number="195" hits="0" branch="false"/>
+                <line number="196" hits="0" branch="false"/>
                 <line number="197" hits="0" branch="false"/>
+                <line number="198" hits="0" branch="false"/>
+                <line number="201" hits="0" branch="false"/>
               </lines>
             </method>
             <method name="set_chunk_dims" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
-                <line number="215" hits="0" branch="false"/>
-                <line number="216" hits="0" branch="false"/>
-                <line number="217" hits="0" branch="false"/>
-                <line number="218" hits="0" branch="false"/>
                 <line number="219" hits="0" branch="false"/>
+                <line number="220" hits="0" branch="false"/>
                 <line number="221" hits="0" branch="false"/>
                 <line number="222" hits="0" branch="false"/>
                 <line number="223" hits="0" branch="false"/>
-                <line number="224" hits="0" branch="false"/>
                 <line number="225" hits="0" branch="false"/>
                 <line number="226" hits="0" branch="false"/>
                 <line number="227" hits="0" branch="false"/>
@@ -7002,6 +7000,10 @@
                 <line number="234" hits="0" branch="false"/>
                 <line number="235" hits="0" branch="false"/>
                 <line number="236" hits="0" branch="false"/>
+                <line number="237" hits="0" branch="false"/>
+                <line number="238" hits="0" branch="false"/>
+                <line number="239" hits="0" branch="false"/>
+                <line number="240" hits="0" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -7061,22 +7063,20 @@
             <line number="181" hits="0" branch="false"/>
             <line number="182" hits="0" branch="false"/>
             <line number="184" hits="0" branch="false"/>
-            <line number="187" hits="0" branch="false"/>
             <line number="188" hits="0" branch="false"/>
-            <line number="191" hits="0" branch="false"/>
+            <line number="189" hits="0" branch="false"/>
+            <line number="190" hits="0" branch="false"/>
             <line number="192" hits="0" branch="false"/>
-            <line number="193" hits="0" branch="false"/>
-            <line number="194" hits="0" branch="false"/>
+            <line number="195" hits="0" branch="false"/>
+            <line number="196" hits="0" branch="false"/>
             <line number="197" hits="0" branch="false"/>
-            <line number="215" hits="0" branch="false"/>
-            <line number="216" hits="0" branch="false"/>
-            <line number="217" hits="0" branch="false"/>
-            <line number="218" hits="0" branch="false"/>
+            <line number="198" hits="0" branch="false"/>
+            <line number="201" hits="0" branch="false"/>
             <line number="219" hits="0" branch="false"/>
+            <line number="220" hits="0" branch="false"/>
             <line number="221" hits="0" branch="false"/>
             <line number="222" hits="0" branch="false"/>
             <line number="223" hits="0" branch="false"/>
-            <line number="224" hits="0" branch="false"/>
             <line number="225" hits="0" branch="false"/>
             <line number="226" hits="0" branch="false"/>
             <line number="227" hits="0" branch="false"/>
@@ -7089,6 +7089,10 @@
             <line number="234" hits="0" branch="false"/>
             <line number="235" hits="0" branch="false"/>
             <line number="236" hits="0" branch="false"/>
+            <line number="237" hits="0" branch="false"/>
+            <line number="238" hits="0" branch="false"/>
+            <line number="239" hits="0" branch="false"/>
+            <line number="240" hits="0" branch="false"/>
           </lines>
         </class>
         <class name="zzz.R" filename="R/zzz.R" line-rate="0" branch-rate="0" complexity="0">
