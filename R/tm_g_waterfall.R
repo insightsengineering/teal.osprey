@@ -366,7 +366,7 @@ srv_g_waterfall <- function(id,
           teal.reporter::teal_card(obj),
           teal.reporter::teal_card("## Module's code")
         )
-      obj <- teal.code::eval_code(obj, "library(dplyr)").
+      obj <- teal.code::eval_code(obj, "library(dplyr)")
 
       adsl <- obj[["ADSL"]]
       adtr <- obj[[dataname_tr]]
@@ -503,23 +503,22 @@ srv_g_waterfall <- function(id,
       # write plotting code to qenv
       anl <- q1[["anl"]]
 
-      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options", paste0("Tumor Burden Parameter: ", input$bar_paramcd, "."))
 
-      if (!is.null(input$facet_var) || !is.null(input$sort_by_var)) {
-        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options")
-      }
-      if (!is.null(input$facet_var)) {
+      if (!is.null(facet_var)) {
         teal.reporter::teal_card(q1) <- c(
           teal.reporter::teal_card(q1),
-          paste0("Faceted by: ", paste(input$facet_var, collapse = ", "), ".")
+          paste0("Faceted by: ", paste(facet_var, collapse = ", "), ".")
         )
       }
-      if (!is.null(input$sort_by_var)) {
+      if (!is.null(sort_var)) {
         teal.reporter::teal_card(q1) <- c(
           teal.reporter::teal_card(q1),
-          paste0("Sorted by: ", paste(input$sort_by_var, collapse = ", "), ".")
+          paste0("Sorted by: ", paste(sort_var, collapse = ", "), ".")
         )
       }
+
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
       q1 <- teal.code::eval_code(
         q1,
