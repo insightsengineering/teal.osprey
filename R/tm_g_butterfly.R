@@ -388,7 +388,7 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
-        obj <- teal.code::eval_code(obj, 'library("dplyr")') # nolint: quotes
+        obj <- teal.code::eval_code(obj, "library(dplyr)")
 
         ADSL <- obj[["ADSL"]]
         ANL <- obj[[dataname]]

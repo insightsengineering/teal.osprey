@@ -397,7 +397,7 @@ srv_g_heatmap_bygrade <- function(id,
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's code")
           )
-        obj <- teal.code::eval_code(obj, 'library("dplyr")') # nolint: quotes.
+        obj <- teal.code::eval_code(obj, "library(dplyr)").
 
         ADSL <- obj[[sl_dataname]]
         ADEX <- obj[[ex_dataname]]
