@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.0014543339150669" branch-rate="0" lines-covered="5" lines-valid="3438" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2025-09-12 13:58:33.913432">
+<coverage line-rate="0.00145772594752187" branch-rate="0" lines-covered="5" lines-valid="3430" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2025-09-15 10:24:05.041712">
   <sources>
     <source>/__w/teal.osprey/teal.osprey/teal.osprey</source>
   </sources>
   <packages>
-    <package name="teal.osprey" line-rate="0.0014543339150669" branch-rate="0" complexity="0">
+    <package name="teal.osprey" line-rate="0.00145772594752187" branch-rate="0" complexity="0">
       <classes>
         <class name="tm_g_ae_oview.R" filename="R/tm_g_ae_oview.R" line-rate="0" branch-rate="0" complexity="0">
           <methods>
@@ -6363,15 +6363,14 @@
                 <line number="517" hits="0" branch="false"/>
                 <line number="518" hits="0" branch="false"/>
                 <line number="519" hits="0" branch="false"/>
-                <line number="520" hits="0" branch="false"/>
                 <line number="521" hits="0" branch="false"/>
-                <line number="522" hits="0" branch="false"/>
                 <line number="523" hits="0" branch="false"/>
                 <line number="524" hits="0" branch="false"/>
                 <line number="525" hits="0" branch="false"/>
                 <line number="526" hits="0" branch="false"/>
                 <line number="527" hits="0" branch="false"/>
                 <line number="528" hits="0" branch="false"/>
+                <line number="529" hits="0" branch="false"/>
                 <line number="530" hits="0" branch="false"/>
                 <line number="531" hits="0" branch="false"/>
                 <line number="532" hits="0" branch="false"/>
@@ -6419,27 +6418,20 @@
                 <line number="574" hits="0" branch="false"/>
                 <line number="575" hits="0" branch="false"/>
                 <line number="576" hits="0" branch="false"/>
-                <line number="577" hits="0" branch="false"/>
                 <line number="578" hits="0" branch="false"/>
-                <line number="579" hits="0" branch="false"/>
-                <line number="580" hits="0" branch="false"/>
                 <line number="581" hits="0" branch="false"/>
                 <line number="582" hits="0" branch="false"/>
                 <line number="583" hits="0" branch="false"/>
+                <line number="584" hits="0" branch="false"/>
                 <line number="585" hits="0" branch="false"/>
-                <line number="588" hits="0" branch="false"/>
+                <line number="586" hits="0" branch="false"/>
                 <line number="589" hits="0" branch="false"/>
                 <line number="590" hits="0" branch="false"/>
                 <line number="591" hits="0" branch="false"/>
                 <line number="592" hits="0" branch="false"/>
                 <line number="593" hits="0" branch="false"/>
-                <line number="596" hits="0" branch="false"/>
-                <line number="597" hits="0" branch="false"/>
-                <line number="598" hits="0" branch="false"/>
-                <line number="599" hits="0" branch="false"/>
-                <line number="600" hits="0" branch="false"/>
-                <line number="601" hits="0" branch="false"/>
-                <line number="602" hits="0" branch="false"/>
+                <line number="594" hits="0" branch="false"/>
+                <line number="595" hits="0" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -6808,15 +6800,14 @@
             <line number="517" hits="0" branch="false"/>
             <line number="518" hits="0" branch="false"/>
             <line number="519" hits="0" branch="false"/>
-            <line number="520" hits="0" branch="false"/>
             <line number="521" hits="0" branch="false"/>
-            <line number="522" hits="0" branch="false"/>
             <line number="523" hits="0" branch="false"/>
             <line number="524" hits="0" branch="false"/>
             <line number="525" hits="0" branch="false"/>
             <line number="526" hits="0" branch="false"/>
             <line number="527" hits="0" branch="false"/>
             <line number="528" hits="0" branch="false"/>
+            <line number="529" hits="0" branch="false"/>
             <line number="530" hits="0" branch="false"/>
             <line number="531" hits="0" branch="false"/>
             <line number="532" hits="0" branch="false"/>
@@ -6864,27 +6855,20 @@
             <line number="574" hits="0" branch="false"/>
             <line number="575" hits="0" branch="false"/>
             <line number="576" hits="0" branch="false"/>
-            <line number="577" hits="0" branch="false"/>
             <line number="578" hits="0" branch="false"/>
-            <line number="579" hits="0" branch="false"/>
-            <line number="580" hits="0" branch="false"/>
             <line number="581" hits="0" branch="false"/>
             <line number="582" hits="0" branch="false"/>
             <line number="583" hits="0" branch="false"/>
+            <line number="584" hits="0" branch="false"/>
             <line number="585" hits="0" branch="false"/>
-            <line number="588" hits="0" branch="false"/>
+            <line number="586" hits="0" branch="false"/>
             <line number="589" hits="0" branch="false"/>
             <line number="590" hits="0" branch="false"/>
             <line number="591" hits="0" branch="false"/>
             <line number="592" hits="0" branch="false"/>
             <line number="593" hits="0" branch="false"/>
-            <line number="596" hits="0" branch="false"/>
-            <line number="597" hits="0" branch="false"/>
-            <line number="598" hits="0" branch="false"/>
-            <line number="599" hits="0" branch="false"/>
-            <line number="600" hits="0" branch="false"/>
-            <line number="601" hits="0" branch="false"/>
-            <line number="602" hits="0" branch="false"/>
+            <line number="594" hits="0" branch="false"/>
+            <line number="595" hits="0" branch="false"/>
           </lines>
         </class>
         <class name="utils.R" filename="R/utils.R" line-rate="0.0588235294117647" branch-rate="0" complexity="0">
