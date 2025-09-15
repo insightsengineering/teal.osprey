@@ -505,14 +505,8 @@ srv_g_waterfall <- function(id,
 
       teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
-      if (!is.null(input$filter_var) || !is.null(input$facet_var) || !is.null(input$sort_by_var)) {
+      if (!is.null(input$facet_var) || !is.null(input$sort_by_var)) {
         teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options")
-      }
-      if (!is.null(input$filter_var)) {
-        teal.reporter::teal_card(q1) <- c(
-          teal.reporter::teal_card(q1),
-          paste0("Preset Data Filters: ", paste(input$filter_var, collapse = ", "), ".")
-        )
       }
       if (!is.null(input$facet_var)) {
         teal.reporter::teal_card(q1) <- c(
