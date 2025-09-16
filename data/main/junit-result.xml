@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="utils" timestamp="2025-08-21T21:59:16Z" hostname="d314eb24fed5" tests="13" skipped="0" failures="0" errors="0" time="0.073">
-    <testcase time="0.00700000000000012" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.02" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.0189999999999999" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+  <testsuite name="utils" timestamp="2025-09-16T07:22:47Z" hostname="da23ca16cb35" tests="13" skipped="0" failures="0" errors="0" time="0.072">
+    <testcase time="0.0089999999999999" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.026" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.016" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00100000000000011" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00100000000000011" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00600000000000001" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00399999999999978" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
     <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
     <testcase time="0.00299999999999989" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.004" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
-    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
   </testsuite>
 </testsuites>
