@@ -11,6 +11,7 @@
 #' and pre-selected option names that can be used to specify the term for events
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #'
 #' @export
 #'
@@ -104,10 +105,6 @@ ui_g_events_term_id <- function(id, ...) {
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = tags$div(
-      ### Reporter
-      teal.reporter::add_card_button_ui(ns("add_reporter"), label = "Add Report Card"),
-      tags$br(), tags$br(),
-      ###
       teal.widgets::optionalSelectInput(
         ns("term"),
         "Term Variable",
@@ -202,14 +199,10 @@ ui_g_events_term_id <- function(id, ...) {
 
 srv_g_events_term_id <- function(id,
                                  data,
-                                 filter_panel_api,
-                                 reporter,
                                  dataname,
                                  label,
                                  plot_height,
                                  plot_width) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -304,7 +297,15 @@ srv_g_events_term_id <- function(id,
     )
 
     output_q <- reactive({
-      ANL <- data()[[dataname]]
+      obj <- data()
+      teal.reporter::teal_card(obj) <-
+        c(
+          teal.reporter::teal_card("# Events by Term"),
+          teal.reporter::teal_card(obj),
+          teal.reporter::teal_card("## Module's code")
+        )
+
+      ANL <- obj[[dataname]]
 
       teal::validate_inputs(iv())
 
@@ -320,7 +321,7 @@ srv_g_events_term_id <- function(id,
       anl_vars <- c("USUBJID", "STUDYID", input$term)
 
       q1 <- teal.code::eval_code(
-        data(),
+        obj,
         code = bquote(
           ANL <- merge(
             x = ADSL[, .(adsl_vars), drop = FALSE],
@@ -336,6 +337,8 @@ srv_g_events_term_id <- function(id,
         min_nrow = 10,
         msg = "Analysis data set must have at least 10 data points"
       )
+
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
       q2 <- teal.code::eval_code(
         q1,
@@ -368,26 +371,6 @@ srv_g_events_term_id <- function(id,
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "Events by Term",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::add_card_button_srv("add_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    set_chunk_dims(pws, output_q)
   })
 }

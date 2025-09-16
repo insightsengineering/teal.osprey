@@ -29,6 +29,7 @@
 #' @param x_label the label of the x axis
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #'
 #' @export
 #'
@@ -183,10 +184,6 @@ ui_g_swimlane <- function(id, ...) {
         teal.widgets::plot_with_settings_ui(id = ns("swimlaneplot"))
       ),
       encoding = tags$div(
-        ### Reporter
-        teal.reporter::add_card_button_ui(ns("add_reporter"), label = "Add Report Card"),
-        tags$br(), tags$br(),
-        ###
         tags$label("Encodings", class = "text-primary"),
         helpText("Analysis data:", tags$code(a$dataname)),
         left_bordered_div(
@@ -262,8 +259,6 @@ ui_g_swimlane <- function(id, ...) {
 
 srv_g_swimlane <- function(id,
                            data,
-                           filter_panel_api,
-                           reporter,
                            dataname,
                            marker_pos_var,
                            marker_shape_var,
@@ -274,8 +269,6 @@ srv_g_swimlane <- function(id,
                            plot_height,
                            plot_width,
                            x_label) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -324,18 +317,26 @@ srv_g_swimlane <- function(id,
 
     # create plot
     output_q <- reactive({
+      obj <- data()
+      teal.reporter::teal_card(obj) <-
+        c(
+          teal.reporter::teal_card("# Swimlane Plot"),
+          teal.reporter::teal_card(obj),
+          teal.reporter::teal_card("## Module's code")
+        )
+
       teal::validate_inputs(iv())
 
-      validate(need("ADSL" %in% names(data()), "'ADSL' not included in data"))
+      validate(need("ADSL" %in% names(obj), "'ADSL' not included in data"))
       validate(need(
-        (length(data()) == 1 && dataname == "ADSL") ||
-          (length(data()) >= 2 && dataname != "ADSL"), paste(
+        (length(obj) == 1 && dataname == "ADSL") ||
+          (length(obj) >= 2 && dataname != "ADSL"), paste(
           "Please either add just 'ADSL' as dataname when just ADSL is available.",
           "In case 2 datasets are available ADSL is not supposed to be the dataname."
         )
       ))
 
-      ADSL <- data()[["ADSL"]]
+      ADSL <- obj[["ADSL"]]
 
       anl_vars <- unique(c(
         "USUBJID", "STUDYID",
@@ -350,7 +351,7 @@ srv_g_swimlane <- function(id,
         teal::validate_has_data(ADSL, min_nrow = 3)
         teal::validate_has_variable(ADSL, adsl_vars)
       } else {
-        anl <- data()[[dataname]]
+        anl <- obj[[dataname]]
         teal::validate_has_data(anl, min_nrow = 3)
         teal::validate_has_variable(anl, anl_vars)
 
@@ -379,7 +380,7 @@ srv_g_swimlane <- function(id,
       }
       vref_line <- suppressWarnings(as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)()))
 
-      q1 <- data()
+      q1 <- obj
 
       q2 <- teal.code::eval_code(
         q1,
@@ -504,8 +505,14 @@ srv_g_swimlane <- function(id,
         )
       }
 
-      q4 <- teal.code::eval_code(q3, code = plot_call)
-      teal.code::eval_code(q4, quote(plot))
+      teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), "## Plot")
+
+      if (!is.null(input$sort_var)) {
+        teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), "### Selected Options")
+        teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), paste("Sorted by:", input$sort_var))
+      }
+
+      teal.code::eval_code(q3, code = plot_call)
     })
 
     plot_r <- reactive(output_q()[["plot"]])
@@ -523,30 +530,6 @@ srv_g_swimlane <- function(id,
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "Swimlane Plot",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        if (!is.null(input$sort_var)) {
-          card$append_text("Selected Options", "header3")
-          card$append_text(paste("Sorted by:", input$sort_var))
-        }
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::add_card_button_srv("add_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    set_chunk_dims(pws, output_q)
   })
 }

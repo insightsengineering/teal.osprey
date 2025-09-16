@@ -40,6 +40,7 @@
 #' @param show_value boolean of whether value of bar height is shown, default is `TRUE`
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #'
 #' @export
 #'
@@ -160,10 +161,6 @@ ui_g_waterfall <- function(id, ...) {
       teal.widgets::plot_with_settings_ui(id = ns("waterfallplot"))
     ),
     encoding = tags$div(
-      ### Reporter
-      teal.reporter::add_card_button_ui(ns("add_reporter"), label = "Add Report Card"),
-      tags$br(), tags$br(),
-      ###
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis Data: ", tags$code(a$dataname_tr), tags$code(a$dataname_rs)),
       teal.widgets::optionalSelectInput(
@@ -271,8 +268,6 @@ ui_g_waterfall <- function(id, ...) {
 
 srv_g_waterfall <- function(id,
                             data,
-                            filter_panel_api,
-                            reporter,
                             bar_paramcd,
                             add_label_paramcd_rs,
                             anno_txt_paramcd_rs,
@@ -282,8 +277,6 @@ srv_g_waterfall <- function(id,
                             label,
                             plot_height,
                             plot_width) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -366,9 +359,18 @@ srv_g_waterfall <- function(id,
     })
 
     output_q <- reactive({
-      adsl <- data()[["ADSL"]]
-      adtr <- data()[[dataname_tr]]
-      adrs <- data()[[dataname_rs]]
+      obj <- data()
+      teal.reporter::teal_card(obj) <-
+        c(
+          teal.reporter::teal_card("# Waterfall Plot"),
+          teal.reporter::teal_card(obj),
+          teal.reporter::teal_card("## Module's code")
+        )
+      obj <- teal.code::eval_code(obj, "library(dplyr)")
+
+      adsl <- obj[["ADSL"]]
+      adtr <- obj[[dataname_tr]]
+      adrs <- obj[[dataname_rs]]
 
       # validate data rows
       teal::validate_has_data(adsl, min_nrow = 2)
@@ -433,22 +435,22 @@ srv_g_waterfall <- function(id,
       }
 
       # write variables to qenv
-      q1 <- teal.code::eval_code(data(), "library(dplyr)") %>%
-        teal.code::eval_code(
-          code = bquote({
-            bar_var <- .(bar_var)
-            bar_color_var <- .(bar_color_var)
-            sort_var <- .(sort_var)
-            add_label_var_sl <- .(add_label_var_sl)
-            add_label_paramcd_rs <- .(add_label_paramcd_rs)
-            anno_txt_var_sl <- .(anno_txt_var_sl)
-            anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs)
-            facet_var <- .(facet_var)
-            href_line <- .(href_line)
-            gap_point_val <- .(gap_point_val)
-            show_value <- .(show_value)
-          })
-        )
+      q1 <- teal.code::eval_code(
+        obj,
+        code = bquote({
+          bar_var <- .(bar_var)
+          bar_color_var <- .(bar_color_var)
+          sort_var <- .(sort_var)
+          add_label_var_sl <- .(add_label_var_sl)
+          add_label_paramcd_rs <- .(add_label_paramcd_rs)
+          anno_txt_var_sl <- .(anno_txt_var_sl)
+          anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs)
+          facet_var <- .(facet_var)
+          href_line <- .(href_line)
+          gap_point_val <- .(gap_point_val)
+          show_value <- .(show_value)
+        })
+      )
 
       # data processing
       q1 <- teal.code::eval_code(
@@ -500,6 +502,28 @@ srv_g_waterfall <- function(id,
 
       # write plotting code to qenv
       anl <- q1[["anl"]]
+
+      teal.reporter::teal_card(q1) <-
+        c(
+          teal.reporter::teal_card(q1),
+          "### Selected Options",
+          paste0("Tumor Burden Parameter: ", input$bar_paramcd, ".")
+        )
+
+      if (!is.null(facet_var)) {
+        teal.reporter::teal_card(q1) <- c(
+          teal.reporter::teal_card(q1),
+          paste0("Faceted by: ", paste(facet_var, collapse = ", "), ".")
+        )
+      }
+      if (!is.null(sort_var)) {
+        teal.reporter::teal_card(q1) <- c(
+          teal.reporter::teal_card(q1),
+          paste0("Sorted by: ", paste(sort_var, collapse = ", "), ".")
+        )
+      }
+
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
 
       q1 <- teal.code::eval_code(
         q1,
@@ -572,34 +596,6 @@ srv_g_waterfall <- function(id,
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "Waterfall Plot",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        card$append_text("Selected Options", "header3")
-        card$append_text(paste0("Tumor Burden Parameter: ", input$bar_paramcd, "."))
-        if (!is.null(input$sort_var)) {
-          card$append_text(paste0("Sorted by: ", input$sort_var, "."))
-        }
-        if (!is.null(input$facet_var)) {
-          card$append_text(paste0("Faceted by: ", paste(input$facet_var, collapse = ", "), "."))
-        }
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::add_card_button_srv("add_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    set_chunk_dims(pws, output_q)
   })
 }

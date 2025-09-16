@@ -19,6 +19,7 @@
 #' @param yfacet_var variable for y facets
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #' @export
 #'
 #' @template author_zhanc107
@@ -146,10 +147,6 @@ ui_g_spider <- function(id, ...) {
         teal.widgets::plot_with_settings_ui(id = ns("spiderplot"))
       ),
       encoding = tags$div(
-        ### Reporter
-        teal.reporter::add_card_button_ui(ns("add_reporter"), label = "Add Report Card"),
-        tags$br(), tags$br(),
-        ###
         tags$label("Encodings", class = "text-primary"),
         helpText("Analysis data:", tags$code(a$dataname)),
         left_bordered_div(
@@ -247,9 +244,7 @@ ui_g_spider <- function(id, ...) {
   )
 }
 
-srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname, label, plot_height, plot_width) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
+srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_width) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -306,9 +301,18 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
 
     # render plot
     output_q <- reactive({
+      obj <- data()
+      teal.reporter::teal_card(obj) <-
+        c(
+          teal.reporter::teal_card("# Spider Plot"),
+          teal.reporter::teal_card(obj),
+          teal.reporter::teal_card("## Module's code")
+        )
+      obj <- teal.code::eval_code(obj, "library(dplyr)")
+
       # get datasets ---
-      ADSL <- data()[["ADSL"]]
-      ADTR <- data()[[dataname]]
+      ADSL <- obj[["ADSL"]]
+      ADTR <- obj[[dataname]]
 
       teal::validate_inputs(iv())
 
@@ -347,19 +351,18 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
       adtr_vars <- adtr_vars[!is.null(adtr_vars)]
 
       # merge
-      q1 <- teal.code::eval_code(data(), "library(dplyr)") %>%
-        teal.code::eval_code(
-          code = bquote({
-            ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
-            ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame()
-
-            ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID"))
-            ANL <- ANL %>%
-              group_by(USUBJID, PARAMCD) %>%
-              arrange(ANL[, .(x_var)]) %>%
-              as.data.frame()
-          })
-        )
+      q1 <- teal.code::eval_code(
+        obj,
+        code = bquote({
+          ADSL <- ADSL[, .(adsl_vars)] %>% as.data.frame()
+          ADTR <- .(as.name(dataname))[, .(adtr_vars)] %>% as.data.frame()
+          ANL <- merge(ADSL, ADTR, by = c("USUBJID", "STUDYID"))
+          ANL <- ANL %>%
+            group_by(USUBJID, PARAMCD) %>%
+            arrange(ANL[, .(x_var)]) %>%
+            as.data.frame()
+        })
+      )
 
       # format and filter
       q1 <- teal.code::eval_code(
@@ -383,6 +386,23 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
       }
 
       # plot code to qenv ---
+
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+      if (!is.null(input$paramcd) || !is.null(input$xfacet_var) || !is.null(input$yfacet_var)) {
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options")
+      }
+      if (!is.null(input$paramcd)) {
+        teal.reporter::teal_card(q1) <-
+          c(teal.reporter::teal_card(q1), paste0("Parameter - (from ", dataname, "): ", input$paramcd, "."))
+      }
+      if (!is.null(input$xfacet_var)) {
+        teal.reporter::teal_card(q1) <-
+          c(teal.reporter::teal_card(q1), paste0("Faceted horizontally by: ", paste(input$xfacet_var, collapse = ", "), "."))
+      }
+      if (!is.null(input$yfacet_var)) {
+        teal.reporter::teal_card(q1) <-
+          c(teal.reporter::teal_card(q1), paste0("Faceted vertically by: ", paste(input$yfacet_var, collapse = ", "), "."))
+      }
 
       q1 <- teal.code::eval_code(
         q1,
@@ -427,8 +447,6 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
             },
             show_legend = .(legend_on)
           )
-
-          plot
         })
       )
     })
@@ -447,38 +465,6 @@ srv_g_spider <- function(id, data, filter_panel_api, paramcd, reporter, dataname
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "Spider Plot",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        if (!is.null(input$paramcd) || !is.null(input$xfacet_var) || !is.null(input$yfacet_var)) {
-          card$append_text("Selected Options", "header3")
-        }
-        if (!is.null(input$paramcd)) {
-          card$append_text(paste0("Parameter - (from ", dataname, "): ", input$paramcd, "."))
-        }
-        if (!is.null(input$xfacet_var)) {
-          card$append_text(paste0("Faceted horizontally by: ", paste(input$xfacet_var, collapse = ", "), "."))
-        }
-        if (!is.null(input$yfacet_var)) {
-          card$append_text(paste0("Faceted vertically by: ", paste(input$yfacet_var, collapse = ", "), "."))
-        }
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::add_card_button_srv("add_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    set_chunk_dims(pws, output_q)
   })
 }

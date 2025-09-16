@@ -30,6 +30,7 @@
 #' specify to `NA` if no concomitant medications data is available
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #'
 #' @export
 #'
@@ -195,10 +196,6 @@ ui_g_heatmap_bygrade <- function(id, ...) {
         plot_decorate_output(id = ns(NULL))
       ),
       encoding = tags$div(
-        ### Reporter
-        teal.reporter::add_card_button_ui(ns("add_reporter"), label = "Add Report Card"),
-        tags$br(), tags$br(),
-        ###
         teal.widgets::optionalSelectInput(
           ns("id_var"),
           "ID Variable",
@@ -277,8 +274,6 @@ ui_g_heatmap_bygrade <- function(id, ...) {
 
 srv_g_heatmap_bygrade <- function(id,
                                   data,
-                                  filter_panel_api,
-                                  reporter,
                                   sl_dataname,
                                   ex_dataname,
                                   ae_dataname,
@@ -286,8 +281,6 @@ srv_g_heatmap_bygrade <- function(id,
                                   label,
                                   plot_height,
                                   plot_width) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelAPI")
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
   if (!is.na(sl_dataname)) checkmate::assert_names(sl_dataname, subset.of = names(data))
@@ -397,10 +390,19 @@ srv_g_heatmap_bygrade <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        ADSL <- data()[[sl_dataname]]
-        ADEX <- data()[[ex_dataname]]
-        ADAE <- data()[[ae_dataname]]
-        ADCM <- data()[[cm_dataname]]
+        obj <- data()
+        teal.reporter::teal_card(obj) <-
+          c(
+            teal.reporter::teal_card("# Heatmap by Grade"),
+            teal.reporter::teal_card(obj),
+            teal.reporter::teal_card("## Module's code")
+          )
+        obj <- teal.code::eval_code(obj, "library(dplyr)")
+
+        ADSL <- obj[[sl_dataname]]
+        ADEX <- obj[[ex_dataname]]
+        ADAE <- obj[[ae_dataname]]
+        ADCM <- obj[[cm_dataname]]
 
         teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
         teal::validate_inputs(iv(), iv_cm())
@@ -408,7 +410,7 @@ srv_g_heatmap_bygrade <- function(id,
           shiny::validate(shiny::need(all(input$conmed_level %in% ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
         }
 
-        qenv <- teal.code::eval_code(data(), "library(dplyr)")
+        qenv <- obj
 
         if (isTRUE(input$plot_cm)) {
           ADCM <- qenv[[cm_dataname]]
@@ -433,7 +435,9 @@ srv_g_heatmap_bygrade <- function(id,
           )
         }
 
-        qenv <- teal.code::eval_code(
+        teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "## Plot")
+
+        teal.code::eval_code(
           qenv,
           code = bquote(
             plot <- osprey::g_heat_bygrade(
@@ -451,7 +455,6 @@ srv_g_heatmap_bygrade <- function(id,
             )
           )
         )
-        teal.code::eval_code(qenv, quote(plot))
       })
     )
 
@@ -462,26 +465,6 @@ srv_g_heatmap_bygrade <- function(id,
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "Heatmap by Grade",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::add_card_button_srv("add_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    set_chunk_dims(pws, output_q)
   })
 }

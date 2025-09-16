@@ -47,6 +47,7 @@
 #' @template author_qit3
 #'
 #' @inherit argument_convention return
+#' @inheritSection teal::example_module Reporting
 #'
 #' @details
 #' As the patient profile module plots different domains in one plot, the study day (x-axis)
@@ -220,10 +221,6 @@ ui_g_patient_profile <- function(id, ...) {
         teal.widgets::plot_with_settings_ui(id = ns("patientprofileplot"))
       ),
       encoding = tags$div(
-        ### Reporter
-        teal.reporter::add_card_button_ui(ns("add_reporter"), label = "Add Report Card"),
-        tags$br(), tags$br(),
-        ###
         tags$label("Encodings", class = "text-primary"),
         selectizeInput(
           inputId = ns("patient_id"),
@@ -341,8 +338,6 @@ ui_g_patient_profile <- function(id, ...) {
 
 srv_g_patient_profile <- function(id,
                                   data,
-                                  filter_panel_api,
-                                  reporter,
                                   patient_id,
                                   sl_dataname,
                                   ex_dataname,
@@ -354,8 +349,6 @@ srv_g_patient_profile <- function(id,
                                   ae_line_col_opt,
                                   plot_height,
                                   plot_width) {
-  with_reporter <- !missing(reporter) && inherits(reporter, "Reporter")
-  with_filter <- !missing(filter_panel_api) && inherits(filter_panel_api, "FilterPanelApi")
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
   if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
@@ -461,6 +454,15 @@ srv_g_patient_profile <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
+        obj <- data()
+        teal.reporter::teal_card(obj) <-
+          c(
+            teal.reporter::teal_card("# Patient Profile"),
+            teal.reporter::teal_card(obj),
+            teal.reporter::teal_card("## Module's code")
+          )
+        obj <- teal.code::eval_code(obj, "library(dplyr)")
+
         teal::validate_inputs(iv())
 
         # get inputs ---
@@ -507,31 +509,31 @@ srv_g_patient_profile <- function(id,
         ))
 
         # get ADSL dataset ---
-        ADSL <- data()[[sl_dataname]]
+        ADSL <- obj[[sl_dataname]]
 
         ADEX <- NULL
         if (isTRUE(select_plot()[ex_dataname])) {
-          ADEX <- data()[[ex_dataname]]
+          ADEX <- obj[[ex_dataname]]
           teal::validate_has_variable(ADEX, adex_vars)
         }
         ADAE <- NULL
         if (isTRUE(select_plot()[ae_dataname])) {
-          ADAE <- data()[[ae_dataname]]
+          ADAE <- obj[[ae_dataname]]
           teal::validate_has_variable(ADAE, adae_vars)
         }
         ADRS <- NULL
         if (isTRUE(select_plot()[rs_dataname])) {
-          ADRS <- data()[[rs_dataname]]
+          ADRS <- obj[[rs_dataname]]
           teal::validate_has_variable(ADRS, adrs_vars)
         }
         ADCM <- NULL
         if (isTRUE(select_plot()[cm_dataname])) {
-          ADCM <- data()[[cm_dataname]]
+          ADCM <- obj[[cm_dataname]]
           teal::validate_has_variable(ADCM, adcm_vars)
         }
         ADLB <- NULL
         if (isTRUE(select_plot()[lb_dataname])) {
-          ADLB <- data()[[lb_dataname]]
+          ADLB <- obj[[lb_dataname]]
           teal::validate_has_variable(ADLB, adlb_vars)
         }
 
@@ -541,26 +543,26 @@ srv_g_patient_profile <- function(id,
         empty_ex <- FALSE
         empty_lb <- FALSE
 
-        q1 <- teal.code::eval_code(data(), "library(dplyr)") %>%
-          teal.code::eval_code(
-            code = substitute(
-              expr = {
-                ADSL <- ADSL %>%
-                  filter(USUBJID == patient_id) %>%
-                  group_by(USUBJID) %>%
-                  mutate(
-                    max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
-                    max_day = as.numeric(difftime(as.Date(max_date), as.Date(sl_start_date), units = "days")) +
-                      (as.Date(max_date) >= as.Date(sl_start_date))
-                  )
-              },
-              env = list(
-                ADSL = as.name(sl_dataname),
-                sl_start_date = as.name(sl_start_date),
-                patient_id = patient_id
-              )
+        q1 <- teal.code::eval_code(
+          obj,
+          code = substitute(
+            expr = {
+              ADSL <- ADSL %>%
+                filter(USUBJID == patient_id) %>%
+                group_by(USUBJID) %>%
+                mutate(
+                  max_date = pmax(as.Date(LSTALVDT), as.Date(DTHDT), na.rm = TRUE),
+                  max_day = as.numeric(difftime(as.Date(max_date), as.Date(sl_start_date), units = "days")) +
+                    (as.Date(max_date) >= as.Date(sl_start_date))
+                )
+            },
+            env = list(
+              ADSL = as.name(sl_dataname),
+              sl_start_date = as.name(sl_start_date),
+              patient_id = patient_id
             )
           )
+        )
 
         # ADSL with single subject
         validate(
@@ -874,6 +876,8 @@ srv_g_patient_profile <- function(id,
           x_limit <- q1[["x_limit"]]
         }
 
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+
         q1 <- teal.code::eval_code(
           q1,
           code = substitute(
@@ -914,26 +918,6 @@ srv_g_patient_profile <- function(id,
       title = paste("R code for", label),
       verbatim_content = reactive(teal.code::get_code(output_q()))
     )
-
-    ### REPORTER
-    if (with_reporter) {
-      card_fun <- function(comment, label) {
-        card <- teal::report_card_template(
-          title = "Patient Profile",
-          label = label,
-          with_filter = with_filter,
-          filter_panel_api = filter_panel_api
-        )
-        card$append_text("Plot", "header3")
-        card$append_plot(plot_r(), dim = pws$dim())
-        if (!comment == "") {
-          card$append_text("Comment", "header3")
-          card$append_text(comment)
-        }
-        card$append_src(teal.code::get_code(output_q()))
-        card
-      }
-      teal.reporter::add_card_button_srv("add_reporter", reporter = reporter, card_fun = card_fun)
-    }
+    set_chunk_dims(pws, output_q)
   })
 }
