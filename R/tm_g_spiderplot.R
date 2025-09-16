@@ -392,13 +392,16 @@ srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_w
         teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options")
       }
       if (!is.null(input$paramcd)) {
-        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), paste0("Parameter - (from ", dataname, "): ", input$paramcd, "."))
+        teal.reporter::teal_card(q1) <-
+          c(teal.reporter::teal_card(q1), paste0("Parameter - (from ", dataname, "): ", input$paramcd, "."))
       }
       if (!is.null(input$xfacet_var)) {
-        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), paste0("Faceted horizontally by: ", paste(input$xfacet_var, collapse = ", "), "."))
+        teal.reporter::teal_card(q1) <-
+          c(teal.reporter::teal_card(q1), paste0("Faceted horizontally by: ", paste(input$xfacet_var, collapse = ", "), "."))
       }
       if (!is.null(input$yfacet_var)) {
-        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), paste0("Faceted vertically by: ", paste(input$yfacet_var, collapse = ", "), "."))
+        teal.reporter::teal_card(q1) <-
+          c(teal.reporter::teal_card(q1), paste0("Faceted vertically by: ", paste(input$yfacet_var, collapse = ", "), "."))
       }
 
       q1 <- teal.code::eval_code(

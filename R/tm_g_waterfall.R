@@ -503,7 +503,12 @@ srv_g_waterfall <- function(id,
       # write plotting code to qenv
       anl <- q1[["anl"]]
 
-      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options", paste0("Tumor Burden Parameter: ", input$bar_paramcd, "."))
+      teal.reporter::teal_card(q1) <-
+        c(
+          teal.reporter::teal_card(q1),
+          "### Selected Options",
+          paste0("Tumor Burden Parameter: ", input$bar_paramcd, ".")
+        )
 
       if (!is.null(facet_var)) {
         teal.reporter::teal_card(q1) <- c(
