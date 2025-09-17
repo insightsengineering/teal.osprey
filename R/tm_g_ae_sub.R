@@ -163,9 +163,6 @@ ui_g_ae_sub <- function(id, ...) {
           footnotes = ""
         )
       )
-    ),
-    forms = tagList(
-      teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
     )
   )
 }
@@ -208,15 +205,6 @@ srv_g_ae_sub <- function(id,
       iv$enable()
       iv
     })
-
-    decorate_output <- srv_g_decorate(
-      id = NULL,
-      plt = plot_r,
-      plot_height = plot_height,
-      plot_width = plot_width
-    )
-    font_size <- decorate_output$font_size
-    pws <- decorate_output$pws
 
     observeEvent(input$arm_var, ignoreNULL = TRUE, {
       arm_var <- input$arm_var
@@ -380,11 +368,15 @@ srv_g_ae_sub <- function(id,
 
     plot_r <- reactive(output_q()[["plot"]])
 
-    teal.widgets::verbatim_popup_srv(
-      id = "rcode",
-      verbatim_content = reactive(teal.code::get_code(output_q())),
-      title = paste("R code for", label),
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
     )
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
+
     set_chunk_dims(pws, output_q)
   })
 }
