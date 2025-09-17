@@ -327,9 +327,6 @@ ui_g_patient_profile <- function(id, ...) {
           value = a$x_limit
         )
       ),
-      forms = tagList(
-        teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
-      ),
       pre_output = a$pre_output,
       post_output = a$post_output
     )
@@ -913,11 +910,6 @@ srv_g_patient_profile <- function(id,
       width = plot_width
     )
 
-    teal.widgets::verbatim_popup_srv(
-      id = "rcode",
-      title = paste("R code for", label),
-      verbatim_content = reactive(teal.code::get_code(output_q()))
-    )
     set_chunk_dims(pws, output_q)
   })
 }
