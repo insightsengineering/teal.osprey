@@ -190,9 +190,6 @@ ui_g_events_term_id <- function(id, ...) {
         titles = "Common AE Table",
         footnotes = ""
       )
-    ),
-    forms = tagList(
-      teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
     )
   )
 }
@@ -245,7 +242,6 @@ srv_g_events_term_id <- function(id,
         )
       )
     })
-
 
     observeEvent(input$sort,
       {
@@ -365,12 +361,6 @@ srv_g_events_term_id <- function(id,
     })
 
     plot_r <- reactive(output_q()[["plot"]])
-
-    teal.widgets::verbatim_popup_srv(
-      id = "rcode",
-      title = paste("R code for", label),
-      verbatim_content = reactive(teal.code::get_code(output_q()))
-    )
     set_chunk_dims(pws, output_q)
   })
 }

@@ -186,9 +186,6 @@ ui_g_ae_oview <- function(id, ...) {
         titles = "AE Overview",
         footnotes = ""
       )
-    ),
-    forms = tagList(
-      teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
     )
   )
 }
@@ -337,12 +334,6 @@ srv_g_ae_oview <- function(id,
     )
 
     plot_r <- reactive(output_q()[["plot"]])
-
-    teal.widgets::verbatim_popup_srv(
-      id = "rcode",
-      verbatim_content = reactive(teal.code::get_code(output_q())),
-      title = paste("R code for", label)
-    )
     set_chunk_dims(pws, output_q)
   })
 }

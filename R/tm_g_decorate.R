@@ -75,12 +75,7 @@ srv_g_decorate <- function(id,
       width = plot_width
     )
 
-    return(
-      list(
-        font_size = reactive(input$fontsize),
-        pws = pws
-      )
-    )
+    list(font_size = reactive(input$fontsize), pws = pws)
   })
 }
 

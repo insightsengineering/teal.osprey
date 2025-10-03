@@ -235,9 +235,6 @@ ui_g_spider <- function(id, ...) {
           value = a$href_line
         )
       ),
-      forms = tagList(
-        teal.widgets::verbatim_popup_ui(ns("rcode"), "Show R code")
-      ),
       pre_output = a$pre_output,
       post_output = a$post_output
     )
@@ -396,12 +393,16 @@ srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_w
           c(teal.reporter::teal_card(q1), paste0("Parameter - (from ", dataname, "): ", input$paramcd, "."))
       }
       if (!is.null(input$xfacet_var)) {
-        teal.reporter::teal_card(q1) <-
-          c(teal.reporter::teal_card(q1), paste0("Faceted horizontally by: ", paste(input$xfacet_var, collapse = ", "), "."))
+        teal.reporter::teal_card(q1) <- c(
+          teal.reporter::teal_card(q1),
+          sprintf("Faceted horizontally by: %s.", paste(input$xfacet_var, collapse = ", "))
+        )
       }
       if (!is.null(input$yfacet_var)) {
-        teal.reporter::teal_card(q1) <-
-          c(teal.reporter::teal_card(q1), paste0("Faceted vertically by: ", paste(input$yfacet_var, collapse = ", "), "."))
+        teal.reporter::teal_card(q1) <- c(
+          teal.reporter::teal_card(q1),
+          sprintf("Faceted vertically by: %s.", paste(input$yfacet_var, collapse = ", "))
+        )
       }
 
       q1 <- teal.code::eval_code(
@@ -460,11 +461,6 @@ srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_w
       width = plot_width
     )
 
-    teal.widgets::verbatim_popup_srv(
-      id = "rcode",
-      title = paste("R code for", label),
-      verbatim_content = reactive(teal.code::get_code(output_q()))
-    )
     set_chunk_dims(pws, output_q)
   })
 }
