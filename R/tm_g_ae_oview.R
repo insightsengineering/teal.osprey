@@ -240,6 +240,13 @@ srv_g_ae_oview <- function(id,
       )
     })
 
+    decorate_output <- srv_g_decorate(
+      id = NULL, plt = plot_r,
+      plot_height = plot_height, plot_width = plot_width
+    )
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
+
     observeEvent(input$arm_var, ignoreNULL = TRUE, {
       ANL <- data()[[dataname]]
       arm_var <- input$arm_var
@@ -327,14 +334,6 @@ srv_g_ae_oview <- function(id,
     )
 
     plot_r <- reactive(output_q()[["plot"]])
-
-    decorate_output <- srv_g_decorate(
-      id = NULL, plt = plot_r,
-      plot_height = plot_height, plot_width = plot_width
-    )
-    font_size <- decorate_output$font_size
-    pws <- decorate_output$pws
-
     set_chunk_dims(pws, output_q)
   })
 }
