@@ -226,6 +226,13 @@ srv_g_ae_oview <- function(id,
       iv
     })
 
+    decorate_output <- srv_g_decorate(
+      id = NULL, plt = plot_r,
+      plot_height = plot_height, plot_width = plot_width
+    )
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
+
     observeEvent(list(input$diff_ci_method, input$conf_level), {
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
       diff_ci_method <- input$diff_ci_method
@@ -239,13 +246,6 @@ srv_g_ae_oview <- function(id,
         )
       )
     })
-
-    decorate_output <- srv_g_decorate(
-      id = NULL, plt = plot_r,
-      plot_height = plot_height, plot_width = plot_width
-    )
-    font_size <- decorate_output$font_size
-    pws <- decorate_output$pws
 
     observeEvent(input$arm_var, ignoreNULL = TRUE, {
       ANL <- data()[[dataname]]
