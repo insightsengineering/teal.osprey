@@ -456,7 +456,7 @@ srv_g_patient_profile <- function(id,
           c(
             teal.reporter::teal_card("# Patient Profile"),
             teal.reporter::teal_card(obj),
-            teal.reporter::teal_card("## Module's code")
+            teal.reporter::teal_card("## Module's output(s)")
           )
         obj <- teal.code::eval_code(obj, "library(dplyr)")
 
@@ -873,7 +873,7 @@ srv_g_patient_profile <- function(id,
           x_limit <- q1[["x_limit"]]
         }
 
-        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 
         q1 <- teal.code::eval_code(
           q1,

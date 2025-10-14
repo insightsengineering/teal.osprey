@@ -319,7 +319,7 @@ srv_g_swimlane <- function(id,
         c(
           teal.reporter::teal_card("# Swimlane Plot"),
           teal.reporter::teal_card(obj),
-          teal.reporter::teal_card("## Module's code")
+          teal.reporter::teal_card("## Module's output(s)")
         )
 
       teal::validate_inputs(iv())
@@ -502,7 +502,7 @@ srv_g_swimlane <- function(id,
         )
       }
 
-      teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), "## Plot")
+      teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), "### Plot")
 
       if (!is.null(input$sort_var)) {
         teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), "### Selected Options")

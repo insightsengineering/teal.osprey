@@ -312,7 +312,7 @@ srv_g_ae_sub <- function(id,
           c(
             teal.reporter::teal_card("# AE by Subgroups"),
             teal.reporter::teal_card(obj),
-            teal.reporter::teal_card("## Module's code")
+            teal.reporter::teal_card("## Module's output(s)")
           )
 
         ANL <- obj[[dataname]]
@@ -348,7 +348,7 @@ srv_g_ae_sub <- function(id,
         q1 <- teal.code::eval_code(obj, code = group_labels_call) %>%
           teal.code::eval_code(code = "")
 
-        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 
         teal.code::eval_code(
           q1,
