@@ -310,7 +310,6 @@ srv_g_ae_sub <- function(id,
         obj <- data()
         teal.reporter::teal_card(obj) <-
           c(
-            teal.reporter::teal_card("# AE by Subgroups"),
             teal.reporter::teal_card(obj),
             teal.reporter::teal_card("## Module's output(s)")
           )

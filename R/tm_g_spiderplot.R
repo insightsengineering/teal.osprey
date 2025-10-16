@@ -301,7 +301,6 @@ srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_w
       obj <- data()
       teal.reporter::teal_card(obj) <-
         c(
-          teal.reporter::teal_card("# Spider Plot"),
           teal.reporter::teal_card(obj),
           teal.reporter::teal_card("## Module's output(s)")
         )
