@@ -381,9 +381,8 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
         obj <- data()
         teal.reporter::teal_card(obj) <-
           c(
-            teal.reporter::teal_card("# Butterfly Plot"),
             teal.reporter::teal_card(obj),
-            teal.reporter::teal_card("## Module's code")
+            teal.reporter::teal_card("## Module's output(s)")
           )
         obj <- teal.code::eval_code(obj, "library(dplyr)")
 
@@ -462,7 +461,7 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
           )
         }
 
-        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 
         if (!is.null(input$filter_var) || !is.null(input$facet_var) || !is.null(input$sort_by_var)) {
           teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options")

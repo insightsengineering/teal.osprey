@@ -296,9 +296,8 @@ srv_g_events_term_id <- function(id,
       obj <- data()
       teal.reporter::teal_card(obj) <-
         c(
-          teal.reporter::teal_card("# Events by Term"),
           teal.reporter::teal_card(obj),
-          teal.reporter::teal_card("## Module's code")
+          teal.reporter::teal_card("## Module's output(s)")
         )
 
       ANL <- obj[[dataname]]
@@ -334,7 +333,7 @@ srv_g_events_term_id <- function(id,
         msg = "Analysis data set must have at least 10 data points"
       )
 
-      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 
       q2 <- teal.code::eval_code(
         q1,

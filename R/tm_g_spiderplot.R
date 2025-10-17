@@ -301,9 +301,8 @@ srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_w
       obj <- data()
       teal.reporter::teal_card(obj) <-
         c(
-          teal.reporter::teal_card("# Spider Plot"),
           teal.reporter::teal_card(obj),
-          teal.reporter::teal_card("## Module's code")
+          teal.reporter::teal_card("## Module's output(s)")
         )
       obj <- teal.code::eval_code(obj, "library(dplyr)")
 
@@ -384,7 +383,7 @@ srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_w
 
       # plot code to qenv ---
 
-      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "## Plot")
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
       if (!is.null(input$paramcd) || !is.null(input$xfacet_var) || !is.null(input$yfacet_var)) {
         teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options")
       }

@@ -390,9 +390,8 @@ srv_g_heatmap_bygrade <- function(id,
         obj <- data()
         teal.reporter::teal_card(obj) <-
           c(
-            teal.reporter::teal_card("# Heatmap by Grade"),
             teal.reporter::teal_card(obj),
-            teal.reporter::teal_card("## Module's code")
+            teal.reporter::teal_card("## Module's output(s)")
           )
         obj <- teal.code::eval_code(obj, "library(dplyr)")
 
@@ -432,7 +431,7 @@ srv_g_heatmap_bygrade <- function(id,
           )
         }
 
-        teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "## Plot")
+        teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "### Plot")
 
         teal.code::eval_code(
           qenv,
