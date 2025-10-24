@@ -1,5 +1,8 @@
 # teal.osprey 0.3.0.9003
 
+### Bug Fixes
+* Fixed ggplot2 4.0 compatibility warnings in `tm_g_ae_sub` and `tm_g_events_term_id` modules. The warning "`height` was translated to `width`" was caused by deprecated parameter usage in `geom_errorbarh()` calls in the underlying `osprey` package functions. Requires `osprey` package update with corresponding fix.
+
 # teal.osprey 0.3.0
 
 ### Enhancements
