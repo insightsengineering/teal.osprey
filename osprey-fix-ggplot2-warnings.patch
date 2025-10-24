@@ -1,0 +1,40 @@
+From 838337ff4f33a046d8b91da73ddef2f9c3fbc94c Mon Sep 17 00:00:00 2001
+From: GitHub Copilot <copilot@github.com>
+Date: Fri, 24 Oct 2025 10:43:03 +0000
+Subject: [PATCH] Fix ggplot2 4.0 warnings: change height to width in
+ geom_errorbarh
+
+---
+ R/g_ae_sub.R         | 2 +-
+ R/g_events_term_id.R | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/R/g_ae_sub.R b/R/g_ae_sub.R
+index 646c069..dd13355 100644
+--- a/R/g_ae_sub.R
++++ b/R/g_ae_sub.R
+@@ -339,7 +339,7 @@ g_ae_sub <- function(id,
+     ) +
+     geom_errorbarh(
+       aes(xmin = .data$lower, xmax = .data$upper, y = .data$level),
+-      height = 0.3
++      width = 0.3
+     ) +
+     mytheme +
+     theme(
+diff --git a/R/g_events_term_id.R b/R/g_events_term_id.R
+index 18ec20a..0131df3 100644
+--- a/R/g_events_term_id.R
++++ b/R/g_events_term_id.R
+@@ -302,7 +302,7 @@ g_events_term_id <- function(term,
+     geom_point(mapping = aes(y = term, x = .data$riskdiff), size = fontsize * 0.7) +
+     geom_vline(data = NULL, xintercept = 0, linetype = 2) +
+     mytheme +
+-    geom_errorbarh(mapping = aes(xmax = .data$upper_ci, xmin = .data$lower_ci, y = term), height = 0.4) +
++    geom_errorbarh(mapping = aes(xmax = .data$upper_ci, xmin = .data$lower_ci, y = term), width = 0.4) +
+     y_axis +
+     ggtitle("Risk Difference")
+ 
+-- 
+2.51.0
+
