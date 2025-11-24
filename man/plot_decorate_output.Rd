@@ -9,6 +9,9 @@ plot_decorate_output(id)
 \arguments{
 \item{id}{(\code{character}) id of this element}
 }
+\value{
+An html element.
+}
 \description{
-Helper function to plot decorated output UI
+Adds \code{\link[teal.widgets:plot_with_settings]{teal.widgets::plot_with_settings_ui()}}
 }
