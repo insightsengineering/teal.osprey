@@ -1,4 +1,6 @@
-# teal.osprey 0.3.0.9003
+# teal.osprey 0.4.0
+
+- Update some documentation
 
 # teal.osprey 0.3.0
 
