@@ -1,6 +1,6 @@
 # teal.osprey 0.4.0
 
-- Update some documentation
+- Refactor some documentation
 
 # teal.osprey 0.3.0
 
