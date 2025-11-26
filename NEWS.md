@@ -1,6 +1,11 @@
 # teal.osprey 0.4.0
 
-- Refactor some documentation
+
+### Enhancements
+- Adds support for reporter and reproducibility by returning a `qenv`-based object from modules.
+
+### Miscellaneous
+- Documentation refactored for improved clarity and consistency.
 
 # teal.osprey 0.3.0
 
