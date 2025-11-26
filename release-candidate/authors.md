@@ -23,7 +23,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/insightsengineering/teal.osprey/blob/v0.4.0-rc2/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/insightsengineering/teal.osprey/blob/v0.4.0-rc3/DESCRIPTION)
 
 Qi N, Kaledkowski D, Liao C, Li L, Pagacz K (2025). *teal.osprey: 'teal'
 Modules for TLG Functions in Osprey*. R package version 0.4.0,
