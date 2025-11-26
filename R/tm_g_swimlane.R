@@ -37,7 +37,7 @@
 #'
 #' @examples
 #' # Example using stream (ADaM) dataset
-#' data <- teal_data() |>
+#' data <- teal_data() %>%
 #'   within({
 #'     library(nestcolor)
 #'     library(dplyr)

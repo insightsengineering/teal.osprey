@@ -81,10 +81,10 @@ srv_g_decorate <- function(id,
 
 #' Helper function to plot decorated output UI
 #'
-#' @description
+#' Adds [plot_with_settings_ui()]
 #'
 #' @param id (`character`) id of this element
-#'
+#' @returns An html element.
 #' @export
 plot_decorate_output <- function(id) {
   ns <- NS(id)

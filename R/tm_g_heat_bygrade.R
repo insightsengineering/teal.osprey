@@ -35,7 +35,7 @@
 #' @export
 #'
 #' @examples
-#' data <- teal_data() |>
+#' data <- teal_data() %>%
 #'   within({
 #'     library(dplyr)
 #'     library(nestcolor)
