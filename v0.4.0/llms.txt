@@ -1,0 +1,132 @@
+# teal.osprey
+
+[![Release
+🎈](https://github.com/insightsengineering/teal.osprey/actions/workflows/release.yaml/badge.svg)](https://github.com/insightsengineering/teal.osprey/releases)
+[![Check
+🛠](https://github.com/insightsengineering/teal.osprey/actions/workflows/check.yaml/badge.svg)](https://insightsengineering.github.io/teal.osprey/main/unit-test-report/)
+[![Docs
+📚](https://github.com/insightsengineering/teal.osprey/actions/workflows/docs.yaml/badge.svg)](https://insightsengineering.github.io/teal.osprey/)
+
+[![Code Coverage
+📔](https://raw.githubusercontent.com/insightsengineering/teal.osprey/_xml_coverage_reports/data/main/badge.svg)](https://insightsengineering.github.io/teal.osprey/main/coverage-report/)
+
+![GitHub
+forks](https://img.shields.io/github/forks/insightsengineering/teal.osprey?style=social)![GitHub
+repo
+stars](https://img.shields.io/github/stars/insightsengineering/teal.osprey?style=social)
+
+![GitHub commit
+activity](https://img.shields.io/github/commit-activity/m/insightsengineering/teal.osprey)![GitHub
+contributors](https://img.shields.io/github/contributors/insightsengineering/teal.osprey)![GitHub
+last
+commit](https://img.shields.io/github/last-commit/insightsengineering/teal.osprey)![GitHub
+pull
+requests](https://img.shields.io/github/issues-pr/insightsengineering/teal.osprey)![GitHub
+repo
+size](https://img.shields.io/github/repo-size/insightsengineering/teal.osprey)![GitHub
+language
+count](https://img.shields.io/github/languages/count/insightsengineering/teal.osprey)[![Project
+Status: Active – The project has reached a stable, usable state and is
+being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Current
+Version](https://img.shields.io/github/r-package/v/insightsengineering/teal.osprey/main?color=purple&label=package%20version)](https://github.com/insightsengineering/teal.osprey/tree/main)
+[![Open
+Issues](https://img.shields.io/github/issues-raw/insightsengineering/teal.osprey?color=red&label=open%20issues)](https://github.com/insightsengineering/teal.osprey/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+
+`teal.osprey` provides community contributed `teal` modules of analysis
+functions from [`osprey`](https://insightsengineering.github.io/osprey/)
+package. This enables `teal` app developers to easily create
+applications making use of `osprey`.
+
+## Installation
+
+``` r
+# stable versions
+# install.packages("pak")
+pak::pkg_install("insightsengineering/teal.osprey@*release")
+
+# beta versions
+# install.packages("pak")
+pak::pkg_install("insightsengineering/teal.osprey")
+```
+
+## Stargazers and Forkers
+
+### Stargazers over time
+
+[![Stargazers over
+time](https://starchart.cc/insightsengineering/teal.osprey.svg)](https://starchart.cc/insightsengineering/teal.osprey)
+
+### Stargazers
+
+[![Stargazers repo roster for
+@insightsengineering/teal.osprey](https://reporoster.com/stars/insightsengineering/teal.osprey)](https://github.com/insightsengineering/teal.osprey/stargazers)
+
+### Forkers
+
+[![Forkers repo roster for
+@insightsengineering/teal.osprey](https://reporoster.com/forks/insightsengineering/teal.osprey)](https://github.com/insightsengineering/teal.osprey/network/members)
+
+# Package index
+
+## Graph Modules
+
+Teal graph modules including safety and early efficacy graphs
+
+- [`tm_g_ae_oview()`](https://insightsengineering.github.io/teal.osprey/reference/tm_g_ae_oview.md)
+  :
+
+  Teal module for the `AE` overview
+
+- [`tm_g_ae_sub()`](https://insightsengineering.github.io/teal.osprey/reference/tm_g_ae_sub.md)
+  :
+
+  teal module for the `AE` by subgroups
+
+- [`tm_g_butterfly()`](https://insightsengineering.github.io/teal.osprey/reference/tm_g_butterfly.md)
+  : Butterfly plot Teal Module
+
+- [`tm_g_events_term_id()`](https://insightsengineering.github.io/teal.osprey/reference/tm_g_events_term_id.md)
+  : Events by Term Plot Teal Module
+
+- [`tm_g_heat_bygrade()`](https://insightsengineering.github.io/teal.osprey/reference/tm_g_heat_bygrade.md)
+  : Teal module for the heatmap by grade
+
+- [`tm_g_patient_profile()`](https://insightsengineering.github.io/teal.osprey/reference/tm_g_patient_profile.md)
+  : Patient Profile plot teal module
+
+- [`tm_g_spiderplot()`](https://insightsengineering.github.io/teal.osprey/reference/tm_g_spiderplot.md)
+  : Spider plot Teal Module
+
+- [`tm_g_swimlane()`](https://insightsengineering.github.io/teal.osprey/reference/tm_g_swimlane.md)
+  :
+
+  Teal Module for `Swimlane` Plot
+
+- [`tm_g_waterfall()`](https://insightsengineering.github.io/teal.osprey/reference/tm_g_waterfall.md)
+  : Teal Module for Waterfall Plot
+
+## Utility
+
+Utilities fuctions used in the package
+
+- [`label_aevar()`](https://insightsengineering.github.io/teal.osprey/reference/label_aevar.md)
+  **\[deprecated\]** :
+
+  Automatically switch variable labels for standard `AE` variables in
+  `AE` osprey functions **\[deprecated\]** `label_aevar` is deprecated
+  and will be unexported in the next release.
+
+- [`plot_decorate_output()`](https://insightsengineering.github.io/teal.osprey/reference/plot_decorate_output.md)
+  : Helper function to plot decorated output UI
+
+- [`quick_filter()`](https://insightsengineering.github.io/teal.osprey/reference/quick_filter.md)
+  : Utility function for quick filter
+
+- [`srv_g_decorate()`](https://insightsengineering.github.io/teal.osprey/reference/srv_g_decorate.md)
+  : Helper server function to decorate plot output
+
+- [`ui_g_decorate()`](https://insightsengineering.github.io/teal.osprey/reference/ui_g_decorate.md)
+  : Helper UI function to decorate plot output UI
+
