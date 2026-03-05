@@ -2,13 +2,23 @@
 #'
 #' @description
 #'
-#' Display Events by Term plot as a shiny module
+#' Display Events by Term plot as a shiny module.
+#'
+#' This is an S3 generic that dispatches on the class of `term_var`:
+#' - [choices_selected][teal.transform::choices_selected()] dispatches to the
+#'   default method.
+#' - [picks][teal.picks::picks()] dispatches to the picks method.
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param term_var [teal.transform::choices_selected] object with all available choices
-#' and pre-selected option names that can be used to specify the term for events
+#' @param term_var A variable selection object. Either a
+#'   [teal.transform::choices_selected()] object (dispatches to the `.default`
+#'   method) or a [teal.picks::picks()] object (dispatches to the `.picks`
+#'   method).
+#' @param dataname (`character(1)`) Name of the events dataset. Required when
+#'   using the default method with [choices_selected][teal.transform::choices_selected()].
+#'   Ignored by the `.picks` method.
 #'
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
@@ -27,6 +37,7 @@
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
+#' # Using the default method (choices_selected)
 #' app <- init(
 #'   data = data,
 #'   modules = modules(
@@ -52,16 +63,42 @@
 #'   shinyApp(app$ui, app$server)
 #' }
 #'
-tm_g_events_term_id <- function(label,
-                                dataname,
-                                term_var,
-                                arm_var,
+tm_g_events_term_id <- function(label = "Common AE",
+                                dataname = NULL,
+                                term_var = teal.picks::picks(
+                                  teal.picks::datasets(),
+                                  teal.picks::variables(
+                                    choices = teal.picks::is_categorical(min.len = 2),
+                                    selected = 1L
+                                  )
+                                ),
+                                arm_var = teal.picks::picks(
+                                  teal.picks::datasets(),
+                                  teal.picks::variables(
+                                    choices = teal.picks::is_categorical(min.len = 2),
+                                    selected = 1L
+                                  )
+                                ),
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
                                 plot_width = NULL,
                                 transformators = list()) {
+  UseMethod("tm_g_events_term_id", term_var)
+}
+
+#' @rdname tm_g_events_term_id
+#' @export
+tm_g_events_term_id.default <- function(label = "Common AE", # nolint: object_name_linter.
+                                        dataname = NULL,
+                                        term_var,
+                                        arm_var,
+                                        fontsize = c(5, 3, 7),
+                                        plot_height = c(600L, 200L, 2000L),
+                                        plot_width = NULL,
+                                        transformators = list()) {
   message("Initializing tm_g_events_term_id")
   checkmate::assert_string(label)
+  checkmate::assert_string(dataname)
   checkmate::assert_class(term_var, classes = "choices_selected")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert(
