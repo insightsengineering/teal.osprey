@@ -110,6 +110,7 @@ tm_g_ae_sub.default <- function(label,
     plot_width[1],
     lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
   )
+  teal::assert_decorators(decorators, "plot")
 
   module(
     label = label,
@@ -196,8 +197,11 @@ ui_g_ae_sub <- function(id, ...) {
           titles = "AE Table with Subgroups",
           footnotes = ""
         )
-      )
-    )
+      ),
+      teal::ui_transform_teal_data(ns("decorator"), transformators = select_decorators(args$decorators, "plot"))
+    ),
+    pre_output = args$pre_output,
+    post_output = args$post_output
   )
 }
 
@@ -408,7 +412,14 @@ srv_g_ae_sub <- function(id,
       })
     )
 
-    plot_r <- reactive(output_q()[["plot"]])
-    set_chunk_dims(pws, output_q)
+    decorated_output_q <- teal::srv_transform_teal_data(
+      "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+
+    plot_r <- reactive(req(decorated_output_q())[["plot"]])
+    set_chunk_dims(pws, plot_r)
   })
 }
