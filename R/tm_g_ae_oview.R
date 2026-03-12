@@ -1,20 +1,26 @@
-#' Teal module for the `AE` overview
+#' @title Teal module for the `AE` overview
 #'
 #' @description
 #'
 #' Display the `AE` overview plot as a shiny module
 #'
+#' This is an S3 generic that dispatches on the class of `flag_var_anl`:
+#' - [choices_selected][teal.transform::choices_selected()] dispatches to the
+#'   default method.
+#' - [picks][teal.picks::picks()] dispatches to the picks method.
+#'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param flag_var_anl ([`teal.transform::choices_selected`])
-#'   `choices_selected` object with variables used to count adverse event
+#' @param flag_var_anl Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[picks][teal.picks::picks()]`)
+#'   object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
-#'
+#' @param dataname (`character(1)`) Name of the events dataset. Required when
+#'   using the default method with [choices_selected][teal.transform::choices_selected()].
+#'   Ignored by the `.picks` method.
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
-#'
-#' @export
 #'
 #' @examples
 #' data <- teal_data() %>%
@@ -47,7 +53,7 @@
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
 #' ADAE <- data[["ADAE"]]
-#'
+#' # Using default method (choices selected)
 #' app <- init(
 #'   data = data,
 #'   modules = modules(
@@ -73,14 +79,40 @@
 #'   shinyApp(app$ui, app$server)
 #' }
 #'
+#' @export
 tm_g_ae_oview <- function(label,
-                          dataname,
-                          arm_var,
-                          flag_var_anl,
+                          dataname = NULL,
+                          arm_var = teal.picks::picks(
+                            teal.picks::datasets(),
+                            teal.picks::variables(
+                              choices = teal.picks::is_categorical(min.len = 2),
+                              selected = 1L
+                            )
+                          ),
+                          flag_var_anl = teal.picks::picks(
+                            teal.picks::datasets(),
+                            teal.picks::variables(
+                              choices = teal.picks::is_categorical(min.len = 2),
+                              selected = 1L
+                            )
+                          ),
                           fontsize = c(5, 3, 7),
                           plot_height = c(600L, 200L, 2000L),
                           plot_width = NULL,
                           transformators = list()) {
+  UseMethod("tm_g_ae_oview", flag_var_anl)
+}
+
+#' @rdname tm_g_ae_oview
+#' @export
+tm_g_ae_oview.default <- function(label,
+                                  dataname,
+                                  arm_var,
+                                  flag_var_anl,
+                                  fontsize = c(5, 3, 7),
+                                  plot_height = c(600L, 200L, 2000L),
+                                  plot_width = NULL,
+                                  transformators = list()) {
   message("Initializing tm_g_ae_oview")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(flag_var_anl, classes = "choices_selected")

@@ -239,3 +239,26 @@ set_chunk_dims <- function(pws, q_r, inner_classes = NULL) {
     q
   })
 }
+
+#' Extract datanames from a list of picks objects
+#'
+#' @param x (`list`) list of picks objects (or NULLs)
+#' @return `character` vector of unique datanames, or `"all"` if any picks
+#'   object uses dynamic dataset choices.
+#' @keywords internal
+.picks_datanames <- function(x) {
+  checkmate::assert_list(x, c("picks", "NULL"))
+  datanames_list <- lapply(x, function(x) {
+    if (is.character(x$datasets$choices)) {
+      x$datasets$choices
+    } else {
+      NULL
+    }
+  })
+
+  if (any(vapply(datanames_list, is.null, logical(1)))) {
+    "all"
+  } else {
+    unique(unlist(datanames_list))
+  }
+}
