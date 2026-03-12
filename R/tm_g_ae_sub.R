@@ -4,6 +4,11 @@
 #'
 #' Display the `AE` by subgroups plot as a teal module
 #'
+#' This is an S3 generic that dispatches on the class of `term_var`:
+#' - [choices_selected][teal.transform::choices_selected()] dispatches to the
+#'   default method.
+#' - [picks][teal.picks::picks()] dispatches to the picks method.
+#'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
@@ -19,14 +24,14 @@
 #'
 #' @examples
 #' # Example using stream (ADaM) dataset
-#' data <- teal_data() %>%
-#'   within({
+#' data <- within(teal_data(), {
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
-#'   })
+#' })
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
+#' # Using the default method (choices_selected)
 #' app <- init(
 #'   data = data,
 #'   modules = modules(
@@ -50,6 +55,33 @@
 #' }
 #'
 tm_g_ae_sub <- function(label,
+                        dataname = NULL,
+                        arm_var = eal.picks::picks(
+                          teal.picks::datasets(),
+                          teal.picks::variables(
+                            choices = teal.picks::is_categorical(min.len = 1),
+                            selected = 1L
+                          )
+                        ),
+                        group_var = teal.picks::picks(
+                          teal.picks::datasets(),
+                          teal.picks::variables(
+                            choices = teal.picks::is_categorical(min.len = 1),
+                            selected = 1L
+                          )
+                        ),
+                        plot_height = c(600L, 200L, 2000L),
+                        plot_width = NULL,
+                        fontsize = c(5, 3, 7),
+                        transformators = list(),
+                        decorators = list()) {
+
+  UseMethod("tm_g_events_term_id", arm_var)
+}
+
+#' @rdname tm_g_ae_sub
+#' @export
+tm_g_ae_sub.default <- function(label,
                         dataname,
                         arm_var,
                         group_var,
@@ -57,6 +89,7 @@ tm_g_ae_sub <- function(label,
                         plot_width = NULL,
                         fontsize = c(5, 3, 7),
                         transformators = list()) {
+
   message("Initializing tm_g_ae_sub")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(group_var, classes = "choices_selected")
@@ -69,6 +102,7 @@ tm_g_ae_sub <- function(label,
       checkmate::check_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3])
     )
   )
+  checkmate::assert_string(dataname)
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
