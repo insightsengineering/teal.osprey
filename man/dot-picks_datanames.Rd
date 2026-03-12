@@ -7,7 +7,7 @@
 .picks_datanames(x)
 }
 \arguments{
-\item{x}{(\code{list}) list of picks objects (or NULLs)}
+\item{x}{(\code{list}) list of picks objects (or NULL objects)}
 }
 \value{
 \code{character} vector of unique datanames, or \code{"all"} if any picks

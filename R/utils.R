@@ -242,7 +242,7 @@ set_chunk_dims <- function(pws, q_r, inner_classes = NULL) {
 
 #' Extract datanames from a list of picks objects
 #'
-#' @param x (`list`) list of picks objects (or NULLs)
+#' @param x (`list`) list of picks objects (or NULL objects)
 #' @return `character` vector of unique datanames, or `"all"` if any picks
 #'   object uses dynamic dataset choices.
 #' @keywords internal
