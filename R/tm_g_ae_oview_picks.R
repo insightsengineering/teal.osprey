@@ -14,44 +14,44 @@
 #'           AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
 #'           AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
 #'         )
-#'         labels <- c(
-#'           "Serious AE", "Related AE", "Grade 5 AE",
-#'           "AE related to A: Drug X", "AE related to B: Placebo"
-#'         )
-#'         cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
-#'         for (i in seq_along(labels)) {
-#'           attr(dat[[cols[i]]], "label") <- labels[i]
-#'         }
-#'         dat
+#'       labels <- c(
+#'         "Serious AE", "Related AE", "Grade 5 AE",
+#'         "AE related to A: Drug X", "AE related to B: Placebo"
+#'       )
+#'       cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
+#'       for (i in seq_along(labels)) {
+#'         attr(dat[[cols[i]]], "label") <- labels[i]
 #'       }
-#'       ADAE <- .add_event_flags(ADAE)
-#'    })
-#'  join_keys(data) <- default_cdisc_join_keys[names(data)]
-#'  ADAE <- data[["ADAE"]]
-#'  # Using the picks method
-#'  app <- init(
-#'    data = data,
-#'    modules = modules(
-#'      tm_g_ae_oview(
-#'        label = "AE Overview",
-#'        arm_var = teal.picks::picks(
-#'          teal.picks::datasets("ADAE"),
-#'          teal.picks::variables(
-#'            choices = tidyselect::starts_with("ACTARM"),
-#'            selected = "ACTARMCD"
-#'          )
-#'        ),
-#'        flag_var_anl = teal.picks::picks(
-#'          teal.picks::datasets("ADAE"),
-#'          teal.picks::variables(
-#'            choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
-#'            selected = "AEREL1"
-#'          )
-#'        ),
-#'        plot_height = c(600, 200, 2000)
-#'      )
-#'    )
-#'  )
+#'       dat
+#'     }
+#'     ADAE <- .add_event_flags(ADAE)
+#'   })
+#' join_keys(data) <- default_cdisc_join_keys[names(data)]
+#' ADAE <- data[["ADAE"]]
+#' # Using the picks method
+#' app <- init(
+#'   data = data,
+#'   modules = modules(
+#'     tm_g_ae_oview(
+#'       label = "AE Overview",
+#'       arm_var = teal.picks::picks(
+#'         teal.picks::datasets("ADAE"),
+#'         teal.picks::variables(
+#'           choices = tidyselect::starts_with("ACTARM"),
+#'           selected = "ACTARMCD"
+#'         )
+#'       ),
+#'       flag_var_anl = teal.picks::picks(
+#'         teal.picks::datasets("ADAE"),
+#'         teal.picks::variables(
+#'           choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
+#'           selected = "AEREL1"
+#'         )
+#'       ),
+#'       plot_height = c(600, 200, 2000)
+#'     )
+#'   )
+#' )
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
@@ -129,7 +129,8 @@ tm_g_ae_oview.picks <- function(label, # nolint: object_name_linter
   )
 }
 
-ui_g_ae_oview.picks <- function( # nolint: object_name_linter
+ui_g_ae_oview.picks <- function(
+  # nolint: object_name_linter
   id,
   label = "Common AE",
   dataname = NULL,
@@ -149,7 +150,6 @@ ui_g_ae_oview.picks <- function( # nolint: object_name_linter
   ),
   fontsize = c(5, 3, 7)
 ) {
-
   ns <- NS(id)
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
