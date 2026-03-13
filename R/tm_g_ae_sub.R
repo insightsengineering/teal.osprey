@@ -55,28 +55,15 @@
 #' }
 #'
 tm_g_ae_sub <- function(label,
-                        dataname = NULL,
-                        arm_var = eal.picks::picks(
-                          teal.picks::datasets(),
-                          teal.picks::variables(
-                            choices = teal.picks::is_categorical(min.len = 1),
-                            selected = 1L
-                          )
-                        ),
-                        group_var = teal.picks::picks(
-                          teal.picks::datasets(),
-                          teal.picks::variables(
-                            choices = teal.picks::is_categorical(min.len = 1),
-                            selected = 1L
-                          )
-                        ),
+                        dataname,
+                        arm_var,
+                        group_var,
                         plot_height = c(600L, 200L, 2000L),
                         plot_width = NULL,
                         fontsize = c(5, 3, 7),
-                        transformators = list(),
-                        decorators = list()) {
+                        transformators = list()) {
 
-  UseMethod("tm_g_events_term_id", arm_var)
+  UseMethod("tm_g_ae_sub", arm_var)
 }
 
 #' @rdname tm_g_ae_sub
@@ -411,15 +398,5 @@ srv_g_ae_sub <- function(id,
         )
       })
     )
-
-    decorated_output_q <- teal::srv_transform_teal_data(
-      "decorator",
-      data = output_q,
-      transformators = select_decorators(decorators, "plot"),
-      expr = quote(plot)
-    )
-
-    plot_r <- reactive(req(decorated_output_q())[["plot"]])
-    set_chunk_dims(pws, plot_r)
   })
 }
