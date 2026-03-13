@@ -1,4 +1,4 @@
-#' @rdname tm_g_events_term_id
+#' @rdname tm_g_ae_sub
 #'
 #' @examples
 #' # Using the picks method
@@ -10,6 +10,29 @@
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
+#' app <- init(
+#'   data = data,
+#'   modules = modules(
+#'     tm_g_ae_sub(
+#'       label = "AE by Subgroup",
+#'       dataname = "ADAE",
+#'       arm_var = teal.picks::picks(
+#'         teal.picks::datasets("ADAE"),
+#'         teal.picks::variables(
+#'           choices = teal.picks::is_categorical(min.len = 2),
+#'           selected = "ACTARMCD"
+#'         )
+#'       ),
+#'       group_var = teal.picks::picks(
+#'         teal.picks::datasets("ADAE"),
+#'         teal.picks::variables(
+#'           choices = teal.picks::is_categorical(min.len = 2),
+#'         )
+#'       ),
+#'       plot_height = c(600, 200, 2000)
+#'     )
+#'   )
+#' )
 #' app <- init(
 #'   data = data,
 #'   modules = modules(
@@ -39,8 +62,8 @@
 #'
 #' @export
 tm_g_ae_sub.picks <- function(label,
-                              dataname = NULL,
-                              arm_var = eal.picks::picks(
+                              dataname,
+                              arm_var = teal.picks::picks(
                                 teal.picks::datasets(),
                                 teal.picks::variables(
                                   choices = teal.picks::is_categorical(min.len = 2),
@@ -105,7 +128,7 @@ tm_g_ae_sub.picks <- function(label,
   module(
     label = label,
     ui = ui_g_ae_sub.picks,
-    server = srv_g_ae_sub.icks,
+    server = srv_g_ae_sub.picks,
     ui_args = args[names(args) %in% names(formals(ui_g_ae_sub.picks))],
     server_args = args[names(args) %in% names(formals(srv_g_ae_sub.picks))],
     transformators = transformators,
