@@ -31,10 +31,12 @@ tm_g_ae_sub(
 \method{tm_g_ae_sub}{picks}(
   label,
   dataname,
-  arm_var = teal.picks::picks(teal.picks::datasets(), teal.picks::variables(choices =
-    teal.picks::is_categorical(min.len = 2), selected = 1L)),
-  group_var = teal.picks::picks(teal.picks::datasets(), teal.picks::variables(choices =
-    teal.picks::is_categorical(min.len = 2), selected = 1L)),
+  arm_var = teal.picks::picks(teal.picks::datasets(dataname),
+    teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2), selected =
+    1L)),
+  group_var = teal.picks::picks(teal.picks::datasets(dataname),
+    teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2), selected =
+    1L)),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
   fontsize = c(5, 3, 7),
@@ -163,29 +165,7 @@ app <- init(
     )
   )
 )
-app <- init(
-  data = data,
-  modules = modules(
-    tm_g_events_term_id(
-      label = "Common AE",
-      term_var = teal.picks::picks(
-        teal.picks::datasets("ADAE"),
-        teal.picks::variables(
-          choices = teal.picks::is_categorical(min.len = 2),
-          selected = "AEDECOD"
-        )
-      ),
-      arm_var = teal.picks::picks(
-        teal.picks::datasets("ADSL"),
-        teal.picks::variables(
-          choices = teal.picks::is_categorical(min.len = 2),
-          selected = "ACTARMCD"
-        )
-      ),
-      plot_height = c(600, 200, 2000)
-    )
-  )
-)
+
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }

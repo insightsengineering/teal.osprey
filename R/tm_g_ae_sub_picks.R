@@ -33,29 +33,7 @@
 #'     )
 #'   )
 #' )
-#' app <- init(
-#'   data = data,
-#'   modules = modules(
-#'     tm_g_events_term_id(
-#'       label = "Common AE",
-#'       term_var = teal.picks::picks(
-#'         teal.picks::datasets("ADAE"),
-#'         teal.picks::variables(
-#'           choices = teal.picks::is_categorical(min.len = 2),
-#'           selected = "AEDECOD"
-#'         )
-#'       ),
-#'       arm_var = teal.picks::picks(
-#'         teal.picks::datasets("ADSL"),
-#'         teal.picks::variables(
-#'           choices = teal.picks::is_categorical(min.len = 2),
-#'           selected = "ACTARMCD"
-#'         )
-#'       ),
-#'       plot_height = c(600, 200, 2000)
-#'     )
-#'   )
-#' )
+#'
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
@@ -64,14 +42,14 @@
 tm_g_ae_sub.picks <- function(label,
                               dataname,
                               arm_var = teal.picks::picks(
-                                teal.picks::datasets(),
+                                teal.picks::datasets(selected = dataname),
                                 teal.picks::variables(
                                   choices = teal.picks::is_categorical(min.len = 2),
                                   selected = 1L
                                 )
                               ),
                               group_var = teal.picks::picks(
-                                teal.picks::datasets(),
+                                teal.picks::datasets(selected = dataname),
                                 teal.picks::variables(
                                   choices = teal.picks::is_categorical(min.len = 2),
                                   selected = 1L
@@ -132,7 +110,7 @@ tm_g_ae_sub.picks <- function(label,
     ui_args = args[names(args) %in% names(formals(ui_g_ae_sub.picks))],
     server_args = args[names(args) %in% names(formals(srv_g_ae_sub.picks))],
     transformators = transformators,
-    datanames = .picks_datanames(list(arm_var, group_var))
+    datanames = dataname
   )
 }
 
@@ -198,7 +176,7 @@ ui_g_ae_sub.picks <- function(id, ...) {
   )
 }
 
-srv_g_ae_sub <- function(id,
+srv_g_ae_sub.picks <- function(id,
                          data,
                          dataname,
                          label,
