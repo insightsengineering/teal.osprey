@@ -129,8 +129,7 @@ tm_g_ae_oview.picks <- function(label, # nolint: object_name_linter.
   )
 }
 
-ui_g_ae_oview.picks <- function(
-  # nolint: object_name_linter
+ui_g_ae_oview.picks <- function(# nolint: object_name_linter.
   id,
   label = "Common AE",
   dataname = NULL,
