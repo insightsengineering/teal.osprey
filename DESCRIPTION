@@ -50,8 +50,8 @@ Suggests:
     testthat (>= 3.2.3),
     withr (>= 3.0.0)
 Remotes:
-insightsengineering/osprey,
-    insightsengineering/teal.picks@redesign_extraction@main
+    insightsengineering/osprey,
+    insightsengineering/teal.picks
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal, insightsengineering/teal.picks,
     insightsengineering/teal.slice, insightsengineering/teal.transform,
