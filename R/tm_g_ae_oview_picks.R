@@ -57,7 +57,7 @@
 #' }
 #' @export
 tm_g_ae_oview.picks <- function(label, # nolint: object_name_linter.
-                                dataname = NULL,
+                                dataname,
                                 arm_var = teal.picks::picks(
                                   teal.picks::datasets(),
                                   teal.picks::variables(
@@ -125,7 +125,7 @@ tm_g_ae_oview.picks <- function(label, # nolint: object_name_linter.
     ui = ui_g_ae_oview.picks,
     ui_args = args[names(args) %in% names(formals(ui_g_ae_oview.picks))],
     transformators = transformators,
-    datanames = .picks_datanames(list(arm_var, flag_var_anl))
+    datanames = c("ADSL", dataname)
   )
 }
 

@@ -64,6 +64,7 @@ testthat::describe("tm_g_ae_oview module creation", {
   testthat::it("creates a teal module using picks (.picks method)", {
     mod <- tm_g_ae_oview(
       label = "AE Overview",
+      dataname = "ADAE",
       arm_var = arm_var_picks,
       flag_var_anl = flag_var_picks,
       plot_height = c(600, 200, 2000)

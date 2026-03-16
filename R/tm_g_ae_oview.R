@@ -81,25 +81,13 @@
 #'
 #' @export
 tm_g_ae_oview <- function(label,
-                          dataname = NULL,
-                          arm_var = teal.picks::picks(
-                            teal.picks::datasets(),
-                            teal.picks::variables(
-                              choices = teal.picks::is_categorical(min.len = 2),
-                              selected = 1L
-                            )
-                          ),
-                          flag_var_anl = teal.picks::picks(
-                            teal.picks::datasets(),
-                            teal.picks::variables(
-                              choices = teal.picks::is_categorical(min.len = 2),
-                              selected = 1L
-                            )
-                          ),
-                          fontsize = c(5, 3, 7),
-                          plot_height = c(600L, 200L, 2000L),
-                          plot_width = NULL,
-                          transformators = list()) {
+                          dataname,
+                          arm_var,
+                          flag_var_anl,
+                          fontsize,
+                          plot_height,
+                          plot_width,
+                          transformators) {
   UseMethod("tm_g_ae_oview", flag_var_anl)
 }
 
