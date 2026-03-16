@@ -56,7 +56,7 @@
 #'   shinyApp(app$ui, app$server)
 #' }
 #' @export
-tm_g_ae_oview.picks <- function(label, # nolint: object_name_linter
+tm_g_ae_oview.picks <- function(label, # nolint: object_name_linter.
                                 dataname = NULL,
                                 arm_var = teal.picks::picks(
                                   teal.picks::datasets(),
