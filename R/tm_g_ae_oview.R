@@ -104,6 +104,19 @@ tm_g_ae_oview.default <- function(label,
   message("Initializing tm_g_ae_oview")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(flag_var_anl, classes = "choices_selected")
+  tm_g_ae_oview.pick(
+    label,
+    dataname,
+    teal.picks::as.picks(arm_var),
+    teal.picks::as.picks(flag_var_anl),
+    fontsize,
+    plot_height,
+    plot_width,
+    transformators
+  )
+
+  checkmate::assert_class(arm_var, classes = "choices_selected")
+  checkmate::assert_class(flag_var_anl, classes = "choices_selected")
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
     checkmate::assert(
