@@ -8,24 +8,18 @@ flag_var_cs <- teal.transform::choices_selected(
   choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5")
 )
 
-arm_var_picks <- teal.picks::picks(
-  teal.picks::datasets("ADAE"),
-  teal.picks::variables(
-    choices = teal.picks::is_categorical(min.len = 2),
-    selected = 1L
-  )
+arm_var_picks <- teal.picks::variables(
+  choices = teal.picks::is_categorical(min.len = 2),
+  selected = 1L
 )
 
-flag_var_picks <- teal.picks::picks(
-  teal.picks::datasets("ADAE"),
-  teal.picks::variables(
-    choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5"),
-    selected = "TMPFL_SER"
-  )
+flag_var_picks <- teal.picks::variables(
+  choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5"),
+  selected = "TMPFL_SER"
 )
 
 testthat::describe("tm_g_ae_oview argument verification", {
-  testthat::it("fails when arm_var is picks but flag_var_anl is choices_selected", {
+  testthat::it("fails when arm_var is pick but flag_var_anl is choices_selected", {
     testthat::expect_error(
       tm_g_ae_oview(
         label = "AE Overview",
@@ -36,7 +30,7 @@ testthat::describe("tm_g_ae_oview argument verification", {
     )
   })
 
-  testthat::it("fails when arm_var is choices_selected but flag_var_anl is picks", {
+  testthat::it("fails when arm_var is choices_selected but flag_var_anl is pick", {
     testthat::expect_error(
       tm_g_ae_oview(
         label = "AE Overview",
@@ -61,7 +55,7 @@ testthat::describe("tm_g_ae_oview module creation", {
     testthat::expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks (.picks method)", {
+  testthat::it("creates a teal module using picks (.pick method)", {
     mod <- tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
