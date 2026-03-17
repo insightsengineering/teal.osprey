@@ -35,12 +35,12 @@
 #'     tm_g_ae_oview(
 #'       label = "AE Overview",
 #'       arm_var = teal.picks::variables(
-#'           choices = tidyselect::starts_with("ACTARM"),
-#'           selected = "ACTARMCD"
+#'         choices = tidyselect::starts_with("ACTARM"),
+#'         selected = "ACTARMCD"
 #'       ),
 #'       flag_var_anl = teal.picks::variables(
-#'           choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
-#'           selected = "AEREL1"
+#'         choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
+#'         selected = "AEREL1"
 #'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
@@ -120,7 +120,8 @@ tm_g_ae_oview.pick <- function(label, # nolint: object_name_linter.
   )
 }
 
-ui_g_ae_oview.picks <- function(# nolint: object_name_linter.
+ui_g_ae_oview.picks <- function(
+  # nolint: object_name_linter.
   id,
   arm_var,
   flag_var_anl,
