@@ -36,7 +36,7 @@
 #'       label = "AE Overview",
 #'       dataname = "ADAE",
 #'       arm_var = teal.picks::variables(
-#'         choices = tidyselect::starts_with("ACTARM"),
+#'         choices = dplyr::starts_with("ACTARM"),
 #'         selected = "ACTARMCD"
 #'       ),
 #'       flag_var_anl = teal.picks::variables(
@@ -121,9 +121,7 @@ tm_g_ae_oview.pick <- function(label, # nolint: object_name_linter.
   )
 }
 
-ui_g_ae_oview.picks <- function(
-  # nolint: object_name_linter.
-  id,
+ui_g_ae_oview.picks <- function(id, # nolint: object_name_linter.
   arm_var,
   flag_var_anl,
   fontsize
