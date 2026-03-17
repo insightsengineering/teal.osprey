@@ -34,19 +34,13 @@
 #'   modules = modules(
 #'     tm_g_ae_oview(
 #'       label = "AE Overview",
-#'       arm_var = teal.picks::picks(
-#'         teal.picks::datasets("ADAE"),
-#'         teal.picks::variables(
+#'       arm_var = teal.picks::variables(
 #'           choices = tidyselect::starts_with("ACTARM"),
 #'           selected = "ACTARMCD"
-#'         )
 #'       ),
-#'       flag_var_anl = teal.picks::picks(
-#'         teal.picks::datasets("ADAE"),
-#'         teal.picks::variables(
+#'       flag_var_anl = teal.picks::variables(
 #'           choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
 #'           selected = "AEREL1"
-#'         )
 #'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
@@ -56,27 +50,24 @@
 #'   shinyApp(app$ui, app$server)
 #' }
 #' @export
-tm_g_ae_oview.picks <- function(label, # nolint: object_name_linter.
-                                dataname,
-                                arm_var = teal.picks::picks(
-                                  teal.picks::datasets(),
-                                  teal.picks::variables(
-                                    choices = teal.picks::is_categorical(min.len = 2),
-                                    selected = 1L
-                                  )
-                                ),
-                                flag_var_anl = teal.picks::picks(
-                                  teal.picks::datasets(),
-                                  teal.picks::variables(
-                                    choices = teal.picks::is_categorical(min.len = 2),
-                                    selected = 1L
-                                  )
-                                ),
-                                fontsize = c(5, 3, 7),
-                                plot_height = c(600L, 200L, 2000L),
-                                plot_width = NULL,
-                                transformators = list()) {
+tm_g_ae_oview.pick <- function(label, # nolint: object_name_linter.
+                               dataname,
+                               arm_var = teal.picks::variables(
+                                 choices = teal.picks::is_categorical(min.len = 2),
+                                 selected = 1L
+                               ),
+                               flag_var_anl = teal.picks::variables(
+                                 choices = teal.picks::is_categorical(min.len = 2),
+                                 selected = 1L
+                               ),
+                               fontsize = c(5, 3, 7),
+                               plot_height = c(600L, 200L, 2000L),
+                               plot_width = NULL,
+                               transformators = list()) {
   message("Initializing tm_g_ae_oview")
+
+  arm_var <- teal.picks::picks(teal.picks::datasets(dataname), arm_var)
+  flag_var_anl <- teal.picks::picks(teal.picks::datasets(dataname), flag_var_anl)
 
   checkmate::assert_class(arm_var, "picks")
   if (isTRUE(attr(arm_var$variables, "multiple"))) {
@@ -131,25 +122,12 @@ tm_g_ae_oview.picks <- function(label, # nolint: object_name_linter.
 
 ui_g_ae_oview.picks <- function(# nolint: object_name_linter.
   id,
-  label = "Common AE",
-  dataname = NULL,
-  arm_var = teal.picks::picks(
-    teal.picks::datasets(),
-    teal.picks::variables(
-      choices = teal.picks::is_categorical(min.len = 2),
-      selected = 1L
-    )
-  ),
-  flag_var_anl = teal.picks::picks(
-    teal.picks::datasets(),
-    teal.picks::variables(
-      choices = teal.picks::is_categorical(min.len = 2),
-      selected = 1L
-    )
-  ),
-  fontsize = c(5, 3, 7)
+  arm_var,
+  flag_var_anl,
+  fontsize
 ) {
   ns <- NS(id)
+
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
@@ -315,7 +293,6 @@ srv_g_ae_oview.picks <- function(id, # nolint: object_name_linter.
         # Original variable name and dataset for arm_N calculation on the source dataset
         arm_var_orig <- selectors$arm_var()$variables$selected
         arm_dataset <- selectors$arm_var()$datasets$selected
-        flag_dataset <- selectors$flag_var_anl()$datasets$selected
 
         shiny::validate(
           shiny::need(

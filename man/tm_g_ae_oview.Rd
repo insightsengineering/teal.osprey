@@ -3,7 +3,7 @@
 \name{tm_g_ae_oview}
 \alias{tm_g_ae_oview}
 \alias{tm_g_ae_oview.default}
-\alias{tm_g_ae_oview.picks}
+\alias{tm_g_ae_oview.pick}
 \title{Teal module for the \code{AE} overview}
 \usage{
 tm_g_ae_oview(
@@ -28,13 +28,13 @@ tm_g_ae_oview(
   transformators = list()
 )
 
-\method{tm_g_ae_oview}{picks}(
+\method{tm_g_ae_oview}{pick}(
   label,
   dataname,
-  arm_var = teal.picks::picks(teal.picks::datasets(), teal.picks::variables(choices =
-    teal.picks::is_categorical(min.len = 2), selected = 1L)),
-  flag_var_anl = teal.picks::picks(teal.picks::datasets(), teal.picks::variables(choices
-    = teal.picks::is_categorical(min.len = 2), selected = 1L)),
+  arm_var = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
+    selected = 1L),
+  flag_var_anl = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
+    selected = 1L),
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
@@ -55,7 +55,7 @@ names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices
 details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
 
 \item{flag_var_anl}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[picks][teal.picks::picks()]})
+\code{choices_selected} object or a (\verb{[teal.picks::variables()]})
 object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)}
 
@@ -193,19 +193,13 @@ app <- init(
   modules = modules(
     tm_g_ae_oview(
       label = "AE Overview",
-      arm_var = teal.picks::picks(
-        teal.picks::datasets("ADAE"),
-        teal.picks::variables(
+      arm_var = teal.picks::variables(
           choices = tidyselect::starts_with("ACTARM"),
           selected = "ACTARMCD"
-        )
       ),
-      flag_var_anl = teal.picks::picks(
-        teal.picks::datasets("ADAE"),
-        teal.picks::variables(
+      flag_var_anl = teal.picks::variables(
           choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
           selected = "AEREL1"
-        )
       ),
       plot_height = c(600, 200, 2000)
     )

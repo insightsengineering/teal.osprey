@@ -13,7 +13,7 @@
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param flag_var_anl Either a ([`teal.transform::choices_selected`])
-#'   `choices_selected` object or a (`[picks][teal.picks::picks()]`)
+#'   `choices_selected` object or a (`[teal.picks::variables()]`)
 #'   object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
 #' @param dataname (`character(1)`) Name of the events dataset. Required when
