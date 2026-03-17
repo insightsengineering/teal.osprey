@@ -121,8 +121,10 @@ tm_g_ae_oview.pick <- function(label, # nolint: object_name_linter.
   )
 }
 
+# nolint start: object_name_linter.
 ui_g_ae_oview.picks <- function(
-  id, # nolint: object_name_linter.
+  # nolint end: object_name_linter.
+  id,
   arm_var,
   flag_var_anl,
   fontsize
