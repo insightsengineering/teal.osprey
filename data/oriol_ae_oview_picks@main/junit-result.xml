@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="tm_g_ae_oview" timestamp="2026-03-17T11:10:08Z" hostname="b94841d42ed0" tests="5" skipped="0" failures="0" errors="0" time="0.098">
-    <testcase time="0.022" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_pick_but_flag_var_anl_is_choices_selected"/>
-    <testcase time="0.0309999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_choices_selected_but_flag_var_anl_is_pick"/>
-    <testcase time="0.02" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
+  <testsuite name="tm_g_ae_oview" timestamp="2026-03-17T11:11:37Z" hostname="336c29064d89" tests="5" skipped="0" failures="0" errors="0" time="0.095">
+    <testcase time="0.0219999999999998" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_pick_but_flag_var_anl_is_choices_selected"/>
+    <testcase time="0.03" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_choices_selected_but_flag_var_anl_is_pick"/>
+    <testcase time="0.0190000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
     <testcase time="0.00800000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks_.pick_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
@@ -12,21 +12,21 @@ Backtrace:
  2. └─teal.osprey:::tm_g_ae_oview.pick(...)
  3.   └─teal.picks::picks(teal.picks::datasets(dataname), flag_var_anl)</system-out>
     </testcase>
-    <testcase time="0.0170000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
+    <testcase time="0.016" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
   </testsuite>
-  <testsuite name="utils" timestamp="2026-03-17T11:10:08Z" hostname="b94841d42ed0" tests="13" skipped="0" failures="0" errors="0" time="0.046">
+  <testsuite name="utils" timestamp="2026-03-17T11:11:37Z" hostname="336c29064d89" tests="13" skipped="0" failures="0" errors="0" time="0.046">
     <testcase time="0.0189999999999999" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.00100000000000011" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.004" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00100000000000011" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00500000000000012" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.004" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
     <testcase time="0.00299999999999989" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.004" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
-    <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00299999999999989" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
   </testsuite>
 </testsuites>
