@@ -103,13 +103,13 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-data <- teal_data() |>
+data <- teal_data() \%>\%
   within({
     library(dplyr)
     ADSL <- rADSL
     ADAE <- rADAE
     .add_event_flags <- function(dat) {
-      dat <- dat |>
+      dat <- dat \%>\%
         mutate(
           TMPFL_SER = AESER == "Y",
           TMPFL_REL = AEREL == "Y",
@@ -159,13 +159,13 @@ if (interactive()) {
   shinyApp(app$ui, app$server)
 }
 
-data <- teal_data() |>
+data <- teal_data() \%>\%
   within({
     library(dplyr)
     ADSL <- rADSL
     ADAE <- rADAE
     .add_event_flags <- function(dat) {
-      dat <- dat |>
+      dat <- dat \%>\%
         mutate(
           TMPFL_SER = AESER == "Y",
           TMPFL_REL = AEREL == "Y",

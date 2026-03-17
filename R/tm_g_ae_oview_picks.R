@@ -1,12 +1,12 @@
 #' @rdname tm_g_ae_oview
 #' @examples
-#' data <- teal_data() |>
+#' data <- teal_data() %>%
 #'   within({
 #'     library(dplyr)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'     .add_event_flags <- function(dat) {
-#'       dat <- dat |>
+#'       dat <- dat %>%
 #'         mutate(
 #'           TMPFL_SER = AESER == "Y",
 #'           TMPFL_REL = AEREL == "Y",
@@ -313,13 +313,13 @@ srv_g_ae_oview.picks <- function(id, # nolint: object_name_linter.
           input$arm_trt %in% ANL[[arm_var_name]] && input$arm_ref %in% ANL[[arm_var_name]],
           "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
         ))
-        q1 <- qenv |>
+        q1 <- qenv %>%
           teal.code::eval_code(
             code = as.expression(c(
               bquote(anl_labels <- formatters::var_labels(ANL, fill = FALSE)),
               bquote(
-                flags <- ANL |>
-                  select(all_of(.(flag_var_name))) |>
+                flags <- ANL %>%
+                  select(all_of(.(flag_var_name))) %>%
                   rename_at(.(flag_var_name), function(x) paste0(x, ": ", anl_labels[x]))
               )
             ))
