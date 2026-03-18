@@ -276,8 +276,8 @@ srv_g_ae_oview.picks <- function(
       )
     })
 
-    observeEvent(selectors$arm_var(), {
-      arm_var_name <- selectors$arm_var()$variables$selected
+    observeEvent(merged$variables()$arm_var, {
+      arm_var_name <- merged$variables()$arm_var
       arm_dataset <- selectors$arm_var()$datasets$selected
       req(arm_var_name, arm_dataset)
 
