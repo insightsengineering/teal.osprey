@@ -51,24 +51,29 @@
 #'   shinyApp(app$ui, app$server)
 #' }
 #' @export
-tm_g_ae_oview.pick <- function(label, # nolint: object_name_linter.
-                               dataname,
-                               arm_var = teal.picks::variables(
-                                 choices = teal.picks::is_categorical(min.len = 2),
-                                 selected = 1L
-                               ),
-                               flag_var_anl = teal.picks::variables(
-                                 choices = teal.picks::is_categorical(min.len = 2),
-                                 selected = 1L
-                               ),
-                               fontsize = c(5, 3, 7),
-                               plot_height = c(600L, 200L, 2000L),
-                               plot_width = NULL,
-                               transformators = list()) {
+tm_g_ae_oview.pick <- function(
+  label, # nolint: object_name_linter.
+  dataname,
+  arm_var = teal.picks::variables(
+    choices = teal.picks::is_categorical(min.len = 2),
+    selected = 1L
+  ),
+  flag_var_anl = teal.picks::variables(
+    choices = teal.picks::is_categorical(min.len = 2),
+    selected = 1L
+  ),
+  fontsize = c(5, 3, 7),
+  plot_height = c(600L, 200L, 2000L),
+  plot_width = NULL,
+  transformators = list()
+) {
   message("Initializing tm_g_ae_oview")
 
   arm_var <- teal.picks::picks(teal.picks::datasets(dataname), arm_var)
-  flag_var_anl <- teal.picks::picks(teal.picks::datasets(dataname), flag_var_anl)
+  flag_var_anl <- teal.picks::picks(
+    teal.picks::datasets(dataname),
+    flag_var_anl
+  )
 
   checkmate::assert_class(arm_var, "picks")
   if (isTRUE(attr(arm_var$variables, "multiple"))) {
@@ -93,19 +98,44 @@ tm_g_ae_oview.pick <- function(label, # nolint: object_name_linter.
     checkmate::assert(
       combine = "and",
       .var.name = "fontsize",
-      checkmate::check_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
-      checkmate::check_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3])
+      checkmate::check_numeric(
+        fontsize,
+        len = 3,
+        any.missing = FALSE,
+        finite = TRUE
+      ),
+      checkmate::check_numeric(
+        fontsize[1],
+        lower = fontsize[2],
+        upper = fontsize[3]
+      )
     )
   )
-  checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
-  checkmate::assert_numeric(plot_height[1],
-    lower = plot_height[2], upper = plot_height[3],
+  checkmate::assert_numeric(
+    plot_height,
+    len = 3,
+    any.missing = FALSE,
+    finite = TRUE
+  )
+  checkmate::assert_numeric(
+    plot_height[1],
+    lower = plot_height[2],
+    upper = plot_height[3],
     .var.name = "plot_height"
   )
-  checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
+  checkmate::assert_numeric(
+    plot_width,
+    len = 3,
+    any.missing = FALSE,
+    null.ok = TRUE,
+    finite = TRUE
+  )
   checkmate::assert_numeric(
     plot_width[1],
-    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
+    lower = plot_width[2],
+    upper = plot_width[3],
+    null.ok = TRUE,
+    .var.name = "plot_width"
   )
 
   args <- as.list(environment())
@@ -189,12 +219,14 @@ ui_g_ae_oview.picks <- function(
   )
 }
 
-srv_g_ae_oview.picks <- function(id, # nolint: object_name_linter.
-                                 data,
-                                 arm_var,
-                                 flag_var_anl,
-                                 plot_height,
-                                 plot_width) {
+srv_g_ae_oview.picks <- function(
+  id, # nolint: object_name_linter.
+  data,
+  arm_var,
+  flag_var_anl,
+  plot_height,
+  plot_width
+) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(isolate(data()), "teal_data")
 
@@ -219,8 +251,10 @@ srv_g_ae_oview.picks <- function(id, # nolint: object_name_linter.
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
 
     decorate_output <- srv_g_decorate(
-      id = NULL, plt = plot_r,
-      plot_height = plot_height, plot_width = plot_width
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
     )
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
@@ -229,7 +263,8 @@ srv_g_ae_oview.picks <- function(id, # nolint: object_name_linter.
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
       diff_ci_method <- input$diff_ci_method
       conf_level <- input$conf_level
-      updateTextAreaInput(session,
+      updateTextAreaInput(
+        session,
         "foot",
         value = sprintf(
           "Note: %d%% CI is calculated using %s",
@@ -308,9 +343,10 @@ srv_g_ae_oview.picks <- function(id, # nolint: object_name_linter.
           )
         )
 
-
         validate(need(
-          input$arm_trt %in% ANL[[arm_var_name]] && input$arm_ref %in% ANL[[arm_var_name]],
+          input$arm_trt %in%
+            ANL[[arm_var_name]] &&
+            input$arm_ref %in% ANL[[arm_var_name]],
           "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
         ))
         q1 <- qenv %>%
@@ -320,12 +356,17 @@ srv_g_ae_oview.picks <- function(id, # nolint: object_name_linter.
               bquote(
                 flags <- ANL %>%
                   select(all_of(.(flag_var_name))) %>%
-                  rename_at(.(flag_var_name), function(x) paste0(x, ": ", anl_labels[x]))
+                  rename_at(.(flag_var_name), function(x) {
+                    paste0(x, ": ", anl_labels[x])
+                  })
               )
             ))
           )
 
-        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
+        teal.reporter::teal_card(q1) <- c(
+          teal.reporter::teal_card(q1),
+          "### Plot"
+        )
         teal.code::eval_code(
           q1,
           code = as.expression(c(

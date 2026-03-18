@@ -23,6 +23,7 @@ testthat::describe("tm_g_ae_oview argument verification", {
     testthat::expect_error(
       tm_g_ae_oview(
         label = "AE Overview",
+        dataname = "ADAE",
         arm_var = arm_var_picks,
         flag_var_anl = flag_var_cs
       ),
