@@ -219,8 +219,10 @@ ui_g_ae_oview.picks <- function(
   )
 }
 
+# nolint start: object_name_linter.
 srv_g_ae_oview.picks <- function(
-  id, # nolint: object_name_linter.
+  # nolint end: object_name_linter.
+  id,
   data,
   arm_var,
   flag_var_anl,
