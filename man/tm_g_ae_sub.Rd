@@ -31,10 +31,10 @@ tm_g_ae_sub(
 \method{tm_g_ae_sub}{picks}(
   label,
   dataname,
-  arm_var = teal.picks::picks(teal.picks::datasets(dataname),
+  arm_var = teal.picks::picks(teal.picks::datasets(selected = dataname),
     teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2), selected =
     1L)),
-  group_var = teal.picks::picks(teal.picks::datasets(dataname),
+  group_var = teal.picks::picks(teal.picks::datasets(selected = dataname),
     teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2), selected =
     1L)),
   plot_height = c(600L, 200L, 2000L),
@@ -149,16 +149,16 @@ app <- init(
       label = "AE by Subgroup",
       dataname = "ADAE",
       arm_var = teal.picks::picks(
-        teal.picks::datasets("ADAE"),
+        teal.picks::datasets(dataname),
         teal.picks::variables(
           choices = teal.picks::is_categorical(min.len = 2),
           selected = "ACTARMCD"
         )
       ),
       group_var = teal.picks::picks(
-        teal.picks::datasets("ADAE"),
+        teal.picks::datasets(dataname),
         teal.picks::variables(
-          choices = teal.picks::is_categorical(min.len = 2),
+          choices = teal.picks::is_categorical(min.len = 2)
         )
       ),
       plot_height = c(600, 200, 2000)

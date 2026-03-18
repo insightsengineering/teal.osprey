@@ -17,16 +17,16 @@
 #'       label = "AE by Subgroup",
 #'       dataname = "ADAE",
 #'       arm_var = teal.picks::picks(
-#'         teal.picks::datasets("ADAE"),
+#'         teal.picks::datasets(dataname),
 #'         teal.picks::variables(
 #'           choices = teal.picks::is_categorical(min.len = 2),
 #'           selected = "ACTARMCD"
 #'         )
 #'       ),
 #'       group_var = teal.picks::picks(
-#'         teal.picks::datasets("ADAE"),
+#'         teal.picks::datasets(dataname),
 #'         teal.picks::variables(
-#'           choices = teal.picks::is_categorical(min.len = 2),
+#'           choices = teal.picks::is_categorical(min.len = 2)
 #'         )
 #'       ),
 #'       plot_height = c(600, 200, 2000)
@@ -105,10 +105,10 @@ tm_g_ae_sub.picks <- function(label,
 
   module(
     label = label,
-    ui = ui_g_ae_sub.picks,
     server = srv_g_ae_sub.picks,
-    ui_args = args[names(args) %in% names(formals(ui_g_ae_sub.picks))],
     server_args = args[names(args) %in% names(formals(srv_g_ae_sub.picks))],
+    ui = ui_g_ae_sub.picks,
+    ui_args = args,
     transformators = transformators,
     datanames = dataname
   )
@@ -127,7 +127,7 @@ ui_g_ae_sub.picks <- function(id, ...) {
       helpText("Analysis data:", tags$code("ADAE")),
       tags$div(
         tags$strong("Term variable"),
-        teal.picks::picks_ui(id = ns("term_var"), picks = args$term_var)
+        teal.picks::picks_ui(id = ns("group_var"), picks = args$group_var)
       ),
       selectInput(
         ns("arm_trt"),
@@ -149,7 +149,7 @@ ui_g_ae_sub.picks <- function(id, ...) {
       tags$div(
         tags$strong("Term variable"),
         teal.picks::picks_ui(id = ns("group_var"), picks = args$group_var)
-      ),,
+      ),
       teal.widgets::panel_item(
         "Additional plot settings",
         teal.widgets::optionalSelectInput(
