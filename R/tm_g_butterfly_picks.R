@@ -1,0 +1,537 @@
+#' @rdname tm_g_butterfly
+#'
+#' @examples
+#' # Example using picks module
+#' data <- teal_data() %>%
+#'   eval_code("set.seed(23) # @linksto ADSL") %>%
+#'   within({
+#'     library(nestcolor)
+#'     library(dplyr)
+#'     ADSL <- rADSL
+#'     ADAE <- rADAE
+#'     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
+#'     ADAE <- mutate(
+#'       ADAE,
+#'       flag1 = ifelse(AETOXGR == 1, 1, 0),
+#'       flag2 = ifelse(AETOXGR == 2, 1, 0),
+#'       flag3 = ifelse(AETOXGR == 3, 1, 0),
+#'       flag1_filt = rep("Y", n())
+#'     )
+#'   })
+#'
+#' join_keys(data) <- default_cdisc_join_keys[names(data)]
+#'
+#' app <- init(
+#'   data = data,
+#'   modules = modules(
+#'     tm_g_butterfly(
+#'       label = "Butterfly Plot (picks)",
+#'       dataname = "ADAE",
+#'       right_var = teal.picks::variables(
+#'         choices = c("SEX", "ARM", "RACE"),
+#'         selected = "SEX"
+#'       ),
+#'       left_var = teal.picks::variables(
+#'         choices = c("SEX", "ARM", "RACE"),
+#'         selected = "RACE"
+#'       ),
+#'       category_var = teal.picks::variables(
+#'         choices = c("AEDECOD", "AEBODSYS"),
+#'         selected = "AEBODSYS"
+#'       ),
+#'       color_by_var = teal.picks::variables(
+#'         choices = c("AETOXGR", "None"),
+#'         selected = "AETOXGR"
+#'       ),
+#'       count_by_var = teal.picks::values(
+#'         selected = "# of patients",
+#'         choices = c("# of patients", "# of AEs")
+#'       ),
+#'       facet_var = teal.picks::variables(
+#'         choices = c("RACE", "SEX", "ARM"),
+#'         selected = NULL
+#'       ),
+#'       sort_by_var = teal.picks::values(
+#'         selected = "count",
+#'         choices = c("count", "alphabetical")
+#'       ),
+#'       legend_on = TRUE,
+#'       plot_height = c(600, 200, 2000)
+#'     )
+#'   )
+#' )
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
+#' }
+#' @export
+tm_g_butterfly.pick <- function(label, # nolint: object_name_linter.
+                                dataname,
+                                filter_var = NULL,
+                                right_var = teal.picks::variables(
+                                  choices = dplyr::where(is.factor),
+                                  selected = 1L
+                                ),
+                                left_var = teal.picks::variables(
+                                  choices = dplyr::where(is.factor),
+                                  selected = 1L
+                                ),
+                                category_var = teal.picks::variables(
+                                  choices = teal.picks::is_categorical(min.len = 2),
+                                  selected = 1L
+                                ),
+                                color_by_var = teal.picks::variables(
+                                  choices = teal.picks::is_categorical(min.len = 2),
+                                  selected = 1L
+                                ),
+                                count_by_var = teal.picks::values(
+                                  selected = "# of patients",
+                                  choices = c("# of patients", "# of AEs")
+                                ),
+                                facet_var = NULL,
+                                sort_by_var = teal.picks::values(
+                                  choices = c("count", "alphabetical"),
+                                  selected = 1L
+                                ),
+                                legend_on = TRUE,
+                                plot_height = c(600L, 200L, 2000L),
+                                plot_width = NULL,
+                                pre_output = NULL,
+                                post_output = NULL,
+                                transformators = list()) {
+  message("Initializing tm_g_butterfly")
+  checkmate::assert_string(label)
+  checkmate::assert_string(dataname)
+
+  right_var <- teal.picks::picks(teal.picks::datasets(dataname), right_var)
+  left_var <- teal.picks::picks(teal.picks::datasets(dataname), left_var)
+  category_var <- teal.picks::picks(teal.picks::datasets(dataname), category_var)
+  color_by_var <- teal.picks::picks(teal.picks::datasets(dataname), color_by_var)
+
+  if (!is.null(filter_var)) {
+    filter_var <- teal.picks::picks(teal.picks::datasets(dataname), filter_var)
+  }
+  if (!is.null(facet_var)) {
+    facet_var <- teal.picks::picks(teal.picks::datasets(dataname), facet_var)
+  }
+
+  checkmate::assert_class(right_var, "picks")
+  if (isTRUE(attr(right_var$variables, "multiple"))) {
+    warning(
+      "`right_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(right_var$variables, "multiple") <- FALSE
+  }
+
+  checkmate::assert_class(left_var, "picks")
+  if (isTRUE(attr(left_var$variables, "multiple"))) {
+    warning(
+      "`left_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(left_var$variables, "multiple") <- FALSE
+  }
+
+  checkmate::assert_class(category_var, "picks")
+  if (isTRUE(attr(category_var$variables, "multiple"))) {
+    warning(
+      "`category_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(category_var$variables, "multiple") <- FALSE
+  }
+
+  checkmate::assert_class(color_by_var, "picks")
+  if (isTRUE(attr(color_by_var$variables, "multiple"))) {
+    warning(
+      "`color_by_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(color_by_var$variables, "multiple") <- FALSE
+  }
+
+  checkmate::assert_class(count_by_var, "pick")
+  if (isTRUE(attr(count_by_var$variables, "multiple"))) {
+    warning(
+      "`count_by_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(count_by_var$variables, "multiple") <- FALSE
+  }
+
+  checkmate::assert_class(sort_by_var, "pick")
+  if (isTRUE(attr(sort_by_var$variables, "multiple"))) {
+    warning(
+      "`sort_by_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(sort_by_var$variables, "multiple") <- FALSE
+  }
+
+  if (!is.null(filter_var)) checkmate::assert_class(filter_var, "picks")
+  if (!is.null(facet_var)) checkmate::assert_class(facet_var, "picks")
+
+  checkmate::assert_flag(legend_on)
+  checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
+  checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
+  checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
+  checkmate::assert_numeric(
+    plot_width[1],
+    lower = plot_width[2],
+    upper = plot_width[3],
+    null.ok = TRUE,
+    .var.name = "plot_width"
+  )
+
+  args <- as.list(environment())
+
+  module(
+    label = label,
+    datanames = c("ADSL", dataname),
+    server = srv_g_butterfly.picks,
+    server_args = args[names(args) %in% names(formals(srv_g_butterfly.picks))],
+    ui = ui_g_butterfly.picks,
+    ui_args = args,
+    transformators = transformators
+  )
+}
+
+ui_g_butterfly.picks <- function(id, ...) { # nolint: object_name_linter.
+  ns <- NS(id)
+  a <- list(...)
+
+  teal.widgets::standard_layout(
+    output = teal.widgets::white_small_well(
+      teal.widgets::plot_with_settings_ui(id = ns("butterflyplot"))
+    ),
+    encoding = tags$div(
+      tags$label("Encodings", class = "text-primary"),
+      helpText("Dataset is:", tags$code(a$dataname)),
+      if (!is.null(a$filter_var)) {
+        tags$div(
+          tags$strong("Preset Data Filters"),
+          teal.picks::picks_ui(id = ns("filter_var"), picks = a$filter_var)
+        )
+      },
+      tags$div(
+        tags$strong("Right Dichotomization Variable"),
+        teal.picks::picks_ui(id = ns("right_var"), picks = a$right_var)
+      ),
+      teal.widgets::optionalSelectInput(
+        ns("right_val"),
+        "Choose Up To 2:",
+        multiple = TRUE,
+        options = list(
+          `max-options` = 2L,
+          `max-options-text` = "no more than 2",
+          `actions-box` = FALSE
+        )
+      ),
+      tags$div(
+        tags$strong("Left Dichotomization Variable"),
+        teal.picks::picks_ui(id = ns("left_var"), picks = a$left_var)
+      ),
+      teal.widgets::optionalSelectInput(
+        ns("left_val"),
+        "Choose Up To 2:",
+        multiple = TRUE,
+        options = list(
+          `max-options` = 2L,
+          `max-options-text` = "no more than 2",
+          `actions-box` = FALSE
+        )
+      ),
+      tags$div(
+        tags$strong("Category Variable"),
+        teal.picks::picks_ui(id = ns("category_var"), picks = a$category_var)
+      ),
+      tags$div(
+        tags$strong("Color Block By Variable"),
+        teal.picks::picks_ui(id = ns("color_by_var"), picks = a$color_by_var)
+      ),
+      radioButtons(
+        ns("count_by_var"),
+        "Count By Variable",
+        get_choices(a$count_by_var$choices),
+        a$count_by_var$selected
+      ),
+      if (!is.null(a$facet_var)) {
+        tags$div(
+          tags$strong("Facet By Variable"),
+          teal.picks::picks_ui(id = ns("facet_var"), picks = a$facet_var)
+        )
+      },
+      radioButtons(
+        ns("sort_by_var"),
+        "Sort By Variable",
+        get_choices(a$sort_by_var$choices),
+        a$sort_by_var$selected
+      ),
+      checkboxInput(
+        ns("legend_on"),
+        "Add legend",
+        value = a$legend_on
+      )
+    ),
+    pre_output = a$pre_output,
+    post_output = a$post_output
+  )
+}
+
+# nolint start: object_name_linter.
+srv_g_butterfly.picks <- function(
+  # nolint end: object_name_linter.
+  id,
+  data,
+  right_var,
+  left_var,
+  category_var,
+  color_by_var,
+  count_by_var,
+  sort_by_var,
+  filter_var,
+  facet_var,
+  plot_height,
+  plot_width
+) {
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
+
+  moduleServer(id, function(input, output, session) {
+    teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
+
+    # Build picks list (exclude NULL optional picks)
+    picks_list <- list(
+      right_var = right_var,
+      left_var = left_var,
+      category_var = category_var,
+      color_by_var = color_by_var
+    )
+    if (!is.null(filter_var)) picks_list$filter_var <- filter_var
+    if (!is.null(facet_var)) picks_list$facet_var <- facet_var
+
+    # Initialize picks selectors
+    selectors <- teal.picks::picks_srv(
+      picks = picks_list,
+      data = data
+    )
+
+    # Merge datasets based on picks selections
+    merged <- teal.picks::merge_srv(
+      "merge",
+      data = data,
+      selectors = selectors,
+      output_name = "ANL"
+    )
+
+    options <- reactiveValues(r = NULL, l = NULL)
+    vars <- reactiveValues(r = NULL, l = NULL)
+
+    # dynamic options for right dichotomization variable values
+    observeEvent(merged$variables()$right_var,
+      handlerExpr = {
+        right_var_name <- merged$variables()$right_var
+        right_val <- isolate(input$right_val)
+        current_r_var <- isolate(vars$r)
+        if (is.null(right_var_name)) {
+          teal.widgets::updateOptionalSelectInput(
+            session,
+            "right_val",
+            choices = character(0),
+            selected = character(0)
+          )
+        } else {
+          options$r <- levels(merged$data()[["ANL"]][[right_var_name]])
+          selected <- if (length(right_val) > 0) {
+            left_over <- right_val[right_val %in% options$r]
+            if (length(left_over) > 0 && !is.null(current_r_var) && current_r_var == right_var_name) {
+              left_over
+            } else {
+              options$r[1]
+            }
+          } else {
+            options$r[1]
+          }
+          teal.widgets::updateOptionalSelectInput(
+            session, "right_val",
+            choices = as.character(options$r), selected = selected, label = "Choose Up To 2:"
+          )
+        }
+        vars$r <- right_var_name
+      },
+      ignoreNULL = FALSE
+    )
+
+    # dynamic options for left dichotomization variable values
+    observeEvent(merged$variables()$left_var,
+      handlerExpr = {
+        left_var_name <- merged$variables()$left_var
+        left_val <- isolate(input$left_val)
+        current_l_var <- isolate(vars$l)
+        if (is.null(left_var_name)) {
+          teal.widgets::updateOptionalSelectInput(
+            session, "left_val",
+            choices = character(0), selected = character(0)
+          )
+        } else {
+          options$l <- levels(merged$data()[["ANL"]][[left_var_name]])
+          selected <- if (length(left_val) > 0) {
+            left_over <- left_val[left_val %in% options$l]
+            if (length(left_over) > 0 && !is.null(current_l_var) && current_l_var == left_var_name) {
+              left_over
+            } else {
+              options$l[1]
+            }
+          } else {
+            options$l[1]
+          }
+          teal.widgets::updateOptionalSelectInput(
+            session, "left_val",
+            choices = as.character(options$l), selected = selected, label = "Choose Up To 2:"
+          )
+        }
+        vars$l <- left_var_name
+      },
+      ignoreNULL = FALSE
+    )
+
+    output_q <- shiny::debounce(
+      millis = 200,
+      r = reactive({
+        qenv <- merged$data()
+
+        teal.reporter::teal_card(qenv) <-
+          c(
+            teal.reporter::teal_card(qenv),
+            teal.reporter::teal_card("## Module's output(s)")
+          )
+        qenv <- teal.code::eval_code(qenv, "library(dplyr)")
+
+        ANL <- qenv[["ANL"]]
+
+        right_var_name <- merged$variables()$right_var
+        left_var_name <- merged$variables()$left_var
+        category_var_name <- merged$variables()$category_var
+        color_by_var_name <- merged$variables()$color_by_var
+        count_by_var_name <- input$count_by_var
+        sort_by_var_name <- input$sort_by_var
+        filter_var_name <- merged$variables()$filter_var
+        facet_var_name <- merged$variables()$facet_var
+
+        teal::validate_has_data(ANL, min_nrow = 0, msg = "ANL Data is empty")
+
+        shiny::validate(
+          shiny::need(length(right_var_name) > 0, "Right Dichotomization Variable is required."),
+          shiny::need(length(left_var_name) > 0, "Left Dichotomization Variable is required."),
+          shiny::need(length(category_var_name) > 0, "Category Variable is required."),
+          shiny::need(
+            is.factor(ANL[[right_var_name]]),
+            "Right Dichotomization Variable must be a factor variable, contact developer."
+          ),
+          shiny::need(
+            is.factor(ANL[[left_var_name]]),
+            "Left Dichotomization Variable must be a factor variable, contact developer."
+          )
+        )
+
+        right_val <- input$right_val
+        left_val <- input$left_val
+        legend_on <- input$legend_on
+
+        shiny::validate(
+          shiny::need(
+            length(right_val) > 0,
+            "At least one value of Right Dichotomization Variable must be selected."
+          ),
+          shiny::need(
+            length(left_val) > 0,
+            "At least one value of Left Dichotomization Variable must be selected."
+          )
+        )
+
+        validate(need(
+          all(right_val %in% ANL[[right_var_name]]) &&
+            all(left_val %in% ANL[[left_var_name]]),
+          "No observations for selected dichotomization values (filtered out?)"
+        ))
+
+        q1 <- teal.code::eval_code(
+          qenv,
+          code = bquote({
+            right <- ANL[[.(right_var_name)]] %in% .(right_val)
+            right_name <- paste(.(right_val), collapse = " - ")
+            left <- ANL[[.(left_var_name)]] %in% .(left_val)
+            left_name <- paste(.(left_val), collapse = " - ")
+          })
+        )
+
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
+
+        if (!is.null(filter_var_name) || !is.null(facet_var_name) || !is.null(sort_by_var_name)) {
+          teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options")
+        }
+        if (!is.null(filter_var_name)) {
+          teal.reporter::teal_card(q1) <- c(
+            teal.reporter::teal_card(q1),
+            sprintf("Preset Data Filters: %s.", paste(filter_var_name, collapse = ", "))
+          )
+        }
+        if (!is.null(facet_var_name)) {
+          teal.reporter::teal_card(q1) <- c(
+            teal.reporter::teal_card(q1),
+            sprintf("Faceted by: %s.", paste(facet_var_name, collapse = ", "))
+          )
+        }
+        if (!is.null(sort_by_var_name)) {
+          teal.reporter::teal_card(q1) <- c(
+            teal.reporter::teal_card(q1),
+            sprintf("Sorted by: %s.", paste(sort_by_var_name, collapse = ", "))
+          )
+        }
+
+        q1 <- teal.code::eval_code(
+          q1,
+          code = bquote(
+            plot <- osprey::g_butterfly(
+              category = ANL[[.(category_var_name)]],
+              right_flag = right,
+              left_flag = left,
+              group_names = c(right_name, left_name),
+              block_count = .(count_by_var_name),
+              block_color = .(if (!is.null(color_by_var_name) && color_by_var_name != "None") {
+                bquote(ANL[[.(color_by_var_name)]])
+              } else {
+                NULL
+              }),
+              id = ANL$USUBJID,
+              facet_rows = .(if (!is.null(facet_var_name)) {
+                bquote(ANL[[.(facet_var_name)]])
+              } else {
+                NULL
+              }),
+              x_label = .(count_by_var_name),
+              y_label = .(category_var_name),
+              legend_label = .(color_by_var_name),
+              sort_by = .(sort_by_var_name),
+              show_legend = .(legend_on)
+            )
+          )
+        )
+
+        q1
+      })
+    )
+
+    plot_r <- reactive(output_q()[["plot"]])
+
+    # Insert the plot into a plot_with_settings module from teal.widgets
+    pws <- teal.widgets::plot_with_settings_srv(
+      id = "butterflyplot",
+      plot_r = plot_r,
+      height = plot_height,
+      width = plot_width
+    )
+
+    set_chunk_dims(pws, output_q)
+  })
+}

@@ -7,18 +7,32 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param filter_var (`choices_selected`) variable name of data filter, please see details regarding
-#'   expected values, default is`NULL`.`choices`
-#'   vector with `filter_var` choices, default is
-#'   `NULL`
-#' @param right_var (`choices_selected`) dichotomization variable for right side
-#' @param left_var (`choices_selected`) dichotomization variable for left side
-#' @param category_var (`choices_selected`) category (y axis) variable
-#' @param color_by_var (`choices_selected`) variable defines color blocks within each bar
-#' @param count_by_var (`choices_selected`) variable defines how x axis is calculated
-#' @param facet_var (`choices_selected`) variable for row facets
-#' @param sort_by_var (`choices_selected`) argument for order of class and term elements in table,
-#'   default here is "count"
+#' @param filter_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::variables()]`)
+#'   object with variable name of data filter, please see details regarding
+#'   expected values, default is `NULL`
+#' @param right_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::variables()]`)
+#'   object with dichotomization variable for right side
+#' @param left_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::variables()]`)
+#'   object with dichotomization variable for left side
+#' @param category_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::variables()]`)
+#'   object with category (y axis) variable
+#' @param color_by_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::variables()]`)
+#'   object with variable that defines color blocks within each bar
+#' @param count_by_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::values()]`)
+#'   object with variable that defines how the x axis is calculated
+#' @param facet_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::variables()]`)
+#'   object with variable for row facets
+#' @param sort_by_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::values()]`)
+#'   object with argument for order of class and term elements in table,
+#'   default here is `"count"`
 #' @param legend_on (`boolean`) value for whether legend is displayed
 #'
 #' @details `filter_var` option is designed to work in conjunction with
@@ -35,11 +49,29 @@
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
 #'
-#' @export
-#'
 #' @template author_zhanc107
 #' @template author_liaoc10
-#'
+#' @export
+tm_g_butterfly <- function(label,
+                           dataname,
+                           filter_var,
+                           right_var,
+                           left_var,
+                           category_var,
+                           color_by_var,
+                           count_by_var,
+                           facet_var,
+                           sort_by_var,
+                           legend_on,
+                           plot_height,
+                           plot_width,
+                           pre_output,
+                           post_output,
+                           transformators = list()) {
+  UseMethod("tm_g_butterfly", right_var)
+}
+
+#' @rdname tm_g_butterfly
 #' @examples
 #' # Example using stream (ADaM) dataset
 #' data <- teal_data() %>%
@@ -104,24 +136,25 @@
 #'   shinyApp(app$ui, app$server)
 #' }
 #'
-tm_g_butterfly <- function(label,
-                           dataname,
-                           filter_var = NULL,
-                           right_var,
-                           left_var,
-                           category_var,
-                           color_by_var,
-                           count_by_var,
-                           facet_var = NULL,
-                           sort_by_var = teal.transform::choices_selected(
-                             selected = "count", choices = c("count", "alphabetical")
-                           ),
-                           legend_on = TRUE,
-                           plot_height = c(600L, 200L, 2000L),
-                           plot_width = NULL,
-                           pre_output = NULL,
-                           post_output = NULL,
-                           transformators = list()) {
+#' @export
+tm_g_butterfly.default <- function(label,
+                                   dataname,
+                                   filter_var = NULL,
+                                   right_var,
+                                   left_var,
+                                   category_var,
+                                   color_by_var,
+                                   count_by_var,
+                                   facet_var = NULL,
+                                   sort_by_var = teal.transform::choices_selected(
+                                     selected = "count", choices = c("count", "alphabetical")
+                                   ),
+                                   legend_on = TRUE,
+                                   plot_height = c(600L, 200L, 2000L),
+                                   plot_width = NULL,
+                                   pre_output = NULL,
+                                   post_output = NULL,
+                                   transformators = list()) {
   message("Initializing tm_g_butterfly")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
