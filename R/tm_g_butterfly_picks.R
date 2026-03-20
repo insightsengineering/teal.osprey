@@ -206,7 +206,6 @@ ui_g_butterfly.picks <- function(id, ...) { # nolint: object_name_linter.
     ),
     encoding = tags$div(
       tags$label("Encodings", class = "text-primary"),
-      helpText("Dataset is:", tags$code(a$dataname)),
       if (!is.null(a$filter_var)) {
         tags$div(
           tags$strong("Preset Data Filters"),
