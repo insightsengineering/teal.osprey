@@ -7,16 +7,25 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param x_var x-axis variables
-#' @param y_var y-axis variables
-#' @param marker_var variable dictates marker symbol
-#' @param line_colorby_var variable dictates line color
-#' @param vref_line vertical reference lines
+#' @param paramcd Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`)
+#' variable value designating the studied parameter.
+#' @param x_var Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`) x-axis variables
+#' @param y_var Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`) y-axis variables
+#' @param marker_var Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`) variable dictates marker symbol
+#' @param line_colorby_var Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`) variable dictates line color
+#' @param vref_line  vertical reference lines
 #' @param href_line horizontal reference lines
 #' @param anno_txt_var annotation text
 #' @param legend_on boolean value for whether legend is displayed
-#' @param xfacet_var variable for x facets
-#' @param yfacet_var variable for y facets
+#' @param xfacet_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::variables()]`) variable for x facets
+#' @param yfacet_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::variables()]`) variable for y facets
 #'
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
@@ -25,8 +34,31 @@
 #' @template author_zhanc107
 #' @template author_liaoc10
 #'
+tm_g_spiderplot <- function(label,
+                            dataname,
+                            paramcd,
+                            x_var,
+                            y_var,
+                            marker_var,
+                            line_colorby_var,
+                            xfacet_var,
+                            yfacet_var,
+                            vref_line,
+                            href_line,
+                            anno_txt_var,
+                            legend_on,
+                            plot_height,
+                            plot_width,
+                            pre_output,
+                            post_output,
+                            transformators) {
+  message("Initializing tm_g_spiderplot")
+  UseMethod("tm_g_spiderplot", x_var)
+}
+
+#' @rdname tm_g_spiderplot
 #' @examples
-#' # Example using stream (ADaM) dataset
+#' # Example using stream (ADaM) dataset and default method choices selected
 #' data <- teal_data() %>%
 #'   within({
 #'     library(nestcolor)
@@ -79,25 +111,25 @@
 #'   shinyApp(app$ui, app$server)
 #' }
 #'
-tm_g_spiderplot <- function(label,
-                            dataname,
-                            paramcd,
-                            x_var,
-                            y_var,
-                            marker_var,
-                            line_colorby_var,
-                            xfacet_var = NULL,
-                            yfacet_var = NULL,
-                            vref_line = NULL,
-                            href_line = NULL,
-                            anno_txt_var = TRUE,
-                            legend_on = FALSE,
-                            plot_height = c(600L, 200L, 2000L),
-                            plot_width = NULL,
-                            pre_output = NULL,
-                            post_output = NULL,
-                            transformators = list()) {
-  message("Initializing tm_g_spiderplot")
+#' @export
+tm_g_spiderplot.default <- function(label,
+                                    dataname,
+                                    paramcd,
+                                    x_var,
+                                    y_var,
+                                    marker_var,
+                                    line_colorby_var,
+                                    xfacet_var = NULL,
+                                    yfacet_var = NULL,
+                                    vref_line = NULL,
+                                    href_line = NULL,
+                                    anno_txt_var = TRUE,
+                                    legend_on = FALSE,
+                                    plot_height = c(600L, 200L, 2000L),
+                                    plot_width = NULL,
+                                    pre_output = NULL,
+                                    post_output = NULL,
+                                    transformators = list()) {
   checkmate::assert_class(paramcd, classes = "choices_selected")
   checkmate::assert_class(x_var, classes = "choices_selected")
   checkmate::assert_class(y_var, classes = "choices_selected")

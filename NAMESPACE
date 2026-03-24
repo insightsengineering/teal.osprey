@@ -2,6 +2,8 @@
 
 S3method(tm_g_butterfly,default)
 S3method(tm_g_butterfly,pick)
+S3method(tm_g_spiderplot,default)
+S3method(tm_g_spiderplot,pick)
 export(label_aevar)
 export(plot_decorate_output)
 export(quick_filter)
