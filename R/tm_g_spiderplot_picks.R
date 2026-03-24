@@ -84,7 +84,7 @@
 #'   )
 #' )
 #' if (interactive()) {
-#'  shinyApp(app$ui, app$server)
+#'   shinyApp(app$ui, app$server)
 #' }
 #'
 #' @export
