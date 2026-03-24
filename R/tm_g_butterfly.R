@@ -119,10 +119,7 @@ tm_g_butterfly <- function(label,
 #'         selected = "# of patients",
 #'         choices = c("# of patients", "# of AEs")
 #'       ),
-#'       facet_var = choices_selected(
-#'         selected = NULL,
-#'         choices = c("RACE", "SEX", "ARM")
-#'       ),
+#'       facet_var = NULL,
 #'       sort_by_var = choices_selected(
 #'         selected = "count",
 #'         choices = c("count", "alphabetical")
