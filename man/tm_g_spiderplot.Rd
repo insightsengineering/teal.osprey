@@ -164,11 +164,11 @@ app <- init(
       label = "Spider plot",
       dataname = "ADTR",
       paramcd = choices_selected(
-        choices = "SLDINV",
-        selected = "SLDINV"
+        choices = "PARAMCD",
+        selected = "PARAMCD"
       ),
       x_var = choices_selected(
-        choices = "ADY",
+        choices = c("ADY", "AGE"),
         selected = "ADY"
       ),
       y_var = choices_selected(
@@ -221,8 +221,8 @@ app <- init(
         selected = "PARAMCD"
       ),
       x_var = teal.picks::variables(
-        choices = "ADY",
-        selected = "ADY"
+        choices = dplyr::where(is.numeric),
+        selected = 1L
       ),
       y_var = teal.picks::variables(
         choices = c("PCHG", "CHG", "AVAL"),

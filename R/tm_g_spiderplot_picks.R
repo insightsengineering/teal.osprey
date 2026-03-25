@@ -21,8 +21,8 @@
 #'         selected = "PARAMCD"
 #'       ),
 #'       x_var = teal.picks::variables(
-#'         choices = "ADY",
-#'         selected = "ADY"
+#'         choices = dplyr::where(is.numeric),
+#'         selected = 1L
 #'       ),
 #'       y_var = teal.picks::variables(
 #'         choices = c("PCHG", "CHG", "AVAL"),
@@ -121,7 +121,6 @@ tm_g_spiderplot.pick <- function(label, # nolint: object_name_linter.
                                  pre_output = NULL,
                                  post_output = NULL,
                                  transformators = list()) {
-  message("Initializing tm_g_spiderplot")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
 

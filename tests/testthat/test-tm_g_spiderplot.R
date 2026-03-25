@@ -39,7 +39,7 @@ paramcd_picks <- teal.picks::variables(
 )
 
 x_var_picks <- teal.picks::variables(
-  choices = "ADY",
+  choices = c("ADY", "AGE"),
   selected = "ADY"
 )
 
