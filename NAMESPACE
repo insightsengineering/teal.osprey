@@ -2,6 +2,13 @@
 
 S3method(tm_g_butterfly,default)
 S3method(tm_g_butterfly,pick)
+<<<<<<< HEAD
+=======
+S3method(tm_g_heat_bygrade,default)
+S3method(tm_g_heat_bygrade,pick)
+S3method(tm_g_spiderplot,default)
+S3method(tm_g_spiderplot,pick)
+>>>>>>> f86a0715 (refactor add picks method for tm_g_heat_bygrade module)
 export(label_aevar)
 export(plot_decorate_output)
 export(quick_filter)

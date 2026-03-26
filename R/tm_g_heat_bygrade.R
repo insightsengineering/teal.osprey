@@ -20,13 +20,19 @@
 #' needs to be available in the list passed to the `data`
 #' argument of [teal::init()] \cr
 #' specify to `NA` if no concomitant medications data is available
-#' @param id_var (`choices_seleced`) unique subject ID variable
-#' @param visit_var (`choices_seleced`) analysis visit variable
-#' @param ongo_var (`choices_seleced`) study ongoing status variable.
+#' @param id_var Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`) unique subject ID variable
+#' @param visit_var Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`) analysis visit variable
+#' @param ongo_var Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`) study ongoing status variable.
 #' This variable is a derived logical variable. Usually it can be derived from `EOSSTT`.
-#' @param anno_var (`choices_seleced`) annotation variable
-#' @param heat_var (`choices_seleced`) heatmap variable
-#' @param conmed_var (`choices_seleced`) concomitant medications variable,
+#' @param anno_var Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`) annotation variable
+#' @param heat_var Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`) heatmap variable
+#' @param conmed_var Either a ([`teal.transform::choices_selected`])
+#' `choices_selected` object or a (`[teal.picks::variables()]`) concomitant medications variable,
 #' specify to `NA` if no concomitant medications data is available
 #'
 #' @inherit argument_convention return
@@ -34,7 +40,30 @@
 #'
 #' @export
 #'
+tm_g_heat_bygrade <- function(label,
+  sl_dataname,
+  ex_dataname,
+  ae_dataname,
+  cm_dataname = NA,
+  id_var,
+  visit_var,
+  ongo_var,
+  anno_var,
+  heat_var,
+  conmed_var = NULL,
+  fontsize,
+  plot_height,
+  plot_width = NULL,
+  transformators = list()
+) {
+  message("Initializing tm_g_heat_bygrade")
+  UseMethod("tm_g_heat_bygrade", id_var)
+}
+
+
+#' @rdname tm_g_heat_bygrade
 #' @examples
+#' # Using default (choices selected) method
 #' data <- teal_data() %>%
 #'   within({
 #'     library(dplyr)
@@ -117,23 +146,22 @@
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
-#'
-tm_g_heat_bygrade <- function(label,
-                              sl_dataname,
-                              ex_dataname,
-                              ae_dataname,
-                              cm_dataname = NA,
-                              id_var,
-                              visit_var,
-                              ongo_var,
-                              anno_var,
-                              heat_var,
-                              conmed_var = NULL,
-                              fontsize = c(5, 3, 7),
-                              plot_height = c(600L, 200L, 2000L),
-                              plot_width = NULL,
-                              transformators = list()) {
-  message("Initializing tm_g_heat_bygrade")
+#' @export
+tm_g_heat_bygrade.default <- function(label, # nolint: object_name_linter.
+                                      sl_dataname,
+                                      ex_dataname,
+                                      ae_dataname,
+                                      cm_dataname = NA,
+                                      id_var,
+                                      visit_var,
+                                      ongo_var,
+                                      anno_var,
+                                      heat_var,
+                                      conmed_var = NULL,
+                                      fontsize = c(5, 3, 7),
+                                      plot_height = c(600L, 200L, 2000L),
+                                      plot_width = NULL,
+                                      transformators = list()) {
   args <- as.list(environment())
 
   checkmate::assert_string(label)
