@@ -228,82 +228,82 @@ if (interactive()) {
 }
 # Using picks method
 data <- teal_data() \%>\%
- within({
-   library(dplyr)
-   library(nestcolor)
-   ADSL <- teal.data::rADSL \%>\% slice(1:30)
-   ADEX <- teal.data::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-   ADAE <- teal.data::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-   ADCM <- teal.data::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-   # This preprocess is only to force legacy standard on ADCM
-   ADCM <- ADCM \%>\%
-     select(-starts_with("ATC")) \%>\%
-     unique()
-   # function to derive AVISIT from ADEX
-   .add_visit <- function(data_need_visit) {
-     visit_dates <- ADEX \%>\%
-       filter(PARAMCD == "DOSE") \%>\%
-       distinct(USUBJID, AVISIT, ASTDTM) \%>\%
-       group_by(USUBJID) \%>\%
-       arrange(ASTDTM) \%>\%
-       mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
-       rename(this_vis = ASTDTM)
-     data_visit <- data_need_visit \%>\%
-       select(USUBJID, ASTDTM) \%>\%
-       left_join(visit_dates, by = "USUBJID") \%>\%
-       filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
-       left_join(data_need_visit) \%>\%
-       distinct()
-     return(data_visit)
-   }
-   # derive AVISIT for ADAE and ADCM
-   ADAE <- .add_visit(ADAE)
-   ADCM <- .add_visit(ADCM)
-   # derive ongoing status variable for ADEX
-   ADEX <- ADEX \%>\%
-     filter(PARCAT1 == "INDIVIDUAL") \%>\%
-     mutate(ongo_status = (EOSSTT == "ONGOING"))
-})
+  within({
+    library(dplyr)
+    library(nestcolor)
+    ADSL <- teal.data::rADSL \%>\% slice(1:30)
+    ADEX <- teal.data::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+    ADAE <- teal.data::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+    ADCM <- teal.data::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+    # This preprocess is only to force legacy standard on ADCM
+    ADCM <- ADCM \%>\%
+      select(-starts_with("ATC")) \%>\%
+      unique()
+    # function to derive AVISIT from ADEX
+    .add_visit <- function(data_need_visit) {
+      visit_dates <- ADEX \%>\%
+        filter(PARAMCD == "DOSE") \%>\%
+        distinct(USUBJID, AVISIT, ASTDTM) \%>\%
+        group_by(USUBJID) \%>\%
+        arrange(ASTDTM) \%>\%
+        mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
+        rename(this_vis = ASTDTM)
+      data_visit <- data_need_visit \%>\%
+        select(USUBJID, ASTDTM) \%>\%
+        left_join(visit_dates, by = "USUBJID") \%>\%
+        filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
+        left_join(data_need_visit) \%>\%
+        distinct()
+      return(data_visit)
+    }
+    # derive AVISIT for ADAE and ADCM
+    ADAE <- .add_visit(ADAE)
+    ADCM <- .add_visit(ADCM)
+    # derive ongoing status variable for ADEX
+    ADEX <- ADEX \%>\%
+      filter(PARCAT1 == "INDIVIDUAL") \%>\%
+      mutate(ongo_status = (EOSSTT == "ONGOING"))
+  })
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
 app <- init(
- data = data,
- modules = modules(
-   tm_g_heat_bygrade(
-     label = "Heatmap by grade (picks)",
-     sl_dataname = "ADSL",
-     ex_dataname = "ADEX",
-     ae_dataname = "ADAE",
-     cm_dataname = "ADCM",
-     id_var = teal.picks::variables(
-       choices = teal.picks::is_categorical(min.len = 2),
-       selected = 1L
-     ),
-     visit_var = teal.picks::variables(
-       choices = dplyr::starts_with("AVISIT"),
-       selected = 1L
-     ),
-     ongo_var = teal.picks::variables(
-       choices = dplyr::starts_with("ongo"),
-       selected = 1L
-     ),
-     anno_var = teal.picks::variables(
-       choices = teal.picks::is_categorical(min.len = 2),
-       selected = c("SEX", "COUNTRY"),
-       multiple = TRUE
-     ),
-     heat_var = teal.picks::variables(
-       choices = dplyr::starts_with("AETO"),
-       selected = 1L
-     ),
-     conmed_var = teal.picks::variables(
-       choices = dplyr::starts_with("CMDECOD"),
-       selected = 1L
-     ),
-     plot_height = c(600L, 200L, 2000L)
-   )
- )
+  data = data,
+  modules = modules(
+    tm_g_heat_bygrade(
+      label = "Heatmap by grade (picks)",
+      sl_dataname = "ADSL",
+      ex_dataname = "ADEX",
+      ae_dataname = "ADAE",
+      cm_dataname = "ADCM",
+      id_var = teal.picks::variables(
+        choices = teal.picks::is_categorical(min.len = 2),
+        selected = 1L
+      ),
+      visit_var = teal.picks::variables(
+        choices = dplyr::starts_with("AVISIT"),
+        selected = 1L
+      ),
+      ongo_var = teal.picks::variables(
+        choices = dplyr::starts_with("ongo"),
+        selected = 1L
+      ),
+      anno_var = teal.picks::variables(
+        choices = teal.picks::is_categorical(min.len = 2),
+        selected = c("SEX", "COUNTRY"),
+        multiple = TRUE
+      ),
+      heat_var = teal.picks::variables(
+        choices = dplyr::starts_with("AETO"),
+        selected = 1L
+      ),
+      conmed_var = teal.picks::variables(
+        choices = dplyr::starts_with("CMDECOD"),
+        selected = 1L
+      ),
+      plot_height = c(600L, 200L, 2000L)
+    )
+  )
 )
 if (interactive()) {
   shinyApp(app$ui, app$server)

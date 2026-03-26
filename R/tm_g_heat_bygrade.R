@@ -40,7 +40,8 @@
 #'
 #' @export
 #'
-tm_g_heat_bygrade <- function(label,
+tm_g_heat_bygrade <- function(
+  label,
   sl_dataname,
   ex_dataname,
   ae_dataname,
@@ -162,8 +163,6 @@ tm_g_heat_bygrade.default <- function(label, # nolint: object_name_linter.
                                       plot_height = c(600L, 200L, 2000L),
                                       plot_width = NULL,
                                       transformators = list()) {
-  args <- as.list(environment())
-
   checkmate::assert_string(label)
   checkmate::assert_string(sl_dataname)
   checkmate::assert_string(ex_dataname)
@@ -195,294 +194,28 @@ tm_g_heat_bygrade.default <- function(label, # nolint: object_name_linter.
     .var.name = "plot_width"
   )
 
-  module(
+  id_var <- teal.picks::as.picks(id_var)
+  visit_var <- teal.picks::as.picks(visit_var)
+  ongo_var <- teal.picks::as.picks(ongo_var)
+  anno_var <- teal.picks::as.picks(anno_var)
+  heat_var <- teal.picks::as.picks(heat_var)
+  if (!is.null(conmed_var)) conmed_var <- teal.picks::as.picks(conmed_var)
+
+  tm_g_heat_bygrade.pick(
     label = label,
-    server = srv_g_heatmap_bygrade,
-    server_args = list(
-      label = label,
-      sl_dataname = sl_dataname,
-      ex_dataname = ex_dataname,
-      ae_dataname = ae_dataname,
-      cm_dataname = cm_dataname,
-      plot_height = plot_height,
-      plot_width = plot_width
-    ),
-    ui = ui_g_heatmap_bygrade,
-    ui_args = args,
-    transformators = transformators,
-    datanames = "all"
+    sl_dataname = sl_dataname,
+    ex_dataname = ex_dataname,
+    ae_dataname = ae_dataname,
+    cm_dataname = cm_dataname,
+    id_var = id_var,
+    visit_var = visit_var,
+    ongo_var = ongo_var,
+    anno_var = anno_var,
+    heat_var = heat_var,
+    conmed_var = conmed_var,
+    fontsize = fontsize,
+    plot_height = plot_height,
+    plot_width = plot_width,
+    transformators = transformators
   )
-}
-
-ui_g_heatmap_bygrade <- function(id, ...) {
-  ns <- NS(id)
-  args <- list(...)
-
-  shiny::tagList(
-    teal.widgets::standard_layout(
-      output = teal.widgets::white_small_well(
-        plot_decorate_output(id = ns(NULL))
-      ),
-      encoding = tags$div(
-        teal.widgets::optionalSelectInput(
-          ns("id_var"),
-          "ID Variable",
-          choices = get_choices(args$id_var$choices),
-          selected = args$id_var$selected,
-          multiple = FALSE
-        ),
-        teal.widgets::optionalSelectInput(
-          ns("visit_var"),
-          "Visit Variable",
-          choices = get_choices(args$visit_var$choices),
-          selected = args$visit_var$selected,
-          multiple = FALSE
-        ),
-        teal.widgets::optionalSelectInput(
-          ns("ongo_var"),
-          "Study Ongoing Status Variable",
-          choices = get_choices(args$ongo_var$choices),
-          selected = args$ongo_var$selected,
-          multiple = FALSE
-        ),
-        teal.widgets::optionalSelectInput(
-          ns("anno_var"),
-          "Annotation Variables",
-          choices = get_choices(args$anno_var$choices),
-          selected = args$anno_var$selected,
-          multiple = TRUE
-        ),
-        teal.widgets::optionalSelectInput(
-          ns("heat_var"),
-          "Heat Variable",
-          choices = get_choices(args$heat_var$choices),
-          selected = args$heat_var$selected,
-          multiple = FALSE
-        ),
-        helpText("Plot conmed"),
-        left_bordered_div(
-          if (!is.na(args$cm_dataname)) {
-            checkboxInput(
-              ns("plot_cm"),
-              "Yes",
-              value = !is.na(args$cm_dataname)
-            )
-          }
-        ),
-        conditionalPanel(
-          paste0("input['", ns("plot_cm"), "']"),
-          teal.widgets::optionalSelectInput(
-            ns("conmed_var"),
-            "Conmed Variable",
-            choices = get_choices(args$conmed_var$choices),
-            selected = args$conmed_var$selected,
-            multiple = FALSE
-          ),
-          selectInput(
-            ns("conmed_level"),
-            "Conmed Levels",
-            choices = get_choices(args$conmed_var$choices),
-            selected = args$conmed_var$selected,
-            multiple = TRUE
-          )
-        ),
-        ui_g_decorate(
-          ns(NULL),
-          fontsize = args$fontsize,
-          titles = "Heatmap by Grade",
-          footnotes = ""
-        )
-      )
-    )
-  )
-}
-
-srv_g_heatmap_bygrade <- function(id,
-                                  data,
-                                  sl_dataname,
-                                  ex_dataname,
-                                  ae_dataname,
-                                  cm_dataname,
-                                  label,
-                                  plot_height,
-                                  plot_width) {
-  checkmate::assert_class(data, "reactive")
-  checkmate::assert_class(shiny::isolate(data()), "teal_data")
-  if (!is.na(sl_dataname)) checkmate::assert_names(sl_dataname, subset.of = names(data))
-  if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
-  if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
-  if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
-
-  moduleServer(id, function(input, output, session) {
-    teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
-    iv <- reactive({
-      ADSL <- data()[[sl_dataname]]
-      ADEX <- data()[[ex_dataname]]
-      ADAE <- data()[[ae_dataname]]
-      if (isTRUE(input$plot_cm)) {
-        ADCM <- data()[[cm_dataname]]
-      }
-
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("id_var", shinyvalidate::sv_required(
-        message = "ID Variable is required"
-      ))
-      iv$add_rule("visit_var", shinyvalidate::sv_required(
-        message = "Visit Variable is required"
-      ))
-      iv$add_rule("ongo_var", shinyvalidate::sv_required(
-        message = "Study Ongoing Status Variable is required"
-      ))
-      iv$add_rule("ongo_var", shinyvalidate::sv_in_set(
-        set = names(ADEX),
-        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", ex_dataname)
-      ))
-      iv$add_rule("ongo_var", ~ if (!is.logical(ADEX[[req(.)]])) {
-        "Study Ongoing Status must be a logical variable"
-      })
-      iv$add_rule("anno_var", shinyvalidate::sv_required(
-        message = "Annotation Variables is required"
-      ))
-      iv$add_rule("anno_var", ~ if (length(.) > 2L) {
-        "No more than two Annotation Variables are allowed"
-      })
-      iv$add_rule("anno_var", shinyvalidate::sv_in_set(
-        set = names(ADSL),
-        message_fmt = sprintf("Study Ongoing Status must be a variable in %s", sl_dataname)
-      ))
-      iv$add_rule("anno_var", ~ if (isTRUE(input$id_var %in% .)) {
-        sprintf("Deselect %s in Annotation Variables", input$id_var)
-      })
-      iv$add_rule("heat_var", shinyvalidate::sv_required(
-        message = "Heat Variable is required"
-      ))
-      iv$enable()
-      iv
-    })
-    iv_cm <- reactive({
-      ADSL <- data()[[sl_dataname]]
-      ADEX <- data()[[ex_dataname]]
-      ADAE <- data()[[ae_dataname]]
-      if (isTRUE(input$plot_cm)) {
-        ADCM <- data()[[cm_dataname]]
-      }
-
-      iv_cm <- shinyvalidate::InputValidator$new()
-      iv_cm$condition(~ isTRUE(input$plot_cm))
-      iv_cm$add_rule("conmed_var", shinyvalidate::sv_required(
-        message = "Conmed Variable is required"
-      ))
-      iv_cm$add_rule("conmed_var", shinyvalidate::sv_in_set(
-        set = names(ADCM),
-        message_fmt = sprintf("Conmed Variable must be a variable in %s", cm_dataname)
-      ))
-      iv_cm$add_rule("conmed_var", ~ if (!is.factor(ADCM[[.]])) {
-        "Study Ongoing Status must be a factor variable"
-      })
-      iv_cm$add_rule("conmed_level", shinyvalidate::sv_required(
-        "Select Conmed Levels"
-      ))
-      iv_cm$add_rule("conmed_level", ~ if (length(.) > 3L) {
-        "No more than three Conmed Levels are allowed"
-      })
-      iv_cm$enable()
-      iv_cm
-    })
-
-    decorate_output <- srv_g_decorate(
-      id = NULL,
-      plt = plot_r,
-      plot_height = plot_height,
-      plot_width = plot_width
-    )
-    font_size <- decorate_output$font_size
-    pws <- decorate_output$pws
-
-    if (!is.na(cm_dataname)) {
-      observeEvent(input$conmed_var, {
-        ADCM <- data()[[cm_dataname]]
-        choices <- levels(ADCM[[input$conmed_var]])
-
-        updateSelectInput(
-          session,
-          "conmed_level",
-          selected = choices[1:3],
-          choices = choices
-        )
-      })
-    }
-
-    output_q <- shiny::debounce(
-      millis = 200,
-      r = reactive({
-        obj <- data()
-        teal.reporter::teal_card(obj) <-
-          c(
-            teal.reporter::teal_card(obj),
-            teal.reporter::teal_card("## Module's output(s)")
-          )
-        obj <- teal.code::eval_code(obj, "library(dplyr)")
-
-        ADSL <- obj[[sl_dataname]]
-        ADEX <- obj[[ex_dataname]]
-        ADAE <- obj[[ae_dataname]]
-        ADCM <- obj[[cm_dataname]]
-
-        teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
-        teal::validate_inputs(iv(), iv_cm())
-        if (isTRUE(input$plot_cm)) {
-          shiny::validate(shiny::need(all(input$conmed_level %in% ADCM[[input$conmed_var]]), "Updating Conmed Levels"))
-        }
-
-        qenv <- obj
-
-        if (isTRUE(input$plot_cm)) {
-          ADCM <- qenv[[cm_dataname]]
-          qenv <- teal.code::eval_code(
-            qenv,
-            code = substitute(
-              expr = {
-                conmed_data <- ADCM %>%
-                  filter(conmed_var_name %in% conmed_level)
-                conmed_data[[conmed_var]] <-
-                  factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
-                formatters::var_labels(conmed_data)[conmed_var] <-
-                  formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
-              },
-              env = list(
-                ADCM = as.name(cm_dataname),
-                conmed_var = input$conmed_var,
-                conmed_var_name = as.name(input$conmed_var),
-                conmed_level = input$conmed_level
-              )
-            )
-          )
-        }
-
-        teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "### Plot")
-
-        teal.code::eval_code(
-          qenv,
-          code = bquote(
-            plot <- osprey::g_heat_bygrade(
-              id_var = .(input$id_var),
-              exp_data = .(as.name(ex_dataname)) %>% filter(PARCAT1 == "INDIVIDUAL"),
-              visit_var = .(input$visit_var),
-              ongo_var = .(input$ongo_var),
-              anno_data = .(as.name(sl_dataname))[c(.(input$anno_var), .(input$id_var))],
-              anno_var = .(input$anno_var),
-              heat_data = .(as.name(ae_dataname)) %>%
-                select(.(as.name(input$id_var)), .(as.name(input$visit_var)), .(as.name(input$heat_var))),
-              heat_color_var = .(input$heat_var),
-              conmed_data = .(if (isTRUE(input$plot_cm)) as.name("conmed_data")),
-              conmed_var = .(if (isTRUE(input$plot_cm)) input$conmed_var),
-            )
-          )
-        )
-      })
-    )
-
-    plot_r <- reactive(output_q()[["plot"]])
-    set_chunk_dims(pws, output_q)
-  })
 }
