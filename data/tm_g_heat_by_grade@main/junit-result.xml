@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="tm_g_butterfly" timestamp="2026-03-26T10:27:39Z" hostname="a7240ce6fd3e" tests="8" skipped="0" failures="0" errors="0" time="0.159">
-    <testcase time="0.0350000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_argument_verification_fails_when_right_var_is_picks_but_left_var_is_choices_selected"/>
-    <testcase time="0.032" classname="tm_g_butterfly" name="tm_g_butterfly_argument_verification_fails_when_right_var_is_choices_selected_but_left_var_is_picks"/>
-    <testcase time="0.0269999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
+  <testsuite name="tm_g_butterfly" timestamp="2026-03-27T15:44:40Z" hostname="a0c1284f08b6" tests="8" skipped="0" failures="0" errors="0" time="0.135">
+    <testcase time="0.024" classname="tm_g_butterfly" name="tm_g_butterfly_argument_verification_fails_when_right_var_is_picks_but_left_var_is_choices_selected"/>
+    <testcase time="0.03" classname="tm_g_butterfly" name="tm_g_butterfly_argument_verification_fails_when_right_var_is_choices_selected_but_left_var_is_picks"/>
+    <testcase time="0.03" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -12,7 +12,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_butterfly.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(dataname), right_var)</system-out>
     </testcase>
-    <testcase time="0.0209999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
+    <testcase time="0.014" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -21,7 +21,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_butterfly.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(dataname), left_var)</system-out>
     </testcase>
-    <testcase time="0.012" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
+    <testcase time="0.0109999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -30,7 +30,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_butterfly.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(dataname), category_var)</system-out>
     </testcase>
-    <testcase time="0.014" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
+    <testcase time="0.0110000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -39,13 +39,13 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_butterfly.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(dataname), color_by_var)</system-out>
     </testcase>
-    <testcase time="0.01" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
-    <testcase time="0.00800000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
+    <testcase time="0.00800000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
+    <testcase time="0.0069999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
   </testsuite>
-  <testsuite name="tm_g_heat_bygrade" timestamp="2026-03-26T10:27:39Z" hostname="a7240ce6fd3e" tests="17" skipped="0" failures="0" errors="0" time="0.233">
-    <testcase time="0.038" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_fails_when_id_var_is_picks_but_other_args_are_choices_selected"/>
-    <testcase time="0.0150000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_fails_when_id_var_is_choices_selected_but_other_args_are_picks"/>
-    <testcase time="0.0129999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
+  <testsuite name="tm_g_heat_bygrade" timestamp="2026-03-27T15:44:40Z" hostname="a0c1284f08b6" tests="17" skipped="0" failures="0" errors="0" time="0.209">
+    <testcase time="0.032" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_fails_when_id_var_is_picks_but_other_args_are_choices_selected"/>
+    <testcase time="0.00800000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_fails_when_id_var_is_choices_selected_but_other_args_are_picks"/>
+    <testcase time="0.012" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -54,7 +54,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_heat_bygrade.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(sl_dataname), id_var)</system-out>
     </testcase>
-    <testcase time="0.012" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
+    <testcase time="0.0109999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -63,7 +63,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_heat_bygrade.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(ex_dataname), visit_var)</system-out>
     </testcase>
-    <testcase time="0.0109999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
+    <testcase time="0.01" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -72,7 +72,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_heat_bygrade.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(ex_dataname), ongo_var)</system-out>
     </testcase>
-    <testcase time="0.012" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
+    <testcase time="0.0110000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -81,7 +81,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_heat_bygrade.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(sl_dataname), anno_var)</system-out>
     </testcase>
-    <testcase time="0.0110000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
+    <testcase time="0.028" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -91,7 +91,7 @@ Backtrace:
  4.     └─teal.picks::picks(teal.picks::datasets(ae_dataname), heat_var)</system-out>
     </testcase>
     <testcase time="0.00800000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
-    <testcase time="0.0309999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_">
+    <testcase time="0.0109999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -100,7 +100,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_heat_bygrade.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(sl_dataname), id_var)</system-out>
     </testcase>
-    <testcase time="0.012" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_">
+    <testcase time="0.0110000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -109,7 +109,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_heat_bygrade.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(ex_dataname), visit_var)</system-out>
     </testcase>
-    <testcase time="0.012" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_">
+    <testcase time="0.0109999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -118,7 +118,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_heat_bygrade.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(ex_dataname), ongo_var)</system-out>
     </testcase>
-    <testcase time="0.0110000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_">
+    <testcase time="0.01" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -136,7 +136,7 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_heat_bygrade.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(ae_dataname), heat_var)</system-out>
     </testcase>
-    <testcase time="0.012" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_">
+    <testcase time="0.0150000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -145,23 +145,23 @@ Backtrace:
  3.   └─teal.osprey:::tm_g_heat_bygrade.pick(...)
  4.     └─teal.picks::picks(teal.picks::datasets(cm_dataname), conmed_var)</system-out>
     </testcase>
-    <testcase time="0.0109999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_"/>
-    <testcase time="0.00600000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
-    <testcase time="0.00700000000000012" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_with_conmed_.pick_method_"/>
+    <testcase time="0.0069999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed_default_method_"/>
+    <testcase time="0.00700000000000012" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
+    <testcase time="0.00600000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_with_conmed_.pick_method_"/>
   </testsuite>
-  <testsuite name="utils" timestamp="2026-03-26T10:27:39Z" hostname="a7240ce6fd3e" tests="13" skipped="0" failures="0" errors="0" time="0.047">
-    <testcase time="0.0189999999999999" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.00100000000000011" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+  <testsuite name="utils" timestamp="2026-03-27T15:44:40Z" hostname="a0c1284f08b6" tests="13" skipped="0" failures="0" errors="0" time="0.046">
+    <testcase time="0.018" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
     <testcase time="0.004" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00100000000000011" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00499999999999989" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00500000000000012" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
     <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00299999999999989" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
     <testcase time="0.004" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
-    <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.00100000000000011" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
   </testsuite>
 </testsuites>
