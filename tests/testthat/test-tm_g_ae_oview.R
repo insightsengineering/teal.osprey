@@ -19,25 +19,25 @@ flag_var_picks <- teal.picks::variables(
 )
 
 testthat::describe("tm_g_ae_oview argument verification", {
-  testthat::it("fails when arm_var is pick but flag_var_anl is choices_selected", {
+  testthat::it("fails when arm_var is neither picks or choices selected", {
     testthat::expect_error(
       tm_g_ae_oview(
         label = "AE Overview",
         dataname = "ADAE",
-        arm_var = arm_var_picks,
+        arm_var = list(),
         flag_var_anl = flag_var_cs
       ),
       class = "error"
     )
   })
 
-  testthat::it("fails when arm_var is choices_selected but flag_var_anl is pick", {
+  testthat::it("fails when flag_var_anl is neiter picks or choices_selected", {
     testthat::expect_error(
       tm_g_ae_oview(
         label = "AE Overview",
         dataname = "ADAE",
         arm_var = arm_var_cs,
-        flag_var_anl = flag_var_picks
+        flag_var_anl = list()
       ),
       class = "error"
     )
@@ -45,7 +45,7 @@ testthat::describe("tm_g_ae_oview argument verification", {
 })
 
 testthat::describe("tm_g_ae_oview module creation", {
-  testthat::it("creates a teal module using choices_selected (default method)", {
+  testthat::it("creates a teal module using choices_selected", {
     mod <- tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
@@ -56,7 +56,7 @@ testthat::describe("tm_g_ae_oview module creation", {
     testthat::expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks (.pick method)", {
+  testthat::it("creates a teal module using picks", {
     mod <- tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",

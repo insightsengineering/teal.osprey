@@ -2,33 +2,23 @@
 % Please edit documentation in R/tm_g_ae_oview.R, R/tm_g_ae_oview_picks.R
 \name{tm_g_ae_oview}
 \alias{tm_g_ae_oview}
-\alias{tm_g_ae_oview.default}
 \alias{tm_g_ae_oview.pick}
 \title{Teal module for the \code{AE} overview}
 \usage{
 tm_g_ae_oview(
   label,
   dataname,
-  arm_var,
-  flag_var_anl,
-  fontsize,
-  plot_height,
-  plot_width,
-  transformators
-)
-
-\method{tm_g_ae_oview}{default}(
-  label,
-  dataname,
-  arm_var,
-  flag_var_anl,
+  arm_var = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
+    selected = 1L),
+  flag_var_anl = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
+    selected = 1L),
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
   transformators = list()
 )
 
-\method{tm_g_ae_oview}{pick}(
+tm_g_ae_oview.pick(
   label,
   dataname,
   arm_var = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
@@ -78,13 +68,6 @@ the \code{\link[teal:teal_modules]{teal::module()}} object.
 }
 \description{
 Display the \code{AE} overview plot as a shiny module
-
-This is an S3 generic that dispatches on the class of \code{flag_var_anl}:
-\itemize{
-\item \link[teal.transform:choices_selected]{choices_selected} dispatches to the
-default method.
-\item \link[teal.picks:picks]{picks} dispatches to the picks method.
-}
 }
 \section{Reporting}{
 
@@ -129,65 +112,8 @@ data <- teal_data() \%>\%
     }
     ADAE <- .add_event_flags(ADAE)
   })
-
-join_keys(data) <- default_cdisc_join_keys[names(data)]
-
-ADAE <- data[["ADAE"]]
-# Using default method (choices selected)
-app <- init(
-  data = data,
-  modules = modules(
-    tm_g_ae_oview(
-      label = "AE Overview",
-      dataname = "ADAE",
-      arm_var = choices_selected(
-        selected = "ACTARM",
-        choices = c("ACTARM", "ACTARMCD")
-      ),
-      flag_var_anl = choices_selected(
-        selected = "AEREL1",
-        choices = variable_choices(
-          ADAE,
-          c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
-        ),
-      ),
-      plot_height = c(600, 200, 2000)
-    )
-  )
-)
-if (interactive()) {
-  shinyApp(app$ui, app$server)
-}
-
-data <- teal_data() \%>\%
-  within({
-    library(dplyr)
-    ADSL <- rADSL
-    ADAE <- rADAE
-    .add_event_flags <- function(dat) {
-      dat <- dat \%>\%
-        mutate(
-          TMPFL_SER = AESER == "Y",
-          TMPFL_REL = AEREL == "Y",
-          TMPFL_GR5 = AETOXGR == "5",
-          AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
-          AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
-        )
-      labels <- c(
-        "Serious AE", "Related AE", "Grade 5 AE",
-        "AE related to A: Drug X", "AE related to B: Placebo"
-      )
-      cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
-      for (i in seq_along(labels)) {
-        attr(dat[[cols[i]]], "label") <- labels[i]
-      }
-      dat
-    }
-    ADAE <- .add_event_flags(ADAE)
-  })
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 ADAE <- data[["ADAE"]]
-# Using the picks method
 app <- init(
   data = data,
   modules = modules(
