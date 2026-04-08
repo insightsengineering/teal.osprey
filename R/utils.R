@@ -70,7 +70,7 @@ ci_choices <- setNames(
 #' @param x ci method to retrieve its name
 name_ci <- function(x = ci_choices) {
   x <- match.arg(x)
-  return(paste0(names(x), " (", x, ")"))
+  paste0(names(x), " (", x, ")")
 }
 
 
@@ -169,7 +169,7 @@ set_chunk_attrs <- function(teal_card,
     return(teal_card)
   }
 
-  for (ix in seq_len(length(teal_card))) {
+  for (ix in seq_along(teal_card)) {
     if (ix > n) {
       break
     }
