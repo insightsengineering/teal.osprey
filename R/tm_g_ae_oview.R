@@ -161,10 +161,10 @@ tm_g_ae_oview <- function(
 
   module(
     label = label,
-    server = srv_g_ae_oview.picks,
-    server_args = args[names(args) %in% names(formals(srv_g_ae_oview.picks))],
-    ui = ui_g_ae_oview.picks,
-    ui_args = args[names(args) %in% names(formals(ui_g_ae_oview.picks))],
+    server = srv_g_ae_oview,
+    server_args = args[names(args) %in% names(formals(srv_g_ae_oview))],
+    ui = ui_g_ae_oview,
+    ui_args = args[names(args) %in% names(formals(ui_g_ae_oview))],
     transformators = transformators,
     datanames = c("ADSL", dataname)
   )
