@@ -71,14 +71,8 @@
 tm_g_ae_oview <- function(
   label,
   dataname,
-  arm_var = teal.picks::variables(
-    choices = teal.picks::is_categorical(min.len = 2),
-    selected = 1L
-  ),
-  flag_var_anl = teal.picks::variables(
-    choices = teal.picks::is_categorical(min.len = 2),
-    selected = 1L
-  ),
+  arm_var,
+  flag_var_anl,
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
@@ -86,7 +80,8 @@ tm_g_ae_oview <- function(
 ) {
   message("Initializing tm_g_ae_oview")
 
-  convert_args_to_picks(c("arm_var", "flag_var_anl"))
+  arm_var <- convert_arg_to_picks(arm_var)
+  flag_var_anl <- convert_arg_to_picks(flag_var_anl)
 
   arm_var <- teal.picks::picks(teal.picks::datasets(dataname), arm_var)
   flag_var_anl <- teal.picks::picks(
@@ -94,7 +89,6 @@ tm_g_ae_oview <- function(
     flag_var_anl
   )
 
-  checkmate::assert_class(arm_var, "picks")
   if (isTRUE(attr(arm_var$variables, "multiple"))) {
     warning(
       "`arm_var` accepts only a single variable selection. ",
@@ -103,7 +97,6 @@ tm_g_ae_oview <- function(
     attr(arm_var$variables, "multiple") <- FALSE
   }
 
-  checkmate::assert_class(flag_var_anl, "picks")
   if (isTRUE(attr(flag_var_anl$variables, "multiple"))) {
     warning(
       "`flag_var_anl` accepts only a single variable selection. ",

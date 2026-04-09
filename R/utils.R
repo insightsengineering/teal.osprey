@@ -240,18 +240,18 @@ set_chunk_dims <- function(pws, q_r, inner_classes = NULL) {
   })
 }
 
-#' Wrapper to help converting choices_selected module arguments to picks variables
+#' Convert choice selected module variables to picks class
 #'
-#' @param args Vector with the names of module arguments that can be of class `choices_selected`
+#' @param arg module variable of class `choices_selected` or picks variables
 #' @keywords internal
-convert_args_to_picks <- function(args) {
-  checkmate::assert_character(args)
-
-  env <- parent.frame()
-  for (arg in args) {
-    val <- get(arg, envir = env)
-    if (inherits(val, "choices_selected")) {
-      assign(arg, teal.picks::as.picks(val), envir = env)
-    }
+convert_arg_to_picks <- function(arg) {
+  checkmate::assert(
+    checkmate::check_class(arg, "choices_selected"),
+    checkmate::check_class(arg, "variables")
+  )
+  if (checkmate::test_multi_class(arg, c("choices_selected", "filter_spec", "select_spec"))) {
+    teal.picks::as.picks(arg)
+  } else {
+    arg
   }
 }

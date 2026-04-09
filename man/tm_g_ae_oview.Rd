@@ -7,10 +7,8 @@
 tm_g_ae_oview(
   label,
   dataname,
-  arm_var = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
-    selected = 1L),
-  flag_var_anl = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
-    selected = 1L),
+  arm_var,
+  flag_var_anl,
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
