@@ -4,7 +4,11 @@
 \alias{convert_arg_to_picks}
 \title{Convert choice selected module variables to picks class}
 \usage{
-convert_arg_to_picks(arg)
+convert_arg_to_picks(
+  arg,
+  allowed_class = c("choices_selected", "filter_spec", "select_spec"),
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{arg}{module variable of class \code{choices_selected} or picks variables}
