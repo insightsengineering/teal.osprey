@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.0222157263957907" branch-rate="0" lines-covered="76" lines-valid="3421" branches-covered="0" branches-valid="0" complexity="0" version="3.6.5" timestamp="2026-04-09 14:49:29.580394">
+<coverage line-rate="0.0222157263957907" branch-rate="0" lines-covered="76" lines-valid="3421" branches-covered="0" branches-valid="0" complexity="0" version="3.6.5" timestamp="2026-04-10 05:55:35.653662">
   <sources>
     <source>/__w/teal.osprey/teal.osprey/teal.osprey</source>
   </sources>
