@@ -1,4 +1,4 @@
-#' @title Teal module for the `AE` overview
+#' Teal module for the `AE` overview
 #'
 #' @description
 #'
