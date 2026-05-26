@@ -13,6 +13,8 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
 #' @inherit argument_convention return
+#' @inheritSection decorate_module_section Decorating Module
+#' @inheritSection decorate_module_section Transforming input data
 #' @inheritSection teal::example_module Reporting
 #'
 #' @export

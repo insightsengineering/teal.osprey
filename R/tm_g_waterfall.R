@@ -40,6 +40,8 @@
 #' @param show_value boolean of whether value of bar height is shown, default is `TRUE`
 #'
 #' @inherit argument_convention return
+#' @inheritSection decorate_module_section Decorating Module
+#' @inheritSection decorate_module_section Transforming input data
 #' @inheritSection teal::example_module Reporting
 #'
 #' @export

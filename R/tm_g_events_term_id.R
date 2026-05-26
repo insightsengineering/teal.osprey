@@ -11,6 +11,8 @@
 #' and pre-selected option names that can be used to specify the term for events
 #'
 #' @inherit argument_convention return
+#' @inheritSection decorate_module_section Decorating Module
+#' @inheritSection decorate_module_section Transforming input data
 #' @inheritSection teal::example_module Reporting
 #'
 #' @export

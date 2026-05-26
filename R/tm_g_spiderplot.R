@@ -19,6 +19,8 @@
 #' @param yfacet_var variable for y facets
 #'
 #' @inherit argument_convention return
+#' @inheritSection decorate_module_section Decorating Module
+#' @inheritSection decorate_module_section Transforming input data
 #' @inheritSection teal::example_module Reporting
 #' @export
 #'
