@@ -102,7 +102,7 @@ tm_g_ae_oview <- function(label,
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
   checkmate::assert_numeric(
     plot_width[1],
-    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,     .var.name = "plot_width"
+    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
   )
   teal::assert_decorators(decorators, "plot")
 
