@@ -15,6 +15,8 @@
 #'
 NULL
 
+select_decorators <- utils::getFromNamespace("select_decorators", "teal")
+
 #' Utility function for quick filter
 #'
 #'

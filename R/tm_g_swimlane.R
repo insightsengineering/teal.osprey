@@ -123,7 +123,8 @@ tm_g_swimlane <- function(label,
                           pre_output = NULL,
                           post_output = NULL,
                           x_label = "Time from First Treatment (Day)",
-                          transformators = list()) {
+                          transformators = list(),
+                          decorators = list()) {
   message("Initializing tm_g_swimlane")
   args <- as.list(environment())
 
@@ -149,7 +150,7 @@ tm_g_swimlane <- function(label,
     .var.name = "plot_width"
   )
   checkmate::assert_string(x_label)
-
+  teal::assert_decorators(decorators, "plot")
 
   module(
     label = label,
@@ -166,7 +167,8 @@ tm_g_swimlane <- function(label,
       label = label,
       plot_height = plot_height,
       plot_width = plot_width,
-      x_label = x_label
+      x_label = x_label,
+      decorators = decorators
     ),
     transformators = transformators,
     datanames = c("ADSL", dataname)
@@ -246,6 +248,10 @@ ui_g_swimlane <- function(id, ...) {
             helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
           ),
           value = paste(a$vref_line, collapse = ", ")
+        ),
+        teal::ui_transform_teal_data(
+          ns("decorator"),
+          transformators = select_decorators(a$decorators, "plot")
         )
       ),
       pre_output = a$pre_output,
@@ -265,7 +271,8 @@ srv_g_swimlane <- function(id,
                            label,
                            plot_height,
                            plot_width,
-                           x_label) {
+                           x_label,
+                           decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -511,7 +518,13 @@ srv_g_swimlane <- function(id,
       teal.code::eval_code(q3, code = plot_call)
     })
 
-    plot_r <- reactive(output_q()[["plot"]])
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
 
     # Insert the plot into a plot_with_settings module from teal.widgets
     pws <- teal.widgets::plot_with_settings_srv(
@@ -521,6 +534,6 @@ srv_g_swimlane <- function(id,
       width = plot_width
     )
 
-    set_chunk_dims(pws, output_q)
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

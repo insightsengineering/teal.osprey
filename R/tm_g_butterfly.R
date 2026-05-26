@@ -121,7 +121,8 @@ tm_g_butterfly <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL,
-                           transformators = list()) {
+                           transformators = list(),
+                           decorators = list()) {
   message("Initializing tm_g_butterfly")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
@@ -144,6 +145,7 @@ tm_g_butterfly <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  teal::assert_decorators(decorators, "plot")
 
   args <- as.list(environment())
 
@@ -151,7 +153,13 @@ tm_g_butterfly <- function(label,
     label = label,
     datanames = c("ADSL", dataname),
     server = srv_g_butterfly,
-    server_args = list(dataname = dataname, label = label, plot_height = plot_height, plot_width = plot_width),
+    server_args = list(
+      dataname = dataname,
+      label = label,
+      plot_height = plot_height,
+      plot_width = plot_width,
+      decorators = decorators
+    ),
     ui = ui_g_butterfly,
     ui_args = args,
     transformators = transformators
@@ -251,6 +259,10 @@ ui_g_butterfly <- function(id, ...) {
         ns("legend_on"),
         "Add legend",
         value = a$legend_on
+      ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(a$decorators, "plot")
       )
     ),
     pre_output = a$pre_output,
@@ -258,7 +270,7 @@ ui_g_butterfly <- function(id, ...) {
   )
 }
 
-srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) {
+srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width, decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -520,7 +532,13 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
       })
     )
 
-    plot_r <- reactive(output_q()[["plot"]])
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
 
     # Insert the plot into a plot_with_settings module from teal.widgets
     pws <- teal.widgets::plot_with_settings_srv(
@@ -530,6 +548,6 @@ srv_g_butterfly <- function(id, data, dataname, label, plot_height, plot_width) 
       width = plot_width
     )
 
-    set_chunk_dims(pws, output_q)
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

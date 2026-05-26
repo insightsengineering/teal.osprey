@@ -80,7 +80,8 @@ tm_g_ae_oview <- function(label,
                           fontsize = c(5, 3, 7),
                           plot_height = c(600L, 200L, 2000L),
                           plot_width = NULL,
-                          transformators = list()) {
+                          transformators = list(),
+                          decorators = list()) {
   message("Initializing tm_g_ae_oview")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(flag_var_anl, classes = "choices_selected")
@@ -101,8 +102,9 @@ tm_g_ae_oview <- function(label,
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
   checkmate::assert_numeric(
     plot_width[1],
-    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
+    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE,     .var.name = "plot_width"
   )
+  teal::assert_decorators(decorators, "plot")
 
   args <- as.list(environment())
 
@@ -113,7 +115,8 @@ tm_g_ae_oview <- function(label,
       label = label,
       dataname = dataname,
       plot_height = plot_height,
-      plot_width = plot_width
+      plot_width = plot_width,
+      decorators = decorators
     ),
     ui = ui_g_ae_oview,
     ui_args = args,
@@ -180,6 +183,10 @@ ui_g_ae_oview <- function(id, ...) {
         selected = "left",
         multiple = FALSE
       ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(args$decorators, "plot")
+      ),
       ui_g_decorate(
         ns(NULL),
         fontsize = args$fontsize,
@@ -195,7 +202,8 @@ srv_g_ae_oview <- function(id,
                            dataname,
                            label,
                            plot_height,
-                           plot_width) {
+                           plot_width,
+                           decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(isolate(data()), "teal_data")
 
@@ -332,7 +340,13 @@ srv_g_ae_oview <- function(id,
       })
     )
 
-    plot_r <- reactive(output_q()[["plot"]])
-    set_chunk_dims(pws, output_q)
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

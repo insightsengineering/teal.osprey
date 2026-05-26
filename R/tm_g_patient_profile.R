@@ -155,7 +155,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
                                  plot_width = NULL,
                                  pre_output = NULL,
                                  post_output = NULL,
-                                 transformators = list()) {
+                                 transformators = list(),
+                                 decorators = list()) {
   args <- as.list(environment())
   checkmate::assert_string(label)
   checkmate::assert_string(sl_dataname)
@@ -186,6 +187,7 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  teal::assert_decorators(decorators, "plot")
 
   module(
     label = label,
@@ -203,7 +205,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
       ae_line_col_opt = ae_line_col_opt,
       label = label,
       plot_height = plot_height,
-      plot_width = plot_width
+      plot_width = plot_width,
+      decorators = decorators
     ),
     transformators = transformators,
     datanames = "all"
@@ -325,6 +328,10 @@ ui_g_patient_profile <- function(id, ...) {
             helpText("Enter TWO numeric values of study days range, separated by comma (eg. -28, 750)")
           ),
           value = a$x_limit
+        ),
+        teal::ui_transform_teal_data(
+          ns("decorator"),
+          transformators = select_decorators(a$decorators, "plot")
         )
       ),
       pre_output = a$pre_output,
@@ -345,7 +352,8 @@ srv_g_patient_profile <- function(id,
                                   label,
                                   ae_line_col_opt,
                                   plot_height,
-                                  plot_width) {
+                                  plot_width,
+                                  decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
   if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
@@ -900,7 +908,13 @@ srv_g_patient_profile <- function(id,
       })
     )
 
-    plot_r <- reactive(output_q()[["plot"]])
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
 
     pws <- teal.widgets::plot_with_settings_srv(
       id = "patientprofileplot",
@@ -909,6 +923,6 @@ srv_g_patient_profile <- function(id,
       width = plot_width
     )
 
-    set_chunk_dims(pws, output_q)
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

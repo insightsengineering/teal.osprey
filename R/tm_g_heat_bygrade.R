@@ -132,7 +132,8 @@ tm_g_heat_bygrade <- function(label,
                               fontsize = c(5, 3, 7),
                               plot_height = c(600L, 200L, 2000L),
                               plot_width = NULL,
-                              transformators = list()) {
+                              transformators = list(),
+                              decorators = list()) {
   message("Initializing tm_g_heat_bygrade")
   args <- as.list(environment())
 
@@ -166,6 +167,7 @@ tm_g_heat_bygrade <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  teal::assert_decorators(decorators, "plot")
 
   module(
     label = label,
@@ -177,7 +179,8 @@ tm_g_heat_bygrade <- function(label,
       ae_dataname = ae_dataname,
       cm_dataname = cm_dataname,
       plot_height = plot_height,
-      plot_width = plot_width
+      plot_width = plot_width,
+      decorators = decorators
     ),
     ui = ui_g_heatmap_bygrade,
     ui_args = args,
@@ -258,6 +261,10 @@ ui_g_heatmap_bygrade <- function(id, ...) {
             multiple = TRUE
           )
         ),
+        teal::ui_transform_teal_data(
+          ns("decorator"),
+          transformators = select_decorators(args$decorators, "plot")
+        ),
         ui_g_decorate(
           ns(NULL),
           fontsize = args$fontsize,
@@ -277,7 +284,8 @@ srv_g_heatmap_bygrade <- function(id,
                                   cm_dataname,
                                   label,
                                   plot_height,
-                                  plot_width) {
+                                  plot_width,
+                                  decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
   if (!is.na(sl_dataname)) checkmate::assert_names(sl_dataname, subset.of = names(data))
@@ -454,7 +462,13 @@ srv_g_heatmap_bygrade <- function(id,
       })
     )
 
-    plot_r <- reactive(output_q()[["plot"]])
-    set_chunk_dims(pws, output_q)
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

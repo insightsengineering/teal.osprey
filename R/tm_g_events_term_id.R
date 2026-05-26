@@ -59,7 +59,8 @@ tm_g_events_term_id <- function(label,
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
                                 plot_width = NULL,
-                                transformators = list()) {
+                                transformators = list(),
+                                decorators = list()) {
   message("Initializing tm_g_events_term_id")
   checkmate::assert_string(label)
   checkmate::assert_class(term_var, classes = "choices_selected")
@@ -83,13 +84,20 @@ tm_g_events_term_id <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  teal::assert_decorators(decorators, "plot")
 
   args <- as.list(environment())
 
   module(
     label = label,
     server = srv_g_events_term_id,
-    server_args = list(label = label, dataname = dataname, plot_height = plot_height, plot_width = plot_width),
+    server_args = list(
+      label = label,
+      dataname = dataname,
+      plot_height = plot_height,
+      plot_width = plot_width,
+      decorators = decorators
+    ),
     ui = ui_g_events_term_id,
     ui_args = args,
     transformators = transformators,
@@ -184,6 +192,10 @@ ui_g_events_term_id <- function(id, ...) {
           value = FALSE
         )
       ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(args$decorators, "plot")
+      ),
       ui_g_decorate(
         ns(NULL),
         fontsize = args$fontsize,
@@ -199,7 +211,8 @@ srv_g_events_term_id <- function(id,
                                  dataname,
                                  label,
                                  plot_height,
-                                 plot_width) {
+                                 plot_width,
+                                 decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -359,7 +372,13 @@ srv_g_events_term_id <- function(id,
       )
     })
 
-    plot_r <- reactive(output_q()[["plot"]])
-    set_chunk_dims(pws, output_q)
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

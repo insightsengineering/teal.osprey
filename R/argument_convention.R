@@ -36,6 +36,12 @@
 #' @param plot_width (`numeric(3)`)\cr
 #'  vector to indicate default value, minimum and maximum values.
 #'
+#' @param decorators `r lifecycle::badge("experimental")`
+#' (named `list` of `teal_transform_module`) optional,
+#' decorators for plots included in the module output. The decorators are applied to the
+#' respective output objects. See [`teal::teal_transform_module()`] and
+#' `vignette("transform-module-output", package = "teal")` for details.
+#'
 #' @return the [teal::module()] object.
 #'
 #' @name argument_convention

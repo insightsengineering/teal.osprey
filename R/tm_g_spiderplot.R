@@ -96,7 +96,8 @@ tm_g_spiderplot <- function(label,
                             plot_width = NULL,
                             pre_output = NULL,
                             post_output = NULL,
-                            transformators = list()) {
+                            transformators = list(),
+                            decorators = list()) {
   message("Initializing tm_g_spiderplot")
   checkmate::assert_class(paramcd, classes = "choices_selected")
   checkmate::assert_class(x_var, classes = "choices_selected")
@@ -119,6 +120,7 @@ tm_g_spiderplot <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  teal::assert_decorators(decorators, "plot")
 
   args <- as.list(environment())
   module(
@@ -130,7 +132,8 @@ tm_g_spiderplot <- function(label,
       paramcd = paramcd,
       label = label,
       plot_height = plot_height,
-      plot_width = plot_width
+      plot_width = plot_width,
+      decorators = decorators
     ),
     ui = ui_g_spider,
     ui_args = args,
@@ -235,13 +238,17 @@ ui_g_spider <- function(id, ...) {
           value = a$href_line
         )
       ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(a$decorators, "plot")
+      ),
       pre_output = a$pre_output,
       post_output = a$post_output
     )
   )
 }
 
-srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_width) {
+srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_width, decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -451,7 +458,13 @@ srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_w
       )
     })
 
-    plot_r <- reactive(output_q()[["plot"]])
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
 
     pws <- teal.widgets::plot_with_settings_srv(
       id = "spiderplot",
@@ -460,6 +473,6 @@ srv_g_spider <- function(id, data, dataname, paramcd, label, plot_height, plot_w
       width = plot_width
     )
 
-    set_chunk_dims(pws, output_q)
+    set_chunk_dims(pws, decorated_output_q)
   })
 }
