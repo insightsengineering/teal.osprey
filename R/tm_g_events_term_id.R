@@ -1,24 +1,26 @@
 #' Events by Term Plot Teal Module
 #'
-#' @description
-#'
-#' Display Events by Term plot as a shiny module.
-#'
-#' This is an S3 generic that dispatches on the class of `term_var`:
-#' - [choices_selected][teal.transform::choices_selected()] dispatches to the
-#'   default method.
-#' - [picks][teal.picks::picks()] dispatches to the picks method.
+#' Display an events-by-term plot as a Shiny module.
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param term_var A variable selection object. Either a
-#'   [teal.transform::choices_selected()] object (dispatches to the `.default`
-#'   method) or a [teal.picks::picks()] object (dispatches to the `.picks`
-#'   method).
-#' @param dataname (`character(1)`) Name of the events dataset. Required when
-#'   using the default method with [choices_selected][teal.transform::choices_selected()].
-#'   Ignored by the `.picks` method.
+#' @param term_var (`choices_selected` or `picks`)\cr
+#'   Variable selection for the event term. A [teal.transform::choices_selected()]
+#'   object dispatches to the default method; a [teal.picks::picks()] object
+#'   dispatches to the picks method.
+#' @param arm_var (`choices_selected` or `picks`)\cr
+#'   Variable selection for the treatment arm. Must be a factor in the analysis
+#'   data. See `term_var` for supported selection types.
+#' @param dataname (`character(1)`)\cr
+#'   Name of the events dataset. Required for the default method with
+#'   [teal.transform::choices_selected()]. Ignored by the picks method.
+#'
+#' @details
+#' S3 dispatch uses the class of `term_var`: `tm_g_events_term_id.default()` for
+#' [teal.transform::choices_selected()] and `tm_g_events_term_id.picks()` for
+#' [teal.picks::picks()]. Do not mix `choices_selected` and `picks` encodings in
+#' one call.
 #'
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
@@ -37,7 +39,7 @@
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
-#' # Using the default method (choices_selected)
+#' # Legacy `teal.transform::choices_selected()` encodings (default S3 method):
 #' app <- init(
 #'   data = data,
 #'   modules = modules(
@@ -65,28 +67,17 @@
 #'
 tm_g_events_term_id <- function(label = "Common AE",
                                 dataname = NULL,
-                                term_var = teal.picks::picks(
-                                  teal.picks::datasets(),
-                                  teal.picks::variables(
-                                    choices = teal.picks::is_categorical(min.len = 2),
-                                    selected = 1L
-                                  )
-                                ),
-                                arm_var = teal.picks::picks(
-                                  teal.picks::datasets(),
-                                  teal.picks::variables(
-                                    choices = teal.picks::is_categorical(min.len = 2),
-                                    selected = 1L
-                                  )
-                                ),
+                                term_var,
+                                arm_var,
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
                                 plot_width = NULL,
                                 transformators = list()) {
+  checkmate::assert_string(label)
   UseMethod("tm_g_events_term_id", term_var)
 }
 
-#' @rdname tm_g_events_term_id
+#' @describeIn tm_g_events_term_id Legacy [teal.transform::choices_selected()] encodings.
 #' @export
 tm_g_events_term_id.default <- function(label = "Common AE", # nolint: object_name_linter.
                                         dataname = NULL,
@@ -96,7 +87,6 @@ tm_g_events_term_id.default <- function(label = "Common AE", # nolint: object_na
                                         plot_height = c(600L, 200L, 2000L),
                                         plot_width = NULL,
                                         transformators = list()) {
-  message("Initializing tm_g_events_term_id")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
   checkmate::assert_class(term_var, classes = "choices_selected")
