@@ -41,23 +41,23 @@
 #' @template author_qit3
 #'
 tm_g_swimlane <- function(label,
-                                dataname,
-                                bar_var,
-                                bar_color_var = NULL,
-                                sort_var = NULL,
-                                marker_pos_var = NULL,
-                                marker_shape_var = NULL,
-                                marker_shape_opt = NULL,
-                                marker_color_var = NULL,
-                                marker_color_opt = NULL,
-                                anno_txt_var = NULL,
-                                vref_line = NULL,
-                                plot_height = c(1200L, 400L, 5000L),
-                                plot_width = NULL,
-                                pre_output = NULL,
-                                post_output = NULL,
-                                x_label = "Time from First Treatment (Day)",
-                                transformators = list()) {
+                          dataname,
+                          bar_var,
+                          bar_color_var = NULL,
+                          sort_var = NULL,
+                          marker_pos_var = NULL,
+                          marker_shape_var = NULL,
+                          marker_shape_opt = NULL,
+                          marker_color_var = NULL,
+                          marker_color_opt = NULL,
+                          anno_txt_var = NULL,
+                          vref_line = NULL,
+                          plot_height = c(1200L, 400L, 5000L),
+                          plot_width = NULL,
+                          pre_output = NULL,
+                          post_output = NULL,
+                          x_label = "Time from First Treatment (Day)",
+                          transformators = list()) {
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
   .assert_picks_single_var(bar_var, "bar_var")
@@ -110,17 +110,17 @@ tm_g_swimlane <- function(label,
 
 #' @keywords internal
 ui_g_swimlane <- function(id,
-                                dataname,
-                                bar_var,
-                                bar_color_var,
-                                sort_var,
-                                marker_pos_var,
-                                marker_shape_var,
-                                marker_color_var,
-                                anno_txt_var,
-                                vref_line,
-                                pre_output,
-                                post_output) {
+                          dataname,
+                          bar_var,
+                          bar_color_var,
+                          sort_var,
+                          marker_pos_var,
+                          marker_shape_var,
+                          marker_color_var,
+                          anno_txt_var,
+                          vref_line,
+                          pre_output,
+                          post_output) {
   ns <- NS(id)
 
   shiny::tagList(
@@ -201,20 +201,20 @@ ui_g_swimlane <- function(id,
 
 #' @keywords internal
 srv_g_swimlane <- function(id,
-                                 data,
-                                 dataname,
-                                 marker_shape_opt,
-                                 marker_color_opt,
-                                 plot_height,
-                                 plot_width,
-                                 x_label,
-                                 bar_var,
-                                 bar_color_var,
-                                 sort_var,
-                                 marker_pos_var,
-                                 marker_shape_var,
-                                 marker_color_var,
-                                 anno_txt_var) {
+                           data,
+                           dataname,
+                           marker_shape_opt,
+                           marker_color_opt,
+                           plot_height,
+                           plot_width,
+                           x_label,
+                           bar_var,
+                           bar_color_var,
+                           sort_var,
+                           marker_pos_var,
+                           marker_shape_var,
+                           marker_color_var,
+                           anno_txt_var) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(isolate(data()), "teal_data")
 
