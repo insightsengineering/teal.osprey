@@ -47,6 +47,7 @@ Suggests:
     logger (>= 0.4.0),
     nestcolor (>= 0.1.0),
     rmarkdown (>= 2.23),
+    shinytest2 (>= 0.4.1),
     testthat (>= 3.2.3),
     withr (>= 3.0.0)
 Remotes:
@@ -61,7 +62,7 @@ Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal.logger, insightsengineering/teal.reporter,
     insightsengineering/teal.widgets, insightsengineering/tern,
     tidyverse/tidyr, yihui/knitr, insightsengineering/nestcolor,
-    rstudio/rmarkdown, insightsengineering/teal.data, r-lib/testthat,
+    rstudio/rmarkdown, rstudio/shinytest2, insightsengineering/teal.data, r-lib/testthat,
     r-lib/withr
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
