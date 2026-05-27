@@ -45,7 +45,7 @@ plot.}
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display the \code{AE} by subgroups plot as a teal module
