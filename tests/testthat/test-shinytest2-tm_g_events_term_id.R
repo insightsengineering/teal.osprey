@@ -7,34 +7,13 @@ create_tm_g_events_term_id_data <- function() {
   data
 }
 
-app_driver_tm_g_events_term_id_default <- function() {
+app_driver_tm_g_events_term_id <- function() {
   data <- create_tm_g_events_term_id_data()
   init_teal_app_driver(
     teal::init(
       data = data,
       modules = tm_g_events_term_id(
-        label = "Common AE (default e2e)",
-        dataname = "ADAE",
-        term_var = teal.transform::choices_selected(
-          selected = "AEDECOD",
-          choices = c("AEDECOD", "AETERM", "AEHLT")
-        ),
-        arm_var = teal.transform::choices_selected(
-          selected = "ACTARMCD",
-          choices = c("ACTARMCD", "ACTARM")
-        )
-      )
-    )
-  )
-}
-
-app_driver_tm_g_events_term_id_picks <- function() {
-  data <- create_tm_g_events_term_id_data()
-  init_teal_app_driver(
-    teal::init(
-      data = data,
-      modules = tm_g_events_term_id(
-        label = "Common AE (picks e2e)",
+        label = "Common AE",
         term_var = teal.picks::picks(
           teal.picks::datasets("ADAE"),
           teal.picks::variables(
@@ -56,25 +35,10 @@ app_driver_tm_g_events_term_id_picks <- function() {
   )
 }
 
-testthat::test_that("e2e - tm_g_events_term_id default initializes and renders a plot", {
+testthat::test_that("e2e - tm_g_events_term_id initializes and renders a plot", {
   testthat::skip_if_not_installed("shinytest2")
   skip_if_too_deep(5)
-  app_driver <- app_driver_tm_g_events_term_id_default()
-  withr::defer(app_driver$stop())
-  app_driver$wait_for_idle()
-
-  app_driver$expect_no_shiny_error()
-  app_driver$expect_no_validation_error()
-  testthat::expect_match(
-    app_driver$get_active_module_plot_output("out"),
-    "data:image/png;base64,"
-  )
-})
-
-testthat::test_that("e2e - tm_g_events_term_id picks initializes and sets different arms", {
-  testthat::skip_if_not_installed("shinytest2")
-  skip_if_too_deep(5)
-  app_driver <- app_driver_tm_g_events_term_id_picks()
+  app_driver <- app_driver_tm_g_events_term_id()
   withr::defer(app_driver$stop())
   app_driver$wait_for_idle()
 
@@ -90,17 +54,17 @@ testthat::test_that("e2e - tm_g_events_term_id picks initializes and sets differ
 })
 
 testthat::test_that(
-  "e2e - tm_g_events_term_id picks starts with expected label and encoding selections.",
+  "e2e - tm_g_events_term_id starts with expected label and encoding selections.",
   {
     testthat::skip_if_not_installed("shinytest2")
     skip_if_too_deep(5)
-    app_driver <- app_driver_tm_g_events_term_id_picks()
+    app_driver <- app_driver_tm_g_events_term_id()
     withr::defer(app_driver$stop())
     app_driver$wait_for_idle()
 
     testthat::expect_equal(
       app_driver$get_text("a.nav-link.active"),
-      "Common AE (picks e2e)"
+      "Common AE"
     )
     testthat::expect_equal(get_teal_picks_slot(app_driver, "term_var", "datasets"), "ADAE")
     testthat::expect_equal(
@@ -116,11 +80,11 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "e2e - tm_g_events_term_id picks: changing term_var changes the plot and does not throw validation errors.",
+  "e2e - tm_g_events_term_id: changing term_var changes the plot and does not throw validation errors.",
   {
     testthat::skip_if_not_installed("shinytest2")
     skip_if_too_deep(5)
-    app_driver <- app_driver_tm_g_events_term_id_picks()
+    app_driver <- app_driver_tm_g_events_term_id()
     withr::defer(app_driver$stop())
     app_driver$wait_for_idle()
     plot_before <- app_driver$get_active_module_plot_output("out")
@@ -134,20 +98,20 @@ testthat::test_that(
   }
 )
 
-testthat::test_that("e2e - tm_g_events_term_id picks: deselection of term_var throws validation error.", {
+testthat::test_that("e2e - tm_g_events_term_id: deselection of term_var throws validation error.", {
   testthat::skip_if_not_installed("shinytest2")
   skip_if_too_deep(5)
-  app_driver <- app_driver_tm_g_events_term_id_picks()
+  app_driver <- app_driver_tm_g_events_term_id()
   withr::defer(app_driver$stop())
   app_driver$wait_for_idle()
   set_teal_picks_slot(app_driver, "term_var", "variables", character(0L))
   app_driver$expect_validation_error()
 })
 
-testthat::test_that("e2e - tm_g_events_term_id picks sort updates title", {
+testthat::test_that("e2e - tm_g_events_term_id sort updates title", {
   testthat::skip_if_not_installed("shinytest2")
   skip_if_too_deep(5)
-  app_driver <- app_driver_tm_g_events_term_id_picks()
+  app_driver <- app_driver_tm_g_events_term_id()
   withr::defer(app_driver$stop())
   app_driver$wait_for_idle()
 

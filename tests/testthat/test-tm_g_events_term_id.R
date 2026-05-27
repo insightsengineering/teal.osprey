@@ -1,22 +1,7 @@
-testthat::test_that("tm_g_events_term_id dispatches on term_var class", {
+testthat::test_that("tm_g_events_term_id builds a teal module with picks encodings", {
   testthat::skip_if_not_installed("teal.picks")
 
-  mod_default <- tm_g_events_term_id(
-    label = "Common AE",
-    dataname = "ADAE",
-    term_var = teal.transform::choices_selected(
-      selected = "AEDECOD",
-      choices = "AEDECOD"
-    ),
-    arm_var = teal.transform::choices_selected(
-      selected = "ACTARMCD",
-      choices = "ACTARMCD"
-    )
-  )
-  testthat::expect_s3_class(mod_default, "teal_module")
-  testthat::expect_identical(mod_default$server, srv_g_events_term_id)
-
-  mod_picks <- tm_g_events_term_id(
+  mod <- tm_g_events_term_id(
     label = "Common AE",
     term_var = teal.picks::picks(
       teal.picks::datasets("ADAE"),
@@ -33,12 +18,12 @@ testthat::test_that("tm_g_events_term_id dispatches on term_var class", {
       )
     )
   )
-  testthat::expect_s3_class(mod_picks, "teal_module")
-  testthat::expect_identical(mod_picks$server, srv_g_events_term_id_picks)
-  testthat::expect_equal(mod_picks$datanames, c("ADAE", "ADSL"))
+  testthat::expect_s3_class(mod, "teal_module")
+  testthat::expect_identical(mod$server, srv_g_events_term_id)
+  testthat::expect_equal(mod$datanames, c("ADAE", "ADSL"))
 })
 
-testthat::test_that("tm_g_events_term_id.picks rejects multiple variable selection", {
+testthat::test_that("tm_g_events_term_id rejects multiple variable selection", {
   testthat::skip_if_not_installed("teal.picks")
 
   term_var <- teal.picks::picks(
