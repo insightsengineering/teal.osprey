@@ -258,48 +258,54 @@ srv_g_events_term_id_picks <- function(id,
     anl_q <- merged_anl$data
     merge_vars <- merged_anl$variables
 
-    observeEvent(anl_selectors$arm_var(), {
-      arm_selector <- anl_selectors$arm_var()
-      req(arm_selector)
-      arm_var_name <- arm_selector$variables$selected
-      arm_dataset <- arm_selector$datasets$selected
-      req(arm_var_name, arm_dataset)
+    observeEvent(anl_selectors$arm_var(),
+      {
+        arm_selector <- anl_selectors$arm_var()
+        req(arm_selector)
+        arm_var_name <- arm_selector$variables$selected
+        arm_dataset <- arm_selector$datasets$selected
+        req(arm_var_name, arm_dataset)
 
-      arm_data <- data()[[arm_dataset]]
-      choices <- levels(arm_data[[arm_var_name]])
+        arm_data <- data()[[arm_dataset]]
+        choices <- levels(arm_data[[arm_var_name]])
 
-      trt_index <- if (length(choices) == 1L) 1L else 2L
+        trt_index <- if (length(choices) == 1L) 1L else 2L
 
-      updateSelectInput(
-        session,
-        "arm_ref",
-        selected = choices[1],
-        choices = choices
-      )
-      updateSelectInput(
-        session,
-        "arm_trt",
-        selected = choices[trt_index],
-        choices = choices
-      )
-    }, ignoreNULL = TRUE)
-
-    observeEvent(input$sort, {
-      sort <- if (is.null(input$sort)) " " else input$sort
-      updateTextInput(
-        session,
-        "title",
-        value = sprintf(
-          "Common AE Table %s",
-          c(
-            "term" = "Sorted by Term",
-            "riskdiff" = "Sorted by Risk Difference",
-            "meanrisk" = "Sorted by Mean Risk",
-            " " = ""
-          )[sort]
+        updateSelectInput(
+          session,
+          "arm_ref",
+          selected = choices[1],
+          choices = choices
         )
-      )
-    }, ignoreNULL = FALSE)
+        updateSelectInput(
+          session,
+          "arm_trt",
+          selected = choices[trt_index],
+          choices = choices
+        )
+      },
+      ignoreNULL = TRUE
+    )
+
+    observeEvent(input$sort,
+      {
+        sort <- if (is.null(input$sort)) " " else input$sort
+        updateTextInput(
+          session,
+          "title",
+          value = sprintf(
+            "Common AE Table %s",
+            c(
+              "term" = "Sorted by Term",
+              "riskdiff" = "Sorted by Risk Difference",
+              "meanrisk" = "Sorted by Mean Risk",
+              " " = ""
+            )[sort]
+          )
+        )
+      },
+      ignoreNULL = FALSE
+    )
 
     observeEvent(list(input$diff_ci_method, input$conf_level), {
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
