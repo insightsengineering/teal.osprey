@@ -37,10 +37,11 @@
 #' | `tm_g_events_term_id` | `plot` | `grob` |
 #' | `tm_g_heat_bygrade` | `plot` | `grob` / `gtable` |
 #'
-#' - For **`ggplot`** outputs, use `ggplot2` modifiers (for example via
-#'   [`teal::make_teal_transform_server()`]).
-#' - For **`grob`** outputs, use [`tern::decorate_grob()`] or other grid-compatible
-#'   adjustments. Do not apply `ggplot2` layer functions to `plot` in these modules.
+#' - For **`ggplot`** outputs (`tm_g_spiderplot` only), use `ggplot2` modifiers
+#'   (for example via [`teal::make_teal_transform_server()`]).
+#' - For **`grob`** outputs (all other modules), use [`tern::decorate_grob()`] or
+#'   other grid-compatible adjustments. Applying `ggplot2` layers to `plot` in
+#'   those modules will fail silently or break rendering.
 #'
 #' Four modules (`tm_g_ae_oview`, `tm_g_ae_sub`, `tm_g_events_term_id`, `tm_g_heat_bygrade`)
 #' also provide built-in title and footnote controls via [`ui_g_decorate()`] and

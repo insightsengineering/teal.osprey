@@ -13,5 +13,5 @@ plot_decorate_output(id)
 An html element.
 }
 \description{
-Adds \code{\link[teal.widgets:plot_with_settings]{teal.widgets::plot_with_settings_ui()}}
+Adds \code{\link[=plot_with_settings_ui]{plot_with_settings_ui()}}
 }
