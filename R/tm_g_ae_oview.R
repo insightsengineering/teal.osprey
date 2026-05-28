@@ -106,6 +106,7 @@ tm_g_ae_oview <- function(label,
     plot_width[1],
     lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
   )
+  assert_transformators(transformators)
   teal::assert_decorators(decorators, "plot")
 
   args <- as.list(environment())

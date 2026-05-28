@@ -152,6 +152,7 @@ tm_g_swimlane <- function(label,
     .var.name = "plot_width"
   )
   checkmate::assert_string(x_label)
+  assert_transformators(transformators)
   teal::assert_decorators(decorators, "plot")
 
   module(

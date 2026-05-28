@@ -132,6 +132,7 @@ tm_g_waterfall <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  assert_transformators(transformators)
   teal::assert_decorators(decorators, "plot")
 
   args <- as.list(environment())
