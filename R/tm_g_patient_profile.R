@@ -359,11 +359,12 @@ srv_g_patient_profile <- function(id,
                                   decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
-  if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
-  if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
-  if (!is.na(rs_dataname)) checkmate::assert_names(rs_dataname, subset.of = names(data))
-  if (!is.na(lb_dataname)) checkmate::assert_names(lb_dataname, subset.of = names(data))
-  if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
+  data_names <- names(isolate(data()))
+  if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = data_names)
+  if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = data_names)
+  if (!is.na(rs_dataname)) checkmate::assert_names(rs_dataname, subset.of = data_names)
+  if (!is.na(lb_dataname)) checkmate::assert_names(lb_dataname, subset.of = data_names)
+  if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = data_names)
   checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")

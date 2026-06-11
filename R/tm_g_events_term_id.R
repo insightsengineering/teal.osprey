@@ -238,11 +238,7 @@ srv_g_events_term_id <- function(id,
       iv
     })
 
-    decorate_output <- srv_g_decorate(
-      id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width
-    )
-    font_size <- decorate_output$font_size
-    pws <- decorate_output$pws
+    font_size <- reactive(input$fontsize)
 
     observeEvent(list(input$diff_ci_method, input$conf_level), {
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
@@ -382,6 +378,14 @@ srv_g_events_term_id <- function(id,
       expr = quote(plot)
     )
     plot_r <- reactive(decorated_output_q()[["plot"]])
+
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
+    )
+    pws <- decorate_output$pws
     set_chunk_dims(pws, decorated_output_q)
   })
 }

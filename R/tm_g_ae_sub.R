@@ -218,14 +218,7 @@ srv_g_ae_sub <- function(id,
       iv
     })
 
-    decorate_output <- srv_g_decorate(
-      id = NULL,
-      plt = plot_r,
-      plot_height = plot_height,
-      plot_width = plot_width
-    )
-    font_size <- decorate_output$font_size
-    pws <- decorate_output$pws
+    font_size <- reactive(input$fontsize)
 
     observeEvent(input$arm_var, ignoreNULL = TRUE, {
       arm_var <- input$arm_var
@@ -393,6 +386,14 @@ srv_g_ae_sub <- function(id,
       expr = quote(plot)
     )
     plot_r <- reactive(decorated_output_q()[["plot"]])
+
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
+    )
+    pws <- decorate_output$pws
     set_chunk_dims(pws, decorated_output_q)
   })
 }

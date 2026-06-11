@@ -372,15 +372,6 @@ srv_g_heatmap_bygrade <- function(id,
       iv_cm
     })
 
-    decorate_output <- srv_g_decorate(
-      id = NULL,
-      plt = plot_r,
-      plot_height = plot_height,
-      plot_width = plot_width
-    )
-    font_size <- decorate_output$font_size
-    pws <- decorate_output$pws
-
     if (!is.na(cm_dataname)) {
       observeEvent(input$conmed_var, {
         ADCM <- data()[[cm_dataname]]
@@ -472,6 +463,14 @@ srv_g_heatmap_bygrade <- function(id,
       expr = quote(plot)
     )
     plot_r <- reactive(decorated_output_q()[["plot"]])
+
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
+    )
+    pws <- decorate_output$pws
     set_chunk_dims(pws, decorated_output_q)
   })
 }
