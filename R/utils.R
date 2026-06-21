@@ -214,6 +214,49 @@ set_chunk_attrs <- function(teal_card,
 #'
 #' @return A reactive expression that returns the `teal_card` with updated dimensions
 #'
+#' Collect unique datanames from a list of picks objects (internal).
+#'
+#' @param pick_slots (`list`) named list of `picks` objects (NULL entries ignored).
+#'
+#' @keywords internal
+.picks_all_datanames <- function(pick_slots) {
+  pick_slots <- pick_slots[!vapply(pick_slots, is.null, logical(1))]
+  if (length(pick_slots) == 0L) {
+    return(character())
+  }
+  all_datanames <- unique(
+    unlist(
+      lapply(
+        pick_slots,
+        function(p) {
+          ch <- p$datasets$choices
+          if (checkmate::test_character(ch, min.len = 1L)) {
+            return(unique(as.character(ch)))
+          }
+          sel <- p$datasets$selected
+          unique(as.character(unlist(sel, recursive = FALSE, use.names = FALSE)))
+        }
+      ),
+      use.names = FALSE
+    )
+  )
+  all_datanames[nzchar(all_datanames) & !is.na(all_datanames)]
+}
+
+#' Assert a picks object uses single variable selection (internal).
+#'
+#' @param pick (`picks`)
+#' @param arg_name (`character`) argument name for error messages.
+#'
+#' @keywords internal
+.assert_picks_single_var <- function(pick, arg_name) {
+  checkmate::assert_class(pick, "picks", .var.name = arg_name)
+  checkmate::assert_false(
+    teal.picks::is_pick_multiple(pick$variables),
+    .var.name = sprintf("`%s` must use variables(..., multiple = FALSE)", arg_name)
+  )
+}
+
 #' @keywords internal
 set_chunk_dims <- function(pws, q_r, inner_classes = NULL) {
   checkmate::assert_list(pws)

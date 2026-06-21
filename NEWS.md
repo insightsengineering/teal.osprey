@@ -1,5 +1,8 @@
 # teal.osprey 0.4.0.9002
 
+- Migrated modules from `teal.transform` to `teal.picks`.
+- Added shinytest2 tests.
+
 # teal.osprey 0.4.0
 
 

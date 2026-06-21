@@ -1,79 +1,25 @@
-#' Events by Term Plot Teal Module
-#'
-#' Display an events-by-term plot as a Shiny module using [teal.picks::picks()] encodings.
-#'
-#' @inheritParams teal.widgets::standard_layout
-#' @inheritParams teal::module
-#' @inheritParams argument_convention
-#' @param term_var (`picks`)\cr
-#'   [teal.picks::picks()] object for the event term variable (single selection).
-#' @param arm_var (`picks`)\cr
-#'   [teal.picks::picks()] object for the treatment arm variable (single selection).
-#'   The arm variable must be a factor in the analysis data.
-#'
-#' @inherit argument_convention return
-#' @inheritSection teal::example_module Reporting
-#'
+#' @describeIn tm_g_events_term_id [teal.picks::picks()]-based encodings (`picks`).
 #' @export
-#'
-#' @author Liming Li (lil128) \email{liming.li@roche.com}
-#' @author Molly He (hey59) \email{hey59@gene.com}
-#'
-#' @examples
-#' data <- teal_data() %>%
-#'   within({
-#'     ADSL <- rADSL
-#'     ADAE <- rADAE
-#'   })
-#'
-#' join_keys(data) <- default_cdisc_join_keys[names(data)]
-#'
-#' app <- init(
-#'   data = data,
-#'   modules = modules(
-#'     tm_g_events_term_id(
-#'       label = "Common AE",
-#'       term_var = teal.picks::picks(
-#'         teal.picks::datasets("ADAE"),
-#'         teal.picks::variables(
-#'           choices = teal.picks::is_categorical(min.len = 2),
-#'           selected = "AEDECOD"
-#'         )
-#'       ),
-#'       arm_var = teal.picks::picks(
-#'         teal.picks::datasets("ADSL"),
-#'         teal.picks::variables(
-#'           choices = teal.picks::is_categorical(min.len = 2),
-#'           selected = "ACTARMCD"
-#'         )
-#'       ),
-#'       plot_height = c(600, 200, 2000)
-#'     )
-#'   )
-#' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
-#' }
-#'
-tm_g_events_term_id <- function(label = "Common AE",
-                                term_var = teal.picks::picks(
-                                  teal.picks::datasets(),
-                                  teal.picks::variables(
-                                    choices = teal.picks::is_categorical(min.len = 2),
-                                    selected = 1L
-                                  )
-                                ),
-                                arm_var = teal.picks::picks(
-                                  teal.picks::datasets(),
-                                  teal.picks::variables(
-                                    choices = teal.picks::is_categorical(min.len = 2),
-                                    selected = 1L
-                                  )
-                                ),
-                                fontsize = c(5, 3, 7),
-                                plot_height = c(600L, 200L, 2000L),
-                                plot_width = NULL,
-                                transformators = list()) {
+tm_g_events_term_id.picks <- function(label = "Common AE", # nolint: object_name_linter.
+                                      dataname = NULL,
+                                      term_var = teal.picks::picks(
+                                        teal.picks::datasets(),
+                                        teal.picks::variables(
+                                          choices = teal.picks::is_categorical(min.len = 2),
+                                          selected = 1L
+                                        )
+                                      ),
+                                      arm_var = teal.picks::picks(
+                                        teal.picks::datasets(),
+                                        teal.picks::variables(
+                                          choices = teal.picks::is_categorical(min.len = 2),
+                                          selected = 1L
+                                        )
+                                      ),
+                                      fontsize = c(5, 3, 7),
+                                      plot_height = c(600L, 200L, 2000L),
+                                      plot_width = NULL,
+                                      transformators = list()) {
   checkmate::assert_string(label)
 
   checkmate::assert_class(term_var, "picks", .var.name = "term_var")
@@ -108,26 +54,79 @@ tm_g_events_term_id <- function(label = "Common AE",
   )
 
   pick_slots <- list(term_var = term_var, arm_var = arm_var)
-  all_datanames <- .picks_all_datanames(pick_slots)
+  all_datanames <- unique(
+    unlist(
+      lapply(
+        pick_slots,
+        function(p) {
+          ch <- p$datasets$choices
+          if (checkmate::test_character(ch, min.len = 1L)) {
+            return(unique(as.character(ch)))
+          }
+          sel <- p$datasets$selected
+          unique(as.character(unlist(sel, recursive = FALSE, use.names = FALSE)))
+        }
+      ),
+      use.names = FALSE
+    )
+  )
+  all_datanames <- all_datanames[nzchar(all_datanames) & !is.na(all_datanames)]
 
   args <- as.list(environment())
 
   module(
     label = label,
-    ui = ui_g_events_term_id,
-    server = srv_g_events_term_id,
-    ui_args = args[names(args) %in% names(formals(ui_g_events_term_id))],
-    server_args = args[names(args) %in% names(formals(srv_g_events_term_id))],
+    ui = ui_g_events_term_id_picks,
+    server = srv_g_events_term_id_picks,
+    ui_args = args[names(args) %in% names(formals(ui_g_events_term_id_picks))],
+    server_args = args[names(args) %in% names(formals(srv_g_events_term_id_picks))],
     transformators = transformators,
     datanames = all_datanames
   )
 }
 
+#' @examples
+#' # Using the picks method
+#' data <- teal_data() %>%
+#'   within({
+#'     ADSL <- rADSL
+#'     ADAE <- rADAE
+#'   })
+#'
+#' join_keys(data) <- default_cdisc_join_keys[names(data)]
+#'
+#' app <- init(
+#'   data = data,
+#'   modules = modules(
+#'     tm_g_events_term_id(
+#'       label = "Common AE",
+#'       term_var = teal.picks::picks(
+#'         teal.picks::datasets("ADAE"),
+#'         teal.picks::variables(
+#'           choices = teal.picks::is_categorical(min.len = 2),
+#'           selected = "AEDECOD"
+#'         )
+#'       ),
+#'       arm_var = teal.picks::picks(
+#'         teal.picks::datasets("ADSL"),
+#'         teal.picks::variables(
+#'           choices = teal.picks::is_categorical(min.len = 2),
+#'           selected = "ACTARMCD"
+#'         )
+#'       ),
+#'       plot_height = c(600, 200, 2000)
+#'     )
+#'   )
+#' )
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
+#' }
+
 #' @keywords internal
-ui_g_events_term_id <- function(id,
-                                term_var,
-                                arm_var,
-                                fontsize) {
+ui_g_events_term_id_picks <- function(id,
+                                      term_var,
+                                      arm_var,
+                                      fontsize) {
   ns <- NS(id)
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
@@ -220,12 +219,12 @@ ui_g_events_term_id <- function(id,
 }
 
 #' @keywords internal
-srv_g_events_term_id <- function(id,
-                                 data,
-                                 term_var,
-                                 arm_var,
-                                 plot_height,
-                                 plot_width) {
+srv_g_events_term_id_picks <- function(id,
+                                       data,
+                                       term_var,
+                                       arm_var,
+                                       plot_height,
+                                       plot_width) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(isolate(data()), "teal_data")
 
