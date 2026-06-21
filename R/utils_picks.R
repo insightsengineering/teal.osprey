@@ -1,0 +1,164 @@
+#' Create a reactive that sets plot dimensions on a `teal_card`
+#'
+#' This is a convenience function that creates a reactive expression that
+#' automatically sets the `dev.width` and `dev.height` attributes on the last
+#' chunk outputs of a `teal_card` based on plot dimensions from a plot widget.
+#'
+#' @param pws (`plot_widget`) plot widget that provides dimensions via `dim()` method
+#' @param q_r (`reactive`) reactive expression that returns a `teal_reporter`
+#' @param inner_classes (`character`) classes within `chunk_output` that should be modified.
+#' This can be used to only change `recordedplot`, `ggplot2` or other type of objects.
+#'
+#' @return A reactive expression that returns the `teal_card` with updated dimensions
+#'
+#' Collect unique datanames from a list of picks objects (internal).
+#'
+#' @param pick_slots (`list`) named list of `picks` objects (NULL entries ignored).
+#'
+#' @keywords internal
+.picks_all_datanames <- function(pick_slots) {
+  pick_slots <- pick_slots[!vapply(pick_slots, is.null, logical(1))]
+  if (length(pick_slots) == 0L) {
+    return(character())
+  }
+  all_datanames <- unique(
+    unlist(
+      lapply(
+        pick_slots,
+        function(p) {
+          ch <- p$datasets$choices
+          if (checkmate::test_character(ch, min.len = 1L)) {
+            return(unique(as.character(ch)))
+          }
+          sel <- p$datasets$selected
+          unique(as.character(unlist(sel, recursive = FALSE, use.names = FALSE)))
+        }
+      ),
+      use.names = FALSE
+    )
+  )
+  all_datanames[nzchar(all_datanames) & !is.na(all_datanames)]
+}
+
+#' Assert a picks object uses single variable selection (internal).
+#'
+#' @param pick (`picks`)
+#' @param arg_name (`character`) argument name for error messages.
+#'
+#' @keywords internal
+.assert_picks_single_var <- function(pick, arg_name) {
+  checkmate::assert_class(pick, "picks", .var.name = arg_name)
+  checkmate::assert_false(
+    teal.picks::is_pick_multiple(pick$variables),
+    .var.name = sprintf("`%s` must use variables(..., multiple = FALSE)", arg_name)
+  )
+}
+
+#' @keywords internal
+set_chunk_dims <- function(pws, q_r, inner_classes = NULL) {
+  checkmate::assert_list(pws)
+  checkmate::assert_names(names(pws), must.include = "dim")
+  checkmate::assert_class(pws$dim, "reactive")
+  checkmate::assert_class(q_r, "reactive")
+  checkmate::assert_character(inner_classes, null.ok = TRUE)
+
+  reactive({
+    pws_dim <- stats::setNames(as.list(req(pws$dim())), c("width", "height"))
+    if (identical(pws_dim$width, "auto")) { # ignore non-numeric values (such as "auto")
+      pws_dim$width <- NULL
+    }
+    if (identical(pws_dim$height, "auto")) { # ignore non-numeric values (such as "auto")
+      pws_dim$height <- NULL
+    }
+    q <- req(q_r())
+    teal.reporter::teal_card(q) <- set_chunk_attrs(
+      teal.reporter::teal_card(q),
+      list(dev.width = pws_dim$width, dev.height = pws_dim$height),
+      inner_classes = inner_classes
+    )
+    q
+  })
+}
+
+#' Coerce legacy `teal.transform` specs to [`teal.picks::variables()`] with deprecation
+#'
+#' If `x` is a legacy `choices_selected`, `filter_spec`, or `select_spec` object, it is converted
+#' via [`teal.picks::as.picks()`]. Otherwise `x` must already inherit `"variables"`.
+#'
+#' @param x (`values`, `choices_selected` or `picks`) object.
+#' @param arg_name optional (`character(1)`) argument name.
+#' @param multiple optional (`logical(1)`) whether multiple values are allowed.
+#' If `NULL` (default), it is not validated and inferred from the length of `selected` in the
+#' `choices_selected` object.
+#' @param null.ok (`logical(1)`) whether `NULL` is allowed.
+#'
+#' @keywords internal
+#' @noRd
+migrate_choices_selected_to_variables <- function(x, # nolint: object_length_linter
+                                                  arg_name = checkmate::vname(x),
+                                                  multiple = NULL,
+                                                  null.ok = FALSE) { # nolint: object_name_linter.
+  # nolint: object_name_linter.
+  checkmate::assert_string(arg_name)
+  checkmate::assert_flag(multiple, null.ok = TRUE)
+  checkmate::assert_flag(null.ok)
+  if (inherits(x, "picks")) {
+    return(x)
+  }
+
+  if (isTRUE(null.ok) && is.null(x)) {
+    return(x)
+  }
+  legacy <- c("choices_selected", "filter_spec", "select_spec")
+  if (inherits(x, legacy)) {
+    lifecycle::deprecate_warn(
+      when = "0.5.0",
+      what = I(paste0("`", arg_name, "`")),
+      details = paste(
+        "Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).",
+        "Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and `select_spec` is deprecated."
+      )
+    )
+    x <- teal.picks::as.picks(x, quiet = FALSE)
+    attr(x, "multiple") <- (!is.null(multiple) && multiple) || (is.null(multiple) && length(x$selected) > 1L)
+  } else {
+    if (!is.null(multiple) && !identical(attr(x, "multiple", exact = TRUE), multiple)) {
+      stop(
+        sprintf("`multiple` metadata does not match the requirement for %s.", arg_name),
+        sprintf(" Please set multiple = %s in the picks object.", multiple),
+        call. = FALSE
+      )
+    }
+  }
+  checkmate::assert_class(
+    x,
+    "variables",
+    null.ok = null.ok,
+    .var.name = arg_name
+  )
+  x
+}
+
+#' Supports the creation of picks object that does not override a dataset if already exists
+#' @param datasets ([`teal.picks::datasets()`] object) to use if `x` does not already have a dataset.
+#' @param x (`pick` or `picks` object) to ensure has a dataset.
+#' @return a `picks` object with a dataset, either from `x` or from `datasets`.
+#' @keywords internal
+#' @noRd
+create_picks_helper <- function(datasets = NULL, x) {
+  if (inherits(x, "picks") && !is.null(x$datasets)) {
+    return(x)
+  }
+  checkmate::assert_class(datasets, "datasets", null.ok = FALSE)
+  checkmate::assert_multi_class(x, c("pick", "picks"))
+
+  if (inherits(x, "picks")) {
+    picks_args <- list(datasets, x$variables, x$values)
+    do.call(
+      teal.picks::picks,
+      picks_args[vapply(picks_args, Negate(is.null), logical(1L))],
+    )
+  } else if (inherits(x, "pick")) {
+    teal.picks::picks(datasets, x)
+  }
+}

@@ -104,11 +104,11 @@ app <- init(
     tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
-      arm_var = teal.picks::variables(
+      arm_var = variables(
         choices = dplyr::starts_with("ACTARM"),
         selected = "ACTARMCD"
       ),
-      flag_var_anl = teal.picks::variables(
+      flag_var_anl = variables(
         choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
         selected = "AEREL1"
       ),

@@ -52,11 +52,11 @@
 #'     tm_g_ae_oview(
 #'       label = "AE Overview",
 #'       dataname = "ADAE",
-#'       arm_var = teal.picks::variables(
+#'       arm_var = variables(
 #'         choices = dplyr::starts_with("ACTARM"),
 #'         selected = "ACTARMCD"
 #'       ),
-#'       flag_var_anl = teal.picks::variables(
+#'       flag_var_anl = variables(
 #'         choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
 #'         selected = "AEREL1"
 #'       ),
@@ -80,16 +80,13 @@ tm_g_ae_oview <- function(
 ) {
   message("Initializing tm_g_ae_oview")
 
-  arm_var <- convert_arg_to_picks(arm_var)
-  flag_var_anl <- convert_arg_to_picks(flag_var_anl)
+  arm_var <- migrate_choices_selected_to_variables(arm_var)
+  flag_var_anl <- migrate_choices_selected_to_variables(flag_var_anl)
 
-  arm_var <- teal.picks::picks(teal.picks::datasets(dataname), arm_var)
-  flag_var_anl <- teal.picks::picks(
-    teal.picks::datasets(dataname),
-    flag_var_anl
-  )
+  arm_var <- create_picks_helper(teal.picks::datasets(dataname), arm_var)
+  flag_var_anl <- create_picks_helper(teal.picks::datasets(dataname), flag_var_anl)
 
-  if (isTRUE(attr(arm_var$variables, "multiple"))) {
+  if (teal.picks::is_pick_multiple(arm_var$variables)) {
     warning(
       "`arm_var` accepts only a single variable selection. ",
       "Forcing `teal.picks::variables(multiple)` to FALSE."
@@ -97,7 +94,7 @@ tm_g_ae_oview <- function(
     attr(arm_var$variables, "multiple") <- FALSE
   }
 
-  if (isTRUE(attr(flag_var_anl$variables, "multiple"))) {
+  if (teal.picks::is_pick_multiple(flag_var_anl$variables)) {
     warning(
       "`flag_var_anl` accepts only a single variable selection. ",
       "Forcing `teal.picks::variables(multiple)` to FALSE."
