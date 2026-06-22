@@ -11,7 +11,7 @@
 #' @param pick_slots (`list`) named list of `picks` objects (NULL entries ignored).
 #'
 #' @keywords internal
-#' 
+#'
 .picks_all_datanames <- function(pick_slots) {
   pick_slots <- pick_slots[!vapply(pick_slots, is.null, logical(1))]
   if (length(pick_slots) == 0L) {
