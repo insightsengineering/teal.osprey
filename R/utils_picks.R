@@ -4,11 +4,6 @@
 #' automatically sets the `dev.width` and `dev.height` attributes on the last
 #' chunk outputs of a `teal_card` based on plot dimensions from a plot widget.
 #'
-#' @param pws (`plot_widget`) plot widget that provides dimensions via `dim()` method
-#' @param q_r (`reactive`) reactive expression that returns a `teal_reporter`
-#' @param inner_classes (`character`) classes within `chunk_output` that should be modified.
-#' This can be used to only change `recordedplot`, `ggplot2` or other type of objects.
-#'
 #' @return A reactive expression that returns the `teal_card` with updated dimensions
 #'
 #' Collect unique datanames from a list of picks objects (internal).
@@ -16,6 +11,7 @@
 #' @param pick_slots (`list`) named list of `picks` objects (NULL entries ignored).
 #'
 #' @keywords internal
+#' 
 .picks_all_datanames <- function(pick_slots) {
   pick_slots <- pick_slots[!vapply(pick_slots, is.null, logical(1))]
   if (length(pick_slots) == 0L) {

@@ -8,13 +8,6 @@
 }
 \arguments{
 \item{pick_slots}{(\code{list}) named list of \code{picks} objects (NULL entries ignored).}
-
-\item{pws}{(\code{plot_widget}) plot widget that provides dimensions via \code{dim()} method}
-
-\item{q_r}{(\code{reactive}) reactive expression that returns a \code{teal_reporter}}
-
-\item{inner_classes}{(\code{character}) classes within \code{chunk_output} that should be modified.
-This can be used to only change \code{recordedplot}, \code{ggplot2} or other type of objects.}
 }
 \value{
 A reactive expression that returns the \code{teal_card} with updated dimensions
