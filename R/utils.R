@@ -70,7 +70,7 @@ ci_choices <- setNames(
 #' @param x ci method to retrieve its name
 name_ci <- function(x = ci_choices) {
   x <- match.arg(x)
-  return(paste0(names(x), " (", x, ")"))
+  paste0(names(x), " (", x, ")")
 }
 
 
@@ -169,7 +169,7 @@ set_chunk_attrs <- function(teal_card,
     return(teal_card)
   }
 
-  for (ix in seq_len(length(teal_card))) {
+  for (ix in seq_along(teal_card)) {
     if (ix > n) {
       break
     }
@@ -199,86 +199,4 @@ set_chunk_attrs <- function(teal_card,
   }
 
   teal_card
-}
-
-#' Create a reactive that sets plot dimensions on a `teal_card`
-#'
-#' This is a convenience function that creates a reactive expression that
-#' automatically sets the `dev.width` and `dev.height` attributes on the last
-#' chunk outputs of a `teal_card` based on plot dimensions from a plot widget.
-#'
-#' @param pws (`plot_widget`) plot widget that provides dimensions via `dim()` method
-#' @param q_r (`reactive`) reactive expression that returns a `teal_reporter`
-#' @param inner_classes (`character`) classes within `chunk_output` that should be modified.
-#' This can be used to only change `recordedplot`, `ggplot2` or other type of objects.
-#'
-#' @return A reactive expression that returns the `teal_card` with updated dimensions
-#'
-#' Collect unique datanames from a list of picks objects (internal).
-#'
-#' @param pick_slots (`list`) named list of `picks` objects (NULL entries ignored).
-#'
-#' @keywords internal
-.picks_all_datanames <- function(pick_slots) {
-  pick_slots <- pick_slots[!vapply(pick_slots, is.null, logical(1))]
-  if (length(pick_slots) == 0L) {
-    return(character())
-  }
-  all_datanames <- unique(
-    unlist(
-      lapply(
-        pick_slots,
-        function(p) {
-          ch <- p$datasets$choices
-          if (checkmate::test_character(ch, min.len = 1L)) {
-            return(unique(as.character(ch)))
-          }
-          sel <- p$datasets$selected
-          unique(as.character(unlist(sel, recursive = FALSE, use.names = FALSE)))
-        }
-      ),
-      use.names = FALSE
-    )
-  )
-  all_datanames[nzchar(all_datanames) & !is.na(all_datanames)]
-}
-
-#' Assert a picks object uses single variable selection (internal).
-#'
-#' @param pick (`picks`)
-#' @param arg_name (`character`) argument name for error messages.
-#'
-#' @keywords internal
-.assert_picks_single_var <- function(pick, arg_name) {
-  checkmate::assert_class(pick, "picks", .var.name = arg_name)
-  checkmate::assert_false(
-    teal.picks::is_pick_multiple(pick$variables),
-    .var.name = sprintf("`%s` must use variables(..., multiple = FALSE)", arg_name)
-  )
-}
-
-#' @keywords internal
-set_chunk_dims <- function(pws, q_r, inner_classes = NULL) {
-  checkmate::assert_list(pws)
-  checkmate::assert_names(names(pws), must.include = "dim")
-  checkmate::assert_class(pws$dim, "reactive")
-  checkmate::assert_class(q_r, "reactive")
-  checkmate::assert_character(inner_classes, null.ok = TRUE)
-
-  reactive({
-    pws_dim <- stats::setNames(as.list(req(pws$dim())), c("width", "height"))
-    if (identical(pws_dim$width, "auto")) { # ignore non-numeric values (such as "auto")
-      pws_dim$width <- NULL
-    }
-    if (identical(pws_dim$height, "auto")) { # ignore non-numeric values (such as "auto")
-      pws_dim$height <- NULL
-    }
-    q <- req(q_r())
-    teal.reporter::teal_card(q) <- set_chunk_attrs(
-      teal.reporter::teal_card(q),
-      list(dev.width = pws_dim$width, dev.height = pws_dim$height),
-      inner_classes = inner_classes
-    )
-    q
-  })
 }
