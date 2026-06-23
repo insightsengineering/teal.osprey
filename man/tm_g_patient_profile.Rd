@@ -93,7 +93,7 @@ into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} el
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display patient profile plot as a shiny module
