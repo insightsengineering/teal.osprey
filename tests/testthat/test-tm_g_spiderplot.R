@@ -69,43 +69,45 @@ yfacet_var_picks <- teal.picks::variables(
 )
 
 testthat::describe("tm_g_spiderplot argument verification", {
-  testthat::it("fails when x_var is picks but other args are choices_selected", {
-    testthat::expect_error(
-      tm_g_spiderplot(
-        label = "Spider Plot",
-        dataname = "ADTR",
-        paramcd = paramcd_cs,
-        x_var = x_var_picks,
-        y_var = y_var_cs,
-        marker_var = marker_var_cs,
-        line_colorby_var = line_colorby_var_cs,
-        xfacet_var = xfacet_var_cs,
-        yfacet_var = yfacet_var_cs,
-        vref_line = "10, 37",
-        href_line = "-20, 0",
-        plot_height = c(600, 200, 2000)
-      ),
-      regexp = "Assertion on 'picks' failed"
+  testthat::it("accepts x_var as picks when other args are choices_selected", {
+    testthat::expect_no_error(
+      suppressWarnings(
+        tm_g_spiderplot(
+          label = "Spider Plot",
+          dataname = "ADTR",
+          paramcd = paramcd_cs,
+          x_var = x_var_picks,
+          y_var = y_var_cs,
+          marker_var = marker_var_cs,
+          line_colorby_var = line_colorby_var_cs,
+          xfacet_var = xfacet_var_cs,
+          yfacet_var = yfacet_var_cs,
+          vref_line = "10, 37",
+          href_line = "-20, 0",
+          plot_height = c(600, 200, 2000)
+        )
+      )
     )
   })
 
-  testthat::it("fails when x_var is choices_selected but other args are picks", {
-    testthat::expect_error(
-      tm_g_spiderplot(
-        label = "Spider Plot",
-        dataname = "ADTR",
-        paramcd = paramcd_picks,
-        x_var = x_var_cs,
-        y_var = y_var_picks,
-        marker_var = marker_var_picks,
-        line_colorby_var = line_colorby_var_picks,
-        xfacet_var = xfacet_var_picks,
-        yfacet_var = yfacet_var_picks,
-        vref_line = "10, 37",
-        href_line = "-20, 0",
-        plot_height = c(600, 200, 2000)
-      ),
-      regexp = "Assertion on 'paramcd' failed:"
+  testthat::it("accepts x_var as choices_selected when other args are picks", {
+    testthat::expect_no_error(
+      suppressWarnings(
+        tm_g_spiderplot(
+          label = "Spider Plot",
+          dataname = "ADTR",
+          paramcd = paramcd_picks,
+          x_var = x_var_cs,
+          y_var = y_var_picks,
+          marker_var = marker_var_picks,
+          line_colorby_var = line_colorby_var_picks,
+          xfacet_var = xfacet_var_picks,
+          yfacet_var = yfacet_var_picks,
+          vref_line = "10, 37",
+          href_line = "-20, 0",
+          plot_height = c(600, 200, 2000)
+        )
+      )
     )
   })
 })
