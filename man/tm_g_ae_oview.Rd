@@ -19,17 +19,18 @@ tm_g_ae_oview(
 \item{label}{(\code{character(1)}) Label shown in the navigation item for the module or module group.
 For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
-\item{dataname}{(\code{character(1)})\cr
-analysis data used in the teal module, needs to be
-available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
+\item{dataname}{(\code{character(1)}) Name of the events dataset. Required when
+using the default method with \link[teal.transform:choices_selected]{choices_selected}.
+Ignored by the \code{.picks} method.}
 
 \item{arm_var}{(\code{choices_selected})\cr
 object with all available choices and the pre-selected option for variable
 names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
 details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
 
-\item{flag_var_anl}{(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object with variables used to count adverse event
+\item{flag_var_anl}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
+\code{choices_selected} object or a (\verb{[teal.picks::variables()]})
+object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
@@ -47,7 +48,7 @@ vector to indicate default value, minimum and maximum values.}
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display the \code{AE} overview plot as a shiny module
@@ -95,27 +96,21 @@ data <- teal_data() \%>\%
     }
     ADAE <- .add_event_flags(ADAE)
   })
-
 join_keys(data) <- default_cdisc_join_keys[names(data)]
-
 ADAE <- data[["ADAE"]]
-
 app <- init(
   data = data,
   modules = modules(
     tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
-      arm_var = choices_selected(
-        selected = "ACTARM",
-        choices = c("ACTARM", "ACTARMCD")
+      arm_var = variables(
+        choices = dplyr::starts_with("ACTARM"),
+        selected = "ACTARMCD"
       ),
-      flag_var_anl = choices_selected(
-        selected = "AEREL1",
-        choices = variable_choices(
-          ADAE,
-          c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
-        ),
+      flag_var_anl = variables(
+        choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
+        selected = "AEREL1"
       ),
       plot_height = c(600, 200, 2000)
     )
@@ -124,5 +119,4 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-
 }
