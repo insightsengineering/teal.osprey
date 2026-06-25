@@ -35,9 +35,28 @@ left_var_picks <- teal.picks::variables(
 
 testthat::describe("tm_g_butterfly input validation", {
   it("plot arguments input validation", {
-    testthat::expect_error({
-      suppressWarnings(
-        tm_g_butterfly(
+    testthat::expect_error(
+      {
+        suppressWarnings(
+          tm_g_butterfly(
+            label = "Butterfly Plot",
+            dataname = "ADAE",
+            right_var = right_var_cs,
+            left_var = left_var_cs,
+            category_var = category_var_cs,
+            color_by_var = color_by_var_cs,
+            count_by_var = count_by_var_cs,
+            plot_height = c(600, 2000, 200)
+          ),
+          classes = "picks_delayed"
+        )
+      },
+      "Assertion on 'plot_height' failed"
+    )
+
+    testthat::expect_error(
+      {
+        suppressWarnings(tm_g_butterfly(
           label = "Butterfly Plot",
           dataname = "ADAE",
           right_var = right_var_cs,
@@ -45,57 +64,51 @@ testthat::describe("tm_g_butterfly input validation", {
           category_var = category_var_cs,
           color_by_var = color_by_var_cs,
           count_by_var = count_by_var_cs,
-          plot_height = c(600, 2000, 200)
-        )
-      , classes = "picks_delayed")
-    }, "Assertion on 'plot_height' failed")
-
-    testthat::expect_error({
-      suppressWarnings(tm_g_butterfly(
-        label = "Butterfly Plot",
-        dataname = "ADAE",
-        right_var = right_var_cs,
-        left_var = left_var_cs,
-        category_var = category_var_cs,
-        color_by_var = color_by_var_cs,
-        count_by_var = count_by_var_cs,
-        plot_width = c(600, 2000, 200)
-      ), classes = "picks_delayed")
-    }, "Assertion on 'plot_width' failed")
+          plot_width = c(600, 2000, 200)
+        ), classes = "picks_delayed")
+      },
+      "Assertion on 'plot_width' failed"
+    )
   })
 
   it("Forcing Conversion from multiple picks to single", {
-    testthat::expect_error({
-      suppressWarnings(tm_g_butterfly(
-        label = "Butterfly Plot",
-        dataname = "ADAE",
-        right_var = right_var_cs,
-        left_var = teal.picks::variables(
-    choices = dplyr::where(is.factor),
-    selected = 1L,
-    multiple = TRUE
-  ),
-        category_var = category_var_cs,
-        color_by_var = color_by_var_cs,
-        count_by_var = count_by_var_cs
-      ), classes = "picks_delayed")
-    }, "metadata does not match the requirement for left_var")
+    testthat::expect_error(
+      {
+        suppressWarnings(tm_g_butterfly(
+          label = "Butterfly Plot",
+          dataname = "ADAE",
+          right_var = right_var_cs,
+          left_var = teal.picks::variables(
+            choices = dplyr::where(is.factor),
+            selected = 1L,
+            multiple = TRUE
+          ),
+          category_var = category_var_cs,
+          color_by_var = color_by_var_cs,
+          count_by_var = count_by_var_cs
+        ), classes = "picks_delayed")
+      },
+      "metadata does not match the requirement for left_var"
+    )
 
-  testthat::expect_error({
-      suppressWarnings(tm_g_butterfly(
-        label = "Butterfly Plot",
-        dataname = "ADAE",
-        right_var = teal.picks::variables(
-    choices = dplyr::where(is.factor),
-    selected = 1L,
-    multiple = TRUE
-  ),
-        left_var = left_var_picks,
-        category_var = category_var_cs,
-        color_by_var = color_by_var_cs,
-        count_by_var = count_by_var_cs
-      ), classes = "picks_delayed")
-    }, "metadata does not match the requirement for right_var")
+    testthat::expect_error(
+      {
+        suppressWarnings(tm_g_butterfly(
+          label = "Butterfly Plot",
+          dataname = "ADAE",
+          right_var = teal.picks::variables(
+            choices = dplyr::where(is.factor),
+            selected = 1L,
+            multiple = TRUE
+          ),
+          left_var = left_var_picks,
+          category_var = category_var_cs,
+          color_by_var = color_by_var_cs,
+          count_by_var = count_by_var_cs
+        ), classes = "picks_delayed")
+      },
+      "metadata does not match the requirement for right_var"
+    )
   })
 })
 
