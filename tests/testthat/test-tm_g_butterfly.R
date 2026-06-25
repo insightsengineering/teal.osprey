@@ -33,51 +33,74 @@ left_var_picks <- teal.picks::variables(
   selected = 1L
 )
 
-testthat::describe("tm_g_butterfly argument verification", {
-  testthat::it("fails when right_var is picks but left_var is choices_selected", {
-    testthat::expect_error(
-      tm_g_butterfly(
-        label = "Butterfly Plot",
-        dataname = "ADAE",
-        right_var = right_var_picks,
-        left_var = left_var_cs,
-        category_var = teal.picks::variables(
-          choices = teal.picks::is_categorical(min.len = 2),
-          selected = 1L
-        ),
-        color_by_var = teal.picks::variables(
-          choices = teal.picks::is_categorical(min.len = 2),
-          selected = 1L
-        ),
-        count_by_var = teal.picks::values(
-          selected = "# of patients",
-          choices = c("# of patients", "# of AEs")
-        ),
-        plot_height = c(600, 200, 2000)
-      ),
-      regexp = "Assertion on 'picks' failed"
-    )
-  })
+testthat::describe("tm_g_butterfly input validation", {
+  it("plot arguments input validation", {
+    testthat::expect_error({
+      suppressWarnings(
+        tm_g_butterfly(
+          label = "Butterfly Plot",
+          dataname = "ADAE",
+          right_var = right_var_cs,
+          left_var = left_var_cs,
+          category_var = category_var_cs,
+          color_by_var = color_by_var_cs,
+          count_by_var = count_by_var_cs,
+          plot_height = c(600, 2000, 200)
+        )
+      , classes = "picks_delayed")
+    }, "Assertion on 'plot_height' failed")
 
-  testthat::it("fails when right_var is choices_selected but left_var is picks", {
-    testthat::expect_error(
-      tm_g_butterfly(
+    testthat::expect_error({
+      suppressWarnings(tm_g_butterfly(
         label = "Butterfly Plot",
         dataname = "ADAE",
         right_var = right_var_cs,
-        left_var = left_var_picks,
+        left_var = left_var_cs,
         category_var = category_var_cs,
         color_by_var = color_by_var_cs,
         count_by_var = count_by_var_cs,
-        plot_height = c(600, 200, 2000)
-      ),
-      regexp = "Assertion on 'left_var' failed:"
-    )
+        plot_width = c(600, 2000, 200)
+      ), classes = "picks_delayed")
+    }, "Assertion on 'plot_width' failed")
+  })
+
+  it("Forcing Conversion from multiple picks to single", {
+    testthat::expect_error({
+      suppressWarnings(tm_g_butterfly(
+        label = "Butterfly Plot",
+        dataname = "ADAE",
+        right_var = right_var_cs,
+        left_var = teal.picks::variables(
+    choices = dplyr::where(is.factor),
+    selected = 1L,
+    multiple = TRUE
+  ),
+        category_var = category_var_cs,
+        color_by_var = color_by_var_cs,
+        count_by_var = count_by_var_cs
+      ), classes = "picks_delayed")
+    }, "metadata does not match the requirement for left_var")
+
+  testthat::expect_error({
+      suppressWarnings(tm_g_butterfly(
+        label = "Butterfly Plot",
+        dataname = "ADAE",
+        right_var = teal.picks::variables(
+    choices = dplyr::where(is.factor),
+    selected = 1L,
+    multiple = TRUE
+  ),
+        left_var = left_var_picks,
+        category_var = category_var_cs,
+        color_by_var = color_by_var_cs,
+        count_by_var = count_by_var_cs
+      ), classes = "picks_delayed")
+    }, "metadata does not match the requirement for right_var")
   })
 })
 
 testthat::describe("tm_g_butterfly module creation", {
-  testthat::it("creates a teal module using choices_selected (default method)", {
+  it("creates a teal module using choices_selected", {
     mod <- tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
@@ -87,11 +110,12 @@ testthat::describe("tm_g_butterfly module creation", {
       color_by_var = color_by_var_cs,
       count_by_var = count_by_var_cs,
       plot_height = c(600, 200, 2000)
-    )
+    ) |>
+      suppressWarnings(classes = "picks_delayed")
     testthat::expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks (.pick method)", {
+  it("creates a teal module using picks", {
     mod <- tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
@@ -114,7 +138,8 @@ testthat::describe("tm_g_butterfly module creation", {
         choices = c("count", "alphabetical")
       ),
       plot_height = c(600, 200, 2000)
-    )
+    ) |>
+      suppressWarnings(classes = "picks_delayed")
     testthat::expect_s3_class(mod, "teal_module")
   })
 })

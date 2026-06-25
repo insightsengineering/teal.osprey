@@ -135,6 +135,56 @@ migrate_choices_selected_to_variables <- function(x, # nolint: object_length_lin
   x
 }
 
+#' Coerce legacy `choices_selected` to [`teal.picks::values()`] with deprecation
+#'
+#' @param x (`values`, `choices_selected`, [`teal.picks::picks()`], or [`teal.picks::variables()`]) object.
+#' @param arg_name optional (`character(1)`) argument name.
+#' @param multiple optional (`logical(1)`) whether multiple values are allowed.
+#' If `NULL` (default), it is not validated and inferred from the length of `selected` in the
+#' `choices_selected` object. If `FALSE`, the result is checked with [teal.picks::is_pick_multiple()].
+#'
+#' @keywords internal
+#' @noRd
+migrate_choices_selected_to_values <- function(x, # nolint: object_length_linter
+                                               arg_name = checkmate::vname(x),
+                                               multiple = NULL) {
+  checkmate::assert_string(arg_name)
+  checkmate::assert_flag(multiple, null.ok = TRUE)
+
+  if (inherits(x, "picks")) {
+    return(x)
+  }
+  if (inherits(x, "variables")) {
+    return(x)
+  }
+  if (inherits(x, "choices_selected")) {
+    lifecycle::deprecate_warn(
+      when = "0.5.0",
+      what = I(paste0("`", arg_name, "`")),
+      details = paste(
+        "Pass `teal.picks::values()`.",
+        "Support for legacy `teal.transform::choices_selected()` is deprecated."
+      )
+    )
+    if (is.null(x$choices) || inherits(x$choices, "delayed_data")) {
+      stop(
+        "Delayed `choices_selected` objects cannot be coerced automatically; ",
+        "specify `teal.picks::values()` explicitly.",
+        call. = FALSE
+      )
+    }
+    choices <- as.character(x$choices)
+    selected <- as.character(unlist(x$selected, use.names = FALSE))
+    checkmate::assert_character(choices, min.len = 1L)
+    checkmate::assert_character(selected, min.len = 1L)
+    fixed <- isTRUE(x$fixed)
+    multiple <- (!is.null(multiple) && multiple) || (is.null(multiple) && length(selected) > 1L)
+    x <- teal.picks::values(choices, selected, fixed = fixed, multiple = multiple)
+  }
+  checkmate::assert_class(x, "values", .var.name = arg_name)
+  x
+}
+
 #' Supports the creation of picks object that does not override a dataset if already exists
 #' @param datasets ([`teal.picks::datasets()`] object) to use if `x` does not already have a dataset.
 #' @param x (`pick` or `picks` object) to ensure has a dataset.
