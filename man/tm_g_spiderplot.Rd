@@ -7,13 +7,11 @@
 tm_g_spiderplot(
   label,
   dataname,
-  paramcd = teal.picks::variables(choices = dplyr::where(is.character), selected = 1L),
-  x_var = teal.picks::variables(choices = dplyr::where(is.numeric), selected = 1L),
-  y_var = teal.picks::variables(choices = dplyr::where(is.numeric), selected = 1L),
-  marker_var = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
-    selected = 1L),
-  line_colorby_var = teal.picks::variables(choices = teal.picks::is_categorical(min.len =
-    2), selected = 1L),
+  paramcd,
+  x_var,
+  y_var,
+  marker_var,
+  line_colorby_var,
   xfacet_var = NULL,
   yfacet_var = NULL,
   vref_line = NULL,
@@ -103,12 +101,12 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-#' data <- teal_data() \%>\%
-  within({
-    library(nestcolor)
-    ADSL <- teal.data::rADSL
-    ADTR <- teal.data::rADTR
-  })
+data <- teal_data() \%>\%
+within({
+  library(nestcolor)
+  ADSL <- teal.data::rADSL
+  ADTR <- teal.data::rADTR
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
@@ -118,31 +116,31 @@ app <- init(
     tm_g_spiderplot(
       label = "Spider plot (picks)",
       dataname = "ADTR",
-      paramcd = teal.picks::variables(
+      paramcd = variables(
         choices = "PARAMCD",
         selected = "PARAMCD"
       ),
-      x_var = teal.picks::variables(
+      x_var = variables(
         choices = dplyr::where(is.numeric),
         selected = 1L
       ),
-      y_var = teal.picks::variables(
+      y_var = variables(
         choices = c("PCHG", "CHG", "AVAL"),
         selected = "PCHG"
       ),
-      marker_var = teal.picks::variables(
+      marker_var = variables(
         choices = c("SEX", "RACE", "USUBJID"),
         selected = "SEX"
       ),
-      line_colorby_var = teal.picks::variables(
+      line_colorby_var = variables(
         choices = c("SEX", "USUBJID", "RACE"),
         selected = "SEX"
       ),
-      xfacet_var = teal.picks::variables(
+      xfacet_var = variables(
         choices = c("SEX", "ARM"),
         selected = "SEX"
       ),
-      yfacet_var = teal.picks::variables(
+      yfacet_var = variables(
         choices = c("SEX", "ARM"),
         selected = "ARM"
       ),
