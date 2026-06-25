@@ -7,14 +7,15 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param flag_var_anl ([`teal.transform::choices_selected`])
-#'   `choices_selected` object with variables used to count adverse event
+#' @param flag_var_anl Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::variables()]`)
+#'   object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
-#'
+#' @param dataname (`character(1)`) Name of the events dataset. Required when
+#'   using the default method with [choices_selected][teal.transform::choices_selected()].
+#'   Ignored by the `.picks` method.
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
-#'
-#' @export
 #'
 #' @examples
 #' data <- teal_data() %>%
@@ -43,27 +44,21 @@
 #'     }
 #'     ADAE <- .add_event_flags(ADAE)
 #'   })
-#'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
-#'
 #' ADAE <- data[["ADAE"]]
-#'
 #' app <- init(
 #'   data = data,
 #'   modules = modules(
 #'     tm_g_ae_oview(
 #'       label = "AE Overview",
 #'       dataname = "ADAE",
-#'       arm_var = choices_selected(
-#'         selected = "ACTARM",
-#'         choices = c("ACTARM", "ACTARMCD")
+#'       arm_var = variables(
+#'         choices = dplyr::starts_with("ACTARM"),
+#'         selected = "ACTARMCD"
 #'       ),
-#'       flag_var_anl = choices_selected(
-#'         selected = "AEREL1",
-#'         choices = variable_choices(
-#'           ADAE,
-#'           c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
-#'         ),
+#'       flag_var_anl = variables(
+#'         choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
+#'         selected = "AEREL1"
 #'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
@@ -72,36 +67,84 @@
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
-#'
-tm_g_ae_oview <- function(label,
-                          dataname,
-                          arm_var,
-                          flag_var_anl,
-                          fontsize = c(5, 3, 7),
-                          plot_height = c(600L, 200L, 2000L),
-                          plot_width = NULL,
-                          transformators = list()) {
+#' @export
+tm_g_ae_oview <- function(
+  label,
+  dataname,
+  arm_var,
+  flag_var_anl,
+  fontsize = c(5, 3, 7),
+  plot_height = c(600L, 200L, 2000L),
+  plot_width = NULL,
+  transformators = list()
+) {
   message("Initializing tm_g_ae_oview")
-  checkmate::assert_class(arm_var, classes = "choices_selected")
-  checkmate::assert_class(flag_var_anl, classes = "choices_selected")
+
+  arm_var <- migrate_choices_selected_to_variables(arm_var)
+  flag_var_anl <- migrate_choices_selected_to_variables(flag_var_anl)
+
+  arm_var <- create_picks_helper(teal.picks::datasets(dataname), arm_var)
+  flag_var_anl <- create_picks_helper(teal.picks::datasets(dataname), flag_var_anl)
+
+  if (teal.picks::is_pick_multiple(arm_var$variables)) {
+    warning(
+      "`arm_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(arm_var$variables, "multiple") <- FALSE
+  }
+
+  if (teal.picks::is_pick_multiple(flag_var_anl$variables)) {
+    warning(
+      "`flag_var_anl` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(flag_var_anl$variables, "multiple") <- FALSE
+  }
+
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
     checkmate::assert(
       combine = "and",
       .var.name = "fontsize",
-      checkmate::check_numeric(fontsize, len = 3, any.missing = FALSE, finite = TRUE),
-      checkmate::check_numeric(fontsize[1], lower = fontsize[2], upper = fontsize[3])
+      checkmate::check_numeric(
+        fontsize,
+        len = 3,
+        any.missing = FALSE,
+        finite = TRUE
+      ),
+      checkmate::check_numeric(
+        fontsize[1],
+        lower = fontsize[2],
+        upper = fontsize[3]
+      )
     )
   )
-  checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
-  checkmate::assert_numeric(plot_height[1],
-    lower = plot_height[2], upper = plot_height[3],
+  checkmate::assert_numeric(
+    plot_height,
+    len = 3,
+    any.missing = FALSE,
+    finite = TRUE
+  )
+  checkmate::assert_numeric(
+    plot_height[1],
+    lower = plot_height[2],
+    upper = plot_height[3],
     .var.name = "plot_height"
   )
-  checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
+  checkmate::assert_numeric(
+    plot_width,
+    len = 3,
+    any.missing = FALSE,
+    null.ok = TRUE,
+    finite = TRUE
+  )
   checkmate::assert_numeric(
     plot_width[1],
-    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
+    lower = plot_width[2],
+    upper = plot_width[3],
+    null.ok = TRUE,
+    .var.name = "plot_width"
   )
 
   args <- as.list(environment())
@@ -109,52 +152,45 @@ tm_g_ae_oview <- function(label,
   module(
     label = label,
     server = srv_g_ae_oview,
-    server_args = list(
-      label = label,
-      dataname = dataname,
-      plot_height = plot_height,
-      plot_width = plot_width
-    ),
+    server_args = args[names(args) %in% names(formals(srv_g_ae_oview))],
     ui = ui_g_ae_oview,
-    ui_args = args,
+    ui_args = args[names(args) %in% names(formals(ui_g_ae_oview))],
     transformators = transformators,
     datanames = c("ADSL", dataname)
   )
 }
 
-ui_g_ae_oview <- function(id, ...) {
+ui_g_ae_oview <- function(
+  id,
+  arm_var,
+  flag_var_anl,
+  fontsize
+) {
   ns <- NS(id)
-  args <- list(...)
+
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = tags$div(
-      teal.widgets::optionalSelectInput(
-        ns("arm_var"),
-        "Arm Variable",
-        choices = get_choices(args$arm_var$choices),
-        selected = args$arm_var$selected,
-        multiple = FALSE
+      tags$label("Encodings", class = "text-primary"),
+      tags$div(
+        tags$strong("Arm variable"),
+        teal.picks::picks_ui(id = ns("arm_var"), picks = arm_var)
+      ),
+      tags$div(
+        tags$strong("Flag variables"),
+        teal.picks::picks_ui(id = ns("flag_var_anl"), picks = flag_var_anl)
       ),
       selectInput(
         ns("arm_ref"),
         "Control",
-        choices = get_choices(args$arm_var$choices),
-        selected = args$arm_var$selected
+        choices = NULL
       ),
       selectInput(
         ns("arm_trt"),
         "Treatment",
-        choices = get_choices(args$arm_var$choices),
-        selected = args$arm_var$selected
-      ),
-      selectInput(
-        ns("flag_var_anl"),
-        "Flags",
-        choices = get_choices(args$flag_var_anl$choices),
-        selected = args$flag_var_anl$selected,
-        multiple = TRUE
+        choices = NULL
       ),
       teal.widgets::panel_item(
         "Confidence interval settings",
@@ -182,7 +218,7 @@ ui_g_ae_oview <- function(id, ...) {
       ),
       ui_g_decorate(
         ns(NULL),
-        fontsize = args$fontsize,
+        fontsize = fontsize,
         titles = "AE Overview",
         footnotes = ""
       )
@@ -190,45 +226,42 @@ ui_g_ae_oview <- function(id, ...) {
   )
 }
 
-srv_g_ae_oview <- function(id,
-                           data,
-                           dataname,
-                           label,
-                           plot_height,
-                           plot_width) {
+srv_g_ae_oview <- function(
+  id,
+  data,
+  arm_var,
+  flag_var_anl,
+  plot_height,
+  plot_width
+) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
-    teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
-    iv <- reactive({
-      ANL <- data()[[dataname]]
+    # Initialize picks selectors
+    selectors <- teal.picks::picks_srv(
+      picks = list(
+        arm_var = arm_var,
+        flag_var_anl = flag_var_anl
+      ),
+      data = data
+    )
 
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("arm_var", shinyvalidate::sv_required(
-        message = "Arm Variable is required"
-      ))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
-        "Arm Var must be a factor variable"
-      })
-      iv$add_rule("arm_var", ~ if (nlevels(ANL[[.]]) < 2L) {
-        "Selected Arm Var must have at least two levels"
-      })
-      iv$add_rule("flag_var_anl", shinyvalidate::sv_required(
-        message = "At least one Flag is required"
-      ))
-      rule_diff <- function(value, other) {
-        if (isTRUE(value == other)) "Control and Treatment must be different"
-      }
-      iv$add_rule("arm_trt", rule_diff, other = input$arm_ref)
-      iv$add_rule("arm_ref", rule_diff, other = input$arm_trt)
-      iv$enable()
-      iv
-    })
+    # Merge datasets based on picks selections
+    merged <- teal.picks::merge_srv(
+      "merge",
+      data = data,
+      selectors = selectors,
+      output_name = "ANL"
+    )
+
+    teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
 
     decorate_output <- srv_g_decorate(
-      id = NULL, plt = plot_r,
-      plot_height = plot_height, plot_width = plot_width
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
     )
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
@@ -237,7 +270,8 @@ srv_g_ae_oview <- function(id,
       req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
       diff_ci_method <- input$diff_ci_method
       conf_level <- input$conf_level
-      updateTextAreaInput(session,
+      updateTextAreaInput(
+        session,
         "foot",
         value = sprintf(
           "Note: %d%% CI is calculated using %s",
@@ -247,11 +281,13 @@ srv_g_ae_oview <- function(id,
       )
     })
 
-    observeEvent(input$arm_var, ignoreNULL = TRUE, {
-      ANL <- data()[[dataname]]
-      arm_var <- input$arm_var
-      arm_val <- ANL[[arm_var]]
-      choices <- levels(arm_val)
+    observeEvent(merged$variables()$arm_var, {
+      arm_var_name <- merged$variables()$arm_var
+      arm_dataset <- selectors$arm_var()$datasets$selected
+      req(arm_var_name, arm_dataset)
+
+      arm_data <- data()[[arm_dataset]]
+      choices <- levels(arm_data[[arm_var_name]])
 
       if (length(choices) == 1) {
         trt_index <- 1
@@ -276,48 +312,77 @@ srv_g_ae_oview <- function(id,
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        obj <- data()
-        teal.reporter::teal_card(obj) <-
+        qenv <- merged$data()
+
+        arm_var_name <- selectors$arm_var()$variables$selected
+        arm_dataset <- selectors$arm_var()$datasets$selected
+
+        teal.reporter::teal_card(qenv) <-
           c(
-            teal.reporter::teal_card(obj),
+            teal.reporter::teal_card(qenv),
             teal.reporter::teal_card("## Module's output(s)")
           )
-        obj <- teal.code::eval_code(obj, "library(dplyr)")
+        qenv <- teal.code::eval_code(qenv, "library(dplyr)")
 
-        ANL <- obj[[dataname]]
+        ANL <- qenv[["ANL"]]
 
-        teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
+        arm_var_name <- merged$variables()$arm_var
+        flag_var_name <- merged$variables()$flag_var_anl
 
-        teal::validate_inputs(iv())
+        teal::validate_has_data(
+          ANL,
+          min_nrow = 10,
+          msg = "Analysis data set must have at least 10 data points"
+        )
+
+        # Original variable name and dataset for arm_N calculation on the source dataset
+        arm_var_orig <- selectors$arm_var()$variables$selected
+        arm_dataset <- selectors$arm_var()$datasets$selected
+
+        shiny::validate(
+          shiny::need(
+            length(flag_var_name) > 0,
+            "A Flag Variable needs to be selected."
+          ),
+          shiny::need(
+            length(arm_var_name) > 0,
+            "An Arm Variable needs to be selected."
+          )
+        )
 
         validate(need(
-          input$arm_trt %in% ANL[[input$arm_var]] && input$arm_ref %in% ANL[[input$arm_var]],
+          input$arm_trt %in%
+            ANL[[arm_var_name]] &&
+            input$arm_ref %in% ANL[[arm_var_name]],
           "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
         ))
-
-        q1 <- obj %>%
+        q1 <- qenv %>%
           teal.code::eval_code(
             code = as.expression(c(
-              bquote(anl_labels <- formatters::var_labels(.(as.name(dataname)), fill = FALSE)),
+              bquote(anl_labels <- formatters::var_labels(ANL, fill = FALSE)),
               bquote(
-                flags <- .(as.name(dataname)) %>%
-                  select(all_of(.(input$flag_var_anl))) %>%
-                  rename_at(vars(.(input$flag_var_anl)), function(x) paste0(x, ": ", anl_labels[x]))
+                flags <- ANL %>%
+                  select(all_of(.(flag_var_name))) %>%
+                  rename_at(.(flag_var_name), function(x) {
+                    paste0(x, ": ", anl_labels[x])
+                  })
               )
             ))
           )
 
-        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
-
+        teal.reporter::teal_card(q1) <- c(
+          teal.reporter::teal_card(q1),
+          "### Plot"
+        )
         teal.code::eval_code(
           q1,
           code = as.expression(c(
             bquote(
               plot <- osprey::g_events_term_id(
                 term = flags,
-                id = .(as.name(dataname))[["USUBJID"]],
-                arm = .(as.name(dataname))[[.(input$arm_var)]],
-                arm_N = table(ADSL[[.(input$arm_var)]]),
+                id = ANL$USUBJID,
+                arm = ANL[[.(arm_var_name)]],
+                arm_N = table(ANL[[.(arm_var_name)]]),
                 ref = .(input$arm_ref),
                 trt = .(input$arm_trt),
                 diff_ci_method = .(input$diff_ci_method),
