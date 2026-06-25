@@ -39,40 +39,16 @@
 #' @inheritSection teal::example_module Reporting
 #'
 #' @export
-#'
-tm_g_heat_bygrade <- function(
-  label,
-  sl_dataname,
-  ex_dataname,
-  ae_dataname,
-  cm_dataname = NA,
-  id_var,
-  visit_var,
-  ongo_var,
-  anno_var,
-  heat_var,
-  conmed_var = NULL,
-  fontsize,
-  plot_height,
-  plot_width = NULL,
-  transformators = list()
-) {
-  message("Initializing tm_g_heat_bygrade")
-  UseMethod("tm_g_heat_bygrade", id_var)
-}
-
-
-#' @rdname tm_g_heat_bygrade
 #' @examples
-#' # Using default (choices selected) method
+#' # Using picks method
 #' data <- teal_data() %>%
 #'   within({
 #'     library(dplyr)
 #'     library(nestcolor)
-#'     ADSL <- rADSL %>% slice(1:30)
-#'     ADEX <- rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADAE <- rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
-#'     ADCM <- rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADSL <- teal.data::rADSL %>% slice(1:30)
+#'     ADEX <- teal.data::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADAE <- teal.data::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
+#'     ADCM <- teal.data::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
 #'     # This preprocess is only to force legacy standard on ADCM
 #'     ADCM <- ADCM %>%
 #'       select(-starts_with("ATC")) %>%
@@ -105,75 +81,130 @@ tm_g_heat_bygrade <- function(
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
-#' ADCM <- data[["ADCM"]]
-#'
 #' app <- init(
 #'   data = data,
 #'   modules = modules(
 #'     tm_g_heat_bygrade(
-#'       label = "Heatmap by grade",
+#'       label = "Heatmap by grade (picks)",
 #'       sl_dataname = "ADSL",
 #'       ex_dataname = "ADEX",
 #'       ae_dataname = "ADAE",
 #'       cm_dataname = "ADCM",
-#'       id_var = choices_selected(
-#'         selected = "USUBJID",
-#'         choices = c("USUBJID", "SUBJID")
+#'       id_var = ::variables(
+#'         choices = ::is_categorical(min.len = 2),
+#'         selected = 1L
 #'       ),
-#'       visit_var = choices_selected(
-#'         selected = "AVISIT",
-#'         choices = c("AVISIT")
+#'       visit_var = ::variables(
+#'         choices = dplyr::starts_with("AVISIT"),
+#'         selected = 1L
 #'       ),
-#'       ongo_var = choices_selected(
-#'         selected = "ongo_status",
-#'         choices = c("ongo_status")
+#'       ongo_var = ::variables(
+#'         choices = dplyr::starts_with("ongo"),
+#'         selected = 1L
 #'       ),
-#'       anno_var = choices_selected(
+#'       anno_var = ::variables(
+#'         choices = ::is_categorical(min.len = 2),
 #'         selected = c("SEX", "COUNTRY"),
-#'         choices = c("SEX", "COUNTRY", "USUBJID")
+#'         multiple = TRUE
 #'       ),
-#'       heat_var = choices_selected(
-#'         selected = "AETOXGR",
-#'         choices = c("AETOXGR")
+#'       heat_var = ::variables(
+#'         choices = dplyr::starts_with("AETO"),
+#'         selected = 1L
 #'       ),
-#'       conmed_var = choices_selected(
-#'         selected = "CMDECOD",
-#'         choices = c("CMDECOD")
+#'       conmed_var = ::variables(
+#'         choices = dplyr::starts_with("CMDECOD"),
+#'         selected = 1L
 #'       ),
-#'       plot_height = c(600, 200, 2000)
+#'       plot_height = c(600L, 200L, 2000L)
 #'     )
 #'   )
 #' )
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
-#' @export
-tm_g_heat_bygrade.default <- function(label, # nolint: object_name_linter.
-                                      sl_dataname,
-                                      ex_dataname,
-                                      ae_dataname,
-                                      cm_dataname = NA,
-                                      id_var,
-                                      visit_var,
-                                      ongo_var,
-                                      anno_var,
-                                      heat_var,
-                                      conmed_var = NULL,
-                                      fontsize = c(5, 3, 7),
-                                      plot_height = c(600L, 200L, 2000L),
-                                      plot_width = NULL,
-                                      transformators = list()) {
+tm_g_heat_bygrade <- function(
+  label,
+  sl_dataname,
+  ex_dataname,
+  ae_dataname,
+  cm_dataname = NA,
+  id_var,
+  visit_var,
+  ongo_var,
+  anno_var,
+  heat_var,
+  conmed_var = NULL,
+  fontsize = c(5, 3, 7),
+  plot_height = c(600L, 200L, 2000L),
+  plot_width = NULL,
+  transformators = list()
+) {
+  message("Initializing tm_g_heat_bygrade")
   checkmate::assert_string(label)
   checkmate::assert_string(sl_dataname)
   checkmate::assert_string(ex_dataname)
   checkmate::assert_string(ae_dataname)
   checkmate::assert_string(cm_dataname, na.ok = TRUE)
-  checkmate::assert_class(id_var, classes = "choices_selected")
-  checkmate::assert_class(visit_var, classes = "choices_selected")
-  checkmate::assert_class(ongo_var, classes = "choices_selected")
-  checkmate::assert_class(anno_var, classes = "choices_selected")
-  checkmate::assert_class(heat_var, classes = "choices_selected")
-  checkmate::assert_class(conmed_var, classes = "choices_selected", null.ok = TRUE)
+
+  id_var <- migrate_choices_selected_to_variables(id_var, multiple = FALSE)
+  visit_var <- migrate_choices_selected_to_variables(visit_var, multiple = FALSE)
+  ongo_var <- migrate_choices_selected_to_variables(ongo_var, multiple = FALSE)
+  anno_var <- migrate_choices_selected_to_variables(anno_var)
+  heat_var <- migrate_choices_selected_to_variables(heat_var, multiple = FALSE)
+  conmed_var <- migrate_choices_selected_to_variables(conmed_var, multiple = FALSE, null.ok = TRUE)
+
+  id_var <- create_picks_helper(teal.picks::datasets(sl_dataname), id_var)
+  visit_var <- create_picks_helper(teal.picks::datasets(ex_dataname), visit_var)
+  ongo_var <- create_picks_helper(teal.picks::datasets(ex_dataname), ongo_var)
+  anno_var <- create_picks_helper(teal.picks::datasets(sl_dataname), anno_var)
+  heat_var <- create_picks_helper(teal.picks::datasets(ae_dataname), heat_var)
+  if (!is.null(conmed_var)) {
+    conmed_var <- create_picks_helper(teal.picks::datasets(cm_dataname), conmed_var)
+  }
+
+  if (teal.picks::is_pick_multiple(id_var$variables)) {
+    warning(
+      "`id_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(id_var$variables, "multiple") <- FALSE
+  }
+  if (teal.picks::is_pick_multiple(visit_var$variables)) {
+    warning(
+      "`visit_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(visit_var$variables, "multiple") <- FALSE
+  }
+  if (teal.picks::is_pick_multiple(ongo_var$variables)) {
+    warning(
+      "`ongo_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(ongo_var$variables, "multiple") <- FALSE
+  }
+  if (teal.picks::is_pick_multiple(heat_var$variables)) {
+    warning(
+      "`heat_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(heat_var$variables, "multiple") <- FALSE
+  }
+  if (!is.null(conmed_var) && teal.picks::is_pick_multiple(conmed_var$variables)) {
+    warning(
+      "`conmed_var` accepts only a single variable selection. ",
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(conmed_var$variables, "multiple") <- FALSE
+  }
+
+  checkmate::assert_class(id_var, "picks")
+  checkmate::assert_class(visit_var, "picks")
+  checkmate::assert_class(ongo_var, "picks")
+  checkmate::assert_class(anno_var, "picks")
+  checkmate::assert_class(heat_var, "picks")
+  if (!is.null(conmed_var)) checkmate::assert_class(conmed_var, "picks")
+
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
     checkmate::assert(
@@ -194,28 +225,262 @@ tm_g_heat_bygrade.default <- function(label, # nolint: object_name_linter.
     .var.name = "plot_width"
   )
 
-  id_var <- teal.picks::as.picks(id_var)
-  visit_var <- teal.picks::as.picks(visit_var)
-  ongo_var <- teal.picks::as.picks(ongo_var)
-  anno_var <- teal.picks::as.picks(anno_var)
-  heat_var <- teal.picks::as.picks(heat_var)
-  if (!is.null(conmed_var)) conmed_var <- teal.picks::as.picks(conmed_var)
-
-  tm_g_heat_bygrade.pick(
+  args <- as.list(environment())
+  module(
     label = label,
-    sl_dataname = sl_dataname,
-    ex_dataname = ex_dataname,
-    ae_dataname = ae_dataname,
-    cm_dataname = cm_dataname,
-    id_var = id_var,
-    visit_var = visit_var,
-    ongo_var = ongo_var,
-    anno_var = anno_var,
-    heat_var = heat_var,
-    conmed_var = conmed_var,
-    fontsize = fontsize,
-    plot_height = plot_height,
-    plot_width = plot_width,
-    transformators = transformators
+    server = srv_g_heat_by_grade,
+    server_args = args[names(args) %in% names(formals(srv_g_heat_by_grade))],
+    ui = ui_g_heat_by_grade,
+    ui_args = args,
+    transformators = transformators,
+    datanames = "all"
   )
+}
+
+ui_g_heat_by_grade <- function(id, ...) { # nolint: object_name_linter.
+  ns <- NS(id)
+  args <- list(...)
+
+  shiny::tagList(
+    teal.widgets::standard_layout(
+      output = teal.widgets::white_small_well(
+        plot_decorate_output(id = ns(NULL))
+      ),
+      encoding = tags$div(
+        tags$label("Encodings", class = "text-primary"),
+        tags$div(
+          tags$strong("ID Variable"),
+          teal.picks::picks_ui(id = ns("id_var"), picks = args$id_var)
+        ),
+        tags$div(
+          tags$strong("Visit Variable"),
+          teal.picks::picks_ui(id = ns("visit_var"), picks = args$visit_var)
+        ),
+        tags$div(
+          tags$strong("Study Ongoing Status Variable"),
+          teal.picks::picks_ui(id = ns("ongo_var"), picks = args$ongo_var)
+        ),
+        tags$div(
+          tags$strong("Annotation Variables"),
+          teal.picks::picks_ui(id = ns("anno_var"), picks = args$anno_var)
+        ),
+        tags$div(
+          tags$strong("Heat Variable"),
+          teal.picks::picks_ui(id = ns("heat_var"), picks = args$heat_var)
+        ),
+        helpText("Plot conmed"),
+        left_bordered_div(
+          if (!is.na(args$cm_dataname)) {
+            checkboxInput(
+              ns("plot_cm"),
+              "Yes",
+              value = !is.na(args$cm_dataname)
+            )
+          }
+        ),
+        conditionalPanel(
+          paste0("input['", ns("plot_cm"), "']"),
+          if (!is.null(args$conmed_var)) {
+            tags$div(
+              tags$strong("Conmed Variable"),
+              teal.picks::picks_ui(id = ns("conmed_var"), picks = args$conmed_var)
+            )
+          },
+          selectInput(
+            ns("conmed_level"),
+            "Conmed Levels",
+            choices = character(0),
+            selected = character(0),
+            multiple = TRUE
+          )
+        ),
+        ui_g_decorate(
+          ns(NULL),
+          fontsize = args$fontsize,
+          titles = "Heatmap by Grade",
+          footnotes = ""
+        )
+      )
+    )
+  )
+}
+
+srv_g_heat_by_grade <- function(
+  id,
+  data,
+  sl_dataname,
+  ex_dataname,
+  ae_dataname,
+  cm_dataname,
+  id_var,
+  visit_var,
+  ongo_var,
+  anno_var,
+  heat_var,
+  conmed_var,
+  label,
+  plot_height,
+  plot_width
+) {
+  checkmate::assert_class(data, "reactive")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
+
+  moduleServer(id, function(input, output, session) {
+    teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
+
+    # Build picks list (exclude NULL optional picks)
+    picks_list <- list(
+      id_var = id_var,
+      visit_var = visit_var,
+      ongo_var = ongo_var,
+      anno_var = anno_var,
+      heat_var = heat_var
+    )
+    if (!is.null(conmed_var)) picks_list$conmed_var <- conmed_var
+
+    selectors <- teal.picks::picks_srv(picks = picks_list, data = data)
+
+    merged_sl <- teal.picks::merge_srv(
+      "merge_sl",
+      data = data,
+      selectors = selectors[c("id_var", "anno_var")],
+      output_name = "ADSL_ANL"
+    )
+    merged_ex <- teal.picks::merge_srv(
+      "merge_ex",
+      data = data,
+      selectors = selectors[c("visit_var", "ongo_var")],
+      output_name = "ADEX_ANL"
+    )
+    merged_ae <- teal.picks::merge_srv(
+      "merge_ae",
+      data = data,
+      selectors = selectors["heat_var"],
+      output_name = "ADAE_ANL"
+    )
+    if (!is.null(conmed_var)) {
+      merged_cm <- teal.picks::merge_srv(
+        "merge_cm",
+        data = data,
+        selectors = selectors["conmed_var"],
+        output_name = "ADCM_ANL"
+      )
+    }
+
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
+    )
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
+
+    if (!is.null(conmed_var)) {
+      observeEvent(merged_cm$variables()$conmed_var,
+        {
+          ADCM <- data()[[cm_dataname]]
+          conmed_var_name <- merged_cm$variables()$conmed_var
+          if (!is.null(conmed_var_name) && conmed_var_name %in% names(ADCM)) {
+            choices <- levels(ADCM[[conmed_var_name]])
+            updateSelectInput(
+              session,
+              "conmed_level",
+              selected = choices[seq_len(min(3L, length(choices)))],
+              choices = choices
+            )
+          }
+        },
+        ignoreNULL = FALSE
+      )
+    }
+
+    output_q <- shiny::debounce(
+      millis = 200,
+      r = reactive({
+        qenv <- data()
+        teal.reporter::teal_card(qenv) <-
+          c(
+            teal.reporter::teal_card(qenv),
+            teal.reporter::teal_card("## Module's output(s)")
+          )
+        qenv <- teal.code::eval_code(qenv, "library(dplyr)")
+
+        id_var_name <- merged_sl$variables()$id_var
+        anno_var_name <- merged_sl$variables()$anno_var
+        visit_var_name <- merged_ex$variables()$visit_var
+        ongo_var_name <- merged_ex$variables()$ongo_var
+        heat_var_name <- merged_ae$variables()$heat_var
+
+        ADSL <- qenv[[sl_dataname]]
+        teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
+
+        shiny::validate(
+          shiny::need(length(id_var_name) > 0, "ID Variable is required."),
+          shiny::need(length(visit_var_name) > 0, "Visit Variable is required."),
+          shiny::need(length(ongo_var_name) > 0, "Study Ongoing Status Variable is required."),
+          shiny::need(length(anno_var_name) > 0, "Annotation Variables is required."),
+          shiny::need(length(heat_var_name) > 0, "Heat Variable is required.")
+        )
+
+        if (isTRUE(input$plot_cm)) {
+          conmed_var_name <- merged_cm$variables()$conmed_var
+          shiny::validate(
+            shiny::need(length(conmed_var_name) > 0, "Conmed Variable is required."),
+            shiny::need(length(input$conmed_level) > 0, "Select Conmed Levels.")
+          )
+        }
+
+        teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "### Plot")
+
+        if (isTRUE(input$plot_cm)) {
+          qenv <- teal.code::eval_code(
+            qenv,
+            code = substitute(
+              expr = {
+                conmed_data <- ADCM %>%
+                  filter(conmed_var_name %in% conmed_level)
+                conmed_data[[conmed_var]] <-
+                  factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
+                formatters::var_labels(conmed_data)[conmed_var] <-
+                  formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
+              },
+              env = list(
+                ADCM = as.name(cm_dataname),
+                conmed_var = conmed_var_name,
+                conmed_var_name = as.name(conmed_var_name),
+                conmed_level = input$conmed_level
+              )
+            )
+          )
+        }
+
+        teal.code::eval_code(
+          qenv,
+          code = bquote(
+            plot <- osprey::g_heat_bygrade(
+              id_var = .(id_var_name),
+              exp_data = .(as.name(ex_dataname)) %>% filter(PARCAT1 == "INDIVIDUAL"),
+              visit_var = .(visit_var_name),
+              ongo_var = .(ongo_var_name),
+              anno_data = .(as.name(sl_dataname))[c(.(anno_var_name), .(id_var_name))],
+              anno_var = .(anno_var_name),
+              heat_data = .(as.name(ae_dataname)) %>%
+                select(
+                  .(as.name(id_var_name)),
+                  .(as.name(visit_var_name)),
+                  .(as.name(heat_var_name))
+                ),
+              heat_color_var = .(heat_var_name),
+              conmed_data = .(if (isTRUE(input$plot_cm)) as.name("conmed_data")),
+              conmed_var = .(if (isTRUE(input$plot_cm)) conmed_var_name),
+            )
+          )
+        )
+      })
+    )
+
+    plot_r <- reactive(output_q()[["plot"]])
+    set_chunk_dims(pws, output_q)
+  })
 }

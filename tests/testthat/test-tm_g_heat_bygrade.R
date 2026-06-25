@@ -59,26 +59,110 @@ conmed_var_picks <- teal.picks::variables(
 )
 
 testthat::describe("tm_g_heat_bygrade argument verification", {
-  testthat::it("fails when id_var is picks but other args are choices_selected", {
+  testthat::it("plot arguments input validation", {
     testthat::expect_error(
-      tm_g_heat_bygrade(
-        label = "Heatmap by grade",
-        sl_dataname = "ADSL",
-        ex_dataname = "ADEX",
-        ae_dataname = "ADAE",
-        cm_dataname = NA,
-        id_var = id_var_picks,
-        visit_var = visit_var_cs,
-        ongo_var = ongo_var_cs,
-        anno_var = anno_var_cs,
-        heat_var = heat_var_cs,
-        plot_height = c(600, 200, 2000)
-      )
+      {
+        suppressWarnings(
+          tm_g_heat_bygrade(
+            label = "Heatmap by grade",
+            sl_dataname = "ADSL",
+            ex_dataname = "ADEX",
+            ae_dataname = "ADAE",
+            cm_dataname = NA,
+            id_var = id_var_cs,
+            visit_var = visit_var_cs,
+            ongo_var = ongo_var_cs,
+            anno_var = anno_var_cs,
+            heat_var = heat_var_cs,
+            plot_height = c(600, 2000, 200)
+          ),
+          classes = "picks_delayed"
+        )
+      },
+      "Assertion on 'plot_height' failed"
+    )
+
+    testthat::expect_error(
+      {
+        suppressWarnings(
+          tm_g_heat_bygrade(
+            label = "Heatmap by grade",
+            sl_dataname = "ADSL",
+            ex_dataname = "ADEX",
+            ae_dataname = "ADAE",
+            cm_dataname = NA,
+            id_var = id_var_cs,
+            visit_var = visit_var_cs,
+            ongo_var = ongo_var_cs,
+            anno_var = anno_var_cs,
+            heat_var = heat_var_cs,
+            plot_width = c(600, 2000, 200)
+          ),
+          classes = "picks_delayed"
+        )
+      },
+      "Assertion on 'plot_width' failed"
     )
   })
 
-  testthat::it("fails when id_var is choices_selected but other args are picks", {
+  testthat::it("Forcing Conversion from multiple picks to single", {
     testthat::expect_error(
+      {
+        suppressWarnings(
+          tm_g_heat_bygrade(
+            label = "Heatmap by grade",
+            sl_dataname = "ADSL",
+            ex_dataname = "ADEX",
+            ae_dataname = "ADAE",
+            cm_dataname = NA,
+            id_var = teal.picks::variables(
+              choices = teal.picks::is_categorical(min.len = 2),
+              selected = 1L,
+              multiple = TRUE
+            ),
+            visit_var = visit_var_cs,
+            ongo_var = ongo_var_cs,
+            anno_var = anno_var_cs,
+            heat_var = heat_var_cs,
+            plot_height = c(600, 200, 2000)
+          ),
+          classes = "picks_delayed"
+        )
+      },
+      "metadata does not match the requirement for id_var"
+    )
+
+    testthat::expect_error(
+      {
+        suppressWarnings(
+          tm_g_heat_bygrade(
+            label = "Heatmap by grade",
+            sl_dataname = "ADSL",
+            ex_dataname = "ADEX",
+            ae_dataname = "ADAE",
+            cm_dataname = NA,
+            id_var = id_var_picks,
+            visit_var = teal.picks::variables(
+              choices = teal.picks::is_categorical(min.len = 2),
+              selected = 1L,
+              multiple = TRUE
+            ),
+            ongo_var = ongo_var_cs,
+            anno_var = anno_var_cs,
+            heat_var = heat_var_cs,
+            plot_height = c(600, 200, 2000)
+          ),
+          classes = "picks_delayed"
+        )
+      },
+      "metadata does not match the requirement for visit_var"
+    )
+  })
+})
+
+testthat::describe("tm_g_heat_bygrade module creation", {
+  testthat::it("creates a teal module using choices_selected (default method)", {
+    mod <- suppressWarnings(
       tm_g_heat_bygrade(
         label = "Heatmap by grade",
         sl_dataname = "ADSL",
@@ -86,84 +170,75 @@ testthat::describe("tm_g_heat_bygrade argument verification", {
         ae_dataname = "ADAE",
         cm_dataname = NA,
         id_var = id_var_cs,
-        visit_var = visit_var_picks,
-        ongo_var = ongo_var_picks,
-        anno_var = anno_var_picks,
-        heat_var = heat_var_picks,
+        visit_var = visit_var_cs,
+        ongo_var = ongo_var_cs,
+        anno_var = anno_var_cs,
+        heat_var = heat_var_cs,
         plot_height = c(600, 200, 2000)
       ),
-      regexp = "Assertion on 'visit_var' failed"
-    )
-  })
-})
-
-testthat::describe("tm_g_heat_bygrade module creation", {
-  testthat::it("creates a teal module using choices_selected (default method)", {
-    mod <- tm_g_heat_bygrade(
-      label = "Heatmap by grade",
-      sl_dataname = "ADSL",
-      ex_dataname = "ADEX",
-      ae_dataname = "ADAE",
-      cm_dataname = NA,
-      id_var = id_var_cs,
-      visit_var = visit_var_cs,
-      ongo_var = ongo_var_cs,
-      anno_var = anno_var_cs,
-      heat_var = heat_var_cs,
-      plot_height = c(600, 200, 2000)
+      classes = "picks_delayed"
     )
     testthat::expect_s3_class(mod, "teal_module")
   })
 
   testthat::it("creates a teal module using choices_selected with conmed (default method)", {
-    mod <- tm_g_heat_bygrade(
-      label = "Heatmap by grade",
-      sl_dataname = "ADSL",
-      ex_dataname = "ADEX",
-      ae_dataname = "ADAE",
-      cm_dataname = "ADCM",
-      id_var = id_var_cs,
-      visit_var = visit_var_cs,
-      ongo_var = ongo_var_cs,
-      anno_var = anno_var_cs,
-      heat_var = heat_var_cs,
-      conmed_var = conmed_var_cs,
-      plot_height = c(600, 200, 2000)
+    mod <- suppressWarnings(
+      tm_g_heat_bygrade(
+        label = "Heatmap by grade",
+        sl_dataname = "ADSL",
+        ex_dataname = "ADEX",
+        ae_dataname = "ADAE",
+        cm_dataname = "ADCM",
+        id_var = id_var_cs,
+        visit_var = visit_var_cs,
+        ongo_var = ongo_var_cs,
+        anno_var = anno_var_cs,
+        heat_var = heat_var_cs,
+        conmed_var = conmed_var_cs,
+        plot_height = c(600, 200, 2000)
+      ),
+      classes = "picks_delayed"
     )
     testthat::expect_s3_class(mod, "teal_module")
   })
 
   testthat::it("creates a teal module using picks (.pick method)", {
-    mod <- tm_g_heat_bygrade(
-      label = "Heatmap by grade",
-      sl_dataname = "ADSL",
-      ex_dataname = "ADEX",
-      ae_dataname = "ADAE",
-      cm_dataname = NA,
-      id_var = id_var_picks,
-      visit_var = visit_var_picks,
-      ongo_var = ongo_var_picks,
-      anno_var = anno_var_picks,
-      heat_var = heat_var_picks,
-      plot_height = c(600L, 200L, 2000L)
+    mod <- suppressWarnings(
+      tm_g_heat_bygrade(
+        label = "Heatmap by grade",
+        sl_dataname = "ADSL",
+        ex_dataname = "ADEX",
+        ae_dataname = "ADAE",
+        cm_dataname = NA,
+        id_var = id_var_picks,
+        visit_var = visit_var_picks,
+        ongo_var = ongo_var_picks,
+        anno_var = anno_var_picks,
+        heat_var = heat_var_picks,
+        plot_height = c(600L, 200L, 2000L)
+      ),
+      classes = "picks_delayed"
     )
     testthat::expect_s3_class(mod, "teal_module")
   })
 
   testthat::it("creates a teal module using picks with conmed (.pick method)", {
-    mod <- tm_g_heat_bygrade(
-      label = "Heatmap by grade",
-      sl_dataname = "ADSL",
-      ex_dataname = "ADEX",
-      ae_dataname = "ADAE",
-      cm_dataname = "ADCM",
-      id_var = id_var_picks,
-      visit_var = visit_var_picks,
-      ongo_var = ongo_var_picks,
-      anno_var = anno_var_picks,
-      heat_var = heat_var_picks,
-      conmed_var = conmed_var_picks,
-      plot_height = c(600L, 200L, 2000L)
+    mod <- suppressWarnings(
+      tm_g_heat_bygrade(
+        label = "Heatmap by grade",
+        sl_dataname = "ADSL",
+        ex_dataname = "ADEX",
+        ae_dataname = "ADAE",
+        cm_dataname = "ADCM",
+        id_var = id_var_picks,
+        visit_var = visit_var_picks,
+        ongo_var = ongo_var_picks,
+        anno_var = anno_var_picks,
+        heat_var = heat_var_picks,
+        conmed_var = conmed_var_picks,
+        plot_height = c(600L, 200L, 2000L)
+      ),
+      classes = "picks_delayed"
     )
     testthat::expect_s3_class(mod, "teal_module")
   })
