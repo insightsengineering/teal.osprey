@@ -8,17 +8,14 @@ tm_g_butterfly(
   label,
   dataname,
   filter_var = NULL,
-  right_var = teal.picks::variables(choices = dplyr::where(is.factor), selected = 1L),
-  left_var = teal.picks::variables(choices = dplyr::where(is.factor), selected = 1L),
-  category_var = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
-    selected = 1L),
-  color_by_var = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
-    selected = 1L),
-  count_by_var = teal.picks::values(choices = c("# of patients", "# of AEs"), selected =
+  right_var = variables(choices = dplyr::where(is.factor), selected = 1L),
+  left_var = variables(choices = dplyr::where(is.factor), selected = 1L),
+  category_var = variables(choices = is_categorical(min.len = 2), selected = 1L),
+  color_by_var = variables(choices = is_categorical(min.len = 2), selected = 1L),
+  count_by_var = values(choices = c("# of patients", "# of AEs"), selected =
     "# of patients"),
   facet_var = NULL,
-  sort_by_var = teal.picks::values(choices = c("count", "alphabetical"), selected =
-    "count"),
+  sort_by_var = values(choices = c("count", "alphabetical"), selected = "count"),
   legend_on = TRUE,
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
