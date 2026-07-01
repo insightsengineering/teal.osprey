@@ -177,11 +177,11 @@ ui_g_ae_sub.picks <- function(id, ...) {
 }
 
 srv_g_ae_sub.picks <- function(id,
-                         data,
-                         dataname,
-                         label,
-                         plot_height,
-                         plot_width) {
+                               data,
+                               dataname,
+                               label,
+                               plot_height,
+                               plot_width) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 }

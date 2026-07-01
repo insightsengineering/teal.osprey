@@ -25,8 +25,8 @@
 #' @examples
 #' # Example using stream (ADaM) dataset
 #' data <- within(teal_data(), {
-#'     ADSL <- rADSL
-#'     ADAE <- rADAE
+#'   ADSL <- rADSL
+#'   ADAE <- rADAE
 #' })
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
@@ -62,21 +62,19 @@ tm_g_ae_sub <- function(label,
                         plot_width = NULL,
                         fontsize = c(5, 3, 7),
                         transformators = list()) {
-
   UseMethod("tm_g_ae_sub", arm_var)
 }
 
 #' @rdname tm_g_ae_sub
 #' @export
 tm_g_ae_sub.default <- function(label,
-                        dataname,
-                        arm_var,
-                        group_var,
-                        plot_height = c(600L, 200L, 2000L),
-                        plot_width = NULL,
-                        fontsize = c(5, 3, 7),
-                        transformators = list()) {
-
+                                dataname,
+                                arm_var,
+                                group_var,
+                                plot_height = c(600L, 200L, 2000L),
+                                plot_width = NULL,
+                                fontsize = c(5, 3, 7),
+                                transformators = list()) {
   message("Initializing tm_g_ae_sub")
   checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert_class(group_var, classes = "choices_selected")
@@ -191,11 +189,11 @@ ui_g_ae_sub.default <- function(id, ...) {
 }
 
 srv_g_ae_sub.default <- function(id,
-                         data,
-                         dataname,
-                         label,
-                         plot_height,
-                         plot_width) {
+                                 data,
+                                 dataname,
+                                 label,
+                                 plot_height,
+                                 plot_width) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
