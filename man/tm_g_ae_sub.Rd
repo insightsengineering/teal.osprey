@@ -73,7 +73,7 @@ plot.}
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display the \code{AE} by subgroups plot as a teal module
@@ -104,8 +104,8 @@ For more information on reporting in \code{teal}, see the vignettes:
 \examples{
 # Example using stream (ADaM) dataset
 data <- within(teal_data(), {
-    ADSL <- rADSL
-    ADAE <- rADAE
+  ADSL <- rADSL
+  ADAE <- rADAE
 })
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]

@@ -46,7 +46,7 @@ vector to indicate default value, minimum and maximum values.}
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display Events by Term plot as a shiny module
