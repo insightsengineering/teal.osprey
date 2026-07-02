@@ -58,8 +58,13 @@ tm_g_ae_sub <- function(label,
                         fontsize = c(5, 3, 7),
                         transformators = list()) {
   message("Initializing tm_g_ae_sub")
-  checkmate::assert_class(arm_var, classes = "choices_selected")
-  checkmate::assert_class(group_var, classes = "choices_selected")
+
+  arm_var <- migrate_choices_selected_to_variables(arm_var)
+  group_var <- migrate_choices_selected_to_variables(group_var)
+
+  arm_var <- create_picks_helper(teal.picks::datasets(dataname), arm_var)
+  group_var <- create_picks_helper(teal.picks::datasets(dataname), group_var)
+
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
     checkmate::assert(
@@ -77,29 +82,21 @@ tm_g_ae_sub <- function(label,
     lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
   )
 
+  args <- as.list(environment())
+
   module(
     label = label,
     server = srv_g_ae_sub,
-    server_args = list(
-      label = label,
-      dataname = dataname,
-      plot_height = plot_height,
-      plot_width = plot_width
-    ),
+    server_args = args[names(args) %in% names(formals(srv_g_ae_sub))],
     ui = ui_g_ae_sub,
-    ui_args = list(
-      arm_var = arm_var,
-      group_var = group_var,
-      fontsize = fontsize
-    ),
+    ui_args = args[names(args) %in% names(formals(ui_g_ae_sub))],
     transformators = transformators,
     datanames = c("ADSL", dataname)
   )
 }
 
-ui_g_ae_sub <- function(id, ...) {
+ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, arm_n = FALSE) {
   ns <- NS(id)
-  args <- list(...)
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
@@ -107,35 +104,28 @@ ui_g_ae_sub <- function(id, ...) {
     encoding = tags$div(
       tags$label("Encodings", class = "text-primary"),
       helpText("Analysis data:", tags$code("ADAE")),
-      teal.widgets::optionalSelectInput(
-        ns("arm_var"),
-        "Arm Variable",
-        choices = get_choices(args$arm_var$choices),
-        selected = args$arm_var$selected
+      tags$div(
+        tags$strong("Arm variable"),
+        teal.picks::picks_ui(id = ns("arm_var"), picks = arm_var)
       ),
       selectInput(
         ns("arm_trt"),
         "Treatment",
-        choices = get_choices(args$arm_var$choices),
-        selected = args$arm_var$selected
+        choices = NULL
       ),
       selectInput(
         ns("arm_ref"),
         "Control",
-        choices = get_choices(args$arm_var$choices),
-        selected = args$arm_var$selected
+        choices = NULL
       ),
       checkboxInput(
         ns("arm_n"),
         "Show N in each arm",
-        value = args$arm_n
+        value = arm_n
       ),
-      teal.widgets::optionalSelectInput(
-        ns("groups"),
-        "Group Variable",
-        choices = get_choices(args$group_var$choices),
-        selected = args$group_var$selected,
-        multiple = TRUE
+      tags$div(
+        tags$strong("Group variable"),
+        teal.picks::picks_ui(id = ns("groups"), picks = group_var)
       ),
       teal.widgets::panel_item(
         "Change group labels",
@@ -158,7 +148,7 @@ ui_g_ae_sub <- function(id, ...) {
         ),
         ui_g_decorate(
           ns(NULL),
-          fontsize = args$fontsize,
+          fontsize = fontsize,
           titles = "AE Table with Subgroups",
           footnotes = ""
         )
