@@ -63,9 +63,9 @@ tm_g_ae_sub <- function(label,
 
   arm_var <- migrate_choices_selected_to_variables(arm_var)
   group_var <- migrate_choices_selected_to_variables(group_var)
-
-  arm_var <- create_picks_helper(teal.picks::datasets(dataname), arm_var)
-  group_var <- create_picks_helper(teal.picks::datasets(dataname), group_var)
+  checkmate::assert_string(dataname)
+  arm_var <- suppressWarnings(create_picks_helper(teal.picks::datasets(dataname), arm_var), classes = "picks")
+  group_var <- suppressWarnings(create_picks_helper(teal.picks::datasets(dataname), group_var), classes = "picks")
 
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
@@ -83,6 +83,8 @@ tm_g_ae_sub <- function(label,
     plot_width[1],
     lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
   )
+  checkmate::assert_class(arm_var, "picks")
+  checkmate::assert_class(group_var, "picks")
 
   args <- as.list(environment())
 
@@ -163,6 +165,8 @@ srv_g_ae_sub <- function(id,
                          data,
                          dataname,
                          label,
+                         arm_var,
+                         group_var,
                          plot_height,
                          plot_width) {
   checkmate::assert_class(data, "reactive")
@@ -170,48 +174,51 @@ srv_g_ae_sub <- function(id,
 
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
-    iv <- reactive({
-      ANL <- data()[[dataname]]
-      ADSL <- data()[["ADSL"]]
 
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("arm_var", shinyvalidate::sv_required(
-        message = "Arm Variable is required"
-      ))
-      iv$add_rule("arm_var", ~ if (!is.factor(ANL[[.]])) {
-        "Arm Var must be a factor variable, contact developer"
-      })
-      rule_diff <- function(value, other) {
-        if (isTRUE(value == other)) "Control and Treatment must be different"
-      }
-      iv$add_rule("arm_trt", rule_diff, other = input$arm_ref)
-      iv$add_rule("arm_ref", rule_diff, other = input$arm_trt)
-      iv$add_rule("groups", shinyvalidate::sv_in_set(
-        names(ANL),
-        message_fmt = sprintf("Groups must be a variable in %s", dataname)
-      ))
-      iv$add_rule("groups", shinyvalidate::sv_in_set(
-        names(ADSL),
-        message_fmt = "Groups must be a variable in ADSL"
-      ))
-      iv$enable()
-      iv
+    # Build picks list (exclude NULL optional picks)
+    picks_list <- list(
+      arm_var = arm_var,
+      group_var = group_var
+    )
+
+    # Initialize picks selectors
+    selectors <- teal.picks::picks_srv(
+      picks = picks_list,
+      data = data
+    )
+
+    validated_q <- reactive({
+      obj <- req(data())
+
+      teal::validate_input(
+        inputId   = "arm_var-variables-selected",
+        condition = !is.null(selectors$arm_var()$variables$selected),
+        message   = "Please select an arm variable."
+      )
+      teal::validate_input(
+        inputId   = "group_var-variables-selected",
+        condition = !is.null(selectors$group_var()$variables$selected),
+        message   = "Please select an group variable."
+      )
+      # teal::validate_input(
+      #   inputId = "group_var-variables-selected",
+      #   condition = length(selectors$group_var()$variables$selected) == 1L,
+      #   message = "Group variable must be of length 1.")
+      obj
     })
 
-    decorate_output <- srv_g_decorate(
-      id = NULL,
-      plt = plot_r,
-      plot_height = plot_height,
-      plot_width = plot_width
+    # Merge datasets based on picks selections
+    merged <- teal.picks::merge_srv(
+      "merge",
+      data = validated_q,
+      selectors = selectors,
+      output_name = "ANL"
     )
-    font_size <- decorate_output$font_size
-    pws <- decorate_output$pws
 
-    observeEvent(input$arm_var, ignoreNULL = TRUE, {
-      arm_var <- input$arm_var
-      ANL <- data()[[dataname]]
-
-      anl_val <- ANL[[arm_var]]
+    # Dynamic options for Treatment vs Reference
+    observeEvent(merged$variables(), ignoreNULL = TRUE, {
+      ANL <- merged$data()[[dataname]]
+      anl_val <- ANL[[merged$variables()$arm_var]]
       choices <- levels(anl_val)
 
       if (length(choices) == 1) {
