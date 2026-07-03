@@ -433,40 +433,55 @@ srv_g_butterfly <- function(
 
         teal::validate_has_data(ANL, min_nrow = 0, msg = "ANL Data is empty")
 
-        shiny::validate(
-          shiny::need(length(right_var_name) > 0, "Right Dichotomization Variable is required."),
-          shiny::need(length(left_var_name) > 0, "Left Dichotomization Variable is required."),
-          shiny::need(length(category_var_name) > 0, "Category Variable is required."),
-          shiny::need(
-            is.factor(ANL[[right_var_name]]),
-            "Right Dichotomization Variable must be a factor variable, contact developer."
-          ),
-          shiny::need(
-            is.factor(ANL[[left_var_name]]),
-            "Left Dichotomization Variable must be a factor variable, contact developer."
-          )
+        teal::validate_input(
+          "right_var-variables-selected",
+          condition = function(x) length(x) > 0,
+          message = "Right Dichotomization Variable is required."
+        )
+        teal::validate_input(
+          "left_var-variables-selected",
+          condition = function(x) length(x) > 0,
+          message = "Left Dichotomization Variable is required."
+        )
+        teal::validate_input(
+          "category_var-variables-selected",
+          condition = function(x) length(x) > 0,
+          message = "Category Variable is required."
+        )
+        teal::validate_input(
+          "right_var-variables-selected",
+          condition = function(x) length(x) > 0 && is.factor(ANL[[x]]),
+          message = "Right Dichotomization Variable must be a factor variable, contact developer."
+        )
+        teal::validate_input(
+          "left_var-variables-selected",
+          condition = function(x) length(x) > 0 && is.factor(ANL[[x]]),
+          message = "Left Dichotomization Variable must be a factor variable, contact developer."
         )
 
         right_val <- input$right_val
         left_val <- input$left_val
         legend_on <- input$legend_on
 
-        shiny::validate(
-          shiny::need(
-            length(right_val) > 0,
-            "At least one value of Right Dichotomization Variable must be selected."
-          ),
-          shiny::need(
-            length(left_val) > 0,
-            "At least one value of Left Dichotomization Variable must be selected."
-          )
+        teal::validate_input(
+          "right_val",
+          condition = function(x) length(x) > 0,
+          message = "At least one value of Right Dichotomization Variable must be selected."
+        )
+        teal::validate_input(
+          "left_val",
+          condition = function(x) length(x) > 0,
+          message = "At least one value of Left Dichotomization Variable must be selected."
         )
 
-        validate(need(
-          all(right_val %in% ANL[[right_var_name]]) &&
-            all(left_val %in% ANL[[left_var_name]]),
-          "No observations for selected dichotomization values (filtered out?)"
-        ))
+        teal::validate_input(
+          c("right_val", "left_val"),
+          condition = function(right_val, left_val) {
+            all(right_val %in% ANL[[right_var_name]]) &&
+              all(left_val %in% ANL[[left_var_name]])
+          },
+          message = "No observations for selected dichotomization values (filtered out?)"
+        )
 
         q1 <- teal.code::eval_code(
           qenv,
