@@ -7,7 +7,8 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param group_var (`choices_selected`) subgroups variables. See [teal.transform::choices_selected()] for details.
+#' @param arm_var ([`teal.picks::variables()`]) object with variable of the arm.
+#' @param group_var ([`teal.picks::variables()`]) object with  subgroups variables.
 #'
 #' @author Liming Li (Lil128) \email{liming.li@roche.com}
 #' @author Molly He (hey59) \email{hey59@gene.com}
@@ -33,13 +34,14 @@
 #'     tm_g_ae_sub(
 #'       label = "AE by Subgroup",
 #'       dataname = "ADAE",
-#'       arm_var = choices_selected(
-#'         selected = "ACTARMCD",
-#'         choices = c("ACTARM", "ACTARMCD")
+#'       arm_var = variables(
+#'         choices = c("ACTARM", "ACTARMCD"),
+#'         selected = "ACTARMCD"
 #'       ),
-#'       group_var = choices_selected(
+#'       group_var = variables(
+#'         choices = c("SEX", "REGION1", "RACE"),
 #'         selected = c("SEX", "REGION1", "RACE"),
-#'         choices = c("SEX", "REGION1", "RACE")
+#'         multiple = TRUE
 #'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
