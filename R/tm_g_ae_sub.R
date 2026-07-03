@@ -248,12 +248,16 @@ srv_g_ae_sub <- function(id,
       trt <- input$arm_trt
       ref <- input$arm_ref
 
-      teal::validate_input(c("arm_trt", "arm_ref"),
-                           trt != ref,
-                           "Treatment and reference should be different.")
-      teal::validate_input("ci",
-                           !is.null(diff_ci_method),
-                           "There should be a CI method set.")
+      teal::validate_input(
+        c("arm_trt", "arm_ref"),
+        trt != ref,
+        "Treatment and reference should be different."
+      )
+      teal::validate_input(
+        "ci",
+        !is.null(diff_ci_method),
+        "There should be a CI method set."
+      )
       updateTextAreaInput(
         session,
         "foot",
@@ -277,7 +281,7 @@ srv_g_ae_sub <- function(id,
     font_size <- decorate_output$font_size
     pws <- decorate_output$pws
 
-    output_q <-  shiny::debounce(
+    output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
         qenv <- merged$data()
@@ -326,10 +330,10 @@ srv_g_ae_sub <- function(id,
           qenv,
           {
             var_names <- group_var_name
-            subgroups_levels <- lapply(var_names, function(x){
+            subgroups_levels <- lapply(var_names, function(x) {
               lvl <- levels(ANL[[x]])
 
-              l <- append( as.list(lvl), x, 0L)
+              l <- append(as.list(lvl), x, 0L)
               names(l) <- c("Total", lvl)
               l
             })
@@ -369,7 +373,6 @@ srv_g_ae_sub <- function(id,
           arm_var_name = arm_var_name,
           arm_n = input$arm_n,
           fontsize = font_size()
-
         )
       })
     )
