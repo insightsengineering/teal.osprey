@@ -64,8 +64,8 @@ tm_g_ae_sub <- function(label,
   arm_var <- migrate_choices_selected_to_variables(arm_var)
   group_var <- migrate_choices_selected_to_variables(group_var)
   checkmate::assert_string(dataname)
-  arm_var <- suppressWarnings(create_picks_helper(teal.picks::datasets(dataname), arm_var), classes = "picks")
-  group_var <- suppressWarnings(create_picks_helper(teal.picks::datasets(dataname), group_var), classes = "picks")
+  arm_var <- create_picks_helper(teal.picks::datasets(dataname), arm_var)
+  group_var <- create_picks_helper(teal.picks::datasets(dataname), group_var)
 
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
@@ -168,7 +168,8 @@ srv_g_ae_sub <- function(id,
                          arm_var,
                          group_var,
                          plot_height,
-                         plot_width) {
+                         plot_width,
+                         fontsize) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -246,6 +247,13 @@ srv_g_ae_sub <- function(id,
       conf_level <- input$conf_level
       trt <- input$arm_trt
       ref <- input$arm_ref
+
+      teal::validate_input(c("arm_trt", "arm_ref"),
+                           trt != ref,
+                           "Treatment and reference should be different.")
+      teal::validate_input("ci",
+                           !is.null(diff_ci_method),
+                           "There should be a CI method set.")
       updateTextAreaInput(
         session,
         "foot",
@@ -259,121 +267,113 @@ srv_g_ae_sub <- function(id,
       )
     })
 
-    observeEvent(input$groups, {
-      ANL <- data()[[dataname]]
-      output$grouplabel_output <- renderUI({
-        grps <- input$groups
-        lo <- lapply(seq_along(grps), function(index) {
-          grp <- grps[index]
-          choices <- levels(ANL[[grp]])
-          sel <- teal.widgets::optionalSelectInput(
-            session$ns(sprintf("groups__%s", index)),
-            grp,
-            choices,
-            multiple = TRUE,
-            selected = choices
-          )
-          textname <- sprintf("text_%s_out", index)
-          txt <- uiOutput(session$ns(textname))
-          observeEvent(
-            eventExpr = input[[sprintf("groups__%s", index)]],
-            handlerExpr = {
-              output[[textname]] <- renderUI({
-                if (!is.null(input[[sprintf("groups__%s", index)]])) {
-                  l <- input[[sprintf("groups__%s", index)]]
-                  l2 <- lapply(seq_along(l), function(i) {
-                    nm <- sprintf("groups__%s__level__%s", index, i)
-                    label <- sprintf("Label for %s, Level %s", grp, l[i])
-                    textInput(session$ns(nm), label, l[i])
-                  })
-                  tagList(textInput(
-                    session$ns(
-                      sprintf("groups__%s__level__%s", index, "all")
-                    ),
-                    sprintf("Label for %s", grp), grp
-                  ), l2)
-                }
-              })
-            }
-          )
-          tagList(sel, txt)
-        })
-        ret <- tagList(lo)
-        ret
-      })
-    })
+    plot_r <- reactive(output_q()[["plot"]])
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
+    )
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
 
-    output_q <- shiny::debounce(
+    output_q <-  shiny::debounce(
       millis = 200,
       r = reactive({
-        obj <- data()
-        teal.reporter::teal_card(obj) <-
+        qenv <- merged$data()
+        teal.reporter::teal_card(qenv) <-
           c(
-            teal.reporter::teal_card(obj),
+            teal.reporter::teal_card(qenv),
             teal.reporter::teal_card("## Module's output(s)")
           )
+        qenv <- teal.code::eval_code(qenv, "library(dplyr)")
 
-        ANL <- obj[[dataname]]
-        ADSL <- obj[["ADSL"]]
+        ANL <- qenv[["ANL"]]
+        ADSL <- qenv[["ADSL"]]
+        arm_var_name <- selectors$arm_var()$variables$selected
+        group_var_name <- selectors$group_var()$variables$selected
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
-        teal::validate_inputs(iv())
-
+        shiny::validate(
+          shiny::need(length(group_var_name) > 0L, "Group variable is required."),
+          # shiny::need(length(group_var_name) == 1L, "Group variable must be of length 1."),
+          shiny::need(length(arm_var_name) == 1L, "Arm Variable is required."),
+          shiny::need(
+            is.factor(ANL[[arm_var_name]]),
+            "Arm Variable must be a factor variable, contact app developer."
+          )
+        )
+        sapply(group_var_name, function(x) {
+          teal::validate_input(
+            inputId = "group_var",
+            condition = is.factor(ANL[[x]]),
+            message = sprintf("Group variable '%s' must be a factor variable.", x)
+          )
+        })
         validate(need(
-          input$arm_trt %in% ANL[[input$arm_var]] && input$arm_ref %in% ANL[[input$arm_var]],
+          input$arm_trt %in% ANL[[arm_var_name]] && input$arm_ref %in% ANL[[arm_var_name]],
           "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
         ))
 
-        group_labels <- lapply(seq_along(input$groups), function(x) {
-          items <- input[[sprintf("groups__%s", x)]]
-          if (length(items) > 0) {
-            l <- lapply(seq_along(items), function(y) {
-              input[[sprintf("groups__%s__level__%s", x, y)]]
+        teal::validate_input(
+          "arm_var",
+          length(ANL[[arm_var_name]]) == length(ANL$USUBJID),
+          "length of id and arm are identical"
+        )
+
+        q1 <- within(
+          qenv,
+          {
+            var_names <- group_var_name
+            subgroups_levels <- lapply(var_names, function(x){
+              lvl <- levels(ANL[[x]])
+
+              l <- append( as.list(lvl), x, 0L)
+              names(l) <- c("Total", lvl)
+              l
             })
-            names(l) <- items
-            l[["Total"]] <- input[[sprintf("groups__%s__level__%s", x, "all")]]
-            l
-          }
-        })
+            names(subgroups_levels) <- var_names
+          },
+          group_var_name = group_var_name
+        )
 
-        group_labels_call <- if (length(unlist(group_labels)) == 0) {
-          quote(group_labels <- NULL)
-        } else {
-          bquote(group_labels <- setNames(.(group_labels), .(input$groups)))
-        }
-
-        q1 <- teal.code::eval_code(obj, code = group_labels_call) %>%
-          teal.code::eval_code(code = "")
 
         teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 
-        teal.code::eval_code(
+        q2 <- within(
           q1,
-          code = as.expression(c(
-            bquote(
-              plot <- osprey::g_ae_sub(
-                id = .(as.name(dataname))$USUBJID,
-                arm = as.factor(.(as.name(dataname))[[.(input$arm_var)]]),
-                arm_sl = as.character(ADSL[[.(input$arm_var)]]),
-                trt = .(input$arm_trt),
-                ref = .(input$arm_ref),
-                subgroups = .(as.name(dataname))[.(input$groups)],
-                subgroups_sl = ADSL[.(input$groups)],
-                subgroups_levels = group_labels,
-                conf_level = .(input$conf_level),
-                diff_ci_method = .(input$ci),
-                fontsize = .(font_size()),
-                arm_n = .(input$arm_n),
-                draw = TRUE
-              )
+          {
+            plot <- osprey::g_ae_sub(
+              id = ANL$USUBJID,
+              arm = ANL[[arm_var_name]],
+              arm_sl = as.character(ANL[[arm_var_name]]),
+              trt = trt,
+              ref = ref,
+              subgroups = ANL[group_var_name],
+              subgroups_sl = ANL[group_var_name],
+              subgroups_levels = subgroups_levels,
+              conf_level = conf_level,
+              diff_ci_method = diff_ci_method,
+              fontsize = fontsize,
+              arm_n = arm_n,
+              draw = TRUE
             )
-          ))
+          },
+          dataname = as.name("ANL$USUBJID"),
+          trt = input$arm_trt,
+          ref = input$arm_ref,
+          conf_level = input$conf_level,
+          diff_ci_method = input$ci,
+          group_var_name = group_var_name,
+          arm_var_name = arm_var_name,
+          arm_n = input$arm_n,
+          fontsize = font_size()
+
         )
       })
     )
 
-    plot_r <- reactive(output_q()[["plot"]])
     set_chunk_dims(pws, output_q)
   })
 }
