@@ -180,14 +180,24 @@ tm_g_butterfly <- function(label,
     server = srv_g_butterfly,
     server_args = args[names(args) %in% names(formals(srv_g_butterfly))],
     ui = ui_g_butterfly,
-    ui_args = args,
+    ui_args = args[names(args) %in% names(formals(ui_g_butterfly))],
     transformators = transformators
   )
 }
 
-ui_g_butterfly <- function(id, ...) { # nolint: object_name_linter.
+ui_g_butterfly <- function(id,
+                           filter_var,
+                           right_var,
+                           left_var,
+                           category_var,
+                           color_by_var,
+                           count_by_var,
+                           facet_var,
+                           sort_by_var,
+                           legend_on,
+                           pre_output,
+                           post_output) { # nolint: object_name_linter.
   ns <- NS(id)
-  a <- list(...)
 
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
@@ -195,15 +205,15 @@ ui_g_butterfly <- function(id, ...) { # nolint: object_name_linter.
     ),
     encoding = tags$div(
       tags$label("Encodings", class = "text-primary"),
-      if (!is.null(a$filter_var)) {
+      if (!is.null(filter_var)) {
         tags$div(
           tags$strong("Preset Data Filters"),
-          teal.picks::picks_ui(id = ns("filter_var"), picks = a$filter_var)
+          teal.picks::picks_ui(id = ns("filter_var"), picks = filter_var)
         )
       },
       tags$div(
         tags$strong("Right Dichotomization Variable"),
-        teal.picks::picks_ui(id = ns("right_var"), picks = a$right_var)
+        teal.picks::picks_ui(id = ns("right_var"), picks = right_var)
       ),
       teal.widgets::optionalSelectInput(
         ns("right_val"),
@@ -217,7 +227,7 @@ ui_g_butterfly <- function(id, ...) { # nolint: object_name_linter.
       ),
       tags$div(
         tags$strong("Left Dichotomization Variable"),
-        teal.picks::picks_ui(id = ns("left_var"), picks = a$left_var)
+        teal.picks::picks_ui(id = ns("left_var"), picks = left_var)
       ),
       teal.widgets::optionalSelectInput(
         ns("left_val"),
@@ -231,38 +241,38 @@ ui_g_butterfly <- function(id, ...) { # nolint: object_name_linter.
       ),
       tags$div(
         tags$strong("Category Variable"),
-        teal.picks::picks_ui(id = ns("category_var"), picks = a$category_var)
+        teal.picks::picks_ui(id = ns("category_var"), picks = category_var)
       ),
       tags$div(
         tags$strong("Color Block By Variable"),
-        teal.picks::picks_ui(id = ns("color_by_var"), picks = a$color_by_var)
+        teal.picks::picks_ui(id = ns("color_by_var"), picks = color_by_var)
       ),
       radioButtons(
         ns("count_by_var"),
         "Count By Variable",
-        get_choices(a$count_by_var$choices),
-        a$count_by_var$selected
+        get_choices(count_by_var$choices),
+        count_by_var$selected
       ),
-      if (!is.null(a$facet_var)) {
+      if (!is.null(facet_var)) {
         tags$div(
           tags$strong("Facet By Variable"),
-          teal.picks::picks_ui(id = ns("facet_var"), picks = a$facet_var)
+          teal.picks::picks_ui(id = ns("facet_var"), picks = facet_var)
         )
       },
       radioButtons(
         ns("sort_by_var"),
         "Sort By Variable",
-        get_choices(a$sort_by_var$choices),
-        a$sort_by_var$selected
+        get_choices(sort_by_var$choices),
+        sort_by_var$selected
       ),
       checkboxInput(
         ns("legend_on"),
         "Add legend",
-        value = a$legend_on
+        value = legend_on
       )
     ),
-    pre_output = a$pre_output,
-    post_output = a$post_output
+    pre_output = pre_output,
+    post_output = post_output
   )
 }
 
