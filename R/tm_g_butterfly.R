@@ -81,8 +81,10 @@
 #'         selected = "AEBODSYS"
 #'       ),
 #'       color_by_var = variables(
-#'         choices = c("AETOXGR", "None"),
-#'         selected = "AETOXGR"
+#'         choices = c("AETOXGR"),
+#'         selected = "AETOXGR",
+#'         "allow-clear" = TRUE,
+#'         fixed = FALSE
 #'       ),
 #'       count_by_var = values(
 #'         choices = c("# of patients", "# of AEs"),
@@ -431,7 +433,7 @@ srv_g_butterfly <- function(
         filter_var_name <- merged$variables()$filter_var
         facet_var_name <- merged$variables()$facet_var
 
-        teal::validate_has_data(ANL, min_nrow = 0, msg = "ANL Data is empty")
+        teal::validate_has_data(ANL, min_nrow = 1, msg = "ANL Data is empty")
 
         teal::validate_input(
           "right_var-variables-selected",
@@ -517,33 +519,45 @@ srv_g_butterfly <- function(
           )
         }
 
-        q1 <- teal.code::eval_code(
+        print(color_by_var_name)
+
+        q1 <- within(
           q1,
-          code = bquote(
+          {
             plot <- osprey::g_butterfly(
-              category = ANL[[.(category_var_name)]],
+              category = ANL[[category_var_name]],
               right_flag = right,
               left_flag = left,
               group_names = c(right_name, left_name),
-              block_count = .(count_by_var_name),
-              block_color = .(if (!is.null(color_by_var_name) && color_by_var_name != "None") {
-                bquote(ANL[[.(color_by_var_name)]])
+              block_count = count_by_var_name,
+              block_color = if (!is.null(color_by_var_name)) {
+                ANL[[color_by_var_name]]
               } else {
                 NULL
-              }),
+              },
               id = ANL$USUBJID,
-              facet_rows = .(if (!is.null(facet_var_name)) {
-                bquote(ANL[[.(facet_var_name)]])
+              facet_rows = if (!is.null(facet_var_name)) {
+                ANL[[facet_var_name]]
               } else {
                 NULL
-              }),
-              x_label = .(count_by_var_name),
-              y_label = .(category_var_name),
-              legend_label = .(color_by_var_name),
-              sort_by = .(sort_by_var_name),
-              show_legend = .(legend_on)
+              },
+              x_label = count_by_var_name,
+              y_label = category_var_name,
+              legend_label = if(!is.null(color_by_var_name)) {
+                color_by_var_name
+              } else {
+                ""
+              },
+              sort_by = sort_by_var_name,
+              show_legend = legend_on
             )
-          )
+          },
+          category_var_name = category_var_name,
+          color_by_var_name = color_by_var_name,
+          count_by_var_name = count_by_var_name,
+          facet_var_name = facet_var_name,
+          sort_by_var_name = sort_by_var_name,
+          legend_on = legend_on
         )
 
         q1
