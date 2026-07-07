@@ -151,16 +151,16 @@ tm_g_spiderplot <- function(label,
   xfacet_var <- migrate_choices_selected_to_variables(xfacet_var, null.ok = TRUE)
   yfacet_var <- migrate_choices_selected_to_variables(yfacet_var, null.ok = TRUE)
 
-  paramcd <- create_picks_helper(teal.picks::datasets(dataname), paramcd)
-  x_var <- create_picks_helper(teal.picks::datasets(dataname), x_var)
-  y_var <- create_picks_helper(teal.picks::datasets(dataname), y_var)
-  marker_var <- create_picks_helper(teal.picks::datasets(dataname), marker_var)
-  line_colorby_var <- create_picks_helper(teal.picks::datasets(dataname), line_colorby_var)
+  paramcd <- create_picks_helper(teal.picks::datasets(dataname, dataname), paramcd)
+  x_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), x_var)
+  y_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), y_var)
+  marker_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), marker_var)
+  line_colorby_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), line_colorby_var)
   if (!is.null(xfacet_var)) {
-    xfacet_var <- create_picks_helper(teal.picks::datasets(dataname), xfacet_var)
+    xfacet_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), xfacet_var)
   }
   if (!is.null(yfacet_var)) {
-    yfacet_var <- create_picks_helper(teal.picks::datasets(dataname), yfacet_var)
+    yfacet_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), yfacet_var)
   }
 
   if (teal.picks::is_pick_multiple(paramcd$variables)) {
