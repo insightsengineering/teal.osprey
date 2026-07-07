@@ -145,8 +145,10 @@ app <- init(
         selected = "AEBODSYS"
       ),
       color_by_var = variables(
-        choices = c("AETOXGR", "None"),
-        selected = "AETOXGR"
+        choices = c("AETOXGR"),
+        selected = "AETOXGR",
+        "allow-clear" = TRUE,
+        fixed = FALSE
       ),
       count_by_var = values(
         choices = c("# of patients", "# of AEs"),
