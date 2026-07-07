@@ -441,8 +441,16 @@ srv_g_spider <- function(
       href_line <- as_numeric_from_comma_sep_str(href_line)
 
       shiny::validate(
-        shiny::need(length(paramcd_col) > 0, "Parameter Column is required."),
-        shiny::need(length(paramcd) > 0, "Parameter Value is required.")
+        teal::need_input(
+          inputId = "paramcd-variables-selected",
+          condition = length(paramcd_col) > 0,
+          message = "Parameter Column is required."
+        ),
+        teal::need_input(
+          inputId = "paramcd_val",
+          condition = length(paramcd) > 0,
+          message = "Parameter Value is required."
+        )```
       )
 
       # format and filter (ANL already merged by merge_srv)
