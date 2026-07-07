@@ -150,37 +150,10 @@ tm_g_butterfly <- function(label,
     facet_var <- create_picks_helper(teal.picks::datasets(dataname), facet_var)
   }
 
-  if (teal.picks::is_pick_multiple(right_var$variables)) {
-    warning(
-      "`right_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(right_var$variables, "multiple") <- FALSE
-  }
-
-  if (teal.picks::is_pick_multiple(left_var$variables)) {
-    warning(
-      "`left_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(left_var$variables, "multiple") <- FALSE
-  }
-
-  if (teal.picks::is_pick_multiple(category_var$variables)) {
-    warning(
-      "`category_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(category_var$variables, "multiple") <- FALSE
-  }
-
-  if (teal.picks::is_pick_multiple(color_by_var$variables)) {
-    warning(
-      "`color_by_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(color_by_var$variables, "multiple") <- FALSE
-  }
+  right_var <- force_pick_to_single(right_var, "right_var")
+  left_var <- force_pick_to_single(left_var, "left_var")
+  category_var <- force_pick_to_single(category_var, "category_var")
+  color_by_var <- force_pick_to_single(color_by_var, "color_by_var")
 
   checkmate::assert_class(count_by_var, "pick")
   checkmate::assert_class(sort_by_var, "pick")
