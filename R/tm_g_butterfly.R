@@ -516,7 +516,7 @@ srv_g_butterfly <- function(
               },
               x_label = count_by_var_name,
               y_label = category_var_name,
-              legend_label = if(!is.null(color_by_var_name)) {
+              legend_label = if (!is.null(color_by_var_name)) {
                 color_by_var_name
               } else {
                 ""
