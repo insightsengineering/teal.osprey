@@ -35,11 +35,11 @@
 #'
 #' @examples
 #' data <- teal_data() %>%
-#' within({
-#'   library(nestcolor)
-#'   ADSL <- teal.data::rADSL
-#'   ADTR <- teal.data::rADTR
-#' })
+#'   within({
+#'     library(nestcolor)
+#'     ADSL <- teal.data::rADSL
+#'     ADTR <- teal.data::rADTR
+#'   })
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
@@ -233,14 +233,27 @@ tm_g_spiderplot <- function(label,
     server = srv_g_spider,
     server_args = args[names(args) %in% names(formals(srv_g_spider))],
     ui = ui_g_spider,
-    ui_args = args,
+    ui_args = args[names(args) %in% names(formals(ui_g_spider))],
     transformators = transformators
   )
 }
 
-ui_g_spider <- function(id, ...) { # nolint: object_name_linter.
+ui_g_spider <- function(id,
+                        dataname,
+                        paramcd,
+                        x_var,
+                        y_var,
+                        marker_var,
+                        line_colorby_var,
+                        xfacet_var,
+                        yfacet_var,
+                        vref_line,
+                        href_line,
+                        anno_txt_var,
+                        legend_on,
+                        pre_output,
+                        post_output) {
   ns <- NS(id)
-  a <- list(...)
   shiny::tagList(
     teal.widgets::standard_layout(
       output = teal.widgets::white_small_well(
@@ -248,10 +261,10 @@ ui_g_spider <- function(id, ...) { # nolint: object_name_linter.
       ),
       encoding = tags$div(
         tags$label("Encodings", class = "text-primary"),
-        helpText("Analysis data:", tags$code(a$dataname)),
+        helpText("Analysis data:", tags$code(dataname)),
         tags$div(
           tags$strong("Parameter Column"),
-          teal.picks::picks_ui(id = ns("paramcd"), picks = a$paramcd)
+          teal.picks::picks_ui(id = ns("paramcd"), picks = paramcd)
         ),
         teal.widgets::optionalSelectInput(
           ns("paramcd_val"),
@@ -262,41 +275,41 @@ ui_g_spider <- function(id, ...) { # nolint: object_name_linter.
         ),
         tags$div(
           tags$strong("X-axis Variable"),
-          teal.picks::picks_ui(id = ns("x_var"), picks = a$x_var)
+          teal.picks::picks_ui(id = ns("x_var"), picks = x_var)
         ),
         tags$div(
           tags$strong("Y-axis Variable"),
-          teal.picks::picks_ui(id = ns("y_var"), picks = a$y_var)
+          teal.picks::picks_ui(id = ns("y_var"), picks = y_var)
         ),
         tags$div(
           tags$strong("Color By Variable (Line)"),
-          teal.picks::picks_ui(id = ns("line_colorby_var"), picks = a$line_colorby_var)
+          teal.picks::picks_ui(id = ns("line_colorby_var"), picks = line_colorby_var)
         ),
         tags$div(
           tags$strong("Marker Symbol By Variable"),
-          teal.picks::picks_ui(id = ns("marker_var"), picks = a$marker_var)
+          teal.picks::picks_ui(id = ns("marker_var"), picks = marker_var)
         ),
-        if (!is.null(a$xfacet_var)) {
+        if (!is.null(xfacet_var)) {
           tags$div(
             tags$strong("X-facet By Variable"),
-            teal.picks::picks_ui(id = ns("xfacet_var"), picks = a$xfacet_var)
+            teal.picks::picks_ui(id = ns("xfacet_var"), picks = xfacet_var)
           )
         },
-        if (!is.null(a$yfacet_var)) {
+        if (!is.null(yfacet_var)) {
           tags$div(
             tags$strong("Y-facet By Variable"),
-            teal.picks::picks_ui(id = ns("yfacet_var"), picks = a$yfacet_var)
+            teal.picks::picks_ui(id = ns("yfacet_var"), picks = yfacet_var)
           )
         },
         checkboxInput(
           ns("anno_txt_var"),
           "Add subject ID label",
-          value = a$anno_txt_var
+          value = anno_txt_var
         ),
         checkboxInput(
           ns("legend_on"),
           "Add legend",
-          value = a$legend_on
+          value = legend_on
         ),
         textInput(
           ns("vref_line"),
@@ -309,7 +322,7 @@ ui_g_spider <- function(id, ...) { # nolint: object_name_linter.
               )
             )
           ),
-          value = a$vref_line
+          value = vref_line
         ),
         textInput(
           ns("href_line"),
@@ -322,11 +335,11 @@ ui_g_spider <- function(id, ...) { # nolint: object_name_linter.
               )
             )
           ),
-          value = a$href_line
+          value = href_line
         )
       ),
-      pre_output = a$pre_output,
-      post_output = a$post_output
+      pre_output = pre_output,
+      post_output = post_output
     )
   )
 }
@@ -360,7 +373,7 @@ srv_g_spider <- function(
       x_var = x_var,
       y_var = y_var,
       marker_var = marker_var,
-      line_colorby_var = line_colorby_var
+      line_colorby_var = line_colorby_var,
       xfacet_var = xfacet_var,
       yfacet_var = yfacet_var
     )
@@ -418,9 +431,10 @@ srv_g_spider <- function(
       )
 
       # get datasets ---
-      ADTR <- qenv[[dataname]]
+      validated_q <- qenv
+      ADTR <- validated_q[[dataname]]
 
-      teal::validate_has_data(qenv[["ANL"]], min_nrow = 1, msg = "ANL data has zero rows")
+      teal::validate_has_data(validated_q[["ANL"]], min_nrow = 1, msg = "ANL data has zero rows")
       teal::validate_has_data(ADTR, min_nrow = 1, msg = sprintf("%s data has zero rows", dataname))
 
       paramcd_col <- merged$variables()$paramcd
@@ -450,12 +464,12 @@ srv_g_spider <- function(
           inputId = "paramcd_val",
           condition = length(paramcd) > 0,
           message = "Parameter Value is required."
-        )```
+        )
       )
 
       # format and filter (ANL already merged by merge_srv)
       q1 <- teal.code::eval_code(
-        qenv,
+        validated_q,
         code = bquote({
           ANL <- ANL %>%
             group_by(USUBJID, .(as.name(paramcd_col))) %>%
@@ -511,50 +525,59 @@ srv_g_spider <- function(
         )
       }
 
-      q1 <- teal.code::eval_code(
-        q1,
-        code = bquote({
+      q1 <- within(q1,
+        {
           plot <- osprey::g_spiderplot(
-            marker_x = ANL_f[, .(x_var)],
+            marker_x = ANL_f[[x_var]],
             marker_id = ANL_f$USUBJID,
-            marker_y = ANL_f[, .(y_var)],
-            line_colby = .(if (line_colorby_var != "None") {
-              bquote(ANL_f[, .(line_colorby_var)])
+            marker_y = ANL_f[[y_var]],
+            line_colby = if (line_colorby_var != "None") {
+              ANL_f[[line_colorby_var]]
             } else {
               NULL
-            }),
-            marker_shape = .(if (marker_var != "None") {
-              bquote(ANL_f[, .(marker_var)])
+            },
+            marker_shape = if (marker_var != "None") {
+              ANL_f[[marker_var]]
             } else {
               NULL
-            }),
+            },
             marker_size = 4,
             datalabel_txt = lbl,
-            facet_rows = .(if (!is.null(yfacet_var)) {
-              bquote(data.frame(ANL_f[, .(yfacet_var)]))
+            facet_rows = if (!is.null(yfacet_var)) {
+              data.frame(ANL_f[, yfacet_var, drop = FALSE])
             } else {
               NULL
-            }),
-            facet_columns = .(if (!is.null(xfacet_var)) {
-              bquote(data.frame(ANL_f[, .(xfacet_var)]))
+            },
+            facet_columns = if (!is.null(xfacet_var)) {
+              data.frame(ANL_f[, xfacet_var, drop = FALSE])
             } else {
               NULL
-            }),
-            vref_line = .(vref_line),
-            href_line = .(href_line),
-            x_label = if (is.null(formatters::var_labels(ADTR[.(x_var)], fill = FALSE))) {
-              .(x_var)
-            } else {
-              formatters::var_labels(ADTR[.(x_var)], fill = FALSE)
             },
-            y_label = if (is.null(formatters::var_labels(ADTR[.(y_var)], fill = FALSE))) {
-              .(y_var)
+            vref_line = vref_line,
+            href_line = href_line,
+            x_label = if (is.null(formatters::var_labels(get(dataname)[x_var], fill = FALSE))) {
+              x_var
             } else {
-              formatters::var_labels(ADTR[.(y_var)], fill = FALSE)
+              formatters::var_labels(get(dataname)[x_var], fill = FALSE)
             },
-            show_legend = .(legend_on)
+            y_label = if (is.null(formatters::var_labels(get(dataname)[y_var], fill = FALSE))) {
+              y_var
+            } else {
+              formatters::var_labels(get(dataname)[y_var], fill = FALSE)
+            },
+            show_legend = legend_on
           )
-        })
+        },
+        x_var = x_var,
+        y_var = y_var,
+        line_colorby_var = line_colorby_var,
+        marker_var = marker_var,
+        yfacet_var = yfacet_var,
+        xfacet_var = xfacet_var,
+        vref_line = vref_line,
+        href_line = href_line,
+        dataname = dataname,
+        legend_on = legend_on
       )
     })
 
