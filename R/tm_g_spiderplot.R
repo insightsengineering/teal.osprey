@@ -361,9 +361,9 @@ srv_g_spider <- function(
       y_var = y_var,
       marker_var = marker_var,
       line_colorby_var = line_colorby_var
+      xfacet_var = xfacet_var,
+      yfacet_var = yfacet_var
     )
-    if (!is.null(xfacet_var)) picks_list$xfacet_var <- xfacet_var
-    if (!is.null(yfacet_var)) picks_list$yfacet_var <- yfacet_var
 
     # Initialize picks selectors
     selectors <- teal.picks::picks_srv(
