@@ -410,27 +410,25 @@ srv_g_events_term_id <- function(id,
       axis_side <- input$axis
       fontsize <- font_size()
 
-      within(qenv,
-        {
-          plot <- osprey::g_events_term_id(
-            term = ANL[[term_var_name]],
-            id = ANL$USUBJID,
-            arm = ANL[[arm_var_name]],
-            arm_N = table(get(arm_dataset)[[arm_var_orig]]),
-            ref = arm_ref,
-            trt = arm_trt,
-            sort_by = sort_by,
-            rate_range = rate_range,
-            diff_range = diff_range,
-            reversed = reversed,
-            conf_level = conf_level,
-            diff_ci_method = diff_ci_method,
-            axis_side = axis_side,
-            fontsize = fontsize,
-            draw = TRUE
-          )
-        }
-      )
+      within(qenv, {
+        plot <- osprey::g_events_term_id(
+          term = ANL[[term_var_name]],
+          id = ANL$USUBJID,
+          arm = ANL[[arm_var_name]],
+          arm_N = table(get(arm_dataset)[[arm_var_orig]]),
+          ref = arm_ref,
+          trt = arm_trt,
+          sort_by = sort_by,
+          rate_range = rate_range,
+          diff_range = diff_range,
+          reversed = reversed,
+          conf_level = conf_level,
+          diff_ci_method = diff_ci_method,
+          axis_side = axis_side,
+          fontsize = fontsize,
+          draw = TRUE
+        )
+      })
     })
 
     plot_r <- reactive(output_q()[["plot"]])
