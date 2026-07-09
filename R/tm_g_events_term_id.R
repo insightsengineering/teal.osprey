@@ -5,11 +5,17 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param term_var (`picks`)\cr
-#'   [teal.picks::picks()] object for the event term variable (single selection).
-#' @param arm_var (`picks`)\cr
-#'   [teal.picks::picks()] object for the treatment arm variable (single selection).
-#'   The arm variable must be a factor in the analysis data.
+#' @param term_dataname optional (`character(1)`) dataset name used to initialize
+#'   `term_var` when provided as [teal.picks::variables()] or a legacy
+#'   `choices_selected` object.
+#' @param term_var Either [teal.picks::variables()] (preferred) or a legacy
+#'   `choices_selected`-style object for the event term variable (single selection).
+#' @param arm_dataname optional (`character(1)`) dataset name used to initialize
+#'   `arm_var` when provided as [teal.picks::variables()] or a legacy
+#'   `choices_selected` object.
+#' @param arm_var Either [teal.picks::variables()] (preferred) or a legacy
+#'   `choices_selected`-style object for the treatment arm variable (single selection).
+#'   The selected arm variable must be a factor in the analysis data.
 #'
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
@@ -31,21 +37,17 @@
 #' app <- init(
 #'   data = data,
 #'   modules = modules(
-#'     tm_g_events_term_id(
+#'     tm_g_event_term_id(
 #'       label = "Common AE",
-#'       term_var = teal.picks::picks(
-#'         teal.picks::datasets("ADAE"),
-#'         teal.picks::variables(
-#'           choices = teal.picks::is_categorical(min.len = 2),
-#'           selected = "AEDECOD"
-#'         )
+#'       term_dataname = "ADAE",
+#'       term_var = variables(
+#'         choices = is_categorical(min.len = 2),
+#'         selected = "AEDECOD"
 #'       ),
-#'       arm_var = teal.picks::picks(
-#'         teal.picks::datasets("ADSL"),
-#'         teal.picks::variables(
-#'           choices = teal.picks::is_categorical(min.len = 2),
-#'           selected = "ACTARMCD"
-#'         )
+#'       arm_dataname = "ADSL",
+#'       arm_var = variables(
+#'         choices = is_categorical(min.len = 2),
+#'         selected = "ACTARMCD"
 #'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
@@ -55,37 +57,44 @@
 #'   shinyApp(app$ui, app$server)
 #' }
 #'
-tm_g_events_term_id <- function(label = "Common AE",
-                                term_var = teal.picks::picks(
-                                  teal.picks::datasets(),
-                                  teal.picks::variables(
-                                    choices = teal.picks::is_categorical(min.len = 2),
-                                    selected = 1L
-                                  )
-                                ),
-                                arm_var = teal.picks::picks(
-                                  teal.picks::datasets(),
-                                  teal.picks::variables(
-                                    choices = teal.picks::is_categorical(min.len = 2),
-                                    selected = 1L
-                                  )
-                                ),
-                                fontsize = c(5, 3, 7),
-                                plot_height = c(600L, 200L, 2000L),
-                                plot_width = NULL,
-                                transformators = list()) {
+#' @export
+tm_g_event_term_id <- function(label = "Common AE",
+                               term_dataname = NULL,
+                               term_var = teal.picks::variables(
+                                 choices = teal.picks::is_categorical(min.len = 2),
+                                 selected = 1L
+                               ),
+                               arm_dataname = NULL,
+                               arm_var = teal.picks::variables(
+                                 choices = teal.picks::is_categorical(min.len = 2),
+                                 selected = 1L
+                               ),
+                               fontsize = c(5, 3, 7),
+                               plot_height = c(600L, 200L, 2000L),
+                               plot_width = NULL,
+                               transformators = list()) {
+  message("Initializing tm_g_event_term_id")
   checkmate::assert_string(label)
+  checkmate::assert_string(term_dataname, null.ok = TRUE)
+  checkmate::assert_string(arm_dataname, null.ok = TRUE)
 
-  checkmate::assert_class(term_var, "picks", .var.name = "term_var")
-  checkmate::assert_false(
-    teal.picks::is_pick_multiple(term_var$variables),
-    .var.name = "`term_var` must use variables(..., multiple = FALSE)"
+  term_var <- migrate_choices_selected_to_variables(term_var, arg_name = "term_var", multiple = FALSE)
+  arm_var <- migrate_choices_selected_to_variables(arm_var, arg_name = "arm_var", multiple = FALSE)
+
+  term_datasets <- if (is.null(term_dataname)) teal.picks::datasets() else teal.picks::datasets(term_dataname)
+  arm_datasets <- if (is.null(arm_dataname)) teal.picks::datasets() else teal.picks::datasets(arm_dataname)
+
+  term_var <- create_picks_helper(
+    term_datasets,
+    term_var
   )
-  checkmate::assert_class(arm_var, "picks", .var.name = "arm_var")
-  checkmate::assert_false(
-    teal.picks::is_pick_multiple(arm_var$variables),
-    .var.name = "`arm_var` must use variables(..., multiple = FALSE)"
+  arm_var <- create_picks_helper(
+    arm_datasets,
+    arm_var
   )
+
+  .assert_picks_single_var(term_var, "term_var")
+  .assert_picks_single_var(arm_var, "arm_var")
 
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
@@ -120,6 +129,35 @@ tm_g_events_term_id <- function(label = "Common AE",
     server_args = args[names(args) %in% names(formals(srv_g_events_term_id))],
     transformators = transformators,
     datanames = all_datanames
+  )
+}
+
+#' Backward-compatible alias of [tm_g_event_term_id()].
+#'
+#' @inheritParams tm_g_event_term_id
+#' @inherit tm_g_event_term_id return
+#' @export
+tm_g_events_term_id <- function(label = "Common AE",
+                                term_var = teal.picks::variables(
+                                  choices = teal.picks::is_categorical(min.len = 2),
+                                  selected = 1L
+                                ),
+                                arm_var = teal.picks::variables(
+                                  choices = teal.picks::is_categorical(min.len = 2),
+                                  selected = 1L
+                                ),
+                                fontsize = c(5, 3, 7),
+                                plot_height = c(600L, 200L, 2000L),
+                                plot_width = NULL,
+                                transformators = list()) {
+  tm_g_event_term_id(
+    label = label,
+    term_var = term_var,
+    arm_var = arm_var,
+    fontsize = fontsize,
+    plot_height = plot_height,
+    plot_width = plot_width,
+    transformators = transformators
   )
 }
 
