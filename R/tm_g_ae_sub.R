@@ -201,10 +201,6 @@ srv_g_ae_sub <- function(id,
         condition = !is.null(selectors$group_var()$variables$selected),
         message   = "Please select an group variable."
       )
-      # teal::validate_input(
-      #   inputId = "group_var-variables-selected",
-      #   condition = length(selectors$group_var()$variables$selected) == 1L,
-      #   message = "Group variable must be of length 1.")
       obj
     })
 
