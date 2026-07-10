@@ -302,7 +302,8 @@ srv_g_ae_sub <- function(id,
           shiny::need(
             is.factor(ANL[[arm_var_name]]),
             "Arm Variable must be a factor variable, contact app developer."
-          )
+          ),
+          shiny::need(input$arm_trt != input$arm_ref, "Treatment and reference should be different.")
         )
         sapply(group_var_name, function(x) {
           teal::validate_input(
