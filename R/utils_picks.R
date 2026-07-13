@@ -50,6 +50,33 @@
   )
 }
 
+#' Force a picks variable selection to single selection (internal)
+#'
+#' Warns when `pick$variables` allows multiple selection and coerces the
+#' underlying metadata to `multiple = FALSE`.
+#'
+#' @param pick (`picks`)
+#' @param arg_name (`character`) argument name used in warning messages.
+#'
+#' @return The updated `pick` object.
+#'
+#' @keywords internal
+#' @noRd
+force_pick_to_single <- function(pick, arg_name) {
+  checkmate::assert_class(pick, "picks", .var.name = arg_name)
+  checkmate::assert_string(arg_name)
+
+  if (teal.picks::is_pick_multiple(pick$variables)) {
+    warning(
+      sprintf("`%s` accepts only a single variable selection. ", arg_name),
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(pick$variables, "multiple") <- FALSE
+  }
+
+  pick
+}
+
 #' @keywords internal
 set_chunk_dims <- function(pws, q_r, inner_classes = NULL) {
   checkmate::assert_list(pws)
