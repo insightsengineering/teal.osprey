@@ -14,8 +14,7 @@ tm_g_butterfly(
   color_by_var,
   count_by_var,
   facet_var = NULL,
-  sort_by_var = teal.transform::choices_selected(selected = "count", choices = c("count",
-    "alphabetical")),
+  sort_by_var = values(choices = c("count", "alphabetical"), selected = "count"),
   legend_on = TRUE,
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
@@ -32,25 +31,29 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{filter_var}{(\code{choices_selected}) variable name of data filter, please see details regarding
-expected values, default is\code{NULL}.\code{choices}
-vector with \code{filter_var} choices, default is
-\code{NULL}}
+\item{filter_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}}) object with variable name of
+data filter, please see details regarding expected values, default is \code{NULL}}
 
-\item{right_var}{(\code{choices_selected}) dichotomization variable for right side}
+\item{right_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}}) object with dichotomization
+variable for right side}
 
-\item{left_var}{(\code{choices_selected}) dichotomization variable for left side}
+\item{left_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}}) object with dichotomization
+variable for left side}
 
-\item{category_var}{(\code{choices_selected}) category (y axis) variable}
+\item{category_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}}) object with category
+(y axis) variable}
 
-\item{color_by_var}{(\code{choices_selected}) variable defines color blocks within each bar}
+\item{color_by_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}}) object with variable that
+defines color blocks within each bar}
 
-\item{count_by_var}{(\code{choices_selected}) variable defines how x axis is calculated}
+\item{count_by_var}{(\code{\link[teal.picks:values]{teal.picks::values()}}) object with variable that
+defines how the x axis is calculated}
 
-\item{facet_var}{(\code{choices_selected}) variable for row facets}
+\item{facet_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}}) object with variable for row
+facets}
 
-\item{sort_by_var}{(\code{choices_selected}) argument for order of class and term elements in table,
-default here is "count"}
+\item{sort_by_var}{(\code{\link[teal.picks:values]{teal.picks::values()}}) object with argument for order
+of class and term elements in table, default here is \code{"count"}}
 
 \item{legend_on}{(\code{boolean}) value for whether legend is displayed}
 
@@ -104,7 +107,6 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-# Example using stream (ADaM) dataset
 data <- teal_data() \%>\%
   eval_code("set.seed(23) # @linksto ADSL") \%>\%
   within({
@@ -130,33 +132,35 @@ app <- init(
     tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
-      right_var = choices_selected(
-        selected = "SEX",
-        choices = c("SEX", "ARM", "RACE")
+      right_var = variables(
+        choices = c("SEX", "ARM", "RACE"),
+        selected = "SEX"
       ),
-      left_var = choices_selected(
-        selected = "RACE",
-        choices = c("SEX", "ARM", "RACE")
+      left_var = variables(
+        choices = c("SEX", "ARM", "RACE"),
+        selected = "RACE"
       ),
-      category_var = choices_selected(
-        selected = "AEBODSYS",
-        choices = c("AEDECOD", "AEBODSYS")
+      category_var = variables(
+        choices = c("AEDECOD", "AEBODSYS"),
+        selected = "AEBODSYS"
       ),
-      color_by_var = choices_selected(
+      color_by_var = variables(
+        choices = c("AETOXGR"),
         selected = "AETOXGR",
-        choices = c("AETOXGR", "None")
+        "allow-clear" = TRUE,
+        fixed = FALSE
       ),
-      count_by_var = choices_selected(
-        selected = "# of patients",
-        choices = c("# of patients", "# of AEs")
+      count_by_var = values(
+        choices = c("# of patients", "# of AEs"),
+        selected = "# of patients"
       ),
-      facet_var = choices_selected(
-        selected = NULL,
-        choices = c("RACE", "SEX", "ARM")
+      facet_var = variables(
+        choices = c("RACE", "SEX", "ARM"),
+        selected = NULL
       ),
-      sort_by_var = choices_selected(
-        selected = "count",
-        choices = c("count", "alphabetical")
+      sort_by_var = values(
+        choices = c("count", "alphabetical"),
+        selected = "count"
       ),
       legend_on = TRUE,
       plot_height = c(600, 200, 2000)
@@ -166,7 +170,6 @@ app <- init(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-
 }
 \author{
 Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}

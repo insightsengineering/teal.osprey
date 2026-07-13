@@ -50,6 +50,33 @@
   )
 }
 
+#' Force a picks variable selection to single selection (internal)
+#'
+#' Warns when `pick$variables` allows multiple selection and coerces the
+#' underlying metadata to `multiple = FALSE`.
+#'
+#' @param pick (`picks`)
+#' @param arg_name (`character`) argument name used in warning messages.
+#'
+#' @return The updated `pick` object.
+#'
+#' @keywords internal
+#' @noRd
+force_pick_to_single <- function(pick, arg_name) {
+  checkmate::assert_class(pick, "picks", .var.name = arg_name)
+  checkmate::assert_string(arg_name)
+
+  if (teal.picks::is_pick_multiple(pick$variables)) {
+    warning(
+      sprintf("`%s` accepts only a single variable selection. ", arg_name),
+      "Forcing `teal.picks::variables(multiple)` to FALSE."
+    )
+    attr(pick$variables, "multiple") <- FALSE
+  }
+
+  pick
+}
+
 #' @keywords internal
 set_chunk_dims <- function(pws, q_r, inner_classes = NULL) {
   checkmate::assert_list(pws)
@@ -132,6 +159,56 @@ migrate_choices_selected_to_variables <- function(x, # nolint: object_length_lin
     null.ok = null.ok,
     .var.name = arg_name
   )
+  x
+}
+
+#' Coerce legacy `choices_selected` to [`teal.picks::values()`] with deprecation
+#'
+#' @param x (`values`, `choices_selected`, [`teal.picks::picks()`], or [`teal.picks::variables()`]) object.
+#' @param arg_name optional (`character(1)`) argument name.
+#' @param multiple optional (`logical(1)`) whether multiple values are allowed.
+#' If `NULL` (default), it is not validated and inferred from the length of `selected` in the
+#' `choices_selected` object. If `FALSE`, the result is checked with [teal.picks::is_pick_multiple()].
+#'
+#' @keywords internal
+#' @noRd
+migrate_choices_selected_to_values <- function(x, # nolint: object_length_linter
+                                               arg_name = checkmate::vname(x),
+                                               multiple = NULL) {
+  checkmate::assert_string(arg_name)
+  checkmate::assert_flag(multiple, null.ok = TRUE)
+
+  if (inherits(x, "picks")) {
+    return(x)
+  }
+  if (inherits(x, "variables")) {
+    return(x)
+  }
+  if (inherits(x, "choices_selected")) {
+    lifecycle::deprecate_warn(
+      when = "0.5.0",
+      what = I(paste0("`", arg_name, "`")),
+      details = paste(
+        "Pass `teal.picks::values()`.",
+        "Support for legacy `teal.transform::choices_selected()` is deprecated."
+      )
+    )
+    if (is.null(x$choices) || inherits(x$choices, "delayed_data")) {
+      stop(
+        "Delayed `choices_selected` objects cannot be coerced automatically; ",
+        "specify `teal.picks::values()` explicitly.",
+        call. = FALSE
+      )
+    }
+    choices <- as.character(x$choices)
+    selected <- as.character(unlist(x$selected, use.names = FALSE))
+    checkmate::assert_character(choices, min.len = 1L)
+    checkmate::assert_character(selected, min.len = 1L)
+    fixed <- isTRUE(x$fixed)
+    multiple <- (!is.null(multiple) && multiple) || (is.null(multiple) && length(selected) > 1L)
+    x <- teal.picks::values(choices, selected, fixed = fixed, multiple = multiple)
+  }
+  checkmate::assert_class(x, "values", .var.name = arg_name)
   x
 }
 
