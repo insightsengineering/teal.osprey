@@ -133,7 +133,7 @@ tm_g_spiderplot <- function(label,
   x_var <- force_pick_to_single(x_var, "x_var")
   y_var <- force_pick_to_single(y_var, "y_var")
   marker_var <- force_pick_to_single(marker_var, "marker_var")
-  line_colorby_var <- force_pick_to_single(line_colorby_var, "line_colorby_var")  
+  line_colorby_var <- force_pick_to_single(line_colorby_var, "line_colorby_var")
 
   checkmate::assert_class(paramcd, "picks")
   checkmate::assert_class(x_var, "picks")
