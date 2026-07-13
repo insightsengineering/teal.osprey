@@ -132,31 +132,33 @@ app <- init(
     tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
-      right_var = teal.picks::variables(
+      right_var = variables(
         choices = c("SEX", "ARM", "RACE"),
         selected = "SEX"
       ),
-      left_var = teal.picks::variables(
+      left_var = variables(
         choices = c("SEX", "ARM", "RACE"),
         selected = "RACE"
       ),
-      category_var = teal.picks::variables(
+      category_var = variables(
         choices = c("AEDECOD", "AEBODSYS"),
         selected = "AEBODSYS"
       ),
-      color_by_var = teal.picks::variables(
-        choices = c("AETOXGR", "None"),
-        selected = "AETOXGR"
+      color_by_var = variables(
+        choices = c("AETOXGR"),
+        selected = "AETOXGR",
+        "allow-clear" = TRUE,
+        fixed = FALSE
       ),
-      count_by_var = teal.picks::values(
+      count_by_var = values(
         choices = c("# of patients", "# of AEs"),
         selected = "# of patients"
       ),
-      facet_var = teal.picks::variables(
+      facet_var = variables(
         choices = c("RACE", "SEX", "ARM"),
         selected = NULL
       ),
-      sort_by_var = teal.picks::values(
+      sort_by_var = values(
         choices = c("count", "alphabetical"),
         selected = "count"
       ),
