@@ -90,28 +90,28 @@
 #'       ex_dataname = "ADEX",
 #'       ae_dataname = "ADAE",
 #'       cm_dataname = "ADCM",
-#'       id_var = ::variables(
-#'         choices = ::is_categorical(min.len = 2),
+#'       id_var = variables(
+#'         choices = teal.picks::is_categorical(min.len = 2),
 #'         selected = 1L
 #'       ),
-#'       visit_var = ::variables(
+#'       visit_var = variables(
 #'         choices = dplyr::starts_with("AVISIT"),
 #'         selected = 1L
 #'       ),
-#'       ongo_var = ::variables(
+#'       ongo_var = variables(
 #'         choices = dplyr::starts_with("ongo"),
 #'         selected = 1L
 #'       ),
-#'       anno_var = ::variables(
-#'         choices = ::is_categorical(min.len = 2),
+#'       anno_var = variables(
+#'         choices = teal.picks::is_categorical(min.len = 2),
 #'         selected = c("SEX", "COUNTRY"),
 #'         multiple = TRUE
 #'       ),
-#'       heat_var = ::variables(
+#'       heat_var = variables(
 #'         choices = dplyr::starts_with("AETO"),
 #'         selected = 1L
 #'       ),
-#'       conmed_var = ::variables(
+#'       conmed_var = variables(
 #'         choices = dplyr::starts_with("CMDECOD"),
 #'         selected = 1L
 #'       ),
@@ -127,7 +127,7 @@ tm_g_heat_bygrade <- function(
   sl_dataname,
   ex_dataname,
   ae_dataname,
-  cm_dataname = NA,
+  cm_dataname,
   id_var,
   visit_var,
   ongo_var,
@@ -140,18 +140,24 @@ tm_g_heat_bygrade <- function(
   transformators = list()
 ) {
   message("Initializing tm_g_heat_bygrade")
-  checkmate::assert_string(label)
-  checkmate::assert_string(sl_dataname)
-  checkmate::assert_string(ex_dataname)
-  checkmate::assert_string(ae_dataname)
-  checkmate::assert_string(cm_dataname, na.ok = TRUE)
 
-  id_var <- migrate_choices_selected_to_variables(id_var, multiple = FALSE)
-  visit_var <- migrate_choices_selected_to_variables(visit_var, multiple = FALSE)
-  ongo_var <- migrate_choices_selected_to_variables(ongo_var, multiple = FALSE)
+  checkmate::assert_string(label)
+  if (!missing(sl_dataname)) checkmate::assert_string(sl_dataname)
+  if (!missing(ex_dataname)) checkmate::assert_string(ex_dataname)
+  if (!missing(ae_dataname)) checkmate::assert_string(ae_dataname)
+  if (!missing(cm_dataname)) checkmate::assert_string(cm_dataname)
+
+  if (!missing(sl_dataname)) checkmate::assert_names(sl_dataname, subset.of = names(data))
+  if (!missing(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
+  if (!missing(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
+  if (!missing(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
+
+  id_var <- migrate_choices_selected_to_variables(id_var)
+  visit_var <- migrate_choices_selected_to_variables(visit_var)
+  ongo_var <- migrate_choices_selected_to_variables(ongo_var)
   anno_var <- migrate_choices_selected_to_variables(anno_var)
-  heat_var <- migrate_choices_selected_to_variables(heat_var, multiple = FALSE)
-  conmed_var <- migrate_choices_selected_to_variables(conmed_var, multiple = FALSE, null.ok = TRUE)
+  heat_var <- migrate_choices_selected_to_variables(heat_var)
+  conmed_var <- migrate_choices_selected_to_variables(conmed_var, null.ok = TRUE)
 
   id_var <- create_picks_helper(teal.picks::datasets(sl_dataname, sl_dataname), id_var)
   visit_var <- create_picks_helper(teal.picks::datasets(ex_dataname, ex_dataname), visit_var)
@@ -418,15 +424,24 @@ srv_g_heat_by_grade <- function(
         shiny::validate(
           teal::need_input("id_var-variables-selected", length(id_var_name) > 0, "ID Variable is required."),
           teal::need_input("visit_var-variables-selected", length(visit_var_name) > 0, "Visit Variable is required."),
-          teal::need_input("ongo_var-variables-selected", length(ongo_var_name) > 0, "Study Ongoing Status Variable is required."),
-          teal::need_input("anno_var-variables-selected", length(anno_var_name) > 0, "Annotation Variables is required."),
-          teal::need_input("heat_var-variables-selected", length(heat_var_name) > 0, "Heat Variable is required.")```
+          teal::need_input(
+            "ongo_var-variables-selected",
+            length(ongo_var_name) > 0, "Study Ongoing Status Variable is required."
+          ),
+          teal::need_input(
+            "anno_var-variables-selected",
+            length(anno_var_name) > 0, "Annotation Variables is required."
+          ),
+          teal::need_input("heat_var-variables-selected", length(heat_var_name) > 0, "Heat Variable is required.")
         )
 
         if (isTRUE(input$plot_cm)) {
           conmed_var_name <- merged_cm$variables()$conmed_var
           shiny::validate(
-            teal::need_input("conmed_var-variables-selected", length(conmed_var_name) > 0, "Conmed Variable is required."),
+            teal::need_input(
+              "conmed_var-variables-selected",
+              length(conmed_var_name) > 0, "Conmed Variable is required."
+            ),
             teal::need_input("conmed_level", length(input$conmed_level) > 0, "Select Conmed Levels.")
           )
         }

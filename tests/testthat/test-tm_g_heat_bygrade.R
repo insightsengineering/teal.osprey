@@ -68,7 +68,6 @@ testthat::describe("tm_g_heat_bygrade argument verification", {
             sl_dataname = "ADSL",
             ex_dataname = "ADEX",
             ae_dataname = "ADAE",
-            cm_dataname = NA,
             id_var = id_var_cs,
             visit_var = visit_var_cs,
             ongo_var = ongo_var_cs,
@@ -90,7 +89,6 @@ testthat::describe("tm_g_heat_bygrade argument verification", {
             sl_dataname = "ADSL",
             ex_dataname = "ADEX",
             ae_dataname = "ADAE",
-            cm_dataname = NA,
             id_var = id_var_cs,
             visit_var = visit_var_cs,
             ongo_var = ongo_var_cs,
@@ -104,71 +102,16 @@ testthat::describe("tm_g_heat_bygrade argument verification", {
       "Assertion on 'plot_width' failed"
     )
   })
-
-  testthat::it("Forcing Conversion from multiple picks to single", {
-    testthat::expect_error(
-      {
-        suppressWarnings(
-          tm_g_heat_bygrade(
-            label = "Heatmap by grade",
-            sl_dataname = "ADSL",
-            ex_dataname = "ADEX",
-            ae_dataname = "ADAE",
-            cm_dataname = NA,
-            id_var = teal.picks::variables(
-              choices = teal.picks::is_categorical(min.len = 2),
-              selected = 1L,
-              multiple = TRUE
-            ),
-            visit_var = visit_var_cs,
-            ongo_var = ongo_var_cs,
-            anno_var = anno_var_cs,
-            heat_var = heat_var_cs,
-            plot_height = c(600, 200, 2000)
-          ),
-          classes = "picks_delayed"
-        )
-      },
-      "metadata does not match the requirement for id_var"
-    )
-
-    testthat::expect_error(
-      {
-        suppressWarnings(
-          tm_g_heat_bygrade(
-            label = "Heatmap by grade",
-            sl_dataname = "ADSL",
-            ex_dataname = "ADEX",
-            ae_dataname = "ADAE",
-            cm_dataname = NA,
-            id_var = id_var_picks,
-            visit_var = teal.picks::variables(
-              choices = teal.picks::is_categorical(min.len = 2),
-              selected = 1L,
-              multiple = TRUE
-            ),
-            ongo_var = ongo_var_cs,
-            anno_var = anno_var_cs,
-            heat_var = heat_var_cs,
-            plot_height = c(600, 200, 2000)
-          ),
-          classes = "picks_delayed"
-        )
-      },
-      "metadata does not match the requirement for visit_var"
-    )
-  })
 })
 
 testthat::describe("tm_g_heat_bygrade module creation", {
-  testthat::it("creates a teal module using choices_selected (default method)", {
+  testthat::it("creates a teal module using choices_selected", {
     mod <- suppressWarnings(
       tm_g_heat_bygrade(
         label = "Heatmap by grade",
         sl_dataname = "ADSL",
         ex_dataname = "ADEX",
         ae_dataname = "ADAE",
-        cm_dataname = NA,
         id_var = id_var_cs,
         visit_var = visit_var_cs,
         ongo_var = ongo_var_cs,
@@ -181,7 +124,7 @@ testthat::describe("tm_g_heat_bygrade module creation", {
     testthat::expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using choices_selected with conmed (default method)", {
+  testthat::it("creates a teal module using choices_selected with conmed", {
     mod <- suppressWarnings(
       tm_g_heat_bygrade(
         label = "Heatmap by grade",
@@ -202,14 +145,13 @@ testthat::describe("tm_g_heat_bygrade module creation", {
     testthat::expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks (.pick method)", {
+  testthat::it("creates a teal module using picks", {
     mod <- suppressWarnings(
       tm_g_heat_bygrade(
         label = "Heatmap by grade",
         sl_dataname = "ADSL",
         ex_dataname = "ADEX",
         ae_dataname = "ADAE",
-        cm_dataname = NA,
         id_var = id_var_picks,
         visit_var = visit_var_picks,
         ongo_var = ongo_var_picks,

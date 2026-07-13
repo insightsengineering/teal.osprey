@@ -150,28 +150,28 @@ app <- init(
       ex_dataname = "ADEX",
       ae_dataname = "ADAE",
       cm_dataname = "ADCM",
-      id_var = ::variables(
-        choices = ::is_categorical(min.len = 2),
+      id_var = variables(
+        choices = teal.picks::is_categorical(min.len = 2),
         selected = 1L
       ),
-      visit_var = ::variables(
+      visit_var = variables(
         choices = dplyr::starts_with("AVISIT"),
         selected = 1L
       ),
-      ongo_var = ::variables(
+      ongo_var = variables(
         choices = dplyr::starts_with("ongo"),
         selected = 1L
       ),
-      anno_var = ::variables(
-        choices = ::is_categorical(min.len = 2),
+      anno_var = variables(
+        choices = teal.picks::is_categorical(min.len = 2),
         selected = c("SEX", "COUNTRY"),
         multiple = TRUE
       ),
-      heat_var = ::variables(
+      heat_var = variables(
         choices = dplyr::starts_with("AETO"),
         selected = 1L
       ),
-      conmed_var = ::variables(
+      conmed_var = variables(
         choices = dplyr::starts_with("CMDECOD"),
         selected = 1L
       ),
