@@ -168,40 +168,12 @@ tm_g_heat_bygrade <- function(
     conmed_var <- create_picks_helper(teal.picks::datasets(cm_dataname, cm_dataname), conmed_var)
   }
 
-  if (teal.picks::is_pick_multiple(id_var$variables)) {
-    warning(
-      "`id_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(id_var$variables, "multiple") <- FALSE
-  }
-  if (teal.picks::is_pick_multiple(visit_var$variables)) {
-    warning(
-      "`visit_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(visit_var$variables, "multiple") <- FALSE
-  }
-  if (teal.picks::is_pick_multiple(ongo_var$variables)) {
-    warning(
-      "`ongo_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(ongo_var$variables, "multiple") <- FALSE
-  }
-  if (teal.picks::is_pick_multiple(heat_var$variables)) {
-    warning(
-      "`heat_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(heat_var$variables, "multiple") <- FALSE
-  }
-  if (!is.null(conmed_var) && teal.picks::is_pick_multiple(conmed_var$variables)) {
-    warning(
-      "`conmed_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(conmed_var$variables, "multiple") <- FALSE
+  id_var <- force_pick_to_single(id_var, "id_var")
+  visit_var <- force_pick_to_single(visit_var, "visit_var")
+  ongo_var <- force_pick_to_single(ongo_var, "ongo_var")
+  heat_var <- force_pick_to_single(heat_var, "heat_var")
+  if (!is.null(conmed_var)) {
+    conmed_var <- force_pick_to_single(conmed_var, "conmed_var")
   }
 
   checkmate::assert_class(id_var, "picks")
@@ -237,15 +209,24 @@ tm_g_heat_bygrade <- function(
     server = srv_g_heat_by_grade,
     server_args = args[names(args) %in% names(formals(srv_g_heat_by_grade))],
     ui = ui_g_heat_by_grade,
-    ui_args = args,
+    ui_args = args[names(args) %in% names(formals(ui_g_heat_by_grade))],
     transformators = transformators,
     datanames = "all"
   )
 }
 
-ui_g_heat_by_grade <- function(id, ...) { # nolint: object_name_linter.
+ui_g_heat_by_grade <- function(
+  id,
+  cm_dataname,
+  id_var,
+  visit_var,
+  ongo_var,
+  anno_var,
+  heat_var,
+  conmed_var,
+  fontsize
+) { # nolint: object_name_linter.
   ns <- NS(id)
-  args <- list(...)
 
   shiny::tagList(
     teal.widgets::standard_layout(
@@ -256,40 +237,40 @@ ui_g_heat_by_grade <- function(id, ...) { # nolint: object_name_linter.
         tags$label("Encodings", class = "text-primary"),
         tags$div(
           tags$strong("ID Variable"),
-          teal.picks::picks_ui(id = ns("id_var"), picks = args$id_var)
+          teal.picks::picks_ui(id = ns("id_var"), picks = id_var)
         ),
         tags$div(
           tags$strong("Visit Variable"),
-          teal.picks::picks_ui(id = ns("visit_var"), picks = args$visit_var)
+          teal.picks::picks_ui(id = ns("visit_var"), picks = visit_var)
         ),
         tags$div(
           tags$strong("Study Ongoing Status Variable"),
-          teal.picks::picks_ui(id = ns("ongo_var"), picks = args$ongo_var)
+          teal.picks::picks_ui(id = ns("ongo_var"), picks = ongo_var)
         ),
         tags$div(
           tags$strong("Annotation Variables"),
-          teal.picks::picks_ui(id = ns("anno_var"), picks = args$anno_var)
+          teal.picks::picks_ui(id = ns("anno_var"), picks = anno_var)
         ),
         tags$div(
           tags$strong("Heat Variable"),
-          teal.picks::picks_ui(id = ns("heat_var"), picks = args$heat_var)
+          teal.picks::picks_ui(id = ns("heat_var"), picks = heat_var)
         ),
         helpText("Plot conmed"),
         left_bordered_div(
-          if (!is.na(args$cm_dataname)) {
+          if (!is.na(cm_dataname)) {
             checkboxInput(
               ns("plot_cm"),
               "Yes",
-              value = !is.na(args$cm_dataname)
+              value = !is.na(cm_dataname)
             )
           }
         ),
         conditionalPanel(
           paste0("input['", ns("plot_cm"), "']"),
-          if (!is.null(args$conmed_var)) {
+          if (!is.null(conmed_var)) {
             tags$div(
               tags$strong("Conmed Variable"),
-              teal.picks::picks_ui(id = ns("conmed_var"), picks = args$conmed_var)
+              teal.picks::picks_ui(id = ns("conmed_var"), picks = conmed_var)
             )
           },
           selectInput(
@@ -302,7 +283,7 @@ ui_g_heat_by_grade <- function(id, ...) { # nolint: object_name_linter.
         ),
         ui_g_decorate(
           ns(NULL),
-          fontsize = args$fontsize,
+          fontsize = fontsize,
           titles = "Heatmap by Grade",
           footnotes = ""
         )
@@ -417,8 +398,12 @@ srv_g_heat_by_grade <- function(
         visit_var_name <- merged_ex$variables()$visit_var
         ongo_var_name <- merged_ex$variables()$ongo_var
         heat_var_name <- merged_ae$variables()$heat_var
+        plot_cm <- isTRUE(input$plot_cm)
+        conmed_var_name <- if (plot_cm) merged_cm$variables()$conmed_var else NULL
 
-        ADSL <- qenv[[sl_dataname]]
+        validated_q <- qenv
+
+        ADSL <- validated_q[[sl_dataname]]
         teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
 
         shiny::validate(
@@ -435,8 +420,7 @@ srv_g_heat_by_grade <- function(
           teal::need_input("heat_var-variables-selected", length(heat_var_name) > 0, "Heat Variable is required.")
         )
 
-        if (isTRUE(input$plot_cm)) {
-          conmed_var_name <- merged_cm$variables()$conmed_var
+        if (plot_cm) {
           shiny::validate(
             teal::need_input(
               "conmed_var-variables-selected",
@@ -446,11 +430,11 @@ srv_g_heat_by_grade <- function(
           )
         }
 
-        teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "### Plot")
+        teal.reporter::teal_card(validated_q) <- c(teal.reporter::teal_card(validated_q), "### Plot")
 
-        if (isTRUE(input$plot_cm)) {
-          qenv <- teal.code::eval_code(
-            qenv,
+        if (plot_cm) {
+          validated_q <- teal.code::eval_code(
+            validated_q,
             code = substitute(
               expr = {
                 conmed_data <- ADCM %>%
@@ -470,28 +454,38 @@ srv_g_heat_by_grade <- function(
           )
         }
 
-        teal.code::eval_code(
-          qenv,
-          code = bquote(
+        conmed_data <- if (plot_cm) validated_q[["conmed_data"]] else NULL
+
+        validated_q <- within(
+          validated_q,
+          {
             plot <- osprey::g_heat_bygrade(
-              id_var = .(id_var_name),
-              exp_data = .(as.name(ex_dataname)) %>% filter(PARCAT1 == "INDIVIDUAL"),
-              visit_var = .(visit_var_name),
-              ongo_var = .(ongo_var_name),
-              anno_data = .(as.name(sl_dataname))[c(.(anno_var_name), .(id_var_name))],
-              anno_var = .(anno_var_name),
-              heat_data = .(as.name(ae_dataname)) %>%
-                select(
-                  .(as.name(id_var_name)),
-                  .(as.name(visit_var_name)),
-                  .(as.name(heat_var_name))
-                ),
-              heat_color_var = .(heat_var_name),
-              conmed_data = .(if (isTRUE(input$plot_cm)) as.name("conmed_data")),
-              conmed_var = .(if (isTRUE(input$plot_cm)) conmed_var_name),
+              id_var = id_var_name,
+              exp_data = get(ex_dataname) %>% filter(PARCAT1 == "INDIVIDUAL"),
+              visit_var = visit_var_name,
+              ongo_var = ongo_var_name,
+              anno_data = get(sl_dataname)[c(anno_var_name, id_var_name)],
+              anno_var = anno_var_name,
+              heat_data = get(ae_dataname) %>%
+                select(all_of(c(id_var_name, visit_var_name, heat_var_name))),
+              heat_color_var = heat_var_name,
+              conmed_data = conmed_data,
+              conmed_var = conmed_var_name
             )
-          )
+          },
+          id_var_name = id_var_name,
+          ex_dataname = ex_dataname,
+          visit_var_name = visit_var_name,
+          ongo_var_name = ongo_var_name,
+          sl_dataname = sl_dataname,
+          anno_var_name = anno_var_name,
+          ae_dataname = ae_dataname,
+          heat_var_name = heat_var_name,
+          conmed_data = conmed_data,
+          conmed_var_name = conmed_var_name
         )
+
+        validated_q
       })
     )
 
