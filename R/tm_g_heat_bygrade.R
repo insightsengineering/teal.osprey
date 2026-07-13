@@ -426,8 +426,8 @@ srv_g_heat_by_grade <- function(
         if (isTRUE(input$plot_cm)) {
           conmed_var_name <- merged_cm$variables()$conmed_var
           shiny::validate(
-            shiny::need(length(conmed_var_name) > 0, "Conmed Variable is required."),
-            shiny::need(length(input$conmed_level) > 0, "Select Conmed Levels.")
+            teal::need_input("conmed_var-variables-selected", length(conmed_var_name) > 0, "Conmed Variable is required."),
+            teal::need_input("conmed_level", length(input$conmed_level) > 0, "Select Conmed Levels.")
           )
         }
 
