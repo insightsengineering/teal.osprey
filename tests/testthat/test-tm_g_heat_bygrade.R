@@ -164,7 +164,7 @@ testthat::describe("tm_g_heat_bygrade module creation", {
     testthat::expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks with conmed (.pick method)", {
+  testthat::it("creates a teal module using picks with conmed", {
     mod <- suppressWarnings(
       tm_g_heat_bygrade(
         label = "Heatmap by grade",
