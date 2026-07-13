@@ -297,7 +297,6 @@ srv_g_ae_sub <- function(id,
 
         shiny::validate(
           shiny::need(length(group_var_name) > 0L, "Group variable is required."),
-          # shiny::need(length(group_var_name) == 1L, "Group variable must be of length 1."),
           shiny::need(length(arm_var_name) == 1L, "Arm Variable is required."),
           shiny::need(
             is.factor(ANL[[arm_var_name]]),
