@@ -79,40 +79,6 @@
 #'       ),
 #'       vref_line = "10, 37",
 #'       href_line = "-20, 0"
-#'     ),
-#'     tm_g_spiderplot(
-#'       label = "Spider plot (default)",
-#'       dataname = "ADTR",
-#'       paramcd = choices_selected(
-#'         choices = "SLDINV",
-#'         selected = "SLDINV"
-#'       ),
-#'       x_var = choices_selected(
-#'         choices = "ADY",
-#'         selected = "ADY"
-#'       ),
-#'       y_var = choices_selected(
-#'         choices = c("PCHG", "CHG", "AVAL"),
-#'         selected = "PCHG"
-#'       ),
-#'       marker_var = choices_selected(
-#'         choices = c("SEX", "RACE", "USUBJID"),
-#'         selected = "SEX"
-#'       ),
-#'       line_colorby_var = choices_selected(
-#'         choices = c("SEX", "USUBJID", "RACE"),
-#'         selected = "SEX"
-#'       ),
-#'       xfacet_var = choices_selected(
-#'         choices = c("SEX", "ARM"),
-#'         selected = "SEX"
-#'       ),
-#'       yfacet_var = choices_selected(
-#'         choices = c("SEX", "ARM"),
-#'         selected = "ARM"
-#'       ),
-#'       vref_line = "10, 37",
-#'       href_line = "-20, 0"
 #'     )
 #'   )
 #' )
@@ -163,45 +129,11 @@ tm_g_spiderplot <- function(label,
     yfacet_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), yfacet_var)
   }
 
-  if (teal.picks::is_pick_multiple(paramcd$variables)) {
-    warning(
-      "`paramcd` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(paramcd$variables, "multiple") <- FALSE
-  }
-
-  if (teal.picks::is_pick_multiple(x_var$variables)) {
-    warning(
-      "`x_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(x_var$variables, "multiple") <- FALSE
-  }
-
-  if (teal.picks::is_pick_multiple(y_var$variables)) {
-    warning(
-      "`y_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(y_var$variables, "multiple") <- FALSE
-  }
-
-  if (teal.picks::is_pick_multiple(marker_var$variables)) {
-    warning(
-      "`marker_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(marker_var$variables, "multiple") <- FALSE
-  }
-
-  if (teal.picks::is_pick_multiple(line_colorby_var$variables)) {
-    warning(
-      "`line_colorby_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(line_colorby_var$variables, "multiple") <- FALSE
-  }
+  paramcd <- force_pick_to_single(paramcd, "paramcd")
+  x_var <- force_pick_to_single(x_var, "x_var")
+  y_var <- force_pick_to_single(y_var, "y_var")
+  marker_var <- force_pick_to_single(marker_var, "marker_var")
+  line_colorby_var <- force_pick_to_single(line_colorby_var, "line_colorby_var")  
 
   checkmate::assert_class(paramcd, "picks")
   checkmate::assert_class(x_var, "picks")
