@@ -344,9 +344,7 @@ ui_g_spider <- function(id,
   )
 }
 
-# nolint start: object_name_linter.
 srv_g_spider <- function(
-  # nolint end: object_name_linter.
   id,
   data,
   dataname,
