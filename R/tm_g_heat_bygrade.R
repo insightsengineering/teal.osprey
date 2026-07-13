@@ -334,9 +334,9 @@ srv_g_heat_by_grade <- function(
       visit_var = visit_var,
       ongo_var = ongo_var,
       anno_var = anno_var,
-      heat_var = heat_var
+      heat_var = heat_var,
+      conmed_var = conmed_var
     )
-    if (!is.null(conmed_var)) picks_list$conmed_var <- conmed_var
 
     selectors <- teal.picks::picks_srv(picks = picks_list, data = data)
 
