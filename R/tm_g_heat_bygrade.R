@@ -153,13 +153,13 @@ tm_g_heat_bygrade <- function(
   heat_var <- migrate_choices_selected_to_variables(heat_var, multiple = FALSE)
   conmed_var <- migrate_choices_selected_to_variables(conmed_var, multiple = FALSE, null.ok = TRUE)
 
-  id_var <- create_picks_helper(teal.picks::datasets(sl_dataname), id_var)
-  visit_var <- create_picks_helper(teal.picks::datasets(ex_dataname), visit_var)
-  ongo_var <- create_picks_helper(teal.picks::datasets(ex_dataname), ongo_var)
-  anno_var <- create_picks_helper(teal.picks::datasets(sl_dataname), anno_var)
-  heat_var <- create_picks_helper(teal.picks::datasets(ae_dataname), heat_var)
+  id_var <- create_picks_helper(teal.picks::datasets(sl_dataname, sl_dataname), id_var)
+  visit_var <- create_picks_helper(teal.picks::datasets(ex_dataname, ex_dataname), visit_var)
+  ongo_var <- create_picks_helper(teal.picks::datasets(ex_dataname, ex_dataname), ongo_var)
+  anno_var <- create_picks_helper(teal.picks::datasets(sl_dataname, sl_dataname), anno_var)
+  heat_var <- create_picks_helper(teal.picks::datasets(ae_dataname, ae_dataname), heat_var)
   if (!is.null(conmed_var)) {
-    conmed_var <- create_picks_helper(teal.picks::datasets(cm_dataname), conmed_var)
+    conmed_var <- create_picks_helper(teal.picks::datasets(cm_dataname, cm_dataname), conmed_var)
   }
 
   if (teal.picks::is_pick_multiple(id_var$variables)) {
