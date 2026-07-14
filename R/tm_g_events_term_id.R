@@ -7,7 +7,8 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param term_var [teal.transform::choices_selected] object with all available choices
+#' @param term_var Either a ([`teal.transform::choices_selected`])
+#'   `choices_selected` object or a (`[teal.picks::variables()]`) object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
 #'
 #' @inherit argument_convention return
@@ -33,16 +34,16 @@
 #'     tm_g_events_term_id(
 #'       label = "Common AE",
 #'       dataname = "ADAE",
-#'       term_var = choices_selected(
-#'         selected = "AEDECOD",
+#'       term_var = variables(
 #'         choices = c(
 #'           "AEDECOD", "AETERM",
 #'           "AEHLT", "AELLT", "AEBODSYS"
-#'         )
+#'         ),
+#'         selected = "AEDECOD"
 #'       ),
-#'       arm_var = choices_selected(
-#'         selected = "ACTARMCD",
-#'         choices = c("ACTARM", "ACTARMCD")
+#'       arm_var = variables(
+#'         choices = c("ACTARM", "ACTARMCD"),
+#'         selected = "ACTARMCD"
 #'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
@@ -116,14 +117,14 @@ ui_g_events_term_id <- function(id,
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = tags$div(
-        tags$div(
-          tags$strong("Term Variable"),
-          teal.picks::picks_ui(id = ns("term_var"), picks = term_var)
-        ),
-        tags$div(
-          tags$strong("Arm Variable"),
-          teal.picks::picks_ui(id = ns("arm_var"), picks = arm_var)
-        ),
+      tags$div(
+        tags$strong("Term Variable"),
+        teal.picks::picks_ui(id = ns("term_var"), picks = term_var)
+      ),
+      tags$div(
+        tags$strong("Arm Variable"),
+        teal.picks::picks_ui(id = ns("arm_var"), picks = arm_var)
+      ),
       selectInput(
         ns("arm_ref"),
         "Control",
@@ -315,15 +316,15 @@ srv_g_events_term_id <- function(id,
 
     output_q <- reactive({
       merged_vars <- merge_vars()
-      validate(
-        need(
-          length(merged_vars[["term_var"]]) > 0L,
-          "Please select a term variable"
-        ),
-        need(
-          length(merged_vars[["arm_var"]]) > 0L,
-          "Please select an arm variable"
-        )
+      teal::validate_input(
+        "term_var-variables-selected",
+        condition = function(x) length(x) > 0L,
+        message = "Please select a term variable"
+      )
+      teal::validate_input(
+        "arm_var-variables-selected",
+        condition = function(x) length(x) > 0L,
+        message = "Please select an arm variable"
       )
 
       term_var_name <- merged_vars[["term_var"]][[1L]]
@@ -336,19 +337,24 @@ srv_g_events_term_id <- function(id,
       qenv <- anl_q()
       ANL <- qenv[["ANL"]]
 
-      validate(
-        need(
-          is.factor(ANL[[arm_var_name]]),
-          "Arm Var must be a factor variable. Contact developer."
-        ),
-        need(
-          input$arm_trt %in% ANL[[arm_var_name]] && input$arm_ref %in% ANL[[arm_var_name]],
-          "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
-        ),
-        need(
-          !isTRUE(input$arm_trt == input$arm_ref),
-          "Control and Treatment must be different."
-        )
+      teal::validate_input(
+        "arm_var-variables-selected",
+        condition = function(x) length(x) > 0L && is.factor(ANL[[x]]),
+        message = "Arm Var must be a factor variable. Contact developer."
+      )
+      teal::validate_input(
+        c("arm_trt", "arm_ref", "arm_var-variables-selected"),
+        condition = function(arm_trt, arm_ref, arm_var_selected) {
+          arm_trt %in% ANL[[arm_var_selected]] && arm_ref %in% ANL[[arm_var_selected]]
+        },
+        message = "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
+      )
+      teal::validate_input(
+        c("arm_trt", "arm_ref"),
+        condition = function(arm_trt, arm_ref) {
+          !isTRUE(arm_trt == arm_ref)
+        },
+        message = "Control and Treatment must be different."
       )
 
       teal::validate_has_data(ANL,
@@ -359,7 +365,8 @@ srv_g_events_term_id <- function(id,
       teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "### Plot")
 
       q2 <- within(
-        qenv, {
+        qenv,
+        {
           plot <- osprey::g_events_term_id(
             term = ANL[[term_var_name]],
             id = ANL$USUBJID,

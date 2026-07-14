@@ -23,7 +23,8 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{term_var}{\link[teal.transform:choices_selected]{teal.transform::choices_selected} object with all available choices
+\item{term_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
+\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) object with all available choices
 and pre-selected option names that can be used to specify the term for events}
 
 \item{arm_var}{(\code{choices_selected})\cr
@@ -46,7 +47,7 @@ vector to indicate default value, minimum and maximum values.}
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display Events by Term plot as a shiny module
@@ -82,16 +83,16 @@ app <- init(
     tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
-      term_var = choices_selected(
-        selected = "AEDECOD",
+      term_var = variables(
         choices = c(
           "AEDECOD", "AETERM",
           "AEHLT", "AELLT", "AEBODSYS"
-        )
+        ),
+        selected = "AEDECOD"
       ),
-      arm_var = choices_selected(
-        selected = "ACTARMCD",
-        choices = c("ACTARM", "ACTARMCD")
+      arm_var = variables(
+        choices = c("ACTARM", "ACTARMCD"),
+        selected = "ACTARMCD"
       ),
       plot_height = c(600, 200, 2000)
     )
