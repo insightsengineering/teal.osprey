@@ -147,10 +147,10 @@ tm_g_heat_bygrade <- function(
   if (!missing(ae_dataname)) checkmate::assert_string(ae_dataname)
   if (!missing(cm_dataname)) checkmate::assert_string(cm_dataname)
 
-  if (!missing(sl_dataname)) checkmate::assert_names(sl_dataname, subset.of = names(data))
-  if (!missing(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
-  if (!missing(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
-  if (!missing(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
+  checkmate::assert_choice(sl_dataname, names(data), null.ok = TRUE)
+  checkmate::assert_choice(ex_dataname, names(data), null.ok = TRUE)
+  checkmate::assert_choice(ae_dataname, names(data), null.ok = TRUE)
+  checkmate::assert_choice(cm_dataname, names(data), null.ok = TRUE)
 
   id_var <- migrate_choices_selected_to_variables(id_var)
   visit_var <- migrate_choices_selected_to_variables(visit_var)
