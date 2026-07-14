@@ -1,4 +1,4 @@
-create_tm_g_events_term_id_data <- function() {
+create_tm_g_events_term_id_data <- function() { # nolint: object_length_linter.
   data <- within(teal.data::teal_data(), {
     ADSL <- teal.data::rADSL
     ADAE <- teal.data::rADAE

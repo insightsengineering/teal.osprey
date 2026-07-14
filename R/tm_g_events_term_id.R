@@ -347,7 +347,8 @@ srv_g_events_term_id <- function(id,
         condition = function(arm_trt, arm_ref, arm_var_selected) {
           arm_trt %in% ANL[[arm_var_selected]] && arm_ref %in% ANL[[arm_var_selected]]
         },
-        message = "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
+        message =
+          "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
       )
       teal::validate_input(
         c("arm_trt", "arm_ref"),
