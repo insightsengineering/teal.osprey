@@ -1,15 +1,14 @@
 #' Events by Term Plot Teal Module
 #'
-#' Display an events-by-term plot as a Shiny module using [teal.picks::picks()] encodings.
+#' @description
+#'
+#' Display Events by Term plot as a shiny module
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param term_var (`picks`)\cr
-#'   [teal.picks::picks()] object for the event term variable (single selection).
-#' @param arm_var (`picks`)\cr
-#'   [teal.picks::picks()] object for the treatment arm variable (single selection).
-#'   The arm variable must be a factor in the analysis data.
+#' @param term_var [teal.transform::choices_selected] object with all available choices
+#' and pre-selected option names that can be used to specify the term for events
 #'
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
@@ -33,19 +32,17 @@
 #'   modules = modules(
 #'     tm_g_events_term_id(
 #'       label = "Common AE",
-#'       term_var = teal.picks::picks(
-#'         teal.picks::datasets("ADAE"),
-#'         teal.picks::variables(
-#'           choices = teal.picks::is_categorical(min.len = 2),
-#'           selected = "AEDECOD"
+#'       dataname = "ADAE",
+#'       term_var = choices_selected(
+#'         selected = "AEDECOD",
+#'         choices = c(
+#'           "AEDECOD", "AETERM",
+#'           "AEHLT", "AELLT", "AEBODSYS"
 #'         )
 #'       ),
-#'       arm_var = teal.picks::picks(
-#'         teal.picks::datasets("ADSL"),
-#'         teal.picks::variables(
-#'           choices = teal.picks::is_categorical(min.len = 2),
-#'           selected = "ACTARMCD"
-#'         )
+#'       arm_var = choices_selected(
+#'         selected = "ACTARMCD",
+#'         choices = c("ACTARM", "ACTARMCD")
 #'       ),
 #'       plot_height = c(600, 200, 2000)
 #'     )
@@ -55,38 +52,18 @@
 #'   shinyApp(app$ui, app$server)
 #' }
 #'
-tm_g_events_term_id <- function(label = "Common AE",
-                                term_var = teal.picks::picks(
-                                  teal.picks::datasets(),
-                                  teal.picks::variables(
-                                    choices = teal.picks::is_categorical(min.len = 2),
-                                    selected = 1L
-                                  )
-                                ),
-                                arm_var = teal.picks::picks(
-                                  teal.picks::datasets(),
-                                  teal.picks::variables(
-                                    choices = teal.picks::is_categorical(min.len = 2),
-                                    selected = 1L
-                                  )
-                                ),
+tm_g_events_term_id <- function(label,
+                                dataname,
+                                term_var,
+                                arm_var,
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
                                 plot_width = NULL,
                                 transformators = list()) {
+  message("Initializing tm_g_events_term_id")
   checkmate::assert_string(label)
-
-  checkmate::assert_class(term_var, "picks", .var.name = "term_var")
-  checkmate::assert_false(
-    teal.picks::is_pick_multiple(term_var$variables),
-    .var.name = "`term_var` must use variables(..., multiple = FALSE)"
-  )
-  checkmate::assert_class(arm_var, "picks", .var.name = "arm_var")
-  checkmate::assert_false(
-    teal.picks::is_pick_multiple(arm_var$variables),
-    .var.name = "`arm_var` must use variables(..., multiple = FALSE)"
-  )
-
+  checkmate::assert_class(term_var, classes = "choices_selected")
+  checkmate::assert_class(arm_var, classes = "choices_selected")
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
     checkmate::assert(
@@ -97,61 +74,60 @@ tm_g_events_term_id <- function(label = "Common AE",
     )
   )
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
-  checkmate::assert_numeric(
-    plot_height[1],
-    lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height"
-  )
+  checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
   checkmate::assert_numeric(
     plot_width[1],
-    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
+    lower = plot_width[2],
+    upper = plot_width[3],
+    null.ok = TRUE,
+    .var.name = "plot_width"
   )
-
-  pick_slots <- list(term_var = term_var, arm_var = arm_var)
-  all_datanames <- .picks_all_datanames(pick_slots)
 
   args <- as.list(environment())
 
   module(
     label = label,
-    ui = ui_g_events_term_id,
     server = srv_g_events_term_id,
-    ui_args = args[names(args) %in% names(formals(ui_g_events_term_id))],
-    server_args = args[names(args) %in% names(formals(srv_g_events_term_id))],
+    server_args = list(label = label, dataname = dataname, plot_height = plot_height, plot_width = plot_width),
+    ui = ui_g_events_term_id,
+    ui_args = args,
     transformators = transformators,
-    datanames = all_datanames
+    datanames = c("ADSL", dataname)
   )
 }
 
-#' @keywords internal
-ui_g_events_term_id <- function(id,
-                                term_var,
-                                arm_var,
-                                fontsize) {
+ui_g_events_term_id <- function(id, ...) {
   ns <- NS(id)
+  args <- list(...)
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
       plot_decorate_output(id = ns(NULL))
     ),
     encoding = tags$div(
-      tags$label("Encodings", class = "text-primary"), tags$br(),
-      tags$div(
-        tags$label("Term variable"),
-        teal.picks::picks_ui(id = ns("term_var"), picks = term_var)
+      teal.widgets::optionalSelectInput(
+        ns("term"),
+        "Term Variable",
+        choices = get_choices(args$term_var$choices),
+        selected = args$term_var$selected
       ),
-      tags$div(
-        tags$label("Arm variable"),
-        teal.picks::picks_ui(id = ns("arm_var"), picks = arm_var)
+      teal.widgets::optionalSelectInput(
+        ns("arm_var"),
+        "Arm Variable",
+        choices = get_choices(args$arm_var$choices),
+        selected = args$arm_var$selected
       ),
       selectInput(
         ns("arm_ref"),
         "Control",
-        choices = NULL
+        choices = get_choices(args$arm_var$choices),
+        selected = args$arm_var$selected
       ),
       selectInput(
         ns("arm_trt"),
         "Treatment",
-        choices = NULL
+        choices = get_choices(args$arm_var$choices),
+        selected = args$arm_var$selected
       ),
       teal.widgets::optionalSelectInput(
         ns("sort"),
@@ -203,15 +179,14 @@ ui_g_events_term_id <- function(id,
           value = c(-0.5, 0.5),
           step = 0.01
         ),
-        checkboxInput(
-          ns("reverse"),
+        checkboxInput(ns("reverse"),
           "Reverse Order",
           value = FALSE
         )
       ),
       ui_g_decorate(
         ns(NULL),
-        fontsize = fontsize,
+        fontsize = args$fontsize,
         titles = "Common AE Table",
         footnotes = ""
       )
@@ -219,74 +194,54 @@ ui_g_events_term_id <- function(id,
   )
 }
 
-#' @keywords internal
 srv_g_events_term_id <- function(id,
                                  data,
-                                 term_var,
-                                 arm_var,
+                                 dataname,
+                                 label,
                                  plot_height,
                                  plot_width) {
   checkmate::assert_class(data, "reactive")
-  checkmate::assert_class(isolate(data()), "teal_data")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
-
-    anl_selectors <- teal.picks::picks_srv(
-      id = "",
-      picks = list(term_var = term_var, arm_var = arm_var),
-      data = data
-    )
-
-    data_with_card <- reactive({
-      obj <- data()
-      teal.reporter::teal_card(obj) <-
-        c(
-          teal.reporter::teal_card(obj),
-          teal.reporter::teal_card("## Module's output(s)")
-        )
-      obj
+    iv <- reactive({
+      iv <- shinyvalidate::InputValidator$new()
+      iv$add_rule("term", shinyvalidate::sv_required(
+        message = "Term Variable is required"
+      ))
+      iv$add_rule("arm_var", shinyvalidate::sv_required(
+        message = "Arm Variable is required"
+      ))
+      rule_diff <- function(value, other) {
+        if (isTRUE(value == other)) "Control and Treatment must be different"
+      }
+      iv$add_rule("arm_trt", rule_diff, other = input$arm_ref)
+      iv$add_rule("arm_ref", rule_diff, other = input$arm_trt)
+      iv$enable()
+      iv
     })
 
-    merged_anl <- teal.picks::merge_srv(
-      "merge_anl",
-      data = data_with_card,
-      selectors = anl_selectors,
-      output_name = "ANL",
-      join_fun = "dplyr::inner_join"
+    decorate_output <- srv_g_decorate(
+      id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width
     )
+    font_size <- decorate_output$font_size
+    pws <- decorate_output$pws
 
-    anl_q <- merged_anl$data
-    merge_vars <- merged_anl$variables
-
-    observeEvent(anl_selectors$arm_var(),
-      {
-        arm_selector <- anl_selectors$arm_var()
-        req(arm_selector)
-        arm_var_name <- arm_selector$variables$selected
-        arm_dataset <- arm_selector$datasets$selected
-        req(arm_var_name, arm_dataset)
-
-        arm_data <- data()[[arm_dataset]]
-        choices <- levels(arm_data[[arm_var_name]])
-
-        trt_index <- if (length(choices) == 1L) 1L else 2L
-
-        updateSelectInput(
-          session,
-          "arm_ref",
-          selected = choices[1],
-          choices = choices
+    observeEvent(list(input$diff_ci_method, input$conf_level), {
+      req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
+      diff_ci_method <- input$diff_ci_method
+      conf_level <- input$conf_level
+      updateTextAreaInput(
+        session,
+        "foot",
+        value = sprintf(
+          "Note: %d%% CI is calculated using %s",
+          round(conf_level * 100),
+          name_ci(diff_ci_method)
         )
-        updateSelectInput(
-          session,
-          "arm_trt",
-          selected = choices[trt_index],
-          choices = choices
-        )
-      },
-      ignoreNULL = TRUE
-    )
+      )
+    })
 
     observeEvent(input$sort,
       {
@@ -308,84 +263,86 @@ srv_g_events_term_id <- function(id,
       ignoreNULL = FALSE
     )
 
-    observeEvent(list(input$diff_ci_method, input$conf_level), {
-      req(!is.null(input$diff_ci_method) && !is.null(input$conf_level))
-      diff_ci_method <- input$diff_ci_method
-      conf_level <- input$conf_level
-      updateTextAreaInput(
-        session,
-        "foot",
-        value = sprintf(
-          "Note: %d%% CI is calculated using %s",
-          round(conf_level * 100),
-          name_ci(diff_ci_method)
-        )
-      )
-    })
+    observeEvent(input$arm_var,
+      {
+        arm_var <- input$arm_var
+        ANL <- data()[[dataname]]
 
-    decorate_output <- srv_g_decorate(
-      id = NULL,
-      plt = plot_r,
-      plot_height = plot_height,
-      plot_width = plot_width
+        choices <- levels(ANL[[arm_var]])
+
+        if (length(choices) == 1) {
+          trt_index <- 1
+        } else {
+          trt_index <- 2
+        }
+
+        updateSelectInput(
+          session,
+          "arm_ref",
+          selected = choices[1],
+          choices = choices
+        )
+        updateSelectInput(
+          session,
+          "arm_trt",
+          selected = choices[trt_index],
+          choices = choices
+        )
+      },
+      ignoreNULL = TRUE
     )
-    font_size <- decorate_output$font_size
-    pws <- decorate_output$pws
 
     output_q <- reactive({
-      merged_vars <- merge_vars()
-      validate(
-        need(
-          length(merged_vars[["term_var"]]) > 0L,
-          "Please select a term variable"
-        ),
-        need(
-          length(merged_vars[["arm_var"]]) > 0L,
-          "Please select an arm variable"
+      obj <- data()
+      teal.reporter::teal_card(obj) <-
+        c(
+          teal.reporter::teal_card(obj),
+          teal.reporter::teal_card("## Module's output(s)")
         )
-      )
 
-      term_var_name <- merged_vars[["term_var"]][[1L]]
-      arm_var_name <- merged_vars[["arm_var"]][[1L]]
+      ANL <- obj[[dataname]]
 
-      arm_selector <- anl_selectors$arm_var()
-      arm_var_orig <- arm_selector$variables$selected
-      arm_dataset <- arm_selector$datasets$selected
+      teal::validate_inputs(iv())
 
-      qenv <- anl_q()
-      ANL <- qenv[["ANL"]]
-
-      validate(
-        need(
-          is.factor(ANL[[arm_var_name]]),
-          "Arm Variable must be a factor variable."
-        ),
-        need(
-          input$arm_trt %in% ANL[[arm_var_name]] && input$arm_ref %in% ANL[[arm_var_name]],
+      shiny::validate(
+        shiny::need(is.factor(ANL[[input$arm_var]]), "Arm Var must be a factor variable. Contact developer."),
+        shiny::need(
+          input$arm_trt %in% ANL[[req(input$arm_var)]] && input$arm_ref %in% ANL[[req(input$arm_var)]],
           "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
-        ),
-        need(
-          !isTRUE(input$arm_trt == input$arm_ref),
-          "Control and Treatment must be different."
         )
       )
 
-      teal::validate_has_data(
-        ANL,
+      adsl_vars <- unique(c("USUBJID", "STUDYID", input$arm_var))
+      anl_vars <- c("USUBJID", "STUDYID", input$term)
+
+      q1 <- teal.code::eval_code(
+        obj,
+        code = bquote(
+          ANL <- merge(
+            x = ADSL[, .(adsl_vars), drop = FALSE],
+            y = .(as.name(dataname))[, .(anl_vars), drop = FALSE],
+            all.x = FALSE,
+            all.y = FALSE,
+            by = c("USUBJID", "STUDYID")
+          )
+        )
+      )
+
+      teal::validate_has_data(q1[["ANL"]],
         min_nrow = 10,
         msg = "Analysis data set must have at least 10 data points"
       )
 
-      teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "### Plot")
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 
-      teal.code::eval_code(
-        qenv,
+      q2 <- teal.code::eval_code(
+        q1,
         code = bquote(
           plot <- osprey::g_events_term_id(
-            term = ANL[[.(term_var_name)]],
+            term = ANL[[.(input$term)]],
             id = ANL$USUBJID,
-            arm = ANL[[.(arm_var_name)]],
-            arm_N = table(.(as.name(arm_dataset))[[.(arm_var_orig)]]),
+            arm = ANL[[.(input$arm_var)]],
+            arm_N = table(ADSL[[.(input$arm_var)]]),
             ref = .(input$arm_ref),
             trt = .(input$arm_trt),
             sort_by = .(input$sort),
