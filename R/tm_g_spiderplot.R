@@ -7,7 +7,6 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' variable value designating the studied parameter.
 #' @param x_var Either a ([`teal.picks::variables()`]) object or a
 #'   ([`teal.transform::choices_selected`]) `choices_selected` object for x-axis variables.
 #' @param y_var Either a ([`teal.picks::variables()`]) object or a
