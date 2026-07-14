@@ -97,7 +97,7 @@ tm_g_events_term_id <- function(label,
   args <- as.list(environment())
 
   module(
-    datanames = c("ADSL", dataname),
+    datanames = unique(c("ADSL", dataname)),
     label = label,
     server = srv_g_events_term_id,
     server_args = args[names(args) %in% names(formals(srv_g_events_term_id))],
