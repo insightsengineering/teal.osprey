@@ -109,11 +109,11 @@ tm_g_spiderplot <- function(label,
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
 
-  paramcd <- migrate_choices_selected_to_variables(paramcd, multiple = FALSE)
-  x_var <- migrate_choices_selected_to_variables(x_var, multiple = FALSE)
-  y_var <- migrate_choices_selected_to_variables(y_var, multiple = FALSE)
-  marker_var <- migrate_choices_selected_to_variables(marker_var, multiple = FALSE)
-  line_colorby_var <- migrate_choices_selected_to_variables(line_colorby_var, multiple = FALSE)
+  paramcd <- migrate_choices_selected_to_variables(paramcd)
+  x_var <- migrate_choices_selected_to_variables(x_var)
+  y_var <- migrate_choices_selected_to_variables(y_var)
+  marker_var <- migrate_choices_selected_to_variables(marker_var)
+  line_colorby_var <- migrate_choices_selected_to_variables(line_colorby_var)
   xfacet_var <- migrate_choices_selected_to_variables(xfacet_var, null.ok = TRUE)
   yfacet_var <- migrate_choices_selected_to_variables(yfacet_var, null.ok = TRUE)
 
