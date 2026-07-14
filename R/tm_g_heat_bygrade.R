@@ -225,7 +225,7 @@ ui_g_heat_by_grade <- function(
   heat_var,
   conmed_var,
   fontsize
-) { # nolint: object_name_linter.
+) {
   ns <- NS(id)
 
   shiny::tagList(
