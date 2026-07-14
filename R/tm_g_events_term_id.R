@@ -365,6 +365,18 @@ srv_g_events_term_id <- function(id,
 
       teal.reporter::teal_card(qenv) <- c(teal.reporter::teal_card(qenv), "### Plot")
 
+      # This is redundant only added to avoid R CMD NOTES
+      arm_ref <- input$arm_ref
+      arm_trt <- input$arm_trt
+      sort_by <- input$sort
+      rate_range <- input$raterange
+      diff_range <- input$diffrange
+      reversed <- input$reverse
+      conf_level <- input$conf_level
+      diff_ci_method <- input$diff_ci_method
+      axis_side <- input$axis
+      fontsize <- font_size()
+
       q2 <- within(
         qenv,
         {
