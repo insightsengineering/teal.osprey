@@ -243,7 +243,7 @@ ui_g_waterfall <- function(id,
 }
 
 #' @keywords internal
-.waterfall_picks_selected_values <- function(selector_state) {
+.waterfall_picks_selected_values <- function(selector_state) { # nolint: object_length_linter.
   if (is.null(selector_state) || is.null(selector_state$values)) {
     return(character())
   }
