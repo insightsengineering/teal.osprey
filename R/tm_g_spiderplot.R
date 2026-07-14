@@ -140,8 +140,8 @@ tm_g_spiderplot <- function(label,
   checkmate::assert_class(y_var, "picks")
   checkmate::assert_class(marker_var, "picks")
   checkmate::assert_class(line_colorby_var, "picks")
-  if (!is.null(xfacet_var)) checkmate::assert_class(xfacet_var, "picks")
-  if (!is.null(yfacet_var)) checkmate::assert_class(yfacet_var, "picks")
+  checkmate::assert_class(xfacet_var, "picks", null.ok = TRUE)
+  checkmate::assert_class(yfacet_var, "picks", null.ok = TRUE)
 
   checkmate::assert_string(vref_line, null.ok = TRUE)
   checkmate::assert_string(href_line, null.ok = TRUE)
