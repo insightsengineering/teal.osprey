@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.102250071204785" branch-rate="0" lines-covered="359" lines-valid="3511" branches-covered="0" branches-valid="0" complexity="0" version="3.6.5" timestamp="2026-07-14 13:46:04.241664">
+<coverage line-rate="0.102220956719818" branch-rate="0" lines-covered="359" lines-valid="3512" branches-covered="0" branches-valid="0" complexity="0" version="3.6.5" timestamp="2026-07-14 13:53:57.627158">
   <sources>
     <source>/__w/teal.osprey/teal.osprey/teal.osprey</source>
   </sources>
   <packages>
-    <package name="teal.osprey" line-rate="0.102250071204785" branch-rate="0" complexity="0">
+    <package name="teal.osprey" line-rate="0.102220956719818" branch-rate="0" complexity="0">
       <classes>
         <class name="tm_g_ae_oview.R" filename="R/tm_g_ae_oview.R" line-rate="0.225092250922509" branch-rate="0" complexity="0">
           <methods>
@@ -1975,7 +1975,7 @@
             <line number="91" hits="0" branch="false"/>
           </lines>
         </class>
-        <class name="tm_g_events_term_id.R" filename="R/tm_g_events_term_id.R" line-rate="0.121405750798722" branch-rate="0" complexity="0">
+        <class name="tm_g_events_term_id.R" filename="R/tm_g_events_term_id.R" line-rate="0.121019108280255" branch-rate="0" complexity="0">
           <methods>
             <method name="tm_g_events_term_id" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
@@ -2259,7 +2259,7 @@
                 <line number="376" hits="0" branch="false"/>
                 <line number="377" hits="0" branch="false"/>
                 <line number="378" hits="0" branch="false"/>
-                <line number="380" hits="0" branch="false"/>
+                <line number="379" hits="0" branch="false"/>
                 <line number="381" hits="0" branch="false"/>
                 <line number="382" hits="0" branch="false"/>
                 <line number="383" hits="0" branch="false"/>
@@ -2295,11 +2295,12 @@
                 <line number="413" hits="0" branch="false"/>
                 <line number="414" hits="0" branch="false"/>
                 <line number="415" hits="0" branch="false"/>
-                <line number="417" hits="0" branch="false"/>
+                <line number="416" hits="0" branch="false"/>
                 <line number="418" hits="0" branch="false"/>
-                <line number="420" hits="0" branch="false"/>
+                <line number="419" hits="0" branch="false"/>
                 <line number="421" hits="0" branch="false"/>
                 <line number="422" hits="0" branch="false"/>
+                <line number="423" hits="0" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -2576,7 +2577,7 @@
             <line number="376" hits="0" branch="false"/>
             <line number="377" hits="0" branch="false"/>
             <line number="378" hits="0" branch="false"/>
-            <line number="380" hits="0" branch="false"/>
+            <line number="379" hits="0" branch="false"/>
             <line number="381" hits="0" branch="false"/>
             <line number="382" hits="0" branch="false"/>
             <line number="383" hits="0" branch="false"/>
@@ -2612,11 +2613,12 @@
             <line number="413" hits="0" branch="false"/>
             <line number="414" hits="0" branch="false"/>
             <line number="415" hits="0" branch="false"/>
-            <line number="417" hits="0" branch="false"/>
+            <line number="416" hits="0" branch="false"/>
             <line number="418" hits="0" branch="false"/>
-            <line number="420" hits="0" branch="false"/>
+            <line number="419" hits="0" branch="false"/>
             <line number="421" hits="0" branch="false"/>
             <line number="422" hits="0" branch="false"/>
+            <line number="423" hits="0" branch="false"/>
           </lines>
         </class>
         <class name="tm_g_heat_bygrade.R" filename="R/tm_g_heat_bygrade.R" line-rate="0" branch-rate="0" complexity="0">
