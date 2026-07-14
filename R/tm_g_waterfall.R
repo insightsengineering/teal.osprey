@@ -296,6 +296,7 @@ srv_g_waterfall <- function(id,
 
     output_q <- reactive({
       obj <- data()
+      anl <- NULL # to avoid triggering NOTE on R CMD check
       teal.reporter::teal_card(obj) <-
         c(
           teal.reporter::teal_card(obj),
