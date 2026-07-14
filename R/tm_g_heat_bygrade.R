@@ -85,7 +85,7 @@
 #'   data = data,
 #'   modules = modules(
 #'     tm_g_heat_bygrade(
-#'       label = "Heatmap by grade (picks)",
+#'       label = "Heatmap by grade",
 #'       sl_dataname = "ADSL",
 #'       ex_dataname = "ADEX",
 #'       ae_dataname = "ADAE",
