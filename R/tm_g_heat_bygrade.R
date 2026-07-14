@@ -181,7 +181,7 @@ tm_g_heat_bygrade <- function(
   checkmate::assert_class(ongo_var, "picks")
   checkmate::assert_class(anno_var, "picks")
   checkmate::assert_class(heat_var, "picks")
-  if (!is.null(conmed_var)) checkmate::assert_class(conmed_var, "picks")
+  checkmate::assert_class(conmed_var, "picks", null.ok = TRUE)
 
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
