@@ -7,25 +7,23 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param paramcd Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`)
 #' variable value designating the studied parameter.
-#' @param x_var Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`) x-axis variables
-#' @param y_var Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`) y-axis variables
-#' @param marker_var Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`) variable dictates marker symbol
-#' @param line_colorby_var Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`) variable dictates line color
+#' @param x_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object for x-axis variables.
+#' @param y_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object for y-axis variables.
+#' @param marker_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object for marker symbol.
+#' @param line_colorby_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object for line color.
 #' @param vref_line  vertical reference lines
 #' @param href_line horizontal reference lines
 #' @param anno_txt_var annotation text
 #' @param legend_on boolean value for whether legend is displayed
-#' @param xfacet_var Either a ([`teal.transform::choices_selected`])
-#'   `choices_selected` object or a (`[teal.picks::variables()]`) variable for x facets
-#' @param yfacet_var Either a ([`teal.transform::choices_selected`])
-#'   `choices_selected` object or a (`[teal.picks::variables()]`) variable for y facets
+#' @param xfacet_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object for x facets.
+#' @param yfacet_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object for y facets.
 #'
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting

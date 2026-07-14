@@ -29,31 +29,23 @@ tm_g_spiderplot(
 \item{label}{(\code{character(1)}) Label shown in the navigation item for the module or module group.
 For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
-\item{dataname}{(\code{character(1)})\cr
-analysis data used in the teal module, needs to be
-available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
+\item{x_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for x-axis variables.}
 
-\item{paramcd}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]})
-variable value designating the studied parameter.}
+\item{y_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for y-axis variables.}
 
-\item{x_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) x-axis variables}
+\item{marker_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for marker symbol.}
 
-\item{y_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) y-axis variables}
+\item{line_colorby_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for line color.}
 
-\item{marker_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) variable dictates marker symbol}
+\item{xfacet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for x facets.}
 
-\item{line_colorby_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) variable dictates line color}
-
-\item{xfacet_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) variable for x facets}
-
-\item{yfacet_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) variable for y facets}
+\item{yfacet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for y facets.}
 
 \item{vref_line}{vertical reference lines}
 
@@ -62,12 +54,6 @@ variable value designating the studied parameter.}
 \item{anno_txt_var}{annotation text}
 
 \item{legend_on}{boolean value for whether legend is displayed}
-
-\item{plot_height}{(\code{numeric(3)})\cr
-vector to indicate default value, minimum and maximum values.}
-
-\item{plot_width}{(\code{numeric(3)})\cr
-vector to indicate default value, minimum and maximum values.}
 
 \item{pre_output}{(\code{shiny.tag}) optional,\cr
 with text placed before the output to put the output into context. For example a title.}
