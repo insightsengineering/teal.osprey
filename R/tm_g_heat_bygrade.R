@@ -93,7 +93,6 @@
 #'       ex_dataname = "ADEX",
 #'       ae_dataname = "ADAE",
 #'       cm_dataname = "ADCM",
-#'       data = data,
 #'       id_var = variables(
 #'         choices = teal.picks::is_categorical(min.len = 2),
 #'         selected = 1L
@@ -131,7 +130,6 @@ tm_g_heat_bygrade <- function(
   sl_dataname,
   ex_dataname,
   ae_dataname,
-  data,
   id_var,
   visit_var,
   ongo_var,
@@ -314,7 +312,7 @@ srv_g_heat_by_grade <- function(
   plot_width
 ) {
   checkmate::assert_class(data, "reactive")
-  checkmate::assert_class(shiny::isolate(data()), "teal_data")
+  checkmate::assert_class(isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
