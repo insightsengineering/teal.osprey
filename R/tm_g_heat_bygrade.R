@@ -460,6 +460,8 @@ srv_g_heat_by_grade <- function(
 
         conmed_data <- if (plot_cm) validated_q[["conmed_data"]] else NULL
 
+        PARCAT1 <- NULL # nolint: object_name_linter.
+
         validated_q <- within(
           validated_q,
           {
