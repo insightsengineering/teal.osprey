@@ -9,12 +9,13 @@ tm_g_heat_bygrade(
   sl_dataname,
   ex_dataname,
   ae_dataname,
-  cm_dataname,
+  data,
   id_var,
   visit_var,
   ongo_var,
   anno_var,
   heat_var,
+  cm_dataname = NULL,
   conmed_var = NULL,
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
@@ -38,7 +39,7 @@ argument of \code{\link[teal:init]{teal::init()}} \cr}
 needs to be available in the list passed to the \code{data}
 argument of \code{\link[teal:init]{teal::init()}} \cr}
 
-\item{cm_dataname}{(\code{character}) concomitant medications dataset name,
+\item{data}{(\code{teal.data}) object that contains all datasets and merged data.
 needs to be available in the list passed to the \code{data}
 argument of \code{\link[teal:init]{teal::init()}} \cr
 specify to \code{NA} if no concomitant medications data is available}
@@ -58,6 +59,8 @@ This variable is a derived logical variable. Usually it can be derived from \cod
 
 \item{heat_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
 \code{choices_selected} object or a (\verb{[teal.picks::variables()]}) heatmap variable}
+
+\item{cm_dataname}{(\code{character}) concomitant medications dataset name,}
 
 \item{conmed_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
 \code{choices_selected} object or a (\verb{[teal.picks::variables()]}) concomitant medications variable,
@@ -82,6 +85,9 @@ the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display the heatmap by grade as a shiny module
+}
+\details{
+`data`` object is only used for checks
 }
 \section{Reporting}{
 
@@ -150,6 +156,7 @@ app <- init(
       ex_dataname = "ADEX",
       ae_dataname = "ADAE",
       cm_dataname = "ADCM",
+      data = data,
       id_var = variables(
         choices = teal.picks::is_categorical(min.len = 2),
         selected = 1L

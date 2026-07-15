@@ -16,7 +16,7 @@
 #' @param ae_dataname (`character`) adverse events dataset name,
 #' needs to be available in the list passed to the `data`
 #' argument of [teal::init()] \cr
-#' @param cm_dataname (`character`) concomitant medications dataset name,
+#' @param data (`teal.data`) object that contains all datasets and merged data.
 #' needs to be available in the list passed to the `data`
 #' argument of [teal::init()] \cr
 #' specify to `NA` if no concomitant medications data is available
@@ -31,12 +31,15 @@
 #' `choices_selected` object or a (`[teal.picks::variables()]`) annotation variable
 #' @param heat_var Either a ([`teal.transform::choices_selected`])
 #' `choices_selected` object or a (`[teal.picks::variables()]`) heatmap variable
+#' @param cm_dataname (`character`) concomitant medications dataset name,
 #' @param conmed_var Either a ([`teal.transform::choices_selected`])
 #' `choices_selected` object or a (`[teal.picks::variables()]`) concomitant medications variable,
 #' specify to `NA` if no concomitant medications data is available
 #'
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
+#' 
+#' @details `data`` object is only used for checks
 #'
 #' @export
 #' @examples
@@ -90,6 +93,7 @@
 #'       ex_dataname = "ADEX",
 #'       ae_dataname = "ADAE",
 #'       cm_dataname = "ADCM",
+#'       data = data,
 #'       id_var = variables(
 #'         choices = teal.picks::is_categorical(min.len = 2),
 #'         selected = 1L
@@ -127,12 +131,13 @@ tm_g_heat_bygrade <- function(
   sl_dataname,
   ex_dataname,
   ae_dataname,
-  cm_dataname,
+  data,
   id_var,
   visit_var,
   ongo_var,
   anno_var,
   heat_var,
+  cm_dataname = NULL,
   conmed_var = NULL,
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
@@ -142,15 +147,13 @@ tm_g_heat_bygrade <- function(
   message("Initializing tm_g_heat_bygrade")
 
   checkmate::assert_string(label)
-  if (!missing(sl_dataname)) checkmate::assert_string(sl_dataname)
-  if (!missing(ex_dataname)) checkmate::assert_string(ex_dataname)
-  if (!missing(ae_dataname)) checkmate::assert_string(ae_dataname)
-  if (!missing(cm_dataname)) checkmate::assert_string(cm_dataname)
 
   checkmate::assert_choice(sl_dataname, names(data), null.ok = TRUE)
   checkmate::assert_choice(ex_dataname, names(data), null.ok = TRUE)
   checkmate::assert_choice(ae_dataname, names(data), null.ok = TRUE)
   checkmate::assert_choice(cm_dataname, names(data), null.ok = TRUE)
+
+  checkmate::assert_class(data, "teal_data")
 
   id_var <- migrate_choices_selected_to_variables(id_var)
   visit_var <- migrate_choices_selected_to_variables(visit_var)
@@ -168,13 +171,14 @@ tm_g_heat_bygrade <- function(
     conmed_var <- create_picks_helper(teal.picks::datasets(cm_dataname, cm_dataname), conmed_var)
   }
 
-  id_var <- force_pick_to_single(id_var, "id_var")
-  visit_var <- force_pick_to_single(visit_var, "visit_var")
-  ongo_var <- force_pick_to_single(ongo_var, "ongo_var")
-  heat_var <- force_pick_to_single(heat_var, "heat_var")
+  id_var <- force_pick_variable_selection(id_var, "id_var")
+  visit_var <- force_pick_variable_selection(visit_var, "visit_var")
+  ongo_var <- force_pick_variable_selection(ongo_var, "ongo_var")
+  heat_var <- force_pick_variable_selection(heat_var, "heat_var")
   if (!is.null(conmed_var)) {
-    conmed_var <- force_pick_to_single(conmed_var, "conmed_var")
+    conmed_var <- force_pick_variable_selection(conmed_var, "conmed_var")
   }
+  anno_var <- force_pick_variable_selection(anno_var, "anno_var", multiple = TRUE)
 
   checkmate::assert_class(id_var, "picks")
   checkmate::assert_class(visit_var, "picks")

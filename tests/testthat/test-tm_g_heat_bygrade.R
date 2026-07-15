@@ -15,7 +15,7 @@ ongo_var_cs <- teal.transform::choices_selected(
 
 anno_var_cs <- teal.transform::choices_selected(
   choices = c("SEX", "COUNTRY", "USUBJID"),
-  selected = c("SEX", "COUNTRY")
+  selected = c("SEX", "COUNTRY"),
 )
 
 heat_var_cs <- teal.transform::choices_selected(
@@ -43,9 +43,15 @@ ongo_var_picks <- teal.picks::variables(
   selected = 1L
 )
 
-anno_var_picks <- teal.picks::variables(
+anno_var_picks_single <- teal.picks::variables(
   choices = teal.picks::is_categorical(min.len = 2),
   selected = 1L
+)
+
+anno_var_picks_multiple <- teal.picks::variables(
+  choices = teal.picks::is_categorical(min.len = 2),
+  selected = 1L,
+  multiple = TRUE
 )
 
 heat_var_picks <- teal.picks::variables(
@@ -58,6 +64,17 @@ conmed_var_picks <- teal.picks::variables(
   selected = 1L
 )
 
+test_data <- teal_data() %>%
+  within({
+     library(dplyr)
+     library(nestcolor)
+     ADSL <- teal.data::rADSL %>% slice(1:30)
+     ADEX <- teal.data::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
+     ADAE <- teal.data::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
+     ADCM <- teal.data::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
+  })
+join_keys(test_data) <- default_cdisc_join_keys[names(test_data)]
+
 testthat::describe("tm_g_heat_bygrade argument verification", {
   testthat::it("plot arguments input validation", {
     testthat::expect_error(
@@ -68,6 +85,7 @@ testthat::describe("tm_g_heat_bygrade argument verification", {
             sl_dataname = "ADSL",
             ex_dataname = "ADEX",
             ae_dataname = "ADAE",
+            data = test_data,
             id_var = id_var_cs,
             visit_var = visit_var_cs,
             ongo_var = ongo_var_cs,
@@ -89,6 +107,7 @@ testthat::describe("tm_g_heat_bygrade argument verification", {
             sl_dataname = "ADSL",
             ex_dataname = "ADEX",
             ae_dataname = "ADAE",
+            data = test_data,
             id_var = id_var_cs,
             visit_var = visit_var_cs,
             ongo_var = ongo_var_cs,
@@ -112,6 +131,7 @@ testthat::describe("tm_g_heat_bygrade module creation", {
         sl_dataname = "ADSL",
         ex_dataname = "ADEX",
         ae_dataname = "ADAE",
+        data = test_data,
         id_var = id_var_cs,
         visit_var = visit_var_cs,
         ongo_var = ongo_var_cs,
@@ -132,6 +152,7 @@ testthat::describe("tm_g_heat_bygrade module creation", {
         ex_dataname = "ADEX",
         ae_dataname = "ADAE",
         cm_dataname = "ADCM",
+        data = test_data,
         id_var = id_var_cs,
         visit_var = visit_var_cs,
         ongo_var = ongo_var_cs,
@@ -152,10 +173,11 @@ testthat::describe("tm_g_heat_bygrade module creation", {
         sl_dataname = "ADSL",
         ex_dataname = "ADEX",
         ae_dataname = "ADAE",
+        data = test_data,
         id_var = id_var_picks,
         visit_var = visit_var_picks,
         ongo_var = ongo_var_picks,
-        anno_var = anno_var_picks,
+        anno_var = anno_var_picks_single,
         heat_var = heat_var_picks,
         plot_height = c(600L, 200L, 2000L)
       ),
@@ -172,10 +194,11 @@ testthat::describe("tm_g_heat_bygrade module creation", {
         ex_dataname = "ADEX",
         ae_dataname = "ADAE",
         cm_dataname = "ADCM",
+        data = test_data,
         id_var = id_var_picks,
         visit_var = visit_var_picks,
         ongo_var = ongo_var_picks,
-        anno_var = anno_var_picks,
+        anno_var = anno_var_picks_single,
         heat_var = heat_var_picks,
         conmed_var = conmed_var_picks,
         plot_height = c(600L, 200L, 2000L)
