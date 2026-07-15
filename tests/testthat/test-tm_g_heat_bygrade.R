@@ -64,7 +64,7 @@ conmed_var_picks <- teal.picks::variables(
   selected = 1L
 )
 
-test_data <- teal_data() %>%
+data <- teal_data() %>%
   within({
     library(dplyr)
     library(nestcolor)
@@ -73,7 +73,7 @@ test_data <- teal_data() %>%
     ADAE <- teal.data::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
     ADCM <- teal.data::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
   })
-join_keys(test_data) <- default_cdisc_join_keys[names(test_data)]
+join_keys(data) <- default_cdisc_join_keys[names(data)]
 
 testthat::describe("tm_g_heat_bygrade argument verification", {
   testthat::it("plot arguments input validation", {
