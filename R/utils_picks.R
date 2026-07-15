@@ -71,8 +71,10 @@ force_pick_variable_selection <- function(pick, arg_name, multiple = FALSE) {
 
   if (teal.picks::is_pick_multiple(pick$variables)) {
     warning(
-      sprintf("`%s` accepts only a %s variable selection. \nForcing `teal.picks::variables(multiple)` to `%s`.",
-        arg_name, selection, multiple)
+      sprintf(
+        "`%s` accepts only a %s variable selection. \nForcing `teal.picks::variables(multiple)` to `%s`.",
+        arg_name, selection, multiple
+      )
     )
     attr(pick$variables, "multiple") <- multiple
   }

@@ -66,12 +66,12 @@ conmed_var_picks <- teal.picks::variables(
 
 test_data <- teal_data() %>%
   within({
-     library(dplyr)
-     library(nestcolor)
-     ADSL <- teal.data::rADSL %>% slice(1:30)
-     ADEX <- teal.data::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
-     ADAE <- teal.data::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
-     ADCM <- teal.data::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
+    library(dplyr)
+    library(nestcolor)
+    ADSL <- teal.data::rADSL %>% slice(1:30)
+    ADEX <- teal.data::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
+    ADAE <- teal.data::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
+    ADCM <- teal.data::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
   })
 join_keys(test_data) <- default_cdisc_join_keys[names(test_data)]
 

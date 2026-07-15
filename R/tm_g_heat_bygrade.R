@@ -38,7 +38,7 @@
 #'
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
-#' 
+#'
 #' @details `data`` object is only used for checks
 #'
 #' @export
