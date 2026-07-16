@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="shinytest2-tm_g_events_term_id" timestamp="2026-07-16T14:00:43Z" hostname="9ec9de6eded4" tests="5" skipped="5" failures="0" errors="0" time="0.181">
-    <testcase time="0.0289999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_initializes_and_renders_a_plot">
+  <testsuite name="shinytest2-tm_g_events_term_id" timestamp="2026-07-16T14:01:28Z" hostname="2baca93da067" tests="5" skipped="5" failures="0" errors="0" time="0.193">
+    <testcase time="0.0329999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_initializes_and_renders_a_plot">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:40:3')"/>
     </testcase>
-    <testcase time="0.054" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_starts_with_expected_label_and_encoding_selections.">
+    <testcase time="0.0570000000000002" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_starts_with_expected_label_and_encoding_selections.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:60:5')"/>
     </testcase>
-    <testcase time="0.0720000000000001" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_changing_term_var_changes_the_plot_and_does_not_throw_validation_errors.">
+    <testcase time="0.0739999999999998" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_changing_term_var_changes_the_plot_and_does_not_throw_validation_errors.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:86:5')"/>
     </testcase>
-    <testcase time="0.0129999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_deselection_of_term_var_throws_validation_error.">
+    <testcase time="0.014" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_deselection_of_term_var_throws_validation_error.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:103:3')"/>
     </testcase>
-    <testcase time="0.0130000000000001" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_sort_updates_title">
+    <testcase time="0.0150000000000001" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_sort_updates_title">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:113:3')"/>
     </testcase>
   </testsuite>
-  <testsuite name="tm_g_ae_oview" timestamp="2026-07-16T14:00:43Z" hostname="9ec9de6eded4" tests="9" skipped="0" failures="0" errors="0" time="0.167">
-    <testcase time="0.0369999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_neither_picks_or_choices_selected"/>
-    <testcase time="0.0350000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected">
+  <testsuite name="tm_g_ae_oview" timestamp="2026-07-16T14:01:29Z" hostname="2baca93da067" tests="9" skipped="0" failures="0" errors="0" time="0.184">
+    <testcase time="0.04" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_neither_picks_or_choices_selected"/>
+    <testcase time="0.0379999999999998" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected">
       <system-out>`arm_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -34,8 +34,8 @@ Backtrace:
  6. └─teal.osprey::tm_g_ae_oview(...)
  7.   └─teal.osprey:::migrate_choices_selected_to_variables(arm_var)</system-out>
     </testcase>
-    <testcase time="0.016" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected"/>
-    <testcase time="0.0229999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.018" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected"/>
+    <testcase time="0.026" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>`flag_var_anl` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -45,7 +45,7 @@ Backtrace:
  1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:49:5
  2.   └─teal.osprey:::migrate_choices_selected_to_variables(flag_var_anl)</system-out>
     </testcase>
-    <testcase time="0.0109999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.0130000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -54,7 +54,7 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.02" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.022" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -63,7 +63,7 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00900000000000012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.01" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
     <testcase time="0.0089999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
@@ -73,10 +73,10 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00700000000000012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.00800000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
   </testsuite>
-  <testsuite name="tm_g_ae_sub" timestamp="2026-07-16T14:00:43Z" hostname="9ec9de6eded4" tests="5" skipped="0" failures="0" errors="0" time="0.081">
-    <testcase time="0.0369999999999999" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation">
+  <testsuite name="tm_g_ae_sub" timestamp="2026-07-16T14:01:29Z" hostname="2baca93da067" tests="5" skipped="0" failures="0" errors="0" time="0.087">
+    <testcase time="0.04" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation">
       <system-out>`group_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -93,13 +93,13 @@ Backtrace:
  8. └─teal.osprey::tm_g_ae_sub(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(group_var)</system-out>
     </testcase>
-    <testcase time="0.02" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.00800000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.0089999999999999" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.00700000000000012" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.016" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0129999999999999" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0110000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.0069999999999999" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_picks"/>
   </testsuite>
-  <testsuite name="tm_g_butterfly" timestamp="2026-07-16T14:00:43Z" hostname="9ec9de6eded4" tests="11" skipped="0" failures="0" errors="0" time="0.208">
-    <testcase time="0.0289999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+  <testsuite name="tm_g_butterfly" timestamp="2026-07-16T14:01:29Z" hostname="2baca93da067" tests="11" skipped="0" failures="0" errors="0" time="0.226">
+    <testcase time="0.03" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`right_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -116,7 +116,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0310000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0289999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`left_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -133,7 +133,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.026" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0340000000000003" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`category_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -150,7 +150,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0269999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0299999999999998" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`color_by_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -167,7 +167,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.03" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0340000000000003" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`count_by_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::values()`. Support for legacy
   `teal.transform::choices_selected()` is deprecated.
@@ -183,15 +183,15 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_values(count_by_var)</system-out>
     </testcase>
-    <testcase time="0.0169999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0179999999999998" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
     <testcase time="0.012" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.0089999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.00999999999999979" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
     <testcase time="0.00700000000000012" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.012" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.0140000000000002" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected"/>
     <testcase time="0.00800000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_picks"/>
   </testsuite>
-  <testsuite name="tm_g_events_term_id" timestamp="2026-07-16T14:00:43Z" hostname="9ec9de6eded4" tests="8" skipped="0" failures="0" errors="0" time="0.067">
-    <testcase time="0.0169999999999999" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings">
+  <testsuite name="tm_g_events_term_id" timestamp="2026-07-16T14:01:29Z" hostname="2baca93da067" tests="8" skipped="0" failures="0" errors="0" time="0.074">
+    <testcase time="0.0179999999999998" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -201,7 +201,7 @@ Backtrace:
  4. └─teal.picks::picks(...)
  5.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.0110000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.012" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -211,10 +211,10 @@ Backtrace:
  4. └─teal.picks::picks(...)
  5.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.0089999999999999" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.0100000000000002" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.00199999999999978" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
     <testcase time="0.00099999999999989" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00200000000000022" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00700000000000012" classname="tm_g_events_term_id" name="tm_g_events_term_id_rejects_multiple_variable_selection">
+    <testcase time="0.00900000000000034" classname="tm_g_events_term_id" name="tm_g_events_term_id_rejects_multiple_variable_selection">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -228,10 +228,10 @@ Backtrace:
  1. └─teal.picks::picks(...) at test-tm_g_events_term_id.R:37:3
  2.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00900000000000034" classname="tm_g_events_term_id" name="tm_g_events_term_id_rejects_multiple_variable_selection"/>
+    <testcase time="0.0110000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_rejects_multiple_variable_selection"/>
   </testsuite>
-  <testsuite name="tm_g_heat_bygrade" timestamp="2026-07-16T14:00:43Z" hostname="9ec9de6eded4" tests="7" skipped="0" failures="2" errors="5" time="0.333">
-    <testcase time="0.17" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+  <testsuite name="tm_g_heat_bygrade" timestamp="2026-07-16T14:01:29Z" hostname="2baca93da067" tests="7" skipped="0" failures="2" errors="5" time="0.356">
+    <testcase time="0.175" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <failure type="failure" message="`{ ... }` threw an error with unexpected message. ('test-tm_g_heat_bygrade.R:80:5')">`{ ... }` threw an error with unexpected message.
 Expected match: "Assertion on 'plot_height' failed"
 Actual message: "Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL)."
@@ -249,7 +249,7 @@ Backtrace:
  10.     └─checkmate::makeAssertion(x, res, .var.name, add)
  11.       └─checkmate:::mstop(...)</failure>
     </testcase>
-    <testcase time="0.0289999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.028" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <failure type="failure" message="`{ ... }` threw an error with unexpected message. ('test-tm_g_heat_bygrade.R:101:5')">`{ ... }` threw an error with unexpected message.
 Expected match: "Assertion on 'plot_width' failed"
 Actual message: "Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL)."
@@ -267,7 +267,7 @@ Backtrace:
  10.     └─checkmate::makeAssertion(x, res, .var.name, add)
  11.       └─checkmate:::mstop(...)</failure>
     </testcase>
-    <testcase time="0.0299999999999998" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.0370000000000004" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected">
       <error type="error" message="Error in `tm_g_heat_bygrade(label = &quot;Heatmap by grade&quot;, sl_dataname = &quot;ADSL&quot;, ex_dataname = &quot;ADEX&quot;, ae_dataname = &quot;ADAE&quot;, id_var = id_var_cs, visit_var = visit_var_cs, ongo_var = ongo_var_cs, anno_var = anno_var_cs, heat_var = heat_var_cs, plot_height = c(600, 200, 2000))`: Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL). ('test-tm_g_heat_bygrade.R:126:5')">Error in `tm_g_heat_bygrade(label = "Heatmap by grade", sl_dataname = "ADSL", ex_dataname = "ADEX", ae_dataname = "ADAE", id_var = id_var_cs, visit_var = visit_var_cs, ongo_var = ongo_var_cs, anno_var = anno_var_cs, heat_var = heat_var_cs, plot_height = c(600, 200, 2000))`: Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL).
 Backtrace:
     ▆
@@ -278,7 +278,7 @@ Backtrace:
  5.     └─checkmate::makeAssertion(x, res, .var.name, add)
  6.       └─checkmate:::mstop(...)</error>
     </testcase>
-    <testcase time="0.0250000000000004" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed">
+    <testcase time="0.028" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed">
       <error type="error" message="Error in `tm_g_heat_bygrade(label = &quot;Heatmap by grade&quot;, sl_dataname = &quot;ADSL&quot;, ex_dataname = &quot;ADEX&quot;, ae_dataname = &quot;ADAE&quot;, cm_dataname = &quot;ADCM&quot;, id_var = id_var_cs, visit_var = visit_var_cs, ongo_var = ongo_var_cs, anno_var = anno_var_cs, heat_var = heat_var_cs, conmed_var = conmed_var_cs, plot_height = c(600, 200, 2000))`: Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL). ('test-tm_g_heat_bygrade.R:145:5')">Error in `tm_g_heat_bygrade(label = "Heatmap by grade", sl_dataname = "ADSL", ex_dataname = "ADEX", ae_dataname = "ADAE", cm_dataname = "ADCM", id_var = id_var_cs, visit_var = visit_var_cs, ongo_var = ongo_var_cs, anno_var = anno_var_cs, heat_var = heat_var_cs, conmed_var = conmed_var_cs, plot_height = c(600, 200, 2000))`: Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL).
 Backtrace:
     ▆
@@ -289,7 +289,7 @@ Backtrace:
  5.     └─checkmate::makeAssertion(x, res, .var.name, add)
  6.       └─checkmate:::mstop(...)</error>
     </testcase>
-    <testcase time="0.0289999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks">
+    <testcase time="0.0309999999999997" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks">
       <error type="error" message="Error in `tm_g_heat_bygrade(label = &quot;Heatmap by grade&quot;, sl_dataname = &quot;ADSL&quot;, ex_dataname = &quot;ADEX&quot;, ae_dataname = &quot;ADAE&quot;, id_var = id_var_picks, visit_var = visit_var_picks, ongo_var = ongo_var_picks, anno_var = anno_var_picks_multiple, heat_var = heat_var_picks, plot_height = c(600L, 200L, 2000L))`: Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL). ('test-tm_g_heat_bygrade.R:166:5')">Error in `tm_g_heat_bygrade(label = "Heatmap by grade", sl_dataname = "ADSL", ex_dataname = "ADEX", ae_dataname = "ADAE", id_var = id_var_picks, visit_var = visit_var_picks, ongo_var = ongo_var_picks, anno_var = anno_var_picks_multiple, heat_var = heat_var_picks, plot_height = c(600L, 200L, 2000L))`: Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL).
 Backtrace:
     ▆
@@ -300,7 +300,7 @@ Backtrace:
  5.     └─checkmate::makeAssertion(x, res, .var.name, add)
  6.       └─checkmate:::mstop(...)</error>
     </testcase>
-    <testcase time="0.024" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_with_conmed">
+    <testcase time="0.028" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_with_conmed">
       <error type="error" message="Error in `tm_g_heat_bygrade(label = &quot;Heatmap by grade&quot;, sl_dataname = &quot;ADSL&quot;, ex_dataname = &quot;ADEX&quot;, ae_dataname = &quot;ADAE&quot;, cm_dataname = &quot;ADCM&quot;, id_var = id_var_picks, visit_var = visit_var_picks, ongo_var = ongo_var_picks, anno_var = anno_var_picks_multiple, heat_var = heat_var_picks, conmed_var = conmed_var_picks, plot_height = c(600L, 200L, 2000L))`: Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL). ('test-tm_g_heat_bygrade.R:185:5')">Error in `tm_g_heat_bygrade(label = "Heatmap by grade", sl_dataname = "ADSL", ex_dataname = "ADEX", ae_dataname = "ADAE", cm_dataname = "ADCM", id_var = id_var_picks, visit_var = visit_var_picks, ongo_var = ongo_var_picks, anno_var = anno_var_picks_multiple, heat_var = heat_var_picks, conmed_var = conmed_var_picks, plot_height = c(600L, 200L, 2000L))`: Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL).
 Backtrace:
     ▆
@@ -311,7 +311,7 @@ Backtrace:
  5.     └─checkmate::makeAssertion(x, res, .var.name, add)
  6.       └─checkmate:::mstop(...)</error>
     </testcase>
-    <testcase time="0.0259999999999998" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple">
+    <testcase time="0.0289999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple">
       <error type="error" message="Error in `tm_g_heat_bygrade(label = &quot;Heatmap by grade&quot;, sl_dataname = &quot;ADSL&quot;, ex_dataname = &quot;ADEX&quot;, ae_dataname = &quot;ADAE&quot;, cm_dataname = &quot;ADCM&quot;, id_var = id_var_picks, visit_var = visit_var_picks, ongo_var = ongo_var_picks, anno_var = anno_var_picks_single, heat_var = heat_var_picks, conmed_var = conmed_var_picks, plot_height = c(600L, 200L, 2000L))`: Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL). ('test-tm_g_heat_bygrade.R:206:5')">Error in `tm_g_heat_bygrade(label = "Heatmap by grade", sl_dataname = "ADSL", ex_dataname = "ADEX", ae_dataname = "ADAE", cm_dataname = "ADCM", id_var = id_var_picks, visit_var = visit_var_picks, ongo_var = ongo_var_picks, anno_var = anno_var_picks_single, heat_var = heat_var_picks, conmed_var = conmed_var_picks, plot_height = c(600L, 200L, 2000L))`: Assertion on 'sl_dataname' failed: Must be element of set {}, but types do not match (character != NULL).
 Backtrace:
     ▆
@@ -326,8 +326,8 @@ Backtrace:
  9.       └─checkmate:::mstop(...)</error>
     </testcase>
   </testsuite>
-  <testsuite name="tm_g_spiderplot" timestamp="2026-07-16T14:00:44Z" hostname="9ec9de6eded4" tests="13" skipped="0" failures="4" errors="2" time="0.438">
-    <testcase time="0.0529999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+  <testsuite name="tm_g_spiderplot" timestamp="2026-07-16T14:01:29Z" hostname="2baca93da067" tests="13" skipped="0" failures="4" errors="2" time="0.46">
+    <testcase time="0.0569999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`paramcd` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -344,7 +344,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(paramcd)</system-out>
     </testcase>
-    <testcase time="0.032" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0300000000000002" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`x_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -361,7 +361,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(x_var)</system-out>
     </testcase>
-    <testcase time="0.028" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0339999999999998" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`y_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -378,7 +378,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(y_var)</system-out>
     </testcase>
-    <testcase time="0.0270000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0290000000000004" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`marker_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -395,7 +395,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(marker_var)</system-out>
     </testcase>
-    <testcase time="0.04" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0339999999999998" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`line_colorby_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -412,7 +412,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(line_colorby_var)</system-out>
     </testcase>
-    <testcase time="0.0270000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0339999999999998" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`xfacet_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -429,7 +429,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0309999999999997" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0300000000000002" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`yfacet_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -446,7 +446,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0180000000000002" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0249999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <failure type="failure" message="`{ ... }` threw an error with unexpected message. ('test-tm_g_spiderplot.R:73:5')">`{ ... }` threw an error with unexpected message.
 Expected match: "Assertion on 'plot_height' failed"
 Actual message: "could not find function \"force_pick_to_single\""
@@ -461,7 +461,7 @@ Backtrace:
  7. │ └─base::withCallingHandlers(...)
  8. └─teal.osprey::tm_g_spiderplot(...)</failure>
     </testcase>
-    <testcase time="0.032" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.036" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <failure type="failure" message="`{ ... }` threw an error with unexpected message. ('test-tm_g_spiderplot.R:96:5')">`{ ... }` threw an error with unexpected message.
 Expected match: "Assertion on 'plot_width' failed"
 Actual message: "could not find function \"force_pick_to_single\""
@@ -476,7 +476,7 @@ Backtrace:
  7. │ └─base::withCallingHandlers(...)
  8. └─teal.osprey::tm_g_spiderplot(...)</failure>
     </testcase>
-    <testcase time="0.0469999999999997" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single">
+    <testcase time="0.0419999999999998" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single">
       <failure type="failure" message="`{ ... }` threw an error with unexpected message. ('test-tm_g_spiderplot.R:121:5')">`{ ... }` threw an error with unexpected message.
 Expected match: "metadata does not match the requirement for x_var"
 Actual message: "could not find function \"force_pick_to_single\""
@@ -491,7 +491,7 @@ Backtrace:
  7. │ └─base::withCallingHandlers(...)
  8. └─teal.osprey::tm_g_spiderplot(...)</failure>
     </testcase>
-    <testcase time="0.0350000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single">
+    <testcase time="0.032" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single">
       <failure type="failure" message="`{ ... }` threw an error with unexpected message. ('test-tm_g_spiderplot.R:147:5')">`{ ... }` threw an error with unexpected message.
 Expected match: "metadata does not match the requirement for paramcd"
 Actual message: "could not find function \"force_pick_to_single\""
@@ -506,7 +506,7 @@ Backtrace:
  7. │ └─base::withCallingHandlers(...)
  8. └─teal.osprey::tm_g_spiderplot(...)</failure>
     </testcase>
-    <testcase time="0.04" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
+    <testcase time="0.0460000000000003" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_choices_selected_default_method_">
       <error type="error" message="Error in `force_pick_to_single(paramcd, &quot;paramcd&quot;)`: could not find function &quot;force_pick_to_single&quot; ('test-tm_g_spiderplot.R:177:5')">Error in `force_pick_to_single(paramcd, "paramcd")`: could not find function "force_pick_to_single"
 Backtrace:
     ▆
@@ -514,7 +514,7 @@ Backtrace:
  2. │ └─base::withCallingHandlers(...)
  3. └─teal.osprey::tm_g_spiderplot(...)</error>
     </testcase>
-    <testcase time="0.028" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_picks_.pick_method_">
+    <testcase time="0.0309999999999997" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_picks_.pick_method_">
       <error type="error" message="Error in `force_pick_to_single(paramcd, &quot;paramcd&quot;)`: could not find function &quot;force_pick_to_single&quot; ('test-tm_g_spiderplot.R:198:5')">Error in `force_pick_to_single(paramcd, "paramcd")`: could not find function "force_pick_to_single"
 Backtrace:
     ▆
@@ -523,8 +523,8 @@ Backtrace:
  3. └─teal.osprey::tm_g_spiderplot(...)</error>
     </testcase>
   </testsuite>
-  <testsuite name="tm_g_swimlane_waterfall_picks" timestamp="2026-07-16T14:00:44Z" hostname="9ec9de6eded4" tests="14" skipped="0" failures="0" errors="0" time="0.151">
-    <testcase time="0.032" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+  <testsuite name="tm_g_swimlane_waterfall_picks" timestamp="2026-07-16T14:01:30Z" hostname="2baca93da067" tests="14" skipped="0" failures="0" errors="0" time="0.165">
+    <testcase time="0.0350000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -535,6 +535,22 @@ Backtrace:
  5. └─teal.picks::picks(...)
  6.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
+    <testcase time="0.0140000000000002" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
+Backtrace:
+    ▆
+ 1. ├─teal.osprey::tm_g_swimlane(...) at test-tm_g_swimlane_waterfall_picks.R:4:3
+ 2. └─teal.picks::picks(...)
+ 3.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
+    </testcase>
+    <testcase time="0.0129999999999999" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
+Backtrace:
+    ▆
+ 1. ├─teal.osprey::tm_g_swimlane(...) at test-tm_g_swimlane_waterfall_picks.R:4:3
+ 2. └─teal.picks::picks(...)
+ 3.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
+    </testcase>
     <testcase time="0.012" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
@@ -543,7 +559,7 @@ Backtrace:
  2. └─teal.picks::picks(...)
  3.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.0110000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.012" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -551,23 +567,7 @@ Backtrace:
  2. └─teal.picks::picks(...)
  3.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.0109999999999997" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
-      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
-Backtrace:
-    ▆
- 1. ├─teal.osprey::tm_g_swimlane(...) at test-tm_g_swimlane_waterfall_picks.R:4:3
- 2. └─teal.picks::picks(...)
- 3.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
-    </testcase>
-    <testcase time="0.016" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
-      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
-Backtrace:
-    ▆
- 1. ├─teal.osprey::tm_g_swimlane(...) at test-tm_g_swimlane_waterfall_picks.R:4:3
- 2. └─teal.picks::picks(...)
- 3.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
-    </testcase>
-    <testcase time="0.0110000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0129999999999999" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -578,9 +578,9 @@ Backtrace:
  5. └─teal.picks::picks(...)
  6.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00999999999999979" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00200000000000022" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00800000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0139999999999998" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.00300000000000011" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.0089999999999999" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -590,7 +590,7 @@ Backtrace:
  4. └─teal.picks::picks(...)
  5.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.0110000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0140000000000002" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -601,7 +601,7 @@ Backtrace:
  5. └─teal.picks::picks(...)
  6.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.012" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0129999999999999" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -609,23 +609,23 @@ Backtrace:
  2. └─teal.picks::picks(...)
  3.   └─teal.picks:::.check_picks(picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00800000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00599999999999978" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00099999999999989" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.0089999999999999" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.00200000000000022" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.00199999999999978" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
   </testsuite>
-  <testsuite name="utils" timestamp="2026-07-16T14:00:44Z" hostname="9ec9de6eded4" tests="13" skipped="0" failures="0" errors="0" time="0.035">
-    <testcase time="0.00700000000000012" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.00200000000000022" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.004" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+  <testsuite name="utils" timestamp="2026-07-16T14:01:30Z" hostname="2baca93da067" tests="13" skipped="0" failures="0" errors="0" time="0.045">
+    <testcase time="0.00800000000000001" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.00100000000000033" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.00499999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00199999999999978" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00100000000000033" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00200000000000022" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00199999999999978" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00500000000000034" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.00299999999999967" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.00200000000000022" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00200000000000022" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00999999999999979" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.004" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
     <testcase time="0.004" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
-    <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.00200000000000022" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
   </testsuite>
 </testsuites>
