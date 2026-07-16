@@ -21,9 +21,8 @@
 #'  names that can be used as `arm_var`. See [teal.transform::choices_selected()] for
 #'  details. Column `arm_var` in the `dataname` has to be a factor.
 #'
-#' @param paramcd (`character(1)` or `choices_selected`)\cr
+#' @param paramcd Either a (`[teal.picks::variables()]`) or `choices_selected`)\cr
 #'  variable value designating the studied parameter.
-#'  See [teal.transform::choices_selected()] for details.
 #'
 #' @param fontsize (`numeric(1)` or `numeric(3)`)\cr
 #'  Defines initial possible range of font-size. `fontsize` is set for
