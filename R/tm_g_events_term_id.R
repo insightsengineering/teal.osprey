@@ -10,7 +10,9 @@
 #' @param term_var Either a (`[teal.picks::variables()]`) object or
 #' a ([`teal.transform::choices_selected`]) `choices_selected` object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
-#'
+#' @param parent_dataname (`character(1)`)\cr
+#'  analysis data used form arm_var in the teal module, needs to be
+#'  available in the list passed to the `data` argument of [teal::init()].
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
 #'

@@ -24,6 +24,10 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
+\item{parent_dataname}{(\code{character(1)})\cr
+analysis data used form arm_var in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
+
 \item{term_var}{Either a (\verb{[teal.picks::variables()]}) object or
 a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object with all available choices
 and pre-selected option names that can be used to specify the term for events}

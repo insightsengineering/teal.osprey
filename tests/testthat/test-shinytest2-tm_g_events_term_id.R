@@ -22,7 +22,8 @@ app_driver_tm_g_events_term_id <- function() {
           choices = c("ACTARMCD", "ACTARM"),
           selected = "ACTARMCD"
         ),
-        dataname = "ADAE"
+        dataname = "ADAE",
+        parent_dataname = "ADSL"
       )
     )
   )

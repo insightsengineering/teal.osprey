@@ -4,6 +4,7 @@ testthat::test_that("tm_g_events_term_id builds a teal module with picks encodin
   mod <- tm_g_events_term_id(
     label = "Common AE",
     dataname = "ADAE",
+    parent_dataname = "ADSL",
     term_var = teal.picks::picks(
       teal.picks::datasets("ADAE"),
       teal.picks::variables(
@@ -21,7 +22,7 @@ testthat::test_that("tm_g_events_term_id builds a teal module with picks encodin
   )
   testthat::expect_s3_class(mod, "teal_module")
   testthat::expect_identical(mod$server, srv_g_events_term_id)
-  testthat::expect_equal(mod$datanames, c("ADSL", "ADAE"))
+  testthat::expect_equal(mod$datanames, c("ADAE", "ADSL"))
 })
 
 testthat::test_that("tm_g_events_term_id coerces multiple variable selection", {
@@ -47,6 +48,7 @@ testthat::test_that("tm_g_events_term_id coerces multiple variable selection", {
     tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
+      parent_dataname = "ADSL",
       term_var = term_var,
       arm_var = arm_var
     ),
