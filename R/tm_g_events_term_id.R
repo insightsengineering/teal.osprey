@@ -34,6 +34,7 @@
 #'     tm_g_events_term_id(
 #'       label = "Common AE",
 #'       dataname = "ADAE",
+#'       parent_dataname = "ADSL",
 #'       term_var = variables(
 #'         choices = c(
 #'           "AEDECOD", "AETERM",
@@ -55,6 +56,7 @@
 #'
 tm_g_events_term_id <- function(label,
                                 dataname,
+                                parent_dataname,
                                 term_var,
                                 arm_var,
                                 fontsize = c(5, 3, 7),
@@ -64,12 +66,13 @@ tm_g_events_term_id <- function(label,
   message("Initializing tm_g_events_term_id")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
+  checkmate::assert_string(parent_dataname)
 
   term_var <- migrate_choices_selected_to_variables(term_var)
   arm_var <- migrate_choices_selected_to_variables(arm_var)
 
   term_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), term_var)
-  arm_var <- create_picks_helper(teal.picks::datasets("ADSL", "ADSL"), arm_var)
+  arm_var <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), arm_var)
 
   term_var <- force_pick_to_single(term_var, "term_var")
   arm_var <- force_pick_to_single(arm_var, "arm_var")
@@ -203,13 +206,14 @@ ui_g_events_term_id <- function(id,
 srv_g_events_term_id <- function(id,
                                  data,
                                  dataname,
+                                 parent_dataname,
                                  label,
                                  term_var,
                                  arm_var,
                                  plot_height,
                                  plot_width) {
   checkmate::assert_class(data, "reactive")
-  checkmate::assert_class(shiny::isolate(data()), "teal_data")
+  checkmate::assert_class(isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
@@ -332,7 +336,6 @@ srv_g_events_term_id <- function(id,
 
       arm_selector <- anl_selectors$arm_var()
       arm_var_orig <- arm_selector$variables$selected
-      arm_dataset <- arm_selector$datasets$selected
 
       qenv <- anl_q()
       ANL <- qenv[["ANL"]]
@@ -375,7 +378,7 @@ srv_g_events_term_id <- function(id,
             term = ANL[[term_var_name]],
             id = ANL$USUBJID,
             arm = ANL[[arm_var_name]],
-            arm_N = table(get(arm_dataset)[[arm_var_orig]]),
+            arm_N = table(parent_dataname[[arm_var_orig]]),
             ref = arm_ref,
             trt = arm_trt,
             sort_by = sort_by,
@@ -391,7 +394,7 @@ srv_g_events_term_id <- function(id,
         },
         term_var_name = term_var_name,
         arm_var_name = arm_var_name,
-        arm_dataset = arm_dataset,
+        parent_dataname = as.name(parent_dataname),
         arm_var_orig = arm_var_orig,
         arm_ref = input$arm_ref,
         arm_trt = input$arm_trt,
