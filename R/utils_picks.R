@@ -69,7 +69,7 @@ force_pick_variable_selection <- function(pick, arg_name, multiple = FALSE) {
   checkmate::assert_logical(multiple)
   selection <- if (isTRUE(multiple)) "multiple" else "single"
 
-  if (teal.picks::is_pick_multiple(pick$variables)) {
+  if (!identical(multiple, teal.picks::is_pick_multiple(pick$variables))) {
     warning(
       sprintf(
         "`%s` accepts only a %s variable selection. \nForcing `teal.picks::variables(multiple)` to `%s`.",
