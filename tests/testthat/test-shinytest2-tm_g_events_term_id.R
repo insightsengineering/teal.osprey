@@ -1,4 +1,4 @@
-create_tm_g_events_term_id_data <- function() {
+create_tm_g_events_term_id_data <- function() { # nolint: object_length_linter.
   data <- within(teal.data::teal_data(), {
     ADSL <- teal.data::rADSL
     ADAE <- teal.data::rADAE
@@ -14,22 +14,16 @@ app_driver_tm_g_events_term_id <- function() {
       data = data,
       modules = tm_g_events_term_id(
         label = "Common AE",
-        term_var = teal.picks::picks(
-          teal.picks::datasets("ADAE"),
-          teal.picks::variables(
-            choices = c("AEDECOD", "AETERM", "AEHLT"),
-            selected = "AEDECOD",
-            multiple = FALSE
-          )
+        term_var = teal.picks::variables(
+          choices = c("AEDECOD", "AETERM", "AEHLT"),
+          selected = "AEDECOD"
         ),
-        arm_var = teal.picks::picks(
-          teal.picks::datasets("ADSL"),
-          teal.picks::variables(
-            choices = c("ACTARMCD", "ACTARM"),
-            selected = "ACTARMCD",
-            multiple = FALSE
-          )
-        )
+        arm_var = teal.picks::variables(
+          choices = c("ACTARMCD", "ACTARM"),
+          selected = "ACTARMCD"
+        ),
+        dataname = "ADAE",
+        parent_dataname = "ADSL"
       )
     )
   )

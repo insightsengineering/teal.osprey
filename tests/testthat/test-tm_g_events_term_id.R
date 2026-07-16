@@ -3,6 +3,8 @@ testthat::test_that("tm_g_events_term_id builds a teal module with picks encodin
 
   mod <- tm_g_events_term_id(
     label = "Common AE",
+    dataname = "ADAE",
+    parent_dataname = "ADSL",
     term_var = teal.picks::picks(
       teal.picks::datasets("ADAE"),
       teal.picks::variables(
@@ -23,7 +25,7 @@ testthat::test_that("tm_g_events_term_id builds a teal module with picks encodin
   testthat::expect_equal(mod$datanames, c("ADAE", "ADSL"))
 })
 
-testthat::test_that("tm_g_events_term_id rejects multiple variable selection", {
+testthat::test_that("tm_g_events_term_id coerces multiple variable selection", {
   testthat::skip_if_not_installed("teal.picks")
 
   term_var <- teal.picks::picks(
@@ -42,12 +44,15 @@ testthat::test_that("tm_g_events_term_id rejects multiple variable selection", {
     )
   )
 
-  testthat::expect_error(
+  mod <- testthat::expect_warning(
     tm_g_events_term_id(
       label = "Common AE",
+      dataname = "ADAE",
+      parent_dataname = "ADSL",
       term_var = term_var,
       arm_var = arm_var
     ),
-    "`term_var` must use variables\\(\\.\\.\\., multiple = FALSE\\)"
+    "accepts only a single variable selection"
   )
+  testthat::expect_false(teal.picks::is_pick_multiple(mod$ui_args$term_var$variables))
 })
