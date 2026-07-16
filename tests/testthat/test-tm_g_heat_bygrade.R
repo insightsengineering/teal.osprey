@@ -201,4 +201,26 @@ testthat::describe("tm_g_heat_bygrade module creation", {
     )
     testthat::expect_s3_class(mod, "teal_module")
   })
+
+  testthat::it("Throws warning when converting anno_var to multiple", {
+    mod <- testthat::expect_warning(
+      tm_g_heat_bygrade(
+        label = "Heatmap by grade",
+        sl_dataname = "ADSL",
+        ex_dataname = "ADEX",
+        ae_dataname = "ADAE",
+        cm_dataname = "ADCM",
+        id_var = id_var_picks,
+        visit_var = visit_var_picks,
+        ongo_var = ongo_var_picks,
+        anno_var = anno_var_picks_single,
+        heat_var = heat_var_picks,
+        conmed_var = conmed_var_picks,
+        plot_height = c(600L, 200L, 2000L)
+      ),
+      "accepts only a multiple variable selection"
+    )
+    testthat::expect_s3_class(mod, "teal_module")
+    testthat::expect_true(teal.picks::is_pick_multiple(mod$server_args$anno_var$variables))
+  })
 })
