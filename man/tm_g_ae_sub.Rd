@@ -23,12 +23,9 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{arm_var}{(\code{choices_selected})\cr
-object with all available choices and the pre-selected option for variable
-names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
-details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
+\item{arm_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}}) object with variable of the arm.}
 
-\item{group_var}{(\code{choices_selected}) subgroups variables. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for details.}
+\item{group_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}}) object with  subgroups variables.}
 
 \item{plot_height}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
@@ -82,13 +79,14 @@ app <- init(
     tm_g_ae_sub(
       label = "AE by Subgroup",
       dataname = "ADAE",
-      arm_var = choices_selected(
-        selected = "ACTARMCD",
-        choices = c("ACTARM", "ACTARMCD")
+      arm_var = variables(
+        choices = c("ACTARM", "ACTARMCD"),
+        selected = "ACTARMCD"
       ),
-      group_var = choices_selected(
+      group_var = variables(
+        choices = c("SEX", "REGION1", "RACE"),
         selected = c("SEX", "REGION1", "RACE"),
-        choices = c("SEX", "REGION1", "RACE")
+        multiple = TRUE
       ),
       plot_height = c(600, 200, 2000)
     )

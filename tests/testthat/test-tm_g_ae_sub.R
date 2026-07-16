@@ -1,0 +1,73 @@
+arm_var_cs <- teal.transform::choices_selected(
+  choices = c("ACTARM", "ACTARMCD"),
+  selected = "ACTARMCD"
+)
+
+group_var_cs <- teal.transform::choices_selected(
+  selected = c("SEX", "REGION1", "RACE"),
+  choices = c("SEX", "REGION1", "RACE")
+)
+
+testthat::describe("tm_g_ae_sub input validation", {
+  it("plot arguments input validation", {
+    testthat::expect_error(
+      {
+        suppressWarnings(
+          tm_g_ae_sub(
+            label = "subgroups Plot",
+            dataname = "ADAE",
+            arm_var = arm_var_cs,
+            group_var = group_var_cs,
+            plot_height = c(0, 1)
+          ),
+          classes = "picks_delayed"
+        )
+      },
+      "Assertion on 'plot_height' failed"
+    )
+
+    testthat::expect_error(
+      {
+        suppressWarnings(tm_g_ae_sub(
+          label = "subgroups Plot",
+          dataname = "ADAE",
+          arm_var = arm_var_cs,
+          group_var = group_var_cs,
+          plot_width = "a"
+        ), classes = "picks_delayed")
+      },
+      "Assertion on 'plot_width' failed"
+    )
+  })
+})
+
+testthat::describe("tm_g_ae_sub module creation", {
+  it("creates a teal module using choices_selected", {
+    mod <- tm_g_ae_sub(
+      label = "subgroups Plot",
+      dataname = "ADAE",
+      arm_var = arm_var_cs,
+      group_var = group_var_cs
+    ) |>
+      suppressWarnings(classes = "picks_delayed")
+    testthat::expect_s3_class(mod, "teal_module")
+  })
+
+  it("creates a teal module using picks", {
+    mod <- tm_g_ae_sub(
+      label = "subgroups Plot",
+      dataname = "ADAE",
+      arm_var = variables(
+        choices = c("ACTARM", "ACTARMCD"),
+        selected = "ACTARMCD"
+      ),
+      group_var = variables(
+        choices = c("SEX", "REGION1", "RACE"),
+        selected = c("SEX", "REGION1", "RACE"),
+        multiple = TRUE
+      )
+    ) |>
+      suppressWarnings(classes = "picks_delayed")
+    testthat::expect_s3_class(mod, "teal_module")
+  })
+})
