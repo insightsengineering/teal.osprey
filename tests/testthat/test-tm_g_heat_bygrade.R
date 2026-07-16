@@ -192,7 +192,7 @@ testthat::describe("tm_g_heat_bygrade module creation", {
         id_var = id_var_picks,
         visit_var = visit_var_picks,
         ongo_var = ongo_var_picks,
-        anno_var = anno_var_picks_single,
+        anno_var = anno_var_picks_multiple,
         heat_var = heat_var_picks,
         conmed_var = conmed_var_picks,
         plot_height = c(600L, 200L, 2000L)
