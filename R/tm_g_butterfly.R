@@ -116,7 +116,7 @@ tm_g_butterfly <- function(label,
                            color_by_var,
                            count_by_var,
                            facet_var = NULL,
-                           sort_by_var = values(
+                           sort_by_var = teal.picks::values(
                              choices = c("count", "alphabetical"),
                              selected = "count"
                            ),
@@ -477,6 +477,12 @@ srv_g_butterfly <- function(
             left_name <- paste(.(left_val), collapse = " - ")
           })
         )
+
+        # This is redundant, only added to avoid NOTE in R CMD check
+        right <- q1[["right"]]
+        right_name <- q1[["right_name"]]
+        left <- q1[["left"]]
+        left_name <- q1[["left_name"]]
 
         teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 

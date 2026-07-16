@@ -1,3 +1,24 @@
+#' Extract datanames from list of picks
+#' @keywords internal
+#' @noRd
+.picks_datanames <- function(x) {
+  checkmate::assert_list(x, c("picks", "NULL"))
+  datanames_list <- lapply(x, function(x) {
+    if (is.character(x$datasets$choices)) {
+      x$datasets$choices
+    } else {
+      NULL
+    }
+  })
+
+  if (any(vapply(datanames_list, is.null, logical(1)))) {
+    "all"
+  } else {
+    unique(unlist(datanames_list))
+  }
+}
+
+
 #' Create a reactive that sets plot dimensions on a `teal_card`
 #'
 #' This is a convenience function that creates a reactive expression that

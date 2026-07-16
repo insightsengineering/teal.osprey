@@ -35,9 +35,3 @@ pak::pkg_install("insightsengineering/teal.osprey@*release")
 # install.packages("pak")
 pak::pkg_install("insightsengineering/teal.osprey")
 ```
-
-## Stargazers and Forkers
-
-### Stargazers over time
-
-[![Stargazers over time](https://starchart.cc/insightsengineering/teal.osprey.svg)](https://starchart.cc/insightsengineering/teal.osprey)
