@@ -7,6 +7,7 @@
 tm_g_events_term_id(
   label,
   dataname,
+  parent_dataname,
   term_var,
   arm_var,
   fontsize = c(5, 3, 7),
@@ -23,8 +24,8 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{term_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) object with all available choices
+\item{term_var}{Either a (\verb{[teal.picks::variables()]}) object or
+a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object with all available choices
 and pre-selected option names that can be used to specify the term for events}
 
 \item{arm_var}{(\code{choices_selected})\cr
@@ -83,6 +84,7 @@ app <- init(
     tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
+      parent_dataname = "ADSL",
       term_var = variables(
         choices = c(
           "AEDECOD", "AETERM",
