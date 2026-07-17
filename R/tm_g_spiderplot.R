@@ -126,11 +126,11 @@ tm_g_spiderplot <- function(label,
     yfacet_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), yfacet_var)
   }
 
-  paramcd <- force_pick_to_single(paramcd, "paramcd")
-  x_var <- force_pick_to_single(x_var, "x_var")
-  y_var <- force_pick_to_single(y_var, "y_var")
-  marker_var <- force_pick_to_single(marker_var, "marker_var")
-  line_colorby_var <- force_pick_to_single(line_colorby_var, "line_colorby_var")
+  paramcd <- force_pick_variable_selection(paramcd, "paramcd")
+  x_var <- force_pick_variable_selection(x_var, "x_var")
+  y_var <- force_pick_variable_selection(y_var, "y_var")
+  marker_var <- force_pick_variable_selection(marker_var, "marker_var")
+  line_colorby_var <- force_pick_variable_selection(line_colorby_var, "line_colorby_var")
 
   checkmate::assert_class(paramcd, "picks")
   checkmate::assert_class(x_var, "picks")
@@ -404,6 +404,8 @@ srv_g_spider <- function(
             as.data.frame()
         })
       )
+
+      ANL_f <- lbl <- NULL # to avoid R CMD check global binding NOTEs
 
       # format and filter
       q1 <- teal.code::eval_code(

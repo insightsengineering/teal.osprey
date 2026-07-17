@@ -71,28 +71,33 @@
   )
 }
 
-#' Force a picks variable selection to single selection (internal)
+#' Force a picks variable selection to single or multiple selection (internal)
 #'
 #' Warns when `pick$variables` allows multiple selection and coerces the
-#' underlying metadata to `multiple = FALSE`.
+#' underlying metadata to `multiple = multiple` (default false).
 #'
 #' @param pick (`picks`)
 #' @param arg_name (`character`) argument name used in warning messages.
+#' @param multiple (`logical`) whether selection shuold be multiple (TRUE) or single (FALSE)
 #'
 #' @return The updated `pick` object.
 #'
 #' @keywords internal
 #' @noRd
-force_pick_to_single <- function(pick, arg_name) {
+force_pick_variable_selection <- function(pick, arg_name, multiple = FALSE) {
   checkmate::assert_class(pick, "picks", .var.name = arg_name)
   checkmate::assert_string(arg_name)
+  checkmate::assert_logical(multiple)
+  selection <- if (isTRUE(multiple)) "multiple" else "single"
 
-  if (teal.picks::is_pick_multiple(pick$variables)) {
+  if (!identical(multiple, teal.picks::is_pick_multiple(pick$variables))) {
     warning(
-      sprintf("`%s` accepts only a single variable selection. ", arg_name),
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
+      sprintf(
+        "`%s` accepts only a %s variable selection. \nForcing `teal.picks::variables(multiple)` to `%s`.",
+        arg_name, selection, multiple
+      )
     )
-    attr(pick$variables, "multiple") <- FALSE
+    attr(pick$variables, "multiple") <- multiple
   }
 
   pick

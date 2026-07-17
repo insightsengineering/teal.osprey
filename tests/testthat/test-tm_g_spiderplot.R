@@ -40,7 +40,7 @@ paramcd_picks <- teal.picks::variables(
 
 x_var_picks <- teal.picks::variables(
   choices = c("ADY", "AGE"),
-  selected = "ADY"
+  selected = "ADY",
 )
 
 y_var_picks <- teal.picks::variables(
@@ -118,7 +118,7 @@ testthat::describe("tm_g_spiderplot argument verification", {
   })
 
   testthat::it("Forcing Conversion from multiple picks to single", {
-    testthat::expect_error(
+    testthat::expect_warning(
       {
         suppressWarnings(
           tm_g_spiderplot(
@@ -141,10 +141,10 @@ testthat::describe("tm_g_spiderplot argument verification", {
           classes = "picks_delayed"
         )
       },
-      "metadata does not match the requirement for x_var"
+      "`x_var` accepts only a single variable selection"
     )
 
-    testthat::expect_error(
+    testthat::expect_warning(
       {
         suppressWarnings(
           tm_g_spiderplot(
@@ -167,7 +167,7 @@ testthat::describe("tm_g_spiderplot argument verification", {
           classes = "picks_delayed"
         )
       },
-      "metadata does not match the requirement for paramcd"
+      "`paramcd` accepts only a single variable selection"
     )
   })
 })
