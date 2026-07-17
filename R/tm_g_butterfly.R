@@ -116,7 +116,7 @@ tm_g_butterfly <- function(label,
                            color_by_var,
                            count_by_var,
                            facet_var = NULL,
-                           sort_by_var = values(
+                           sort_by_var = teal.picks::values(
                              choices = c("count", "alphabetical"),
                              selected = "count"
                            ),
@@ -150,10 +150,10 @@ tm_g_butterfly <- function(label,
     facet_var <- create_picks_helper(teal.picks::datasets(dataname), facet_var)
   }
 
-  right_var <- force_pick_to_single(right_var, "right_var")
-  left_var <- force_pick_to_single(left_var, "left_var")
-  category_var <- force_pick_to_single(category_var, "category_var")
-  color_by_var <- force_pick_to_single(color_by_var, "color_by_var")
+  right_var <- force_pick_variable_selection(right_var, "right_var")
+  left_var <- force_pick_variable_selection(left_var, "left_var")
+  category_var <- force_pick_variable_selection(category_var, "category_var")
+  color_by_var <- force_pick_variable_selection(color_by_var, "color_by_var")
 
   checkmate::assert_class(count_by_var, "pick")
   checkmate::assert_class(sort_by_var, "pick")
@@ -477,6 +477,12 @@ srv_g_butterfly <- function(
             left_name <- paste(.(left_val), collapse = " - ")
           })
         )
+
+        # This is redundant, only added to avoid NOTE in R CMD check
+        right <- q1[["right"]]
+        right_name <- q1[["right_name"]]
+        left <- q1[["left"]]
+        left_name <- q1[["left_name"]]
 
         teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 

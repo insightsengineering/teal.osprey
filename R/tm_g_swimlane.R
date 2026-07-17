@@ -251,6 +251,7 @@ srv_g_swimlane <- function(id,
 
     output_q <- reactive({
       obj <- data()
+      ANL <- NULL # to avoid triggering NOTE on R CMD check
       teal.reporter::teal_card(obj) <-
         c(
           teal.reporter::teal_card(obj),

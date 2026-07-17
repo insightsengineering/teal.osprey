@@ -341,6 +341,8 @@ srv_g_ae_sub <- function(id,
 
         teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 
+        arm_n <- NULL # to avoid R CMD NOTE on no visible binding
+
         q2 <- within(
           q1,
           {
