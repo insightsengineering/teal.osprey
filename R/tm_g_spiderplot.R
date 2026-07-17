@@ -405,6 +405,8 @@ srv_g_spider <- function(
         })
       )
 
+      ANL_f <- lbl <- NULL # to avoid R CMD check global binding NOTEs
+
       # format and filter
       q1 <- teal.code::eval_code(
         q1,

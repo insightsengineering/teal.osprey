@@ -16,9 +16,6 @@
 #' @param ae_dataname (`character`) adverse events dataset name,
 #' needs to be available in the list passed to the `data`
 #' argument of [teal::init()] \cr
-#' @param data (`teal.data`) object that contains all datasets and merged data.
-#' needs to be available in the list passed to the `data`
-#' argument of [teal::init()] \cr
 #' specify to `NA` if no concomitant medications data is available
 #' @param id_var Either a ([`teal.transform::choices_selected`])
 #' `choices_selected` object or a (`[teal.picks::variables()]`) unique subject ID variable

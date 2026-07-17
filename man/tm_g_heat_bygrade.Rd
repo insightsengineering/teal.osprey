@@ -36,7 +36,8 @@ argument of \code{\link[teal:init]{teal::init()}} \cr}
 
 \item{ae_dataname}{(\code{character}) adverse events dataset name,
 needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal:init]{teal::init()}} \cr}
+argument of \code{\link[teal:init]{teal::init()}} \cr
+specify to \code{NA} if no concomitant medications data is available}
 
 \item{id_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
 \code{choices_selected} object or a (\verb{[teal.picks::variables()]}) unique subject ID variable}
@@ -73,11 +74,6 @@ vector to indicate default value, minimum and maximum values.}
 
 \item{transformators}{(\code{list} of \code{teal_transform_module}) that will be applied to transform module's data input.
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
-
-\item{data}{(\code{teal.data}) object that contains all datasets and merged data.
-needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal:init]{teal::init()}} \cr
-specify to \code{NA} if no concomitant medications data is available}
 }
 \value{
 the \code{\link[teal:module]{teal::module()}} object.
