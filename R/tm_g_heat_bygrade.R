@@ -146,13 +146,6 @@ tm_g_heat_bygrade <- function(
 
   checkmate::assert_string(label)
 
-  checkmate::assert_choice(sl_dataname, names(data), null.ok = TRUE)
-  checkmate::assert_choice(ex_dataname, names(data), null.ok = TRUE)
-  checkmate::assert_choice(ae_dataname, names(data), null.ok = TRUE)
-  checkmate::assert_choice(cm_dataname, names(data), null.ok = TRUE)
-
-  checkmate::assert_class(data, "teal_data")
-
   id_var <- migrate_choices_selected_to_variables(id_var)
   visit_var <- migrate_choices_selected_to_variables(visit_var)
   ongo_var <- migrate_choices_selected_to_variables(ongo_var)
@@ -313,6 +306,14 @@ srv_g_heat_by_grade <- function(
 ) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(isolate(data()), "teal_data")
+
+  names_data <- isolate(names(data()))
+
+  checkmate::assert_choice(sl_dataname, names_data, null.ok = TRUE)
+  checkmate::assert_choice(ex_dataname, names_data, null.ok = TRUE)
+  checkmate::assert_choice(ae_dataname, names_data, null.ok = TRUE)
+  checkmate::assert_choice(cm_dataname, names_data, null.ok = TRUE)
+
 
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
