@@ -378,14 +378,6 @@ ui_g_patient_profile <- function(id,
 }
 
 #' @keywords internal
-.patient_profile_picks_selected_var <- function(selector_state) {
-  if (is.null(selector_state) || is.null(selector_state$variables)) {
-    return(character())
-  }
-  as.character(selector_state$variables$selected)
-}
-
-#' @keywords internal
 .patient_profile_picks_selected_values <- function(selector_state) {
   if (is.null(selector_state) || is.null(selector_state$values)) {
     return(character())
@@ -424,21 +416,23 @@ srv_g_patient_profile <- function(id,
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
 
+    picks_list <- Filter(
+      Negate(is.null),
+      list(
+        patient_id = patient_id,
+        sl_start_date = sl_start_date,
+        ex_var = ex_var,
+        ae_var = ae_var,
+        ae_line_col_var = ae_line_col_var,
+        rs_var = rs_var,
+        cm_var = cm_var,
+        lb_var = lb_var
+      )
+    )
+
     selectors <- teal.picks::picks_srv(
       id = "",
-      picks = Filter(
-        Negate(is.null),
-        list(
-          patient_id = patient_id,
-          sl_start_date = sl_start_date,
-          ex_var = ex_var,
-          ae_var = ae_var,
-          ae_line_col_var = ae_line_col_var,
-          rs_var = rs_var,
-          cm_var = cm_var,
-          lb_var = lb_var
-        )
-      ),
+      picks = picks_list,
       data = data
     )
 
@@ -447,9 +441,9 @@ srv_g_patient_profile <- function(id,
     )
 
     if (!is.na(lb_dataname) && !is.null(lb_var)) {
-      observeEvent(.patient_profile_picks_selected_var(selectors$lb_var()), ignoreNULL = TRUE, {
+      observeEvent(selectors$lb_var()$variables$selected, ignoreNULL = TRUE, {
         ADLB <- data()[[lb_dataname]]
-        lb_var_selected <- .patient_profile_picks_selected_var(selectors$lb_var())
+        lb_var_selected <- selectors$lb_var()$variables$selected
         req(length(lb_var_selected) > 0)
         choices <- unique(ADLB[[lb_var_selected]])
         choices_selected <- if (length(choices) > 5) choices[1:5] else choices
@@ -477,24 +471,21 @@ srv_g_patient_profile <- function(id,
 
         pick_selected <- function(name) {
           if (name %in% names(selectors)) {
-            return(.patient_profile_picks_selected_var(selectors[[name]]()))
+            return(selectors[[name]]()$variables$selected)
           }
           character()
         }
 
-        # get inputs ---
-        patient_id <- .patient_profile_picks_selected_values(selectors$patient_id())
-        sl_start_date <- pick_selected("sl_start_date")
-        ae_var <- pick_selected("ae_var")
-        ae_line_col_var <- pick_selected("ae_line_col_var")
-        rs_var <- pick_selected("rs_var")
-        cm_var <- pick_selected("cm_var")
-        ex_var <- pick_selected("ex_var")
-        lb_var <- pick_selected("lb_var")
-        x_limit <- input$x_limit
-        lb_var_show <- input$lb_var_show
-
-        validated_q <- obj
+        patient_id_selected <- selectors$patient_id()$values$selected
+        sl_start_date_selected <- pick_selected("sl_start_date")
+        ae_var_selected <- pick_selected("ae_var")
+        ae_line_col_var_selected <- pick_selected("ae_line_col_var")
+        rs_var_seleted <- pick_selected("rs_var")
+        cm_var_selected <- pick_selected("cm_var")
+        ex_var_selected <- pick_selected("ex_var")
+        lb_var_selected <- pick_selected("lb_var")
+        x_limit_selected <- input$x_limit
+        lb_var_show_selected <- input$lb_var_show
 
         teal::validate_input(
           "select_ADaM",
@@ -534,49 +525,63 @@ srv_g_patient_profile <- function(id,
           message = "Study Days Range mut be: first lower, then upper limit"
         )
 
-        teal::validate_input(
-          "patient_id-values-selected",
+        validate_picks_input(
+          patient_id,
+          "patient_id",
           condition = function(x) length(x) > 0L,
-          message = "Patient ID is required."
+          message = "Patient ID is required.",
+          pick_type = "values"
         )
-        teal::validate_input(
-          "sl_start_date-variables-selected",
+        validate_picks_input(
+          sl_start_date,
+          "sl_start_date",
           condition = function(x) length(x) > 0L,
-          message = "Date variable is required."
+          message = "Date variable is required.",
+          pick_type = "variables"
         )
         if (isTRUE(select_plot()[ex_dataname])) {
-          teal::validate_input(
+          validate_picks_input(
+            ex_var,
             "ex_var-variables-selected",
             condition = function(x) length(x) > 0L,
-            message = "Exposure variable is required."
+            message = "Exposure variable is required.",
+            pick_type = "variables"
           )
         }
         if (isTRUE(select_plot()[ae_dataname])) {
-          teal::validate_input(
-            "ae_var-variables-selected",
+          validate_picks_input(
+            ae_var,
+            "ae_var",
             condition = function(x) length(x) > 0L,
-            message = "Adverse Event variable is required."
+            message = "Adverse Event variable is required.",
+            pick_type = "variables"
           )
         }
         if (isTRUE(select_plot()[rs_dataname])) {
-          teal::validate_input(
-            "rs_var-variables-selected",
+          validate_picks_input(
+            rs_var,
+            "rs_var",
             condition = function(x) length(x) > 0L,
-            message = "Tumor response variable is required."
+            message = "Tumor response variable is required.",
+            pick_type = "variables"
           )
         }
         if (isTRUE(select_plot()[cm_dataname])) {
-          teal::validate_input(
-            "cm_var-variables-selected",
+          validate_picks_input(
+            cm_var,
+            "cm_var",
             condition = function(x) length(x) > 0L,
-            message = "Concomitant medicine variable is required."
+            message = "Concomitant medicine variable is required.",
+            pick_type = "variables"
           )
         }
         if (isTRUE(select_plot()[lb_dataname])) {
-          teal::validate_input(
-            "lb_var-variables-selected",
+          validate_picks_input(
+            lb_var,
+            "lb_var",
             condition = function(x) length(x) > 0L,
-            message = "Lab variable is required."
+            message = "Lab variable is required.",
+            pick_type = "variables"
           )
           teal::validate_input(
             "lb_var_show",
@@ -589,73 +594,75 @@ srv_g_patient_profile <- function(id,
             message = "Lab variable and Lab value must be different"
           )
         }
-        if (isTRUE(select_plot()[ae_dataname]) && length(ae_line_col_var) > 0L && !is.null(ae_line_col_opt)) {
-          teal::validate_input(
-            "ae_line_col_var-variables-selected",
+        if (isTRUE(select_plot()[ae_dataname]) && length(ae_line_col_var_selected) > 0L && !is.null(ae_line_col_opt)) {
+          validate_picks_input(
+            ae_line_col_var,
+            "ae_line_col_var",
             condition = function(x) {
-              length(levels(validated_q[[ae_dataname]][[x]])) <= length(ae_line_col_opt)
+              length(levels(obj[[ae_dataname]][[x]])) <= length(ae_line_col_opt)
             },
-            message = "Not enough colors provided for Adverse Event line color, unselect"
+            message = "Not enough colors provided for Adverse Event line color, unselect",
+            pick_type = "variables"
           )
         }
 
         adrs_vars <- unique(c(
           "USUBJID", "STUDYID", "PARAMCD",
           "PARAM", "AVALC", "AVAL", "ADY",
-          "ADT", rs_var
+          "ADT", rs_var_seleted
         ))
         adae_vars <- unique(c(
           "USUBJID", "STUDYID", "ASTDT",
           "AENDT", "AESOC", "AEDECOD",
           "AESER", "AETOXGR", "AEREL",
           "ASTDY", "AENDY",
-          ae_var, ae_line_col_var
+          ae_var_selected, ae_line_col_var_selected
         ))
         adcm_vars <- unique(c(
           "USUBJID", "STUDYID", "ASTDT",
           "AENDT", "ASTDT", "CMDECOD",
           "ASTDY", "AENDY", "CMCAT",
-          cm_var
+          cm_var_selected
         ))
         adex_vars <- unique(c(
           "USUBJID", "STUDYID", "ASTDT",
           "AENDT", "PARCAT2", "AVAL",
           "AVALU", "PARAMCD", "PARCAT1",
-          "PARCAT2", ex_var
+          "PARCAT2", ex_var_selected
         ))
         adlb_vars <- unique(c(
           "USUBJID", "STUDYID", "ANRIND", "LBSEQ",
           "PARAMCD", "BASETYPE", "ADT", "AVISITN",
           "LBSTRESN", "LBCAT", "LBTESTCD",
-          lb_var
+          lb_var_selected
         ))
 
         # get ADSL dataset ---
-        ADSL <- validated_q[[sl_dataname]]
+        ADSL <- obj[[sl_dataname]]
 
         ADEX <- NULL
         if (isTRUE(select_plot()[ex_dataname])) {
-          ADEX <- validated_q[[ex_dataname]]
+          ADEX <- obj[[ex_dataname]]
           teal::validate_has_variable(ADEX, adex_vars)
         }
         ADAE <- NULL
         if (isTRUE(select_plot()[ae_dataname])) {
-          ADAE <- validated_q[[ae_dataname]]
+          ADAE <- obj[[ae_dataname]]
           teal::validate_has_variable(ADAE, adae_vars)
         }
         ADRS <- NULL
         if (isTRUE(select_plot()[rs_dataname])) {
-          ADRS <- validated_q[[rs_dataname]]
+          ADRS <- obj[[rs_dataname]]
           teal::validate_has_variable(ADRS, adrs_vars)
         }
         ADCM <- NULL
         if (isTRUE(select_plot()[cm_dataname])) {
-          ADCM <- validated_q[[cm_dataname]]
+          ADCM <- obj[[cm_dataname]]
           teal::validate_has_variable(ADCM, adcm_vars)
         }
         ADLB <- NULL
         if (isTRUE(select_plot()[lb_dataname])) {
-          ADLB <- validated_q[[lb_dataname]]
+          ADLB <- obj[[lb_dataname]]
           teal::validate_has_variable(ADLB, adlb_vars)
         }
 
@@ -666,7 +673,7 @@ srv_g_patient_profile <- function(id,
         empty_lb <- FALSE
 
         q1 <- teal.code::eval_code(
-          validated_q,
+          obj,
           code = substitute(
             expr = {
               ADSL <- ADSL %>%
@@ -680,30 +687,32 @@ srv_g_patient_profile <- function(id,
             },
             env = list(
               ADSL = as.name(sl_dataname),
-              sl_start_date = as.name(sl_start_date),
-              patient_id = patient_id
+              sl_start_date = as.name(sl_start_date_selected),
+              patient_id = patient_id_selected
             )
           )
         )
 
         # ADSL with single subject
-        teal::validate_input(
-          "patient_id-values-selected",
+        validate_picks_input(
+          patient_id,
+          "patient_id",
           condition = function(x) nrow(q1[["ADSL"]]) >= 1,
           message = paste(
             "Subject",
-            patient_id,
+            patient_id_selected,
             "not found in the dataset. Perhaps they have been filtered out by the filter panel?"
-          )
+          ),
+          pick_type = "values"
         )
 
         # name for ae_line_col
-        q1 <- if (!is.null(ae_line_col_var) && is.data.frame(ADAE)) {
+        q1 <- if (!is.null(ae_line_col_var_selected) && is.data.frame(ADAE)) {
           teal.code::eval_code(
             q1,
             code = substitute(
               expr = ae_line_col_name <- formatters::var_labels(ADAE, fill = FALSE)[ae_line_col_var],
-              env = list(ADAE = as.name(ae_dataname), ae_line_col_var = ae_line_col_var)
+              env = list(ADAE = as.name(ae_dataname), ae_line_col_var = ae_line_col_var_selected)
             )
           )
         } else {
@@ -736,8 +745,8 @@ srv_g_patient_profile <- function(id,
                 env = list(
                   ADSL = as.name(sl_dataname),
                   ADAE = as.name(ae_dataname),
-                  sl_start_date = as.name(sl_start_date),
-                  ae_line_col_var = ae_line_col_var,
+                  sl_start_date = as.name(sl_start_date_selected),
+                  ae_line_col_var = ae_line_col_var_selected,
                   adae_vars = adae_vars
                 )
               )
@@ -753,9 +762,9 @@ srv_g_patient_profile <- function(id,
                   ),
                   env = list(
                     ADAE = as.name(ae_dataname),
-                    ae_var = ae_var,
-                    line_col = if (!is.null(ae_line_col_var)) bquote(as.vector(ADAE[, .(ae_line_col_var)])) else NULL,
-                    line_col_legend = ae_line_col_var,
+                    ae_var = ae_var_selected,
+                    line_col = if (!is.null(ae_line_col_var_selected)) bquote(as.vector(ADAE[, .(ae_line_col_var_selected)])) else NULL,
+                    line_col_legend = ae_line_col_var_selected,
                     line_col_opt = ae_line_col_opt
                   )
                 )
@@ -794,8 +803,8 @@ srv_g_patient_profile <- function(id,
                 env = list(
                   ADRS = as.name(rs_dataname),
                   adrs_vars = adrs_vars,
-                  sl_start_date = as.name(sl_start_date),
-                  rs_var = rs_var
+                  sl_start_date = as.name(sl_start_date_selected),
+                  rs_var = rs_var_seleted
                 )
               )
             )
@@ -839,9 +848,9 @@ srv_g_patient_profile <- function(id,
                 env = list(
                   ADSL = as.name(sl_dataname),
                   ADCM = as.name(cm_dataname),
-                  sl_start_date = as.name(sl_start_date),
+                  sl_start_date = as.name(sl_start_date_selected),
                   adcm_vars = adcm_vars,
-                  cm_var = cm_var
+                  cm_var = cm_var_selected
                 )
               )
             )
@@ -898,13 +907,13 @@ srv_g_patient_profile <- function(id,
                   ADSL = as.name(sl_dataname),
                   ADEX = as.name(ex_dataname),
                   adex_vars = adex_vars,
-                  sl_start_date = as.name(sl_start_date),
-                  ex_var = ex_var
+                  sl_start_date = as.name(sl_start_date_selected),
+                  ex_var = ex_var_selected
                 )
               )
             )
             ADEX <- qq[[ex_dataname]]
-            if (is.null(ADEX) | nrow(ADEX) == 0) {
+            if (is.null(ADEX) || nrow(ADEX) == 0) {
               empty_ex <- TRUE
             }
             qq
@@ -944,9 +953,9 @@ srv_g_patient_profile <- function(id,
                   ADLB = as.name(lb_dataname),
                   ADSL = as.name(sl_dataname),
                   adlb_vars = adlb_vars,
-                  sl_start_date = as.name(sl_start_date),
-                  lb_var = lb_var,
-                  lb_var_show = lb_var_show
+                  sl_start_date = as.name(sl_start_date_selected),
+                  lb_var = lb_var_selected,
+                  lb_var_show = lb_var_show_selected
                 )
               )
             )
@@ -990,10 +999,10 @@ srv_g_patient_profile <- function(id,
         }
 
         # Convert x_limit to numeric vector
-        if (!is.null(x_limit) || x_limit != "") {
+        if (!is.null(x_limit_selected) || x_limit_selected != "") {
           q1 <- teal.code::eval_code(
             q1,
-            code = bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit), ","))))
+            code = bquote(x_limit <- as.numeric(unlist(strsplit(.(x_limit_selected), ","))))
           )
           x_limit <- q1[["x_limit"]]
         }
@@ -1018,8 +1027,9 @@ srv_g_patient_profile <- function(id,
               plot
             },
             env = list(
-              patient_id = patient_id,
-              ADSL = as.name(sl_dataname)
+              patient_id = patient_id_selected,
+              ADSL = as.name(sl_dataname),
+              x_limit = as_numeric_from_comma_sep_str(x_limit_selected)
             )
           )
         )

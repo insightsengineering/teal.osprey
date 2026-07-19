@@ -261,3 +261,37 @@ create_picks_helper <- function(datasets = NULL, x) {
     teal.picks::picks(datasets, x)
   }
 }
+
+#' Wrapper to call teal::validate_input in picks object
+#'
+#' @param picks (`teal.picks::picks()`)` object to be validated)
+#' @param inputId (`character`) Character of the picks input
+#' @param condition function(x) to validate the input
+#' @param message (`character(1)`) Character string of validation message
+#' @param pick_type (`character(1)`) pick object to validate (can be 'datasets', 'variables' or 'values')
+#' @param session shiny session
+#' @keywords internal
+#' @noRd
+validate_picks_input <- function(
+    picks,
+    input_id,
+    condition,
+    message,
+    pick_type,
+    session = shiny::getDefaultReactiveDomain()) {
+  pick_type <- match.arg(pick_type, c("datasets", "variables", "values"))
+  checkmate::assert_class(picks, "picks")
+  checkmate::assert_function(condition)
+
+  input_selector <- paste(input_id, pick_type, "selected", sep = "-")
+
+  if (isTRUE(teal.picks::is_pick_fixed(picks[[pick_type]]))) {
+    if (isTRUE(condition(picks[[pick_type]]$selected))) {
+      return(invisible())
+    } else { # If an fixed input is valideted, it will fail the validation as it is hidden from the ui
+      teal::validate_input(input_selector, condition, message, session)
+    }
+  } else {
+    teal::validate_input(input_selector, condition, message, session)
+  }
+}
