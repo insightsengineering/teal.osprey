@@ -273,12 +273,13 @@ create_picks_helper <- function(datasets = NULL, x) {
 #' @keywords internal
 #' @noRd
 validate_picks_input <- function(
-    picks,
-    input_id,
-    condition,
-    message,
-    pick_type,
-    session = shiny::getDefaultReactiveDomain()) {
+  picks,
+  input_id,
+  condition,
+  message,
+  pick_type,
+  session = shiny::getDefaultReactiveDomain()
+) {
   pick_type <- match.arg(pick_type, c("datasets", "variables", "values"))
   checkmate::assert_class(picks, "picks")
   checkmate::assert_function(condition)
