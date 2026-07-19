@@ -270,6 +270,7 @@ create_picks_helper <- function(datasets = NULL, x) {
 #' @param message (`character(1)`) Character string of validation message
 #' @param pick_type (`character(1)`) pick object to validate (can be 'datasets', 'variables' or 'values')
 #' @param session shiny session
+#' @details It can only be applied to a single input
 #' @keywords internal
 #' @noRd
 validate_picks_input <- function(

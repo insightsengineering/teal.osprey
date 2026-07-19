@@ -407,6 +407,7 @@ srv_g_patient_profile <- function(id,
   checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
+    ns <- session$ns
 
     picks_list <- Filter(
       Negate(is.null),
@@ -423,7 +424,7 @@ srv_g_patient_profile <- function(id,
     )
 
     selectors <- teal.picks::picks_srv(
-      id = "",
+      id = ns("server_selectors"),
       picks = picks_list,
       data = data
     )
