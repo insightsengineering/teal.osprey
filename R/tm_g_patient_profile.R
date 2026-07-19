@@ -377,14 +377,6 @@ ui_g_patient_profile <- function(id,
   )
 }
 
-#' @keywords internal
-.patient_profile_picks_selected_values <- function(selector_state) {
-  if (is.null(selector_state) || is.null(selector_state$values)) {
-    return(character())
-  }
-  as.character(selector_state$values$selected)
-}
-
 srv_g_patient_profile <- function(id,
                                   data,
                                   patient_id,
@@ -763,7 +755,11 @@ srv_g_patient_profile <- function(id,
                   env = list(
                     ADAE = as.name(ae_dataname),
                     ae_var = ae_var_selected,
-                    line_col = if (!is.null(ae_line_col_var_selected)) bquote(as.vector(ADAE[, .(ae_line_col_var_selected)])) else NULL,
+                    line_col = if (!is.null(ae_line_col_var_selected)) {
+                      bquote(as.vector(ADAE[, .(ae_line_col_var_selected)]))
+                    } else {
+                      NULL
+                    },
                     line_col_legend = ae_line_col_var_selected,
                     line_col_opt = ae_line_col_opt
                   )

@@ -287,7 +287,7 @@ validate_picks_input <- function(
 
   if (isTRUE(teal.picks::is_pick_fixed(picks[[pick_type]]))) {
     if (isTRUE(condition(picks[[pick_type]]$selected))) {
-      return(invisible())
+      invisible()
     } else { # If an fixed input is valideted, it will fail the validation as it is hidden from the ui
       teal::validate_input(input_selector, condition, message, session)
     }
