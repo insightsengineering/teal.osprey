@@ -97,7 +97,6 @@ data <- teal_data() \%>\%
     ADAE <- .add_event_flags(ADAE)
   })
 join_keys(data) <- default_cdisc_join_keys[names(data)]
-ADAE <- data[["ADAE"]]
 app <- init(
   data = data,
   modules = modules(
