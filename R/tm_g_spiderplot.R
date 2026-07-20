@@ -381,19 +381,23 @@ srv_g_spider <- function(
       vref_line <- as_numeric_from_comma_sep_str(vref_line)
       href_line <- as_numeric_from_comma_sep_str(href_line)
 
-      shiny::validate(
-        teal::need_input(
-          inputId = "paramcd-variables-selected",
-          condition = length(paramcd_col) > 0,
-          message = "Parameter Column is required."
-        ),
-        teal::need_input(
-          inputId = "paramcd_val",
-          condition = length(paramcd) > 0,
-          message = "Parameter Value is required."
-        )
+      validate_input(
+        inputId = "paramcd-variables-selected",
+        condition = length(paramcd_col) > 0,
+        message = "Parameter Column is required."
       )
 
+      validate_input(
+        inputId = "paramcd_val",
+        condition = length(paramcd) > 0,
+        message = "Parameter Value is required."
+      )
+
+      validate_input(
+        c("x_var", "y_var"),
+        condition = x_var != y_var,
+        message = "X and Y variable can't be the same."
+      )
       # format and filter (ANL already merged by merge_srv)
       q1 <- teal.code::eval_code(
         validated_q,

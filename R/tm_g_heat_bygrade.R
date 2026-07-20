@@ -406,28 +406,24 @@ srv_g_heat_by_grade <- function(
         ADSL <- validated_q[[sl_dataname]]
         teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
 
-        shiny::validate(
-          teal::need_input("id_var-variables-selected", length(id_var_name) > 0, "ID Variable is required."),
-          teal::need_input("visit_var-variables-selected", length(visit_var_name) > 0, "Visit Variable is required."),
-          teal::need_input(
-            "ongo_var-variables-selected",
-            length(ongo_var_name) > 0, "Study Ongoing Status Variable is required."
-          ),
-          teal::need_input(
-            "anno_var-variables-selected",
-            length(anno_var_name) > 0, "Annotation Variables is required."
-          ),
-          teal::need_input("heat_var-variables-selected", length(heat_var_name) > 0, "Heat Variable is required.")
+        validate_input(
+          "id_var-variables-selected", length(id_var_name) > 0, "ID Variable is required.")
+        validate_input(
+          "visit_var-variables-selected", length(visit_var_name) > 0, "Visit Variable is required.")
+        validate_input(
+          "ongo_var-variables-selected",
+          length(ongo_var_name) > 0,
+          "Study Ongoing Status Variable is required."
         )
+        validate_input("anno_var-variables-selected", length(anno_var_name) > 0, "Annotation Variables is required.")
+        validate_input("heat_var-variables-selected", length(heat_var_name) > 0, "Heat Variable is required.")
 
         if (plot_cm) {
-          shiny::validate(
-            teal::need_input(
+          validate_input(
               "conmed_var-variables-selected",
               length(conmed_var_name) > 0, "Conmed Variable is required."
-            ),
-            teal::need_input("conmed_level", length(input$conmed_level) > 0, "Select Conmed Levels.")
-          )
+            )
+          validate_input("conmed_level", length(input$conmed_level) > 0, "Select Conmed Levels.")
         }
 
         teal.reporter::teal_card(validated_q) <- c(teal.reporter::teal_card(validated_q), "### Plot")

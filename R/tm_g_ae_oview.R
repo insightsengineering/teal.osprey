@@ -45,7 +45,6 @@
 #'     ADAE <- .add_event_flags(ADAE)
 #'   })
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
-#' ADAE <- data[["ADAE"]]
 #' app <- init(
 #'   data = data,
 #'   modules = modules(
@@ -338,24 +337,32 @@ srv_g_ae_oview <- function(
         # Original variable name and dataset for arm_N calculation on the source dataset
         arm_var_orig <- selectors$arm_var()$variables$selected
         arm_dataset <- selectors$arm_var()$datasets$selected
-
-        shiny::validate(
-          shiny::need(
-            length(flag_var_name) > 0,
-            "A Flag Variable needs to be selected."
-          ),
-          shiny::need(
-            length(arm_var_name) > 0,
-            "An Arm Variable needs to be selected."
+        validate_input(
+          "flag_var_anl",
+          length(flag_var_name) > 0,
+          "A Flag Variable needs to be selected."
           )
+
+        validate_input(
+          "arm_var",
+          length(arm_var_name) > 0,
+          "An Arm Variable needs to be selected."
         )
 
-        validate(need(
+        validate_input(
+          c("arm_trt", "arm_ref"),
           input$arm_trt %in%
             ANL[[arm_var_name]] &&
             input$arm_ref %in% ANL[[arm_var_name]],
           "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
-        ))
+        )
+
+        validate_input(
+          c("arm_trt", "arm_ref"),
+          input$arm_trt != input$arm_ref,
+          "Treatment and Control can't be the same."
+        )
+
         q1 <- qenv %>%
           teal.code::eval_code(
             code = as.expression(c(
