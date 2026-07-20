@@ -238,7 +238,6 @@ ui_g_waterfall <- function(id,
     ),
     encoding = tags$div(
       tags$label("Encodings", class = "text-primary"),
-
       tags$div(
         tags$strong("Tumor Burden Parameter"),
         teal.picks::picks_ui(ns("bar_paramcd"), bar_paramcd)
