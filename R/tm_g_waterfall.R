@@ -7,37 +7,58 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param dataname_tr tumor burden analysis data used in teal module to plot as bar height, needs to
+#' @param parentname (`character(1)`) parent analysis data used in teal module, usually this refers to `ADSL`,
+#' which is the default.
+#' @param dataname_tr (`character(1)`) tumor burden analysis data used in teal module to plot as bar height, needs to
 #' be available in the list passed to the `data` argument of [teal::init()]
-#' @param dataname_rs response analysis data used in teal module to label response parameters, needs to
+#' @param dataname_rs (`character(1)`) response analysis data used in teal module to label response parameters, needs to
 #' be available in the list passed to the `data` argument of [teal::init()]
-#' @param bar_paramcd `choices_selected` parameter in tumor burden data that will be plotted as
-#' bar height
-#' @param bar_var `choices_selected` numeric variable from dataset to plot the bar height, e.g., `PCHG`
-#' @param bar_color_var `choices_selected` color by variable (subject level), `None` corresponds
-#' to `NULL`
+#' @param bar_paramcd (`values` or `choices_selected`) parameter in tumor burden data that will be plotted as
+#' bar height.
+#' `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#' Please use [teal.picks::values()] instead.
+#' @param bar_var (`variables` or `choices_selected`) numeric variable from dataset to plot the bar height,
+#' e.g., `PCHG`.
+#' `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#' Please use [teal.picks::variables()] instead.
+#' @param bar_color_var (`variables` or `choices_selected`) color by variable (subject level), `None` corresponds
+#' to `NULL`.
+#' `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#' Please use [teal.picks::variables()] instead.
 #' @param bar_color_opt aesthetic values to map color values (named vector to map color values to each name).
 #' If not `NULL`, please make sure this contains all possible values for `bar_color_var` values,
 #' otherwise color will be assigned by `ggplot` default, please note that `NULL` needs to be specified
 #' in this case
-#' @param sort_var `choices_selected` sort by variable (subject level), `None` corresponds
-#' to `NULL`
-#' @param add_label_var_sl `choices_selected` add label to bars (subject level), `None`
-#' corresponds to `NULL`
-#' @param add_label_paramcd_rs `choices_selected` add label to bars (response dataset), `None`
+#' @param sort_var (`variables` or `choices_selected`) sort by variable (subject level), `None` corresponds
+#' to `NULL`.
+#' `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#' Please use [teal.picks::variables()] instead.
+#' @param add_label_var_sl (`variables` or `choices_selected`) add label to bars (subject level), `None`
+#' corresponds to `NULL`.
+#' `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#' Please use [teal.picks::variables()] instead.
+#' @param add_label_paramcd_rs (`values` or `choices_selected`) add label to bars (response dataset), `None`
 #' corresponds to `NULL`. At least one of `add_label_var_sl` and `add_label_paramcd_rs` needs
-#' to be `NULL`
-#' @param anno_txt_var_sl `choices_selected` subject level variables to be displayed in the annotation
-#' table, default is `NULL`
-#' @param anno_txt_paramcd_rs `choices_selected` analysis dataset variables to be displayed in the
-#' annotation table, default is `NULL`
-#' @param facet_var `choices_selected` facet by variable (subject level), `None` corresponds to
-#' `NULL`
-#' @param ytick_at bar height axis interval, default is 20
-#' @param href_line numeric vector to plot horizontal reference lines, default is `NULL`
-#' @param gap_point_val singular numeric value for adding bar break when some bars are significantly higher
+#' to be `NULL`.
+#' `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#' Please use [teal.picks::values()] instead.
+#' @param anno_txt_var_sl (`variables` or `choices_selected`) subject level variables to be displayed in the annotation
+#' table, default is `NULL`.
+#' `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#' Please use [teal.picks::variables()] instead.
+#' @param anno_txt_paramcd_rs (`values` or `choices_selected`) analysis dataset variables to be displayed in the
+#' annotation table, default is `NULL`.
+#' `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#' Please use [teal.picks::values()] instead.
+#' @param facet_var (`variables` or `choices_selected`) facet by variable (subject level), `None` corresponds to
+#' `NULL`.
+#' `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#' Please use [teal.picks::variables()] instead.
+#' @param ytick_at (`numeric(1)`) bar height axis interval, default is 20
+#' @param href_line (`numeric`) numeric vector to plot horizontal reference lines, default is `NULL`
+#' @param gap_point_val (`numeric(1)`) singular numeric value for adding bar break when some bars are significantly higher
 #' than others, default is `NULL`
-#' @param show_value boolean of whether value of bar height is shown, default is `TRUE`
+#' @param show_value (`logical(1)`) boolean of whether value of bar height is shown, default is `TRUE`
 #'
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
@@ -66,16 +87,16 @@
 #'       label = "Waterfall",
 #'       dataname_tr = "ADTR",
 #'       dataname_rs = "ADRS",
-#'       bar_paramcd = choices_selected(c("SLDINV"), "SLDINV"),
-#'       bar_var = choices_selected(c("PCHG", "AVAL"), "PCHG"),
-#'       bar_color_var = choices_selected(c("ARMCD", "SEX"), "ARMCD"),
+#'       bar_paramcd = values(c("SLDINV"), "SLDINV", multiple = FALSE),
+#'       bar_var = variables(c("PCHG", "AVAL"), "PCHG"),
+#'       bar_color_var = variables(c("ARMCD", "SEX"), "ARMCD"),
 #'       bar_color_opt = NULL,
-#'       sort_var = choices_selected(c("ARMCD", "SEX"), NULL),
-#'       add_label_var_sl = choices_selected(c("SEX", "EOSDY"), NULL),
-#'       add_label_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-#'       anno_txt_var_sl = choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
-#'       anno_txt_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-#'       facet_var = choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
+#'       sort_var = variables(c("ARMCD", "SEX"), NULL),
+#'       add_label_var_sl = variables(c("SEX", "EOSDY"), NULL),
+#'       add_label_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL, multiple = TRUE),
+#'       anno_txt_var_sl = variables(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL, multiple = TRUE),
+#'       anno_txt_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL),
+#'       facet_var = variables(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
 #'       href_line = "-30, 20"
 #'     )
 #'   )
@@ -85,7 +106,7 @@
 #' }
 #'
 tm_g_waterfall <- function(label,
-                           parent_dataname = "ADSL",
+                           parentname = "ADSL",
                            dataname_tr = "ADTR",
                            dataname_rs = "ADRS",
                            bar_paramcd,
@@ -112,6 +133,27 @@ tm_g_waterfall <- function(label,
   checkmate::assert_string(dataname_tr)
   checkmate::assert_string(dataname_rs)
 
+  checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
+  checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
+  checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
+  checkmate::assert_numeric(
+    plot_width[1],
+    lower = plot_width[2],
+    upper = plot_width[3],
+    null.ok = TRUE,
+    .var.name = "plot_width"
+  )
+
+  checkmate::assert_multi_class(bar_paramcd, classes = c("picks", "values", "choices_selected"))
+  checkmate::assert_multi_class(add_label_paramcd_rs, classes = c("picks", "values", "choices_selected"))
+  checkmate::assert_multi_class(anno_txt_paramcd_rs, classes = c("picks", "values", "choices_selected"))
+
+  checkmate::assert_multi_class(bar_var, classes = c("picks", "variables", "choices_selected"))
+  checkmate::assert_multi_class(bar_color_var, classes = c("picks", "variables", "choices_selected"))
+  checkmate::assert_multi_class(sort_var, classes = c("picks", "variables", "choices_selected"))
+  checkmate::assert_multi_class(add_label_var_sl, classes = c("picks", "variables", "choices_selected"))
+  checkmate::assert_multi_class(anno_txt_var_sl, classes = c("picks", "variables", "choices_selected"))
+
   bar_paramcd <- migrate_value_choices_to_picks(bar_paramcd, default_variable_name = "PARAMCD")
   bar_var <- migrate_choices_selected_to_variables(bar_var)
   bar_color_var <- migrate_choices_selected_to_variables(bar_color_var)
@@ -123,11 +165,11 @@ tm_g_waterfall <- function(label,
   add_label_paramcd_rs <- migrate_value_choices_to_picks(add_label_paramcd_rs, default_variable_name = "PARAMCD")
 
   # from ADSL
-  bar_color_var <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), bar_color_var)
-  sort_var <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), sort_var)
-  anno_txt_var_sl <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), anno_txt_var_sl)
-  facet_var <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), facet_var)
-  add_label_var_sl <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), add_label_var_sl)
+  bar_color_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), bar_color_var)
+  sort_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), sort_var)
+  anno_txt_var_sl <- create_picks_helper(teal.picks::datasets(parentname, parentname), anno_txt_var_sl)
+  facet_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), facet_var)
+  add_label_var_sl <- create_picks_helper(teal.picks::datasets(parentname, parentname), add_label_var_sl)
 
   # from ADTR
   bar_var <- create_picks_helper(teal.picks::datasets(dataname_tr, dataname_tr), bar_var)
@@ -136,27 +178,6 @@ tm_g_waterfall <- function(label,
   bar_paramcd <- create_picks_helper(teal.picks::datasets(dataname_tr, dataname_tr), bar_paramcd)
   anno_txt_paramcd_rs <- create_picks_helper(teal.picks::datasets(dataname_rs, dataname_rs), anno_txt_paramcd_rs)
   add_label_paramcd_rs <- create_picks_helper(teal.picks::datasets(dataname_rs, dataname_rs), add_label_paramcd_rs)
-
-  checkmate::assert_multi_class(bar_paramcd, classes = c("picks", "variables"))
-  checkmate::assert_multi_class(bar_var, classes = c("picks", "variables"))
-  checkmate::assert_multi_class(bar_color_var, classes = c("picks", "variables"))
-  checkmate::assert_multi_class(sort_var, classes = c("picks", "variables"))
-  checkmate::assert_multi_class(anno_txt_var_sl, classes = c("picks", "variables"))
-  checkmate::assert_multi_class(anno_txt_paramcd_rs, classes = c("picks", "values"))
-  checkmate::assert_multi_class(facet_var, classes = c("picks", "variables"))
-  checkmate::assert_multi_class(add_label_var_sl, classes = c("picks", "variables"))
-  checkmate::assert_multi_class(add_label_paramcd_rs, classes = c("picks", "variables"))
-
-  checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
-  checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
-  checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
-  checkmate::assert_numeric(
-    plot_width[1],
-    lower = plot_width[2],
-    upper = plot_width[3],
-    null.ok = TRUE,
-    .var.name = "plot_width"
-  )
 
   bar_paramcd <- force_pick_variable_selection(bar_paramcd, which = "values", multiple = FALSE)
   bar_var <- force_pick_variable_selection(bar_var, which = "variables", multiple = FALSE)
@@ -192,7 +213,7 @@ tm_g_waterfall <- function(label,
 }
 
 ui_g_waterfall <- function(id,
-                           parent_dataname,
+                           parentname,
                            dataname_tr,
                            dataname_rs,
                            bar_paramcd,
@@ -234,7 +255,7 @@ ui_g_waterfall <- function(id,
       tags$div(
         tags$strong("Sort by"),
         teal.picks::picks_ui(ns("sort_var"), sort_var),
-        helpText("from ", tags$code(parent_dataname))
+        helpText("from ", tags$code(parentname))
       ),
       tags$div(
         tags$strong("Add ADSL Label to Bars"),
@@ -247,7 +268,7 @@ ui_g_waterfall <- function(id,
       tags$div(
         tags$strong("Annotation Variables"),
         teal.picks::picks_ui(ns("anno_txt_var_sl"), anno_txt_var_sl),
-        helpText("from ", tags$code(parent_dataname))
+        helpText("from ", tags$code(parentname))
       ),
       tags$div(
         tags$strong("Annotation Parameters"),
@@ -257,7 +278,7 @@ ui_g_waterfall <- function(id,
       tags$div(
         tags$strong("Facet by"),
         teal.picks::picks_ui(ns("facet_var"), facet_var),
-        helpText("from ", tags$code(parent_dataname))
+        helpText("from ", tags$code(parentname))
       ),
 
       # teal.widgets::optionalSelectInput(
@@ -371,7 +392,7 @@ srv_g_waterfall <- function(id,
                             facet_var,
                             add_label_var_sl,
                             add_label_paramcd_rs,
-                            parent_dataname,
+                            parentname,
                             dataname_tr,
                             dataname_rs,
                             bar_color_opt,
@@ -397,7 +418,7 @@ srv_g_waterfall <- function(id,
     ), data = data)
 
     validated_q <- reactive({
-      adsl <- data()[[parent_dataname]]
+      adsl <- data()[[parentname]]
       adtr <- data()[[dataname_tr]]
       adrs <- data()[[dataname_rs]]
 
@@ -469,7 +490,7 @@ srv_g_waterfall <- function(id,
         )
       obj <- teal.code::eval_code(obj, "library(dplyr)")
 
-      adsl <- obj[[parent_dataname]]
+      adsl <- obj[[parentname]]
       adtr <- obj[[dataname_tr]]
       adrs <- obj[[dataname_rs]]
 
@@ -555,7 +576,7 @@ srv_g_waterfall <- function(id,
       q1 <- teal.code::eval_code(
         q1,
         code = bquote({
-          adsl <- .(as.name(parent_dataname))[, .(adsl_vars)]
+          adsl <- .(as.name(parentname))[, .(adsl_vars)]
           adtr <- .(as.name(dataname_tr))[, .(adtr_vars)]
           adrs <- .(as.name(dataname_rs))[, .(adrs_vars)]
 
