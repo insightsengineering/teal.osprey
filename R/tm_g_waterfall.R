@@ -2,44 +2,42 @@
 #'
 #' @description
 #'
-#' This is a teal module that generates a waterfall plot for `ADaM` data using
-#' [teal.picks::picks()] encodings.
+#' This is teal module that generates a waterfall plot for `ADaM` data
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param dataname_tr (`character(1)`)\cr
-#'   Tumor burden dataset name (e.g. `"ADTR"`).
-#' @param dataname_rs (`character(1)`)\cr
-#'   Response dataset name (e.g. `"ADRS"`).
-#' @param bar_paramcd (`picks`)\cr
-#'   `PARAMCD` selection for tumor burden data (`values` slot).
-#' @param bar_var (`picks`)\cr
-#'   Numeric variable for bar height (e.g. `PCHG`).
-#' @param bar_color_var (`picks` or `NULL`)\cr
-#'   Subject-level color variable from `ADSL`.
-#' @param bar_color_opt (`character`)\cr
-#'   Named vector mapping color values to colors.
-#' @param sort_var (`picks` or `NULL`)\cr
-#'   Subject-level sort variable from `ADSL`.
-#' @param add_label_var_sl (`picks` or `NULL`)\cr
-#'   Subject-level bar label variable from `ADSL`.
-#' @param add_label_paramcd_rs (`picks` or `NULL`)\cr
-#'   `PARAMCD` label from response data (`ADRS`).
-#' @param anno_txt_var_sl (`picks` or `NULL`)\cr
-#'   Subject-level annotation variables from `ADSL`.
-#' @param anno_txt_paramcd_rs (`picks` or `NULL`)\cr
-#'   `PARAMCD` annotation parameters from `ADRS`.
-#' @param facet_var (`picks` or `NULL`)\cr
-#'   Subject-level facet variable from `ADSL`.
-#' @param ytick_at (`numeric`)\cr
-#'   Bar height axis interval.
-#' @param href_line (`character`)\cr
-#'   Comma-separated horizontal reference lines.
-#' @param gap_point_val (`character`)\cr
-#'   Value for breaking high bars.
-#' @param show_value (`logical`)\cr
-#'   Whether to show bar height values.
+#' @param dataname_tr tumor burden analysis data used in teal module to plot as bar height, needs to
+#' be available in the list passed to the `data` argument of [teal::init()]
+#' @param dataname_rs response analysis data used in teal module to label response parameters, needs to
+#' be available in the list passed to the `data` argument of [teal::init()]
+#' @param bar_paramcd `choices_selected` parameter in tumor burden data that will be plotted as
+#' bar height
+#' @param bar_var `choices_selected` numeric variable from dataset to plot the bar height, e.g., `PCHG`
+#' @param bar_color_var `choices_selected` color by variable (subject level), `None` corresponds
+#' to `NULL`
+#' @param bar_color_opt aesthetic values to map color values (named vector to map color values to each name).
+#' If not `NULL`, please make sure this contains all possible values for `bar_color_var` values,
+#' otherwise color will be assigned by `ggplot` default, please note that `NULL` needs to be specified
+#' in this case
+#' @param sort_var `choices_selected` sort by variable (subject level), `None` corresponds
+#' to `NULL`
+#' @param add_label_var_sl `choices_selected` add label to bars (subject level), `None`
+#' corresponds to `NULL`
+#' @param add_label_paramcd_rs `choices_selected` add label to bars (response dataset), `None`
+#' corresponds to `NULL`. At least one of `add_label_var_sl` and `add_label_paramcd_rs` needs
+#' to be `NULL`
+#' @param anno_txt_var_sl `choices_selected` subject level variables to be displayed in the annotation
+#' table, default is `NULL`
+#' @param anno_txt_paramcd_rs `choices_selected` analysis dataset variables to be displayed in the
+#' annotation table, default is `NULL`
+#' @param facet_var `choices_selected` facet by variable (subject level), `None` corresponds to
+#' `NULL`
+#' @param ytick_at bar height axis interval, default is 20
+#' @param href_line numeric vector to plot horizontal reference lines, default is `NULL`
+#' @param gap_point_val singular numeric value for adding bar break when some bars are significantly higher
+#' than others, default is `NULL`
+#' @param show_value boolean of whether value of bar height is shown, default is `TRUE`
 #'
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
@@ -49,19 +47,57 @@
 #' @template author_qit3
 #' @author houx14 \email{houx14@gene.com}
 #'
+#' @examples
+#' data <- teal_data() %>%
+#'   within({
+#'     library(nestcolor)
+#'     ADSL <- rADSL
+#'     ADRS <- rADRS
+#'     ADTR <- rADTR
+#'     ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+#'   })
+#'
+#' join_keys(data) <- default_cdisc_join_keys[names(data)]
+#'
+#' app <- init(
+#'   data = data,
+#'   modules = modules(
+#'     tm_g_waterfall(
+#'       label = "Waterfall",
+#'       dataname_tr = "ADTR",
+#'       dataname_rs = "ADRS",
+#'       bar_paramcd = choices_selected(c("SLDINV"), "SLDINV"),
+#'       bar_var = choices_selected(c("PCHG", "AVAL"), "PCHG"),
+#'       bar_color_var = choices_selected(c("ARMCD", "SEX"), "ARMCD"),
+#'       bar_color_opt = NULL,
+#'       sort_var = choices_selected(c("ARMCD", "SEX"), NULL),
+#'       add_label_var_sl = choices_selected(c("SEX", "EOSDY"), NULL),
+#'       add_label_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
+#'       anno_txt_var_sl = choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
+#'       anno_txt_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
+#'       facet_var = choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
+#'       href_line = "-30, 20"
+#'     )
+#'   )
+#' )
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
+#' }
+#'
 tm_g_waterfall <- function(label,
+                           parent_dataname = "ADSL",
                            dataname_tr = "ADTR",
                            dataname_rs = "ADRS",
                            bar_paramcd,
                            bar_var,
-                           bar_color_var = NULL,
+                           bar_color_var,
                            bar_color_opt = NULL,
-                           sort_var = NULL,
-                           add_label_var_sl = NULL,
-                           add_label_paramcd_rs = NULL,
-                           anno_txt_var_sl = NULL,
-                           anno_txt_paramcd_rs = NULL,
-                           facet_var = NULL,
+                           sort_var,
+                           add_label_var_sl,
+                           add_label_paramcd_rs,
+                           anno_txt_var_sl,
+                           anno_txt_paramcd_rs,
+                           facet_var,
                            ytick_at = 20,
                            href_line = NULL,
                            gap_point_val = NULL,
@@ -71,56 +107,92 @@ tm_g_waterfall <- function(label,
                            pre_output = NULL,
                            post_output = NULL,
                            transformators = list()) {
+  message("Initializing tm_g_waterfall")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname_tr)
   checkmate::assert_string(dataname_rs)
-  checkmate::assert_class(bar_paramcd, "picks", .var.name = "bar_paramcd")
-  .assert_picks_single_var(bar_var, "bar_var")
-  if (!is.null(bar_color_var)) .assert_picks_single_var(bar_color_var, "bar_color_var")
-  if (!is.null(sort_var)) .assert_picks_single_var(sort_var, "sort_var")
-  if (!is.null(add_label_var_sl)) .assert_picks_single_var(add_label_var_sl, "add_label_var_sl")
-  if (!is.null(facet_var)) .assert_picks_single_var(facet_var, "facet_var")
+
+  bar_paramcd <- migrate_value_choices_to_picks(bar_paramcd, default_variable_name = "PARAMCD")
+  bar_var <- migrate_choices_selected_to_variables(bar_var)
+  bar_color_var <- migrate_choices_selected_to_variables(bar_color_var)
+  sort_var <- migrate_choices_selected_to_variables(sort_var)
+  anno_txt_var_sl <- migrate_choices_selected_to_variables(anno_txt_var_sl)
+  anno_txt_paramcd_rs <- migrate_value_choices_to_picks(anno_txt_paramcd_rs, default_variable_name = "PARAMCD")
+  facet_var <- migrate_choices_selected_to_variables(facet_var)
+  add_label_var_sl <- migrate_choices_selected_to_variables(add_label_var_sl)
+  add_label_paramcd_rs <- migrate_value_choices_to_picks(add_label_paramcd_rs, default_variable_name = "PARAMCD")
+
+  # from ADSL
+  bar_color_var <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), bar_color_var)
+  sort_var <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), sort_var)
+  anno_txt_var_sl <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), anno_txt_var_sl)
+  facet_var <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), facet_var)
+  add_label_var_sl <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), add_label_var_sl)
+
+  # from ADTR
+  bar_var <- create_picks_helper(teal.picks::datasets(dataname_tr, dataname_tr), bar_var)
+
+  # from ADRS
+  bar_paramcd <- create_picks_helper(teal.picks::datasets(dataname_tr, dataname_tr), bar_paramcd)
+  anno_txt_paramcd_rs <- create_picks_helper(teal.picks::datasets(dataname_rs, dataname_rs), anno_txt_paramcd_rs)
+  add_label_paramcd_rs <- create_picks_helper(teal.picks::datasets(dataname_rs, dataname_rs), add_label_paramcd_rs)
+
+  checkmate::assert_multi_class(bar_paramcd, classes = c("picks", "variables"))
+  checkmate::assert_multi_class(bar_var, classes = c("picks", "variables"))
+  checkmate::assert_multi_class(bar_color_var, classes = c("picks", "variables"))
+  checkmate::assert_multi_class(sort_var, classes = c("picks", "variables"))
+  checkmate::assert_multi_class(anno_txt_var_sl, classes = c("picks", "variables"))
+  checkmate::assert_multi_class(anno_txt_paramcd_rs, classes = c("picks", "values"))
+  checkmate::assert_multi_class(facet_var, classes = c("picks", "variables"))
+  checkmate::assert_multi_class(add_label_var_sl, classes = c("picks", "variables"))
+  checkmate::assert_multi_class(add_label_paramcd_rs, classes = c("picks", "variables"))
+
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
-  checkmate::assert_numeric(
-    plot_height[1],
-    lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height"
-  )
+  checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
   checkmate::assert_numeric(plot_width, len = 3, any.missing = FALSE, null.ok = TRUE, finite = TRUE)
   checkmate::assert_numeric(
     plot_width[1],
-    lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
+    lower = plot_width[2],
+    upper = plot_width[3],
+    null.ok = TRUE,
+    .var.name = "plot_width"
   )
 
-  pick_slots <- Filter(
-    Negate(is.null),
-    list(
-      bar_paramcd = bar_paramcd,
-      bar_var = bar_var,
-      bar_color_var = bar_color_var,
-      sort_var = sort_var,
-      add_label_var_sl = add_label_var_sl,
-      add_label_paramcd_rs = add_label_paramcd_rs,
-      anno_txt_var_sl = anno_txt_var_sl,
-      anno_txt_paramcd_rs = anno_txt_paramcd_rs,
-      facet_var = facet_var
-    )
-  )
+  bar_paramcd <- force_pick_variable_selection(bar_paramcd, which = "values", multiple = FALSE)
+  bar_var <- force_pick_variable_selection(bar_var, which = "variables", multiple = FALSE)
+  bar_color_var <- force_pick_variable_selection(bar_color_var, which = "variables", multiple = FALSE)
+  sort_var <- force_pick_variable_selection(sort_var, which = "variables", multiple = FALSE)
+  add_label_var_sl <- force_pick_variable_selection(add_label_var_sl, which = "variables", multiple = FALSE)
+  add_label_paramcd_rs <- force_pick_variable_selection(add_label_paramcd_rs, which = "values", multiple = FALSE)
+  anno_txt_var_sl <- force_pick_variable_selection(anno_txt_var_sl, which = "variables", multiple = TRUE)
+  anno_txt_paramcd_rs <- force_pick_variable_selection(anno_txt_paramcd_rs, which = "values", multiple = TRUE)
+  facet_var <- force_pick_variable_selection(facet_var, which = "variables", multiple = FALSE)
 
   args <- as.list(environment())
 
   module(
     label = label,
     ui = ui_g_waterfall,
-    server = srv_g_waterfall,
     ui_args = args[names(args) %in% names(formals(ui_g_waterfall))],
+    server = srv_g_waterfall,
     server_args = args[names(args) %in% names(formals(srv_g_waterfall))],
     transformators = transformators,
-    datanames = unique(c("ADSL", dataname_tr, dataname_rs, .picks_all_datanames(pick_slots)))
+    datanames = .picks_datanames(list(
+      bar_paramcd,
+      bar_var,
+      bar_color_var,
+      sort_var,
+      add_label_var_sl,
+      add_label_paramcd_rs,
+      anno_txt_var_sl,
+      anno_txt_paramcd_rs,
+      facet_var
+    ))
   )
 }
 
-#' @keywords internal
 ui_g_waterfall <- function(id,
+                           parent_dataname,
                            dataname_tr,
                            dataname_rs,
                            bar_paramcd,
@@ -132,10 +204,10 @@ ui_g_waterfall <- function(id,
                            anno_txt_var_sl,
                            anno_txt_paramcd_rs,
                            facet_var,
-                           ytick_at,
-                           href_line,
-                           gap_point_val,
                            show_value,
+                           href_line,
+                           ytick_at,
+                           gap_point_val,
                            pre_output,
                            post_output) {
   ns <- NS(id)
@@ -145,57 +217,111 @@ ui_g_waterfall <- function(id,
     ),
     encoding = tags$div(
       tags$label("Encodings", class = "text-primary"),
-      helpText("Analysis Data: ", tags$code(dataname_tr), tags$code(dataname_rs)),
+
       tags$div(
-        tags$label("Tumor burden parameter"),
+        tags$strong("Tumor Burden Parameter"),
         teal.picks::picks_ui(ns("bar_paramcd"), bar_paramcd)
       ),
       tags$div(
-        tags$label("Bar height"),
-        teal.picks::picks_ui(ns("bar_var"), bar_var)
+        tags$strong("Bar Height"),
+        teal.picks::picks_ui(ns("bar_var"), bar_var),
+        helpText("Tumor change variable from ", tags$code(dataname_tr))
       ),
-      if (!is.null(bar_color_var)) {
-        tags$div(
-          tags$label("Bar color"),
-          teal.picks::picks_ui(ns("bar_color_var"), bar_color_var)
-        )
-      },
-      if (!is.null(sort_var)) {
-        tags$div(
-          tags$label("Sort by"),
-          teal.picks::picks_ui(ns("sort_var"), sort_var)
-        )
-      },
-      if (!is.null(add_label_var_sl)) {
-        tags$div(
-          tags$label("Add ADSL label to bars"),
-          teal.picks::picks_ui(ns("add_label_var_sl"), add_label_var_sl)
-        )
-      },
-      if (!is.null(add_label_paramcd_rs)) {
-        tags$div(
-          tags$label("Add ADRS label to bars"),
-          teal.picks::picks_ui(ns("add_label_paramcd_rs"), add_label_paramcd_rs)
-        )
-      },
-      if (!is.null(anno_txt_var_sl)) {
-        tags$div(
-          tags$label("Annotation variables (ADSL)"),
-          teal.picks::picks_ui(ns("anno_txt_var_sl"), anno_txt_var_sl)
-        )
-      },
-      if (!is.null(anno_txt_paramcd_rs)) {
-        tags$div(
-          tags$label("Annotation parameters (ADRS)"),
-          teal.picks::picks_ui(ns("anno_txt_paramcd_rs"), anno_txt_paramcd_rs)
-        )
-      },
-      if (!is.null(facet_var)) {
-        tags$div(
-          tags$label("Facet by"),
-          teal.picks::picks_ui(ns("facet_var"), facet_var)
-        )
-      },
+      tags$div(
+        tags$strong("Bar Color"),
+        teal.picks::picks_ui(ns("bar_color_var"), bar_color_var)
+      ),
+      tags$div(
+        tags$strong("Sort by"),
+        teal.picks::picks_ui(ns("sort_var"), sort_var),
+        helpText("from ", tags$code(parent_dataname))
+      ),
+      tags$div(
+        tags$strong("Add ADSL Label to Bars"),
+        teal.picks::picks_ui(ns("add_label_var_sl"), add_label_var_sl)
+      ),
+      tags$div(
+        tags$strong("Add ADRS Label to Bars"),
+        teal.picks::picks_ui(ns("add_label_paramcd_rs"), add_label_paramcd_rs)
+      ),
+      tags$div(
+        tags$strong("Annotation Variables"),
+        teal.picks::picks_ui(ns("anno_txt_var_sl"), anno_txt_var_sl),
+        helpText("from ", tags$code(parent_dataname))
+      ),
+      tags$div(
+        tags$strong("Annotation Parameters"),
+        teal.picks::picks_ui(ns("anno_txt_paramcd_rs"), anno_txt_paramcd_rs),
+        helpText("from ", tags$code(dataname_rs))
+      ),
+      tags$div(
+        tags$strong("Facet by"),
+        teal.picks::picks_ui(ns("facet_var"), facet_var),
+        helpText("from ", tags$code(parent_dataname))
+      ),
+
+      # teal.widgets::optionalSelectInput(
+      #   ns("bar_paramcd"),
+      #   "Tumor Burden Parameter",
+      #   multiple = FALSE
+      # ),
+      # teal.widgets::optionalSelectInput(
+      #   ns("bar_var"),
+      #   "Bar Height",
+      #   choices = get_choices(a$bar_var$choices),
+      #   selected = a$bar_var$selected,
+      #   multiple = FALSE,
+      #   label_help = helpText("Tumor change variable from ", tags$code("ADTR"))
+      # ),
+      # teal.widgets::optionalSelectInput(
+      #   ns("bar_color_var"),
+      #   "Bar Color",
+      #   choices = get_choices(a$bar_color_var$choices),
+      #   selected = a$bar_color_var$selected,
+      #   multiple = FALSE
+      # ),
+      # teal.widgets::optionalSelectInput(
+      #   ns("sort_var"),
+      #   "Sort by",
+      #   choices = get_choices(a$sort_var$choices),
+      #   selected = a$sort_var$selected,
+      #   multiple = FALSE,
+      #   label_help = helpText("from ", tags$code("ADSL"))
+      # ),
+      # teal.widgets::optionalSelectInput(
+      #   ns("add_label_var_sl"),
+      #   "Add ADSL Label to Bars",
+      #   choices = get_choices(a$add_label_var_sl$choices),
+      #   selected = a$add_label_var_sl$selected,
+      #   multiple = FALSE
+      # ),
+      # teal.widgets::optionalSelectInput(
+      #   ns("add_label_paramcd_rs"),
+      #   "Add ADRS Label to Bars",
+      #   multiple = FALSE
+      # ),
+      # teal.widgets::optionalSelectInput(
+      #   ns("anno_txt_var_sl"),
+      #   "Annotation Variables",
+      #   choices = get_choices(a$anno_txt_var_sl$choices),
+      #   selected = a$anno_txt_var_sl$selected,
+      #   multiple = TRUE,
+      #   label_help = helpText("from ", tags$code("ADSL"))
+      # ),
+      # teal.widgets::optionalSelectInput(
+      #   ns("anno_txt_paramcd_rs"),
+      #   "Annotation Parameters",
+      #   multiple = TRUE,
+      #   label_help = helpText("from ", tags$code("ADRS"))
+      # ),
+      # teal.widgets::optionalSelectInput(
+      #   ns("facet_var"),
+      #   "Facet by",
+      #   choices = get_choices(a$facet_var$choices),
+      #   selected = NULL,
+      #   multiple = FALSE,
+      #   label_help = helpText("from ", tags$code("ADSL"))
+      # ),
       checkboxInput(
         ns("show_value"),
         "Add Bar Height Value",
@@ -234,69 +360,108 @@ ui_g_waterfall <- function(id,
   )
 }
 
-#' @keywords internal
-.waterfall_picks_selected_var <- function(selector_state) {
-  if (is.null(selector_state) || is.null(selector_state$variables)) {
-    return(character())
-  }
-  as.character(selector_state$variables$selected)
-}
-
-#' @keywords internal
-.waterfall_picks_selected_values <- function(selector_state) { # nolint: object_length_linter.
-  if (is.null(selector_state) || is.null(selector_state$values)) {
-    return(character())
-  }
-  as.character(selector_state$values$selected)
-}
-
-#' @keywords internal
 srv_g_waterfall <- function(id,
                             data,
-                            dataname_tr,
-                            dataname_rs,
                             bar_paramcd,
                             bar_var,
                             bar_color_var,
                             sort_var,
-                            add_label_var_sl,
-                            add_label_paramcd_rs,
                             anno_txt_var_sl,
                             anno_txt_paramcd_rs,
                             facet_var,
+                            add_label_var_sl,
+                            add_label_paramcd_rs,
+                            parent_dataname,
+                            dataname_tr,
+                            dataname_rs,
                             bar_color_opt,
+                            label,
                             plot_height,
                             plot_width) {
   checkmate::assert_class(data, "reactive")
-  checkmate::assert_class(isolate(data()), "teal_data")
+  checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
 
-    picks_inputs <- Filter(
-      Negate(is.null),
-      list(
-        bar_paramcd = bar_paramcd,
-        bar_var = bar_var,
-        bar_color_var = bar_color_var,
-        sort_var = sort_var,
-        add_label_var_sl = add_label_var_sl,
-        add_label_paramcd_rs = add_label_paramcd_rs,
-        anno_txt_var_sl = anno_txt_var_sl,
-        anno_txt_paramcd_rs = anno_txt_paramcd_rs,
-        facet_var = facet_var
-      )
-    )
+    selectors <- teal.picks::picks_srv("", picks = list(
+      bar_paramcd = bar_paramcd,
+      bar_var = bar_var,
+      bar_color_var = bar_color_var,
+      sort_var = sort_var,
+      add_label_var_sl = add_label_var_sl,
+      add_label_paramcd_rs = add_label_paramcd_rs,
+      anno_txt_var_sl = anno_txt_var_sl,
+      anno_txt_paramcd_rs = anno_txt_paramcd_rs,
+      facet_var = facet_var
+    ), data = data)
 
-    selectors <- teal.picks::picks_srv(
-      id = "",
-      picks = picks_inputs,
-      data = data
-    )
+    validated_q <- reactive({
+      adsl <- data()[[parent_dataname]]
+      adtr <- data()[[dataname_tr]]
+      adrs <- data()[[dataname_rs]]
+
+      # validate(
+      #   teal::need_input(
+      #     "bar_var-variables-selected",
+      #     length(selectors$bar_var()$variables$selected) > 0,
+      #     "Bar height is required."
+      #   ),
+      #   teal::need_input(
+      #     "bar_paramcd-values-selected",
+      #     length(selectors$bar_paramcd()$values$selected) > 0,
+      #     "Tumor Burden Parameter is required."
+      #   ),
+      #   teal::need_input(
+      #     "bar_paramcd-values-selected",
+      #     all(selectors$bar_paramcd()$values$selected %in% data()[[dataname_tr]]$PARAMCD),
+      #     "All values of Tumor Burden Parameter must be elements of ADTR PARAMCD."
+      #   ),
+      #   teal::need_input(
+      #     "add_label_paramcd_rs-values-selected",
+      #     all(selectors$add_label_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
+      #     "All values of ADRS Label must be elements of ADRS PARAMCD."
+      #   ),
+      #   teal::need_input(
+      #     c("bar_paramcd-values-selected", "add_label_var_sl-variables-selected"),
+      #     length(selectors$add_label_var_sl()$variables$selected) == 0 ||
+      #       length(selectors$add_label_paramcd_rs()$values$selected) == 0,
+      #     "Only one of 'Add ADSL Label to Bars' and 'Add ADRS Label to Bars' can be selected."
+      #   ),
+      #   teal::need_input(
+      #     "anno_txt_paramcd_rs-values-selected",
+      #     all(selectors$anno_txt_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
+      #     "All values of Annotation Parameters must be elements of ADRS PARAMCD."
+      #   ),
+      #   teal::need_input(
+      #     "href_line",
+      #     all(!is.na(suppressWarnings(as_numeric_from_comma_sep_str(input$href_line)))),
+      #     "Horizontal Reference Line(s) are invalid."
+      #   ),
+      #   teal::need_input(
+      #     "ytick_at",
+      #     length(input$ytick_at) > 0L,
+      #     "Y-axis Interval is required."
+      #   ),
+      #   teal::need_input(
+      #     "ytick_at",
+      #     !is.na(suppressWarnings(as.numeric(input$ytick_at))) &&
+      #       checkmate::test_number(suppressWarnings(as.numeric(input$ytick_at)), lower = 1),
+      #     "Y-axis Interval must be a single positive number."
+      #   ),
+      #   teal::need_input(
+      #     "gap_point_val",
+      #     input$gap_point_val == "" ||
+      #       (!is.na(suppressWarnings(as.numeric(input$gap_point_val))) &&
+      #         checkmate::test_number(suppressWarnings(as.numeric(input$gap_point_val)), lower = 1)),
+      #     "Break High Bars must be a single positive number."
+      #   )
+      # )
+      data()
+    })
 
     output_q <- reactive({
-      obj <- data()
-      anl <- NULL # to avoid triggering NOTE on R CMD check
+      obj <- validated_q()
       teal.reporter::teal_card(obj) <-
         c(
           teal.reporter::teal_card(obj),
@@ -304,164 +469,106 @@ srv_g_waterfall <- function(id,
         )
       obj <- teal.code::eval_code(obj, "library(dplyr)")
 
-      adsl <- obj[["ADSL"]]
+      adsl <- obj[[parent_dataname]]
       adtr <- obj[[dataname_tr]]
       adrs <- obj[[dataname_rs]]
 
+      # validate data rows
       teal::validate_has_data(adsl, min_nrow = 2)
       teal::validate_has_data(adtr, min_nrow = 2)
       teal::validate_has_data(adrs, min_nrow = 2)
 
-      bar_var_name <- .waterfall_picks_selected_var(selectors$bar_var())
-      bar_paramcd_val <- .waterfall_picks_selected_values(selectors$bar_paramcd())
+      # get variables
+      bar_var_selected <- selectors$bar_var()$variables$selected
+      bar_paramcd_selected <- selectors$bar_paramcd()$values$selected
+      add_label_var_sl_selected <- selectors$add_label_var_sl()$variables$selected
+      add_label_paramcd_rs_selected <- selectors$add_label_paramcd_rs()$values$selected
+      anno_txt_var_sl_selected <- selectors$anno_txt_var_sl()$variables$selected
+      anno_txt_paramcd_rs_selected <- selectors$anno_txt_paramcd_rs()$values$selected
+      bar_color_var_selected <- selectors$bar_color_var()$variables$selected
+      sort_var_selected <- selectors$sort_var()$variables$selected
+      facet_var_selected <- selectors$facet_var()$variables$selected
 
-      validate(
-        need(length(bar_var_name) > 0L, "Please select a bar height variable."),
-        need(length(bar_paramcd_val) > 0L, "Please select a tumor burden parameter.")
-      )
+      ytick_at_selected <- input$ytick_at
+      href_line_selected <- input$href_line
+      gap_point_val_selected <- input$gap_point_val
+      show_value_selected <- input$show_value
+      href_line_selected <- suppressWarnings(as_numeric_from_comma_sep_str(href_line_selected))
 
-      bar_color_var_name <- if (!is.null(bar_color_var)) {
-        .waterfall_picks_selected_var(selectors$bar_color_var())
-      } else {
-        character()
-      }
-      sort_var_name <- if (!is.null(sort_var)) {
-        .waterfall_picks_selected_var(selectors$sort_var())
-      } else {
-        character()
-      }
-      add_label_var_sl_name <- if (!is.null(add_label_var_sl)) {
-        .waterfall_picks_selected_var(selectors$add_label_var_sl())
-      } else {
-        character()
-      }
-      add_label_paramcd_rs_val <- if (!is.null(add_label_paramcd_rs)) {
-        .waterfall_picks_selected_values(selectors$add_label_paramcd_rs())
-      } else {
-        character()
-      }
-      anno_txt_var_sl_name <- if (!is.null(anno_txt_var_sl)) {
-        .waterfall_picks_selected_var(selectors$anno_txt_var_sl())
-      } else {
-        character()
-      }
-      anno_txt_paramcd_rs_val <- if (!is.null(anno_txt_paramcd_rs)) {
-        .waterfall_picks_selected_values(selectors$anno_txt_paramcd_rs())
-      } else {
-        character()
-      }
-      facet_var_name <- if (!is.null(facet_var)) {
-        .waterfall_picks_selected_var(selectors$facet_var())
-      } else {
-        character()
-      }
-
-      bar_paramcd_one <- bar_paramcd_val[[1L]]
-      validate(
-        need(
-          bar_paramcd_one %in% adtr$PARAMCD,
-          "Tumor burden parameter must be an element of ADTR PARAMCD."
+      adsl_vars <- unique(
+        c(
+          "USUBJID", "STUDYID",
+          bar_color_var_selected,
+          sort_var_selected,
+          add_label_var_sl_selected,
+          anno_txt_var_sl_selected,
+          facet_var_selected
         )
       )
-      if (length(add_label_paramcd_rs_val) > 0L) {
-        validate(need(
-          all(add_label_paramcd_rs_val %in% adrs$PARAMCD),
-          "ADRS label must be an element of ADRS PARAMCD."
-        ))
-      }
-      if (length(add_label_var_sl_name) > 0L && length(add_label_paramcd_rs_val) > 0L) {
-        validate(need(FALSE, "Only one \"Label to Bars\" is allowed."))
-      }
-      if (length(anno_txt_paramcd_rs_val) > 0L) {
-        validate(need(
-          all(anno_txt_paramcd_rs_val %in% adrs$PARAMCD),
-          "Annotation parameters must be elements of ADRS PARAMCD."
-        ))
-      }
-
-      adsl_vars <- unique(c(
-        "USUBJID", "STUDYID",
-        bar_color_var_name, sort_var_name, add_label_var_sl_name, anno_txt_var_sl_name, facet_var_name
-      ))
-      adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", bar_var_name))
+      adtr_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", bar_var_selected))
       adrs_vars <- unique(c("USUBJID", "STUDYID", "PARAMCD", "AVALC"))
-      adrs_paramcd <- unique(c(add_label_paramcd_rs_val, anno_txt_paramcd_rs_val))
+      adrs_paramcd <- unique(c(add_label_paramcd_rs_selected, anno_txt_paramcd_rs_selected))
 
+      # validate data input
       teal::validate_has_variable(adsl, adsl_vars)
       teal::validate_has_variable(adrs, adrs_vars)
       teal::validate_has_variable(adtr, adtr_vars)
 
-      href_line <- suppressWarnings(as_numeric_from_comma_sep_str(input$href_line))
-      gap_point_val <- input$gap_point_val
-      ytick_at <- input$ytick_at
-      show_value <- input$show_value
-
-      validate(
-        need(
-          !is.na(suppressWarnings(as.numeric(ytick_at))) &&
-            checkmate::test_number(suppressWarnings(as.numeric(ytick_at)), lower = 1),
-          "Y-axis Interval must be a single positive number."
-        )
-      )
-      if (!is.null(gap_point_val) && nzchar(gap_point_val)) {
-        validate(need(
-          checkmate::test_number(suppressWarnings(as.numeric(gap_point_val)), lower = 1),
-          "Break High Bars must be a single positive number."
-        ))
-      }
-      if (!is.null(href_line) && anyNA(href_line)) {
-        validate(need(FALSE, "Horizontal Reference Line(s) are invalid."))
-      }
-
-      if (gap_point_val == "" || is.null(gap_point_val)) {
-        gap_point_val <- NULL
+      gap_point_val_selected <- if (gap_point_val_selected == "") {
+        NULL
       } else {
-        gap_point_val <- as.numeric(gap_point_val)
+        as.numeric(gap_point_val_selected)
       }
-      ytick_at <- as.numeric(ytick_at)
+      ytick_at_selected <- as.numeric(ytick_at_selected)
 
-      bar_color_var <- if (length(bar_color_var_name) > 0L) bar_color_var_name else NULL
-      sort_var <- if (length(sort_var_name) > 0L) sort_var_name else NULL
-      facet_var <- if (length(facet_var_name) > 0L) facet_var_name else NULL
-      add_label_var_sl <- if (length(add_label_var_sl_name) > 0L) add_label_var_sl_name else NULL
-      add_label_paramcd_rs <- if (length(add_label_paramcd_rs_val) > 0L) add_label_paramcd_rs_val else NULL
-      anno_txt_var_sl <- if (length(anno_txt_var_sl_name) > 0L) anno_txt_var_sl_name else NULL
-      anno_txt_paramcd_rs <- if (length(anno_txt_paramcd_rs_val) > 0L) anno_txt_paramcd_rs_val else NULL
+      bar_color_var_selected <- if (
+        !is.null(bar_color_var_selected) &&
+          bar_color_var_selected != "None" &&
+          bar_color_var_selected != ""
+      ) {
+        bar_color_var_selected
+      }
+      sort_var_selected <- if (!is.null(sort_var_selected) && sort_var_selected != "None" && sort_var_selected != "") {
+        sort_var_selected
+      }
 
-      q1 <- teal.code::eval_code(
-        obj,
-        code = bquote({
-          bar_var <- .(bar_var_name)
-          bar_color_var <- .(bar_color_var)
-          sort_var <- .(sort_var)
-          add_label_var_sl <- .(add_label_var_sl)
-          add_label_paramcd_rs <- .(add_label_paramcd_rs)
-          anno_txt_var_sl <- .(anno_txt_var_sl)
-          anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs)
-          facet_var <- .(facet_var)
-          href_line <- .(href_line)
-          gap_point_val <- .(gap_point_val)
-          show_value <- .(show_value)
-        })
-      )
+      facet_var_selected <- if (!is.null(facet_var_selected) && facet_var_selected != "None" && facet_var_selected != "") {
+        facet_var_selected
+      }
 
+      # write variables to qenv
+      q1 <- teal.code::eval_code(obj, bquote({
+        bar_var <- .(bar_var_selected)
+        bar_color_var <- .(bar_color_var_selected)
+        sort_var <- .(sort_var_selected)
+        add_label_var_sl <- .(add_label_var_sl_selected)
+        add_label_paramcd_rs <- .(add_label_paramcd_rs_selected)
+        anno_txt_var_sl <- .(anno_txt_var_sl_selected)
+        anno_txt_paramcd_rs <- .(anno_txt_paramcd_rs_selected)
+        facet_var <- .(facet_var_selected)
+        href_line <- .(href_line_selected)
+        gap_point_val <- .(gap_point_val_selected)
+        show_value <- .(show_value_selected)
+      }))
+
+      # data processing
       q1 <- teal.code::eval_code(
         q1,
         code = bquote({
-          adsl <- ADSL[, .(adsl_vars)]
+          adsl <- .(as.name(parent_dataname))[, .(adsl_vars)]
           adtr <- .(as.name(dataname_tr))[, .(adtr_vars)]
           adrs <- .(as.name(dataname_rs))[, .(adrs_vars)]
 
           bar_tr <- .(as.name(dataname_tr)) %>%
-            dplyr::filter(PARAMCD == .(bar_paramcd_one)) %>%
-            dplyr::select(USUBJID, .(as.name(bar_var))) %>%
+            dplyr::filter(PARAMCD == .(bar_paramcd_selected)) %>%
+            dplyr::select(USUBJID, .(as.name(bar_var_selected))) %>%
             dplyr::group_by(USUBJID) %>%
-            dplyr::slice(which.min(.(as.name(bar_var))))
+            dplyr::slice(which.min(.(as.name(bar_var_selected))))
           bar_data <- adsl %>% dplyr::inner_join(bar_tr, "USUBJID")
         })
       )
 
-      q1 <- if (length(adrs_paramcd) == 0L) {
+      q1 <- if (is.null(adrs_paramcd)) {
         teal.code::eval_code(
           q1,
           code = bquote({
@@ -480,76 +587,91 @@ srv_g_waterfall <- function(id,
 
         teal::validate_one_row_per_id(qq1[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
 
-        teal.code::eval_code(
-          qq1,
-          code = bquote({
-            rs_label <- rs_sub %>%
-              dplyr::select(USUBJID, PARAMCD, AVALC) %>%
-              tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
-            anl <- bar_data %>% dplyr::left_join(rs_label, by = c("USUBJID"))
-            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1))
-          })
-        )
+        within(qq1, {
+          rs_label <- rs_sub %>%
+            dplyr::select(USUBJID, PARAMCD, AVALC) %>%
+            tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
+          anl <- bar_data %>% dplyr::left_join(rs_label, by = c("USUBJID"))
+          anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1))
+        })
       }
+
+      # write plotting code to qenv
+      anl <- q1[["anl"]]
 
       teal.reporter::teal_card(q1) <-
         c(
           teal.reporter::teal_card(q1),
           "### Selected Options",
-          paste0("Tumor Burden Parameter: ", bar_paramcd_one, ".")
+          paste0("Tumor Burden Parameter: ", bar_paramcd_selected, ".")
         )
 
-      if (!is.null(facet_var)) {
+      if (!is.null(facet_var_selected)) {
         teal.reporter::teal_card(q1) <- c(
           teal.reporter::teal_card(q1),
-          paste0("Faceted by: ", paste(facet_var, collapse = ", "), ".")
+          paste0("Faceted by: ", paste(facet_var_selected, collapse = ", "), ".")
         )
       }
-      if (!is.null(sort_var)) {
+      if (!is.null(sort_var_selected)) {
         teal.reporter::teal_card(q1) <- c(
           teal.reporter::teal_card(q1),
-          paste0("Sorted by: ", paste(sort_var, collapse = ", "), ".")
+          paste0("Sorted by: ", paste(sort_var_selected, collapse = ", "), ".")
         )
       }
 
       teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 
-      teal.code::eval_code(
+      q1 <- teal.code::eval_code(
         q1,
         code = bquote({
           plot <- osprey::g_waterfall(
             bar_id = anl[["USUBJID"]],
             bar_height = anl[[bar_var]],
-            sort_by = .(if (length(sort_var) > 0) quote(anl[[sort_var]]) else NULL),
-            col_by = .(if (length(bar_color_var) > 0) quote(anl[[bar_color_var]]) else NULL),
-            bar_color_opt = .(if (length(bar_color_var) == 0) {
+            sort_by = .(if (length(sort_var_selected) > 0) {
+              quote(anl[[sort_var]])
+            } else {
               NULL
-            } else if (length(bar_color_var) > 0 & all(unique(anl[[bar_color_var]]) %in% names(bar_color_opt))) {
+            }),
+            col_by = .(if (length(bar_color_var_selected) > 0) {
+              quote(anl[[bar_color_var]])
+            } else {
+              NULL
+            }),
+            bar_color_opt = .(if (length(bar_color_var_selected) == 0) {
+              NULL
+            } else if (
+              length(bar_color_var_selected) > 0 &&
+                all(unique(anl[[bar_color_var_selected]]) %in% names(bar_color_opt))
+            ) {
               bar_color_opt
             } else {
               NULL
             }),
-            anno_txt = .(if (length(anno_txt_var_sl) == 0 & length(anno_txt_paramcd_rs) == 0) {
+            anno_txt = .(if (length(anno_txt_var_sl_selected) == 0 && length(anno_txt_paramcd_rs_selected) == 0) {
               NULL
-            } else if (length(anno_txt_var_sl) >= 1 & length(anno_txt_paramcd_rs) == 0) {
+            } else if (length(anno_txt_var_sl_selected) >= 1 & length(anno_txt_paramcd_rs_selected) == 0) {
               quote(data.frame(anl[anno_txt_var_sl]))
-            } else if (length(anno_txt_paramcd_rs) >= 1 & length(anno_txt_var_sl) == 0) {
+            } else if (length(anno_txt_paramcd_rs_selected) >= 1 & length(anno_txt_var_sl_selected) == 0) {
               quote(data.frame(anl[anno_txt_paramcd_rs]))
             } else {
               quote(cbind(anl[anno_txt_var_sl], anl[anno_txt_paramcd_rs]))
             }),
-            href_line = .(href_line),
-            facet_by = .(if (length(facet_var) > 0) quote(as.factor(anl[[facet_var]])) else NULL),
-            show_datavalue = .(show_value),
-            add_label = .(if (length(add_label_var_sl) > 0 & length(add_label_paramcd_rs) == 0) {
+            href_line = .(href_line_selected),
+            facet_by = .(if (length(facet_var_selected) > 0) {
+              quote(as.factor(anl[[facet_var]]))
+            } else {
+              NULL
+            }),
+            show_datavalue = .(show_value_selected),
+            add_label = .(if (length(add_label_var_sl_selected) > 0 & length(add_label_paramcd_rs_selected) == 0) {
               quote(anl[[add_label_var_sl]])
-            } else if (length(add_label_paramcd_rs) > 0 & length(add_label_var_sl) == 0) {
+            } else if (length(add_label_paramcd_rs_selected) > 0 & length(add_label_var_sl_selected) == 0) {
               quote(anl[[add_label_paramcd_rs]])
             } else {
               NULL
             }),
-            gap_point = .(gap_point_val),
-            ytick_at = .(ytick_at),
+            gap_point = .(gap_point_val_selected),
+            ytick_at = .(ytick_at_selected),
             y_label = "Tumor Burden Change from Baseline",
             title = "Waterfall Plot"
           )
@@ -559,6 +681,7 @@ srv_g_waterfall <- function(id,
 
     plot_r <- reactive(output_q()[["plot"]])
 
+    # Insert the plot into a plot_with_settings module from teal.widgets
     pws <- teal.widgets::plot_with_settings_srv(
       id = "waterfallplot",
       plot_r = plot_r,
