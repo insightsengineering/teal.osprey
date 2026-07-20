@@ -636,7 +636,7 @@ srv_g_patient_profile <- function(id,
                 )
               )
             ADAE <- qq[[ae_dataname]]
-            if (is.null(ADAE) | nrow(ADAE) == 0) {
+            if (is.null(ADAE) || nrow(ADAE) == 0) {
               empty_ae <- TRUE
             }
             qq
@@ -722,7 +722,7 @@ srv_g_patient_profile <- function(id,
             )
 
             ADCM <- qq[[cm_dataname]]
-            if (is.null(ADCM) | nrow(ADCM) == 0) {
+            if (is.null(ADCM) || nrow(ADCM) == 0) {
               empty_cm <- TRUE
             }
             qq
@@ -779,7 +779,7 @@ srv_g_patient_profile <- function(id,
               )
             )
             ADEX <- qq[[ex_dataname]]
-            if (is.null(ADEX) | nrow(ADEX) == 0) {
+            if (is.null(ADEX) || nrow(ADEX) == 0) {
               empty_ex <- TRUE
             }
             qq
@@ -827,7 +827,7 @@ srv_g_patient_profile <- function(id,
             )
 
             ADLB <- qq[[lb_dataname]]
-            if (is.null(ADLB) | nrow(ADLB) == 0) {
+            if (is.null(ADLB) || nrow(ADLB) == 0) {
               empty_lb <- TRUE
             }
             qq
