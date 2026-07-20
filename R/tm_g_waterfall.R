@@ -280,69 +280,6 @@ ui_g_waterfall <- function(id,
         teal.picks::picks_ui(ns("facet_var"), facet_var),
         helpText("from ", tags$code(parentname))
       ),
-
-      # teal.widgets::optionalSelectInput(
-      #   ns("bar_paramcd"),
-      #   "Tumor Burden Parameter",
-      #   multiple = FALSE
-      # ),
-      # teal.widgets::optionalSelectInput(
-      #   ns("bar_var"),
-      #   "Bar Height",
-      #   choices = get_choices(a$bar_var$choices),
-      #   selected = a$bar_var$selected,
-      #   multiple = FALSE,
-      #   label_help = helpText("Tumor change variable from ", tags$code("ADTR"))
-      # ),
-      # teal.widgets::optionalSelectInput(
-      #   ns("bar_color_var"),
-      #   "Bar Color",
-      #   choices = get_choices(a$bar_color_var$choices),
-      #   selected = a$bar_color_var$selected,
-      #   multiple = FALSE
-      # ),
-      # teal.widgets::optionalSelectInput(
-      #   ns("sort_var"),
-      #   "Sort by",
-      #   choices = get_choices(a$sort_var$choices),
-      #   selected = a$sort_var$selected,
-      #   multiple = FALSE,
-      #   label_help = helpText("from ", tags$code("ADSL"))
-      # ),
-      # teal.widgets::optionalSelectInput(
-      #   ns("add_label_var_sl"),
-      #   "Add ADSL Label to Bars",
-      #   choices = get_choices(a$add_label_var_sl$choices),
-      #   selected = a$add_label_var_sl$selected,
-      #   multiple = FALSE
-      # ),
-      # teal.widgets::optionalSelectInput(
-      #   ns("add_label_paramcd_rs"),
-      #   "Add ADRS Label to Bars",
-      #   multiple = FALSE
-      # ),
-      # teal.widgets::optionalSelectInput(
-      #   ns("anno_txt_var_sl"),
-      #   "Annotation Variables",
-      #   choices = get_choices(a$anno_txt_var_sl$choices),
-      #   selected = a$anno_txt_var_sl$selected,
-      #   multiple = TRUE,
-      #   label_help = helpText("from ", tags$code("ADSL"))
-      # ),
-      # teal.widgets::optionalSelectInput(
-      #   ns("anno_txt_paramcd_rs"),
-      #   "Annotation Parameters",
-      #   multiple = TRUE,
-      #   label_help = helpText("from ", tags$code("ADRS"))
-      # ),
-      # teal.widgets::optionalSelectInput(
-      #   ns("facet_var"),
-      #   "Facet by",
-      #   choices = get_choices(a$facet_var$choices),
-      #   selected = NULL,
-      #   multiple = FALSE,
-      #   label_help = helpText("from ", tags$code("ADSL"))
-      # ),
       checkboxInput(
         ns("show_value"),
         "Add Bar Height Value",
