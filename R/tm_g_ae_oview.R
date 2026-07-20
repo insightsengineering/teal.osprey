@@ -341,7 +341,7 @@ srv_g_ae_oview <- function(
           "flag_var_anl",
           length(flag_var_name) > 0,
           "A Flag Variable needs to be selected."
-          )
+        )
 
         validate_input(
           "arm_var",
