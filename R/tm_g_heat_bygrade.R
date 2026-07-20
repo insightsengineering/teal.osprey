@@ -91,7 +91,7 @@
 #'       ae_dataname = "ADAE",
 #'       cm_dataname = "ADCM",
 #'       id_var = variables(
-#'         choices = teal.picks::is_categorical(min.len = 2),
+#'         choices = is_categorical(min.len = 2),
 #'         selected = 1L
 #'       ),
 #'       visit_var = variables(
@@ -103,7 +103,7 @@
 #'         selected = 1L
 #'       ),
 #'       anno_var = variables(
-#'         choices = teal.picks::is_categorical(min.len = 2),
+#'         choices = is_categorical(min.len = 2),
 #'         selected = c("SEX", "COUNTRY"),
 #'         multiple = TRUE
 #'       ),
