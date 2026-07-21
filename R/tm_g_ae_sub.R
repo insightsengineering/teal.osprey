@@ -301,7 +301,11 @@ srv_g_ae_sub <- function(id,
           is.factor(ANL[[arm_var_name]]),
           "Arm Variable must be a factor variable, contact app developer."
         )
-        validate_input(c("arm_trt", "arm_ref"), input$arm_trt != input$arm_ref, "Treatment and reference should be different.")
+        validate_input(
+          c("arm_trt", "arm_ref"),
+          input$arm_trt != input$arm_ref,
+          "Treatment and reference should be different."
+        )
         sapply(group_var_name, function(x) {
           teal::validate_input(
             inputId = "group_var",
