@@ -408,9 +408,10 @@ srv_g_waterfall <- function(id,
         ),
         teal::need_input(
           "gap_point_val",
-          input$gap_point_val == "" ||
-            (!is.na(suppressWarnings(as.numeric(input$gap_point_val))) &&
-              checkmate::test_number(suppressWarnings(as.numeric(input$gap_point_val)), lower = 1)),
+          input$gap_point_val == "" || (
+            !is.na(suppressWarnings(as.numeric(input$gap_point_val))) &&
+              checkmate::test_number(suppressWarnings(as.numeric(input$gap_point_val)), lower = 1)
+          ),
           "Break High Bars must be a single positive number."
         )
       )
