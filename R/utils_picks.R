@@ -278,6 +278,9 @@ create_picks_helper <- function(datasets = NULL, x) {
 #' @param multiple optional (`logical(1)`) whether multiple values are allowed.
 #' If `NULL` (default), it is not validated and inferred from the length of `selected` in the
 #' `choices_selected` object.
+#' @param default_variable_name optional (`character(1)`) variable name to use if `x` is a bare `values` pick.
+#' @param add_values (`logical(1)`) whether to add a `values` pick if `x` is a bare `variables` pick.
+#' Default is `TRUE`.
 #'
 #' @keywords internal
 #' @noRd
