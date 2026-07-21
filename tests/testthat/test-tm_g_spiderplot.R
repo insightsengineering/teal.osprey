@@ -1,6 +1,6 @@
 paramcd_cs <- teal.transform::choices_selected(
-  choices = "SLDINV",
-  selected = "SLDINV"
+  choices = "PARAMCD",
+  selected = "PARAMCD"
 )
 
 x_var_cs <- teal.transform::choices_selected(
@@ -213,5 +213,76 @@ testthat::describe("tm_g_spiderplot module creation", {
       classes = "picks_delayed"
     )
     testthat::expect_s3_class(mod, "teal_module")
+  })
+
+  testthat::it("module using choices_selected works", {
+    mod <- suppressWarnings(
+      tm_g_spiderplot(
+        label = "Spider Plot",
+        dataname = "ADTR",
+        paramcd = paramcd_cs,
+        x_var = x_var_cs,
+        y_var = y_var_cs,
+        marker_var = marker_var_cs,
+        line_colorby_var = line_colorby_var_cs,
+        xfacet_var = xfacet_var_cs,
+        yfacet_var = yfacet_var_cs,
+        vref_line = "10, 37",
+        href_line = "-20, 0"
+      ),
+      classes = "picks_delayed"
+    )
+
+    data <- within(teal_data(), {
+      ADSL <- teal.data::rADSL
+      ADTR <- teal.data::rADTR
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE)
+        expect_no_error(session$returned())
+      }
+    )
+  })
+
+  testthat::it("module using picks works", {
+    mod <- suppressWarnings(
+      tm_g_spiderplot(
+        label = "Spider Plot",
+        dataname = "ADTR",
+        paramcd = paramcd_picks,
+        x_var = x_var_picks,
+        y_var = y_var_picks,
+        marker_var = marker_var_picks,
+        line_colorby_var = line_colorby_var_picks,
+        xfacet_var = xfacet_var_picks,
+        yfacet_var = yfacet_var_picks,
+        vref_line = "10, 37",
+        href_line = "-20, 0",
+        plot_height = c(600, 200, 2000)
+      ),
+      classes = "picks_delayed"
+    )
+
+    data <- within(teal_data(), {
+      ADSL <- teal.data::rADSL
+      ADTR <- teal.data::rADTR
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE)
+        expect_no_error(session$returned())
+      }
+    )
   })
 })
