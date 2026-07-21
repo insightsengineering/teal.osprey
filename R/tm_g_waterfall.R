@@ -388,7 +388,7 @@ srv_g_waterfall <- function(id,
         teal::need_input(
           "anno_txt_paramcd_rs-values-selected",
           all(selectors$anno_txt_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
-          "Annotation Parameters must be elements of ADRS PARAMCD"
+          "Annotation Parameters must be elements of ADRS PARAMCD."
         ),
         teal::need_input(
           "href_line",
