@@ -28,7 +28,7 @@ available in the list passed to the \code{data} argument of \code{\link[teal:ini
 analysis data used form arm_var in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{term_var}{Either a (\verb{[teal.picks::variables()]}) object or
+\item{term_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or
 a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object with all available choices
 and pre-selected option names that can be used to specify the term for events}
 

@@ -18,19 +18,19 @@
 #' argument of [teal::init()] \cr
 #' specify to `NA` if no concomitant medications data is available
 #' @param id_var Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`) unique subject ID variable
+#' `choices_selected` object or a ([`teal.picks::variables()`]) unique subject ID variable
 #' @param visit_var Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`) analysis visit variable
+#' `choices_selected` object or a ([`teal.picks::variables()`]) analysis visit variable
 #' @param ongo_var Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`) study ongoing status variable.
+#' `choices_selected` object or a ([`teal.picks::variables()`]) study ongoing status variable.
 #' This variable is a derived logical variable. Usually it can be derived from `EOSSTT`.
 #' @param anno_var Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`) annotation variable
+#' `choices_selected` object or a ([`teal.picks::variables()`]) annotation variable
 #' @param heat_var Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`) heatmap variable
+#' `choices_selected` object or a ([`teal.picks::variables()`]) heatmap variable
 #' @param cm_dataname (`character`) concomitant medications dataset name,
 #' @param conmed_var Either a ([`teal.transform::choices_selected`])
-#' `choices_selected` object or a (`[teal.picks::variables()]`) concomitant medications variable,
+#' `choices_selected` object or a ([`teal.picks::variables()`]) concomitant medications variable,
 #' specify to `NA` if no concomitant medications data is available
 #'
 #' @inherit argument_convention return

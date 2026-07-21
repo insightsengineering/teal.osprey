@@ -16,7 +16,7 @@ object with all available choices and the pre-selected option for variable
 names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
 details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
 
-\item{paramcd}{Either a (\verb{[teal.picks::variables()]}) or \code{choices_selected})\cr
+\item{paramcd}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) or \code{choices_selected})\cr
 variable value designating the studied parameter.}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr

@@ -29,7 +29,7 @@ names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices
 details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
 
 \item{flag_var_anl}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]})
+\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}})
 object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)}
 

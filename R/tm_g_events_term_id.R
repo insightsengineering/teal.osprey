@@ -7,7 +7,7 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param term_var Either a (`[teal.picks::variables()]`) object or
+#' @param term_var Either a ([`teal.picks::variables()`]) object or
 #' a ([`teal.transform::choices_selected`]) `choices_selected` object with all available choices
 #' and pre-selected option names that can be used to specify the term for events
 #' @param parent_dataname (`character(1)`)\cr
