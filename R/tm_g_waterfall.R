@@ -13,15 +13,15 @@
 #' be available in the list passed to the `data` argument of [teal::init()]
 #' @param dataname_rs (`character(1)`) response analysis data used in teal module to label response parameters, needs to
 #' be available in the list passed to the `data` argument of [teal::init()]
-#' @param bar_paramcd (`values` or `choices_selected`) parameter in tumor burden data that will be plotted as
+#' @param bar_paramcd ([teal.picks::values()] or `choices_selected`) parameter in tumor burden data that will be plotted as
 #' bar height.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::values()] instead.
-#' @param bar_var (`variables` or `choices_selected`) numeric variable from dataset to plot the bar height,
+#' @param bar_var ([teal.picks::variables()] or [teal.transform::choices_selected()]) numeric variable from dataset to plot the bar height,
 #' e.g., `PCHG`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
-#' @param bar_color_var (`variables` or `choices_selected`) color by variable (subject level), `None` corresponds
+#' @param bar_color_var ([teal.picks::variables()] or [teal.transform::choices_selected()]) color by variable (subject level), `None` corresponds
 #' to `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
@@ -29,28 +29,28 @@
 #' If not `NULL`, please make sure this contains all possible values for `bar_color_var` values,
 #' otherwise color will be assigned by `ggplot` default, please note that `NULL` needs to be specified
 #' in this case
-#' @param sort_var (`variables` or `choices_selected`) sort by variable (subject level), `None` corresponds
+#' @param sort_var ([teal.picks::variables()] or [teal.transform::choices_selected()]) sort by variable (subject level), `None` corresponds
 #' to `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
-#' @param add_label_var_sl (`variables` or `choices_selected`) add label to bars (subject level), `None`
+#' @param add_label_var_sl ([teal.picks::variables()] or [teal.transform::choices_selected()]) add label to bars (subject level), `None`
 #' corresponds to `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
-#' @param add_label_paramcd_rs (`values` or `choices_selected`) add label to bars (response dataset), `None`
+#' @param add_label_paramcd_rs ([teal.picks::values()] or [teal.transform::choices_selected()]) add label to bars (response dataset), `None`
 #' corresponds to `NULL`. At least one of `add_label_var_sl` and `add_label_paramcd_rs` needs
 #' to be `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::values()] instead.
-#' @param anno_txt_var_sl (`variables` or `choices_selected`) subject level variables to be displayed in the annotation
+#' @param anno_txt_var_sl ([teal.picks::variables()] or [teal.transform::choices_selected()]) subject level variables to be displayed in the annotation
 #' table, default is `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
-#' @param anno_txt_paramcd_rs (`values` or `choices_selected`) analysis dataset variables to be displayed in the
+#' @param anno_txt_paramcd_rs ([teal.picks::values()] or [teal.transform::choices_selected()]) analysis dataset variables to be displayed in the
 #' annotation table, default is `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::values()] instead.
-#' @param facet_var (`variables` or `choices_selected`) facet by variable (subject level), `None` corresponds to
+#' @param facet_var ([teal.picks::variables()] or [teal.transform::choices_selected()]) facet by variable (subject level), `None` corresponds to
 #' `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.

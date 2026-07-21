@@ -43,17 +43,17 @@ be available in the list passed to the \code{data} argument of \code{\link[teal:
 \item{dataname_rs}{(\code{character(1)}) response analysis data used in teal module to label response parameters, needs to
 be available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}}
 
-\item{bar_paramcd}{(\code{values} or \code{choices_selected}) parameter in tumor burden data that will be plotted as
+\item{bar_paramcd}{(\code{\link[teal.picks:values]{teal.picks::values()}} or \code{choices_selected}) parameter in tumor burden data that will be plotted as
 bar height.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:values]{teal.picks::values()}} instead.}
 
-\item{bar_var}{(\code{variables} or \code{choices_selected}) numeric variable from dataset to plot the bar height,
+\item{bar_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) numeric variable from dataset to plot the bar height,
 e.g., \code{PCHG}.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
 
-\item{bar_color_var}{(\code{variables} or \code{choices_selected}) color by variable (subject level), \code{None} corresponds
+\item{bar_color_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) color by variable (subject level), \code{None} corresponds
 to \code{NULL}.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
@@ -63,33 +63,33 @@ If not \code{NULL}, please make sure this contains all possible values for \code
 otherwise color will be assigned by \code{ggplot} default, please note that \code{NULL} needs to be specified
 in this case}
 
-\item{sort_var}{(\code{variables} or \code{choices_selected}) sort by variable (subject level), \code{None} corresponds
+\item{sort_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) sort by variable (subject level), \code{None} corresponds
 to \code{NULL}.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
 
-\item{add_label_var_sl}{(\code{variables} or \code{choices_selected}) add label to bars (subject level), \code{None}
+\item{add_label_var_sl}{(\code{\link[teal.picks:variables]{teal.picks::variables()}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) add label to bars (subject level), \code{None}
 corresponds to \code{NULL}.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
 
-\item{add_label_paramcd_rs}{(\code{values} or \code{choices_selected}) add label to bars (response dataset), \code{None}
+\item{add_label_paramcd_rs}{(\code{\link[teal.picks:values]{teal.picks::values()}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) add label to bars (response dataset), \code{None}
 corresponds to \code{NULL}. At least one of \code{add_label_var_sl} and \code{add_label_paramcd_rs} needs
 to be \code{NULL}.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:values]{teal.picks::values()}} instead.}
 
-\item{anno_txt_var_sl}{(\code{variables} or \code{choices_selected}) subject level variables to be displayed in the annotation
+\item{anno_txt_var_sl}{(\code{\link[teal.picks:variables]{teal.picks::variables()}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) subject level variables to be displayed in the annotation
 table, default is \code{NULL}.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
 
-\item{anno_txt_paramcd_rs}{(\code{values} or \code{choices_selected}) analysis dataset variables to be displayed in the
+\item{anno_txt_paramcd_rs}{(\code{\link[teal.picks:values]{teal.picks::values()}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) analysis dataset variables to be displayed in the
 annotation table, default is \code{NULL}.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:values]{teal.picks::values()}} instead.}
 
-\item{facet_var}{(\code{variables} or \code{choices_selected}) facet by variable (subject level), \code{None} corresponds to
+\item{facet_var}{(\code{\link[teal.picks:variables]{teal.picks::variables()}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) facet by variable (subject level), \code{None} corresponds to
 \code{NULL}.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
