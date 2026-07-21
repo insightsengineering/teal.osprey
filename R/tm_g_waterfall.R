@@ -377,7 +377,7 @@ srv_g_waterfall <- function(id,
         teal::need_input(
           "add_label_paramcd_rs-values-selected",
           all(selectors$add_label_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
-          "All values of ADRS Label must be elements of ADRS PARAMCD."
+          "ADRS Label must be an element of ADRS PARAMCD."
         ),
         teal::need_input(
           c("bar_paramcd-values-selected", "add_label_var_sl-variables-selected"),
@@ -388,7 +388,7 @@ srv_g_waterfall <- function(id,
         teal::need_input(
           "anno_txt_paramcd_rs-values-selected",
           all(selectors$anno_txt_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
-          "All values of Annotation Parameters must be elements of ADRS PARAMCD."
+          "Annotation Parameters must be elements of ADRS PARAMCD"
         ),
         teal::need_input(
           "href_line",
