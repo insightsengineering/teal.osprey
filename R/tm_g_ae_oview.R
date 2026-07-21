@@ -58,8 +58,7 @@
 #'       flag_var_anl = variables(
 #'         choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
 #'         selected = "AEREL1"
-#'       ),
-#'       plot_height = c(600, 200, 2000)
+#'       )
 #'     )
 #'   )
 #' )

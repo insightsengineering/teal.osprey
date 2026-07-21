@@ -114,8 +114,7 @@
 #'       conmed_var = variables(
 #'         choices = dplyr::starts_with("CMDECOD"),
 #'         selected = 1L
-#'       ),
-#'       plot_height = c(600L, 200L, 2000L)
+#'       )
 #'     )
 #'   )
 #' )

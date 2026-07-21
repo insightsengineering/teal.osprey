@@ -162,9 +162,7 @@ app <- init(
       sort_by_var = values(
         choices = c("count", "alphabetical"),
         selected = "count"
-      ),
-      legend_on = TRUE,
-      plot_height = c(600, 200, 2000)
+      )
     )
   )
 )

@@ -42,8 +42,7 @@
 #'         choices = c("SEX", "REGION1", "RACE"),
 #'         selected = c("SEX", "REGION1", "RACE"),
 #'         multiple = TRUE
-#'       ),
-#'       plot_height = c(600, 200, 2000)
+#'       )
 #'     )
 #'   )
 #' )
