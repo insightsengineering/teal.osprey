@@ -358,62 +358,62 @@ srv_g_waterfall <- function(id,
       adtr <- data()[[dataname_tr]]
       adrs <- data()[[dataname_rs]]
 
-      # validate(
-      #   teal::need_input(
-      #     "bar_var-variables-selected",
-      #     length(selectors$bar_var()$variables$selected) > 0,
-      #     "Bar height is required."
-      #   ),
-      #   teal::need_input(
-      #     "bar_paramcd-values-selected",
-      #     length(selectors$bar_paramcd()$values$selected) > 0,
-      #     "Tumor Burden Parameter is required."
-      #   ),
-      #   teal::need_input(
-      #     "bar_paramcd-values-selected",
-      #     all(selectors$bar_paramcd()$values$selected %in% data()[[dataname_tr]]$PARAMCD),
-      #     "All values of Tumor Burden Parameter must be elements of ADTR PARAMCD."
-      #   ),
-      #   teal::need_input(
-      #     "add_label_paramcd_rs-values-selected",
-      #     all(selectors$add_label_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
-      #     "All values of ADRS Label must be elements of ADRS PARAMCD."
-      #   ),
-      #   teal::need_input(
-      #     c("bar_paramcd-values-selected", "add_label_var_sl-variables-selected"),
-      #     length(selectors$add_label_var_sl()$variables$selected) == 0 ||
-      #       length(selectors$add_label_paramcd_rs()$values$selected) == 0,
-      #     "Only one of 'Add ADSL Label to Bars' and 'Add ADRS Label to Bars' can be selected."
-      #   ),
-      #   teal::need_input(
-      #     "anno_txt_paramcd_rs-values-selected",
-      #     all(selectors$anno_txt_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
-      #     "All values of Annotation Parameters must be elements of ADRS PARAMCD."
-      #   ),
-      #   teal::need_input(
-      #     "href_line",
-      #     all(!is.na(suppressWarnings(as_numeric_from_comma_sep_str(input$href_line)))),
-      #     "Horizontal Reference Line(s) are invalid."
-      #   ),
-      #   teal::need_input(
-      #     "ytick_at",
-      #     length(input$ytick_at) > 0L,
-      #     "Y-axis Interval is required."
-      #   ),
-      #   teal::need_input(
-      #     "ytick_at",
-      #     !is.na(suppressWarnings(as.numeric(input$ytick_at))) &&
-      #       checkmate::test_number(suppressWarnings(as.numeric(input$ytick_at)), lower = 1),
-      #     "Y-axis Interval must be a single positive number."
-      #   ),
-      #   teal::need_input(
-      #     "gap_point_val",
-      #     input$gap_point_val == "" ||
-      #       (!is.na(suppressWarnings(as.numeric(input$gap_point_val))) &&
-      #         checkmate::test_number(suppressWarnings(as.numeric(input$gap_point_val)), lower = 1)),
-      #     "Break High Bars must be a single positive number."
-      #   )
-      # )
+      validate(
+        teal::need_input(
+          "bar_var-variables-selected",
+          length(selectors$bar_var()$variables$selected) > 0,
+          "Bar height is required."
+        ),
+        teal::need_input(
+          "bar_paramcd-values-selected",
+          length(selectors$bar_paramcd()$values$selected) > 0,
+          "Tumor Burden Parameter is required."
+        ),
+        teal::need_input(
+          "bar_paramcd-values-selected",
+          all(selectors$bar_paramcd()$values$selected %in% data()[[dataname_tr]]$PARAMCD),
+          "All values of Tumor Burden Parameter must be elements of ADTR PARAMCD."
+        ),
+        teal::need_input(
+          "add_label_paramcd_rs-values-selected",
+          all(selectors$add_label_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
+          "All values of ADRS Label must be elements of ADRS PARAMCD."
+        ),
+        teal::need_input(
+          c("bar_paramcd-values-selected", "add_label_var_sl-variables-selected"),
+          length(selectors$add_label_var_sl()$variables$selected) == 0 ||
+            length(selectors$add_label_paramcd_rs()$values$selected) == 0,
+          "Only one of 'Add ADSL Label to Bars' and 'Add ADRS Label to Bars' can be selected."
+        ),
+        teal::need_input(
+          "anno_txt_paramcd_rs-values-selected",
+          all(selectors$anno_txt_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
+          "All values of Annotation Parameters must be elements of ADRS PARAMCD."
+        ),
+        teal::need_input(
+          "href_line",
+          all(!is.na(suppressWarnings(as_numeric_from_comma_sep_str(input$href_line)))),
+          "Horizontal Reference Line(s) are invalid."
+        ),
+        teal::need_input(
+          "ytick_at",
+          length(input$ytick_at) > 0L,
+          "Y-axis Interval is required."
+        ),
+        teal::need_input(
+          "ytick_at",
+          !is.na(suppressWarnings(as.numeric(input$ytick_at))) &&
+            checkmate::test_number(suppressWarnings(as.numeric(input$ytick_at)), lower = 1),
+          "Y-axis Interval must be a single positive number."
+        ),
+        teal::need_input(
+          "gap_point_val",
+          input$gap_point_val == "" ||
+            (!is.na(suppressWarnings(as.numeric(input$gap_point_val))) &&
+              checkmate::test_number(suppressWarnings(as.numeric(input$gap_point_val)), lower = 1)),
+          "Break High Bars must be a single positive number."
+        )
+      )
       data()
     })
 
