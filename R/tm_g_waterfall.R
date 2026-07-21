@@ -13,51 +13,51 @@
 #' be available in the list passed to the `data` argument of [teal::init()]
 #' @param dataname_rs (`character(1)`) response analysis data used in teal module to label response parameters, needs to
 #' be available in the list passed to the `data` argument of [teal::init()]
-#' @param bar_paramcd ([teal.picks::values()] or `choices_selected`) parameter in tumor burden data that will be plotted as
-#' bar height.
+#' @param bar_paramcd ([teal.picks::values()] or `choices_selected`)
+#' parameter in tumor burden data that will be plotted as bar height.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::values()] instead.
-#' @param bar_var ([teal.picks::variables()] or [teal.transform::choices_selected()]) numeric variable from dataset to plot the bar height,
-#' e.g., `PCHG`.
+#' @param bar_var ([teal.picks::variables()] or [teal.transform::choices_selected()])
+#' numeric variable from dataset to plot the bar height, e.g., `PCHG`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
-#' @param bar_color_var ([teal.picks::variables()] or [teal.transform::choices_selected()]) color by variable (subject level), `None` corresponds
-#' to `NULL`.
+#' @param bar_color_var ([teal.picks::variables()] or [teal.transform::choices_selected()])
+#' color by variable (subject level), `None` corresponds to `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
 #' @param bar_color_opt aesthetic values to map color values (named vector to map color values to each name).
 #' If not `NULL`, please make sure this contains all possible values for `bar_color_var` values,
 #' otherwise color will be assigned by `ggplot` default, please note that `NULL` needs to be specified
 #' in this case
-#' @param sort_var ([teal.picks::variables()] or [teal.transform::choices_selected()]) sort by variable (subject level), `None` corresponds
-#' to `NULL`.
+#' @param sort_var ([teal.picks::variables()] or [teal.transform::choices_selected()])
+#' sort by variable (subject level), `None` corresponds to `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
-#' @param add_label_var_sl ([teal.picks::variables()] or [teal.transform::choices_selected()]) add label to bars (subject level), `None`
-#' corresponds to `NULL`.
+#' @param add_label_var_sl ([teal.picks::variables()] or [teal.transform::choices_selected()])
+#' add label to bars (subject level), `None` corresponds to `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
-#' @param add_label_paramcd_rs ([teal.picks::values()] or [teal.transform::choices_selected()]) add label to bars (response dataset), `None`
-#' corresponds to `NULL`. At least one of `add_label_var_sl` and `add_label_paramcd_rs` needs
-#' to be `NULL`.
+#' @param add_label_paramcd_rs ([teal.picks::values()] or [teal.transform::choices_selected()])
+#' add label to bars (response dataset), `None` corresponds to `NULL`.
+#' At least one of `add_label_var_sl` and `add_label_paramcd_rs` needs to be `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::values()] instead.
-#' @param anno_txt_var_sl ([teal.picks::variables()] or [teal.transform::choices_selected()]) subject level variables to be displayed in the annotation
-#' table, default is `NULL`.
+#' @param anno_txt_var_sl ([teal.picks::variables()] or [teal.transform::choices_selected()])
+#' subject level variables to be displayed in the annotation table, default is `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
-#' @param anno_txt_paramcd_rs ([teal.picks::values()] or [teal.transform::choices_selected()]) analysis dataset variables to be displayed in the
-#' annotation table, default is `NULL`.
+#' @param anno_txt_paramcd_rs ([teal.picks::values()] or [teal.transform::choices_selected()])
+#' analysis dataset variables to be displayed in the annotation table, default is `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::values()] instead.
-#' @param facet_var ([teal.picks::variables()] or [teal.transform::choices_selected()]) facet by variable (subject level), `None` corresponds to
-#' `NULL`.
+#' @param facet_var ([teal.picks::variables()] or [teal.transform::choices_selected()])
+#' facet by variable (subject level), `None` corresponds to `NULL`.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
 #' @param ytick_at (`numeric(1)`) bar height axis interval, default is 20
 #' @param href_line (`numeric`) numeric vector to plot horizontal reference lines, default is `NULL`
-#' @param gap_point_val (`numeric(1)`) singular numeric value for adding bar break when some bars are significantly higher
-#' than others, default is `NULL`
+#' @param gap_point_val (`numeric(1)`) singular numeric value for adding bar break when some bars
+#' are significantly higher than others, default is `NULL`
 #' @param show_value (`logical(1)`) boolean of whether value of bar height is shown, default is `TRUE`
 #'
 #' @inherit argument_convention return
@@ -485,11 +485,15 @@ srv_g_waterfall <- function(id,
       ) {
         bar_color_var_selected
       }
-      sort_var_selected <- if (!is.null(sort_var_selected) && sort_var_selected != "None" && sort_var_selected != "") {
+      sort_var_selected <- if (
+        !is.null(sort_var_selected) && sort_var_selected != "None" && sort_var_selected != ""
+      ) {
         sort_var_selected
       }
 
-      facet_var_selected <- if (!is.null(facet_var_selected) && facet_var_selected != "None" && facet_var_selected != "") {
+      facet_var_selected <- if (
+        !is.null(facet_var_selected) && facet_var_selected != "None" && facet_var_selected != ""
+      ) {
         facet_var_selected
       }
 
