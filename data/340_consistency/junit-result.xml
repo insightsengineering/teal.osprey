@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="shinytest2-tm_g_events_term_id" timestamp="2026-07-21T09:49:59Z" hostname="ec33097dada4" tests="5" skipped="5" failures="0" errors="0" time="0.109">
-    <testcase time="0.017" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_initializes_and_renders_a_plot">
+  <testsuite name="shinytest2-tm_g_events_term_id" timestamp="2026-07-21T12:57:47Z" hostname="3dd1f7ea70d9" tests="5" skipped="5" failures="0" errors="0" time="0.193">
+    <testcase time="0.032" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_initializes_and_renders_a_plot">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:34:3')"/>
     </testcase>
-    <testcase time="0.028" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_starts_with_expected_label_and_encoding_selections.">
+    <testcase time="0.0519999999999998" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_starts_with_expected_label_and_encoding_selections.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:54:5')"/>
     </testcase>
-    <testcase time="0.05" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_changing_term_var_changes_the_plot_and_does_not_throw_validation_errors.">
+    <testcase time="0.0830000000000002" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_changing_term_var_changes_the_plot_and_does_not_throw_validation_errors.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:80:5')"/>
     </testcase>
-    <testcase time="0.00700000000000001" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_deselection_of_term_var_throws_validation_error.">
+    <testcase time="0.0129999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_deselection_of_term_var_throws_validation_error.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:97:3')"/>
     </testcase>
-    <testcase time="0.0069999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_sort_updates_title">
+    <testcase time="0.0130000000000001" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_sort_updates_title">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:107:3')"/>
     </testcase>
   </testsuite>
-  <testsuite name="tm_g_ae_oview" timestamp="2026-07-21T09:49:59Z" hostname="ec33097dada4" tests="9" skipped="0" failures="0" errors="0" time="0.087">
-    <testcase time="0.019" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_neither_picks_or_choices_selected"/>
-    <testcase time="0.0180000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected">
+  <testsuite name="tm_g_ae_oview" timestamp="2026-07-21T12:57:47Z" hostname="3dd1f7ea70d9" tests="9" skipped="0" failures="0" errors="0" time="0.167">
+    <testcase time="0.0359999999999998" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_neither_picks_or_choices_selected"/>
+    <testcase time="0.0350000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected">
       <system-out>`arm_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -34,8 +34,8 @@ Backtrace:
  6. └─teal.osprey::tm_g_ae_oview(...)
  7.   └─teal.osprey:::migrate_choices_selected_to_variables(arm_var)</system-out>
     </testcase>
-    <testcase time="0.0089999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected"/>
-    <testcase time="0.0110000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.016" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected"/>
+    <testcase time="0.022" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>`flag_var_anl` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -44,15 +44,6 @@ Backtrace:
     ▆
  1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:49:5
  2.   └─teal.osprey:::migrate_choices_selected_to_variables(flag_var_anl)</system-out>
-    </testcase>
-    <testcase time="0.00599999999999978" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
-      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
-Backtrace:
-    ▆
- 1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:49:5
- 2.   └─teal.osprey:::create_picks_helper(...)
- 3.     └─teal.picks::picks(datasets, x)
- 4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
     <testcase time="0.012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
@@ -63,8 +54,17 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.004" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.00500000000000012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks">
+    <testcase time="0.0209999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
+Backtrace:
+    ▆
+ 1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:49:5
+ 2.   └─teal.osprey:::create_picks_helper(...)
+ 3.     └─teal.picks::picks(datasets, x)
+ 4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
+    </testcase>
+    <testcase time="0.0089999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.00900000000000012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -73,10 +73,10 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00299999999999989" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.0069999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
   </testsuite>
-  <testsuite name="tm_g_ae_sub" timestamp="2026-07-21T09:49:59Z" hostname="ec33097dada4" tests="5" skipped="0" failures="0" errors="0" time="0.042">
-    <testcase time="0.0190000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation">
+  <testsuite name="tm_g_ae_sub" timestamp="2026-07-21T12:57:47Z" hostname="3dd1f7ea70d9" tests="7" skipped="0" failures="0" errors="1" time="2.893">
+    <testcase time="0.0370000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation">
       <system-out>`group_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -93,13 +93,52 @@ Backtrace:
  8. └─teal.osprey::tm_g_ae_sub(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(group_var)</system-out>
     </testcase>
-    <testcase time="0.00800000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.0069999999999999" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.00500000000000012" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.00299999999999989" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.0189999999999999" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.00900000000000012" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0089999999999999" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.00600000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.0549999999999999" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_choices_selected_works">
+      <error type="error" message="Error in `(function (id, data, dataname, label, arm_var, group_var, plot_height, plot_width, fontsize)  {     checkmate::assert_class(data, &quot;reactive&quot;)     checkmate::assert_class(shiny::isolate(data()), &quot;teal_data&quot;)     moduleServer(id, function(input, output, session) {         teal.logger::log_shiny_input_changes(input, namespace = &quot;teal.osprey&quot;)         picks_list &lt;- list(arm_var = arm_var, group_var = group_var)         selectors &lt;- teal.picks::picks_srv(picks = picks_list, data = data)         validated_q &lt;- reactive({             obj &lt;- req(data())             teal::validate_input(inputId = &quot;arm_var-variables-selected&quot;, condition = !is.null(selectors$arm_var()$variables$selected), message = &quot;Please select an arm variable.&quot;)             teal::validate_input(inputId = &quot;group_var-variables-selected&quot;, condition = !is.null(selectors$group_var()$variables$selected), message = &quot;Please select an group variable.&quot;)             obj         })         merged &lt;- teal.picks::merge_srv(&quot;merge&quot;, data = validated_q, selectors = selectors, output_name = &quot;ANL&quot;)         observeEvent(merged$variables(), ignoreNULL = TRUE, {             ANL &lt;- merged$data()[[dataname]]             anl_val &lt;- ANL[[merged$variables()$arm_var]]             choices &lt;- levels(anl_val)             if (length(choices) == 1) {                 ref_index &lt;- 1             }             else {                 ref_index &lt;- 2             }             updateSelectInput(session, &quot;arm_trt&quot;, selected = choices[1], choices = choices)             updateSelectInput(session, &quot;arm_ref&quot;, selected = choices[ref_index], choices = choices)         })         observeEvent(list(input$ci, input$conf_level, input$arm_trt, input$arm_ref), {             diff_ci_method &lt;- input$ci             conf_level &lt;- input$conf_level             trt &lt;- input$arm_trt             ref &lt;- input$arm_ref             teal::validate_input(c(&quot;arm_trt&quot;, &quot;arm_ref&quot;), trt != ref, &quot;Treatment and reference should be different.&quot;)             teal::validate_input(&quot;ci&quot;, !is.null(diff_ci_method), &quot;There should be a CI method set.&quot;)             updateTextAreaInput(session, &quot;foot&quot;, value = sprintf(&quot;Note: %d%% CI is calculated using %s\nTRT: %s; CONT: %s&quot;, round(conf_level * 100), name_ci(diff_ci_method), trt, ref))         })         plot_r &lt;- reactive(output_q()[[&quot;plot&quot;]])         decorate_output &lt;- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width)         font_size &lt;- decorate_output$font_size         pws &lt;- decorate_output$pws         output_q &lt;- shiny::debounce(millis = 200, r = reactive({             qenv &lt;- merged$data()             teal.reporter::teal_card(qenv) &lt;- c(teal.reporter::teal_card(qenv), teal.reporter::teal_card(&quot;## Module's output(s)&quot;))             qenv &lt;- teal.code::eval_code(qenv, &quot;library(dplyr)&quot;)             ANL &lt;- qenv[[&quot;ANL&quot;]]             ADSL &lt;- qenv[[&quot;ADSL&quot;]]             arm_var_name &lt;- selectors$arm_var()$variables$selected             group_var_name &lt;- selectors$group_var()$variables$selected             teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf(&quot;%s has not enough data&quot;, dataname))             validate_input(&quot;group_var&quot;, length(group_var_name) &gt; 0L, &quot;Group variable is required.&quot;)             validate_input(&quot;arm_var&quot;, length(arm_var_name) == 1L, &quot;Arm Variable is required.&quot;)             validate_input(&quot;arm_var&quot;, is.factor(ANL[[arm_var_name]]), &quot;Arm Variable must be a factor variable, contact app developer.&quot;)             validate_input(c(&quot;arm_trt&quot;, &quot;arm_ref&quot;), input$arm_trt != input$arm_ref, &quot;Treatment and reference should be different.&quot;)             sapply(group_var_name, function(x) {                 teal::validate_input(inputId = &quot;group_var&quot;, condition = is.factor(ANL[[x]]), message = sprintf(&quot;Group variable '%s' must be a factor variable.&quot;, x))             })             validate_input(c(&quot;arm_trt&quot;, &quot;arm_ref&quot;), input$arm_trt %in% ANL[[arm_var_name]] &amp;&amp; input$arm_ref %in% ANL[[arm_var_name]], &quot;Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?&quot;)             teal::validate_input(&quot;arm_var&quot;, length(ANL[[arm_var_name]]) == length(ANL$USUBJID), &quot;length of id and arm are identical&quot;)             q1 &lt;- within(qenv, {                 var_names &lt;- group_var_name                 subgroups_levels &lt;- lapply(var_names, function(x) {                   lvl &lt;- levels(ANL[[x]])                   l &lt;- append(as.list(lvl), x, 0L)                   names(l) &lt;- c(&quot;Total&quot;, lvl)                   l                 })                 names(subgroups_levels) &lt;- var_names             }, group_var_name = group_var_name)             teal.reporter::teal_card(q1) &lt;- c(teal.reporter::teal_card(q1), &quot;### Plot&quot;)             arm_n &lt;- NULL             q2 &lt;- within(q1, {                 plot &lt;- osprey::g_ae_sub(id = ANL$USUBJID, arm = ANL[[arm_var_name]], arm_sl = as.character(ANL[[arm_var_name]]), trt = trt, ref = ref, subgroups = ANL[group_var_name], subgroups_sl = ANL[group_var_name], subgroups_levels = subgroups_levels, conf_level = conf_level, diff_ci_method = diff_ci_method, fontsize = fontsize, arm_n = arm_n, draw = TRUE)             }, dataname = as.name(&quot;ANL$USUBJID&quot;), trt = input$arm_trt, ref = input$arm_ref, conf_level = input$conf_level, diff_ci_method = input$ci, group_var_name = group_var_name, arm_var_name = arm_var_name, arm_n = input$arm_n, fontsize = font_size())         }))         set_chunk_dims(pws, output_q)     }) })(id = &quot;test_id&quot;, data = structure(function ()  {     if (.destroyed)          stop(destroyedReactiveError(.label))     .dependents$register()     if (.invalidated || .running) {         ..stacktraceoff..(self$.updateValue())     }     if (.error) {         stop(.value)     }     if (.visible)          .value     else invisible(.value) }, observable = &lt;environment&gt;, cacheHint = list(userExpr = {     data }), class = c(&quot;reactiveExpr&quot;, &quot;reactive&quot;, &quot;function&quot;)), label = &quot;subgroups Plot&quot;, dataname = &quot;ADAE&quot;, arm_var = structure(list(datasets = structure(list(choices = &quot;ADAE&quot;, selected = ~1L), multiple = FALSE, ordered = FALSE, fixed = TRUE, class = c(&quot;datasets&quot;, &quot;pick&quot;)), variables = structure(list(choices = c(&quot;ACTARMCD&quot;, &quot;ACTARM&quot;), selected = &quot;ACTARMCD&quot;), multiple = FALSE, ordered = FALSE, fixed = FALSE, &quot;`allow-clear`&quot; = FALSE, class = c(&quot;variables&quot;, &quot;pick&quot;))), class = c(&quot;picks&quot;, &quot;list&quot;)), group_var = structure(list(     datasets = structure(list(choices = &quot;ADAE&quot;, selected = ~1L), multiple = FALSE, ordered = FALSE, fixed = TRUE, class = c(&quot;datasets&quot;, &quot;pick&quot;)), variables = structure(list(choices = c(&quot;SEX&quot;, &quot;REGION1&quot;, &quot;RACE&quot;), selected = c(&quot;SEX&quot;, &quot;REGION1&quot;, &quot;RACE&quot;)), multiple = TRUE, ordered = FALSE, fixed = FALSE, &quot;`allow-clear`&quot; = TRUE, class = c(&quot;variables&quot;, &quot;pick&quot;))), class = c(&quot;picks&quot;, &quot;list&quot;)), plot_height = c(600L, 200L, 2000L), plot_width = NULL, fontsize = c(5, 3, 7))`: Assertion on 'shiny::isolate(data())' failed: Must inherit from class 'teal_data', but has class 'function'. ('test-tm_g_ae_sub.R:82:5')">Error in `(function (id, data, dataname, label, arm_var, group_var, plot_height, plot_width, fontsize)  {     checkmate::assert_class(data, "reactive")     checkmate::assert_class(shiny::isolate(data()), "teal_data")     moduleServer(id, function(input, output, session) {         teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")         picks_list &lt;- list(arm_var = arm_var, group_var = group_var)         selectors &lt;- teal.picks::picks_srv(picks = picks_list, data = data)         validated_q &lt;- reactive({             obj &lt;- req(data())             teal::validate_input(inputId = "arm_var-variables-selected", condition = !is.null(selectors$arm_var()$variables$selected), message = "Please select an arm variable.")             teal::validate_input(inputId = "group_var-variables-selected", condition = !is.null(selectors$group_var()$variables$selected), message = "Please select an group variable.")             obj         })         merged &lt;- teal.picks::merge_srv("merge", data = validated_q, selectors = selectors, output_name = "ANL")         observeEvent(merged$variables(), ignoreNULL = TRUE, {             ANL &lt;- merged$data()[[dataname]]             anl_val &lt;- ANL[[merged$variables()$arm_var]]             choices &lt;- levels(anl_val)             if (length(choices) == 1) {                 ref_index &lt;- 1             }             else {                 ref_index &lt;- 2             }             updateSelectInput(session, "arm_trt", selected = choices[1], choices = choices)             updateSelectInput(session, "arm_ref", selected = choices[ref_index], choices = choices)         })         observeEvent(list(input$ci, input$conf_level, input$arm_trt, input$arm_ref), {             diff_ci_method &lt;- input$ci             conf_level &lt;- input$conf_level             trt &lt;- input$arm_trt             ref &lt;- input$arm_ref             teal::validate_input(c("arm_trt", "arm_ref"), trt != ref, "Treatment and reference should be different.")             teal::validate_input("ci", !is.null(diff_ci_method), "There should be a CI method set.")             updateTextAreaInput(session, "foot", value = sprintf("Note: %d%% CI is calculated using %s\nTRT: %s; CONT: %s", round(conf_level * 100), name_ci(diff_ci_method), trt, ref))         })         plot_r &lt;- reactive(output_q()[["plot"]])         decorate_output &lt;- srv_g_decorate(id = NULL, plt = plot_r, plot_height = plot_height, plot_width = plot_width)         font_size &lt;- decorate_output$font_size         pws &lt;- decorate_output$pws         output_q &lt;- shiny::debounce(millis = 200, r = reactive({             qenv &lt;- merged$data()             teal.reporter::teal_card(qenv) &lt;- c(teal.reporter::teal_card(qenv), teal.reporter::teal_card("## Module's output(s)"))             qenv &lt;- teal.code::eval_code(qenv, "library(dplyr)")             ANL &lt;- qenv[["ANL"]]             ADSL &lt;- qenv[["ADSL"]]             arm_var_name &lt;- selectors$arm_var()$variables$selected             group_var_name &lt;- selectors$group_var()$variables$selected             teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))             validate_input("group_var", length(group_var_name) &gt; 0L, "Group variable is required.")             validate_input("arm_var", length(arm_var_name) == 1L, "Arm Variable is required.")             validate_input("arm_var", is.factor(ANL[[arm_var_name]]), "Arm Variable must be a factor variable, contact app developer.")             validate_input(c("arm_trt", "arm_ref"), input$arm_trt != input$arm_ref, "Treatment and reference should be different.")             sapply(group_var_name, function(x) {                 teal::validate_input(inputId = "group_var", condition = is.factor(ANL[[x]]), message = sprintf("Group variable '%s' must be a factor variable.", x))             })             validate_input(c("arm_trt", "arm_ref"), input$arm_trt %in% ANL[[arm_var_name]] &amp;&amp; input$arm_ref %in% ANL[[arm_var_name]], "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?")             teal::validate_input("arm_var", length(ANL[[arm_var_name]]) == length(ANL$USUBJID), "length of id and arm are identical")             q1 &lt;- within(qenv, {                 var_names &lt;- group_var_name                 subgroups_levels &lt;- lapply(var_names, function(x) {                   lvl &lt;- levels(ANL[[x]])                   l &lt;- append(as.list(lvl), x, 0L)                   names(l) &lt;- c("Total", lvl)                   l                 })                 names(subgroups_levels) &lt;- var_names             }, group_var_name = group_var_name)             teal.reporter::teal_card(q1) &lt;- c(teal.reporter::teal_card(q1), "### Plot")             arm_n &lt;- NULL             q2 &lt;- within(q1, {                 plot &lt;- osprey::g_ae_sub(id = ANL$USUBJID, arm = ANL[[arm_var_name]], arm_sl = as.character(ANL[[arm_var_name]]), trt = trt, ref = ref, subgroups = ANL[group_var_name], subgroups_sl = ANL[group_var_name], subgroups_levels = subgroups_levels, conf_level = conf_level, diff_ci_method = diff_ci_method, fontsize = fontsize, arm_n = arm_n, draw = TRUE)             }, dataname = as.name("ANL$USUBJID"), trt = input$arm_trt, ref = input$arm_ref, conf_level = input$conf_level, diff_ci_method = input$ci, group_var_name = group_var_name, arm_var_name = arm_var_name, arm_n = input$arm_n, fontsize = font_size())         }))         set_chunk_dims(pws, output_q)     }) })(id = "test_id", data = structure(function ()  {     if (.destroyed)          stop(destroyedReactiveError(.label))     .dependents$register()     if (.invalidated || .running) {         ..stacktraceoff..(self$.updateValue())     }     if (.error) {         stop(.value)     }     if (.visible)          .value     else invisible(.value) }, observable = &lt;environment&gt;, cacheHint = list(userExpr = {     data }), class = c("reactiveExpr", "reactive", "function")), label = "subgroups Plot", dataname = "ADAE", arm_var = structure(list(datasets = structure(list(choices = "ADAE", selected = ~1L), multiple = FALSE, ordered = FALSE, fixed = TRUE, class = c("datasets", "pick")), variables = structure(list(choices = c("ACTARMCD", "ACTARM"), selected = "ACTARMCD"), multiple = FALSE, ordered = FALSE, fixed = FALSE, "`allow-clear`" = FALSE, class = c("variables", "pick"))), class = c("picks", "list")), group_var = structure(list(     datasets = structure(list(choices = "ADAE", selected = ~1L), multiple = FALSE, ordered = FALSE, fixed = TRUE, class = c("datasets", "pick")), variables = structure(list(choices = c("SEX", "REGION1", "RACE"), selected = c("SEX", "REGION1", "RACE")), multiple = TRUE, ordered = FALSE, fixed = FALSE, "`allow-clear`" = TRUE, class = c("variables", "pick"))), class = c("picks", "list")), plot_height = c(600L, 200L, 2000L), plot_width = NULL, fontsize = c(5, 3, 7))`: Assertion on 'shiny::isolate(data())' failed: Must inherit from class 'teal_data', but has class 'function'.
+Backtrace:
+     ▆
+  1. ├─shiny::testServer(...) at test-tm_g_ae_sub.R:82:5
+  2. │ ├─shiny:::withMockContext(session, rlang::exec(app, !!!args))
+  3. │ │ ├─shiny::isolate(...)
+  4. │ │ │ ├─shiny::..stacktraceoff..(...)
+  5. │ │ │ └─ctx$run(...)
+  6. │ │ │   ├─promises::with_promise_domain(...)
+  7. │ │ │   │ └─domain$wrapSync(expr)
+  8. │ │ │   ├─shiny::withReactiveDomain(...)
+  9. │ │ │   │ └─promises::with_promise_domain(...)
+ 10. │ │ │   │   └─domain$wrapSync(expr)
+ 11. │ │ │   │     └─base::force(expr)
+ 12. │ │ │   ├─shiny:::with_otel_span_context(...)
+ 13. │ │ │   │ └─base::force(expr)
+ 14. │ │ │   ├─shiny::captureStackTraces(...)
+ 15. │ │ │   │ └─promises::with_promise_domain(...)
+ 16. │ │ │   │   └─domain$wrapSync(expr)
+ 17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 18. │ │ │   └─env$runWith(self, func)
+ 19. │ │ │     └─shiny (local) contextFunc()
+ 20. │ │ │       └─shiny::..stacktraceon..(expr)
+ 21. │ │ ├─shiny::withReactiveDomain(...)
+ 22. │ │ │ └─promises::with_promise_domain(...)
+ 23. │ │ │   └─domain$wrapSync(expr)
+ 24. │ │ │     └─base::force(expr)
+ 25. │ │ └─withr::with_options(...)
+ 26. │ │   └─base::force(code)
+ 27. │ ├─rlang::exec(app, !!!args)
+ 28. │ └─teal.osprey (local) `&lt;fn&gt;`(...)
+ 29. │   └─checkmate::assert_class(shiny::isolate(data()), "teal_data")
+ 30. │     └─checkmate::makeAssertion(x, res, .var.name, add)
+ 31. │       └─checkmate:::mstop(...)
+ 32. │         └─base::stop(simpleError(sprintf(msg, ...), call.))
+ 33. └─shiny (local) `&lt;fn&gt;`(`&lt;smplErrr&gt;`)</error>
+    </testcase>
+    <testcase time="2.758" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_picks_works"/>
   </testsuite>
-  <testsuite name="tm_g_butterfly" timestamp="2026-07-21T09:49:59Z" hostname="ec33097dada4" tests="11" skipped="0" failures="0" errors="0" time="0.105">
-    <testcase time="0.014" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+  <testsuite name="tm_g_butterfly" timestamp="2026-07-21T12:57:50Z" hostname="3dd1f7ea70d9" tests="11" skipped="0" failures="0" errors="0" time="0.648">
+    <testcase time="0.14" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`right_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -116,7 +155,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.014" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0259999999999998" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`left_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -133,7 +172,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.016" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0259999999999998" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`category_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -150,7 +189,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0130000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0270000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`color_by_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -167,7 +206,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0149999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0260000000000007" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`count_by_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::values()`. Support for legacy
   `teal.transform::choices_selected()` is deprecated.
@@ -183,15 +222,22 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_values(count_by_var)</system-out>
     </testcase>
-    <testcase time="0.0089999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.00500000000000012" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.00499999999999989" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.00300000000000011" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.0069999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.004" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.016" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0109999999999992" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.00900000000000034" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.00699999999999967" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0120000000000005" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.348" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_picks"/>
   </testsuite>
-  <testsuite name="tm_g_events_term_id" timestamp="2026-07-21T09:49:59Z" hostname="ec33097dada4" tests="9" skipped="0" failures="0" errors="0" time="0.035">
-    <testcase time="0.00900000000000012" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings">
+  <testsuite name="tm_g_decorate" timestamp="2026-07-21T12:57:50Z" hostname="3dd1f7ea70d9" tests="5" skipped="0" failures="0" errors="0" time="0.118">
+    <testcase time="0.11" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00199999999999978" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00100000000000033" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00299999999999923" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00200000000000067" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+  </testsuite>
+  <testsuite name="tm_g_events_term_id" timestamp="2026-07-21T12:57:51Z" hostname="3dd1f7ea70d9" tests="9" skipped="0" failures="0" errors="0" time="0.073">
+    <testcase time="0.0199999999999996" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -200,7 +246,7 @@ Backtrace:
  3. └─teal.picks::picks(...)
  4.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00499999999999989" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0110000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -209,28 +255,28 @@ Backtrace:
  3. └─teal.picks::picks(...)
  4.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00500000000000012" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00099999999999989" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.004" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection">
+    <testcase time="0.00900000000000034" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.00199999999999978" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.000999999999999446" classname="tm_g_events_term_id" name="tm_g_events_term_id_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.00800000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
  1. └─teal.picks::picks(...) at test-tm_g_events_term_id.R:31:3
  2.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00500000000000012" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection">
+    <testcase time="0.0100000000000007" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
  1. └─teal.picks::picks(...) at test-tm_g_events_term_id.R:39:3
  2.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.004" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
-    <testcase time="0.002" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
+    <testcase time="0.00800000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
+    <testcase time="0.00399999999999956" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
   </testsuite>
-  <testsuite name="tm_g_heat_bygrade" timestamp="2026-07-21T09:49:59Z" hostname="ec33097dada4" tests="15" skipped="0" failures="0" errors="0" time="0.211">
-    <testcase time="0.095" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+  <testsuite name="tm_g_heat_bygrade" timestamp="2026-07-21T12:57:51Z" hostname="3dd1f7ea70d9" tests="15" skipped="0" failures="0" errors="0" time="0.383">
+    <testcase time="0.161" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <system-out>`id_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -247,7 +293,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_heat_bygrade(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(id_var)</system-out>
     </testcase>
-    <testcase time="0.016" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0369999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <system-out>`visit_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -264,7 +310,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_heat_bygrade(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(visit_var)</system-out>
     </testcase>
-    <testcase time="0.014" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0259999999999998" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <system-out>`ongo_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -281,7 +327,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_heat_bygrade(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(ongo_var)</system-out>
     </testcase>
-    <testcase time="0.014" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0270000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <system-out>`anno_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -298,7 +344,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_heat_bygrade(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(anno_var)</system-out>
     </testcase>
-    <testcase time="0.0149999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0249999999999995" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <system-out>`heat_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -315,10 +361,10 @@ Backtrace:
  8. └─teal.osprey::tm_g_heat_bygrade(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(heat_var)</system-out>
     </testcase>
-    <testcase time="0.00900000000000012" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.00600000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.0069999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.014" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed">
+    <testcase time="0.0170000000000003" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0110000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0129999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.0250000000000004" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed">
       <system-out>`conmed_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -330,15 +376,15 @@ Backtrace:
  3. └─teal.osprey::tm_g_heat_bygrade(...)
  4.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.00600000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed"/>
-    <testcase time="0.004" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks"/>
-    <testcase time="0.004" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_with_conmed"/>
-    <testcase time="0.004" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
-    <testcase time="0.00099999999999989" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
-    <testcase time="0.002" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
+    <testcase time="0.0119999999999996" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed"/>
+    <testcase time="0.00800000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.00800000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_with_conmed"/>
+    <testcase time="0.00900000000000034" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
+    <testcase time="0.000999999999999446" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
+    <testcase time="0.00300000000000011" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
   </testsuite>
-  <testsuite name="tm_g_spiderplot" timestamp="2026-07-21T09:49:59Z" hostname="ec33097dada4" tests="13" skipped="0" failures="0" errors="0" time="0.145">
-    <testcase time="0.018" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+  <testsuite name="tm_g_spiderplot" timestamp="2026-07-21T12:57:51Z" hostname="3dd1f7ea70d9" tests="19" skipped="0" failures="0" errors="0" time="4.762">
+    <testcase time="0.032" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`paramcd` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -355,7 +401,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(paramcd)</system-out>
     </testcase>
-    <testcase time="0.0130000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0270000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`x_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -372,7 +418,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(x_var)</system-out>
     </testcase>
-    <testcase time="0.016" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0270000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`y_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -389,7 +435,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(y_var)</system-out>
     </testcase>
-    <testcase time="0.014" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0339999999999998" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`marker_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -406,7 +452,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(marker_var)</system-out>
     </testcase>
-    <testcase time="0.0149999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0259999999999998" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`line_colorby_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -423,7 +469,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(line_colorby_var)</system-out>
     </testcase>
-    <testcase time="0.014" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0260000000000007" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`xfacet_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -440,7 +486,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0129999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0269999999999992" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`yfacet_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -457,15 +503,819 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0110000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.0069999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.00700000000000012" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.004" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.0069999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
-    <testcase time="0.00600000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
+    <testcase time="0.0170000000000003" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0140000000000002" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0129999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.00800000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0149999999999997" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
+    <testcase time="0.00800000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
+    <testcase time="1.742" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works">
+      <system-out>Removed 799 rows containing missing values or values outside the scale range
+(`geom_line()`).
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_spiderplot.R:243:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. └─session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE) at test-tm_g_spiderplot.R:247:9
+  29.   └─self$setInputs(!!!mapNames(ns, rlang::dots_list(..., .homonyms = "error")))
+  30.     └─private$flush()
+  31.       └─shiny:::flushReact()
+  32.         └─.getReactiveEnvironment()$flush()
+  33.           └─ctx$executeFlushCallbacks()
+  34.             └─base::lapply(...)
+  35.               └─shiny (local) FUN(X[[i]], ...)
+  36.                 └─shiny (local) flushCallback()
+  37.                   ├─shiny:::hybrid_chain(...)
+  38.                   │ └─shiny (local) do()
+  39.                   │   ├─base::tryCatch(...)
+  40.                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  41.                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  42.                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  43.                   │   ├─shiny::captureStackTraces(...)
+  44.                   │   │ └─promises::with_promise_domain(...)
+  45.                   │   │   └─domain$wrapSync(expr)
+  46.                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  47.                   │   ├─base::withVisible(force(expr))
+  48.                   │   └─base::force(expr)
+  49.                   ├─shiny:::shinyCallingHandlers(run())
+  50.                   │ ├─base::withCallingHandlers(...)
+  51.                   │ └─shiny::captureStackTraces(expr)
+  52.                   │   └─promises::with_promise_domain(...)
+  53.                   │     └─domain$wrapSync(expr)
+  54.                   │       └─base::withCallingHandlers(expr, error = doCaptureStack)
+  55.                   └─shiny (local) run()
+  56.                     └─ctx$run(.func)
+  57.                       ├─promises::with_promise_domain(...)
+  58.                       │ └─domain$wrapSync(expr)
+  59.                       ├─shiny::withReactiveDomain(...)
+  60.                       │ └─promises::with_promise_domain(...)
+  61.                       │   └─domain$wrapSync(expr)
+  62.                       │     └─base::force(expr)
+  63.                       ├─shiny:::with_otel_span_context(...)
+  64.                       │ └─base::force(expr)
+  65.                       ├─shiny::captureStackTraces(...)
+  66.                       │ └─promises::with_promise_domain(...)
+  67.                       │   └─domain$wrapSync(expr)
+  68.                       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  69.                       └─env$runWith(self, func)
+  70.                         └─shiny (local) contextFunc()
+  71.                           ├─shiny::..stacktraceon..(`&lt;observer&gt;`(...))
+  72.                           └─shiny (local) `&lt;observer&gt;`(...)
+  73.                             └─shiny::observe()
+  74.                               ├─base::tryCatch(...)
+  75.                               │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  76.                               │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  77.                               │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  78.                               ├─private$withCurrentOutput(name, func(self, name))
+  79.                               │ └─promises::with_promise_domain(...)
+  80.                               │   └─domain$wrapSync(expr)
+  81.                               │     └─base::force(expr)
+  82.                               └─shiny (local) func(self, name)
+  83.                                 ├─shiny::..stacktraceoff..(if (is.null(formals(renderFunc))) renderFunc() else renderFunc(...))
+  84.                                 └─shiny (local) renderFunc(...)
+  85.                                   ├─shiny:::hybrid_chain(...)
+  86.                                   │ └─shiny (local) do()
+  87.                                   │   ├─base::tryCatch(...)
+  88.                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  89.                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  90.                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  91.                                   │   ├─shiny::captureStackTraces(...)
+  92.                                   │   │ └─promises::with_promise_domain(...)
+  93.                                   │   │   └─domain$wrapSync(expr)
+  94.                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  95.                                   │   ├─base::withVisible(force(expr))
+  96.                                   │   └─base::force(expr)
+  97.                                   └─shiny (local) drawReactive()
+  98.                                     ├─shiny::..stacktraceoff..(self$.updateValue())
+  99.                                     └─self$.updateValue()
+ 100.                                       └─ctx$run(...)
+ 101.                                         ├─promises::with_promise_domain(...)
+ 102.                                         │ └─domain$wrapSync(expr)
+ 103.                                         ├─shiny::withReactiveDomain(...)
+ 104.                                         │ └─promises::with_promise_domain(...)
+ 105.                                         │   └─domain$wrapSync(expr)
+ 106.                                         │     └─base::force(expr)
+ 107.                                         ├─shiny:::with_otel_span_context(...)
+ 108.                                         │ └─base::force(expr)
+ 109.                                         ├─shiny::captureStackTraces(...)
+ 110.                                         │ └─promises::with_promise_domain(...)
+ 111.                                         │   └─domain$wrapSync(expr)
+ 112.                                         │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 113.                                         └─env$runWith(self, func)
+ 114.                                           └─shiny (local) contextFunc()
+ 115.                                             ├─base::withCallingHandlers(...)
+ 116.                                             ├─base::withVisible(.func())
+ 117.                                             └─shiny (local) .func()
+ 118.                                               ├─shiny::..stacktraceon..(`&lt;reactive:plotObj&gt;`(...))
+ 119.                                               └─shiny (local) `&lt;reactive:plotObj&gt;`(...)
+ 120.                                                 ├─shiny:::hybrid_chain(...)
+ 121.                                                 │ └─shiny (local) do()
+ 122.                                                 │   ├─base::tryCatch(...)
+ 123.                                                 │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 124.                                                 │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 125.                                                 │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 126.                                                 │   ├─shiny::captureStackTraces(...)
+ 127.                                                 │   │ └─promises::with_promise_domain(...)
+ 128.                                                 │   │   └─domain$wrapSync(expr)
+ 129.                                                 │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 130.                                                 │   ├─base::withVisible(force(expr))
+ 131.                                                 │   └─base::force(expr)
+ 132.                                                 ├─base::do.call(...)
+ 133.                                                 └─shiny:::drawPlot(...)
+ 134.                                                   ├─shiny:::hybrid_chain(...)
+ 135.                                                   │ └─shiny (local) do()
+ 136.                                                   │   ├─base::tryCatch(...)
+ 137.                                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 138.                                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 139.                                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 140.                                                   │   ├─shiny::captureStackTraces(...)
+ 141.                                                   │   │ └─promises::with_promise_domain(...)
+ 142.                                                   │   │   └─domain$wrapSync(expr)
+ 143.                                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 144.                                                   │   ├─base::withVisible(force(expr))
+ 145.                                                   │   └─base::force(expr)
+ 146.                                                   ├─shiny:::hybrid_chain(...)
+ 147.                                                   │ └─shiny (local) do()
+ 148.                                                   │   ├─base::tryCatch(...)
+ 149.                                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 150.                                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 151.                                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 152.                                                   │   ├─shiny::captureStackTraces(...)
+ 153.                                                   │   │ └─promises::with_promise_domain(...)
+ 154.                                                   │   │   └─domain$wrapSync(expr)
+ 155.                                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 156.                                                   │   ├─base::withVisible(force(expr))
+ 157.                                                   │   └─base::force(expr)
+ 158.                                                   ├─promises::with_promise_domain(...)
+ 159.                                                   │ └─domain$wrapSync(expr)
+ 160.                                                   │   └─base::force(expr)
+ 161.                                                   └─shiny:::hybrid_chain(...)
+ 162.                                                     └─shiny (local) do()
+ 163.                                                       ├─base::tryCatch(...)
+ 164.                                                       │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 165.                                                       │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 166.                                                       │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 167.                                                       ├─shiny::captureStackTraces(...)
+ 168.                                                       │ └─promises::with_promise_domain(...)
+ 169.                                                       │   └─domain$wrapSync(expr)
+ 170.                                                       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 171.                                                       └─base::Reduce(...)
+ 172.                                                         └─shiny (local) f(init, x[[i]])
+ 173.                                                           ├─base::withVisible(func(v$value))
+ 174.                                                           └─shiny (local) func(v$value)
+ 175.                                                             ├─utils::capture.output(...)
+ 176.                                                             │ └─base::withVisible(...elt(i))
+ 177.                                                             ├─shiny::..stacktraceon..(print(res$value))
+ 178.                                                             ├─base::print(res$value)
+ 179.                                                             └─shiny (local) `print.ggplot2::ggplot`(res$value)
+ 180.                                                               ├─ggplot2::ggplot_gtable(build)
+ 181.                                                               └─ggplot2 (local) `ggplot_gtable.ggplot2::ggplot_built`(build)
+ 182.                                                                 └─ggplot2:::by_layer(...)
+ 183.                                                                   ├─rlang::try_fetch(...)
+ 184.                                                                   │ ├─base::tryCatch(...)
+ 185.                                                                   │ │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 186.                                                                   │ │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 187.                                                                   │ │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 188.                                                                   │ └─base::withCallingHandlers(...)
+ 189.                                                                   └─ggplot2 (local) f(l = layers[[i]], d = data[[i]])
+ 190.                                                                     └─l$draw_geom(d, layout)
+ 191.                                                                       └─ggplot2 (local) draw_geom(..., self = self)
+ 192.                                                                         └─self$geom$handle_na(data, self$computed_geom_params)
+ 193.                                                                           └─ggplot2 (local) handle_na(..., self = self)
+ 194.                                                                             └─cli::cli_warn(...)</system-out>
+    </testcase>
+    <testcase time="0.156000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works">
+      <system-out>Removed 800 rows containing missing values or values outside the scale range
+(`geom_point()`).
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_spiderplot.R:243:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. └─session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE) at test-tm_g_spiderplot.R:247:9
+  29.   └─self$setInputs(!!!mapNames(ns, rlang::dots_list(..., .homonyms = "error")))
+  30.     └─private$flush()
+  31.       └─shiny:::flushReact()
+  32.         └─.getReactiveEnvironment()$flush()
+  33.           └─ctx$executeFlushCallbacks()
+  34.             └─base::lapply(...)
+  35.               └─shiny (local) FUN(X[[i]], ...)
+  36.                 └─shiny (local) flushCallback()
+  37.                   ├─shiny:::hybrid_chain(...)
+  38.                   │ └─shiny (local) do()
+  39.                   │   ├─base::tryCatch(...)
+  40.                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  41.                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  42.                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  43.                   │   ├─shiny::captureStackTraces(...)
+  44.                   │   │ └─promises::with_promise_domain(...)
+  45.                   │   │   └─domain$wrapSync(expr)
+  46.                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  47.                   │   ├─base::withVisible(force(expr))
+  48.                   │   └─base::force(expr)
+  49.                   ├─shiny:::shinyCallingHandlers(run())
+  50.                   │ ├─base::withCallingHandlers(...)
+  51.                   │ └─shiny::captureStackTraces(expr)
+  52.                   │   └─promises::with_promise_domain(...)
+  53.                   │     └─domain$wrapSync(expr)
+  54.                   │       └─base::withCallingHandlers(expr, error = doCaptureStack)
+  55.                   └─shiny (local) run()
+  56.                     └─ctx$run(.func)
+  57.                       ├─promises::with_promise_domain(...)
+  58.                       │ └─domain$wrapSync(expr)
+  59.                       ├─shiny::withReactiveDomain(...)
+  60.                       │ └─promises::with_promise_domain(...)
+  61.                       │   └─domain$wrapSync(expr)
+  62.                       │     └─base::force(expr)
+  63.                       ├─shiny:::with_otel_span_context(...)
+  64.                       │ └─base::force(expr)
+  65.                       ├─shiny::captureStackTraces(...)
+  66.                       │ └─promises::with_promise_domain(...)
+  67.                       │   └─domain$wrapSync(expr)
+  68.                       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  69.                       └─env$runWith(self, func)
+  70.                         └─shiny (local) contextFunc()
+  71.                           ├─shiny::..stacktraceon..(`&lt;observer&gt;`(...))
+  72.                           └─shiny (local) `&lt;observer&gt;`(...)
+  73.                             └─shiny::observe()
+  74.                               ├─base::tryCatch(...)
+  75.                               │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  76.                               │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  77.                               │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  78.                               ├─private$withCurrentOutput(name, func(self, name))
+  79.                               │ └─promises::with_promise_domain(...)
+  80.                               │   └─domain$wrapSync(expr)
+  81.                               │     └─base::force(expr)
+  82.                               └─shiny (local) func(self, name)
+  83.                                 ├─shiny::..stacktraceoff..(if (is.null(formals(renderFunc))) renderFunc() else renderFunc(...))
+  84.                                 └─shiny (local) renderFunc(...)
+  85.                                   ├─shiny:::hybrid_chain(...)
+  86.                                   │ └─shiny (local) do()
+  87.                                   │   ├─base::tryCatch(...)
+  88.                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  89.                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  90.                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  91.                                   │   ├─shiny::captureStackTraces(...)
+  92.                                   │   │ └─promises::with_promise_domain(...)
+  93.                                   │   │   └─domain$wrapSync(expr)
+  94.                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  95.                                   │   ├─base::withVisible(force(expr))
+  96.                                   │   └─base::force(expr)
+  97.                                   └─shiny (local) drawReactive()
+  98.                                     ├─shiny::..stacktraceoff..(self$.updateValue())
+  99.                                     └─self$.updateValue()
+ 100.                                       └─ctx$run(...)
+ 101.                                         ├─promises::with_promise_domain(...)
+ 102.                                         │ └─domain$wrapSync(expr)
+ 103.                                         ├─shiny::withReactiveDomain(...)
+ 104.                                         │ └─promises::with_promise_domain(...)
+ 105.                                         │   └─domain$wrapSync(expr)
+ 106.                                         │     └─base::force(expr)
+ 107.                                         ├─shiny:::with_otel_span_context(...)
+ 108.                                         │ └─base::force(expr)
+ 109.                                         ├─shiny::captureStackTraces(...)
+ 110.                                         │ └─promises::with_promise_domain(...)
+ 111.                                         │   └─domain$wrapSync(expr)
+ 112.                                         │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 113.                                         └─env$runWith(self, func)
+ 114.                                           └─shiny (local) contextFunc()
+ 115.                                             ├─base::withCallingHandlers(...)
+ 116.                                             ├─base::withVisible(.func())
+ 117.                                             └─shiny (local) .func()
+ 118.                                               ├─shiny::..stacktraceon..(`&lt;reactive:plotObj&gt;`(...))
+ 119.                                               └─shiny (local) `&lt;reactive:plotObj&gt;`(...)
+ 120.                                                 ├─shiny:::hybrid_chain(...)
+ 121.                                                 │ └─shiny (local) do()
+ 122.                                                 │   ├─base::tryCatch(...)
+ 123.                                                 │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 124.                                                 │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 125.                                                 │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 126.                                                 │   ├─shiny::captureStackTraces(...)
+ 127.                                                 │   │ └─promises::with_promise_domain(...)
+ 128.                                                 │   │   └─domain$wrapSync(expr)
+ 129.                                                 │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 130.                                                 │   ├─base::withVisible(force(expr))
+ 131.                                                 │   └─base::force(expr)
+ 132.                                                 ├─base::do.call(...)
+ 133.                                                 └─shiny:::drawPlot(...)
+ 134.                                                   ├─shiny:::hybrid_chain(...)
+ 135.                                                   │ └─shiny (local) do()
+ 136.                                                   │   ├─base::tryCatch(...)
+ 137.                                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 138.                                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 139.                                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 140.                                                   │   ├─shiny::captureStackTraces(...)
+ 141.                                                   │   │ └─promises::with_promise_domain(...)
+ 142.                                                   │   │   └─domain$wrapSync(expr)
+ 143.                                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 144.                                                   │   ├─base::withVisible(force(expr))
+ 145.                                                   │   └─base::force(expr)
+ 146.                                                   ├─shiny:::hybrid_chain(...)
+ 147.                                                   │ └─shiny (local) do()
+ 148.                                                   │   ├─base::tryCatch(...)
+ 149.                                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 150.                                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 151.                                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 152.                                                   │   ├─shiny::captureStackTraces(...)
+ 153.                                                   │   │ └─promises::with_promise_domain(...)
+ 154.                                                   │   │   └─domain$wrapSync(expr)
+ 155.                                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 156.                                                   │   ├─base::withVisible(force(expr))
+ 157.                                                   │   └─base::force(expr)
+ 158.                                                   ├─promises::with_promise_domain(...)
+ 159.                                                   │ └─domain$wrapSync(expr)
+ 160.                                                   │   └─base::force(expr)
+ 161.                                                   └─shiny:::hybrid_chain(...)
+ 162.                                                     └─shiny (local) do()
+ 163.                                                       ├─base::tryCatch(...)
+ 164.                                                       │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 165.                                                       │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 166.                                                       │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 167.                                                       ├─shiny::captureStackTraces(...)
+ 168.                                                       │ └─promises::with_promise_domain(...)
+ 169.                                                       │   └─domain$wrapSync(expr)
+ 170.                                                       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 171.                                                       └─base::Reduce(...)
+ 172.                                                         └─shiny (local) f(init, x[[i]])
+ 173.                                                           ├─base::withVisible(func(v$value))
+ 174.                                                           └─shiny (local) func(v$value)
+ 175.                                                             ├─utils::capture.output(...)
+ 176.                                                             │ └─base::withVisible(...elt(i))
+ 177.                                                             ├─shiny::..stacktraceon..(print(res$value))
+ 178.                                                             ├─base::print(res$value)
+ 179.                                                             └─shiny (local) `print.ggplot2::ggplot`(res$value)
+ 180.                                                               ├─ggplot2::ggplot_gtable(build)
+ 181.                                                               └─ggplot2 (local) `ggplot_gtable.ggplot2::ggplot_built`(build)
+ 182.                                                                 └─ggplot2:::by_layer(...)
+ 183.                                                                   ├─rlang::try_fetch(...)
+ 184.                                                                   │ ├─base::tryCatch(...)
+ 185.                                                                   │ │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 186.                                                                   │ │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 187.                                                                   │ │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 188.                                                                   │ └─base::withCallingHandlers(...)
+ 189.                                                                   └─ggplot2 (local) f(l = layers[[i]], d = data[[i]])
+ 190.                                                                     └─l$draw_geom(d, layout)
+ 191.                                                                       └─ggplot2 (local) draw_geom(..., self = self)
+ 192.                                                                         └─self$geom$handle_na(data, self$computed_geom_params)
+ 193.                                                                           └─ggplot2 (local) handle_na(..., self = self)
+ 194.                                                                             └─ggplot2::remove_missing(...)
+ 195.                                                                               └─cli::cli_warn(msg)</system-out>
+    </testcase>
+    <testcase time="0.341999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works"/>
+    <testcase time="1.74" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works">
+      <system-out>Removed 799 rows containing missing values or values outside the scale range
+(`geom_line()`).
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_spiderplot.R:279:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. └─session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE) at test-tm_g_spiderplot.R:283:9
+  29.   └─self$setInputs(!!!mapNames(ns, rlang::dots_list(..., .homonyms = "error")))
+  30.     └─private$flush()
+  31.       └─shiny:::flushReact()
+  32.         └─.getReactiveEnvironment()$flush()
+  33.           └─ctx$executeFlushCallbacks()
+  34.             └─base::lapply(...)
+  35.               └─shiny (local) FUN(X[[i]], ...)
+  36.                 └─shiny (local) flushCallback()
+  37.                   ├─shiny:::hybrid_chain(...)
+  38.                   │ └─shiny (local) do()
+  39.                   │   ├─base::tryCatch(...)
+  40.                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  41.                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  42.                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  43.                   │   ├─shiny::captureStackTraces(...)
+  44.                   │   │ └─promises::with_promise_domain(...)
+  45.                   │   │   └─domain$wrapSync(expr)
+  46.                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  47.                   │   ├─base::withVisible(force(expr))
+  48.                   │   └─base::force(expr)
+  49.                   ├─shiny:::shinyCallingHandlers(run())
+  50.                   │ ├─base::withCallingHandlers(...)
+  51.                   │ └─shiny::captureStackTraces(expr)
+  52.                   │   └─promises::with_promise_domain(...)
+  53.                   │     └─domain$wrapSync(expr)
+  54.                   │       └─base::withCallingHandlers(expr, error = doCaptureStack)
+  55.                   └─shiny (local) run()
+  56.                     └─ctx$run(.func)
+  57.                       ├─promises::with_promise_domain(...)
+  58.                       │ └─domain$wrapSync(expr)
+  59.                       ├─shiny::withReactiveDomain(...)
+  60.                       │ └─promises::with_promise_domain(...)
+  61.                       │   └─domain$wrapSync(expr)
+  62.                       │     └─base::force(expr)
+  63.                       ├─shiny:::with_otel_span_context(...)
+  64.                       │ └─base::force(expr)
+  65.                       ├─shiny::captureStackTraces(...)
+  66.                       │ └─promises::with_promise_domain(...)
+  67.                       │   └─domain$wrapSync(expr)
+  68.                       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  69.                       └─env$runWith(self, func)
+  70.                         └─shiny (local) contextFunc()
+  71.                           ├─shiny::..stacktraceon..(`&lt;observer&gt;`(...))
+  72.                           └─shiny (local) `&lt;observer&gt;`(...)
+  73.                             └─shiny::observe()
+  74.                               ├─base::tryCatch(...)
+  75.                               │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  76.                               │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  77.                               │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  78.                               ├─private$withCurrentOutput(name, func(self, name))
+  79.                               │ └─promises::with_promise_domain(...)
+  80.                               │   └─domain$wrapSync(expr)
+  81.                               │     └─base::force(expr)
+  82.                               └─shiny (local) func(self, name)
+  83.                                 ├─shiny::..stacktraceoff..(if (is.null(formals(renderFunc))) renderFunc() else renderFunc(...))
+  84.                                 └─shiny (local) renderFunc(...)
+  85.                                   ├─shiny:::hybrid_chain(...)
+  86.                                   │ └─shiny (local) do()
+  87.                                   │   ├─base::tryCatch(...)
+  88.                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  89.                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  90.                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  91.                                   │   ├─shiny::captureStackTraces(...)
+  92.                                   │   │ └─promises::with_promise_domain(...)
+  93.                                   │   │   └─domain$wrapSync(expr)
+  94.                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  95.                                   │   ├─base::withVisible(force(expr))
+  96.                                   │   └─base::force(expr)
+  97.                                   └─shiny (local) drawReactive()
+  98.                                     ├─shiny::..stacktraceoff..(self$.updateValue())
+  99.                                     └─self$.updateValue()
+ 100.                                       └─ctx$run(...)
+ 101.                                         ├─promises::with_promise_domain(...)
+ 102.                                         │ └─domain$wrapSync(expr)
+ 103.                                         ├─shiny::withReactiveDomain(...)
+ 104.                                         │ └─promises::with_promise_domain(...)
+ 105.                                         │   └─domain$wrapSync(expr)
+ 106.                                         │     └─base::force(expr)
+ 107.                                         ├─shiny:::with_otel_span_context(...)
+ 108.                                         │ └─base::force(expr)
+ 109.                                         ├─shiny::captureStackTraces(...)
+ 110.                                         │ └─promises::with_promise_domain(...)
+ 111.                                         │   └─domain$wrapSync(expr)
+ 112.                                         │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 113.                                         └─env$runWith(self, func)
+ 114.                                           └─shiny (local) contextFunc()
+ 115.                                             ├─base::withCallingHandlers(...)
+ 116.                                             ├─base::withVisible(.func())
+ 117.                                             └─shiny (local) .func()
+ 118.                                               ├─shiny::..stacktraceon..(`&lt;reactive:plotObj&gt;`(...))
+ 119.                                               └─shiny (local) `&lt;reactive:plotObj&gt;`(...)
+ 120.                                                 ├─shiny:::hybrid_chain(...)
+ 121.                                                 │ └─shiny (local) do()
+ 122.                                                 │   ├─base::tryCatch(...)
+ 123.                                                 │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 124.                                                 │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 125.                                                 │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 126.                                                 │   ├─shiny::captureStackTraces(...)
+ 127.                                                 │   │ └─promises::with_promise_domain(...)
+ 128.                                                 │   │   └─domain$wrapSync(expr)
+ 129.                                                 │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 130.                                                 │   ├─base::withVisible(force(expr))
+ 131.                                                 │   └─base::force(expr)
+ 132.                                                 ├─base::do.call(...)
+ 133.                                                 └─shiny:::drawPlot(...)
+ 134.                                                   ├─shiny:::hybrid_chain(...)
+ 135.                                                   │ └─shiny (local) do()
+ 136.                                                   │   ├─base::tryCatch(...)
+ 137.                                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 138.                                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 139.                                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 140.                                                   │   ├─shiny::captureStackTraces(...)
+ 141.                                                   │   │ └─promises::with_promise_domain(...)
+ 142.                                                   │   │   └─domain$wrapSync(expr)
+ 143.                                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 144.                                                   │   ├─base::withVisible(force(expr))
+ 145.                                                   │   └─base::force(expr)
+ 146.                                                   ├─shiny:::hybrid_chain(...)
+ 147.                                                   │ └─shiny (local) do()
+ 148.                                                   │   ├─base::tryCatch(...)
+ 149.                                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 150.                                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 151.                                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 152.                                                   │   ├─shiny::captureStackTraces(...)
+ 153.                                                   │   │ └─promises::with_promise_domain(...)
+ 154.                                                   │   │   └─domain$wrapSync(expr)
+ 155.                                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 156.                                                   │   ├─base::withVisible(force(expr))
+ 157.                                                   │   └─base::force(expr)
+ 158.                                                   ├─promises::with_promise_domain(...)
+ 159.                                                   │ └─domain$wrapSync(expr)
+ 160.                                                   │   └─base::force(expr)
+ 161.                                                   └─shiny:::hybrid_chain(...)
+ 162.                                                     └─shiny (local) do()
+ 163.                                                       ├─base::tryCatch(...)
+ 164.                                                       │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 165.                                                       │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 166.                                                       │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 167.                                                       ├─shiny::captureStackTraces(...)
+ 168.                                                       │ └─promises::with_promise_domain(...)
+ 169.                                                       │   └─domain$wrapSync(expr)
+ 170.                                                       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 171.                                                       └─base::Reduce(...)
+ 172.                                                         └─shiny (local) f(init, x[[i]])
+ 173.                                                           ├─base::withVisible(func(v$value))
+ 174.                                                           └─shiny (local) func(v$value)
+ 175.                                                             ├─utils::capture.output(...)
+ 176.                                                             │ └─base::withVisible(...elt(i))
+ 177.                                                             ├─shiny::..stacktraceon..(print(res$value))
+ 178.                                                             ├─base::print(res$value)
+ 179.                                                             └─shiny (local) `print.ggplot2::ggplot`(res$value)
+ 180.                                                               ├─ggplot2::ggplot_gtable(build)
+ 181.                                                               └─ggplot2 (local) `ggplot_gtable.ggplot2::ggplot_built`(build)
+ 182.                                                                 └─ggplot2:::by_layer(...)
+ 183.                                                                   ├─rlang::try_fetch(...)
+ 184.                                                                   │ ├─base::tryCatch(...)
+ 185.                                                                   │ │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 186.                                                                   │ │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 187.                                                                   │ │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 188.                                                                   │ └─base::withCallingHandlers(...)
+ 189.                                                                   └─ggplot2 (local) f(l = layers[[i]], d = data[[i]])
+ 190.                                                                     └─l$draw_geom(d, layout)
+ 191.                                                                       └─ggplot2 (local) draw_geom(..., self = self)
+ 192.                                                                         └─self$geom$handle_na(data, self$computed_geom_params)
+ 193.                                                                           └─ggplot2 (local) handle_na(..., self = self)
+ 194.                                                                             └─cli::cli_warn(...)</system-out>
+    </testcase>
+    <testcase time="0.156000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works">
+      <system-out>Removed 800 rows containing missing values or values outside the scale range
+(`geom_point()`).
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_spiderplot.R:279:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. └─session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE) at test-tm_g_spiderplot.R:283:9
+  29.   └─self$setInputs(!!!mapNames(ns, rlang::dots_list(..., .homonyms = "error")))
+  30.     └─private$flush()
+  31.       └─shiny:::flushReact()
+  32.         └─.getReactiveEnvironment()$flush()
+  33.           └─ctx$executeFlushCallbacks()
+  34.             └─base::lapply(...)
+  35.               └─shiny (local) FUN(X[[i]], ...)
+  36.                 └─shiny (local) flushCallback()
+  37.                   ├─shiny:::hybrid_chain(...)
+  38.                   │ └─shiny (local) do()
+  39.                   │   ├─base::tryCatch(...)
+  40.                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  41.                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  42.                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  43.                   │   ├─shiny::captureStackTraces(...)
+  44.                   │   │ └─promises::with_promise_domain(...)
+  45.                   │   │   └─domain$wrapSync(expr)
+  46.                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  47.                   │   ├─base::withVisible(force(expr))
+  48.                   │   └─base::force(expr)
+  49.                   ├─shiny:::shinyCallingHandlers(run())
+  50.                   │ ├─base::withCallingHandlers(...)
+  51.                   │ └─shiny::captureStackTraces(expr)
+  52.                   │   └─promises::with_promise_domain(...)
+  53.                   │     └─domain$wrapSync(expr)
+  54.                   │       └─base::withCallingHandlers(expr, error = doCaptureStack)
+  55.                   └─shiny (local) run()
+  56.                     └─ctx$run(.func)
+  57.                       ├─promises::with_promise_domain(...)
+  58.                       │ └─domain$wrapSync(expr)
+  59.                       ├─shiny::withReactiveDomain(...)
+  60.                       │ └─promises::with_promise_domain(...)
+  61.                       │   └─domain$wrapSync(expr)
+  62.                       │     └─base::force(expr)
+  63.                       ├─shiny:::with_otel_span_context(...)
+  64.                       │ └─base::force(expr)
+  65.                       ├─shiny::captureStackTraces(...)
+  66.                       │ └─promises::with_promise_domain(...)
+  67.                       │   └─domain$wrapSync(expr)
+  68.                       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  69.                       └─env$runWith(self, func)
+  70.                         └─shiny (local) contextFunc()
+  71.                           ├─shiny::..stacktraceon..(`&lt;observer&gt;`(...))
+  72.                           └─shiny (local) `&lt;observer&gt;`(...)
+  73.                             └─shiny::observe()
+  74.                               ├─base::tryCatch(...)
+  75.                               │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  76.                               │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  77.                               │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  78.                               ├─private$withCurrentOutput(name, func(self, name))
+  79.                               │ └─promises::with_promise_domain(...)
+  80.                               │   └─domain$wrapSync(expr)
+  81.                               │     └─base::force(expr)
+  82.                               └─shiny (local) func(self, name)
+  83.                                 ├─shiny::..stacktraceoff..(if (is.null(formals(renderFunc))) renderFunc() else renderFunc(...))
+  84.                                 └─shiny (local) renderFunc(...)
+  85.                                   ├─shiny:::hybrid_chain(...)
+  86.                                   │ └─shiny (local) do()
+  87.                                   │   ├─base::tryCatch(...)
+  88.                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  89.                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  90.                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  91.                                   │   ├─shiny::captureStackTraces(...)
+  92.                                   │   │ └─promises::with_promise_domain(...)
+  93.                                   │   │   └─domain$wrapSync(expr)
+  94.                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  95.                                   │   ├─base::withVisible(force(expr))
+  96.                                   │   └─base::force(expr)
+  97.                                   └─shiny (local) drawReactive()
+  98.                                     ├─shiny::..stacktraceoff..(self$.updateValue())
+  99.                                     └─self$.updateValue()
+ 100.                                       └─ctx$run(...)
+ 101.                                         ├─promises::with_promise_domain(...)
+ 102.                                         │ └─domain$wrapSync(expr)
+ 103.                                         ├─shiny::withReactiveDomain(...)
+ 104.                                         │ └─promises::with_promise_domain(...)
+ 105.                                         │   └─domain$wrapSync(expr)
+ 106.                                         │     └─base::force(expr)
+ 107.                                         ├─shiny:::with_otel_span_context(...)
+ 108.                                         │ └─base::force(expr)
+ 109.                                         ├─shiny::captureStackTraces(...)
+ 110.                                         │ └─promises::with_promise_domain(...)
+ 111.                                         │   └─domain$wrapSync(expr)
+ 112.                                         │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 113.                                         └─env$runWith(self, func)
+ 114.                                           └─shiny (local) contextFunc()
+ 115.                                             ├─base::withCallingHandlers(...)
+ 116.                                             ├─base::withVisible(.func())
+ 117.                                             └─shiny (local) .func()
+ 118.                                               ├─shiny::..stacktraceon..(`&lt;reactive:plotObj&gt;`(...))
+ 119.                                               └─shiny (local) `&lt;reactive:plotObj&gt;`(...)
+ 120.                                                 ├─shiny:::hybrid_chain(...)
+ 121.                                                 │ └─shiny (local) do()
+ 122.                                                 │   ├─base::tryCatch(...)
+ 123.                                                 │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 124.                                                 │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 125.                                                 │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 126.                                                 │   ├─shiny::captureStackTraces(...)
+ 127.                                                 │   │ └─promises::with_promise_domain(...)
+ 128.                                                 │   │   └─domain$wrapSync(expr)
+ 129.                                                 │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 130.                                                 │   ├─base::withVisible(force(expr))
+ 131.                                                 │   └─base::force(expr)
+ 132.                                                 ├─base::do.call(...)
+ 133.                                                 └─shiny:::drawPlot(...)
+ 134.                                                   ├─shiny:::hybrid_chain(...)
+ 135.                                                   │ └─shiny (local) do()
+ 136.                                                   │   ├─base::tryCatch(...)
+ 137.                                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 138.                                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 139.                                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 140.                                                   │   ├─shiny::captureStackTraces(...)
+ 141.                                                   │   │ └─promises::with_promise_domain(...)
+ 142.                                                   │   │   └─domain$wrapSync(expr)
+ 143.                                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 144.                                                   │   ├─base::withVisible(force(expr))
+ 145.                                                   │   └─base::force(expr)
+ 146.                                                   ├─shiny:::hybrid_chain(...)
+ 147.                                                   │ └─shiny (local) do()
+ 148.                                                   │   ├─base::tryCatch(...)
+ 149.                                                   │   │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 150.                                                   │   │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 151.                                                   │   │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 152.                                                   │   ├─shiny::captureStackTraces(...)
+ 153.                                                   │   │ └─promises::with_promise_domain(...)
+ 154.                                                   │   │   └─domain$wrapSync(expr)
+ 155.                                                   │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 156.                                                   │   ├─base::withVisible(force(expr))
+ 157.                                                   │   └─base::force(expr)
+ 158.                                                   ├─promises::with_promise_domain(...)
+ 159.                                                   │ └─domain$wrapSync(expr)
+ 160.                                                   │   └─base::force(expr)
+ 161.                                                   └─shiny:::hybrid_chain(...)
+ 162.                                                     └─shiny (local) do()
+ 163.                                                       ├─base::tryCatch(...)
+ 164.                                                       │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 165.                                                       │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 166.                                                       │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 167.                                                       ├─shiny::captureStackTraces(...)
+ 168.                                                       │ └─promises::with_promise_domain(...)
+ 169.                                                       │   └─domain$wrapSync(expr)
+ 170.                                                       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 171.                                                       └─base::Reduce(...)
+ 172.                                                         └─shiny (local) f(init, x[[i]])
+ 173.                                                           ├─base::withVisible(func(v$value))
+ 174.                                                           └─shiny (local) func(v$value)
+ 175.                                                             ├─utils::capture.output(...)
+ 176.                                                             │ └─base::withVisible(...elt(i))
+ 177.                                                             ├─shiny::..stacktraceon..(print(res$value))
+ 178.                                                             ├─base::print(res$value)
+ 179.                                                             └─shiny (local) `print.ggplot2::ggplot`(res$value)
+ 180.                                                               ├─ggplot2::ggplot_gtable(build)
+ 181.                                                               └─ggplot2 (local) `ggplot_gtable.ggplot2::ggplot_built`(build)
+ 182.                                                                 └─ggplot2:::by_layer(...)
+ 183.                                                                   ├─rlang::try_fetch(...)
+ 184.                                                                   │ ├─base::tryCatch(...)
+ 185.                                                                   │ │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+ 186.                                                                   │ │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 187.                                                                   │ │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+ 188.                                                                   │ └─base::withCallingHandlers(...)
+ 189.                                                                   └─ggplot2 (local) f(l = layers[[i]], d = data[[i]])
+ 190.                                                                     └─l$draw_geom(d, layout)
+ 191.                                                                       └─ggplot2 (local) draw_geom(..., self = self)
+ 192.                                                                         └─self$geom$handle_na(data, self$computed_geom_params)
+ 193.                                                                           └─ggplot2 (local) handle_na(..., self = self)
+ 194.                                                                             └─ggplot2::remove_missing(...)
+ 195.                                                                               └─cli::cli_warn(msg)</system-out>
+    </testcase>
+    <testcase time="0.352" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works"/>
   </testsuite>
-  <testsuite name="tm_g_swimlane_waterfall_picks" timestamp="2026-07-21T09:49:59Z" hostname="ec33097dada4" tests="14" skipped="0" failures="0" errors="0" time="0.066">
-    <testcase time="0.00700000000000012" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+  <testsuite name="tm_g_swimlane_waterfall_picks" timestamp="2026-07-21T12:57:56Z" hostname="3dd1f7ea70d9" tests="14" skipped="0" failures="0" errors="0" time="0.186">
+    <testcase time="0.0760000000000005" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -476,7 +1326,7 @@ Backtrace:
  5. └─teal.picks::picks(...)
  6.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00600000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0129999999999999" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -484,7 +1334,7 @@ Backtrace:
  2. └─teal.picks::picks(...)
  3.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00600000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0109999999999992" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -492,7 +1342,7 @@ Backtrace:
  2. └─teal.picks::picks(...)
  3.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00600000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.011000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -500,7 +1350,7 @@ Backtrace:
  2. └─teal.picks::picks(...)
  3.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00499999999999989" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0109999999999992" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -508,7 +1358,7 @@ Backtrace:
  2. └─teal.picks::picks(...)
  3.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00800000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0109999999999992" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -519,9 +1369,9 @@ Backtrace:
  5. └─teal.picks::picks(...)
  6.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00500000000000012" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00099999999999989" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00500000000000012" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0100000000000016" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.000999999999999446" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.00900000000000034" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -531,7 +1381,7 @@ Backtrace:
  4. └─teal.picks::picks(...)
  5.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00499999999999989" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.0109999999999992" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -542,7 +1392,7 @@ Backtrace:
  5. └─teal.picks::picks(...)
  6.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00600000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
+    <testcase time="0.011000000000001" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -550,23 +1400,23 @@ Backtrace:
  2. └─teal.picks::picks(...)
  3.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.004" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00100000000000011" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00099999999999989" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.00799999999999912" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.00200000000000067" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
+    <testcase time="0.000999999999999446" classname="tm_g_swimlane_waterfall_picks" name="tm_g_waterfall_builds_a_teal_module_with_picks_encodings"/>
   </testsuite>
-  <testsuite name="utils" timestamp="2026-07-21T09:49:59Z" hostname="ec33097dada4" tests="13" skipped="0" failures="0" errors="0" time="0.02">
-    <testcase time="0.004" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.00499999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00100000000000011" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00100000000000011" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00099999999999989" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.00100000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.002" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
-    <testcase time="0" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+  <testsuite name="utils" timestamp="2026-07-21T12:57:56Z" hostname="3dd1f7ea70d9" tests="13" skipped="0" failures="0" errors="0" time="0.042">
+    <testcase time="0.016" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.000999999999999446" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.00399999999999956" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00100000000000122" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00199999999999889" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00100000000000122" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.000999999999999446" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00200000000000067" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00399999999999956" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.000999999999999446" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
   </testsuite>
 </testsuites>
