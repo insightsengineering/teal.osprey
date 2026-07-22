@@ -71,6 +71,13 @@ testthat::describe("tm_g_ae_sub module creation", {
     testthat::expect_s3_class(mod, "teal_module")
   })
 
+  data <- within(teal_data(), {
+    ADSL <- rADSL
+    ADAE <- rADAE
+  })
+
+  join_keys(data) <- default_cdisc_join_keys[names(data)]
+
   it("using choices_selected works", {
     mod <- tm_g_ae_sub(
       label = "subgroups Plot",
@@ -110,14 +117,6 @@ testthat::describe("tm_g_ae_sub module creation", {
       )
     ) |>
       suppressWarnings(classes = "picks_delayed")
-
-
-    data <- within(teal_data(), {
-      ADSL <- rADSL
-      ADAE <- rADAE
-    })
-
-    join_keys(data) <- default_cdisc_join_keys[names(data)]
 
     testServer(
       mod$server,
