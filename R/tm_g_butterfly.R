@@ -417,28 +417,28 @@ srv_g_butterfly <- function(
         teal::validate_has_data(ANL, min_nrow = 1, msg = "ANL Data is empty")
 
         teal::validate_input(
-          "right_var-variables-selected",
-          condition = function(x) length(x) > 0,
+          "right_var",
+          condition = length(right_var_name) > 0,
           message = "Right Dichotomization Variable is required."
         )
         teal::validate_input(
-          "left_var-variables-selected",
-          condition = function(x) length(x) > 0,
+          "left_var",
+          condition = length(left_var_name) > 0,
           message = "Left Dichotomization Variable is required."
         )
         teal::validate_input(
-          "category_var-variables-selected",
-          condition = function(x) length(x) > 0,
+          "category_var",
+          condition = length(category_var_name) > 0,
           message = "Category Variable is required."
         )
         teal::validate_input(
-          "right_var-variables-selected",
-          condition = function(x) length(x) > 0 && is.factor(ANL[[x]]),
+          "right_var",
+          condition = length(ANL[[right_var_name]]) > 0 && is.factor(ANL[[right_var_name]]),
           message = "Right Dichotomization Variable must be a factor variable, contact developer."
         )
         teal::validate_input(
-          "left_var-variables-selected",
-          condition = function(x) length(x) > 0 && is.factor(ANL[[x]]),
+          "left_var",
+          condition = length(ANL[[left_var_name]]) > 0 && is.factor(ANL[[left_var_name]]),
           message = "Left Dichotomization Variable must be a factor variable, contact developer."
         )
 
@@ -448,21 +448,19 @@ srv_g_butterfly <- function(
 
         teal::validate_input(
           "right_val",
-          condition = function(x) length(x) > 0,
+          condition = length(right_val) > 0,
           message = "At least one value of Right Dichotomization Variable must be selected."
         )
         teal::validate_input(
           "left_val",
-          condition = function(x) length(x) > 0,
+          condition = length(left_val) > 0,
           message = "At least one value of Left Dichotomization Variable must be selected."
         )
 
         teal::validate_input(
           c("right_val", "left_val"),
-          condition = function(right_val, left_val) {
-            all(right_val %in% ANL[[right_var_name]]) &&
-              all(left_val %in% ANL[[left_var_name]])
-          },
+          condition = all(right_val %in% ANL[[right_var_name]]) &&
+              all(left_val %in% ANL[[left_var_name]]),
           message = "No observations for selected dichotomization values (filtered out?)"
         )
 
@@ -505,8 +503,6 @@ srv_g_butterfly <- function(
             sprintf("Sorted by: %s.", paste(sort_by_var_name, collapse = ", "))
           )
         }
-
-        print(color_by_var_name)
 
         q1 <- within(
           q1,
