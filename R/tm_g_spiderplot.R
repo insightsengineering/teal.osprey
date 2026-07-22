@@ -381,7 +381,7 @@ srv_g_spider <- function(
       href_line <- as_numeric_from_comma_sep_str(href_line)
 
       validate_input(
-        inputId = "paramcd-variables-selected",
+        inputId = "paramcd",
         condition = length(paramcd_col) > 0,
         message = "Parameter Column is required."
       )

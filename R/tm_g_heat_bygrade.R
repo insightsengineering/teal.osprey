@@ -406,22 +406,22 @@ srv_g_heat_by_grade <- function(
         teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
 
         validate_input(
-          "id_var-variables-selected", length(id_var_name) > 0, "ID Variable is required."
+          "id_var", length(id_var_name) > 0, "ID Variable is required."
         )
         validate_input(
-          "visit_var-variables-selected", length(visit_var_name) > 0, "Visit Variable is required."
+          "visit_var", length(visit_var_name) > 0, "Visit Variable is required."
         )
         validate_input(
-          "ongo_var-variables-selected",
+          "ongo_var",
           length(ongo_var_name) > 0,
           "Study Ongoing Status Variable is required."
         )
-        validate_input("anno_var-variables-selected", length(anno_var_name) > 0, "Annotation Variables is required.")
-        validate_input("heat_var-variables-selected", length(heat_var_name) > 0, "Heat Variable is required.")
+        validate_input("anno_var", length(anno_var_name) > 0, "Annotation Variables is required.")
+        validate_input("heat_var", length(heat_var_name) > 0, "Heat Variable is required.")
 
         if (plot_cm) {
           validate_input(
-            "conmed_var-variables-selected",
+            "conmed_var",
             length(conmed_var_name) > 0, "Conmed Variable is required."
           )
           validate_input("conmed_level", length(input$conmed_level) > 0, "Select Conmed Levels.")

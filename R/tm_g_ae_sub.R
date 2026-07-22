@@ -191,12 +191,12 @@ srv_g_ae_sub <- function(id,
       obj <- req(data())
 
       teal::validate_input(
-        inputId   = "arm_var-variables-selected",
+        inputId   = "arm_var",
         condition = !is.null(selectors$arm_var()$variables$selected),
         message   = "Please select an arm variable."
       )
       teal::validate_input(
-        inputId   = "group_var-variables-selected",
+        inputId   = "group_var",
         condition = !is.null(selectors$group_var()$variables$selected),
         message   = "Please select an group variable."
       )
