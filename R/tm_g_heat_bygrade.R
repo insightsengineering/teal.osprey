@@ -451,36 +451,33 @@ srv_g_heat_by_grade <- function(
           )
         }
 
-        conmed_data <- if (plot_cm) validated_q[["conmed_data"]] else NULL
 
         PARCAT1 <- NULL # nolint: object_name_linter.
-
         validated_q <- within(
           validated_q,
           {
             plot <- osprey::g_heat_bygrade(
               id_var = id_var_name,
-              exp_data = get(ex_dataname) %>% filter(PARCAT1 == "INDIVIDUAL"),
+              exp_data = filter(ex_dataname, PARCAT1 == "INDIVIDUAL"),
               visit_var = visit_var_name,
               ongo_var = ongo_var_name,
-              anno_data = get(sl_dataname)[c(anno_var_name, id_var_name)],
+              anno_data = sl_dataname[c(anno_var_name, id_var_name)],
               anno_var = anno_var_name,
-              heat_data = get(ae_dataname) %>%
-                select(all_of(c(id_var_name, visit_var_name, heat_var_name))),
+              heat_data = select(ae_dataname, all_of(c(id_var_name, visit_var_name, heat_var_name))),
               heat_color_var = heat_var_name,
               conmed_data = conmed_data,
               conmed_var = conmed_var_name
             )
           },
           id_var_name = id_var_name,
-          ex_dataname = ex_dataname,
+          ex_dataname = as.name(ex_dataname),
           visit_var_name = visit_var_name,
           ongo_var_name = ongo_var_name,
-          sl_dataname = sl_dataname,
+          sl_dataname = as.name(sl_dataname),
           anno_var_name = anno_var_name,
-          ae_dataname = ae_dataname,
+          ae_dataname = as.name(ae_dataname),
           heat_var_name = heat_var_name,
-          conmed_data = conmed_data,
+          conmed_data = if (plot_cm) as.name("conmed_data") else NULL,
           conmed_var_name = conmed_var_name
         )
 
