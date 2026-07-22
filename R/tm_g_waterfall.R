@@ -179,15 +179,15 @@ tm_g_waterfall <- function(label,
   anno_txt_paramcd_rs <- create_picks_helper(teal.picks::datasets(dataname_rs, dataname_rs), anno_txt_paramcd_rs)
   add_label_paramcd_rs <- create_picks_helper(teal.picks::datasets(dataname_rs, dataname_rs), add_label_paramcd_rs)
 
-  bar_paramcd <- force_pick_variable_selection(bar_paramcd, which = "values", multiple = FALSE)
-  bar_var <- force_pick_variable_selection(bar_var, which = "variables", multiple = FALSE)
-  bar_color_var <- force_pick_variable_selection(bar_color_var, which = "variables", multiple = FALSE)
-  sort_var <- force_pick_variable_selection(sort_var, which = "variables", multiple = FALSE)
-  add_label_var_sl <- force_pick_variable_selection(add_label_var_sl, which = "variables", multiple = FALSE)
-  add_label_paramcd_rs <- force_pick_variable_selection(add_label_paramcd_rs, which = "values", multiple = FALSE)
-  anno_txt_var_sl <- force_pick_variable_selection(anno_txt_var_sl, which = "variables", multiple = TRUE)
-  anno_txt_paramcd_rs <- force_pick_variable_selection(anno_txt_paramcd_rs, which = "values", multiple = TRUE)
-  facet_var <- force_pick_variable_selection(facet_var, which = "variables", multiple = FALSE)
+  bar_paramcd <- force_pick_selection(bar_paramcd, which = "values", multiple = FALSE)
+  bar_var <- force_pick_selection(bar_var, which = "variables", multiple = FALSE)
+  bar_color_var <- force_pick_selection(bar_color_var, which = "variables", multiple = FALSE)
+  sort_var <- force_pick_selection(sort_var, which = "variables", multiple = FALSE)
+  add_label_var_sl <- force_pick_selection(add_label_var_sl, which = "variables", multiple = FALSE)
+  add_label_paramcd_rs <- force_pick_selection(add_label_paramcd_rs, which = "values", multiple = FALSE)
+  anno_txt_var_sl <- force_pick_selection(anno_txt_var_sl, which = "variables", multiple = TRUE)
+  anno_txt_paramcd_rs <- force_pick_selection(anno_txt_paramcd_rs, which = "values", multiple = TRUE)
+  facet_var <- force_pick_selection(facet_var, which = "variables", multiple = FALSE)
 
   args <- as.list(environment())
 
@@ -539,7 +539,7 @@ srv_g_waterfall <- function(id,
           })
         )
       } else {
-        qq1 <- teal.code::eval_code(
+        q_temp <- teal.code::eval_code(
           q1,
           code = bquote(
             rs_sub <- .(as.name(dataname_rs)) %>%
@@ -547,9 +547,9 @@ srv_g_waterfall <- function(id,
           )
         )
 
-        teal::validate_one_row_per_id(qq1[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
+        teal::validate_one_row_per_id(q_temp[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
 
-        within(qq1, {
+        within(q_temp, {
           rs_label <- rs_sub %>%
             dplyr::select(USUBJID, PARAMCD, AVALC) %>%
             tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)

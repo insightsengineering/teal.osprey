@@ -84,10 +84,10 @@
 #'
 #' @keywords internal
 #' @noRd
-force_pick_variable_selection <- function(pick,
-                                          arg_name = checkmate::vname(pick),
-                                          which = c("variables", "values", "datasets"),
-                                          multiple = FALSE) {
+force_pick_selection <- function(pick,
+                                 arg_name = checkmate::vname(pick),
+                                 which = c("variables", "values", "datasets"),
+                                 multiple = FALSE) {
   checkmate::assert_class(pick, "picks", .var.name = arg_name)
   checkmate::assert_string(arg_name)
   checkmate::assert_logical(multiple)
