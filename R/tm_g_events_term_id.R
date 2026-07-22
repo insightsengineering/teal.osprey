@@ -322,19 +322,20 @@ srv_g_events_term_id <- function(id,
 
     output_q <- reactive({
       merged_vars <- merge_vars()
+      term_var_name <- merged_vars[["term_var"]]
+      arm_var_name <- merged_vars[["arm_var"]]
+
       teal::validate_input(
-        "term_var-variables-selected",
-        condition = function(x) length(x) > 0L,
+        "term_var",
+        condition = length(term_var_name) > 0L,
         message = "Please select a term variable"
       )
       teal::validate_input(
-        "arm_var-variables-selected",
-        condition = function(x) length(x) > 0L,
+        "arm_var",
+        condition = length(arm_var_name) > 0L,
         message = "Please select an arm variable"
       )
 
-      term_var_name <- merged_vars[["term_var"]][[1L]]
-      arm_var_name <- merged_vars[["arm_var"]][[1L]]
 
       arm_selector <- anl_selectors$arm_var()
       arm_var_orig <- arm_selector$variables$selected
@@ -343,23 +344,19 @@ srv_g_events_term_id <- function(id,
       ANL <- qenv[["ANL"]]
 
       teal::validate_input(
-        "arm_var-variables-selected",
-        condition = function(x) length(x) > 0L && is.factor(ANL[[x]]),
+        "arm_var",
+        condition = length(ANL[[arm_var_name]]) > 0L && is.factor(ANL[[arm_var_name]]),
         message = "Arm Var must be a factor variable. Contact developer."
       )
       teal::validate_input(
-        c("arm_trt", "arm_ref", "arm_var-variables-selected"),
-        condition = function(arm_trt, arm_ref, arm_var_selected) {
-          arm_trt %in% ANL[[arm_var_selected]] && arm_ref %in% ANL[[arm_var_selected]]
-        },
+        c("arm_trt", "arm_ref", "arm_var"),
+        condition = input$arm_trt %in% ANL[[arm_var_name]] && input$arm_ref %in% ANL[[arm_var_name]],
         message =
           "Cannot generate plot. The dataset does not contain subjects from both the control and treatment arms."
       )
       teal::validate_input(
         c("arm_trt", "arm_ref"),
-        condition = function(arm_trt, arm_ref) {
-          !isTRUE(arm_trt == arm_ref)
-        },
+        condition = !isTRUE(input$arm_trt == input$arm_ref),
         message = "Control and Treatment must be different."
       )
 
