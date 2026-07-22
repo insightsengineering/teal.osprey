@@ -81,6 +81,9 @@ testthat::describe("tm_g_events_term_id module creation", {
           arm_ref = "ARM A",
           arm_trt = "ARM B",
           ci = "wald", conf_level = 0.95,
+          raterange = c(.1, 1),
+          diffrange = c(-.5, .5),
+          reverse = FALSE,
           fontsize = 5
         )
         expect_no_error(session$returned())
@@ -119,6 +122,9 @@ testthat::describe("tm_g_events_term_id module creation", {
           arm_ref = "ARM A",
           arm_trt = "ARM B",
           ci = "wald", conf_level = 0.95,
+          raterange = c(.1, 1),
+          diffrange = c(-.5, .5),
+          reverse = FALSE,
           fontsize = 5
         )
         expect_no_error(session$returned())
