@@ -3,31 +3,42 @@
 #' @description
 #'
 #' This is a teal module that generates a `swimlane` plot (bar plot with markers) for `ADaM` data
-#' using [teal.picks::picks()] encodings.
+#' using [teal.picks::variables()] encodings.
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param dataname (`character(1)`)\cr
-#'   Analysis data used for markers. Use `"ADSL"` when no markers are plotted.
-#' @param bar_var (`picks`)\cr
-#'   Subject-level numeric variable for bar length (from `ADSL`).
-#' @param bar_color_var (`picks` or `NULL`)\cr
-#'   Subject-level color variable from `ADSL`.
-#' @param sort_var (`picks` or `NULL`)\cr
-#'   Subject-level sort variable from `ADSL`.
-#' @param marker_pos_var (`picks` or `NULL`)\cr
-#'   Marker position variable from `dataname` (when not `"ADSL"`).
-#' @param marker_shape_var (`picks` or `NULL`)\cr
+#'   analysis data used for markers. Use `"ADSL"` when no markers are plotted.
+#' @param bar_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   Subject-level numeric variable for bar length (from `parentname`).
+#' @param parentname dataname (`character(1)`)\cr
+#'  analysis data used for several variables in the teal module, needs to be
+#'  available in the list passed to the `data` argument of [teal::init()]. The default is
+#' `"ADSL"`
+#' @param bar_color_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   Subject-level color variable from `parentname`.
+#' @param sort_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   Subject-level sort variable from `parentname`.
+#' @param marker_pos_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   Marker position variable from `dataname`).
+#' @param marker_shape_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
 #'   Marker shape variable from `dataname`.
 #' @param marker_shape_opt (`numeric`)\cr
 #'   Named vector mapping shape values to ggplot shapes.
-#' @param marker_color_var (`picks` or `NULL`)\cr
+#' @param marker_color_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
 #'   Marker color variable from `dataname`.
 #' @param marker_color_opt (`character`)\cr
 #'   Named vector mapping color values to colors.
-#' @param anno_txt_var (`picks` or `NULL`)\cr
-#'   Subject-level annotation variables from `ADSL` (multiple selection allowed).
+#' @param anno_txt_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   Subject-level annotation variables from `parentname` (multiple selection allowed).
 #' @param vref_line (`numeric`)\cr
 #'   Vertical reference lines.
 #' @param x_label (`character`)\cr
@@ -43,6 +54,7 @@
 tm_g_swimlane <- function(label,
                           dataname,
                           bar_var,
+                          parentname = "ADSL",
                           bar_color_var = NULL,
                           sort_var = NULL,
                           marker_pos_var = NULL,
@@ -60,12 +72,47 @@ tm_g_swimlane <- function(label,
                           transformators = list()) {
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
-  .assert_picks_single_var(bar_var, "bar_var")
-  if (!is.null(bar_color_var)) .assert_picks_single_var(bar_color_var, "bar_color_var")
-  if (!is.null(sort_var)) .assert_picks_single_var(sort_var, "sort_var")
-  if (!is.null(marker_pos_var)) .assert_picks_single_var(marker_pos_var, "marker_pos_var")
-  if (!is.null(marker_shape_var)) .assert_picks_single_var(marker_shape_var, "marker_shape_var")
-  if (!is.null(marker_color_var)) .assert_picks_single_var(marker_color_var, "marker_color_var")
+
+  bar_var <- migrate_choices_selected_to_variables(bar_var, "bar_var")
+  bar_color_var <- migrate_choices_selected_to_variables(bar_color_var, "bar_color_var", null.ok = TRUE)
+  sort_var <- migrate_choices_selected_to_variables(sort_var, "sort_var", null.ok = TRUE)
+  marker_pos_var <- migrate_choices_selected_to_variables(marker_pos_var, "marker_pos_var", null.ok = TRUE)
+  marker_shape_var <- migrate_choices_selected_to_variables(marker_shape_var, "marker_shape_var", null.ok = TRUE)
+  marker_color_var <- migrate_choices_selected_to_variables(marker_color_var, "marker_color_var", null.ok = TRUE)
+  anno_txt_var <- migrate_choices_selected_to_variables(anno_txt_var, "anno_txt_var", null.ok = TRUE)
+
+  bar_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), bar_var)
+  if (!is.null(bar_color_var)) {
+    bar_color_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), bar_color_var)
+  }
+  if (!is.null(sort_var)) {
+    sort_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), sort_var)
+  }
+  if (!is.null(marker_pos_var)) {
+    marker_pos_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), marker_pos_var)
+  }
+  if (!is.null(marker_shape_var)) {
+    marker_shape_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), marker_shape_var)
+  }
+  if (!is.null(marker_color_var)) {
+    marker_color_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), marker_color_var)
+  }
+  if (!is.null(anno_txt_var)) {
+    anno_txt_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), anno_txt_var)
+  }
+
+  bar_var <- force_pick_variable_selection(bar_var, "bar_var")
+  if (!is.null(bar_color_var)) bar_color_var <- force_pick_variable_selection(bar_color_var, "bar_color_var")
+  if (!is.null(marker_pos_var)) marker_pos_var <- force_pick_variable_selection(marker_pos_var, "marker_pos_var")
+  if (!is.null(marker_shape_var)) {
+    marker_shape_var <- force_pick_variable_selection(marker_shape_var, "marker_shape_var")
+  }
+  if (!is.null(marker_color_var)) {
+    marker_color_var <- force_pick_variable_selection(marker_color_var, "marker_color_var")
+  }
+
+
+
   checkmate::assert_numeric(marker_shape_opt, min.len = 1, any.missing = FALSE, null.ok = TRUE)
   checkmate::assert_character(marker_color_opt, min.len = 1, any.missing = FALSE, null.ok = TRUE)
   checkmate::assert_numeric(vref_line, min.len = 1, null.ok = TRUE, any.missing = FALSE)
@@ -93,7 +140,6 @@ tm_g_swimlane <- function(label,
       anno_txt_var = anno_txt_var
     )
   )
-  all_datanames <- unique(c("ADSL", dataname, .picks_all_datanames(pick_slots)))
 
   args <- as.list(environment())
 
@@ -104,7 +150,7 @@ tm_g_swimlane <- function(label,
     ui_args = args[names(args) %in% names(formals(ui_g_swimlane))],
     server_args = args[names(args) %in% names(formals(srv_g_swimlane))],
     transformators = transformators,
-    datanames = all_datanames
+    datanames = .picks_datanames(pick_slots)
   )
 }
 
@@ -192,17 +238,10 @@ ui_g_swimlane <- function(id,
 }
 
 #' @keywords internal
-.swimlane_picks_selected_var <- function(selector_state) {
-  if (is.null(selector_state) || is.null(selector_state$variables)) {
-    return(character())
-  }
-  as.character(selector_state$variables$selected)
-}
-
-#' @keywords internal
 srv_g_swimlane <- function(id,
                            data,
                            dataname,
+                           parentname,
                            marker_shape_opt,
                            marker_color_opt,
                            plot_height,
@@ -221,93 +260,73 @@ srv_g_swimlane <- function(id,
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
 
-    picks_inputs <- Filter(
+    pick_slots <- Filter(
       Negate(is.null),
       list(
         bar_var = bar_var,
         bar_color_var = bar_color_var,
         sort_var = sort_var,
-        marker_pos_var = if (dataname != "ADSL") marker_pos_var else NULL,
-        marker_shape_var = if (dataname != "ADSL") marker_shape_var else NULL,
-        marker_color_var = if (dataname != "ADSL") marker_color_var else NULL,
+        marker_pos_var = marker_pos_var,
+        marker_shape_var = marker_shape_var,
+        marker_color_var = marker_color_var,
         anno_txt_var = anno_txt_var
       )
     )
 
     selectors <- teal.picks::picks_srv(
       id = "",
-      picks = picks_inputs,
+      picks = pick_slots,
       data = data
     )
 
-    iv <- reactive({
-      iv <- shinyvalidate::InputValidator$new()
-      iv$add_rule("vref_line", ~ if (anyNA(suppressWarnings(as_numeric_from_comma_sep_str(.)))) {
+    validated_q <- reactive({
+      obj <- req(data())
+
+      teal::validate_input(
+        "vref_line",
+        condition = !anyNA(suppressWarnings(as_numeric_from_comma_sep_str(input$vref_line))),
         "Vertical Reference Line(s) are invalid"
-      })
-      iv$enable()
-      iv
+      )
+      teal::validate_input(
+        "bar_var-variables-selected",
+        condition = !is.null(pick_selected("bar_var", selectors)),
+        "Please select a bar length variable."
+      )
+      teal::validate_input(
+        "marker_pos_var-variables-selected",
+        condition = !is.null(pick_selected("marker_pos_var", selectors))
+      )
+      obj  
     })
 
+    merged <- teal.picks::merge_srv(
+      "merge",
+      data = validated_q,
+      selectors = selectors,
+      output_name = "ANL"
+    )
+
     output_q <- reactive({
-      obj <- data()
-      ANL <- NULL # to avoid triggering NOTE on R CMD check
-      teal.reporter::teal_card(obj) <-
+      qenv <- merged$data()
+      teal.reporter::teal_card(qenv) <-
         c(
-          teal.reporter::teal_card(obj),
+          teal.reporter::teal_card(qenv),
           teal.reporter::teal_card("## Module's output(s)")
         )
 
-      teal::validate_inputs(iv())
+      
+      bar_var_name <- pick_selected("bar_var", selectors)
+      bar_color_var_name <- pick_selected("bar_color_var", selectors)
+      sort_var_name <- pick_selected("sort_var", selectors)
+      anno_txt_var_name <- pick_selected("anno_txt_var", selectors)
+      marker_pos_var_name <- pick_selected("marker_pos_var", selectors)
+      marker_shape_var_name <- pick_selected("marker_shape_var", selectors)
+      marker_color_var_name <- pick_selected("marker_color_var", selectors)
+      
 
-      bar_var_name <- .swimlane_picks_selected_var(selectors$bar_var())
-      validate(
-        need(length(bar_var_name) > 0L, "Please select a bar length variable.")
-      )
+      validate(need(parentname %in% names(qenv), sprintf("'%s' not included in data", parentname)))
 
-      bar_color_var_name <- if (!is.null(bar_color_var)) {
-        .swimlane_picks_selected_var(selectors$bar_color_var())
-      } else {
-        character()
-      }
-      sort_var_name <- if (!is.null(sort_var)) {
-        .swimlane_picks_selected_var(selectors$sort_var())
-      } else {
-        character()
-      }
-      anno_txt_var_name <- if (!is.null(anno_txt_var)) {
-        .swimlane_picks_selected_var(selectors$anno_txt_var())
-      } else {
-        character()
-      }
-
-      marker_pos_var_name <- if (dataname != "ADSL" && !is.null(marker_pos_var)) {
-        .swimlane_picks_selected_var(selectors$marker_pos_var())
-      } else {
-        character()
-      }
-      marker_shape_var_name <- if (dataname != "ADSL" && !is.null(marker_shape_var)) {
-        .swimlane_picks_selected_var(selectors$marker_shape_var())
-      } else {
-        character()
-      }
-      marker_color_var_name <- if (dataname != "ADSL" && !is.null(marker_color_var)) {
-        .swimlane_picks_selected_var(selectors$marker_color_var())
-      } else {
-        character()
-      }
-
-      validate(need("ADSL" %in% names(obj), "'ADSL' not included in data"))
-      validate(need(
-        (length(obj) == 1 && dataname == "ADSL") ||
-          (length(obj) >= 2 && dataname != "ADSL"),
-        paste(
-          "Please either add just 'ADSL' as dataname when just ADSL is available.",
-          "In case 2 datasets are available ADSL is not supposed to be the dataname."
-        )
-      ))
-
-      ADSL <- obj[["ADSL"]]
+      ADSL <- qenv[[parentname]]
 
       anl_vars <- unique(c(
         "USUBJID", "STUDYID",
@@ -318,133 +337,89 @@ srv_g_swimlane <- function(id,
         bar_var_name, bar_color_var_name, sort_var_name, anno_txt_var_name
       ))
 
-      if (dataname == "ADSL") {
-        teal::validate_has_data(ADSL, min_nrow = 3)
-        teal::validate_has_variable(ADSL, adsl_vars)
-      } else {
-        anl <- obj[[dataname]]
-        teal::validate_has_data(anl, min_nrow = 3)
-        teal::validate_has_variable(anl, anl_vars)
-        validate(need(
-          length(marker_pos_var_name) > 0L,
-          "Please select a marker position variable."
-        ))
-      }
+      teal::validate_has_data(ADSL, min_nrow = 3)
+      teal::validate_has_variable(ADSL, adsl_vars)
+
+      anl <- qenv[[dataname]]
+      teal::validate_has_data(anl, min_nrow = 3)
+      teal::validate_has_variable(anl, anl_vars)
 
       vref_line <- suppressWarnings(as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)()))
 
-      q1 <- obj
-
-      q2 <- teal.code::eval_code(
-        q1,
-        code = bquote({
-          bar_var <- .(bar_var_name)
-          bar_color_var <- .(bar_color_var_name)
-          sort_var <- .(sort_var_name)
-          marker_pos_var <- .(marker_pos_var_name)
-          marker_shape_var <- .(marker_shape_var_name)
-          marker_color_var <- .(marker_color_var_name)
-          anno_txt_var <- .(anno_txt_var_name)
-        })
-      )
-
-      q3 <- if (dataname == "ADSL") {
-        teal.code::eval_code(
-          q2,
-          code = bquote({
-            ADSL_p <- ADSL
-            ADSL <- ADSL_p[, .(adsl_vars), drop = FALSE]
-            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
-          })
-        )
-      } else {
-        teal.code::eval_code(
-          q2,
+      q1 <- teal.code::eval_code(
+          qenv,
           code = bquote({
             ADSL_p <- ADSL
             ANL_p <- .(as.name(dataname))
 
-            ADSL <- ADSL_p[, .(adsl_vars), drop = FALSE]
-            ANL <- merge(
-              x = ADSL,
-              y = ANL_p[, .(anl_vars), drop = FALSE],
-              all.x = FALSE, all.y = FALSE,
-              by = c("USUBJID", "STUDYID")
-            )
+            ADSLqe <- ADSL_p[, .(adsl_vars), drop = FALSE]
             ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
             ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1))
           })
         )
+
+      ANL <- q1[["ANL"]]
+      ADSL <- q1[["ADSL"]]
+
+      teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
+
+      if (length(sort_var_name) > 0L) {
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Selected Options")
+        teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), paste("Sorted by:", sort_var_name))
       }
 
-      plot_call <- if (dataname == "ADSL") {
-        bquote(
+      q2 <- within(
+        q1,
+        expr = {
           plot <- osprey::g_swimlane(
             bar_id = ADSL[["USUBJID"]],
-            bar_length = ADSL[[bar_var]],
-            sort_by = .(if (length(sort_var) > 0) quote(ADSL[[sort_var]]) else NULL),
-            col_by = .(if (length(bar_color_var) > 0) quote(ADSL[[bar_color_var]]) else NULL),
-            marker_id = NULL,
-            marker_pos = NULL,
-            marker_shape = NULL,
-            marker_shape_opt = NULL,
-            marker_color = NULL,
-            marker_color_opt = NULL,
-            anno_txt = .(if (length(anno_txt_var) > 0) quote(ADSL[, anno_txt_var, drop = FALSE]) else NULL),
-            xref_line = .(vref_line),
-            xtick_at = ggplot2::waiver(),
-            xlab = .(x_label),
-            title = "Swimlane Plot"
-          )
-        )
-      } else {
-        bquote(
-          plot <- osprey::g_swimlane(
-            bar_id = ADSL[["USUBJID"]],
-            bar_length = ADSL[[bar_var]],
-            sort_by = .(if (length(sort_var) > 0) quote(ADSL[[sort_var]]) else NULL),
-            col_by = .(if (length(bar_color_var) > 0) quote(ADSL[[bar_color_var]]) else NULL),
+            bar_length = ADSL[[bar_var_name]],
+            sort_by = if (length(sort_var_name) > 0) ADSL[[sort_var_name]] else NULL,
+            col_by = if (length(bar_color_var_name) > 0) ADSL[[bar_color_var_name]] else NULL,
             marker_id = ANL[["USUBJID"]],
-            marker_pos = .(if (length(marker_pos_var) > 0) quote(ANL[[marker_pos_var]]) else NULL),
-            marker_shape = .(if (length(marker_shape_var) > 0) quote(ANL[[marker_shape_var]]) else NULL),
-            marker_shape_opt = .(if (length(marker_shape_var) == 0) {
+            marker_pos = if (length(marker_pos_var_name) > 0) ANL[[marker_pos_var_name]] else NULL,
+            marker_shape = if (length(marker_shape_var_name) > 0) ANL[[marker_shape_var_name]] else NULL,
+            marker_shape_opt = if (length(marker_shape_var_name) == 0) {
               NULL
             } else if (
-              length(marker_shape_var) > 0 &&
-                all(unique(ANL[[marker_shape_var]]) %in% names(marker_shape_opt))
+              length(marker_shape_var_name) > 0 &&
+                all(unique(ANL[[marker_shape_var_name]]) %in% names(marker_shape_opt))
             ) {
               bquote(.(marker_shape_opt))
             } else {
               NULL
-            }),
-            marker_color = .(if (length(marker_color_var) > 0) quote(ANL[[marker_color_var]]) else NULL),
-            marker_color_opt = .(if (length(marker_color_var) == 0) {
+            },
+            marker_color = if (length(marker_color_var_name) > 0) ANL[[marker_color_var_name]] else NULL,
+            marker_color_opt = if (length(marker_color_var_name) == 0) {
               NULL
             } else if (
-              length(marker_color_var) > 0 &&
-                all(unique(ANL[[marker_color_var]]) %in% names(marker_color_opt))
+              length(marker_color_var_name) > 0 &&
+                all(unique(ANL[[marker_color_var_name]]) %in% names(marker_color_opt))
             ) {
               bquote(.(marker_color_opt))
             } else {
               NULL
-            }),
-            anno_txt = .(if (length(anno_txt_var) > 0) quote(ADSL[, anno_txt_var, drop = FALSE]) else NULL),
-            xref_line = .(vref_line),
+            },
+            anno_txt = if (length(anno_txt_var_name) > 0) ADSL[, anno_txt_var_name, drop = FALSE] else NULL,
+            xref_line = vref_line,
             xtick_at = ggplot2::waiver(),
-            xlab = .(x_label),
+            xlab = x_label,
             title = "Swimlane Plot"
           )
-        )
-      }
+        },
+        bar_var_name = bar_var_name,
+        sort_var_name = sort_var_name,
+        bar_color_var_name = bar_color_var_name,
+        marker_pos_var_name = marker_pos_var_name,
+        marker_shape_var_name = marker_shape_var_name,
+        marker_color_var_name = marker_color_var_name,
+        marker_shape_opt = marker_shape_opt,
+        marker_color_opt = marker_color_opt,
+        anno_txt_var_name = anno_txt_var_name,
+        vref_line = vref_line,
+        x_label = x_label
+      )
 
-      teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), "### Plot")
-
-      if (length(sort_var_name) > 0L) {
-        teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), "### Selected Options")
-        teal.reporter::teal_card(q3) <- c(teal.reporter::teal_card(q3), paste("Sorted by:", sort_var_name))
-      }
-
-      teal.code::eval_code(q3, code = plot_call)
     })
 
     plot_r <- reactive(output_q()[["plot"]])
