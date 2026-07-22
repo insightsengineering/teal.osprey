@@ -10,8 +10,9 @@ flag_var_cs <- teal.transform::choices_selected(
 
 arm_var_picks <- teal.picks::variables(
   choices = teal.picks::is_categorical(min.len = 2),
-  selected = 1L
-)
+  selected = "ACTARM"
+) |>
+  suppressWarnings(classes = "picks_delayed")
 
 flag_var_picks <- teal.picks::variables(
   choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5"),
@@ -123,7 +124,9 @@ testthat::describe("tm_g_ae_oview module creation", {
       arm_var = arm_var_picks,
       flag_var_anl = flag_var_picks,
       plot_height = c(600, 200, 2000)
-    ) |> suppressWarnings(classes = "picks_delayed")
+    ) |>
+      suppressWarnings(classes = "picks_delayed")
+
     testServer(
       mod$server,
       args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
@@ -132,7 +135,6 @@ testthat::describe("tm_g_ae_oview module creation", {
           fontsize = 5, conf_level = 0.95, diff_ci_method = "wald",
           arm_ref = "A: Drug X", arm_trt = "B: Placebo"
         )
-        session$flushReact()
         expect_no_error(session$returned())
       }
     )
