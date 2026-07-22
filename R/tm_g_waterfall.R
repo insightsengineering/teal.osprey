@@ -112,7 +112,7 @@ tm_g_waterfall <- function(label,
                            bar_paramcd = teal.picks::values(choices = teal.picks::is_categorical(), multiple = FALSE),
                            bar_var = teal.picks::variables(choices = is.numeric, multiple = FALSE),
                            bar_color_var = teal.picks::variables(
-                            choices = teal.picks::is_categorical(max.len = 20), selected = NULL
+                             choices = teal.picks::is_categorical(max.len = 20), selected = NULL
                            ),
                            bar_color_opt = NULL,
                            sort_var = teal.picks::variables(selected = NULL),
@@ -263,7 +263,7 @@ ui_g_waterfall <- function(id,
       tags$div(
         tags$strong("Add ADSL Label to Bars"),
         teal.picks::picks_ui(ns("add_label_var_sl"), add_label_var_sl)
-          ),
+      ),
       tags$div(
         tags$strong("Add ADRS Label to Bars"),
         teal.picks::picks_ui(ns("add_label_paramcd_rs"), add_label_paramcd_rs)
