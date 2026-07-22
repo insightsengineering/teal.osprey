@@ -1,5 +1,5 @@
 describe("tm_g_events_term_id module creation", {
-  test_that("using choices_selected", {
+  it("using choices_selected", {
     mod <- tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
@@ -22,7 +22,7 @@ describe("tm_g_events_term_id module creation", {
     expect_equal(mod$datanames, c("ADAE", "ADSL"))
   })
 
-  test_that("using picks", {
+  it("using picks", {
     skip_if_not_installed("teal.picks")
 
     mod <- tm_g_events_term_id(
@@ -56,7 +56,7 @@ describe("tm_g_events_term_id module creation", {
 
   join_keys(data) <- default_cdisc_join_keys[names(data)]
 
-  test_that("using choices_selected works", {
+  it("using choices_selected works", {
     mod <- tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
@@ -91,7 +91,7 @@ describe("tm_g_events_term_id module creation", {
     )
   })
 
-  test_that("using picks works", {
+  it("using picks works", {
     skip_if_not_installed("teal.picks")
 
     mod <- tm_g_events_term_id(
