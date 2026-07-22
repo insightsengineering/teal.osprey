@@ -14,11 +14,11 @@ app_driver_tm_g_events_term_id <- function() {
       data = data,
       modules = tm_g_events_term_id(
         label = "Common AE",
-        term_var = teal.picks::variables(
+        term_var = variables(
           choices = c("AEDECOD", "AETERM", "AEHLT"),
           selected = "AEDECOD"
         ),
-        arm_var = teal.picks::variables(
+        arm_var = variables(
           choices = c("ACTARMCD", "ACTARM"),
           selected = "ACTARMCD"
         ),

@@ -8,13 +8,13 @@ flag_var_cs <- teal.transform::choices_selected(
   choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5")
 )
 
-arm_var_picks <- teal.picks::variables(
-  choices = teal.picks::is_categorical(min.len = 2),
+arm_var_picks <- variables(
+  choices = is_categorical(min.len = 2),
   selected = "ACTARM"
 ) |>
   suppressWarnings(classes = "picks_delayed")
 
-flag_var_picks <- teal.picks::variables(
+flag_var_picks <- variables(
   choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5"),
   selected = "TMPFL_SER"
 )

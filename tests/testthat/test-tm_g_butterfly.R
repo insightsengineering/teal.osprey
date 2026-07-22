@@ -23,13 +23,13 @@ count_by_var_cs <- teal.transform::choices_selected(
   choices = c("# of patients", "# of AEs")
 )
 
-right_var_picks <- teal.picks::variables(
+right_var_picks <- variables(
   choices = dplyr::where(is.factor),
   selected = "SEX"
 ) |>
   suppressWarnings(classes = "picks_delayed")
 
-left_var_picks <- teal.picks::variables(
+left_var_picks <- variables(
   choices = dplyr::where(is.factor),
   selected = "RACE"
 ) |>
@@ -80,7 +80,7 @@ describe("tm_g_butterfly input validation", {
           label = "Butterfly Plot",
           dataname = "ADAE",
           right_var = right_var_cs,
-          left_var = teal.picks::variables(
+          left_var = variables(
             choices = dplyr::where(is.factor),
             selected = 1L,
             multiple = TRUE
@@ -98,7 +98,7 @@ describe("tm_g_butterfly input validation", {
         suppressWarnings(tm_g_butterfly(
           label = "Butterfly Plot",
           dataname = "ADAE",
-          right_var = teal.picks::variables(
+          right_var = variables(
             choices = dplyr::where(is.factor),
             selected = 1L,
             multiple = TRUE
@@ -136,19 +136,19 @@ describe("tm_g_butterfly module creation", {
       dataname = "ADAE",
       right_var = right_var_picks,
       left_var = left_var_picks,
-      category_var = teal.picks::variables(
-        choices = teal.picks::is_categorical(min.len = 2),
+      category_var = variables(
+        choices = is_categorical(min.len = 2),
         selected = 1L
       ),
-      color_by_var = teal.picks::variables(
-        choices = teal.picks::is_categorical(min.len = 2),
+      color_by_var = variables(
+        choices = is_categorical(min.len = 2),
         selected = 1L
       ),
-      count_by_var = teal.picks::values(
+      count_by_var = values(
         selected = "# of patients",
         choices = c("# of patients", "# of AEs")
       ),
-      sort_by_var = teal.picks::values(
+      sort_by_var = values(
         selected = "count",
         choices = c("count", "alphabetical")
       ),
@@ -209,19 +209,19 @@ describe("tm_g_butterfly module creation", {
       dataname = "ADAE",
       right_var = right_var_picks,
       left_var = left_var_picks,
-      category_var = teal.picks::variables(
-        choices = teal.picks::is_categorical(min.len = 2),
+      category_var = variables(
+        choices = is_categorical(min.len = 2),
         selected = "AEBODSYS"
       ),
-      color_by_var = teal.picks::variables(
-        choices = teal.picks::is_categorical(min.len = 2),
+      color_by_var = variables(
+        choices = is_categorical(min.len = 2),
         selected = "AETOXGR"
       ),
-      count_by_var = teal.picks::values(
+      count_by_var = values(
         selected = "# of patients",
         choices = c("# of patients", "# of AEs")
       ),
-      sort_by_var = teal.picks::values(
+      sort_by_var = values(
         selected = "count",
         choices = c("count", "alphabetical")
       )

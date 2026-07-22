@@ -33,37 +33,37 @@ yfacet_var_cs <- teal.transform::choices_selected(
   selected = "ARM",
 )
 
-paramcd_picks <- teal.picks::variables(
+paramcd_picks <- variables(
   choices = "PARAMCD",
   selected = "PARAMCD"
 )
 
-x_var_picks <- teal.picks::variables(
+x_var_picks <- variables(
   choices = c("ADY", "AGE"),
   selected = "ADY",
 )
 
-y_var_picks <- teal.picks::variables(
+y_var_picks <- variables(
   choices = c("PCHG", "CHG", "AVAL"),
   selected = "PCHG"
 )
 
-marker_var_picks <- teal.picks::variables(
+marker_var_picks <- variables(
   choices = c("SEX", "RACE", "USUBJID"),
   selected = "SEX"
 )
 
-line_colorby_var_picks <- teal.picks::variables(
+line_colorby_var_picks <- variables(
   choices = c("SEX", "USUBJID", "RACE"),
   selected = "SEX"
 )
 
-xfacet_var_picks <- teal.picks::variables(
+xfacet_var_picks <- variables(
   choices = c("SEX", "ARM"),
   selected = "SEX"
 )
 
-yfacet_var_picks <- teal.picks::variables(
+yfacet_var_picks <- variables(
   choices = c("SEX", "ARM"),
   selected = "ARM"
 )
@@ -125,7 +125,7 @@ describe("tm_g_spiderplot argument verification", {
             label = "Spider Plot",
             dataname = "ADTR",
             paramcd = paramcd_cs,
-            x_var = teal.picks::variables(
+            x_var = variables(
               choices = c("ADY", "AGE"),
               selected = "ADY",
               multiple = TRUE
@@ -150,7 +150,7 @@ describe("tm_g_spiderplot argument verification", {
           tm_g_spiderplot(
             label = "Spider Plot",
             dataname = "ADTR",
-            paramcd = teal.picks::variables(
+            paramcd = variables(
               choices = "PARAMCD",
               selected = "PARAMCD",
               multiple = TRUE

@@ -23,22 +23,21 @@ describe("tm_g_events_term_id module creation", {
   })
 
   it("using picks", {
-    skip_if_not_installed("teal.picks")
 
     mod <- tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
       parent_dataname = "ADSL",
-      term_var = teal.picks::picks(
-        teal.picks::datasets("ADAE"),
-        teal.picks::variables(
+      term_var = picks(
+        datasets("ADAE"),
+        variables(
           choices = "AEDECOD",
           selected = "AEDECOD"
         )
       ),
-      arm_var = teal.picks::picks(
-        teal.picks::datasets("ADSL"),
-        teal.picks::variables(
+      arm_var = picks(
+        datasets("ADSL"),
+        variables(
           choices = "ACTARMCD",
           selected = "ACTARMCD"
         )
@@ -92,22 +91,20 @@ describe("tm_g_events_term_id module creation", {
   })
 
   it("using picks works", {
-    skip_if_not_installed("teal.picks")
-
     mod <- tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
       parent_dataname = "ADSL",
-      term_var = teal.picks::picks(
-        teal.picks::datasets("ADAE"),
-        teal.picks::variables(
+      term_var = picks(
+        datasets("ADAE"),
+        variables(
           choices = "AEDECOD",
           selected = "AEDECOD"
         )
       ),
-      arm_var = teal.picks::picks(
-        teal.picks::datasets("ADSL"),
-        teal.picks::variables(
+      arm_var = picks(
+        datasets("ADSL"),
+        variables(
           choices = "ACTARMCD",
           selected = "ACTARMCD"
         )
@@ -134,19 +131,17 @@ describe("tm_g_events_term_id module creation", {
 })
 
 test_that("tm_g_events_term_id coerces multiple variable selection", {
-  skip_if_not_installed("teal.picks")
-
-  term_var <- teal.picks::picks(
-    teal.picks::datasets("ADAE"),
-    teal.picks::variables(
+  term_var <- picks(
+    datasets("ADAE"),
+    variables(
       choices = c("AEDECOD", "AETERM"),
       selected = c("AEDECOD", "AETERM"),
       multiple = TRUE
     )
   )
-  arm_var <- teal.picks::picks(
-    teal.picks::datasets("ADSL"),
-    teal.picks::variables(
+  arm_var <- picks(
+    datasets("ADSL"),
+    variables(
       choices = "ACTARMCD",
       selected = "ACTARMCD"
     )
@@ -162,5 +157,5 @@ test_that("tm_g_events_term_id coerces multiple variable selection", {
     ),
     "accepts only a single variable selection"
   )
-  expect_false(teal.picks::is_pick_multiple(mod$ui_args$term_var$variables))
+  expect_false(is_pick_multiple(mod$ui_args$term_var$variables))
 })

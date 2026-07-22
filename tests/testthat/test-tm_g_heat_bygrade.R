@@ -28,39 +28,39 @@ conmed_var_cs <- teal.transform::choices_selected(
   selected = "CMDECOD"
 )
 
-id_var_picks <- teal.picks::variables(
-  choices = teal.picks::is_categorical(min.len = 2),
+id_var_picks <- variables(
+  choices = is_categorical(min.len = 2),
   selected = 1L
 )
 
-visit_var_picks <- teal.picks::variables(
-  choices = teal.picks::is_categorical(min.len = 2),
+visit_var_picks <- variables(
+  choices = is_categorical(min.len = 2),
   selected = 1L
 )
 
-ongo_var_picks <- teal.picks::variables(
+ongo_var_picks <- variables(
   choices = dplyr::where(is.logical),
   selected = 1L
 )
 
-anno_var_picks_single <- teal.picks::variables(
-  choices = teal.picks::is_categorical(min.len = 2),
+anno_var_picks_single <- variables(
+  choices = is_categorical(min.len = 2),
   selected = 1L
 )
 
-anno_var_picks_multiple <- teal.picks::variables(
-  choices = teal.picks::is_categorical(min.len = 2),
+anno_var_picks_multiple <- variables(
+  choices = is_categorical(min.len = 2),
   selected = 1L,
   multiple = TRUE
 )
 
-heat_var_picks <- teal.picks::variables(
-  choices = teal.picks::is_categorical(min.len = 2),
+heat_var_picks <- variables(
+  choices = is_categorical(min.len = 2),
   selected = 1L
 )
 
-conmed_var_picks <- teal.picks::variables(
-  choices = teal.picks::is_categorical(min.len = 2),
+conmed_var_picks <- variables(
+  choices = is_categorical(min.len = 2),
   selected = 1L
 )
 
@@ -221,6 +221,6 @@ describe("tm_g_heat_bygrade module creation", {
       "accepts only a multiple variable selection"
     )
     expect_s3_class(mod, "teal_module")
-    expect_true(teal.picks::is_pick_multiple(mod$server_args$anno_var$variables))
+    expect_true(is_pick_multiple(mod$server_args$anno_var$variables))
   })
 })
