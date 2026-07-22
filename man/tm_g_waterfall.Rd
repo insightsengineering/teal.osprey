@@ -9,16 +9,18 @@ tm_g_waterfall(
   parentname = "ADSL",
   dataname_tr = "ADTR",
   dataname_rs = "ADRS",
-  bar_paramcd,
-  bar_var,
-  bar_color_var,
+  bar_paramcd = teal.picks::values(choices = teal.picks::is_categorical(), multiple =
+    FALSE),
+  bar_var = teal.picks::variables(choices = is.numeric, multiple = FALSE),
+  bar_color_var = teal.picks::variables(choices = teal.picks::is_categorical(max.len =
+    20), selected = NULL),
   bar_color_opt = NULL,
-  sort_var,
-  add_label_var_sl,
-  add_label_paramcd_rs,
-  anno_txt_var_sl,
-  anno_txt_paramcd_rs,
-  facet_var,
+  sort_var = teal.picks::variables(selected = NULL),
+  add_label_var_sl = teal.picks::variables(selected = NULL),
+  add_label_paramcd_rs = teal.picks::values(selected = NULL, multiple = FALSE),
+  anno_txt_var_sl = teal.picks::variables(selected = NULL, multiple = TRUE),
+  anno_txt_paramcd_rs = teal.picks::values(selected = NULL),
+  facet_var = teal.picks::variables(selected = NULL),
   ytick_at = 20,
   href_line = NULL,
   gap_point_val = NULL,
@@ -54,7 +56,7 @@ numeric variable from dataset to plot the bar height, e.g., \code{PCHG}.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
 
 \item{bar_color_var}{(\code{\link[teal.picks:variables]{teal.picks::variables}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-color by variable (subject level), \code{None} corresponds to \code{NULL}.
+color by variable (subject level). Defaults to no selection.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
 
@@ -64,33 +66,33 @@ otherwise color will be assigned by \code{ggplot} default, please note that \cod
 in this case}
 
 \item{sort_var}{(\code{\link[teal.picks:variables]{teal.picks::variables}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-sort by variable (subject level), \code{None} corresponds to \code{NULL}.
+sort by variable (subject level). Defaults to no selection.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
 
 \item{add_label_var_sl}{(\code{\link[teal.picks:variables]{teal.picks::variables}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-add label to bars (subject level), \code{None} corresponds to \code{NULL}.
+add label to bars (subject level).
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
 
 \item{add_label_paramcd_rs}{(\code{\link[teal.picks:values]{teal.picks::values}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-add label to bars (response dataset), \code{None} corresponds to \code{NULL}.
-At least one of \code{add_label_var_sl} and \code{add_label_paramcd_rs} needs to be \code{NULL}.
+add label to bars (response dataset).
+At least one of \code{add_label_var_sl} and \code{add_label_paramcd_rs} needs to not be selected.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:values]{teal.picks::values()}} instead.}
 
 \item{anno_txt_var_sl}{(\code{\link[teal.picks:variables]{teal.picks::variables}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-subject level variables to be displayed in the annotation table, default is \code{NULL}.
+subject level variables to be displayed in the annotation table, default is no selection.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
 
 \item{anno_txt_paramcd_rs}{(\code{\link[teal.picks:values]{teal.picks::values}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-analysis dataset variables to be displayed in the annotation table, default is \code{NULL}.
+analysis dataset variables to be displayed in the annotation table, default is no selection.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:values]{teal.picks::values()}} instead.}
 
 \item{facet_var}{(\code{\link[teal.picks:variables]{teal.picks::variables}} or \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-facet by variable (subject level), \code{None} corresponds to \code{NULL}.
+facet by variable (subject level). Defaults to no selection.
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
 Please use \code{\link[teal.picks:variables]{teal.picks::variables()}} instead.}
 
@@ -165,7 +167,7 @@ app <- init(
       bar_color_opt = NULL,
       sort_var = variables(c("ARMCD", "SEX"), NULL),
       add_label_var_sl = variables(c("SEX", "EOSDY"), NULL),
-      add_label_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL, multiple = TRUE),
+      add_label_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL, multiple = FALSE),
       anno_txt_var_sl = variables(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL, multiple = TRUE),
       anno_txt_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL),
       facet_var = variables(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),

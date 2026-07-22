@@ -291,8 +291,8 @@ migrate_value_choices_to_picks <- function(x, # nolint: object_length_linter.
                                            add_values = TRUE) {
   checkmate::assert_flag(multiple, null.ok = TRUE)
   checkmate::assert_string(arg_name)
-  checkmate::assert_flag(add_values)
   checkmate::assert_string(default_variable_name, null.ok = TRUE)
+  checkmate::assert_flag(add_values)
 
   if (inherits(x, "picks")) {
     if (!is.null(multiple) && !identical(attr(x$values, "multiple", exact = TRUE), multiple)) {

@@ -22,7 +22,7 @@
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
 #' @param bar_color_var ([`teal.picks::variables`] or [`teal.transform::choices_selected`])
-#' color by variable (subject level), `None` corresponds to `NULL`.
+#' color by variable (subject level). Defaults to no selection.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
 #' @param bar_color_opt aesthetic values to map color values (named vector to map color values to each name).
@@ -30,28 +30,28 @@
 #' otherwise color will be assigned by `ggplot` default, please note that `NULL` needs to be specified
 #' in this case
 #' @param sort_var ([`teal.picks::variables`] or [`teal.transform::choices_selected`])
-#' sort by variable (subject level), `None` corresponds to `NULL`.
+#' sort by variable (subject level). Defaults to no selection.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
 #' @param add_label_var_sl ([`teal.picks::variables`] or [`teal.transform::choices_selected`])
-#' add label to bars (subject level), `None` corresponds to `NULL`.
+#' add label to bars (subject level).
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
 #' @param add_label_paramcd_rs ([`teal.picks::values`] or [`teal.transform::choices_selected`])
-#' add label to bars (response dataset), `None` corresponds to `NULL`.
-#' At least one of `add_label_var_sl` and `add_label_paramcd_rs` needs to be `NULL`.
+#' add label to bars (response dataset).
+#' At least one of `add_label_var_sl` and `add_label_paramcd_rs` needs to not be selected.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::values()] instead.
 #' @param anno_txt_var_sl ([`teal.picks::variables`] or [`teal.transform::choices_selected`])
-#' subject level variables to be displayed in the annotation table, default is `NULL`.
+#' subject level variables to be displayed in the annotation table, default is no selection.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
 #' @param anno_txt_paramcd_rs ([`teal.picks::values`] or [`teal.transform::choices_selected`])
-#' analysis dataset variables to be displayed in the annotation table, default is `NULL`.
+#' analysis dataset variables to be displayed in the annotation table, default is no selection.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::values()] instead.
 #' @param facet_var ([`teal.picks::variables`] or [`teal.transform::choices_selected`])
-#' facet by variable (subject level), `None` corresponds to `NULL`.
+#' facet by variable (subject level). Defaults to no selection.
 #' `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #' Please use [teal.picks::variables()] instead.
 #' @param ytick_at (`numeric(1)`) bar height axis interval, default is 20
@@ -93,7 +93,7 @@
 #'       bar_color_opt = NULL,
 #'       sort_var = variables(c("ARMCD", "SEX"), NULL),
 #'       add_label_var_sl = variables(c("SEX", "EOSDY"), NULL),
-#'       add_label_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL, multiple = TRUE),
+#'       add_label_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL, multiple = FALSE),
 #'       anno_txt_var_sl = variables(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL, multiple = TRUE),
 #'       anno_txt_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL),
 #'       facet_var = variables(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
@@ -109,16 +109,18 @@ tm_g_waterfall <- function(label,
                            parentname = "ADSL",
                            dataname_tr = "ADTR",
                            dataname_rs = "ADRS",
-                           bar_paramcd,
-                           bar_var,
-                           bar_color_var,
+                           bar_paramcd = teal.picks::values(choices = teal.picks::is_categorical(), multiple = FALSE),
+                           bar_var = teal.picks::variables(choices = is.numeric, multiple = FALSE),
+                           bar_color_var = teal.picks::variables(
+                            choices = teal.picks::is_categorical(max.len = 20), selected = NULL
+                           ),
                            bar_color_opt = NULL,
-                           sort_var,
-                           add_label_var_sl,
-                           add_label_paramcd_rs,
-                           anno_txt_var_sl,
-                           anno_txt_paramcd_rs,
-                           facet_var,
+                           sort_var = teal.picks::variables(selected = NULL),
+                           add_label_var_sl = teal.picks::variables(selected = NULL),
+                           add_label_paramcd_rs = teal.picks::values(selected = NULL, multiple = FALSE),
+                           anno_txt_var_sl = teal.picks::variables(selected = NULL, multiple = TRUE),
+                           anno_txt_paramcd_rs = teal.picks::values(selected = NULL),
+                           facet_var = teal.picks::variables(selected = NULL),
                            ytick_at = 20,
                            href_line = NULL,
                            gap_point_val = NULL,
@@ -188,6 +190,8 @@ tm_g_waterfall <- function(label,
   anno_txt_var_sl <- force_pick_selection(anno_txt_var_sl, which = "variables", multiple = TRUE)
   anno_txt_paramcd_rs <- force_pick_selection(anno_txt_paramcd_rs, which = "values", multiple = TRUE)
   facet_var <- force_pick_selection(facet_var, which = "variables", multiple = FALSE)
+
+  attr(add_label_paramcd_rs$values, "allow-clear") <- TRUE
 
   args <- as.list(environment())
 
@@ -259,7 +263,7 @@ ui_g_waterfall <- function(id,
       tags$div(
         tags$strong("Add ADSL Label to Bars"),
         teal.picks::picks_ui(ns("add_label_var_sl"), add_label_var_sl)
-      ),
+          ),
       tags$div(
         tags$strong("Add ADRS Label to Bars"),
         teal.picks::picks_ui(ns("add_label_paramcd_rs"), add_label_paramcd_rs)
@@ -380,7 +384,7 @@ srv_g_waterfall <- function(id,
           "ADRS Label must be an element of ADRS PARAMCD."
         ),
         teal::need_input(
-          c("bar_paramcd-values-selected", "add_label_var_sl-variables-selected"),
+          c("add_label_paramcd_rs-values-selected", "add_label_var_sl-variables-selected"),
           length(selectors$add_label_var_sl()$variables$selected) == 0 ||
             length(selectors$add_label_paramcd_rs()$values$selected) == 0,
           "Only one of 'Add ADSL Label to Bars' and 'Add ADRS Label to Bars' can be selected."
@@ -478,25 +482,6 @@ srv_g_waterfall <- function(id,
         as.numeric(gap_point_val_selected)
       }
       ytick_at_selected <- as.numeric(ytick_at_selected)
-
-      bar_color_var_selected <- if (
-        !is.null(bar_color_var_selected) &&
-          bar_color_var_selected != "None" &&
-          bar_color_var_selected != ""
-      ) {
-        bar_color_var_selected
-      }
-      sort_var_selected <- if (
-        !is.null(sort_var_selected) && sort_var_selected != "None" && sort_var_selected != ""
-      ) {
-        sort_var_selected
-      }
-
-      facet_var_selected <- if (
-        !is.null(facet_var_selected) && facet_var_selected != "None" && facet_var_selected != ""
-      ) {
-        facet_var_selected
-      }
 
       # write variables to qenv
       q1 <- teal.code::eval_code(obj, bquote({
