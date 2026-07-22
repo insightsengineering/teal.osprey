@@ -208,7 +208,7 @@ testthat::describe("tm_g_waterfall argument verification", {
 })
 
 testthat::describe("tm_g_waterfall module creation", {
-  testthat::it("creates a teal module using choices_selected (default method)", {
+  testthat::it("creates a teal module using choices_selected (deprecated option)", {
     mod <- tm_g_waterfall(
       label = "Waterfall",
       dataname_tr = "ADTR",
