@@ -324,8 +324,7 @@ srv_g_spider <- function(
       {
         paramcd_col <- merged$variables()$paramcd
         if (!is.null(paramcd_col) && paramcd_col %in% names(merged$data()[["ANL"]])) {
-          choices <- unique(as.character(merged$data()[["ANL"]][[paramcd_col]])) |>
-            sort()
+          choices <- sort(unique(as.character(merged$data()[["ANL"]][[paramcd_col]])))
           teal.widgets::updateOptionalSelectInput(
             session,
             "paramcd_val",
@@ -488,15 +487,15 @@ srv_g_spider <- function(
             },
             vref_line = vref_line,
             href_line = href_line,
-            x_label = if (is.null(formatters::var_labels(get(dataname)[x_var], fill = FALSE))) {
+            x_label = if (is.null(formatters::var_labels(dataname[x_var], fill = FALSE))) {
               x_var
             } else {
-              formatters::var_labels(get(dataname)[x_var], fill = FALSE)
+              formatters::var_labels(dataname[x_var], fill = FALSE)
             },
-            y_label = if (is.null(formatters::var_labels(get(dataname)[y_var], fill = FALSE))) {
+            y_label = if (is.null(formatters::var_labels(dataname[y_var], fill = FALSE))) {
               y_var
             } else {
-              formatters::var_labels(get(dataname)[y_var], fill = FALSE)
+              formatters::var_labels(dataname[y_var], fill = FALSE)
             },
             show_legend = legend_on
           )
@@ -509,7 +508,7 @@ srv_g_spider <- function(
         xfacet_var = xfacet_var,
         vref_line = vref_line,
         href_line = href_line,
-        dataname = dataname,
+        dataname = as.name(dataname),
         legend_on = legend_on
       )
     })
