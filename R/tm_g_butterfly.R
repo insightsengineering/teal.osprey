@@ -460,7 +460,7 @@ srv_g_butterfly <- function(
         teal::validate_input(
           c("right_val", "left_val"),
           condition = all(right_val %in% ANL[[right_var_name]]) &&
-              all(left_val %in% ANL[[left_var_name]]),
+            all(left_val %in% ANL[[left_var_name]]),
           message = "No observations for selected dichotomization values (filtered out?)"
         )
 

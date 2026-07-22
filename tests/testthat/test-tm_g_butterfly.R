@@ -200,7 +200,6 @@ describe("tm_g_butterfly module creation", {
         expect_no_error(session$returned())
       }
     )
-
   })
 
   it("works with picks", {

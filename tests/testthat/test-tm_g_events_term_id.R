@@ -23,7 +23,6 @@ describe("tm_g_events_term_id module creation", {
   })
 
   it("using picks", {
-
     mod <- tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
