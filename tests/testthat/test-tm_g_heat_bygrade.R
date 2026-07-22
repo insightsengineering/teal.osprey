@@ -75,9 +75,9 @@ data <- teal_data() %>%
   })
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
-testthat::describe("tm_g_heat_bygrade argument verification", {
-  testthat::it("plot arguments input validation", {
-    testthat::expect_error(
+describe("tm_g_heat_bygrade argument verification", {
+  it("plot arguments input validation", {
+    expect_error(
       {
         suppressWarnings(
           tm_g_heat_bygrade(
@@ -98,7 +98,7 @@ testthat::describe("tm_g_heat_bygrade argument verification", {
       "Assertion on 'plot_height' failed"
     )
 
-    testthat::expect_error(
+    expect_error(
       {
         suppressWarnings(
           tm_g_heat_bygrade(
@@ -121,8 +121,8 @@ testthat::describe("tm_g_heat_bygrade argument verification", {
   })
 })
 
-testthat::describe("tm_g_heat_bygrade module creation", {
-  testthat::it("creates a teal module using choices_selected", {
+describe("tm_g_heat_bygrade module creation", {
+  it("creates a teal module using choices_selected", {
     mod <- suppressWarnings(
       tm_g_heat_bygrade(
         label = "Heatmap by grade",
@@ -138,10 +138,10 @@ testthat::describe("tm_g_heat_bygrade module creation", {
       ),
       classes = "picks_delayed"
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using choices_selected with conmed", {
+  it("creates a teal module using choices_selected with conmed", {
     mod <- suppressWarnings(
       tm_g_heat_bygrade(
         label = "Heatmap by grade",
@@ -159,10 +159,10 @@ testthat::describe("tm_g_heat_bygrade module creation", {
       ),
       classes = "picks_delayed"
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks", {
+  it("creates a teal module using picks", {
     mod <- suppressWarnings(
       tm_g_heat_bygrade(
         label = "Heatmap by grade",
@@ -178,10 +178,10 @@ testthat::describe("tm_g_heat_bygrade module creation", {
       ),
       classes = "picks_delayed"
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks with conmed", {
+  it("creates a teal module using picks with conmed", {
     mod <- suppressWarnings(
       tm_g_heat_bygrade(
         label = "Heatmap by grade",
@@ -199,11 +199,11 @@ testthat::describe("tm_g_heat_bygrade module creation", {
       ),
       classes = "picks_delayed"
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("Throws warning when converting anno_var to multiple", {
-    mod <- testthat::expect_warning(
+  it("Throws warning when converting anno_var to multiple", {
+    mod <- expect_warning(
       tm_g_heat_bygrade(
         label = "Heatmap by grade",
         sl_dataname = "ADSL",
@@ -220,7 +220,7 @@ testthat::describe("tm_g_heat_bygrade module creation", {
       ),
       "accepts only a multiple variable selection"
     )
-    testthat::expect_s3_class(mod, "teal_module")
-    testthat::expect_true(teal.picks::is_pick_multiple(mod$server_args$anno_var$variables))
+    expect_s3_class(mod, "teal_module")
+    expect_true(teal.picks::is_pick_multiple(mod$server_args$anno_var$variables))
   })
 })

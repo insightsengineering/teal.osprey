@@ -29,8 +29,8 @@ app_driver_tm_g_events_term_id <- function() {
   )
 }
 
-testthat::test_that("e2e - tm_g_events_term_id initializes and renders a plot", {
-  testthat::skip_if_not_installed("shinytest2")
+test_that("e2e - tm_g_events_term_id initializes and renders a plot", {
+  skip_if_not_installed("shinytest2")
   skip_if_too_deep(5)
   app_driver <- app_driver_tm_g_events_term_id()
   withr::defer(app_driver$stop())
@@ -38,62 +38,62 @@ testthat::test_that("e2e - tm_g_events_term_id initializes and renders a plot", 
 
   app_driver$expect_no_shiny_error()
   app_driver$expect_no_validation_error()
-  testthat::expect_match(
+  expect_match(
     app_driver$get_active_module_plot_output("out"),
     "data:image/png;base64,"
   )
-  testthat::expect_false(
+  expect_false(
     isTRUE(app_driver$get_active_module_input("arm_ref") == app_driver$get_active_module_input("arm_trt"))
   )
 })
 
-testthat::test_that(
+test_that(
   "e2e - tm_g_events_term_id starts with expected label and encoding selections.",
   {
-    testthat::skip_if_not_installed("shinytest2")
+    skip_if_not_installed("shinytest2")
     skip_if_too_deep(5)
     app_driver <- app_driver_tm_g_events_term_id()
     withr::defer(app_driver$stop())
     app_driver$wait_for_idle()
 
-    testthat::expect_equal(
+    expect_equal(
       app_driver$get_text("a.nav-link.active"),
       "Common AE"
     )
-    testthat::expect_equal(get_teal_picks_slot(app_driver, "term_var", "datasets"), "ADAE")
-    testthat::expect_equal(
+    expect_equal(get_teal_picks_slot(app_driver, "term_var", "datasets"), "ADAE")
+    expect_equal(
       .teal_picks_strip_ds_prefix_vec(get_teal_picks_slot(app_driver, "term_var", "variables")),
       "AEDECOD"
     )
-    testthat::expect_equal(get_teal_picks_slot(app_driver, "arm_var", "datasets"), "ADSL")
-    testthat::expect_equal(
+    expect_equal(get_teal_picks_slot(app_driver, "arm_var", "datasets"), "ADSL")
+    expect_equal(
       .teal_picks_strip_ds_prefix_vec(get_teal_picks_slot(app_driver, "arm_var", "variables")),
       "ACTARMCD"
     )
   }
 )
 
-testthat::test_that(
+test_that(
   "e2e - tm_g_events_term_id: changing term_var changes the plot and does not throw validation errors.",
   {
-    testthat::skip_if_not_installed("shinytest2")
+    skip_if_not_installed("shinytest2")
     skip_if_too_deep(5)
     app_driver <- app_driver_tm_g_events_term_id()
     withr::defer(app_driver$stop())
     app_driver$wait_for_idle()
     plot_before <- app_driver$get_active_module_plot_output("out")
     set_teal_picks_slot(app_driver, "term_var", "variables", "AETERM")
-    testthat::expect_equal(
+    expect_equal(
       .teal_picks_strip_ds_prefix_vec(get_teal_picks_slot(app_driver, "term_var", "variables")),
       "AETERM"
     )
-    testthat::expect_false(identical(plot_before, app_driver$get_active_module_plot_output("out")))
+    expect_false(identical(plot_before, app_driver$get_active_module_plot_output("out")))
     app_driver$expect_no_validation_error()
   }
 )
 
-testthat::test_that("e2e - tm_g_events_term_id: deselection of term_var throws validation error.", {
-  testthat::skip_if_not_installed("shinytest2")
+test_that("e2e - tm_g_events_term_id: deselection of term_var throws validation error.", {
+  skip_if_not_installed("shinytest2")
   skip_if_too_deep(5)
   app_driver <- app_driver_tm_g_events_term_id()
   withr::defer(app_driver$stop())
@@ -102,15 +102,15 @@ testthat::test_that("e2e - tm_g_events_term_id: deselection of term_var throws v
   app_driver$expect_validation_error()
 })
 
-testthat::test_that("e2e - tm_g_events_term_id sort updates title", {
-  testthat::skip_if_not_installed("shinytest2")
+test_that("e2e - tm_g_events_term_id sort updates title", {
+  skip_if_not_installed("shinytest2")
   skip_if_too_deep(5)
   app_driver <- app_driver_tm_g_events_term_id()
   withr::defer(app_driver$stop())
   app_driver$wait_for_idle()
 
   app_driver$set_active_module_input("sort", "riskdiff")
-  testthat::expect_identical(
+  expect_identical(
     app_driver$get_active_module_input("title"),
     "Common AE Table Sorted by Risk Difference"
   )

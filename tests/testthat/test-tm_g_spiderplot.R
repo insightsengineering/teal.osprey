@@ -68,9 +68,9 @@ yfacet_var_picks <- teal.picks::variables(
   selected = "ARM"
 )
 
-testthat::describe("tm_g_spiderplot argument verification", {
-  testthat::it("plot arguments input validation", {
-    testthat::expect_error(
+describe("tm_g_spiderplot argument verification", {
+  it("plot arguments input validation", {
+    expect_error(
       {
         suppressWarnings(
           tm_g_spiderplot(
@@ -93,7 +93,7 @@ testthat::describe("tm_g_spiderplot argument verification", {
       "Assertion on 'plot_height' failed"
     )
 
-    testthat::expect_error(
+    expect_error(
       {
         suppressWarnings(
           tm_g_spiderplot(
@@ -117,8 +117,8 @@ testthat::describe("tm_g_spiderplot argument verification", {
     )
   })
 
-  testthat::it("Forcing Conversion from multiple picks to single", {
-    testthat::expect_warning(
+  it("Forcing Conversion from multiple picks to single", {
+    expect_warning(
       {
         suppressWarnings(
           tm_g_spiderplot(
@@ -144,7 +144,7 @@ testthat::describe("tm_g_spiderplot argument verification", {
       "`x_var` accepts only a single variable selection"
     )
 
-    testthat::expect_warning(
+    expect_warning(
       {
         suppressWarnings(
           tm_g_spiderplot(
@@ -172,8 +172,8 @@ testthat::describe("tm_g_spiderplot argument verification", {
   })
 })
 
-testthat::describe("tm_g_spiderplot module creation", {
-  testthat::it("creates a teal module using choices_selected (default method)", {
+describe("tm_g_spiderplot module creation", {
+  it("creates a teal module using choices_selected (default method)", {
     mod <- suppressWarnings(
       tm_g_spiderplot(
         label = "Spider Plot",
@@ -191,10 +191,10 @@ testthat::describe("tm_g_spiderplot module creation", {
       ),
       classes = "picks_delayed"
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks (.pick method)", {
+  it("creates a teal module using picks (.pick method)", {
     mod <- suppressWarnings(
       tm_g_spiderplot(
         label = "Spider Plot",
@@ -212,10 +212,10 @@ testthat::describe("tm_g_spiderplot module creation", {
       ),
       classes = "picks_delayed"
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("module using choices_selected works", {
+  it("module using choices_selected works", {
     mod <- suppressWarnings(
       tm_g_spiderplot(
         label = "Spider Plot",
@@ -250,7 +250,7 @@ testthat::describe("tm_g_spiderplot module creation", {
     )
   })
 
-  testthat::it("module using picks works", {
+  it("module using picks works", {
     mod <- suppressWarnings(
       tm_g_spiderplot(
         label = "Spider Plot",

@@ -1,5 +1,5 @@
-testthat::test_that("tm_g_swimlane builds a teal module with picks encodings", {
-  testthat::skip_if_not_installed("teal.picks")
+test_that("tm_g_swimlane builds a teal module with picks encodings", {
+  skip_if_not_installed("teal.picks")
 
   mod <- tm_g_swimlane(
     label = "Swimlane",
@@ -35,12 +35,12 @@ testthat::test_that("tm_g_swimlane builds a teal module with picks encodings", {
       )
     )
   )
-  testthat::expect_s3_class(mod, "teal_module")
-  testthat::expect_identical(mod$server, srv_g_swimlane)
+  expect_s3_class(mod, "teal_module")
+  expect_identical(mod$server, srv_g_swimlane)
 })
 
-testthat::test_that("tm_g_waterfall builds a teal module with picks encodings", {
-  testthat::skip_if_not_installed("teal.picks")
+test_that("tm_g_waterfall builds a teal module with picks encodings", {
+  skip_if_not_installed("teal.picks")
 
   mod <- tm_g_waterfall(
     label = "Waterfall",
@@ -58,7 +58,7 @@ testthat::test_that("tm_g_waterfall builds a teal module with picks encodings", 
       teal.picks::variables(choices = c("ARMCD", "SEX"), selected = "ARMCD")
     )
   )
-  testthat::expect_s3_class(mod, "teal_module")
-  testthat::expect_identical(mod$server, srv_g_waterfall)
-  testthat::expect_equal(mod$datanames, c("ADSL", "ADTR", "ADRS"))
+  expect_s3_class(mod, "teal_module")
+  expect_identical(mod$server, srv_g_waterfall)
+  expect_equal(mod$datanames, c("ADSL", "ADTR", "ADRS"))
 })

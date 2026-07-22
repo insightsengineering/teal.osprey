@@ -35,9 +35,9 @@ left_var_picks <- teal.picks::variables(
 ) |>
   suppressWarnings(classes = "picks_delayed")
 
-testthat::describe("tm_g_butterfly input validation", {
+describe("tm_g_butterfly input validation", {
   it("plot arguments input validation", {
-    testthat::expect_error(
+    expect_error(
       {
         suppressWarnings(
           tm_g_butterfly(
@@ -56,7 +56,7 @@ testthat::describe("tm_g_butterfly input validation", {
       "Assertion on 'plot_height' failed"
     )
 
-    testthat::expect_error(
+    expect_error(
       {
         suppressWarnings(tm_g_butterfly(
           label = "Butterfly Plot",
@@ -74,7 +74,7 @@ testthat::describe("tm_g_butterfly input validation", {
   })
 
   it("Forcing Conversion from multiple picks to single", {
-    testthat::expect_error(
+    expect_error(
       {
         suppressWarnings(tm_g_butterfly(
           label = "Butterfly Plot",
@@ -93,7 +93,7 @@ testthat::describe("tm_g_butterfly input validation", {
       "metadata does not match the requirement for left_var"
     )
 
-    testthat::expect_error(
+    expect_error(
       {
         suppressWarnings(tm_g_butterfly(
           label = "Butterfly Plot",
@@ -114,7 +114,7 @@ testthat::describe("tm_g_butterfly input validation", {
   })
 })
 
-testthat::describe("tm_g_butterfly module creation", {
+describe("tm_g_butterfly module creation", {
   it("creates a teal module using choices_selected", {
     mod <- tm_g_butterfly(
       label = "Butterfly Plot",
@@ -127,7 +127,7 @@ testthat::describe("tm_g_butterfly module creation", {
       plot_height = c(600, 200, 2000)
     ) |>
       suppressWarnings(classes = "picks_delayed")
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
   it("creates a teal module using picks", {
@@ -155,7 +155,7 @@ testthat::describe("tm_g_butterfly module creation", {
       plot_height = c(600, 200, 2000)
     ) |>
       suppressWarnings(classes = "picks_delayed")
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
 

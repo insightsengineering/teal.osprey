@@ -19,9 +19,9 @@ flag_var_picks <- teal.picks::variables(
   selected = "TMPFL_SER"
 )
 
-testthat::describe("tm_g_ae_oview argument verification", {
+describe("tm_g_ae_oview argument verification", {
   it("fails when arm_var is neither picks or choices selected", {
-    testthat::expect_error(
+    expect_error(
       tm_g_ae_oview(
         label = "AE Overview",
         dataname = "ADAE",
@@ -33,7 +33,7 @@ testthat::describe("tm_g_ae_oview argument verification", {
   })
 
   it("fails when flag_var_anl is neiter picks or choices_selected", {
-    testthat::expect_error(
+    expect_error(
       tm_g_ae_oview(
         label = "AE Overview",
         dataname = "ADAE",
@@ -45,7 +45,7 @@ testthat::describe("tm_g_ae_oview argument verification", {
   })
 })
 
-testthat::describe("tm_g_ae_oview module creation", {
+describe("tm_g_ae_oview module creation", {
   skip_if_not_installed("dplyr")
   data <- within(teal_data(), {
     library(dplyr)
@@ -83,7 +83,7 @@ testthat::describe("tm_g_ae_oview module creation", {
       flag_var_anl = flag_var_cs,
       plot_height = c(600, 200, 2000)
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
   it("creates a teal module using picks", {
@@ -94,7 +94,7 @@ testthat::describe("tm_g_ae_oview module creation", {
       flag_var_anl = flag_var_picks,
       plot_height = c(600, 200, 2000)
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
   it("creates a teal module using choices_selected", {

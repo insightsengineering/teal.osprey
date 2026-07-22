@@ -1,5 +1,5 @@
-testthat::describe("tm_g_events_term_id module creation", {
-  testthat::test_that("using choices_selected", {
+describe("tm_g_events_term_id module creation", {
+  test_that("using choices_selected", {
     mod <- tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
@@ -17,13 +17,13 @@ testthat::describe("tm_g_events_term_id module creation", {
       )
     )
 
-    testthat::expect_s3_class(mod, "teal_module")
-    testthat::expect_identical(mod$server, srv_g_events_term_id)
-    testthat::expect_equal(mod$datanames, c("ADAE", "ADSL"))
+    expect_s3_class(mod, "teal_module")
+    expect_identical(mod$server, srv_g_events_term_id)
+    expect_equal(mod$datanames, c("ADAE", "ADSL"))
   })
 
-  testthat::test_that("using picks", {
-    testthat::skip_if_not_installed("teal.picks")
+  test_that("using picks", {
+    skip_if_not_installed("teal.picks")
 
     mod <- tm_g_events_term_id(
       label = "Common AE",
@@ -44,9 +44,9 @@ testthat::describe("tm_g_events_term_id module creation", {
         )
       )
     )
-    testthat::expect_s3_class(mod, "teal_module")
-    testthat::expect_identical(mod$server, srv_g_events_term_id)
-    testthat::expect_equal(mod$datanames, c("ADAE", "ADSL"))
+    expect_s3_class(mod, "teal_module")
+    expect_identical(mod$server, srv_g_events_term_id)
+    expect_equal(mod$datanames, c("ADAE", "ADSL"))
   })
 
   data <- within(teal_data(), {
@@ -56,7 +56,7 @@ testthat::describe("tm_g_events_term_id module creation", {
 
   join_keys(data) <- default_cdisc_join_keys[names(data)]
 
-  testthat::test_that("using choices_selected works", {
+  test_that("using choices_selected works", {
     mod <- tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
@@ -91,8 +91,8 @@ testthat::describe("tm_g_events_term_id module creation", {
     )
   })
 
-  testthat::test_that("using picks works", {
-    testthat::skip_if_not_installed("teal.picks")
+  test_that("using picks works", {
+    skip_if_not_installed("teal.picks")
 
     mod <- tm_g_events_term_id(
       label = "Common AE",
@@ -133,8 +133,8 @@ testthat::describe("tm_g_events_term_id module creation", {
   })
 })
 
-testthat::test_that("tm_g_events_term_id coerces multiple variable selection", {
-  testthat::skip_if_not_installed("teal.picks")
+test_that("tm_g_events_term_id coerces multiple variable selection", {
+  skip_if_not_installed("teal.picks")
 
   term_var <- teal.picks::picks(
     teal.picks::datasets("ADAE"),
@@ -152,7 +152,7 @@ testthat::test_that("tm_g_events_term_id coerces multiple variable selection", {
     )
   )
 
-  mod <- testthat::expect_warning(
+  mod <- expect_warning(
     tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
@@ -162,5 +162,5 @@ testthat::test_that("tm_g_events_term_id coerces multiple variable selection", {
     ),
     "accepts only a single variable selection"
   )
-  testthat::expect_false(teal.picks::is_pick_multiple(mod$ui_args$term_var$variables))
+  expect_false(teal.picks::is_pick_multiple(mod$ui_args$term_var$variables))
 })

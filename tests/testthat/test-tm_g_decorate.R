@@ -1,4 +1,4 @@
-testthat::describe("srv_g_decorate creation", {
+describe("srv_g_decorate creation", {
   it("srv_g_decorate returns", {
     testServer(
       srv_g_decorate,
