@@ -47,6 +47,76 @@
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
 #'
+#' @examples
+#' data <- teal.data::teal_data() %>%
+#'   within({
+#'     library(nestcolor)
+#'     library(dplyr)
+#'     ADSL <- rADSL %>%
+#'       mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+#'       filter(STRATA1 == "A" & ARMCD == "ARM A")
+#'     ADRS <- rADRS %>%
+#'       filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+#'       mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+#'       rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+#'       arrange(USUBJID)
+#'   })
+#'
+#' join_keys(data) <- default_cdisc_join_keys[names(data)]
+#'
+#' ADSL <- data[["ADSL"]]
+#' ADRS <- data[["ADRS"]]
+#'
+#' app <- init(
+#'   data = data,
+#'   modules = modules(
+#'     tm_g_swimlane(
+#'       label = "Swimlane Plot",
+#'       dataname = "ADRS",
+#'       bar_var = variables(
+#'         choices = c("TRTDURD", "EOSDY"),
+#'         selected = "TRTDURD"
+#'       ),
+#'       bar_color_var = variables(
+#'         choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX"),
+#'         selected = "EOSSTT"
+#'       ),
+#'       sort_var = variables(
+#'         choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD"),
+#'         selected = "ACTARMCD"
+#'       ),
+#'       marker_pos_var = variables(
+#'         choices = c("ADY"),
+#'         selected = "ADY"
+#'       ),
+#'       marker_shape_var = variables(
+#'         selected = "AVALC",
+#'         c("AVALC", "AVISIT")
+#'       ),
+#'       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
+#'       marker_color_var = variables(
+#'         selected = "AVALC",
+#'         choices = c("AVALC", "AVISIT")
+#'       ),
+#'       marker_color_opt = c(
+#'         "CR" = "green", "PR" = "blue", "SD" = "goldenrod",
+#'         "PD" = "red", "Death" = "black"
+#'       ),
+#'       vref_line = c(30, 60),
+#'       anno_txt_var = variables(
+#'         selected = c("ACTARM", "SEX"),
+#'         choices = c(
+#'           "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
+#'           "SEX", "RACE", "COUNTRY", "DCSREAS", "DCSREASP"
+#'         )
+#'       )
+#'     )
+#'   )
+#' )
+#' if (interactive()) {
+#'   shinyApp(app$ui, app$server)
+#' }
+#'
 #' @export
 #'
 #' @template author_qit3
@@ -110,7 +180,6 @@ tm_g_swimlane <- function(label,
   if (!is.null(marker_color_var)) {
     marker_color_var <- force_pick_variable_selection(marker_color_var, "marker_color_var")
   }
-
 
 
   checkmate::assert_numeric(marker_shape_opt, min.len = 1, any.missing = FALSE, null.ok = TRUE)
@@ -195,7 +264,7 @@ ui_g_swimlane <- function(id,
             teal.picks::picks_ui(ns("sort_var"), sort_var)
           )
         },
-        if (dataname != "ADSL" && !is.null(marker_pos_var)) {
+        if (!is.null(marker_pos_var)) {
           left_bordered_div(
             tags$div(
               tags$label("Marker position"),
@@ -296,7 +365,7 @@ srv_g_swimlane <- function(id,
         "marker_pos_var-variables-selected",
         condition = !is.null(pick_selected("marker_pos_var", selectors))
       )
-      obj  
+      obj
     })
 
     merged <- teal.picks::merge_srv(
@@ -314,7 +383,6 @@ srv_g_swimlane <- function(id,
           teal.reporter::teal_card("## Module's output(s)")
         )
 
-      
       bar_var_name <- pick_selected("bar_var", selectors)
       bar_color_var_name <- pick_selected("bar_color_var", selectors)
       sort_var_name <- pick_selected("sort_var", selectors)
@@ -322,7 +390,7 @@ srv_g_swimlane <- function(id,
       marker_pos_var_name <- pick_selected("marker_pos_var", selectors)
       marker_shape_var_name <- pick_selected("marker_shape_var", selectors)
       marker_color_var_name <- pick_selected("marker_color_var", selectors)
-      
+
 
       validate(need(parentname %in% names(qenv), sprintf("'%s' not included in data", parentname)))
 
@@ -347,16 +415,16 @@ srv_g_swimlane <- function(id,
       vref_line <- suppressWarnings(as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)()))
 
       q1 <- teal.code::eval_code(
-          qenv,
-          code = bquote({
-            ADSL_p <- ADSL
-            ANL_p <- .(as.name(dataname))
+        qenv,
+        code = bquote({
+          ADSL_p <- ADSL
+          ANL_p <- .(as.name(dataname))
 
-            ADSLqe <- ADSL_p[, .(adsl_vars), drop = FALSE]
-            ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
-            ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1))
-          })
-        )
+          ADSLqe <- ADSL_p[, .(adsl_vars), drop = FALSE]
+          ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
+          ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1))
+        })
+      )
 
       ANL <- q1[["ANL"]]
       ADSL <- q1[["ADSL"]]
@@ -419,7 +487,6 @@ srv_g_swimlane <- function(id,
         vref_line = vref_line,
         x_label = x_label
       )
-
     })
 
     plot_r <- reactive(output_q()[["plot"]])
