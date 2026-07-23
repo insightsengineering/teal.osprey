@@ -158,14 +158,14 @@ tm_g_heat_bygrade <- function(
     conmed_var <- create_picks_helper(teal.picks::datasets(cm_dataname, cm_dataname), conmed_var)
   }
 
-  id_var <- force_pick_variable_selection(id_var, "id_var")
-  visit_var <- force_pick_variable_selection(visit_var, "visit_var")
-  ongo_var <- force_pick_variable_selection(ongo_var, "ongo_var")
-  heat_var <- force_pick_variable_selection(heat_var, "heat_var")
+  id_var <- force_pick_selection(id_var, "id_var")
+  visit_var <- force_pick_selection(visit_var, "visit_var")
+  ongo_var <- force_pick_selection(ongo_var, "ongo_var")
+  heat_var <- force_pick_selection(heat_var, "heat_var")
   if (!is.null(conmed_var)) {
-    conmed_var <- force_pick_variable_selection(conmed_var, "conmed_var")
+    conmed_var <- force_pick_selection(conmed_var, "conmed_var")
   }
-  anno_var <- force_pick_variable_selection(anno_var, "anno_var", multiple = TRUE)
+  anno_var <- force_pick_selection(anno_var, "anno_var", multiple = TRUE)
 
   checkmate::assert_class(id_var, "picks")
   checkmate::assert_class(visit_var, "picks")
