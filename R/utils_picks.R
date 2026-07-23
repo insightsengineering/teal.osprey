@@ -63,7 +63,7 @@
 #' @return the selected pick variable or character 0 if the pick does not exist
 #' @details this is useful when optional picks in modules are set to NULL
 #' @keywords internal
-#' @noRd 
+#' @noRd
 pick_selected <- function(name, selectors) {
   checkmate::assert_string(name)
   checkmate::assert_list(selectors)
@@ -279,4 +279,3 @@ create_picks_helper <- function(datasets = NULL, x) {
     teal.picks::picks(datasets, x)
   }
 }
-
