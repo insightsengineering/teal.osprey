@@ -15,7 +15,7 @@ ongo_var_cs <- teal.transform::choices_selected(
 
 anno_var_cs <- teal.transform::choices_selected(
   choices = c("SEX", "COUNTRY", "USUBJID"),
-  selected = c("SEX", "COUNTRY"),
+  selected = c("SEX", "COUNTRY")
 )
 
 heat_var_cs <- teal.transform::choices_selected(
@@ -30,46 +30,56 @@ conmed_var_cs <- teal.transform::choices_selected(
 
 id_var_picks <- variables(
   choices = is_categorical(min.len = 2),
-  selected = 1L
-)
+  selected = "USUBJID"
+) |>
+  suppressWarnings(classes = "picks_delayed")
 
 visit_var_picks <- variables(
   choices = is_categorical(min.len = 2),
-  selected = 1L
-)
+  selected = "AVISIT"
+) |>
+  suppressWarnings(classes = "picks_delayed")
 
 ongo_var_picks <- variables(
   choices = dplyr::where(is.logical),
-  selected = 1L
-)
+  selected = "ongo_status"
+) |>
+  suppressWarnings(classes = "picks_delayed")
 
 anno_var_picks_single <- variables(
   choices = is_categorical(min.len = 2),
-  selected = 1L
-)
+  selected = "SEX"
+) |>
+  suppressWarnings(classes = "picks_delayed")
 
 anno_var_picks_multiple <- variables(
   choices = is_categorical(min.len = 2),
-  selected = 1L,
+  selected = c("SEX", "COUNTRY"),
   multiple = TRUE
-)
+) |>
+  suppressWarnings(classes = "picks_delayed")
 
 heat_var_picks <- variables(
   choices = is_categorical(min.len = 2),
-  selected = 1L
-)
+  selected = "AETOXGR"
+) |>
+  suppressWarnings(classes = "picks_delayed")
 
 conmed_var_picks <- variables(
   choices = is_categorical(min.len = 2),
-  selected = 1L
-)
+  selected = "CMDECOD"
+) |>
+  suppressWarnings(classes = "picks_delayed")
 
 data <- teal_data() %>%
   within({
     library(dplyr)
     library(nestcolor)
     ADSL <- teal.data::rADSL %>% slice(1:30)
-    ADEX <- teal.data::rADEX %>% filter(USUBJID %in% ADSL$USUBJID)
+    ADEX <- teal.data::rADEX %>%
+      filter(USUBJID %in% ADSL$USUBJID) %>%
+      filter(PARCAT1 == "INDIVIDUAL") %>%
+      mutate(ongo_status = (EOSSTT == "ONGOING"))
     ADAE <- teal.data::rADAE %>% filter(USUBJID %in% ADSL$USUBJID)
     ADCM <- teal.data::rADCM %>% filter(USUBJID %in% ADSL$USUBJID)
   })
@@ -202,6 +212,111 @@ describe("tm_g_heat_bygrade module creation", {
     expect_s3_class(mod, "teal_module")
   })
 
+  it("works with choices_selected", {
+    mod <- suppressWarnings(
+      tm_g_heat_bygrade(
+        label = "Heatmap by grade",
+        sl_dataname = "ADSL",
+        ex_dataname = "ADEX",
+        ae_dataname = "ADAE",
+        id_var = id_var_cs,
+        visit_var = visit_var_cs,
+        ongo_var = ongo_var_cs,
+        anno_var = anno_var_cs,
+        heat_var = heat_var_cs,
+        plot_height = c(600, 200, 2000)
+      ),
+      classes = "picks_delayed"
+    )
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        expect_no_error(session$returned())
+      }
+    )
+  })
+
+  it("works with choices_selected with conmed", {
+    mod <- suppressWarnings(
+      tm_g_heat_bygrade(
+        label = "Heatmap by grade",
+        sl_dataname = "ADSL",
+        ex_dataname = "ADEX",
+        ae_dataname = "ADAE",
+        cm_dataname = "ADCM",
+        id_var = id_var_cs,
+        visit_var = visit_var_cs,
+        ongo_var = ongo_var_cs,
+        anno_var = anno_var_cs,
+        heat_var = heat_var_cs,
+        conmed_var = conmed_var_cs
+      ),
+      classes = "picks_delayed"
+    )
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        browser()
+        expect_no_error(session$returned())
+      }
+    )
+  })
+
+  it("works with picks", {
+    mod <- suppressWarnings(
+      tm_g_heat_bygrade(
+        label = "Heatmap by grade",
+        sl_dataname = "ADSL",
+        ex_dataname = "ADEX",
+        ae_dataname = "ADAE",
+        id_var = id_var_picks,
+        visit_var = visit_var_picks,
+        ongo_var = ongo_var_picks,
+        anno_var = anno_var_picks_multiple,
+        heat_var = heat_var_picks
+      ),
+      classes = "picks_delayed"
+    )
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        expect_no_error(session$returned())
+      }
+    )
+  })
+
+  it("works with picks with conmed", {
+    mod <- suppressWarnings(
+      tm_g_heat_bygrade(
+        label = "Heatmap by grade",
+        sl_dataname = "ADSL",
+        ex_dataname = "ADEX",
+        ae_dataname = "ADAE",
+        cm_dataname = "ADCM",
+        id_var = id_var_picks,
+        visit_var = visit_var_picks,
+        ongo_var = ongo_var_picks,
+        anno_var = anno_var_picks_multiple,
+        heat_var = heat_var_picks,
+        conmed_var = conmed_var_picks
+      ),
+      classes = "picks_delayed"
+    )
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        expect_no_error(session$returned())
+      }
+    )
+  })
+
   it("Throws warning when converting anno_var to multiple", {
     mod <- expect_warning(
       tm_g_heat_bygrade(
@@ -215,8 +330,7 @@ describe("tm_g_heat_bygrade module creation", {
         ongo_var = ongo_var_picks,
         anno_var = anno_var_picks_single,
         heat_var = heat_var_picks,
-        conmed_var = conmed_var_picks,
-        plot_height = c(600L, 200L, 2000L)
+        conmed_var = conmed_var_picks
       ),
       "accepts only a multiple variable selection"
     )
