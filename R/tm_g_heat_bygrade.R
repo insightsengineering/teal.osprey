@@ -248,7 +248,7 @@ ui_g_heat_by_grade <- function(
         ),
         helpText("Plot conmed"),
         left_bordered_div(
-          if (!is.na(cm_dataname)) {
+          if (!is.na(cm_dataname) && !is.null(cm_dataname)) {
             checkboxInput(
               ns("plot_cm"),
               "Yes",
@@ -326,30 +326,20 @@ srv_g_heat_by_grade <- function(
 
     selectors <- teal.picks::picks_srv(picks = picks_list, data = data)
 
-    merged_sl <- teal.picks::merge_srv(
-      "merge_sl",
+    data_heat <- teal.picks::merge_srv(
+      "merge_heat",
       data = data,
-      selectors = selectors[c("id_var", "anno_var")],
-      output_name = "ADSL_ANL"
+      selectors = selectors[c("id_var", "heat_var", "visit_var")],
+      output_name = "heat_data"
     )
-    merged_ex <- teal.picks::merge_srv(
-      "merge_ex",
-      data = data,
-      selectors = selectors[c("visit_var", "ongo_var")],
-      output_name = "ADEX_ANL"
-    )
-    merged_ae <- teal.picks::merge_srv(
-      "merge_ae",
-      data = data,
-      selectors = selectors["heat_var"],
-      output_name = "ADAE_ANL"
-    )
+    heat_var_name <- data_heat$variables()$heat_var
+
     if (!is.null(conmed_var)) {
-      merged_cm <- teal.picks::merge_srv(
-        "merge_cm",
-        data = data,
-        selectors = selectors["conmed_var"],
-        output_name = "ADCM_ANL"
+      data_heat <- teal.picks::merge_srv(
+        "merge",
+        data = data_heat$data,
+        selectors = selectors[c("id_var", "anno_var", "visit_var", "ongo_var", "heat_var", "conmed_var")],
+        output_name = "conmed_data"
       )
     }
 
@@ -363,10 +353,10 @@ srv_g_heat_by_grade <- function(
     pws <- decorate_output$pws
 
     if (!is.null(conmed_var)) {
-      observeEvent(merged_cm$variables()$conmed_var,
+      observeEvent(merged$variables()$conmed_var,
         {
           ADCM <- data()[[cm_dataname]]
-          conmed_var_name <- merged_cm$variables()$conmed_var
+          conmed_var_name <- merged$variables()$conmed_var
           if (!is.null(conmed_var_name) && conmed_var_name %in% names(ADCM)) {
             choices <- levels(ADCM[[conmed_var_name]])
             updateSelectInput(
@@ -384,29 +374,33 @@ srv_g_heat_by_grade <- function(
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        qenv <- data()
+        qenv <- data_heat$data()
         teal.reporter::teal_card(qenv) <-
           c(
             teal.reporter::teal_card(qenv),
             teal.reporter::teal_card("## Module's output(s)")
           )
-        qenv <- teal.code::eval_code(qenv, "library(dplyr)")
+        validated_q <- teal.code::eval_code(qenv, "library(dplyr)")
+        id_var_name <- selectors$id_var()$variables$selected
+        anno_var_name <- selectors$anno_var()$variables$selected
+        visit_var_name <- selectors$visit_var()$variables$selected
+        ongo_var_name <- selectors$ongo_var()$variables$selected
+        sl_dataset <- validated_q[[sl_dataname]]
+        ae_dataset <- validated_q[[ae_dataname]]
 
-        id_var_name <- merged_sl$variables()$id_var
-        anno_var_name <- merged_sl$variables()$anno_var
-        visit_var_name <- merged_ex$variables()$visit_var
-        ongo_var_name <- merged_ex$variables()$ongo_var
-        heat_var_name <- merged_ae$variables()$heat_var
         plot_cm <- isTRUE(input$plot_cm)
-        conmed_var_name <- if (plot_cm) merged_cm$variables()$conmed_var else NULL
+        conmed_var_name <- if (plot_cm) selectors$conmed_var()$variables$selected else NULL
 
-        validated_q <- qenv
-
-        ADSL <- validated_q[[sl_dataname]]
-        teal::validate_has_data(ADSL, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
+        teal::validate_has_data(sl_dataset, min_nrow = 1, msg = sprintf("%s contains no data", sl_dataname))
 
         validate_input(
           "id_var", length(id_var_name) > 0, "ID Variable is required."
+        )
+        validate_input(
+          "id_var", id_var_name %in% colnames(sl_dataset), "ID Variable must be present on SL dataset."
+        )
+        validate_input(
+          "id_var", id_var_name %in% colnames(ae_dataset), "ID Variable must be present on AE dataset."
         )
         validate_input(
           "visit_var", length(visit_var_name) > 0, "Visit Variable is required."
@@ -417,7 +411,17 @@ srv_g_heat_by_grade <- function(
           "Study Ongoing Status Variable is required."
         )
         validate_input("anno_var", length(anno_var_name) > 0, "Annotation Variables is required.")
+        validate_input(
+          "anno_var", all(anno_var_name %in% colnames(sl_dataset)),
+          "Annotation Variable must be present on SL dataset."
+        )
         validate_input("heat_var", length(heat_var_name) > 0, "Heat Variable is required.")
+
+        validate_input(
+          c("ae_dataname", "id_var", "visit_var", "heat_var"),
+          all(c(id_var_name, visit_var_name, heat_var_name) %in% colnames(validated_q[["heat_data"]])),
+          "Variables ID, Visit and Heat should be present on heat_data"
+        )
 
         if (plot_cm) {
           validate_input(
@@ -434,7 +438,7 @@ srv_g_heat_by_grade <- function(
             validated_q,
             code = substitute(
               expr = {
-                conmed_data <- ADCM %>%
+                conmed_data <- conmed_data %>%
                   filter(conmed_var_name %in% conmed_level)
                 conmed_data[[conmed_var]] <-
                   factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
@@ -461,9 +465,9 @@ srv_g_heat_by_grade <- function(
               exp_data = filter(ex_dataname, PARCAT1 == "INDIVIDUAL"),
               visit_var = visit_var_name,
               ongo_var = ongo_var_name,
-              anno_data = sl_dataname[c(anno_var_name, id_var_name)],
+              anno_data = sl_dataname[, anno_cols],
               anno_var = anno_var_name,
-              heat_data = select(ae_dataname, all_of(c(id_var_name, visit_var_name, heat_var_name))),
+              heat_data = select(heat_data, all_of(c(id_var_name, visit_var_name, heat_var_name))),
               heat_color_var = heat_var_name,
               conmed_data = conmed_data,
               conmed_var = conmed_var_name
@@ -471,6 +475,7 @@ srv_g_heat_by_grade <- function(
           },
           id_var_name = id_var_name,
           ex_dataname = as.name(ex_dataname),
+          anno_cols = c(anno_var_name, id_var_name),
           visit_var_name = visit_var_name,
           ongo_var_name = ongo_var_name,
           sl_dataname = as.name(sl_dataname),
