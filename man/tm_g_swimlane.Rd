@@ -37,7 +37,7 @@ analysis data used for markers. Use \code{"ADSL"} when no markers are plotted.}
 (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object,
 Subject-level numeric variable for bar length (from \code{parentname}).}
 
-\item{parentname}{dataname (\code{character(1)})\cr
+\item{parentname}{(\code{character(1)})\cr
 analysis data used for several variables in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
 \code{"ADSL"}}

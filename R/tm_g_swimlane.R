@@ -13,7 +13,7 @@
 #' @param bar_var Either a ([`teal.picks::variables()`]) object or a
 #'   ([`teal.transform::choices_selected`]) `choices_selected` object,
 #'   Subject-level numeric variable for bar length (from `parentname`).
-#' @param parentname dataname (`character(1)`)\cr
+#' @param parentname (`character(1)`)\cr
 #'  analysis data used for several variables in the teal module, needs to be
 #'  available in the list passed to the `data` argument of [teal::init()]. The default is
 #' `"ADSL"`
@@ -171,14 +171,14 @@ tm_g_swimlane <- function(label,
     anno_txt_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), anno_txt_var)
   }
 
-  bar_var <- force_pick_variable_selection(bar_var, "bar_var")
-  if (!is.null(bar_color_var)) bar_color_var <- force_pick_variable_selection(bar_color_var, "bar_color_var")
-  if (!is.null(marker_pos_var)) marker_pos_var <- force_pick_variable_selection(marker_pos_var, "marker_pos_var")
+  bar_var <- force_pick_selection(bar_var, "bar_var")
+  if (!is.null(bar_color_var)) bar_color_var <- force_pick_selection(bar_color_var, "bar_color_var")
+  if (!is.null(marker_pos_var)) marker_pos_var <- force_pick_selection(marker_pos_var, "marker_pos_var")
   if (!is.null(marker_shape_var)) {
-    marker_shape_var <- force_pick_variable_selection(marker_shape_var, "marker_shape_var")
+    marker_shape_var <- force_pick_selection(marker_shape_var, "marker_shape_var")
   }
   if (!is.null(marker_color_var)) {
-    marker_color_var <- force_pick_variable_selection(marker_color_var, "marker_color_var")
+    marker_color_var <- force_pick_selection(marker_color_var, "marker_color_var")
   }
 
 
@@ -394,40 +394,39 @@ srv_g_swimlane <- function(id,
 
       validate(need(parentname %in% names(qenv), sprintf("'%s' not included in data", parentname)))
 
-      ADSL <- qenv[[parentname]]
+      parentdata <- qenv[[parentname]]
 
-      anl_vars <- unique(c(
+      dataname_vars <- unique(c(
         "USUBJID", "STUDYID",
         marker_pos_var_name, marker_shape_var_name, marker_color_var_name
       ))
-      adsl_vars <- unique(c(
+      parentname_vars <- unique(c(
         "USUBJID", "STUDYID",
         bar_var_name, bar_color_var_name, sort_var_name, anno_txt_var_name
       ))
 
-      teal::validate_has_data(ADSL, min_nrow = 3)
-      teal::validate_has_variable(ADSL, adsl_vars)
+      teal::validate_has_data(parentdata, min_nrow = 3)
+      teal::validate_has_variable(parentdata, parentname_vars)
 
-      anl <- qenv[[dataname]]
-      teal::validate_has_data(anl, min_nrow = 3)
-      teal::validate_has_variable(anl, anl_vars)
+      dataname_data <- qenv[[dataname]]
+      teal::validate_has_data(dataname_data, min_nrow = 3)
+      teal::validate_has_variable(dataname_data, dataname_vars)
 
       vref_line <- suppressWarnings(as_numeric_from_comma_sep_str(debounce(reactive(input$vref_line), 1500)()))
 
       q1 <- teal.code::eval_code(
         qenv,
         code = bquote({
-          ADSL_p <- ADSL
-          ANL_p <- .(as.name(dataname))
+          parentdata_p <- .(as.name(parentname))
 
-          ADSLqe <- ADSL_p[, .(adsl_vars), drop = FALSE]
-          ADSL$USUBJID <- unlist(lapply(strsplit(ADSL$USUBJID, "-", fixed = TRUE), tail, 1))
+          parentdata <- parentdata_p[, .(parentname_vars), drop = FALSE]
+          parentdata$USUBJID <- unlist(lapply(strsplit(parentdata$USUBJID, "-", fixed = TRUE), tail, 1))
           ANL$USUBJID <- unlist(lapply(strsplit(ANL$USUBJID, "-", fixed = TRUE), tail, 1))
         })
       )
 
       ANL <- q1[["ANL"]]
-      ADSL <- q1[["ADSL"]]
+      parentdata <- q1[["parentdata"]]
 
       teal.reporter::teal_card(q1) <- c(teal.reporter::teal_card(q1), "### Plot")
 
@@ -440,10 +439,10 @@ srv_g_swimlane <- function(id,
         q1,
         expr = {
           plot <- osprey::g_swimlane(
-            bar_id = ADSL[["USUBJID"]],
-            bar_length = ADSL[[bar_var_name]],
-            sort_by = if (length(sort_var_name) > 0) ADSL[[sort_var_name]] else NULL,
-            col_by = if (length(bar_color_var_name) > 0) ADSL[[bar_color_var_name]] else NULL,
+            bar_id = parentdata[["USUBJID"]],
+            bar_length = parentdata[[bar_var_name]],
+            sort_by = if (length(sort_var_name) > 0) parentdata[[sort_var_name]] else NULL,
+            col_by = if (length(bar_color_var_name) > 0) parentdata[[bar_color_var_name]] else NULL,
             marker_id = ANL[["USUBJID"]],
             marker_pos = if (length(marker_pos_var_name) > 0) ANL[[marker_pos_var_name]] else NULL,
             marker_shape = if (length(marker_shape_var_name) > 0) ANL[[marker_shape_var_name]] else NULL,
@@ -464,11 +463,11 @@ srv_g_swimlane <- function(id,
               length(marker_color_var_name) > 0 &&
                 all(unique(ANL[[marker_color_var_name]]) %in% names(marker_color_opt))
             ) {
-              bquote(.(marker_color_opt))
+              marker_color_opt
             } else {
               NULL
             },
-            anno_txt = if (length(anno_txt_var_name) > 0) ADSL[, anno_txt_var_name, drop = FALSE] else NULL,
+            anno_txt = if (length(anno_txt_var_name) > 0) parentdata[, anno_txt_var_name, drop = FALSE] else NULL,
             xref_line = vref_line,
             xtick_at = ggplot2::waiver(),
             xlab = x_label,
