@@ -8,6 +8,7 @@ tm_g_swimlane(
   label,
   dataname,
   bar_var,
+  parentname = "ADSL",
   bar_color_var = NULL,
   sort_var = NULL,
   marker_pos_var = NULL,
@@ -30,34 +31,46 @@ tm_g_swimlane(
 For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
 \item{dataname}{(\code{character(1)})\cr
-Analysis data used for markers. Use \code{"ADSL"} when no markers are plotted.}
+analysis data used for markers. Use \code{"ADSL"} when no markers are plotted.}
 
-\item{bar_var}{(\code{picks})\cr
-Subject-level numeric variable for bar length (from \code{ADSL}).}
+\item{bar_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object,
+Subject-level numeric variable for bar length (from \code{parentname}).}
 
-\item{bar_color_var}{(\code{picks} or \code{NULL})\cr
-Subject-level color variable from \code{ADSL}.}
+\item{parentname}{(\code{character(1)})\cr
+analysis data used for several variables in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
+\code{"ADSL"}}
 
-\item{sort_var}{(\code{picks} or \code{NULL})\cr
-Subject-level sort variable from \code{ADSL}.}
+\item{bar_color_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object,
+Subject-level color variable from \code{parentname}.}
 
-\item{marker_pos_var}{(\code{picks} or \code{NULL})\cr
-Marker position variable from \code{dataname} (when not \code{"ADSL"}).}
+\item{sort_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object,
+Subject-level sort variable from \code{parentname}.}
 
-\item{marker_shape_var}{(\code{picks} or \code{NULL})\cr
+\item{marker_pos_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object,
+Marker position variable from \code{dataname}).}
+
+\item{marker_shape_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object,
 Marker shape variable from \code{dataname}.}
 
 \item{marker_shape_opt}{(\code{numeric})\cr
 Named vector mapping shape values to ggplot shapes.}
 
-\item{marker_color_var}{(\code{picks} or \code{NULL})\cr
+\item{marker_color_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object,
 Marker color variable from \code{dataname}.}
 
 \item{marker_color_opt}{(\code{character})\cr
 Named vector mapping color values to colors.}
 
-\item{anno_txt_var}{(\code{picks} or \code{NULL})\cr
-Subject-level annotation variables from \code{ADSL} (multiple selection allowed).}
+\item{anno_txt_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object,
+Subject-level annotation variables from \code{parentname} (multiple selection allowed).}
 
 \item{vref_line}{(\code{numeric})\cr
 Vertical reference lines.}
@@ -85,7 +98,7 @@ the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 This is a teal module that generates a \code{swimlane} plot (bar plot with markers) for \code{ADaM} data
-using \code{\link[teal.picks:picks]{teal.picks::picks()}} encodings.
+using \code{\link[teal.picks:variables]{teal.picks::variables()}} encodings.
 }
 \section{Reporting}{
 
@@ -103,6 +116,77 @@ For more information on reporting in \code{teal}, see the vignettes:
 
 }
 
+\examples{
+data <- teal.data::teal_data() \%>\%
+  within({
+    library(nestcolor)
+    library(dplyr)
+    ADSL <- rADSL \%>\%
+      mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
+      filter(STRATA1 == "A" & ARMCD == "ARM A")
+    ADRS <- rADRS \%>\%
+      filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
+      mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
+      rbind(rADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+      arrange(USUBJID)
+  })
+
+join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+ADSL <- data[["ADSL"]]
+ADRS <- data[["ADRS"]]
+
+app <- init(
+  data = data,
+  modules = modules(
+    tm_g_swimlane(
+      label = "Swimlane Plot",
+      dataname = "ADRS",
+      bar_var = variables(
+        choices = c("TRTDURD", "EOSDY"),
+        selected = "TRTDURD"
+      ),
+      bar_color_var = variables(
+        choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX"),
+        selected = "EOSSTT"
+      ),
+      sort_var = variables(
+        choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD"),
+        selected = "ACTARMCD"
+      ),
+      marker_pos_var = variables(
+        choices = c("ADY"),
+        selected = "ADY"
+      ),
+      marker_shape_var = variables(
+        selected = "AVALC",
+        c("AVALC", "AVISIT")
+      ),
+      marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
+      marker_color_var = variables(
+        selected = "AVALC",
+        choices = c("AVALC", "AVISIT")
+      ),
+      marker_color_opt = c(
+        "CR" = "green", "PR" = "blue", "SD" = "goldenrod",
+        "PD" = "red", "Death" = "black"
+      ),
+      vref_line = c(30, 60),
+      anno_txt_var = variables(
+        selected = c("ACTARM", "SEX"),
+        choices = c(
+          "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
+          "SEX", "RACE", "COUNTRY", "DCSREAS", "DCSREASP"
+        )
+      )
+    )
+  )
+)
+if (interactive()) {
+  shinyApp(app$ui, app$server)
+}
+
+}
 \author{
 Ting Qi (qit3) \email{qit3@gene.com}
 }
