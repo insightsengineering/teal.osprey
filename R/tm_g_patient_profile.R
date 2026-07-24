@@ -62,19 +62,19 @@
 #'
 #' @examples
 #' data <- within(teal_data(), {
-#'     library(nestcolor)
-#'     library(dplyr)
-#'     ADSL <- rADSL
-#'     ADAE <- rADAE %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-#'     ADCM <- rADCM %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-#'     # The step below is to pre-process ADCM to legacy standard
-#'     ADCM <- ADCM %>%
-#'       select(-starts_with("ATC")) %>%
-#'       unique()
-#'     ADRS <- rADRS %>% mutate(ADT = as.Date(ADTM))
-#'     ADEX <- rADEX %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-#'     ADLB <- rADLB %>% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
-#'   })
+#'   library(nestcolor)
+#'   library(dplyr)
+#'   ADSL <- rADSL
+#'   ADAE <- rADAE %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+#'   ADCM <- rADCM %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+#'   # The step below is to pre-process ADCM to legacy standard
+#'   ADCM <- ADCM %>%
+#'     select(-starts_with("ATC")) %>%
+#'     unique()
+#'   ADRS <- rADRS %>% mutate(ADT = as.Date(ADTM))
+#'   ADEX <- rADEX %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+#'   ADLB <- rADLB %>% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
+#' })
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'

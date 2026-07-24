@@ -252,12 +252,12 @@ describe("tm_g_waterfall module creation", {
 
   it("works using choices_selected (deprecated option)", {
     data <- within(teal_data(), {
-        library(nestcolor)
-        ADSL <- rADSL
-        ADRS <- rADRS
-        ADTR <- rADTR
-        ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
-      })
+      library(nestcolor)
+      ADSL <- rADSL
+      ADRS <- rADRS
+      ADTR <- rADTR
+      ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+    })
 
     join_keys(data) <- default_cdisc_join_keys[names(data)]
     mod <- tm_g_waterfall(
@@ -288,7 +288,6 @@ describe("tm_g_waterfall module creation", {
         expect_no_error(session$returned())
       }
     )
-
   })
 
   it("works using picks", {
@@ -330,5 +329,4 @@ describe("tm_g_waterfall module creation", {
       }
     )
   })
-
 })
