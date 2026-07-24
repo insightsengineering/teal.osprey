@@ -226,6 +226,13 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     lb_var <- create_picks_helper(teal.picks::datasets(lb_dataname), lb_var)
   }
 
+  check_variable_and_dataset(ex_var, ex_dataname)
+  check_variable_and_dataset(ae_var, ae_dataname)
+  check_variable_and_dataset(ae_line_col_var, ae_dataname)
+  check_variable_and_dataset(rs_var, rs_dataname)
+  check_variable_and_dataset(lb_var, lb_dataname)
+  check_variable_and_dataset(cm_var, cm_dataname)
+
   checkmate::assert_string(x_limit)
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
   checkmate::assert_numeric(plot_height[1], lower = plot_height[2], upper = plot_height[3], .var.name = "plot_height")
@@ -405,6 +412,8 @@ srv_g_patient_profile <- function(id,
   if (!is.na(lb_dataname)) checkmate::assert_names(lb_dataname, subset.of = names(data))
   if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
   checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
+  checkmate::assert_vector(checkboxes[!is.na(checkboxes)], min.len = 1)
+
   moduleServer(id, function(input, output, session) {
     teal.logger::log_shiny_input_changes(input, namespace = "teal.osprey")
     ns <- session$ns
@@ -462,23 +471,15 @@ srv_g_patient_profile <- function(id,
           )
         obj <- teal.code::eval_code(obj, "library(dplyr)")
 
-        pick_selected <- function(name) {
-          if (name %in% names(selectors)) {
-            return(selectors[[name]]()$variables$selected)
-          }
-          character()
-        }
-
         patient_id_selected <- selectors$patient_id()$values$selected
-        sl_start_date_selected <- pick_selected("sl_start_date")
-        ae_var_selected <- pick_selected("ae_var")
-        ae_line_col_var_selected <- pick_selected("ae_line_col_var")
-        rs_var_selected <- pick_selected("rs_var")
-        cm_var_selected <- pick_selected("cm_var")
-        ex_var_selected <- pick_selected("ex_var")
-        lb_var_selected <- pick_selected("lb_var")
+        sl_start_date_selected <- pick_selected("sl_start_date", selectors)
+        ae_var_selected <- pick_selected("ae_var", selectors)
+        ae_line_col_var_selected <- pick_selected("ae_line_col_var", selectors)
+        rs_var_selected <- pick_selected("rs_var", selectors)
+        cm_var_selected <- pick_selected("cm_var", selectors)
+        ex_var_selected <- pick_selected("ex_var", selectors)
+        lb_var_selected <- pick_selected("lb_var", selectors)
         x_limit_selected <- input$x_limit
-        lb_var_show_selected <- input$lb_var_show
 
         teal::validate_input(
           "select_ADaM",
@@ -934,7 +935,7 @@ srv_g_patient_profile <- function(id,
                   adlb_vars = adlb_vars,
                   sl_start_date = as.name(sl_start_date_selected),
                   lb_var = lb_var_selected,
-                  lb_var_show = lb_var_show_selected
+                  lb_var_show = input$lb_var_show
                 )
               )
             )
