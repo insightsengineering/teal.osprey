@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="shinytest2-tm_g_events_term_id" timestamp="2026-07-23T14:03:00Z" hostname="d4f812dd20e6" tests="5" skipped="5" failures="0" errors="0" time="0.189">
-    <testcase time="0.0309999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_initializes_and_renders_a_plot">
+  <testsuite name="shinytest2-tm_g_events_term_id" timestamp="2026-07-24T12:41:13Z" hostname="6893e751b91c" tests="5" skipped="5" failures="0" errors="0" time="0.176">
+    <testcase time="0.0289999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_initializes_and_renders_a_plot">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:34:3')"/>
     </testcase>
-    <testcase time="0.052" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_starts_with_expected_label_and_encoding_selections.">
+    <testcase time="0.0529999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_starts_with_expected_label_and_encoding_selections.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:54:5')"/>
     </testcase>
-    <testcase time="0.0799999999999998" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_changing_term_var_changes_the_plot_and_does_not_throw_validation_errors.">
+    <testcase time="0.0680000000000001" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_changing_term_var_changes_the_plot_and_does_not_throw_validation_errors.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:80:5')"/>
     </testcase>
     <testcase time="0.0130000000000001" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_deselection_of_term_var_throws_validation_error.">
@@ -17,9 +17,9 @@
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:107:3')"/>
     </testcase>
   </testsuite>
-  <testsuite name="tm_g_ae_oview" timestamp="2026-07-23T14:03:00Z" hostname="d4f812dd20e6" tests="13" skipped="0" failures="0" errors="0" time="4.628">
-    <testcase time="0.036" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_neither_picks_or_choices_selected"/>
-    <testcase time="0.0350000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected">
+  <testsuite name="tm_g_ae_oview" timestamp="2026-07-24T12:41:14Z" hostname="6893e751b91c" tests="13" skipped="0" failures="0" errors="0" time="4.357">
+    <testcase time="0.0369999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_neither_picks_or_choices_selected"/>
+    <testcase time="0.0330000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected">
       <system-out>`arm_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -34,8 +34,8 @@ Backtrace:
  6. └─teal.osprey::tm_g_ae_oview(...)
  7.   └─teal.osprey:::migrate_choices_selected_to_variables(arm_var)</system-out>
     </testcase>
-    <testcase time="0.016" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected"/>
-    <testcase time="0.24" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.0149999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected"/>
+    <testcase time="0.234" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>`flag_var_anl` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -54,7 +54,7 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.0110000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.01" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -63,8 +63,8 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00799999999999956" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.00800000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks">
+    <testcase time="0.00800000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.00900000000000012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -73,8 +73,8 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
-    <testcase time="0.0100000000000002" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.01" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.01" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -92,11 +92,11 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="2.707" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="1.523" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="2.527" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="1.442" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
   </testsuite>
-  <testsuite name="tm_g_ae_sub" timestamp="2026-07-23T14:03:04Z" hostname="d4f812dd20e6" tests="7" skipped="0" failures="0" errors="0" time="1.975">
-    <testcase time="0.0620000000000003" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation">
+  <testsuite name="tm_g_ae_sub" timestamp="2026-07-24T12:41:18Z" hostname="6893e751b91c" tests="7" skipped="0" failures="0" errors="0" time="2.01">
+    <testcase time="0.0670000000000002" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation">
       <system-out>`group_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -113,15 +113,15 @@ Backtrace:
  8. └─teal.osprey::tm_g_ae_sub(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(group_var)</system-out>
     </testcase>
-    <testcase time="0.016" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0150000000000006" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
     <testcase time="0.00800000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.00900000000000034" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.00599999999999934" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_picks"/>
-    <testcase time="0.914000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_choices_selected_works"/>
-    <testcase time="0.959999999999999" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_picks_works"/>
+    <testcase time="0.00899999999999945" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.00600000000000023" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.938" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_choices_selected_works"/>
+    <testcase time="0.967000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_picks_works"/>
   </testsuite>
-  <testsuite name="tm_g_butterfly" timestamp="2026-07-23T14:03:06Z" hostname="d4f812dd20e6" tests="13" skipped="0" failures="0" errors="0" time="3.418">
-    <testcase time="0.0570000000000004" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+  <testsuite name="tm_g_butterfly" timestamp="2026-07-24T12:41:20Z" hostname="6893e751b91c" tests="13" skipped="0" failures="0" errors="0" time="3.55">
+    <testcase time="0.0599999999999996" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`right_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -138,7 +138,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0289999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0270000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`left_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -155,7 +155,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.027000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0269999999999992" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`category_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -172,7 +172,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0279999999999987" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.027000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`color_by_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -189,7 +189,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.027000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
+    <testcase time="0.0269999999999992" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation">
       <system-out>`count_by_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::values()`. Support for legacy
   `teal.transform::choices_selected()` is deprecated.
@@ -205,24 +205,24 @@ Backtrace:
  8. └─teal.osprey::tm_g_butterfly(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_values(count_by_var)</system-out>
     </testcase>
-    <testcase time="0.0169999999999995" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.0210000000000008" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.0109999999999992" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.016" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0190000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.00999999999999979" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
     <testcase time="0.00600000000000023" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
     <testcase time="0.0129999999999999" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.00699999999999967" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_picks"/>
-    <testcase time="1.481" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_works_with_choices_selected"/>
-    <testcase time="1.694" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_works_with_picks"/>
+    <testcase time="0.0080000000000009" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="1.533" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_works_with_choices_selected"/>
+    <testcase time="1.777" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_works_with_picks"/>
   </testsuite>
-  <testsuite name="tm_g_decorate" timestamp="2026-07-23T14:03:10Z" hostname="d4f812dd20e6" tests="5" skipped="0" failures="0" errors="0" time="0.155">
-    <testcase time="0.147" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+  <testsuite name="tm_g_decorate" timestamp="2026-07-24T12:41:24Z" hostname="6893e751b91c" tests="5" skipped="0" failures="0" errors="0" time="0.162">
+    <testcase time="0.154000000000002" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
     <testcase time="0.00199999999999889" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
     <testcase time="0.00200000000000067" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
-    <testcase time="0.00300000000000011" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
-    <testcase time="0.000999999999999446" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00199999999999889" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00200000000000067" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
   </testsuite>
-  <testsuite name="tm_g_events_term_id" timestamp="2026-07-23T14:03:10Z" hostname="d4f812dd20e6" tests="17" skipped="0" failures="0" errors="0" time="1.96">
-    <testcase time="0.0449999999999999" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected">
+  <testsuite name="tm_g_events_term_id" timestamp="2026-07-24T12:41:24Z" hostname="6893e751b91c" tests="17" skipped="0" failures="0" errors="0" time="1.961">
+    <testcase time="0.0459999999999994" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected">
       <system-out>`term_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -232,8 +232,8 @@ Backtrace:
  1. └─teal.osprey::tm_g_events_term_id(...) at test-tm_g_events_term_id.R:3:5
  2.   └─teal.osprey:::migrate_choices_selected_to_variables(term_var)</system-out>
     </testcase>
-    <testcase time="0.011000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
-    <testcase time="0.00199999999999889" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
+    <testcase time="0.00999999999999979" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
+    <testcase time="0.00200000000000067" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
     <testcase time="0.00200000000000067" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
     <testcase time="0.00799999999999912" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
@@ -244,7 +244,7 @@ Backtrace:
  3. └─teal.picks::picks(...)
  4.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.011000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks">
+    <testcase time="0.0120000000000005" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -254,10 +254,10 @@ Backtrace:
  4.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
     <testcase time="0.00699999999999967" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
-    <testcase time="0.00200000000000067" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
     <testcase time="0.000999999999999446" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
-    <testcase time="0.864000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected_works"/>
-    <testcase time="0.0359999999999996" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks_works">
+    <testcase time="0.00200000000000067" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
+    <testcase time="0.870000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected_works"/>
+    <testcase time="0.0469999999999988" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks_works">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -275,134 +275,1596 @@ Backtrace:
  3. └─teal.picks::picks(...)
  4.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.885" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks_works"/>
-    <testcase time="0.048" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection">
+    <testcase time="0.872" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks_works"/>
+    <testcase time="0.0400000000000009" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
  1. └─teal.picks::picks(...) at test-tm_g_events_term_id.R:133:3
  2.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.0119999999999987" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection">
+    <testcase time="0.0179999999999989" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
  1. └─teal.picks::picks(...) at test-tm_g_events_term_id.R:141:3
  2.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.011000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
+    <testcase time="0.00900000000000034" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
     <testcase time="0.00300000000000011" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
   </testsuite>
-  <testsuite name="tm_g_heat_bygrade" timestamp="2026-07-23T14:03:12Z" hostname="d4f812dd20e6" tests="15" skipped="0" failures="0" errors="0" time="0.382">
-    <testcase time="0.134" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+  <testsuite name="tm_g_heat_bygrade" timestamp="2026-07-24T12:41:26Z" hostname="6893e751b91c" tests="27" skipped="0" failures="0" errors="0" time="5.851">
+    <testcase time="0.154" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <system-out>`id_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
   `select_spec` is deprecated.
 Backtrace:
     ▆
- 1. ├─testthat::expect_error(...) at test-tm_g_heat_bygrade.R:80:5
+ 1. ├─testthat::expect_error(...) at test-tm_g_heat_bygrade.R:90:5
  2. │ └─testthat:::quasi_capture(...)
  3. │   ├─testthat (local) .capture(...)
  4. │   │ └─base::withCallingHandlers(...)
  5. │   └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
- 6. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:82:9
+ 6. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:92:9
  7. │ └─base::withCallingHandlers(...)
  8. └─teal.osprey::tm_g_heat_bygrade(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(id_var)</system-out>
     </testcase>
-    <testcase time="0.0289999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0280000000000005" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <system-out>`visit_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
   `select_spec` is deprecated.
 Backtrace:
     ▆
- 1. ├─testthat::expect_error(...) at test-tm_g_heat_bygrade.R:80:5
+ 1. ├─testthat::expect_error(...) at test-tm_g_heat_bygrade.R:90:5
  2. │ └─testthat:::quasi_capture(...)
  3. │   ├─testthat (local) .capture(...)
  4. │   │ └─base::withCallingHandlers(...)
  5. │   └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
- 6. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:82:9
+ 6. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:92:9
  7. │ └─base::withCallingHandlers(...)
  8. └─teal.osprey::tm_g_heat_bygrade(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(visit_var)</system-out>
     </testcase>
-    <testcase time="0.0279999999999987" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0350000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <system-out>`ongo_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
   `select_spec` is deprecated.
 Backtrace:
     ▆
- 1. ├─testthat::expect_error(...) at test-tm_g_heat_bygrade.R:80:5
+ 1. ├─testthat::expect_error(...) at test-tm_g_heat_bygrade.R:90:5
  2. │ └─testthat:::quasi_capture(...)
  3. │   ├─testthat (local) .capture(...)
  4. │   │ └─base::withCallingHandlers(...)
  5. │   └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
- 6. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:82:9
+ 6. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:92:9
  7. │ └─base::withCallingHandlers(...)
  8. └─teal.osprey::tm_g_heat_bygrade(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(ongo_var)</system-out>
     </testcase>
-    <testcase time="0.043000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0299999999999994" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <system-out>`anno_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
   `select_spec` is deprecated.
 Backtrace:
     ▆
- 1. ├─testthat::expect_error(...) at test-tm_g_heat_bygrade.R:80:5
+ 1. ├─testthat::expect_error(...) at test-tm_g_heat_bygrade.R:90:5
  2. │ └─testthat:::quasi_capture(...)
  3. │   ├─testthat (local) .capture(...)
  4. │   │ └─base::withCallingHandlers(...)
  5. │   └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
- 6. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:82:9
+ 6. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:92:9
  7. │ └─base::withCallingHandlers(...)
  8. └─teal.osprey::tm_g_heat_bygrade(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(anno_var)</system-out>
     </testcase>
-    <testcase time="0.0329999999999995" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0289999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation">
       <system-out>`heat_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
   `select_spec` is deprecated.
 Backtrace:
     ▆
- 1. ├─testthat::expect_error(...) at test-tm_g_heat_bygrade.R:80:5
+ 1. ├─testthat::expect_error(...) at test-tm_g_heat_bygrade.R:90:5
  2. │ └─testthat:::quasi_capture(...)
  3. │   ├─testthat (local) .capture(...)
  4. │   │ └─base::withCallingHandlers(...)
  5. │   └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
- 6. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:82:9
+ 6. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:92:9
  7. │ └─base::withCallingHandlers(...)
  8. └─teal.osprey::tm_g_heat_bygrade(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(heat_var)</system-out>
     </testcase>
     <testcase time="0.0169999999999995" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.0150000000000006" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.016" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.0250000000000004" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed">
+    <testcase time="0.0120000000000005" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0139999999999993" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.0240000000000009" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed">
       <system-out>`conmed_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
   `select_spec` is deprecated.
 Backtrace:
     ▆
- 1. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:145:5
+ 1. ├─base::suppressWarnings(...) at test-tm_g_heat_bygrade.R:155:5
  2. │ └─base::withCallingHandlers(...)
  3. └─teal.osprey::tm_g_heat_bygrade(...)
  4.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0129999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed"/>
+    <testcase time="0.0120000000000005" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed"/>
     <testcase time="0.00799999999999912" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks"/>
     <testcase time="0.0080000000000009" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_with_conmed"/>
-    <testcase time="0.00900000000000034" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
-    <testcase time="0.000999999999999446" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
+    <testcase time="0.35" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected">
+      <system-out>cartesian join - happens when primary keys A is not a subset of B and B is not a subset of A
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_heat_bygrade.R:231:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. ├─testthat::expect_no_error(session$returned()) at test-tm_g_heat_bygrade.R:235:9
+  29. │ └─testthat:::expect_no_(...)
+  30. │   └─testthat:::quasi_capture(enquo(object), NULL, capture)
+  31. │     ├─testthat (local) .capture(...)
+  32. │     │ ├─base::withRestarts(...)
+  33. │     │ │ └─base (local) withOneRestart(expr, restarts[[1L]])
+  34. │     │ │   └─base (local) doWithOneRestart(return(expr), restart)
+  35. │     │ └─base::withCallingHandlers(...)
+  36. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+  37. └─session$returned()
+  38.   ├─shiny::..stacktraceoff..(self$.updateValue())
+  39.   └─self$.updateValue()
+  40.     └─ctx$run(...)
+  41.       ├─promises::with_promise_domain(...)
+  42.       │ └─domain$wrapSync(expr)
+  43.       ├─shiny::withReactiveDomain(...)
+  44.       │ └─promises::with_promise_domain(...)
+  45.       │   └─domain$wrapSync(expr)
+  46.       │     └─base::force(expr)
+  47.       ├─shiny:::with_otel_span_context(...)
+  48.       │ └─base::force(expr)
+  49.       ├─shiny::captureStackTraces(...)
+  50.       │ └─promises::with_promise_domain(...)
+  51.       │   └─domain$wrapSync(expr)
+  52.       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  53.       └─env$runWith(self, func)
+  54.         └─shiny (local) contextFunc()
+  55.           ├─base::withCallingHandlers(...)
+  56.           ├─base::withVisible(.func())
+  57.           └─shiny (local) .func()
+  58.             ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+  59.             └─teal.osprey (local) `&lt;reactive&gt;`(...)
+  60.               ├─shiny::req(q_r())
+  61.               │ └─shiny:::dotloop(...)
+  62.               │   ├─shiny (local) fun_(eval(as.symbol(paste0("..", i))))
+  63.               │   │ └─shiny::isTruthy(item)
+  64.               │   └─base::eval(as.symbol(paste0("..", i)))
+  65.               │     └─base::eval(as.symbol(paste0("..", i)))
+  66.               └─shiny (local) q_r()
+  67.                 ├─shiny::..stacktraceoff..(self$.updateValue())
+  68.                 └─self$.updateValue()
+  69.                   └─ctx$run(...)
+  70.                     ├─promises::with_promise_domain(...)
+  71.                     │ └─domain$wrapSync(expr)
+  72.                     ├─shiny::withReactiveDomain(...)
+  73.                     │ └─promises::with_promise_domain(...)
+  74.                     │   └─domain$wrapSync(expr)
+  75.                     │     └─base::force(expr)
+  76.                     ├─shiny:::with_otel_span_context(...)
+  77.                     │ └─base::force(expr)
+  78.                     ├─shiny::captureStackTraces(...)
+  79.                     │ └─promises::with_promise_domain(...)
+  80.                     │   └─domain$wrapSync(expr)
+  81.                     │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  82.                     └─env$runWith(self, func)
+  83.                       └─shiny (local) contextFunc()
+  84.                         ├─base::withCallingHandlers(...)
+  85.                         ├─base::withVisible(.func())
+  86.                         └─shiny (local) .func()
+  87.                           └─shiny (local) `&lt;reactive&gt;`(...)
+  88.                             └─shiny:::hybrid_chain(...)
+  89.                               └─shiny (local) do()
+  90.                                 ├─base::tryCatch(...)
+  91.                                 │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  92.                                 │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  93.                                 │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  94.                                 ├─shiny::captureStackTraces(...)
+  95.                                 │ └─promises::with_promise_domain(...)
+  96.                                 │   └─domain$wrapSync(expr)
+  97.                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  98.                                 └─base::Reduce(...)
+  99.                                   └─shiny (local) f(init, x[[i]])
+ 100.                                     ├─base::withVisible(func(v$value))
+ 101.                                     └─shiny (local) func(v$value)
+ 102.                                       ├─shiny::isolate(valueFunc())
+ 103.                                       │ ├─shiny::..stacktraceoff..(...)
+ 104.                                       │ └─ctx$run(...)
+ 105.                                       │   ├─promises::with_promise_domain(...)
+ 106.                                       │   │ └─domain$wrapSync(expr)
+ 107.                                       │   ├─shiny::withReactiveDomain(...)
+ 108.                                       │   │ └─promises::with_promise_domain(...)
+ 109.                                       │   │   └─domain$wrapSync(expr)
+ 110.                                       │   │     └─base::force(expr)
+ 111.                                       │   ├─shiny:::with_otel_span_context(...)
+ 112.                                       │   │ └─base::force(expr)
+ 113.                                       │   ├─shiny::captureStackTraces(...)
+ 114.                                       │   │ └─promises::with_promise_domain(...)
+ 115.                                       │   │   └─domain$wrapSync(expr)
+ 116.                                       │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 117.                                       │   └─env$runWith(self, func)
+ 118.                                       │     └─shiny (local) contextFunc()
+ 119.                                       │       └─shiny::..stacktraceon..(expr)
+ 120.                                       └─shiny (local) valueFunc()
+ 121.                                         ├─shiny::..stacktraceon..(eventReactiveValueFunc(...))
+ 122.                                         └─shiny (local) eventReactiveValueFunc(...)
+ 123.                                           └─shiny (local) r()
+ 124.                                             ├─shiny::..stacktraceoff..(self$.updateValue())
+ 125.                                             └─self$.updateValue()
+ 126.                                               └─ctx$run(...)
+ 127.                                                 ├─promises::with_promise_domain(...)
+ 128.                                                 │ └─domain$wrapSync(expr)
+ 129.                                                 ├─shiny::withReactiveDomain(...)
+ 130.                                                 │ └─promises::with_promise_domain(...)
+ 131.                                                 │   └─domain$wrapSync(expr)
+ 132.                                                 │     └─base::force(expr)
+ 133.                                                 ├─shiny:::with_otel_span_context(...)
+ 134.                                                 │ └─base::force(expr)
+ 135.                                                 ├─shiny::captureStackTraces(...)
+ 136.                                                 │ └─promises::with_promise_domain(...)
+ 137.                                                 │   └─domain$wrapSync(expr)
+ 138.                                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 139.                                                 └─env$runWith(self, func)
+ 140.                                                   └─shiny (local) contextFunc()
+ 141.                                                     ├─base::withCallingHandlers(...)
+ 142.                                                     ├─base::withVisible(.func())
+ 143.                                                     └─shiny (local) .func()
+ 144.                                                       ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 145.                                                       └─teal.osprey (local) `&lt;reactive&gt;`(...)
+ 146.                                                         └─data_heat$data()
+ 147.                                                           ├─shiny::..stacktraceoff..(self$.updateValue())
+ 148.                                                           └─self$.updateValue()
+ 149.                                                             └─ctx$run(...)
+ 150.                                                               ├─promises::with_promise_domain(...)
+ 151.                                                               │ └─domain$wrapSync(expr)
+ 152.                                                               ├─shiny::withReactiveDomain(...)
+ 153.                                                               │ └─promises::with_promise_domain(...)
+ 154.                                                               │   └─domain$wrapSync(expr)
+ 155.                                                               │     └─base::force(expr)
+ 156.                                                               ├─shiny:::with_otel_span_context(...)
+ 157.                                                               │ └─base::force(expr)
+ 158.                                                               ├─shiny::captureStackTraces(...)
+ 159.                                                               │ └─promises::with_promise_domain(...)
+ 160.                                                               │   └─domain$wrapSync(expr)
+ 161.                                                               │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 162.                                                               └─env$runWith(self, func)
+ 163.                                                                 └─shiny (local) contextFunc()
+ 164.                                                                   ├─base::withCallingHandlers(...)
+ 165.                                                                   ├─base::withVisible(.func())
+ 166.                                                                   └─shiny (local) .func()
+ 167.                                                                     ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 168.                                                                     └─teal.picks (local) `&lt;reactive&gt;`(...)
+ 169.                                                                       └─teal.picks:::.qenv_merge(...)
+ 170.                                                                         └─teal.picks:::.merge_expr(...)</system-out>
+    </testcase>
+    <testcase time="0.727" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected"/>
+    <testcase time="0.424999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected_with_conmed">
+      <system-out>cartesian join - happens when primary keys A is not a subset of B and B is not a subset of A
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_heat_bygrade.R:258:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. ├─testthat::expect_no_error(session$returned()) at test-tm_g_heat_bygrade.R:262:9
+  29. │ └─testthat:::expect_no_(...)
+  30. │   └─testthat:::quasi_capture(enquo(object), NULL, capture)
+  31. │     ├─testthat (local) .capture(...)
+  32. │     │ ├─base::withRestarts(...)
+  33. │     │ │ └─base (local) withOneRestart(expr, restarts[[1L]])
+  34. │     │ │   └─base (local) doWithOneRestart(return(expr), restart)
+  35. │     │ └─base::withCallingHandlers(...)
+  36. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+  37. └─session$returned()
+  38.   ├─shiny::..stacktraceoff..(self$.updateValue())
+  39.   └─self$.updateValue()
+  40.     └─ctx$run(...)
+  41.       ├─promises::with_promise_domain(...)
+  42.       │ └─domain$wrapSync(expr)
+  43.       ├─shiny::withReactiveDomain(...)
+  44.       │ └─promises::with_promise_domain(...)
+  45.       │   └─domain$wrapSync(expr)
+  46.       │     └─base::force(expr)
+  47.       ├─shiny:::with_otel_span_context(...)
+  48.       │ └─base::force(expr)
+  49.       ├─shiny::captureStackTraces(...)
+  50.       │ └─promises::with_promise_domain(...)
+  51.       │   └─domain$wrapSync(expr)
+  52.       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  53.       └─env$runWith(self, func)
+  54.         └─shiny (local) contextFunc()
+  55.           ├─base::withCallingHandlers(...)
+  56.           ├─base::withVisible(.func())
+  57.           └─shiny (local) .func()
+  58.             ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+  59.             └─teal.osprey (local) `&lt;reactive&gt;`(...)
+  60.               ├─shiny::req(q_r())
+  61.               │ └─shiny:::dotloop(...)
+  62.               │   ├─shiny (local) fun_(eval(as.symbol(paste0("..", i))))
+  63.               │   │ └─shiny::isTruthy(item)
+  64.               │   └─base::eval(as.symbol(paste0("..", i)))
+  65.               │     └─base::eval(as.symbol(paste0("..", i)))
+  66.               └─shiny (local) q_r()
+  67.                 ├─shiny::..stacktraceoff..(self$.updateValue())
+  68.                 └─self$.updateValue()
+  69.                   └─ctx$run(...)
+  70.                     ├─promises::with_promise_domain(...)
+  71.                     │ └─domain$wrapSync(expr)
+  72.                     ├─shiny::withReactiveDomain(...)
+  73.                     │ └─promises::with_promise_domain(...)
+  74.                     │   └─domain$wrapSync(expr)
+  75.                     │     └─base::force(expr)
+  76.                     ├─shiny:::with_otel_span_context(...)
+  77.                     │ └─base::force(expr)
+  78.                     ├─shiny::captureStackTraces(...)
+  79.                     │ └─promises::with_promise_domain(...)
+  80.                     │   └─domain$wrapSync(expr)
+  81.                     │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  82.                     └─env$runWith(self, func)
+  83.                       └─shiny (local) contextFunc()
+  84.                         ├─base::withCallingHandlers(...)
+  85.                         ├─base::withVisible(.func())
+  86.                         └─shiny (local) .func()
+  87.                           └─shiny (local) `&lt;reactive&gt;`(...)
+  88.                             └─shiny:::hybrid_chain(...)
+  89.                               └─shiny (local) do()
+  90.                                 ├─base::tryCatch(...)
+  91.                                 │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  92.                                 │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  93.                                 │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  94.                                 ├─shiny::captureStackTraces(...)
+  95.                                 │ └─promises::with_promise_domain(...)
+  96.                                 │   └─domain$wrapSync(expr)
+  97.                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  98.                                 └─base::Reduce(...)
+  99.                                   └─shiny (local) f(init, x[[i]])
+ 100.                                     ├─base::withVisible(func(v$value))
+ 101.                                     └─shiny (local) func(v$value)
+ 102.                                       ├─shiny::isolate(valueFunc())
+ 103.                                       │ ├─shiny::..stacktraceoff..(...)
+ 104.                                       │ └─ctx$run(...)
+ 105.                                       │   ├─promises::with_promise_domain(...)
+ 106.                                       │   │ └─domain$wrapSync(expr)
+ 107.                                       │   ├─shiny::withReactiveDomain(...)
+ 108.                                       │   │ └─promises::with_promise_domain(...)
+ 109.                                       │   │   └─domain$wrapSync(expr)
+ 110.                                       │   │     └─base::force(expr)
+ 111.                                       │   ├─shiny:::with_otel_span_context(...)
+ 112.                                       │   │ └─base::force(expr)
+ 113.                                       │   ├─shiny::captureStackTraces(...)
+ 114.                                       │   │ └─promises::with_promise_domain(...)
+ 115.                                       │   │   └─domain$wrapSync(expr)
+ 116.                                       │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 117.                                       │   └─env$runWith(self, func)
+ 118.                                       │     └─shiny (local) contextFunc()
+ 119.                                       │       └─shiny::..stacktraceon..(expr)
+ 120.                                       └─shiny (local) valueFunc()
+ 121.                                         ├─shiny::..stacktraceon..(eventReactiveValueFunc(...))
+ 122.                                         └─shiny (local) eventReactiveValueFunc(...)
+ 123.                                           └─shiny (local) r()
+ 124.                                             ├─shiny::..stacktraceoff..(self$.updateValue())
+ 125.                                             └─self$.updateValue()
+ 126.                                               └─ctx$run(...)
+ 127.                                                 ├─promises::with_promise_domain(...)
+ 128.                                                 │ └─domain$wrapSync(expr)
+ 129.                                                 ├─shiny::withReactiveDomain(...)
+ 130.                                                 │ └─promises::with_promise_domain(...)
+ 131.                                                 │   └─domain$wrapSync(expr)
+ 132.                                                 │     └─base::force(expr)
+ 133.                                                 ├─shiny:::with_otel_span_context(...)
+ 134.                                                 │ └─base::force(expr)
+ 135.                                                 ├─shiny::captureStackTraces(...)
+ 136.                                                 │ └─promises::with_promise_domain(...)
+ 137.                                                 │   └─domain$wrapSync(expr)
+ 138.                                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 139.                                                 └─env$runWith(self, func)
+ 140.                                                   └─shiny (local) contextFunc()
+ 141.                                                     ├─base::withCallingHandlers(...)
+ 142.                                                     ├─base::withVisible(.func())
+ 143.                                                     └─shiny (local) .func()
+ 144.                                                       ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 145.                                                       └─teal.osprey (local) `&lt;reactive&gt;`(...)
+ 146.                                                         └─data_heat$data()
+ 147.                                                           ├─shiny::..stacktraceoff..(self$.updateValue())
+ 148.                                                           └─self$.updateValue()
+ 149.                                                             └─ctx$run(...)
+ 150.                                                               ├─promises::with_promise_domain(...)
+ 151.                                                               │ └─domain$wrapSync(expr)
+ 152.                                                               ├─shiny::withReactiveDomain(...)
+ 153.                                                               │ └─promises::with_promise_domain(...)
+ 154.                                                               │   └─domain$wrapSync(expr)
+ 155.                                                               │     └─base::force(expr)
+ 156.                                                               ├─shiny:::with_otel_span_context(...)
+ 157.                                                               │ └─base::force(expr)
+ 158.                                                               ├─shiny::captureStackTraces(...)
+ 159.                                                               │ └─promises::with_promise_domain(...)
+ 160.                                                               │   └─domain$wrapSync(expr)
+ 161.                                                               │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 162.                                                               └─env$runWith(self, func)
+ 163.                                                                 └─shiny (local) contextFunc()
+ 164.                                                                   ├─base::withCallingHandlers(...)
+ 165.                                                                   ├─base::withVisible(.func())
+ 166.                                                                   └─shiny (local) .func()
+ 167.                                                                     ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 168.                                                                     └─teal.picks (local) `&lt;reactive&gt;`(...)
+ 169.                                                                       ├─shiny::req(data(), selectors_unwrapped())
+ 170.                                                                       │ └─shiny:::dotloop(...)
+ 171.                                                                       │   ├─shiny (local) fun_(eval(as.symbol(paste0("..", i))))
+ 172.                                                                       │   │ └─shiny::isTruthy(item)
+ 173.                                                                       │   └─base::eval(as.symbol(paste0("..", i)))
+ 174.                                                                       │     └─base::eval(as.symbol(paste0("..", i)))
+ 175.                                                                       └─shiny (local) data()
+ 176.                                                                         ├─shiny::..stacktraceoff..(self$.updateValue())
+ 177.                                                                         └─self$.updateValue()
+ 178.                                                                           └─ctx$run(...)
+ 179.                                                                             ├─promises::with_promise_domain(...)
+ 180.                                                                             │ └─domain$wrapSync(expr)
+ 181.                                                                             ├─shiny::withReactiveDomain(...)
+ 182.                                                                             │ └─promises::with_promise_domain(...)
+ 183.                                                                             │   └─domain$wrapSync(expr)
+ 184.                                                                             │     └─base::force(expr)
+ 185.                                                                             ├─shiny:::with_otel_span_context(...)
+ 186.                                                                             │ └─base::force(expr)
+ 187.                                                                             ├─shiny::captureStackTraces(...)
+ 188.                                                                             │ └─promises::with_promise_domain(...)
+ 189.                                                                             │   └─domain$wrapSync(expr)
+ 190.                                                                             │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 191.                                                                             └─env$runWith(self, func)
+ 192.                                                                               └─shiny (local) contextFunc()
+ 193.                                                                                 ├─base::withCallingHandlers(...)
+ 194.                                                                                 ├─base::withVisible(.func())
+ 195.                                                                                 └─shiny (local) .func()
+ 196.                                                                                   ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 197.                                                                                   └─teal.picks (local) `&lt;reactive&gt;`(...)
+ 198.                                                                                     └─teal.picks:::.qenv_merge(...)
+ 199.                                                                                       └─teal.picks:::.merge_expr(...)</system-out>
+    </testcase>
+    <testcase time="0.264000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected_with_conmed">
+      <system-out>cartesian join - happens when primary keys A is not a subset of B and B is not a subset of A
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_heat_bygrade.R:258:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. ├─testthat::expect_no_error(session$returned()) at test-tm_g_heat_bygrade.R:262:9
+  29. │ └─testthat:::expect_no_(...)
+  30. │   └─testthat:::quasi_capture(enquo(object), NULL, capture)
+  31. │     ├─testthat (local) .capture(...)
+  32. │     │ ├─base::withRestarts(...)
+  33. │     │ │ └─base (local) withOneRestart(expr, restarts[[1L]])
+  34. │     │ │   └─base (local) doWithOneRestart(return(expr), restart)
+  35. │     │ └─base::withCallingHandlers(...)
+  36. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+  37. └─session$returned()
+  38.   ├─shiny::..stacktraceoff..(self$.updateValue())
+  39.   └─self$.updateValue()
+  40.     └─ctx$run(...)
+  41.       ├─promises::with_promise_domain(...)
+  42.       │ └─domain$wrapSync(expr)
+  43.       ├─shiny::withReactiveDomain(...)
+  44.       │ └─promises::with_promise_domain(...)
+  45.       │   └─domain$wrapSync(expr)
+  46.       │     └─base::force(expr)
+  47.       ├─shiny:::with_otel_span_context(...)
+  48.       │ └─base::force(expr)
+  49.       ├─shiny::captureStackTraces(...)
+  50.       │ └─promises::with_promise_domain(...)
+  51.       │   └─domain$wrapSync(expr)
+  52.       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  53.       └─env$runWith(self, func)
+  54.         └─shiny (local) contextFunc()
+  55.           ├─base::withCallingHandlers(...)
+  56.           ├─base::withVisible(.func())
+  57.           └─shiny (local) .func()
+  58.             ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+  59.             └─teal.osprey (local) `&lt;reactive&gt;`(...)
+  60.               ├─shiny::req(q_r())
+  61.               │ └─shiny:::dotloop(...)
+  62.               │   ├─shiny (local) fun_(eval(as.symbol(paste0("..", i))))
+  63.               │   │ └─shiny::isTruthy(item)
+  64.               │   └─base::eval(as.symbol(paste0("..", i)))
+  65.               │     └─base::eval(as.symbol(paste0("..", i)))
+  66.               └─shiny (local) q_r()
+  67.                 ├─shiny::..stacktraceoff..(self$.updateValue())
+  68.                 └─self$.updateValue()
+  69.                   └─ctx$run(...)
+  70.                     ├─promises::with_promise_domain(...)
+  71.                     │ └─domain$wrapSync(expr)
+  72.                     ├─shiny::withReactiveDomain(...)
+  73.                     │ └─promises::with_promise_domain(...)
+  74.                     │   └─domain$wrapSync(expr)
+  75.                     │     └─base::force(expr)
+  76.                     ├─shiny:::with_otel_span_context(...)
+  77.                     │ └─base::force(expr)
+  78.                     ├─shiny::captureStackTraces(...)
+  79.                     │ └─promises::with_promise_domain(...)
+  80.                     │   └─domain$wrapSync(expr)
+  81.                     │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  82.                     └─env$runWith(self, func)
+  83.                       └─shiny (local) contextFunc()
+  84.                         ├─base::withCallingHandlers(...)
+  85.                         ├─base::withVisible(.func())
+  86.                         └─shiny (local) .func()
+  87.                           └─shiny (local) `&lt;reactive&gt;`(...)
+  88.                             └─shiny:::hybrid_chain(...)
+  89.                               └─shiny (local) do()
+  90.                                 ├─base::tryCatch(...)
+  91.                                 │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  92.                                 │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  93.                                 │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  94.                                 ├─shiny::captureStackTraces(...)
+  95.                                 │ └─promises::with_promise_domain(...)
+  96.                                 │   └─domain$wrapSync(expr)
+  97.                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  98.                                 └─base::Reduce(...)
+  99.                                   └─shiny (local) f(init, x[[i]])
+ 100.                                     ├─base::withVisible(func(v$value))
+ 101.                                     └─shiny (local) func(v$value)
+ 102.                                       ├─shiny::isolate(valueFunc())
+ 103.                                       │ ├─shiny::..stacktraceoff..(...)
+ 104.                                       │ └─ctx$run(...)
+ 105.                                       │   ├─promises::with_promise_domain(...)
+ 106.                                       │   │ └─domain$wrapSync(expr)
+ 107.                                       │   ├─shiny::withReactiveDomain(...)
+ 108.                                       │   │ └─promises::with_promise_domain(...)
+ 109.                                       │   │   └─domain$wrapSync(expr)
+ 110.                                       │   │     └─base::force(expr)
+ 111.                                       │   ├─shiny:::with_otel_span_context(...)
+ 112.                                       │   │ └─base::force(expr)
+ 113.                                       │   ├─shiny::captureStackTraces(...)
+ 114.                                       │   │ └─promises::with_promise_domain(...)
+ 115.                                       │   │   └─domain$wrapSync(expr)
+ 116.                                       │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 117.                                       │   └─env$runWith(self, func)
+ 118.                                       │     └─shiny (local) contextFunc()
+ 119.                                       │       └─shiny::..stacktraceon..(expr)
+ 120.                                       └─shiny (local) valueFunc()
+ 121.                                         ├─shiny::..stacktraceon..(eventReactiveValueFunc(...))
+ 122.                                         └─shiny (local) eventReactiveValueFunc(...)
+ 123.                                           └─shiny (local) r()
+ 124.                                             ├─shiny::..stacktraceoff..(self$.updateValue())
+ 125.                                             └─self$.updateValue()
+ 126.                                               └─ctx$run(...)
+ 127.                                                 ├─promises::with_promise_domain(...)
+ 128.                                                 │ └─domain$wrapSync(expr)
+ 129.                                                 ├─shiny::withReactiveDomain(...)
+ 130.                                                 │ └─promises::with_promise_domain(...)
+ 131.                                                 │   └─domain$wrapSync(expr)
+ 132.                                                 │     └─base::force(expr)
+ 133.                                                 ├─shiny:::with_otel_span_context(...)
+ 134.                                                 │ └─base::force(expr)
+ 135.                                                 ├─shiny::captureStackTraces(...)
+ 136.                                                 │ └─promises::with_promise_domain(...)
+ 137.                                                 │   └─domain$wrapSync(expr)
+ 138.                                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 139.                                                 └─env$runWith(self, func)
+ 140.                                                   └─shiny (local) contextFunc()
+ 141.                                                     ├─base::withCallingHandlers(...)
+ 142.                                                     ├─base::withVisible(.func())
+ 143.                                                     └─shiny (local) .func()
+ 144.                                                       ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 145.                                                       └─teal.osprey (local) `&lt;reactive&gt;`(...)
+ 146.                                                         └─data_heat$data()
+ 147.                                                           ├─shiny::..stacktraceoff..(self$.updateValue())
+ 148.                                                           └─self$.updateValue()
+ 149.                                                             └─ctx$run(...)
+ 150.                                                               ├─promises::with_promise_domain(...)
+ 151.                                                               │ └─domain$wrapSync(expr)
+ 152.                                                               ├─shiny::withReactiveDomain(...)
+ 153.                                                               │ └─promises::with_promise_domain(...)
+ 154.                                                               │   └─domain$wrapSync(expr)
+ 155.                                                               │     └─base::force(expr)
+ 156.                                                               ├─shiny:::with_otel_span_context(...)
+ 157.                                                               │ └─base::force(expr)
+ 158.                                                               ├─shiny::captureStackTraces(...)
+ 159.                                                               │ └─promises::with_promise_domain(...)
+ 160.                                                               │   └─domain$wrapSync(expr)
+ 161.                                                               │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 162.                                                               └─env$runWith(self, func)
+ 163.                                                                 └─shiny (local) contextFunc()
+ 164.                                                                   ├─base::withCallingHandlers(...)
+ 165.                                                                   ├─base::withVisible(.func())
+ 166.                                                                   └─shiny (local) .func()
+ 167.                                                                     ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 168.                                                                     └─teal.picks (local) `&lt;reactive&gt;`(...)
+ 169.                                                                       └─teal.picks:::.qenv_merge(...)
+ 170.                                                                         └─teal.picks:::.merge_expr(...)</system-out>
+    </testcase>
+    <testcase time="0.093" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected_with_conmed">
+      <system-out>cartesian join - happens when primary keys A is not a subset of B and B is not a subset of A
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_heat_bygrade.R:258:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. ├─testthat::expect_no_error(session$returned()) at test-tm_g_heat_bygrade.R:262:9
+  29. │ └─testthat:::expect_no_(...)
+  30. │   └─testthat:::quasi_capture(enquo(object), NULL, capture)
+  31. │     ├─testthat (local) .capture(...)
+  32. │     │ ├─base::withRestarts(...)
+  33. │     │ │ └─base (local) withOneRestart(expr, restarts[[1L]])
+  34. │     │ │   └─base (local) doWithOneRestart(return(expr), restart)
+  35. │     │ └─base::withCallingHandlers(...)
+  36. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+  37. └─session$returned()
+  38.   ├─shiny::..stacktraceoff..(self$.updateValue())
+  39.   └─self$.updateValue()
+  40.     └─ctx$run(...)
+  41.       ├─promises::with_promise_domain(...)
+  42.       │ └─domain$wrapSync(expr)
+  43.       ├─shiny::withReactiveDomain(...)
+  44.       │ └─promises::with_promise_domain(...)
+  45.       │   └─domain$wrapSync(expr)
+  46.       │     └─base::force(expr)
+  47.       ├─shiny:::with_otel_span_context(...)
+  48.       │ └─base::force(expr)
+  49.       ├─shiny::captureStackTraces(...)
+  50.       │ └─promises::with_promise_domain(...)
+  51.       │   └─domain$wrapSync(expr)
+  52.       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  53.       └─env$runWith(self, func)
+  54.         └─shiny (local) contextFunc()
+  55.           ├─base::withCallingHandlers(...)
+  56.           ├─base::withVisible(.func())
+  57.           └─shiny (local) .func()
+  58.             ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+  59.             └─teal.osprey (local) `&lt;reactive&gt;`(...)
+  60.               ├─shiny::req(q_r())
+  61.               │ └─shiny:::dotloop(...)
+  62.               │   ├─shiny (local) fun_(eval(as.symbol(paste0("..", i))))
+  63.               │   │ └─shiny::isTruthy(item)
+  64.               │   └─base::eval(as.symbol(paste0("..", i)))
+  65.               │     └─base::eval(as.symbol(paste0("..", i)))
+  66.               └─shiny (local) q_r()
+  67.                 ├─shiny::..stacktraceoff..(self$.updateValue())
+  68.                 └─self$.updateValue()
+  69.                   └─ctx$run(...)
+  70.                     ├─promises::with_promise_domain(...)
+  71.                     │ └─domain$wrapSync(expr)
+  72.                     ├─shiny::withReactiveDomain(...)
+  73.                     │ └─promises::with_promise_domain(...)
+  74.                     │   └─domain$wrapSync(expr)
+  75.                     │     └─base::force(expr)
+  76.                     ├─shiny:::with_otel_span_context(...)
+  77.                     │ └─base::force(expr)
+  78.                     ├─shiny::captureStackTraces(...)
+  79.                     │ └─promises::with_promise_domain(...)
+  80.                     │   └─domain$wrapSync(expr)
+  81.                     │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  82.                     └─env$runWith(self, func)
+  83.                       └─shiny (local) contextFunc()
+  84.                         ├─base::withCallingHandlers(...)
+  85.                         ├─base::withVisible(.func())
+  86.                         └─shiny (local) .func()
+  87.                           └─shiny (local) `&lt;reactive&gt;`(...)
+  88.                             └─shiny:::hybrid_chain(...)
+  89.                               └─shiny (local) do()
+  90.                                 ├─base::tryCatch(...)
+  91.                                 │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  92.                                 │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  93.                                 │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  94.                                 ├─shiny::captureStackTraces(...)
+  95.                                 │ └─promises::with_promise_domain(...)
+  96.                                 │   └─domain$wrapSync(expr)
+  97.                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  98.                                 └─base::Reduce(...)
+  99.                                   └─shiny (local) f(init, x[[i]])
+ 100.                                     ├─base::withVisible(func(v$value))
+ 101.                                     └─shiny (local) func(v$value)
+ 102.                                       ├─shiny::isolate(valueFunc())
+ 103.                                       │ ├─shiny::..stacktraceoff..(...)
+ 104.                                       │ └─ctx$run(...)
+ 105.                                       │   ├─promises::with_promise_domain(...)
+ 106.                                       │   │ └─domain$wrapSync(expr)
+ 107.                                       │   ├─shiny::withReactiveDomain(...)
+ 108.                                       │   │ └─promises::with_promise_domain(...)
+ 109.                                       │   │   └─domain$wrapSync(expr)
+ 110.                                       │   │     └─base::force(expr)
+ 111.                                       │   ├─shiny:::with_otel_span_context(...)
+ 112.                                       │   │ └─base::force(expr)
+ 113.                                       │   ├─shiny::captureStackTraces(...)
+ 114.                                       │   │ └─promises::with_promise_domain(...)
+ 115.                                       │   │   └─domain$wrapSync(expr)
+ 116.                                       │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 117.                                       │   └─env$runWith(self, func)
+ 118.                                       │     └─shiny (local) contextFunc()
+ 119.                                       │       └─shiny::..stacktraceon..(expr)
+ 120.                                       └─shiny (local) valueFunc()
+ 121.                                         ├─shiny::..stacktraceon..(eventReactiveValueFunc(...))
+ 122.                                         └─shiny (local) eventReactiveValueFunc(...)
+ 123.                                           └─shiny (local) r()
+ 124.                                             ├─shiny::..stacktraceoff..(self$.updateValue())
+ 125.                                             └─self$.updateValue()
+ 126.                                               └─ctx$run(...)
+ 127.                                                 ├─promises::with_promise_domain(...)
+ 128.                                                 │ └─domain$wrapSync(expr)
+ 129.                                                 ├─shiny::withReactiveDomain(...)
+ 130.                                                 │ └─promises::with_promise_domain(...)
+ 131.                                                 │   └─domain$wrapSync(expr)
+ 132.                                                 │     └─base::force(expr)
+ 133.                                                 ├─shiny:::with_otel_span_context(...)
+ 134.                                                 │ └─base::force(expr)
+ 135.                                                 ├─shiny::captureStackTraces(...)
+ 136.                                                 │ └─promises::with_promise_domain(...)
+ 137.                                                 │   └─domain$wrapSync(expr)
+ 138.                                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 139.                                                 └─env$runWith(self, func)
+ 140.                                                   └─shiny (local) contextFunc()
+ 141.                                                     ├─base::withCallingHandlers(...)
+ 142.                                                     ├─base::withVisible(.func())
+ 143.                                                     └─shiny (local) .func()
+ 144.                                                       ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 145.                                                       └─teal.osprey (local) `&lt;reactive&gt;`(...)
+ 146.                                                         └─data_heat$data()
+ 147.                                                           ├─shiny::..stacktraceoff..(self$.updateValue())
+ 148.                                                           └─self$.updateValue()
+ 149.                                                             └─ctx$run(...)
+ 150.                                                               ├─promises::with_promise_domain(...)
+ 151.                                                               │ └─domain$wrapSync(expr)
+ 152.                                                               ├─shiny::withReactiveDomain(...)
+ 153.                                                               │ └─promises::with_promise_domain(...)
+ 154.                                                               │   └─domain$wrapSync(expr)
+ 155.                                                               │     └─base::force(expr)
+ 156.                                                               ├─shiny:::with_otel_span_context(...)
+ 157.                                                               │ └─base::force(expr)
+ 158.                                                               ├─shiny::captureStackTraces(...)
+ 159.                                                               │ └─promises::with_promise_domain(...)
+ 160.                                                               │   └─domain$wrapSync(expr)
+ 161.                                                               │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 162.                                                               └─env$runWith(self, func)
+ 163.                                                                 └─shiny (local) contextFunc()
+ 164.                                                                   ├─base::withCallingHandlers(...)
+ 165.                                                                   ├─base::withVisible(.func())
+ 166.                                                                   └─shiny (local) .func()
+ 167.                                                                     ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 168.                                                                     └─teal.picks (local) `&lt;reactive&gt;`(...)
+ 169.                                                                       └─teal.picks:::.qenv_merge(...)
+ 170.                                                                         └─teal.picks:::.merge_expr(...)</system-out>
+    </testcase>
+    <testcase time="0.776" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected_with_conmed"/>
+    <testcase time="0.391999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks">
+      <system-out>cartesian join - happens when primary keys A is not a subset of B and B is not a subset of A
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_heat_bygrade.R:283:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. ├─testthat::expect_no_error(session$returned()) at test-tm_g_heat_bygrade.R:287:9
+  29. │ └─testthat:::expect_no_(...)
+  30. │   └─testthat:::quasi_capture(enquo(object), NULL, capture)
+  31. │     ├─testthat (local) .capture(...)
+  32. │     │ ├─base::withRestarts(...)
+  33. │     │ │ └─base (local) withOneRestart(expr, restarts[[1L]])
+  34. │     │ │   └─base (local) doWithOneRestart(return(expr), restart)
+  35. │     │ └─base::withCallingHandlers(...)
+  36. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+  37. └─session$returned()
+  38.   ├─shiny::..stacktraceoff..(self$.updateValue())
+  39.   └─self$.updateValue()
+  40.     └─ctx$run(...)
+  41.       ├─promises::with_promise_domain(...)
+  42.       │ └─domain$wrapSync(expr)
+  43.       ├─shiny::withReactiveDomain(...)
+  44.       │ └─promises::with_promise_domain(...)
+  45.       │   └─domain$wrapSync(expr)
+  46.       │     └─base::force(expr)
+  47.       ├─shiny:::with_otel_span_context(...)
+  48.       │ └─base::force(expr)
+  49.       ├─shiny::captureStackTraces(...)
+  50.       │ └─promises::with_promise_domain(...)
+  51.       │   └─domain$wrapSync(expr)
+  52.       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  53.       └─env$runWith(self, func)
+  54.         └─shiny (local) contextFunc()
+  55.           ├─base::withCallingHandlers(...)
+  56.           ├─base::withVisible(.func())
+  57.           └─shiny (local) .func()
+  58.             ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+  59.             └─teal.osprey (local) `&lt;reactive&gt;`(...)
+  60.               ├─shiny::req(q_r())
+  61.               │ └─shiny:::dotloop(...)
+  62.               │   ├─shiny (local) fun_(eval(as.symbol(paste0("..", i))))
+  63.               │   │ └─shiny::isTruthy(item)
+  64.               │   └─base::eval(as.symbol(paste0("..", i)))
+  65.               │     └─base::eval(as.symbol(paste0("..", i)))
+  66.               └─shiny (local) q_r()
+  67.                 ├─shiny::..stacktraceoff..(self$.updateValue())
+  68.                 └─self$.updateValue()
+  69.                   └─ctx$run(...)
+  70.                     ├─promises::with_promise_domain(...)
+  71.                     │ └─domain$wrapSync(expr)
+  72.                     ├─shiny::withReactiveDomain(...)
+  73.                     │ └─promises::with_promise_domain(...)
+  74.                     │   └─domain$wrapSync(expr)
+  75.                     │     └─base::force(expr)
+  76.                     ├─shiny:::with_otel_span_context(...)
+  77.                     │ └─base::force(expr)
+  78.                     ├─shiny::captureStackTraces(...)
+  79.                     │ └─promises::with_promise_domain(...)
+  80.                     │   └─domain$wrapSync(expr)
+  81.                     │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  82.                     └─env$runWith(self, func)
+  83.                       └─shiny (local) contextFunc()
+  84.                         ├─base::withCallingHandlers(...)
+  85.                         ├─base::withVisible(.func())
+  86.                         └─shiny (local) .func()
+  87.                           └─shiny (local) `&lt;reactive&gt;`(...)
+  88.                             └─shiny:::hybrid_chain(...)
+  89.                               └─shiny (local) do()
+  90.                                 ├─base::tryCatch(...)
+  91.                                 │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  92.                                 │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  93.                                 │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  94.                                 ├─shiny::captureStackTraces(...)
+  95.                                 │ └─promises::with_promise_domain(...)
+  96.                                 │   └─domain$wrapSync(expr)
+  97.                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  98.                                 └─base::Reduce(...)
+  99.                                   └─shiny (local) f(init, x[[i]])
+ 100.                                     ├─base::withVisible(func(v$value))
+ 101.                                     └─shiny (local) func(v$value)
+ 102.                                       ├─shiny::isolate(valueFunc())
+ 103.                                       │ ├─shiny::..stacktraceoff..(...)
+ 104.                                       │ └─ctx$run(...)
+ 105.                                       │   ├─promises::with_promise_domain(...)
+ 106.                                       │   │ └─domain$wrapSync(expr)
+ 107.                                       │   ├─shiny::withReactiveDomain(...)
+ 108.                                       │   │ └─promises::with_promise_domain(...)
+ 109.                                       │   │   └─domain$wrapSync(expr)
+ 110.                                       │   │     └─base::force(expr)
+ 111.                                       │   ├─shiny:::with_otel_span_context(...)
+ 112.                                       │   │ └─base::force(expr)
+ 113.                                       │   ├─shiny::captureStackTraces(...)
+ 114.                                       │   │ └─promises::with_promise_domain(...)
+ 115.                                       │   │   └─domain$wrapSync(expr)
+ 116.                                       │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 117.                                       │   └─env$runWith(self, func)
+ 118.                                       │     └─shiny (local) contextFunc()
+ 119.                                       │       └─shiny::..stacktraceon..(expr)
+ 120.                                       └─shiny (local) valueFunc()
+ 121.                                         ├─shiny::..stacktraceon..(eventReactiveValueFunc(...))
+ 122.                                         └─shiny (local) eventReactiveValueFunc(...)
+ 123.                                           └─shiny (local) r()
+ 124.                                             ├─shiny::..stacktraceoff..(self$.updateValue())
+ 125.                                             └─self$.updateValue()
+ 126.                                               └─ctx$run(...)
+ 127.                                                 ├─promises::with_promise_domain(...)
+ 128.                                                 │ └─domain$wrapSync(expr)
+ 129.                                                 ├─shiny::withReactiveDomain(...)
+ 130.                                                 │ └─promises::with_promise_domain(...)
+ 131.                                                 │   └─domain$wrapSync(expr)
+ 132.                                                 │     └─base::force(expr)
+ 133.                                                 ├─shiny:::with_otel_span_context(...)
+ 134.                                                 │ └─base::force(expr)
+ 135.                                                 ├─shiny::captureStackTraces(...)
+ 136.                                                 │ └─promises::with_promise_domain(...)
+ 137.                                                 │   └─domain$wrapSync(expr)
+ 138.                                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 139.                                                 └─env$runWith(self, func)
+ 140.                                                   └─shiny (local) contextFunc()
+ 141.                                                     ├─base::withCallingHandlers(...)
+ 142.                                                     ├─base::withVisible(.func())
+ 143.                                                     └─shiny (local) .func()
+ 144.                                                       ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 145.                                                       └─teal.osprey (local) `&lt;reactive&gt;`(...)
+ 146.                                                         └─data_heat$data()
+ 147.                                                           ├─shiny::..stacktraceoff..(self$.updateValue())
+ 148.                                                           └─self$.updateValue()
+ 149.                                                             └─ctx$run(...)
+ 150.                                                               ├─promises::with_promise_domain(...)
+ 151.                                                               │ └─domain$wrapSync(expr)
+ 152.                                                               ├─shiny::withReactiveDomain(...)
+ 153.                                                               │ └─promises::with_promise_domain(...)
+ 154.                                                               │   └─domain$wrapSync(expr)
+ 155.                                                               │     └─base::force(expr)
+ 156.                                                               ├─shiny:::with_otel_span_context(...)
+ 157.                                                               │ └─base::force(expr)
+ 158.                                                               ├─shiny::captureStackTraces(...)
+ 159.                                                               │ └─promises::with_promise_domain(...)
+ 160.                                                               │   └─domain$wrapSync(expr)
+ 161.                                                               │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 162.                                                               └─env$runWith(self, func)
+ 163.                                                                 └─shiny (local) contextFunc()
+ 164.                                                                   ├─base::withCallingHandlers(...)
+ 165.                                                                   ├─base::withVisible(.func())
+ 166.                                                                   └─shiny (local) .func()
+ 167.                                                                     ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 168.                                                                     └─teal.picks (local) `&lt;reactive&gt;`(...)
+ 169.                                                                       └─teal.picks:::.qenv_merge(...)
+ 170.                                                                         └─teal.picks:::.merge_expr(...)</system-out>
+    </testcase>
+    <testcase time="0.786000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks"/>
+    <testcase time="0.440999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks_with_conmed">
+      <system-out>cartesian join - happens when primary keys A is not a subset of B and B is not a subset of A
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_heat_bygrade.R:310:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. ├─testthat::expect_no_error(session$returned()) at test-tm_g_heat_bygrade.R:314:9
+  29. │ └─testthat:::expect_no_(...)
+  30. │   └─testthat:::quasi_capture(enquo(object), NULL, capture)
+  31. │     ├─testthat (local) .capture(...)
+  32. │     │ ├─base::withRestarts(...)
+  33. │     │ │ └─base (local) withOneRestart(expr, restarts[[1L]])
+  34. │     │ │   └─base (local) doWithOneRestart(return(expr), restart)
+  35. │     │ └─base::withCallingHandlers(...)
+  36. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+  37. └─session$returned()
+  38.   ├─shiny::..stacktraceoff..(self$.updateValue())
+  39.   └─self$.updateValue()
+  40.     └─ctx$run(...)
+  41.       ├─promises::with_promise_domain(...)
+  42.       │ └─domain$wrapSync(expr)
+  43.       ├─shiny::withReactiveDomain(...)
+  44.       │ └─promises::with_promise_domain(...)
+  45.       │   └─domain$wrapSync(expr)
+  46.       │     └─base::force(expr)
+  47.       ├─shiny:::with_otel_span_context(...)
+  48.       │ └─base::force(expr)
+  49.       ├─shiny::captureStackTraces(...)
+  50.       │ └─promises::with_promise_domain(...)
+  51.       │   └─domain$wrapSync(expr)
+  52.       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  53.       └─env$runWith(self, func)
+  54.         └─shiny (local) contextFunc()
+  55.           ├─base::withCallingHandlers(...)
+  56.           ├─base::withVisible(.func())
+  57.           └─shiny (local) .func()
+  58.             ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+  59.             └─teal.osprey (local) `&lt;reactive&gt;`(...)
+  60.               ├─shiny::req(q_r())
+  61.               │ └─shiny:::dotloop(...)
+  62.               │   ├─shiny (local) fun_(eval(as.symbol(paste0("..", i))))
+  63.               │   │ └─shiny::isTruthy(item)
+  64.               │   └─base::eval(as.symbol(paste0("..", i)))
+  65.               │     └─base::eval(as.symbol(paste0("..", i)))
+  66.               └─shiny (local) q_r()
+  67.                 ├─shiny::..stacktraceoff..(self$.updateValue())
+  68.                 └─self$.updateValue()
+  69.                   └─ctx$run(...)
+  70.                     ├─promises::with_promise_domain(...)
+  71.                     │ └─domain$wrapSync(expr)
+  72.                     ├─shiny::withReactiveDomain(...)
+  73.                     │ └─promises::with_promise_domain(...)
+  74.                     │   └─domain$wrapSync(expr)
+  75.                     │     └─base::force(expr)
+  76.                     ├─shiny:::with_otel_span_context(...)
+  77.                     │ └─base::force(expr)
+  78.                     ├─shiny::captureStackTraces(...)
+  79.                     │ └─promises::with_promise_domain(...)
+  80.                     │   └─domain$wrapSync(expr)
+  81.                     │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  82.                     └─env$runWith(self, func)
+  83.                       └─shiny (local) contextFunc()
+  84.                         ├─base::withCallingHandlers(...)
+  85.                         ├─base::withVisible(.func())
+  86.                         └─shiny (local) .func()
+  87.                           └─shiny (local) `&lt;reactive&gt;`(...)
+  88.                             └─shiny:::hybrid_chain(...)
+  89.                               └─shiny (local) do()
+  90.                                 ├─base::tryCatch(...)
+  91.                                 │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  92.                                 │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  93.                                 │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  94.                                 ├─shiny::captureStackTraces(...)
+  95.                                 │ └─promises::with_promise_domain(...)
+  96.                                 │   └─domain$wrapSync(expr)
+  97.                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  98.                                 └─base::Reduce(...)
+  99.                                   └─shiny (local) f(init, x[[i]])
+ 100.                                     ├─base::withVisible(func(v$value))
+ 101.                                     └─shiny (local) func(v$value)
+ 102.                                       ├─shiny::isolate(valueFunc())
+ 103.                                       │ ├─shiny::..stacktraceoff..(...)
+ 104.                                       │ └─ctx$run(...)
+ 105.                                       │   ├─promises::with_promise_domain(...)
+ 106.                                       │   │ └─domain$wrapSync(expr)
+ 107.                                       │   ├─shiny::withReactiveDomain(...)
+ 108.                                       │   │ └─promises::with_promise_domain(...)
+ 109.                                       │   │   └─domain$wrapSync(expr)
+ 110.                                       │   │     └─base::force(expr)
+ 111.                                       │   ├─shiny:::with_otel_span_context(...)
+ 112.                                       │   │ └─base::force(expr)
+ 113.                                       │   ├─shiny::captureStackTraces(...)
+ 114.                                       │   │ └─promises::with_promise_domain(...)
+ 115.                                       │   │   └─domain$wrapSync(expr)
+ 116.                                       │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 117.                                       │   └─env$runWith(self, func)
+ 118.                                       │     └─shiny (local) contextFunc()
+ 119.                                       │       └─shiny::..stacktraceon..(expr)
+ 120.                                       └─shiny (local) valueFunc()
+ 121.                                         ├─shiny::..stacktraceon..(eventReactiveValueFunc(...))
+ 122.                                         └─shiny (local) eventReactiveValueFunc(...)
+ 123.                                           └─shiny (local) r()
+ 124.                                             ├─shiny::..stacktraceoff..(self$.updateValue())
+ 125.                                             └─self$.updateValue()
+ 126.                                               └─ctx$run(...)
+ 127.                                                 ├─promises::with_promise_domain(...)
+ 128.                                                 │ └─domain$wrapSync(expr)
+ 129.                                                 ├─shiny::withReactiveDomain(...)
+ 130.                                                 │ └─promises::with_promise_domain(...)
+ 131.                                                 │   └─domain$wrapSync(expr)
+ 132.                                                 │     └─base::force(expr)
+ 133.                                                 ├─shiny:::with_otel_span_context(...)
+ 134.                                                 │ └─base::force(expr)
+ 135.                                                 ├─shiny::captureStackTraces(...)
+ 136.                                                 │ └─promises::with_promise_domain(...)
+ 137.                                                 │   └─domain$wrapSync(expr)
+ 138.                                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 139.                                                 └─env$runWith(self, func)
+ 140.                                                   └─shiny (local) contextFunc()
+ 141.                                                     ├─base::withCallingHandlers(...)
+ 142.                                                     ├─base::withVisible(.func())
+ 143.                                                     └─shiny (local) .func()
+ 144.                                                       ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 145.                                                       └─teal.osprey (local) `&lt;reactive&gt;`(...)
+ 146.                                                         └─data_heat$data()
+ 147.                                                           ├─shiny::..stacktraceoff..(self$.updateValue())
+ 148.                                                           └─self$.updateValue()
+ 149.                                                             └─ctx$run(...)
+ 150.                                                               ├─promises::with_promise_domain(...)
+ 151.                                                               │ └─domain$wrapSync(expr)
+ 152.                                                               ├─shiny::withReactiveDomain(...)
+ 153.                                                               │ └─promises::with_promise_domain(...)
+ 154.                                                               │   └─domain$wrapSync(expr)
+ 155.                                                               │     └─base::force(expr)
+ 156.                                                               ├─shiny:::with_otel_span_context(...)
+ 157.                                                               │ └─base::force(expr)
+ 158.                                                               ├─shiny::captureStackTraces(...)
+ 159.                                                               │ └─promises::with_promise_domain(...)
+ 160.                                                               │   └─domain$wrapSync(expr)
+ 161.                                                               │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 162.                                                               └─env$runWith(self, func)
+ 163.                                                                 └─shiny (local) contextFunc()
+ 164.                                                                   ├─base::withCallingHandlers(...)
+ 165.                                                                   ├─base::withVisible(.func())
+ 166.                                                                   └─shiny (local) .func()
+ 167.                                                                     ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 168.                                                                     └─teal.picks (local) `&lt;reactive&gt;`(...)
+ 169.                                                                       ├─shiny::req(data(), selectors_unwrapped())
+ 170.                                                                       │ └─shiny:::dotloop(...)
+ 171.                                                                       │   ├─shiny (local) fun_(eval(as.symbol(paste0("..", i))))
+ 172.                                                                       │   │ └─shiny::isTruthy(item)
+ 173.                                                                       │   └─base::eval(as.symbol(paste0("..", i)))
+ 174.                                                                       │     └─base::eval(as.symbol(paste0("..", i)))
+ 175.                                                                       └─shiny (local) data()
+ 176.                                                                         ├─shiny::..stacktraceoff..(self$.updateValue())
+ 177.                                                                         └─self$.updateValue()
+ 178.                                                                           └─ctx$run(...)
+ 179.                                                                             ├─promises::with_promise_domain(...)
+ 180.                                                                             │ └─domain$wrapSync(expr)
+ 181.                                                                             ├─shiny::withReactiveDomain(...)
+ 182.                                                                             │ └─promises::with_promise_domain(...)
+ 183.                                                                             │   └─domain$wrapSync(expr)
+ 184.                                                                             │     └─base::force(expr)
+ 185.                                                                             ├─shiny:::with_otel_span_context(...)
+ 186.                                                                             │ └─base::force(expr)
+ 187.                                                                             ├─shiny::captureStackTraces(...)
+ 188.                                                                             │ └─promises::with_promise_domain(...)
+ 189.                                                                             │   └─domain$wrapSync(expr)
+ 190.                                                                             │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 191.                                                                             └─env$runWith(self, func)
+ 192.                                                                               └─shiny (local) contextFunc()
+ 193.                                                                                 ├─base::withCallingHandlers(...)
+ 194.                                                                                 ├─base::withVisible(.func())
+ 195.                                                                                 └─shiny (local) .func()
+ 196.                                                                                   ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 197.                                                                                   └─teal.picks (local) `&lt;reactive&gt;`(...)
+ 198.                                                                                     └─teal.picks:::.qenv_merge(...)
+ 199.                                                                                       └─teal.picks:::.merge_expr(...)</system-out>
+    </testcase>
+    <testcase time="0.279" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks_with_conmed">
+      <system-out>cartesian join - happens when primary keys A is not a subset of B and B is not a subset of A
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_heat_bygrade.R:310:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. ├─testthat::expect_no_error(session$returned()) at test-tm_g_heat_bygrade.R:314:9
+  29. │ └─testthat:::expect_no_(...)
+  30. │   └─testthat:::quasi_capture(enquo(object), NULL, capture)
+  31. │     ├─testthat (local) .capture(...)
+  32. │     │ ├─base::withRestarts(...)
+  33. │     │ │ └─base (local) withOneRestart(expr, restarts[[1L]])
+  34. │     │ │   └─base (local) doWithOneRestart(return(expr), restart)
+  35. │     │ └─base::withCallingHandlers(...)
+  36. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+  37. └─session$returned()
+  38.   ├─shiny::..stacktraceoff..(self$.updateValue())
+  39.   └─self$.updateValue()
+  40.     └─ctx$run(...)
+  41.       ├─promises::with_promise_domain(...)
+  42.       │ └─domain$wrapSync(expr)
+  43.       ├─shiny::withReactiveDomain(...)
+  44.       │ └─promises::with_promise_domain(...)
+  45.       │   └─domain$wrapSync(expr)
+  46.       │     └─base::force(expr)
+  47.       ├─shiny:::with_otel_span_context(...)
+  48.       │ └─base::force(expr)
+  49.       ├─shiny::captureStackTraces(...)
+  50.       │ └─promises::with_promise_domain(...)
+  51.       │   └─domain$wrapSync(expr)
+  52.       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  53.       └─env$runWith(self, func)
+  54.         └─shiny (local) contextFunc()
+  55.           ├─base::withCallingHandlers(...)
+  56.           ├─base::withVisible(.func())
+  57.           └─shiny (local) .func()
+  58.             ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+  59.             └─teal.osprey (local) `&lt;reactive&gt;`(...)
+  60.               ├─shiny::req(q_r())
+  61.               │ └─shiny:::dotloop(...)
+  62.               │   ├─shiny (local) fun_(eval(as.symbol(paste0("..", i))))
+  63.               │   │ └─shiny::isTruthy(item)
+  64.               │   └─base::eval(as.symbol(paste0("..", i)))
+  65.               │     └─base::eval(as.symbol(paste0("..", i)))
+  66.               └─shiny (local) q_r()
+  67.                 ├─shiny::..stacktraceoff..(self$.updateValue())
+  68.                 └─self$.updateValue()
+  69.                   └─ctx$run(...)
+  70.                     ├─promises::with_promise_domain(...)
+  71.                     │ └─domain$wrapSync(expr)
+  72.                     ├─shiny::withReactiveDomain(...)
+  73.                     │ └─promises::with_promise_domain(...)
+  74.                     │   └─domain$wrapSync(expr)
+  75.                     │     └─base::force(expr)
+  76.                     ├─shiny:::with_otel_span_context(...)
+  77.                     │ └─base::force(expr)
+  78.                     ├─shiny::captureStackTraces(...)
+  79.                     │ └─promises::with_promise_domain(...)
+  80.                     │   └─domain$wrapSync(expr)
+  81.                     │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  82.                     └─env$runWith(self, func)
+  83.                       └─shiny (local) contextFunc()
+  84.                         ├─base::withCallingHandlers(...)
+  85.                         ├─base::withVisible(.func())
+  86.                         └─shiny (local) .func()
+  87.                           └─shiny (local) `&lt;reactive&gt;`(...)
+  88.                             └─shiny:::hybrid_chain(...)
+  89.                               └─shiny (local) do()
+  90.                                 ├─base::tryCatch(...)
+  91.                                 │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  92.                                 │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  93.                                 │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  94.                                 ├─shiny::captureStackTraces(...)
+  95.                                 │ └─promises::with_promise_domain(...)
+  96.                                 │   └─domain$wrapSync(expr)
+  97.                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  98.                                 └─base::Reduce(...)
+  99.                                   └─shiny (local) f(init, x[[i]])
+ 100.                                     ├─base::withVisible(func(v$value))
+ 101.                                     └─shiny (local) func(v$value)
+ 102.                                       ├─shiny::isolate(valueFunc())
+ 103.                                       │ ├─shiny::..stacktraceoff..(...)
+ 104.                                       │ └─ctx$run(...)
+ 105.                                       │   ├─promises::with_promise_domain(...)
+ 106.                                       │   │ └─domain$wrapSync(expr)
+ 107.                                       │   ├─shiny::withReactiveDomain(...)
+ 108.                                       │   │ └─promises::with_promise_domain(...)
+ 109.                                       │   │   └─domain$wrapSync(expr)
+ 110.                                       │   │     └─base::force(expr)
+ 111.                                       │   ├─shiny:::with_otel_span_context(...)
+ 112.                                       │   │ └─base::force(expr)
+ 113.                                       │   ├─shiny::captureStackTraces(...)
+ 114.                                       │   │ └─promises::with_promise_domain(...)
+ 115.                                       │   │   └─domain$wrapSync(expr)
+ 116.                                       │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 117.                                       │   └─env$runWith(self, func)
+ 118.                                       │     └─shiny (local) contextFunc()
+ 119.                                       │       └─shiny::..stacktraceon..(expr)
+ 120.                                       └─shiny (local) valueFunc()
+ 121.                                         ├─shiny::..stacktraceon..(eventReactiveValueFunc(...))
+ 122.                                         └─shiny (local) eventReactiveValueFunc(...)
+ 123.                                           └─shiny (local) r()
+ 124.                                             ├─shiny::..stacktraceoff..(self$.updateValue())
+ 125.                                             └─self$.updateValue()
+ 126.                                               └─ctx$run(...)
+ 127.                                                 ├─promises::with_promise_domain(...)
+ 128.                                                 │ └─domain$wrapSync(expr)
+ 129.                                                 ├─shiny::withReactiveDomain(...)
+ 130.                                                 │ └─promises::with_promise_domain(...)
+ 131.                                                 │   └─domain$wrapSync(expr)
+ 132.                                                 │     └─base::force(expr)
+ 133.                                                 ├─shiny:::with_otel_span_context(...)
+ 134.                                                 │ └─base::force(expr)
+ 135.                                                 ├─shiny::captureStackTraces(...)
+ 136.                                                 │ └─promises::with_promise_domain(...)
+ 137.                                                 │   └─domain$wrapSync(expr)
+ 138.                                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 139.                                                 └─env$runWith(self, func)
+ 140.                                                   └─shiny (local) contextFunc()
+ 141.                                                     ├─base::withCallingHandlers(...)
+ 142.                                                     ├─base::withVisible(.func())
+ 143.                                                     └─shiny (local) .func()
+ 144.                                                       ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 145.                                                       └─teal.osprey (local) `&lt;reactive&gt;`(...)
+ 146.                                                         └─data_heat$data()
+ 147.                                                           ├─shiny::..stacktraceoff..(self$.updateValue())
+ 148.                                                           └─self$.updateValue()
+ 149.                                                             └─ctx$run(...)
+ 150.                                                               ├─promises::with_promise_domain(...)
+ 151.                                                               │ └─domain$wrapSync(expr)
+ 152.                                                               ├─shiny::withReactiveDomain(...)
+ 153.                                                               │ └─promises::with_promise_domain(...)
+ 154.                                                               │   └─domain$wrapSync(expr)
+ 155.                                                               │     └─base::force(expr)
+ 156.                                                               ├─shiny:::with_otel_span_context(...)
+ 157.                                                               │ └─base::force(expr)
+ 158.                                                               ├─shiny::captureStackTraces(...)
+ 159.                                                               │ └─promises::with_promise_domain(...)
+ 160.                                                               │   └─domain$wrapSync(expr)
+ 161.                                                               │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 162.                                                               └─env$runWith(self, func)
+ 163.                                                                 └─shiny (local) contextFunc()
+ 164.                                                                   ├─base::withCallingHandlers(...)
+ 165.                                                                   ├─base::withVisible(.func())
+ 166.                                                                   └─shiny (local) .func()
+ 167.                                                                     ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 168.                                                                     └─teal.picks (local) `&lt;reactive&gt;`(...)
+ 169.                                                                       └─teal.picks:::.qenv_merge(...)
+ 170.                                                                         └─teal.picks:::.merge_expr(...)</system-out>
+    </testcase>
+    <testcase time="0.0889999999999986" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks_with_conmed">
+      <system-out>cartesian join - happens when primary keys A is not a subset of B and B is not a subset of A
+Backtrace:
+      ▆
+   1. ├─shiny::testServer(...) at test-tm_g_heat_bygrade.R:310:5
+   2. │ ├─shiny:::withMockContext(...)
+   3. │ │ ├─shiny::isolate(...)
+   4. │ │ │ ├─shiny::..stacktraceoff..(...)
+   5. │ │ │ └─ctx$run(...)
+   6. │ │ │   ├─promises::with_promise_domain(...)
+   7. │ │ │   │ └─domain$wrapSync(expr)
+   8. │ │ │   ├─shiny::withReactiveDomain(...)
+   9. │ │ │   │ └─promises::with_promise_domain(...)
+  10. │ │ │   │   └─domain$wrapSync(expr)
+  11. │ │ │   │     └─base::force(expr)
+  12. │ │ │   ├─shiny:::with_otel_span_context(...)
+  13. │ │ │   │ └─base::force(expr)
+  14. │ │ │   ├─shiny::captureStackTraces(...)
+  15. │ │ │   │ └─promises::with_promise_domain(...)
+  16. │ │ │   │   └─domain$wrapSync(expr)
+  17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  18. │ │ │   └─env$runWith(self, func)
+  19. │ │ │     └─shiny (local) contextFunc()
+  20. │ │ │       └─shiny::..stacktraceon..(expr)
+  21. │ │ ├─shiny::withReactiveDomain(...)
+  22. │ │ │ └─promises::with_promise_domain(...)
+  23. │ │ │   └─domain$wrapSync(expr)
+  24. │ │ │     └─base::force(expr)
+  25. │ │ └─withr::with_options(...)
+  26. │ │   └─base::force(code)
+  27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+  28. ├─testthat::expect_no_error(session$returned()) at test-tm_g_heat_bygrade.R:314:9
+  29. │ └─testthat:::expect_no_(...)
+  30. │   └─testthat:::quasi_capture(enquo(object), NULL, capture)
+  31. │     ├─testthat (local) .capture(...)
+  32. │     │ ├─base::withRestarts(...)
+  33. │     │ │ └─base (local) withOneRestart(expr, restarts[[1L]])
+  34. │     │ │   └─base (local) doWithOneRestart(return(expr), restart)
+  35. │     │ └─base::withCallingHandlers(...)
+  36. │     └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+  37. └─session$returned()
+  38.   ├─shiny::..stacktraceoff..(self$.updateValue())
+  39.   └─self$.updateValue()
+  40.     └─ctx$run(...)
+  41.       ├─promises::with_promise_domain(...)
+  42.       │ └─domain$wrapSync(expr)
+  43.       ├─shiny::withReactiveDomain(...)
+  44.       │ └─promises::with_promise_domain(...)
+  45.       │   └─domain$wrapSync(expr)
+  46.       │     └─base::force(expr)
+  47.       ├─shiny:::with_otel_span_context(...)
+  48.       │ └─base::force(expr)
+  49.       ├─shiny::captureStackTraces(...)
+  50.       │ └─promises::with_promise_domain(...)
+  51.       │   └─domain$wrapSync(expr)
+  52.       │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  53.       └─env$runWith(self, func)
+  54.         └─shiny (local) contextFunc()
+  55.           ├─base::withCallingHandlers(...)
+  56.           ├─base::withVisible(.func())
+  57.           └─shiny (local) .func()
+  58.             ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+  59.             └─teal.osprey (local) `&lt;reactive&gt;`(...)
+  60.               ├─shiny::req(q_r())
+  61.               │ └─shiny:::dotloop(...)
+  62.               │   ├─shiny (local) fun_(eval(as.symbol(paste0("..", i))))
+  63.               │   │ └─shiny::isTruthy(item)
+  64.               │   └─base::eval(as.symbol(paste0("..", i)))
+  65.               │     └─base::eval(as.symbol(paste0("..", i)))
+  66.               └─shiny (local) q_r()
+  67.                 ├─shiny::..stacktraceoff..(self$.updateValue())
+  68.                 └─self$.updateValue()
+  69.                   └─ctx$run(...)
+  70.                     ├─promises::with_promise_domain(...)
+  71.                     │ └─domain$wrapSync(expr)
+  72.                     ├─shiny::withReactiveDomain(...)
+  73.                     │ └─promises::with_promise_domain(...)
+  74.                     │   └─domain$wrapSync(expr)
+  75.                     │     └─base::force(expr)
+  76.                     ├─shiny:::with_otel_span_context(...)
+  77.                     │ └─base::force(expr)
+  78.                     ├─shiny::captureStackTraces(...)
+  79.                     │ └─promises::with_promise_domain(...)
+  80.                     │   └─domain$wrapSync(expr)
+  81.                     │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  82.                     └─env$runWith(self, func)
+  83.                       └─shiny (local) contextFunc()
+  84.                         ├─base::withCallingHandlers(...)
+  85.                         ├─base::withVisible(.func())
+  86.                         └─shiny (local) .func()
+  87.                           └─shiny (local) `&lt;reactive&gt;`(...)
+  88.                             └─shiny:::hybrid_chain(...)
+  89.                               └─shiny (local) do()
+  90.                                 ├─base::tryCatch(...)
+  91.                                 │ └─base (local) tryCatchList(expr, classes, parentenv, handlers)
+  92.                                 │   └─base (local) tryCatchOne(expr, names, parentenv, handlers[[1L]])
+  93.                                 │     └─base (local) doTryCatch(return(expr), name, parentenv, handler)
+  94.                                 ├─shiny::captureStackTraces(...)
+  95.                                 │ └─promises::with_promise_domain(...)
+  96.                                 │   └─domain$wrapSync(expr)
+  97.                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+  98.                                 └─base::Reduce(...)
+  99.                                   └─shiny (local) f(init, x[[i]])
+ 100.                                     ├─base::withVisible(func(v$value))
+ 101.                                     └─shiny (local) func(v$value)
+ 102.                                       ├─shiny::isolate(valueFunc())
+ 103.                                       │ ├─shiny::..stacktraceoff..(...)
+ 104.                                       │ └─ctx$run(...)
+ 105.                                       │   ├─promises::with_promise_domain(...)
+ 106.                                       │   │ └─domain$wrapSync(expr)
+ 107.                                       │   ├─shiny::withReactiveDomain(...)
+ 108.                                       │   │ └─promises::with_promise_domain(...)
+ 109.                                       │   │   └─domain$wrapSync(expr)
+ 110.                                       │   │     └─base::force(expr)
+ 111.                                       │   ├─shiny:::with_otel_span_context(...)
+ 112.                                       │   │ └─base::force(expr)
+ 113.                                       │   ├─shiny::captureStackTraces(...)
+ 114.                                       │   │ └─promises::with_promise_domain(...)
+ 115.                                       │   │   └─domain$wrapSync(expr)
+ 116.                                       │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 117.                                       │   └─env$runWith(self, func)
+ 118.                                       │     └─shiny (local) contextFunc()
+ 119.                                       │       └─shiny::..stacktraceon..(expr)
+ 120.                                       └─shiny (local) valueFunc()
+ 121.                                         ├─shiny::..stacktraceon..(eventReactiveValueFunc(...))
+ 122.                                         └─shiny (local) eventReactiveValueFunc(...)
+ 123.                                           └─shiny (local) r()
+ 124.                                             ├─shiny::..stacktraceoff..(self$.updateValue())
+ 125.                                             └─self$.updateValue()
+ 126.                                               └─ctx$run(...)
+ 127.                                                 ├─promises::with_promise_domain(...)
+ 128.                                                 │ └─domain$wrapSync(expr)
+ 129.                                                 ├─shiny::withReactiveDomain(...)
+ 130.                                                 │ └─promises::with_promise_domain(...)
+ 131.                                                 │   └─domain$wrapSync(expr)
+ 132.                                                 │     └─base::force(expr)
+ 133.                                                 ├─shiny:::with_otel_span_context(...)
+ 134.                                                 │ └─base::force(expr)
+ 135.                                                 ├─shiny::captureStackTraces(...)
+ 136.                                                 │ └─promises::with_promise_domain(...)
+ 137.                                                 │   └─domain$wrapSync(expr)
+ 138.                                                 │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 139.                                                 └─env$runWith(self, func)
+ 140.                                                   └─shiny (local) contextFunc()
+ 141.                                                     ├─base::withCallingHandlers(...)
+ 142.                                                     ├─base::withVisible(.func())
+ 143.                                                     └─shiny (local) .func()
+ 144.                                                       ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 145.                                                       └─teal.osprey (local) `&lt;reactive&gt;`(...)
+ 146.                                                         └─data_heat$data()
+ 147.                                                           ├─shiny::..stacktraceoff..(self$.updateValue())
+ 148.                                                           └─self$.updateValue()
+ 149.                                                             └─ctx$run(...)
+ 150.                                                               ├─promises::with_promise_domain(...)
+ 151.                                                               │ └─domain$wrapSync(expr)
+ 152.                                                               ├─shiny::withReactiveDomain(...)
+ 153.                                                               │ └─promises::with_promise_domain(...)
+ 154.                                                               │   └─domain$wrapSync(expr)
+ 155.                                                               │     └─base::force(expr)
+ 156.                                                               ├─shiny:::with_otel_span_context(...)
+ 157.                                                               │ └─base::force(expr)
+ 158.                                                               ├─shiny::captureStackTraces(...)
+ 159.                                                               │ └─promises::with_promise_domain(...)
+ 160.                                                               │   └─domain$wrapSync(expr)
+ 161.                                                               │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 162.                                                               └─env$runWith(self, func)
+ 163.                                                                 └─shiny (local) contextFunc()
+ 164.                                                                   ├─base::withCallingHandlers(...)
+ 165.                                                                   ├─base::withVisible(.func())
+ 166.                                                                   └─shiny (local) .func()
+ 167.                                                                     ├─shiny::..stacktraceon..(`&lt;reactive&gt;`(...))
+ 168.                                                                     └─teal.picks (local) `&lt;reactive&gt;`(...)
+ 169.                                                                       └─teal.picks:::.qenv_merge(...)
+ 170.                                                                         └─teal.picks:::.merge_expr(...)</system-out>
+    </testcase>
+    <testcase time="0.809000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks_with_conmed"/>
+    <testcase time="0.0450000000000017" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
+    <testcase time="0.000999999999997669" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
     <testcase time="0.00300000000000011" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
   </testsuite>
-  <testsuite name="tm_g_spiderplot" timestamp="2026-07-23T14:03:12Z" hostname="d4f812dd20e6" tests="19" skipped="0" failures="0" errors="0" time="5.811">
-    <testcase time="0.0329999999999995" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+  <testsuite name="tm_g_spiderplot" timestamp="2026-07-24T12:41:32Z" hostname="6893e751b91c" tests="19" skipped="0" failures="0" errors="0" time="5.812">
+    <testcase time="0.032" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`paramcd` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -419,7 +1881,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(paramcd)</system-out>
     </testcase>
-    <testcase time="0.0400000000000009" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.027000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`x_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -436,7 +1898,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(x_var)</system-out>
     </testcase>
-    <testcase time="0.0350000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0279999999999987" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`y_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -453,7 +1915,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(y_var)</system-out>
     </testcase>
-    <testcase time="0.0299999999999994" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0390000000000015" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`marker_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -470,7 +1932,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(marker_var)</system-out>
     </testcase>
-    <testcase time="0.0280000000000005" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0309999999999988" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`line_colorby_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -487,7 +1949,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(line_colorby_var)</system-out>
     </testcase>
-    <testcase time="0.0269999999999992" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0280000000000022" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`xfacet_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -504,7 +1966,7 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0280000000000005" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
+    <testcase time="0.0269999999999975" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation">
       <system-out>`yfacet_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -521,13 +1983,13 @@ Backtrace:
  8. └─teal.osprey::tm_g_spiderplot(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(...)</system-out>
     </testcase>
-    <testcase time="0.0190000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.0149999999999988" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.0140000000000011" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0190000000000019" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0159999999999982" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
     <testcase time="0.0139999999999993" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.0170000000000012" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
-    <testcase time="0.0119999999999987" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
-    <testcase time="1.82" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works">
+    <testcase time="0.0150000000000006" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0190000000000019" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
+    <testcase time="0.00999999999999801" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
+    <testcase time="2.287" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works">
       <system-out>Removed 799 rows containing missing values or values outside the scale range
 (`geom_line()`).
 Backtrace:
@@ -727,7 +2189,7 @@ Backtrace:
  193.                                                                           └─ggplot2 (local) handle_na(..., self = self)
  194.                                                                             └─cli::cli_warn(...)</system-out>
     </testcase>
-    <testcase time="0.173000000000002" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works">
+    <testcase time="0.157" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works">
       <system-out>Removed 800 rows containing missing values or values outside the scale range
 (`geom_point()`).
 Backtrace:
@@ -928,8 +2390,8 @@ Backtrace:
  194.                                                                             └─ggplot2::remove_missing(...)
  195.                                                                               └─cli::cli_warn(msg)</system-out>
     </testcase>
-    <testcase time="0.497999999999998" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works"/>
-    <testcase time="2.476" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works">
+    <testcase time="0.369" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works"/>
+    <testcase time="1.77" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works">
       <system-out>Removed 799 rows containing missing values or values outside the scale range
 (`geom_line()`).
 Backtrace:
@@ -1129,7 +2591,7 @@ Backtrace:
  193.                                                                           └─ggplot2 (local) handle_na(..., self = self)
  194.                                                                             └─cli::cli_warn(...)</system-out>
     </testcase>
-    <testcase time="0.180999999999997" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works">
+    <testcase time="0.562999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works">
       <system-out>Removed 800 rows containing missing values or values outside the scale range
 (`geom_point()`).
 Backtrace:
@@ -1330,97 +2792,45 @@ Backtrace:
  194.                                                                             └─ggplot2::remove_missing(...)
  195.                                                                               └─cli::cli_warn(msg)</system-out>
     </testcase>
-    <testcase time="0.351000000000003" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works"/>
+    <testcase time="0.361000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works"/>
   </testsuite>
-  <testsuite name="tm_g_swimlane_waterfall_picks" timestamp="2026-07-23T14:03:18Z" hostname="d4f812dd20e6" tests="8" skipped="0" failures="0" errors="0" time="0.146">
-    <testcase time="0.0809999999999995" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
-      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
-Backtrace:
-    ▆
- 1. ├─teal.osprey::tm_g_swimlane(...) at test-tm_g_swimlane_waterfall_picks.R:2:3
- 2. │ └─teal.osprey:::.assert_picks_single_var(bar_var, "bar_var")
- 3. │   └─checkmate::assert_class(pick, "picks", .var.name = arg_name)
- 4. │     └─checkmate::checkClass(x, classes, ordered, null.ok)
- 5. └─teal.picks::picks(...)
- 6.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
-    </testcase>
-    <testcase time="0.0120000000000005" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
-      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
-Backtrace:
-    ▆
- 1. ├─teal.osprey::tm_g_swimlane(...) at test-tm_g_swimlane_waterfall_picks.R:2:3
- 2. └─teal.picks::picks(...)
- 3.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
-    </testcase>
-    <testcase time="0.0109999999999992" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
-      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
-Backtrace:
-    ▆
- 1. ├─teal.osprey::tm_g_swimlane(...) at test-tm_g_swimlane_waterfall_picks.R:2:3
- 2. └─teal.picks::picks(...)
- 3.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
-    </testcase>
-    <testcase time="0.0109999999999992" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
-      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
-Backtrace:
-    ▆
- 1. ├─teal.osprey::tm_g_swimlane(...) at test-tm_g_swimlane_waterfall_picks.R:2:3
- 2. └─teal.picks::picks(...)
- 3.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
-    </testcase>
-    <testcase time="0.0100000000000016" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
-      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
-Backtrace:
-    ▆
- 1. ├─teal.osprey::tm_g_swimlane(...) at test-tm_g_swimlane_waterfall_picks.R:2:3
- 2. └─teal.picks::picks(...)
- 3.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
-    </testcase>
-    <testcase time="0.0100000000000016" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings">
-      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
-Backtrace:
-    ▆
- 1. ├─teal.osprey::tm_g_swimlane(...) at test-tm_g_swimlane_waterfall_picks.R:2:3
- 2. │ └─base::Filter(...)
- 3. │   ├─base::unlist(lapply(x, f))
- 4. │   └─base::lapply(x, f)
- 5. └─teal.picks::picks(...)
- 6.   └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
-    </testcase>
-    <testcase time="0.00900000000000034" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings"/>
-    <testcase time="0.00199999999999889" classname="tm_g_swimlane_waterfall_picks" name="tm_g_swimlane_builds_a_teal_module_with_picks_encodings"/>
+  <testsuite name="tm_g_swimlane" timestamp="2026-07-24T12:41:37Z" hostname="6893e751b91c" tests="12" skipped="0" failures="0" errors="0" time="5.398">
+    <testcase time="0.0910000000000011" classname="tm_g_swimlane" name="tm_swimlane_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.00900000000000034" classname="tm_g_swimlane" name="tm_swimlane_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.00799999999999912" classname="tm_g_swimlane" name="tm_swimlane_input_validation_fails_bar_var_is_not_the_expected_class"/>
+    <testcase time="0.00999999999999801" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_teal.picks"/>
+    <testcase time="0.00200000000000244" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_teal.picks"/>
+    <testcase time="0.00600000000000023" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_accepts_optionally_NULL_argument_as_module_argument"/>
+    <testcase time="0.00199999999999889" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_accepts_optionally_NULL_argument_as_module_argument"/>
+    <testcase time="0.0719999999999992" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_choices_selected"/>
+    <testcase time="0.00100000000000122" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_choices_selected"/>
+    <testcase time="1.748" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_using_teal.picks"/>
+    <testcase time="1.608" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_with_optionally_NULL_argument_as_module_argument"/>
+    <testcase time="1.841" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_using_choices_selected"/>
   </testsuite>
-  <testsuite name="tm_g_waterfall" timestamp="2026-07-23T14:03:18Z" hostname="d4f812dd20e6" tests="7" skipped="0" failures="0" errors="0" time="0.25">
-    <testcase time="0.0169999999999995" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.00499999999999901" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.162000000000003" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.00999999999999801" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.0250000000000021" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_choices_selected_deprecated_option_">
-      <system-out>`bar_var` was deprecated in teal.osprey 0.5.0.
-ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
-  Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
-  `select_spec` is deprecated.
-Backtrace:
-    ▆
- 1. └─teal.osprey::tm_g_waterfall(...) at test-tm_g_waterfall.R:212:5
- 2.   └─teal.osprey:::migrate_choices_selected_to_variables(bar_var)</system-out>
-    </testcase>
-    <testcase time="0.0179999999999971" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_choices_selected_deprecated_option_"/>
-    <testcase time="0.0130000000000017" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_picks"/>
+  <testsuite name="tm_g_waterfall" timestamp="2026-07-24T12:41:43Z" hostname="6893e751b91c" tests="8" skipped="0" failures="0" errors="0" time="9.023">
+    <testcase time="0.0850000000000009" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.00600000000000023" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.148" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0109999999999992" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0199999999999996" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_choices_selected_deprecated_option_"/>
+    <testcase time="0.0120000000000005" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="6.899" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_works_using_choices_selected_deprecated_option_"/>
+    <testcase time="1.84200000000001" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_works_using_picks"/>
   </testsuite>
-  <testsuite name="utils" timestamp="2026-07-23T14:03:19Z" hostname="d4f812dd20e6" tests="13" skipped="0" failures="0" errors="0" time="0.036">
-    <testcase time="0.00799999999999912" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.00100000000000122" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+  <testsuite name="utils" timestamp="2026-07-24T12:41:52Z" hostname="6893e751b91c" tests="13" skipped="0" failures="0" errors="0" time="0.211">
+    <testcase time="0.183999999999997" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
     <testcase time="0.00399999999999778" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00100000000000122" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00199999999999889" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00100000000000122" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00499999999999901" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
-    <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00500000000000256" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00199999999999534" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00400000000000489" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
   </testsuite>
 </testsuites>
