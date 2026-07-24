@@ -65,11 +65,10 @@ For more information on reporting in \code{teal}, see the vignettes:
 
 \examples{
 # Example using stream (ADaM) dataset
-data <- teal_data() \%>\%
-  within({
-    ADSL <- rADSL
-    ADAE <- rADAE
-  })
+data <- within(teal_data(), {
+  ADSL <- rADSL
+  ADAE <- rADAE
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 

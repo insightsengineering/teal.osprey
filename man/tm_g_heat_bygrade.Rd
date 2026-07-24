@@ -102,43 +102,42 @@ For more information on reporting in \code{teal}, see the vignettes:
 
 \examples{
 # Using picks method
-data <- teal_data() \%>\%
-  within({
-    library(dplyr)
-    library(nestcolor)
-    ADSL <- teal.data::rADSL \%>\% slice(1:30)
-    ADEX <- teal.data::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADAE <- teal.data::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADCM <- teal.data::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    # This preprocess is only to force legacy standard on ADCM
-    ADCM <- ADCM \%>\%
-      select(-starts_with("ATC")) \%>\%
-      unique()
-    # function to derive AVISIT from ADEX
-    .add_visit <- function(data_need_visit) {
-      visit_dates <- ADEX \%>\%
-        filter(PARAMCD == "DOSE") \%>\%
-        distinct(USUBJID, AVISIT, ASTDTM) \%>\%
-        group_by(USUBJID) \%>\%
-        arrange(ASTDTM) \%>\%
-        mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
-        rename(this_vis = ASTDTM)
-      data_visit <- data_need_visit \%>\%
-        select(USUBJID, ASTDTM) \%>\%
-        left_join(visit_dates, by = "USUBJID") \%>\%
-        filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
-        left_join(data_need_visit) \%>\%
-        distinct()
-      return(data_visit)
-    }
-    # derive AVISIT for ADAE and ADCM
-    ADAE <- .add_visit(ADAE)
-    ADCM <- .add_visit(ADCM)
-    # derive ongoing status variable for ADEX
-    ADEX <- ADEX \%>\%
-      filter(PARCAT1 == "INDIVIDUAL") \%>\%
-      mutate(ongo_status = (EOSSTT == "ONGOING"))
-  })
+data <- within(teal_data(), {
+  library(dplyr)
+  library(nestcolor)
+  ADSL <- teal.data::rADSL \%>\% slice(1:30)
+  ADEX <- teal.data::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+  ADAE <- teal.data::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+  ADCM <- teal.data::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+  # This preprocess is only to force legacy standard on ADCM
+  ADCM <- ADCM \%>\%
+    select(-starts_with("ATC")) \%>\%
+    unique()
+  # function to derive AVISIT from ADEX
+  .add_visit <- function(data_need_visit) {
+    visit_dates <- ADEX \%>\%
+      filter(PARAMCD == "DOSE") \%>\%
+      distinct(USUBJID, AVISIT, ASTDTM) \%>\%
+      group_by(USUBJID) \%>\%
+      arrange(ASTDTM) \%>\%
+      mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
+      rename(this_vis = ASTDTM)
+    data_visit <- data_need_visit \%>\%
+      select(USUBJID, ASTDTM) \%>\%
+      left_join(visit_dates, by = "USUBJID") \%>\%
+      filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
+      left_join(data_need_visit) \%>\%
+      distinct()
+    return(data_visit)
+  }
+  # derive AVISIT for ADAE and ADCM
+  ADAE <- .add_visit(ADAE)
+  ADCM <- .add_visit(ADCM)
+  # derive ongoing status variable for ADEX
+  ADEX <- ADEX \%>\%
+    filter(PARCAT1 == "INDIVIDUAL") \%>\%
+    mutate(ongo_status = (EOSSTT == "ONGOING"))
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 

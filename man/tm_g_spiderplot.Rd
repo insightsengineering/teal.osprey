@@ -100,12 +100,11 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-data <- teal_data() \%>\%
-  within({
-    library(nestcolor)
-    ADSL <- teal.data::rADSL
-    ADTR <- teal.data::rADTR
-  })
+data <- within(teal_data(), {
+  library(nestcolor)
+  ADSL <- teal.data::rADSL
+  ADTR <- teal.data::rADTR
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
