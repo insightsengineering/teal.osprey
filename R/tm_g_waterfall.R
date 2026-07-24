@@ -537,8 +537,8 @@ srv_g_waterfall <- function(id,
         )
 
         teal::validate_one_row_per_id(q_temp[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
-
-        USUBJID <- PARAMCD <- AVALC <- NULL # To avoid no visible binding R CMD NOTE
+        # To avoid no visible binding R CMD NOTE
+        USUBJID <- PARAMCD <- AVALC <- NULL  # nolint: object_name_linter.
 
         within(q_temp, {
           rs_label <- rs_sub %>%

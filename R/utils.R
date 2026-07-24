@@ -210,8 +210,7 @@ check_variable_and_dataset <- function(variable, dataset) {
   variable_name <- deparse(substitute(variable))
   dataset_name <- deparse(substitute(dataset))
 
-  if ((!is.null(variable) && is.na(dataset)) ||
-    (is.null(variable) && !is.na(dataset))) {
+  if ((!is.null(variable) && is.na(dataset)) || (is.null(variable) && !is.na(dataset))) {
     stop(sprintf(
       "Please set arguments %s and %s to non-NULL values or leave both of them NULL.",
       variable_name,
