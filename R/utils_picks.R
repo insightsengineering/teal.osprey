@@ -57,6 +57,24 @@
   all_datanames[nzchar(all_datanames) & !is.na(all_datanames)]
 }
 
+#' Return selected variable from picks or empty character if picks does not exist
+#' @param (`character()`) name name of the picks
+#' @param selectors reactive server coming from (`teal.picks::merge_srv`)
+#' @return the selected pick variable or character 0 if the pick does not exist
+#' @details this is useful when optional picks in modules are set to NULL
+#' @keywords internal
+#' @noRd
+pick_selected <- function(name, selectors) {
+  checkmate::assert_string(name)
+  checkmate::assert_list(selectors)
+
+  if (name %in% names(selectors)) {
+    selectors[[name]]()$variables$selected
+  } else {
+    character()
+  }
+}
+
 #' Assert a picks object uses single variable selection (internal).
 #'
 #' @param pick (`picks`)
