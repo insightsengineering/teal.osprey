@@ -20,8 +20,7 @@
 #'
 #' @examples
 #' # Example using stream (ADaM) dataset
-#' data <- teal_data() %>%
-#'   within({
+#' data <- within(teal_data(), {
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'   })

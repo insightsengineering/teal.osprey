@@ -18,8 +18,7 @@
 #' @inheritSection teal::example_module Reporting
 #'
 #' @examples
-#' data <- teal_data() %>%
-#'   within({
+#' data <- within(teal_data(), {
 #'     library(dplyr)
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE

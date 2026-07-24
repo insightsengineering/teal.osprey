@@ -31,8 +31,7 @@
 #' @template author_liaoc10
 #'
 #' @examples
-#' data <- teal_data() %>%
-#'   within({
+#' data <- within(teal_data(), {
 #'     library(nestcolor)
 #'     ADSL <- teal.data::rADSL
 #'     ADTR <- teal.data::rADTR

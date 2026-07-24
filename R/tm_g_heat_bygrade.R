@@ -41,8 +41,7 @@
 #' @export
 #' @examples
 #' # Using picks method
-#' data <- teal_data() %>%
-#'   within({
+#' data <- within(teal_data(), {
 #'     library(dplyr)
 #'     library(nestcolor)
 #'     ADSL <- teal.data::rADSL %>% slice(1:30)

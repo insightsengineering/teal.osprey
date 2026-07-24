@@ -61,8 +61,7 @@
 #' @export
 #'
 #' @examples
-#' data <- teal_data() %>%
-#'   within({
+#' data <- within(teal_data(), {
 #'     library(nestcolor)
 #'     library(dplyr)
 #'     ADSL <- rADSL

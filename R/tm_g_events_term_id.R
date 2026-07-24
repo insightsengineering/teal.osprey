@@ -22,8 +22,7 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
 #' @examples
-#' data <- teal_data() %>%
-#'   within({
+#' data <- within(teal_data(), {
 #'     ADSL <- rADSL
 #'     ADAE <- rADAE
 #'   })
