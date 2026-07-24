@@ -102,20 +102,24 @@ pick_selected <- function(name, selectors) {
 #'
 #' @keywords internal
 #' @noRd
-force_pick_variable_selection <- function(pick, arg_name, multiple = FALSE) {
+force_pick_selection <- function(pick,
+                                 arg_name = checkmate::vname(pick),
+                                 which = c("variables", "values", "datasets"),
+                                 multiple = FALSE) {
   checkmate::assert_class(pick, "picks", .var.name = arg_name)
   checkmate::assert_string(arg_name)
   checkmate::assert_logical(multiple)
+  which <- match.arg(which)
   selection <- if (isTRUE(multiple)) "multiple" else "single"
 
-  if (!identical(multiple, teal.picks::is_pick_multiple(pick$variables))) {
+  if (!identical(multiple, teal.picks::is_pick_multiple(pick[[which]]))) {
     warning(
       sprintf(
-        "`%s` accepts only a %s variable selection. \nForcing `teal.picks::variables(multiple)` to `%s`.",
-        arg_name, selection, multiple
+        "`%s` accepts only a %s variable selection. \nForcing `teal.picks::%s(multiple)` to `%s`.",
+        arg_name, selection, which, multiple
       )
     )
-    attr(pick$variables, "multiple") <- multiple
+    attr(pick[[which]], "multiple") <- multiple
   }
 
   pick
@@ -247,7 +251,10 @@ migrate_choices_selected_to_values <- function(x, # nolint: object_length_linter
     choices <- as.character(x$choices)
     selected <- as.character(unlist(x$selected, use.names = FALSE))
     checkmate::assert_character(choices, min.len = 1L)
-    checkmate::assert_character(selected, min.len = 1L)
+    if (length(selected) == 0) {
+      selected <- NULL
+    }
+    checkmate::assert_character(selected, min.len = 1L, null.ok = TRUE)
     fixed <- isTRUE(x$fixed)
     multiple <- (!is.null(multiple) && multiple) || (is.null(multiple) && length(selected) > 1L)
     x <- teal.picks::values(choices, selected, fixed = fixed, multiple = multiple)
@@ -277,5 +284,89 @@ create_picks_helper <- function(datasets = NULL, x) {
     )
   } else if (inherits(x, "pick")) {
     teal.picks::picks(datasets, x)
+  }
+}
+
+#' Coerce legacy `choices_selected`-based specs to `picks` with deprecation
+#'
+#' @param x (`variables`, `values`, `choices_selected` or `picks`) object.
+#'   A bare [`teal.picks::variables()`] pick is returned unchanged (column selector only; value
+#'   levels follow from data when the pick chain is completed with `create_picks_helper()`).
+#' @param arg_name optional (`character(1)`) argument name.
+#' @param multiple optional (`logical(1)`) whether multiple values are allowed.
+#' If `NULL` (default), it is not validated and inferred from the length of `selected` in the
+#' `choices_selected` object.
+#' @param default_variable_name optional (`character(1)`) variable name to use if `x` is a bare `values` pick.
+#' @param add_values (`logical(1)`) whether to add a `values` pick if `x` is a bare `variables` pick.
+#' Default is `TRUE`.
+#'
+#' @keywords internal
+#' @noRd
+migrate_value_choices_to_picks <- function(x, # nolint: object_length_linter.
+                                           multiple = NULL,
+                                           arg_name = checkmate::vname(x),
+                                           default_variable_name = NULL,
+                                           add_values = TRUE) {
+  checkmate::assert_flag(multiple, null.ok = TRUE)
+  checkmate::assert_string(arg_name)
+  checkmate::assert_string(default_variable_name, null.ok = TRUE)
+  checkmate::assert_flag(add_values)
+
+  if (inherits(x, "picks")) {
+    if (!is.null(multiple) && !identical(attr(x$values, "multiple", exact = TRUE), multiple)) {
+      stop(
+        sprintf("`multiple` metadata does not match the requirement for %s.", arg_name),
+        sprintf(" Please set multiple = %s in the picks object.", multiple),
+        call. = FALSE
+      )
+    }
+
+    if (add_values && is.null(x$values)) {
+      x$values <- do.call(teal.picks::values, list(multiple = multiple)[!is.null(multiple)])
+    }
+    return(x)
+  }
+
+  if (inherits(x, "choices_selected")) {
+    values <- migrate_choices_selected_to_values(x, multiple = multiple, arg_name = arg_name)
+    variable_name <- attr(x$choices, "var_choices", exact = TRUE) %||% default_variable_name
+    if (is.null(default_variable_name) && inherits(x, "choices_selected") && is.null(variable_name)) {
+      stop(
+        sprintf("When using choices_selected for %s", arg_name),
+        " it should have 'var_choices' attribute specifying variable choices.",
+        " Cannot convert to picks object without this information.",
+        call. = FALSE
+      )
+    }
+    return(
+      teal.picks::picks(
+        teal.picks::variables(variable_name, variable_name),
+        values,
+        check_dataset = FALSE
+      )
+    )
+  }
+  if (inherits(x, "variables")) {
+    if (add_values) {
+      return(
+        teal.picks::picks(
+          x,
+          do.call(teal.picks::values, list(multiple = multiple)[!is.null(multiple)]),
+          check_dataset = FALSE
+        )
+      )
+    }
+    teal.picks::picks(x, check_dataset = FALSE)
+  } else if (inherits(x, "values") && !is.null(default_variable_name)) {
+    teal.picks::picks(
+      teal.picks::variables(default_variable_name, default_variable_name),
+      x,
+      check_dataset = FALSE
+    )
+  } else {
+    stop(
+      sprintf("Cannot convert object of class %s to picks for %s.", class(x)[1], arg_name),
+      call. = FALSE
+    )
   }
 }

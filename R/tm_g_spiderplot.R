@@ -126,11 +126,11 @@ tm_g_spiderplot <- function(label,
     yfacet_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), yfacet_var)
   }
 
-  paramcd <- force_pick_variable_selection(paramcd, "paramcd")
-  x_var <- force_pick_variable_selection(x_var, "x_var")
-  y_var <- force_pick_variable_selection(y_var, "y_var")
-  marker_var <- force_pick_variable_selection(marker_var, "marker_var")
-  line_colorby_var <- force_pick_variable_selection(line_colorby_var, "line_colorby_var")
+  paramcd <- force_pick_selection(paramcd, "paramcd")
+  x_var <- force_pick_selection(x_var, "x_var")
+  y_var <- force_pick_selection(y_var, "y_var")
+  marker_var <- force_pick_selection(marker_var, "marker_var")
+  line_colorby_var <- force_pick_selection(line_colorby_var, "line_colorby_var")
 
   checkmate::assert_class(paramcd, "picks")
   checkmate::assert_class(x_var, "picks")
