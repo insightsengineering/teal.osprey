@@ -498,6 +498,8 @@ srv_g_waterfall <- function(id,
         show_value <- .(show_value_selected)
       }))
 
+      bar_data <- NULL # To avoid R CMD Check NOTES on global binding
+
       # data processing
       q1 <- teal.code::eval_code(
         q1,
@@ -515,12 +517,14 @@ srv_g_waterfall <- function(id,
         })
       )
 
+      rs_sub <- NULL # To avoid no visible binding R CMD Check NOTE
+
       q1 <- if (is.null(adrs_paramcd)) {
         teal.code::eval_code(
           q1,
           code = bquote({
             anl <- bar_data
-            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1))
+            anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), utils::tail, 1))
           })
         )
       } else {
@@ -534,12 +538,14 @@ srv_g_waterfall <- function(id,
 
         teal::validate_one_row_per_id(q_temp[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
 
+        USUBJID <- PARAMCD <- AVALC <- NULL # To avoid no visible binding R CMD NOTE
+
         within(q_temp, {
           rs_label <- rs_sub %>%
             dplyr::select(USUBJID, PARAMCD, AVALC) %>%
             tidyr::pivot_wider(names_from = PARAMCD, values_from = AVALC)
           anl <- bar_data %>% dplyr::left_join(rs_label, by = c("USUBJID"))
-          anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), tail, 1))
+          anl$USUBJID <- unlist(lapply(strsplit(anl$USUBJID, "-", fixed = TRUE), utils::tail, 1))
         })
       }
 
