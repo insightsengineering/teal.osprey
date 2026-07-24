@@ -259,7 +259,6 @@ describe("tm_g_heat_bygrade module creation", {
       mod$server,
       args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
       expr = {
-        browser()
         expect_no_error(session$returned())
       }
     )
