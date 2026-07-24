@@ -352,10 +352,10 @@ srv_g_heat_by_grade <- function(
     pws <- decorate_output$pws
 
     if (!is.null(conmed_var)) {
-      observeEvent(merged$variables()$conmed_var,
+      observeEvent(data_heat$variables()$conmed_var,
         {
           ADCM <- data()[[cm_dataname]]
-          conmed_var_name <- merged$variables()$conmed_var
+          conmed_var_name <- data_heat$variables()$conmed_var
           if (!is.null(conmed_var_name) && conmed_var_name %in% names(ADCM)) {
             choices <- levels(ADCM[[conmed_var_name]])
             updateSelectInput(
