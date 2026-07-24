@@ -91,9 +91,9 @@ facet_var_picks <- teal.picks::variables(
   selected = NULL
 )
 
-testthat::describe("tm_g_waterfall argument verification", {
-  testthat::it("plot arguments input validation", {
-    testthat::expect_error(
+describe("tm_g_waterfall argument verification", {
+  it("plot arguments input validation", {
+    expect_error(
       {
         suppressWarnings(
           tm_g_waterfall(
@@ -119,7 +119,7 @@ testthat::describe("tm_g_waterfall argument verification", {
       "Assertion on 'plot_height' failed"
     )
 
-    testthat::expect_error(
+    expect_error(
       {
         suppressWarnings(
           tm_g_waterfall(
@@ -146,8 +146,8 @@ testthat::describe("tm_g_waterfall argument verification", {
     )
   })
 
-  testthat::it("Forcing Conversion from multiple picks to single", {
-    testthat::expect_warning(
+  it("Forcing Conversion from multiple picks to single", {
+    expect_warning(
       {
         suppressWarnings(
           tm_g_waterfall(
@@ -176,7 +176,7 @@ testthat::describe("tm_g_waterfall argument verification", {
       "`bar_var` accepts only a single variable selection"
     )
 
-    testthat::expect_warning(
+    expect_warning(
       {
         suppressWarnings(
           tm_g_waterfall(
@@ -207,8 +207,8 @@ testthat::describe("tm_g_waterfall argument verification", {
   })
 })
 
-testthat::describe("tm_g_waterfall module creation", {
-  testthat::it("creates a teal module using choices_selected (deprecated option)", {
+describe("tm_g_waterfall module creation", {
+  it("creates a teal module using choices_selected (deprecated option)", {
     mod <- tm_g_waterfall(
       label = "Waterfall",
       dataname_tr = "ADTR",
@@ -226,10 +226,10 @@ testthat::describe("tm_g_waterfall module creation", {
       href_line = "-30, 20",
       plot_height = c(1200, 400, 5000)
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks", {
+  it("creates a teal module using picks", {
     mod <- tm_g_waterfall(
       label = "Waterfall",
       dataname_tr = "ADTR",
@@ -247,6 +247,6 @@ testthat::describe("tm_g_waterfall module creation", {
       href_line = "-30, 20",
       plot_height = c(1200, 400, 5000)
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 })
