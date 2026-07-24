@@ -8,11 +8,10 @@ flag_var_cs <- teal.transform::choices_selected(
   choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5")
 )
 
-arm_var_picks <- variables(
+arm_var_picks <- suppressWarnings(variables(
   choices = is_categorical(min.len = 2),
   selected = "ACTARM"
-) |>
-  suppressWarnings(classes = "picks_delayed")
+), classes = "picks_delayed")
 
 flag_var_picks <- variables(
   choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5"),
@@ -118,14 +117,13 @@ describe("tm_g_ae_oview module creation", {
   })
 
   it("creates a teal module using picks", {
-    mod <- tm_g_ae_oview(
+    mod <- suppressWarnings(tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
       arm_var = arm_var_picks,
       flag_var_anl = flag_var_picks,
       plot_height = c(600, 200, 2000)
-    ) |>
-      suppressWarnings(classes = "picks_delayed")
+    ), classes = "picks_delayed")
 
     testServer(
       mod$server,

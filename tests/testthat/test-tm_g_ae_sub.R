@@ -43,18 +43,17 @@ describe("tm_g_ae_sub input validation", {
 
 describe("tm_g_ae_sub module creation", {
   it("creates a teal module using choices_selected", {
-    mod <- tm_g_ae_sub(
+    mod <- suppressWarnings(tm_g_ae_sub(
       label = "subgroups Plot",
       dataname = "ADAE",
       arm_var = arm_var_cs,
       group_var = group_var_cs
-    ) |>
-      suppressWarnings(classes = "picks_delayed")
+    ), classes = "picks_delayed")
     expect_s3_class(mod, "teal_module")
   })
 
   it("creates a teal module using picks", {
-    mod <- tm_g_ae_sub(
+    mod <- suppressWarnings(tm_g_ae_sub(
       label = "subgroups Plot",
       dataname = "ADAE",
       arm_var = variables(
@@ -65,9 +64,8 @@ describe("tm_g_ae_sub module creation", {
         choices = c("SEX", "REGION1", "RACE"),
         selected = c("SEX", "REGION1", "RACE"),
         multiple = TRUE
-      )
-    ) |>
-      suppressWarnings(classes = "picks_delayed")
+      ), classes = "picks_delayed"
+    ))
     expect_s3_class(mod, "teal_module")
   })
 
@@ -79,13 +77,12 @@ describe("tm_g_ae_sub module creation", {
   join_keys(data) <- default_cdisc_join_keys[names(data)]
 
   it("using choices_selected works", {
-    mod <- tm_g_ae_sub(
+    mod <- suppressWarnings(tm_g_ae_sub(
       label = "subgroups Plot",
       dataname = "ADAE",
       arm_var = arm_var_cs,
       group_var = group_var_cs
-    ) |>
-      suppressWarnings(classes = "picks_delayed")
+    ), classes = "picks_delayed")
     testServer(
       mod$server,
       args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
@@ -103,7 +100,7 @@ describe("tm_g_ae_sub module creation", {
   })
 
   it("using picks works", {
-    mod <- tm_g_ae_sub(
+    mod <- suppressWarnings(tm_g_ae_sub(
       label = "subgroups Plot",
       dataname = "ADAE",
       arm_var = variables(
@@ -115,8 +112,7 @@ describe("tm_g_ae_sub module creation", {
         selected = c("SEX", "REGION1", "RACE"),
         multiple = TRUE
       )
-    ) |>
-      suppressWarnings(classes = "picks_delayed")
+    ), classes = "picks_delayed")
 
     testServer(
       mod$server,

@@ -28,48 +28,41 @@ conmed_var_cs <- teal.transform::choices_selected(
   selected = "CMDECOD"
 )
 
-id_var_picks <- variables(
+id_var_picks <- suppressWarnings(variables(
   choices = is_categorical(min.len = 2),
   selected = "USUBJID"
-) |>
-  suppressWarnings(classes = "picks_delayed")
+), classes = "picks_delayed")
 
-visit_var_picks <- variables(
+visit_var_picks <- suppressWarnings(variables(
   choices = is_categorical(min.len = 2),
   selected = "AVISIT"
-) |>
-  suppressWarnings(classes = "picks_delayed")
+), classes = "picks_delayed")
 
-ongo_var_picks <- variables(
+ongo_var_picks <- suppressWarnings(variables(
   choices = dplyr::where(is.logical),
   selected = "ongo_status"
-) |>
-  suppressWarnings(classes = "picks_delayed")
+), classes = "picks_delayed")
 
-anno_var_picks_single <- variables(
+anno_var_picks_single <- suppressWarnings(variables(
   choices = is_categorical(min.len = 2),
   selected = "SEX"
-) |>
-  suppressWarnings(classes = "picks_delayed")
+), classes = "picks_delayed")
 
-anno_var_picks_multiple <- variables(
+anno_var_picks_multiple <- suppressWarnings(variables(
   choices = is_categorical(min.len = 2),
   selected = c("SEX", "COUNTRY"),
   multiple = TRUE
-) |>
-  suppressWarnings(classes = "picks_delayed")
+), classes = "picks_delayed")
 
-heat_var_picks <- variables(
+heat_var_picks <- suppressWarnings(variables(
   choices = is_categorical(min.len = 2),
   selected = "AETOXGR"
-) |>
-  suppressWarnings(classes = "picks_delayed")
+), classes = "picks_delayed")
 
-conmed_var_picks <- variables(
+conmed_var_picks <- suppressWarnings(variables(
   choices = is_categorical(min.len = 2),
   selected = "CMDECOD"
-) |>
-  suppressWarnings(classes = "picks_delayed")
+), classes = "picks_delayed")
 
 data <- teal_data() %>%
   within({

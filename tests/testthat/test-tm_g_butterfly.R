@@ -23,17 +23,15 @@ count_by_var_cs <- teal.transform::choices_selected(
   choices = c("# of patients", "# of AEs")
 )
 
-right_var_picks <- variables(
+right_var_picks <- suppressWarnings(variables(
   choices = dplyr::where(is.factor),
   selected = "SEX"
-) |>
-  suppressWarnings(classes = "picks_delayed")
+), classes = "picks_delayed")
 
-left_var_picks <- variables(
+left_var_picks <- suppressWarnings(variables(
   choices = dplyr::where(is.factor),
   selected = "RACE"
-) |>
-  suppressWarnings(classes = "picks_delayed")
+), classes = "picks_delayed")
 
 describe("tm_g_butterfly input validation", {
   it("plot arguments input validation", {
@@ -116,7 +114,7 @@ describe("tm_g_butterfly input validation", {
 
 describe("tm_g_butterfly module creation", {
   it("creates a teal module using choices_selected", {
-    mod <- tm_g_butterfly(
+    mod <- suppressWarnings(tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
       right_var = right_var_cs,
@@ -125,13 +123,12 @@ describe("tm_g_butterfly module creation", {
       color_by_var = color_by_var_cs,
       count_by_var = count_by_var_cs,
       plot_height = c(600, 200, 2000)
-    ) |>
-      suppressWarnings(classes = "picks_delayed")
+    ), classes = "picks_delayed")
     expect_s3_class(mod, "teal_module")
   })
 
   it("creates a teal module using picks", {
-    mod <- tm_g_butterfly(
+    mod <- suppressWarnings(tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
       right_var = right_var_picks,
@@ -153,8 +150,7 @@ describe("tm_g_butterfly module creation", {
         choices = c("count", "alphabetical")
       ),
       plot_height = c(600, 200, 2000)
-    ) |>
-      suppressWarnings(classes = "picks_delayed")
+    ), classes = "picks_delayed")
     expect_s3_class(mod, "teal_module")
   })
 
@@ -179,7 +175,7 @@ describe("tm_g_butterfly module creation", {
   join_keys(data) <- default_cdisc_join_keys[names(data)]
 
   it("works with choices_selected", {
-    mod <- tm_g_butterfly(
+    mod <- suppressWarnings(tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
       right_var = right_var_cs,
@@ -187,8 +183,7 @@ describe("tm_g_butterfly module creation", {
       category_var = category_var_cs,
       color_by_var = color_by_var_cs,
       count_by_var = count_by_var_cs
-    ) |>
-      suppressWarnings(classes = "picks_delayed")
+    ), classes = "picks_delayed")
 
     testServer(
       mod$server,
@@ -203,7 +198,7 @@ describe("tm_g_butterfly module creation", {
   })
 
   it("works with picks", {
-    mod <- tm_g_butterfly(
+    mod <- suppressWarnings(tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
       right_var = right_var_picks,
@@ -224,8 +219,7 @@ describe("tm_g_butterfly module creation", {
         selected = "count",
         choices = c("count", "alphabetical")
       )
-    ) |>
-      suppressWarnings(classes = "picks_delayed")
+    ), classes = "picks_delayed")
     testServer(
       mod$server,
       args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
