@@ -76,8 +76,8 @@ tm_g_events_term_id <- function(label,
   term_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), term_var)
   arm_var <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), arm_var)
 
-  term_var <- force_pick_variable_selection(term_var, "term_var")
-  arm_var <- force_pick_variable_selection(arm_var, "arm_var")
+  term_var <- force_pick_selection(term_var, "term_var")
+  arm_var <- force_pick_selection(arm_var, "arm_var")
 
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),

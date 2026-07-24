@@ -148,10 +148,10 @@ tm_g_butterfly <- function(label,
     facet_var <- create_picks_helper(teal.picks::datasets(dataname), facet_var)
   }
 
-  right_var <- force_pick_variable_selection(right_var, "right_var")
-  left_var <- force_pick_variable_selection(left_var, "left_var")
-  category_var <- force_pick_variable_selection(category_var, "category_var")
-  color_by_var <- force_pick_variable_selection(color_by_var, "color_by_var")
+  right_var <- force_pick_selection(right_var, "right_var")
+  left_var <- force_pick_selection(left_var, "left_var")
+  category_var <- force_pick_selection(category_var, "category_var")
+  color_by_var <- force_pick_selection(color_by_var, "color_by_var")
 
   checkmate::assert_class(count_by_var, "pick")
   checkmate::assert_class(sort_by_var, "pick")
