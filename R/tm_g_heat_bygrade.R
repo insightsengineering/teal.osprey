@@ -249,11 +249,11 @@ ui_g_heat_by_grade <- function(
         ),
         helpText("Plot conmed"),
         left_bordered_div(
-          if (!is.na(cm_dataname)) {
+          if (!is.null(cm_dataname)) {
             checkboxInput(
               ns("plot_cm"),
               "Yes",
-              value = !is.na(cm_dataname)
+              value = !is.null(cm_dataname)
             )
           }
         ),
