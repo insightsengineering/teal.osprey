@@ -19,9 +19,9 @@ tm_g_ae_oview(
 \item{label}{(\code{character(1)}) Label shown in the navigation item for the module or module group.
 For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
-\item{dataname}{(\code{character(1)}) Name of the events dataset. Required when
-using the default method with \link[teal.picks:variables]{choices_selected}.
-Ignored by the \code{.picks} method.}
+\item{dataname}{(\code{character(1)})\cr
+analysis data used in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
 \item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
 (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr

@@ -12,9 +12,6 @@
 #'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
 #'   Object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
-#' @param dataname (`character(1)`) Name of the events dataset. Required when
-#'   using the default method with [choices_selected][variables()].
-#'   Ignored by the `.picks` method.
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
 #'
