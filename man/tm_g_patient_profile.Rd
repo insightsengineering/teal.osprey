@@ -123,6 +123,8 @@ is derived for consistency based the start date of user's choice in the app (for
 \item In \code{ADRS} and \code{ADLB}, it would be study day based on \code{ADT} in reference to
 the start date
 }
+
+For every variable domain defined (i.e \verb{ae_var``) please set its corresponding analysis dataset (i.e }ae_dataset`)
 }
 \section{Reporting}{
 
