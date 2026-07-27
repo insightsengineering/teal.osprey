@@ -73,7 +73,7 @@
 #' - In `ADRS` and `ADLB`, it would be study day based on `ADT` in reference to
 #'     the start date
 #'
-#' For every variable domain defined (i.e `ae_var``) please set its corresponding analysis dataset (i.e `ae_dataset`)
+#' For every variable domain defined (i.e `ae_var`) please set its corresponding analysis dataset (i.e `ae_dataset`)
 #'
 #' @export
 #'
@@ -753,7 +753,7 @@ srv_g_patient_profile <- function(id,
                 )
               )
             ADAE <- qq[[ae_dataname]]
-            if (is.null(ADAE) | nrow(ADAE) == 0) {
+            if (is.null(ADAE) || nrow(ADAE) == 0) {
               empty_ae <- TRUE
             }
             qq
@@ -839,7 +839,7 @@ srv_g_patient_profile <- function(id,
             )
 
             ADCM <- qq[[cm_dataname]]
-            if (is.null(ADCM) | nrow(ADCM) == 0) {
+            if (is.null(ADCM) || nrow(ADCM) == 0) {
               empty_cm <- TRUE
             }
             qq
@@ -944,7 +944,7 @@ srv_g_patient_profile <- function(id,
             )
 
             ADLB <- qq[[lb_dataname]]
-            if (is.null(ADLB) | nrow(ADLB) == 0) {
+            if (is.null(ADLB) || nrow(ADLB) == 0) {
               empty_lb <- TRUE
             }
             qq

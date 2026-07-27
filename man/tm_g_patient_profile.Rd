@@ -124,7 +124,7 @@ is derived for consistency based the start date of user's choice in the app (for
 the start date
 }
 
-For every variable domain defined (i.e \verb{ae_var``) please set its corresponding analysis dataset (i.e }ae_dataset`)
+For every variable domain defined (i.e \code{ae_var}) please set its corresponding analysis dataset (i.e \code{ae_dataset})
 }
 \section{Reporting}{
 
