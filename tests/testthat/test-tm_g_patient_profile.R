@@ -150,7 +150,9 @@ describe("tm_g_patient_profile module creation", {
         ex_dataname = "ADEX",
         ex_var = ex_var_cs,
         sl_start_date = sl_start_date_cs
-      ), classes = c("picks_delayed", "lifecycle_warning_deprecated"))
+      ),
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
+    )
 
     # expect_warning(
     testServer(
@@ -164,7 +166,6 @@ describe("tm_g_patient_profile module creation", {
     )
     #   regexp = "cartesian join"
     # )
-
   })
 
   it("works using teal.picks variables", {

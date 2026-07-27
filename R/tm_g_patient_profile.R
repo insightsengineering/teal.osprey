@@ -565,7 +565,7 @@ srv_g_patient_profile <- function(id,
           )
           teal::validate_input(
             c("lb_var", "lb_var_show"),
-            condition =  !isTRUE(any(input$lb_var == input$lb_var_show)),
+            condition = !isTRUE(any(input$lb_var == input$lb_var_show)),
             message = "Lab variable and Lab value must be different"
           )
         }
