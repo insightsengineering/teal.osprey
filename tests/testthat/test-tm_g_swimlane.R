@@ -149,7 +149,7 @@ testthat::describe("tm_g_swimlane module creation", {
       ADRS <- rADRS %>%
         filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
         mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-        rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
         arrange(USUBJID)
     })
 
@@ -192,7 +192,7 @@ testthat::describe("tm_g_swimlane module creation", {
       ADRS <- rADRS %>%
         filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
         mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-        rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
         arrange(USUBJID)
     })
 
@@ -236,7 +236,7 @@ testthat::describe("tm_g_swimlane module creation", {
       ADRS <- rADRS %>%
         filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
         mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-        rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
         arrange(USUBJID)
     })
 
