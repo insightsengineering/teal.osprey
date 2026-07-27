@@ -73,6 +73,8 @@
 #' - In `ADRS` and `ADLB`, it would be study day based on `ADT` in reference to
 #'     the start date
 #'
+#' For every variable domain defined (i.e `ae_var``) please set its corresponding analysis dataset (i.e `ae_dataset`)
+#'
 #' @export
 #'
 #' @examples
@@ -226,12 +228,13 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     lb_var <- create_picks_helper(teal.picks::datasets(lb_dataname), lb_var)
   }
 
-  check_variable_and_dataset(ex_var, ex_dataname)
-  check_variable_and_dataset(ae_var, ae_dataname)
-  check_variable_and_dataset(ae_line_col_var, ae_dataname)
-  check_variable_and_dataset(rs_var, rs_dataname)
-  check_variable_and_dataset(lb_var, lb_dataname)
-  check_variable_and_dataset(cm_var, cm_dataname)
+  checkmate::assert_class(sl_start_date, "picks")
+  if (!is.null(ex_var) || !is.na(ex_dataname)) checkmate::assert_class(ex_var, "picks")
+  if (!is.null(ae_var) || !is.na(ae_dataname)) checkmate::assert_class(ae_var, "picks")
+  if (!is.null(ae_line_col_var) || !is.na(ae_dataname)) checkmate::assert_class(ae_line_col_var, "picks")
+  if (!is.null(rs_var) || !is.na(rs_dataname)) checkmate::assert_class(rs_var, "picks")
+  if (!is.null(lb_var) || !is.na(lb_dataname)) checkmate::assert_class(lb_var, "picks")
+  if (!is.null(cm_var) || !is.na(cm_dataname)) checkmate::assert_class(cm_var, "picks")
 
   checkmate::assert_string(x_limit)
   checkmate::assert_numeric(plot_height, len = 3, any.missing = FALSE, finite = TRUE)
