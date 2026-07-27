@@ -251,7 +251,7 @@ ui_g_heat_by_grade <- function(
             checkboxInput(
               ns("plot_cm"),
               "Yes",
-              value = !is.na(cm_dataname)
+              value = !is.null(cm_dataname)
             )
           }
         ),

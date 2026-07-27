@@ -495,6 +495,8 @@ srv_g_waterfall <- function(id,
         show_value <- .(show_value_selected)
       }))
 
+      bar_data <- NULL # To avoid R CMD Check NOTES on global binding
+
       # data processing
       q1 <- teal.code::eval_code(
         q1,
@@ -530,6 +532,8 @@ srv_g_waterfall <- function(id,
         )
 
         teal::validate_one_row_per_id(q_temp[["rs_sub"]], key = c("STUDYID", "USUBJID", "PARAMCD"))
+        # To avoid no visible binding R CMD NOTE
+        USUBJID <- PARAMCD <- AVALC <- NULL # nolint: object_name_linter.
 
         within(q_temp, {
           rs_label <- rs_sub %>%
