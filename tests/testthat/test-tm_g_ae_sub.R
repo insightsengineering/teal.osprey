@@ -64,8 +64,8 @@ describe("tm_g_ae_sub module creation", {
         choices = c("SEX", "REGION1", "RACE"),
         selected = c("SEX", "REGION1", "RACE"),
         multiple = TRUE
-      ), classes = "picks_delayed"
-    ))
+      )
+    ), classes = "picks_delayed")
     expect_s3_class(mod, "teal_module")
   })
 

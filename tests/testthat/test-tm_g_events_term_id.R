@@ -1,6 +1,6 @@
 describe("tm_g_events_term_id module creation", {
   it("using choices_selected", {
-    mod <- tm_g_events_term_id(
+    mod <- suppressWarnings(tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
       parent_dataname = "ADSL",
@@ -15,7 +15,7 @@ describe("tm_g_events_term_id module creation", {
         selected = "ACTARMCD",
         choices = c("ACTARM", "ACTARMCD")
       )
-    )
+    ), classes = c("picks_delayed", "lifecycle_warning_deprecated"))
 
     expect_s3_class(mod, "teal_module")
     expect_identical(mod$server, srv_g_events_term_id)
@@ -23,7 +23,7 @@ describe("tm_g_events_term_id module creation", {
   })
 
   it("using picks", {
-    mod <- tm_g_events_term_id(
+    mod <- suppressWarnings(tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
       parent_dataname = "ADSL",
@@ -41,7 +41,7 @@ describe("tm_g_events_term_id module creation", {
           selected = "ACTARMCD"
         )
       )
-    )
+    ), classes = "picks_delayed")
     expect_s3_class(mod, "teal_module")
     expect_identical(mod$server, srv_g_events_term_id)
     expect_equal(mod$datanames, c("ADAE", "ADSL"))
@@ -55,7 +55,7 @@ describe("tm_g_events_term_id module creation", {
   join_keys(data) <- default_cdisc_join_keys[names(data)]
 
   it("using choices_selected works", {
-    mod <- tm_g_events_term_id(
+    mod <- suppressWarnings(tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
       parent_dataname = "ADSL",
@@ -70,7 +70,7 @@ describe("tm_g_events_term_id module creation", {
         selected = "ACTARMCD",
         choices = c("ACTARM", "ACTARMCD")
       )
-    )
+    ), classes = "lifecycle_warning_deprecated")
     testServer(
       mod$server,
       args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
@@ -90,7 +90,7 @@ describe("tm_g_events_term_id module creation", {
   })
 
   it("using picks works", {
-    mod <- tm_g_events_term_id(
+    mod <- suppressWarnings(tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
       parent_dataname = "ADSL",
@@ -108,7 +108,7 @@ describe("tm_g_events_term_id module creation", {
           selected = "ACTARMCD"
         )
       )
-    )
+    ), classes = "picks_delayed")
 
     testServer(
       mod$server,
@@ -130,21 +130,21 @@ describe("tm_g_events_term_id module creation", {
 })
 
 test_that("tm_g_events_term_id coerces multiple variable selection", {
-  term_var <- picks(
+  term_var <- suppressWarnings(picks(
     datasets("ADAE"),
     variables(
       choices = c("AEDECOD", "AETERM"),
       selected = c("AEDECOD", "AETERM"),
       multiple = TRUE
     )
-  )
-  arm_var <- picks(
+  ), classes = "picks_delayed")
+  arm_var <- suppressWarnings(picks(
     datasets("ADSL"),
     variables(
       choices = "ACTARMCD",
       selected = "ACTARMCD"
     )
-  )
+  ), classes = "picks_delayed")
 
   mod <- expect_warning(
     tm_g_events_term_id(

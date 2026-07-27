@@ -95,7 +95,7 @@ describe("tm_g_heat_bygrade argument verification", {
             heat_var = heat_var_cs,
             plot_height = c(600, 2000, 200)
           ),
-          classes = "picks_delayed"
+          classes = c("picks_delayed", "lifecycle_warning_deprecated")
         )
       },
       "Assertion on 'plot_height' failed"
@@ -116,7 +116,7 @@ describe("tm_g_heat_bygrade argument verification", {
             heat_var = heat_var_cs,
             plot_width = c(600, 2000, 200)
           ),
-          classes = "picks_delayed"
+          classes = c("picks_delayed", "lifecycle_warning_deprecated")
         )
       },
       "Assertion on 'plot_width' failed"
@@ -139,7 +139,7 @@ describe("tm_g_heat_bygrade module creation", {
         heat_var = heat_var_cs,
         plot_height = c(600, 200, 2000)
       ),
-      classes = "picks_delayed"
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
     )
     expect_s3_class(mod, "teal_module")
   })
@@ -160,7 +160,7 @@ describe("tm_g_heat_bygrade module creation", {
         conmed_var = conmed_var_cs,
         plot_height = c(600, 200, 2000)
       ),
-      classes = "picks_delayed"
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
     )
     expect_s3_class(mod, "teal_module")
   })
@@ -219,14 +219,17 @@ describe("tm_g_heat_bygrade module creation", {
         heat_var = heat_var_cs,
         plot_height = c(600, 200, 2000)
       ),
-      classes = "picks_delayed"
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
     )
-    testServer(
-      mod$server,
-      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-      expr = {
-        expect_no_error(session$returned())
-      }
+    expect_warning(
+      testServer(
+        mod$server,
+        args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+        expr = {
+          expect_no_error(session$returned())
+        }
+      ),
+      regexp = "cartesian join"
     )
   })
 
@@ -245,15 +248,18 @@ describe("tm_g_heat_bygrade module creation", {
         heat_var = heat_var_cs,
         conmed_var = conmed_var_cs
       ),
-      classes = "picks_delayed"
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
     )
 
-    testServer(
-      mod$server,
-      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-      expr = {
-        expect_no_error(session$returned())
-      }
+    expect_warning(
+      testServer(
+        mod$server,
+        args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+        expr = {
+          expect_no_error(session$returned())
+        }
+      ),
+      regexp = "cartesian join"
     )
   })
 
@@ -273,12 +279,16 @@ describe("tm_g_heat_bygrade module creation", {
       classes = "picks_delayed"
     )
 
-    testServer(
-      mod$server,
-      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-      expr = {
-        expect_no_error(session$returned())
-      }
+    # cartesian product warning: unclear what class is it
+    expect_warning(
+      testServer(
+        mod$server,
+        args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+        expr = {
+          expect_no_error(session$returned())
+        }
+      ),
+      regexp = "cartesian join"
     )
   })
 
@@ -300,12 +310,15 @@ describe("tm_g_heat_bygrade module creation", {
       classes = "picks_delayed"
     )
 
-    testServer(
-      mod$server,
-      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-      expr = {
-        expect_no_error(session$returned())
-      }
+    expect_warning(
+      testServer(
+        mod$server,
+        args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+        expr = {
+          expect_no_error(session$returned())
+        }
+      ),
+      regexp = "cartesian join"
     )
   })
 

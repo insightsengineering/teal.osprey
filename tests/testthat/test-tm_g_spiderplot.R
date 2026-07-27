@@ -87,7 +87,7 @@ describe("tm_g_spiderplot argument verification", {
             href_line = "-20, 0",
             plot_height = c(600, 2000, 200)
           ),
-          classes = "picks_delayed"
+          classes = c("picks_delayed", "lifecycle_warning_deprecated")
         )
       },
       "Assertion on 'plot_height' failed"
@@ -110,7 +110,7 @@ describe("tm_g_spiderplot argument verification", {
             href_line = "-20, 0",
             plot_width = c(600, 2000, 200)
           ),
-          classes = "picks_delayed"
+          classes = c("picks_delayed", "lifecycle_warning_deprecated")
         )
       },
       "Assertion on 'plot_width' failed"
@@ -189,7 +189,7 @@ describe("tm_g_spiderplot module creation", {
         href_line = "-20, 0",
         plot_height = c(600, 200, 2000)
       ),
-      classes = "picks_delayed"
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
     )
     expect_s3_class(mod, "teal_module")
   })
@@ -230,7 +230,7 @@ describe("tm_g_spiderplot module creation", {
         vref_line = "10, 37",
         href_line = "-20, 0"
       ),
-      classes = "picks_delayed"
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
     )
 
     data <- within(teal_data(), {
@@ -240,13 +240,17 @@ describe("tm_g_spiderplot module creation", {
 
     join_keys(data) <- default_cdisc_join_keys[names(data)]
 
-    testServer(
-      mod$server,
-      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-      expr = {
-        session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE)
-        expect_no_error(session$returned())
-      }
+    # Removed rows mcontaining missing values or values outside the scale range
+    expect_warning(
+      testServer(
+        mod$server,
+        args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+        expr = {
+          session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE)
+          expect_no_error(session$returned())
+        }
+      ),
+      regexp = "rows containing missing values or values outside the scale range"
     )
   })
 
@@ -276,13 +280,16 @@ describe("tm_g_spiderplot module creation", {
 
     join_keys(data) <- default_cdisc_join_keys[names(data)]
 
-    testServer(
-      mod$server,
-      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-      expr = {
-        session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE)
-        expect_no_error(session$returned())
-      }
+    expect_warning(
+      testServer(
+        mod$server,
+        args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+        expr = {
+          session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE)
+          expect_no_error(session$returned())
+        }
+      ),
+      regexp = "rows containing missing values or values outside the scale range"
     )
   })
 })

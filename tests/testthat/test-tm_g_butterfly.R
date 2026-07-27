@@ -48,7 +48,7 @@ describe("tm_g_butterfly input validation", {
             count_by_var = count_by_var_cs,
             plot_height = c(600, 2000, 200)
           ),
-          classes = "picks_delayed"
+          classes = c("picks_delayed", "lifecycle_warning_deprecated")
         )
       },
       "Assertion on 'plot_height' failed"
@@ -65,7 +65,7 @@ describe("tm_g_butterfly input validation", {
           color_by_var = color_by_var_cs,
           count_by_var = count_by_var_cs,
           plot_width = c(600, 2000, 200)
-        ), classes = "picks_delayed")
+        ), classes = c("picks_delayed", "lifecycle_warning_deprecated"))
       },
       "Assertion on 'plot_width' failed"
     )
