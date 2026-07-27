@@ -95,16 +95,14 @@
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
-#' ADSL <- data[["ADSL"]]
-#'
 #' app <- init(
 #'   data = data,
 #'   modules = modules(
 #'     tm_g_patient_profile(
 #'       label = "Patient Profile Plot",
 #'       patient_id = variables(
-#'         choices = unique(ADSL$USUBJID),
-#'         selected = unique(ADSL$USUBJID)[1]
+#'         choices = "USUBJID",
+#'         selected = "USUBJID"
 #'       ),
 #'       sl_dataname = "ADSL",
 #'       ex_dataname = "ADEX",
