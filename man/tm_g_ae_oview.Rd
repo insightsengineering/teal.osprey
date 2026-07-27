@@ -96,7 +96,7 @@ data <- within(teal_data(), {
   ADAE <- .add_event_flags(ADAE)
 })
 join_keys(data) <- default_cdisc_join_keys[names(data)]
-app <- init(
+app <- suppressWarnings(init(
   data = data,
   modules = modules(
     tm_g_ae_oview(
@@ -112,7 +112,7 @@ app <- init(
       )
     )
   )
-)
+), classes = "picks_delayed")
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
