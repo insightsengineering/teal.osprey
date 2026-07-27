@@ -33,26 +33,40 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{paramcd}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) or \code{choices_selected})\cr
-variable value designating the studied parameter.}
+\item{paramcd}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Variable value designating the studied parameter.}
 
 \item{x_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for x-axis variables.}
+(\code{\link[teal.picks:variables]{variables()}}) object.
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+For x-axis variables.}
 
 \item{y_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for y-axis variables.}
+(\code{\link[teal.picks:variables]{variables()}}) object.
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+For y-axis variables.}
 
 \item{marker_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for marker symbol.}
+(\code{\link[teal.picks:variables]{variables()}}) object.
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+For marker symbol.}
 
 \item{line_colorby_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for line color.}
+(\code{\link[teal.picks:variables]{variables()}}) object.
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+For line color.}
 
 \item{xfacet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for x facets.}
+(\code{\link[teal.picks:variables]{variables()}}) object.
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+For x facets.}
 
 \item{yfacet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}}) \code{choices_selected} object for y facets.}
+(\code{\link[teal.picks:variables]{variables()}}) object.
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+For y facets.}
 
 \item{vref_line}{vertical reference lines}
 
