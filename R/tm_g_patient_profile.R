@@ -522,46 +522,46 @@ srv_g_patient_profile <- function(id,
         )
 
         teal::validate_input(
-          "patient_id-values-selected",
+          "patient_id",
           condition = !is.null(patient_id_selected),
           message = "Patient ID is required."
         )
         teal::validate_input(
-          "sl_start_date-variables-selected",
+          "sl_start_date",
           condition = !is.null(sl_start_date_selected),
           message = "Date variable is required."
         )
         if (isTRUE(select_plot()[ex_dataname])) {
           teal::validate_input(
-            "ex_var-variables-selected",
+            "ex_var",
             condition = !is.null(ex_var_selected),
             message = "Exposure variable is required."
           )
         }
         if (isTRUE(select_plot()[ae_dataname])) {
           teal::validate_input(
-            "ae_var-variables-selected",
+            "ae_var",
             condition = !is.null(ae_var_selected),
             message = "Adverse Event variable is required."
           )
         }
         if (isTRUE(select_plot()[rs_dataname])) {
           teal::validate_input(
-            "rs_var-variables-selected",
+            "rs_var",
             condition = !is.null(rs_var_selected),
             message = "Tumor response variable is required."
           )
         }
         if (isTRUE(select_plot()[cm_dataname])) {
           teal::validate_input(
-            "cm_var-variables-selected",
+            "cm_var",
             condition = !is.null(cm_var_selected),
             message = "Concomitant medicine variable is required."
           )
         }
         if (isTRUE(select_plot()[lb_dataname])) {
           teal::validate_input(
-            "lb_var-variables-selected",
+            "lb_var",
             condition = !is.null(lb_var_selected),
             message = "Lab variable is required.",
           )
@@ -571,7 +571,7 @@ srv_g_patient_profile <- function(id,
             message = "At least one Lab value is required."
           )
           teal::validate_input(
-            c("lb_var-variables-selected", "lb_var_show"),
+            c("lb_var", "lb_var_show"),
             condition = function(lb_var, lb_var_show) !isTRUE(any(lb_var == lb_var_show)),
             message = "Lab variable and Lab value must be different"
           )
@@ -675,7 +675,7 @@ srv_g_patient_profile <- function(id,
 
         # ADSL with single subject
         teal::validate_input(
-          "patient_id-values-selected",
+          "patient_id",
           condition = function(x) nrow(q1[["ADSL"]]) >= 1,
           message = paste(
             "Subject",
