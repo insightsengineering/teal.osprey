@@ -22,9 +22,9 @@ anno_txt_var_cs <- teal.transform::choices_selected(
   selected = "ACTARM"
 )
 
-testthat::describe("tm_swimlane input validation", {
+describe("tm_swimlane input validation", {
   it("plot arguments input validation", {
-    testthat::expect_error(
+    expect_error(
       {
         mod <- tm_g_swimlane(
           label = "Test - Swimlane - Plot Height",
@@ -43,7 +43,7 @@ testthat::describe("tm_swimlane input validation", {
       "Assertion on 'plot_height' failed"
     )
 
-    testthat::expect_error(
+    expect_error(
       {
         mod <- tm_g_swimlane(
           label = "Test - Swimlane - Plot Width",
@@ -64,7 +64,7 @@ testthat::describe("tm_swimlane input validation", {
   })
 
   it("fails bar_var is not the expected class", {
-    testthat::expect_error(
+    expect_error(
       {
         mod <- tm_g_swimlane(
           label = "Test - Swimlane - Plot Height",
@@ -84,7 +84,7 @@ testthat::describe("tm_swimlane input validation", {
   })
 })
 
-testthat::describe("tm_g_swimlane module creation", {
+describe("tm_g_swimlane module creation", {
   it("is correctly created using teal.picks", {
     mod <- tm_g_swimlane(
       label = "Test - Swimlane",
@@ -98,8 +98,8 @@ testthat::describe("tm_g_swimlane module creation", {
       marker_color_opt = marker_color_opt,
       anno_txt_var = anno_txt_var_picks
     )
-    testthat::expect_s3_class(mod, "teal_module")
-    testthat::expect_identical(mod$server, srv_g_swimlane)
+    expect_s3_class(mod, "teal_module")
+    expect_identical(mod$server, srv_g_swimlane)
   })
 
   it("accepts (optionally) NULL argument as module argument", {
@@ -115,8 +115,8 @@ testthat::describe("tm_g_swimlane module creation", {
       marker_color_opt = marker_color_opt,
       anno_txt_var = anno_txt_var_picks
     )
-    testthat::expect_s3_class(mod, "teal_module")
-    testthat::expect_identical(mod$server, srv_g_swimlane)
+    expect_s3_class(mod, "teal_module")
+    expect_identical(mod$server, srv_g_swimlane)
   })
 
   it("is correctly created using choices_selected", {
@@ -135,8 +135,8 @@ testthat::describe("tm_g_swimlane module creation", {
       )
     })
 
-    testthat::expect_s3_class(mod, "teal_module")
-    testthat::expect_identical(mod$server, srv_g_swimlane)
+    expect_s3_class(mod, "teal_module")
+    expect_identical(mod$server, srv_g_swimlane)
   })
 
   it("works using teal.picks", {
