@@ -560,12 +560,12 @@ srv_g_patient_profile <- function(id,
           )
           teal::validate_input(
             "lb_var_show",
-            condition = function(x) length(x) > 0L,
+            condition = length(input$lb_var_show) > 0L,
             message = "At least one Lab value is required."
           )
           teal::validate_input(
             c("lb_var", "lb_var_show"),
-            condition = function(lb_var, lb_var_show) !isTRUE(any(lb_var == lb_var_show)),
+            condition =  !isTRUE(any(input$lb_var == input$lb_var_show)),
             message = "Lab variable and Lab value must be different"
           )
         }
@@ -667,7 +667,7 @@ srv_g_patient_profile <- function(id,
         # ADSL with single subject
         teal::validate_input(
           "patient_id",
-          condition = function(x) nrow(q1[["ADSL"]]) >= 1,
+          condition = nrow(q1[["ADSL"]]) >= 1,
           message = paste(
             "Subject",
             patient_id_selected,
@@ -954,7 +954,7 @@ srv_g_patient_profile <- function(id,
 
         teal::validate_input(
           "select_ADaM",
-          condition = function(x) any(!empty_data_check & select_plot()),
+          condition = any(!empty_data_check & select_plot()),
           message = "The subject does not have information in any selected domain."
         )
 
