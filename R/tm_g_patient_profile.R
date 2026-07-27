@@ -483,39 +483,34 @@ srv_g_patient_profile <- function(id,
 
         teal::validate_input(
           "select_ADaM",
-          condition = function(x) length(x) > 0L,
+          condition = length(input$select_ADaM) > 0L,
           message = "At least one ADaM data set is required"
         )
         if (isTRUE(select_plot()[lb_dataname])) {
           teal::validate_input(
             "lb_var_show",
-            condition = function(x) length(x) > 0L,
-            message = "At least one Lab value is required"
+            length(input$lb_var_show) > 0L,
+            "At least one Lab value is required"
           )
         }
         teal::validate_input(
           "x_limit",
-          condition = function(x) length(x) == 1L && nzchar(trimws(x)),
-          message = "Study Days Range is required"
+          length(input$x_limit) == 1L && nzchar(trimws(input$x_limit)),
+          "Study Days Range is required"
         )
         teal::validate_input(
           "x_limit",
-          condition = function(x) {
-            vals <- suppressWarnings(as_numeric_from_comma_sep_str(x))
-            !anyNA(vals)
-          },
-          message = "Study Days Range is invalid"
+          !anyNA(suppressWarnings(as_numeric_from_comma_sep_str(input$x_limit))),
+          "Study Days Range is invalid"
         )
         teal::validate_input(
           "x_limit",
-          condition = function(x) length(suppressWarnings(as_numeric_from_comma_sep_str(x))) == 2L,
-          message = "Study Days Range must be two values"
+          length(suppressWarnings(as_numeric_from_comma_sep_str(input$x_limit))) == 2L,
+          "Study Days Range must be two values"
         )
         teal::validate_input(
           "x_limit",
-          condition = function(x) {
-            identical(order(suppressWarnings(as_numeric_from_comma_sep_str(x))), 1:2)
-          },
+          identical(order(suppressWarnings(as_numeric_from_comma_sep_str(input$x_limit))), 1:2),
           message = "Study Days Range mut be: first lower, then upper limit"
         )
 
@@ -576,10 +571,8 @@ srv_g_patient_profile <- function(id,
         }
         if (isTRUE(select_plot()[ae_dataname]) && length(ae_line_col_var_selected) > 0L && !is.null(ae_line_col_opt)) {
           teal::validate_input(
-            "ae_line_col_var-variables-selected",
-            condition = function(x) {
-              length(levels(obj[[ae_dataname]][[ae_line_col_var_selected]])) <= length(ae_line_col_opt)
-            },
+            "ae_line_col_var",
+            length(levels(obj[[ae_dataname]][[ae_line_col_var_selected]])) <= length(ae_line_col_opt),
             message = "Not enough colors provided for Adverse Event line color, unselect"
           )
         }
