@@ -212,7 +212,7 @@ ui_g_butterfly <- function(id,
                            sort_by_var,
                            legend_on,
                            pre_output,
-                           post_output) { # nolint: object_name_linter.
+                           post_output) {
   ns <- NS(id)
 
   teal.widgets::standard_layout(
@@ -292,9 +292,7 @@ ui_g_butterfly <- function(id,
   )
 }
 
-# nolint start: object_name_linter.
 srv_g_butterfly <- function(
-  # nolint end: object_name_linter.
   id,
   data,
   right_var,
