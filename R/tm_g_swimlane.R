@@ -363,12 +363,12 @@ srv_g_swimlane <- function(id,
         "Vertical Reference Line(s) are invalid"
       )
       teal::validate_input(
-        "bar_var-variables-selected",
+        "bar_var",
         condition = !is.null(pick_selected("bar_var", selectors)),
         "Please select a bar length variable."
       )
       teal::validate_input(
-        "marker_pos_var-variables-selected",
+        "marker_pos_var",
         condition = !is.null(pick_selected("marker_pos_var", selectors))
       )
       obj

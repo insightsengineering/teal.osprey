@@ -362,33 +362,33 @@ srv_g_waterfall <- function(id,
       adrs <- data()[[dataname_rs]]
 
       teal::validate_input(
-        "bar_var-variables-selected",
+        "bar_var",
         length(selectors$bar_var()$variables$selected) > 0,
         "Bar height is required."
       )
       teal::validate_input(
-        "bar_paramcd-values-selected",
+        "bar_paramcd",
         length(selectors$bar_paramcd()$values$selected) > 0,
         "Tumor Burden Parameter is required."
       )
       teal::validate_input(
-        "bar_paramcd-values-selected",
+        "bar_paramcd",
         all(selectors$bar_paramcd()$values$selected %in% data()[[dataname_tr]]$PARAMCD),
         "All values of Tumor Burden Parameter must be elements of ADTR PARAMCD."
       )
       teal::validate_input(
-        "add_label_paramcd_rs-values-selected",
+        "add_label_paramcd_rs",
         all(selectors$add_label_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
         "ADRS Label must be an element of ADRS PARAMCD."
       )
       teal::validate_input(
-        c("add_label_paramcd_rs-values-selected", "add_label_var_sl-variables-selected"),
+        c("add_label_paramcd_rs", "add_label_var_sl"),
         length(selectors$add_label_var_sl()$variables$selected) == 0 ||
           length(selectors$add_label_paramcd_rs()$values$selected) == 0,
         "Only one of 'Add ADSL Label to Bars' and 'Add ADRS Label to Bars' can be selected."
       )
       teal::validate_input(
-        "anno_txt_paramcd_rs-values-selected",
+        "anno_txt_paramcd_rs",
         all(selectors$anno_txt_paramcd_rs()$values$selected %in% data()[[dataname_rs]]$PARAMCD),
         "Annotation Parameters must be elements of ADRS PARAMCD."
       )
