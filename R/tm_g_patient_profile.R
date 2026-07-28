@@ -726,7 +726,6 @@ srv_g_patient_profile <- function(id,
 
       q1 <- if (isTRUE(select_plot()[ae_dataname])) {
         if (all(ADAE$USUBJID %in% ADSL$USUBJID)) {
-
           adae_vars <- unique(c(
             "USUBJID", "STUDYID", "ASTDT",
             "AENDT", "AESOC", "AEDECOD",
@@ -802,7 +801,6 @@ srv_g_patient_profile <- function(id,
 
       q1 <- if (isTRUE(select_plot()[rs_dataname])) {
         if (all(ADRS$USUBJID %in% ADSL$USUBJID)) {
-
           adrs_vars <- unique(c(
             "USUBJID", "STUDYID", "PARAMCD",
             "PARAM", "AVALC", "AVAL", "ADY",
@@ -848,7 +846,6 @@ srv_g_patient_profile <- function(id,
 
       q1 <- if (isTRUE(select_plot()[cm_dataname])) {
         if (all(ADCM$USUBJID %in% ADSL$USUBJID)) {
-
           adcm_vars <- unique(c(
             "USUBJID", "STUDYID", "ASTDT",
             "AENDT", "ASTDT", "CMDECOD",
@@ -903,7 +900,6 @@ srv_g_patient_profile <- function(id,
 
       q1 <- if (isTRUE(select_plot()[ex_dataname])) {
         if (all(ADEX$USUBJID %in% ADSL$USUBJID)) {
-
           adex_vars <- unique(c(
             "USUBJID", "STUDYID", "ASTDT",
             "AENDT", "PARCAT2", "AVAL",

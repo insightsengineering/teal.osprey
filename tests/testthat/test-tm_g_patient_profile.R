@@ -154,7 +154,9 @@ describe("tm_g_patient_profile module creation", {
         ex_var = ex_var_cs,
         sl_start_date = sl_start_date_cs,
         plot_height = c(1200, 400, 5000)
-      ), classes = c("picks_delayed", "lifecycle_warning_deprecated"))
+      ),
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
+    )
 
     expect_warning(
       testServer(
