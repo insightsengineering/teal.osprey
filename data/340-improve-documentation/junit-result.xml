@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="shinytest2-tm_g_events_term_id" timestamp="2026-07-28T10:12:10Z" hostname="e8209c9aebcf" tests="5" skipped="5" failures="0" errors="0" time="0.203">
+    <testcase time="0.0309999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_initializes_and_renders_a_plot">
+      <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:34:3')"/>
+    </testcase>
+    <testcase time="0.0589999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_starts_with_expected_label_and_encoding_selections.">
+      <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:54:5')"/>
+    </testcase>
+    <testcase time="0.0840000000000001" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_changing_term_var_changes_the_plot_and_does_not_throw_validation_errors.">
+      <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:80:5')"/>
+    </testcase>
+    <testcase time="0.0149999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_deselection_of_term_var_throws_validation_error.">
+      <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:97:3')"/>
+    </testcase>
+    <testcase time="0.014" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_sort_updates_title">
+      <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:107:3')"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="tm_g_ae_oview" timestamp="2026-07-28T10:12:10Z" hostname="e8209c9aebcf" tests="13" skipped="0" failures="0" errors="0" time="4.559">
+    <testcase time="0.04" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_neither_picks_or_choices_selected"/>
+    <testcase time="0.0369999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected">
+      <system-out>`arm_var` was deprecated in teal.osprey 0.5.0.
+ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
+  Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
+  `select_spec` is deprecated.
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_error(...) at test-tm_g_ae_oview.R:35:5
+ 2. │ └─testthat:::quasi_capture(...)
+ 3. │   ├─testthat (local) .capture(...)
+ 4. │   │ └─base::withCallingHandlers(...)
+ 5. │   └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+ 6. └─teal.osprey::tm_g_ae_oview(...)
+ 7.   └─teal.osprey:::migrate_choices_selected_to_variables(arm_var)</system-out>
+    </testcase>
+    <testcase time="0.0169999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected"/>
+    <testcase time="0.368" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+      <system-out>`flag_var_anl` was deprecated in teal.osprey 0.5.0.
+ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
+  Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
+  `select_spec` is deprecated.
+Backtrace:
+    ▆
+ 1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:78:5
+ 2.   └─teal.osprey:::migrate_choices_selected_to_variables(flag_var_anl)</system-out>
+    </testcase>
+    <testcase time="0.012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
+Backtrace:
+    ▆
+ 1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:78:5
+ 2.   └─teal.osprey:::create_picks_helper(...)
+ 3.     └─teal.picks::picks(datasets, x)
+ 4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
+    </testcase>
+    <testcase time="0.0109999999999997" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
+Backtrace:
+    ▆
+ 1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:78:5
+ 2.   └─teal.osprey:::create_picks_helper(...)
+ 3.     └─teal.picks::picks(datasets, x)
+ 4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
+    </testcase>
+    <testcase time="0.0089999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.00800000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks">
+      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
+Backtrace:
+    ▆
+ 1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:89:5
+ 2.   └─teal.osprey:::create_picks_helper(...)
+ 3.     └─teal.picks::picks(datasets, x)
+ 4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
+    </testcase>
+    <testcase time="0.00900000000000034" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.0129999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
+Backtrace:
+    ▆
+ 1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:100:5
+ 2.   └─teal.osprey:::create_picks_helper(...)
+ 3.     └─teal.picks::picks(datasets, x)
+ 4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
+    </testcase>
+    <testcase time="0.0139999999999998" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+      <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
+Backtrace:
+    ▆
+ 1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:100:5
+ 2.   └─teal.osprey:::create_picks_helper(...)
+ 3.     └─teal.picks::picks(datasets, x)
+ 4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
+    </testcase>
+    <testcase time="2.546" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="1.475" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
+  </testsuite>
+  <testsuite name="tm_g_ae_sub" timestamp="2026-07-28T10:12:15Z" hostname="e8209c9aebcf" tests="7" skipped="0" failures="0" errors="0" time="2.205">
+    <testcase time="0.0790000000000006" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation">
+      <system-out>`group_var` was deprecated in teal.osprey 0.5.0.
+ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
+  Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
+  `select_spec` is deprecated.
+Backtrace:
+    ▆
+ 1. ├─testthat::expect_error(...) at test-tm_g_ae_sub.R:13:5
+ 2. │ └─testthat:::quasi_capture(...)
+ 3. │   ├─testthat (local) .capture(...)
+ 4. │   │ └─base::withCallingHandlers(...)
+ 5. │   └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
+ 6. ├─base::suppressWarnings(...) at test-tm_g_ae_sub.R:15:9
+ 7. │ └─base::withCallingHandlers(...)
+ 8. └─teal.osprey::tm_g_ae_sub(...)
+ 9.   └─teal.osprey:::migrate_choices_selected_to_variables(group_var)</system-out>
+    </testcase>
+    <testcase time="0.016" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0139999999999993" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.00900000000000034" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.00699999999999967" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="1.027" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_choices_selected_works"/>
+    <testcase time="1.053" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_picks_works"/>
+  </testsuite>
+  <testsuite name="tm_g_butterfly" timestamp="2026-07-28T10:12:17Z" hostname="e8209c9aebcf" tests="8" skipped="0" failures="0" errors="0" time="3.762">
+    <testcase time="0.118" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0240000000000009" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0109999999999992" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.00699999999999967" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.016" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.00900000000000034" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="1.665" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_works_with_choices_selected"/>
+    <testcase time="1.912" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_works_with_picks"/>
+  </testsuite>
+  <testsuite name="tm_g_decorate" timestamp="2026-07-28T10:12:21Z" hostname="e8209c9aebcf" tests="5" skipped="0" failures="0" errors="0" time="0.181">
+    <testcase time="0.172000000000001" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00200000000000067" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00199999999999889" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00300000000000011" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00200000000000067" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+  </testsuite>
+  <testsuite name="tm_g_events_term_id" timestamp="2026-07-28T10:12:21Z" hostname="e8209c9aebcf" tests="10" skipped="0" failures="0" errors="0" time="2.039">
+    <testcase time="0.036999999999999" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
+    <testcase time="0.00200000000000067" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
+    <testcase time="0.00200000000000067" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
+    <testcase time="0.00699999999999967" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
+    <testcase time="0.00199999999999889" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
+    <testcase time="0.00100000000000122" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
+    <testcase time="0.992999999999999" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected_works"/>
+    <testcase time="0.944000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks_works"/>
+    <testcase time="0.0470000000000006" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
+    <testcase time="0.00399999999999956" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
+  </testsuite>
+  <testsuite name="tm_g_heat_bygrade" timestamp="2026-07-28T10:12:23Z" hostname="e8209c9aebcf" tests="17" skipped="0" failures="0" errors="0" time="5.166">
+    <testcase time="0.526" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0129999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0139999999999993" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.0240000000000009" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed"/>
+    <testcase time="0.00900000000000034" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.00799999999999912" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_with_conmed"/>
+    <testcase time="1.032" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected"/>
+    <testcase time="0.0269999999999975" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected"/>
+    <testcase time="1.212" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected_with_conmed"/>
+    <testcase time="0.0330000000000013" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected_with_conmed"/>
+    <testcase time="0.962" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks"/>
+    <testcase time="0.0280000000000022" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks"/>
+    <testcase time="1.231" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks_with_conmed"/>
+    <testcase time="0.032" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks_with_conmed"/>
+    <testcase time="0.0100000000000016" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
+    <testcase time="0.000999999999997669" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
+    <testcase time="0.00400000000000134" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
+  </testsuite>
+  <testsuite name="tm_g_patient_profile" timestamp="2026-07-28T10:12:28Z" hostname="e8209c9aebcf" tests="9" skipped="0" failures="2" errors="2" time="1.26">
+    <testcase time="0.0449999999999982" classname="tm_g_patient_profile" name="tm_g_patient_profile_input_validation_plot_arguments_input_validation">
+      <failure type="failure" message="Expected `{ ... }` to throw a error. ('test-tm_g_patient_profile.R:33:5')">Expected `{ ... }` to throw a error.</failure>
+    </testcase>
+    <testcase time="0.0200000000000031" classname="tm_g_patient_profile" name="tm_g_patient_profile_input_validation_plot_arguments_input_validation">
+      <failure type="failure" message="Expected `{ ... }` to throw a error. ('test-tm_g_patient_profile.R:48:5')">Expected `{ ... }` to throw a error.</failure>
+    </testcase>
+    <testcase time="0.0279999999999987" classname="tm_g_patient_profile" name="tm_g_patient_profile_input_validation_Forcing_conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.00799999999999912" classname="tm_g_patient_profile" name="tm_g_patient_profile_input_validation_Forcing_conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0100000000000016" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.00499999999999901" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_creates_a_teal_module_using_teal.picks_variables"/>
+    <testcase time="0.713000000000001" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_works_using_choices_selected">
+      <system-out>`multiple` has been set to `FALSE`, while selected contains multiple values, forcing to select first:&lt;fn&gt;
+Backtrace:
+     ▆
+  1. └─shiny::testServer(...) at test-tm_g_patient_profile.R:158:5
+  2.   ├─shiny:::withMockContext(session, rlang::exec(app, !!!args))
+  3.   │ ├─shiny::isolate(...)
+  4.   │ │ ├─shiny::..stacktraceoff..(...)
+  5.   │ │ └─ctx$run(...)
+  6.   │ │   ├─promises::with_promise_domain(...)
+  7.   │ │   │ └─domain$wrapSync(expr)
+  8.   │ │   ├─shiny::withReactiveDomain(...)
+  9.   │ │   │ └─promises::with_promise_domain(...)
+ 10.   │ │   │   └─domain$wrapSync(expr)
+ 11.   │ │   │     └─base::force(expr)
+ 12.   │ │   ├─shiny:::with_otel_span_context(...)
+ 13.   │ │   │ └─base::force(expr)
+ 14.   │ │   ├─shiny::captureStackTraces(...)
+ 15.   │ │   │ └─promises::with_promise_domain(...)
+ 16.   │ │   │   └─domain$wrapSync(expr)
+ 17.   │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 18.   │ │   └─env$runWith(self, func)
+ 19.   │ │     └─shiny (local) contextFunc()
+ 20.   │ │       └─shiny::..stacktraceon..(expr)
+ 21.   │ ├─shiny::withReactiveDomain(...)
+ 22.   │ │ └─promises::with_promise_domain(...)
+ 23.   │ │   └─domain$wrapSync(expr)
+ 24.   │ │     └─base::force(expr)
+ 25.   │ └─withr::with_options(...)
+ 26.   │   └─base::force(code)
+ 27.   ├─rlang::exec(app, !!!args)
+ 28.   └─teal.osprey (local) `&lt;fn&gt;`(...)
+ 29.     └─shiny::moduleServer(...)
+ 30.       ├─session$setReturned(callModule(module, id, session = session))
+ 31.       └─shiny::callModule(module, id, session = session)
+ 32.         ├─shiny::withReactiveDomain(...)
+ 33.         │ └─promises::with_promise_domain(...)
+ 34.         │   └─domain$wrapSync(expr)
+ 35.         │     └─base::force(expr)
+ 36.         └─teal.osprey (local) module(childScope$input, childScope$output, childScope, ...)
+ 37.           ├─teal.picks::picks_srv(...)
+ 38.           └─teal.picks:::picks_srv.list(...)
+ 39.             └─base::sapply(...)
+ 40.               └─base::lapply(X = X, FUN = FUN, ...)
+ 41.                 └─teal.picks (local) FUN(X[[i]], ...)
+ 42.                   ├─teal.picks::picks_srv(name, picks[[name]], data)
+ 43.                   └─teal.picks:::picks_srv.picks(name, picks[[name]], data)
+ 44.                     └─shiny::moduleServer(...)
+ 45.                       └─shiny::callModule(module, id, session = session)
+ 46.                         ├─shiny::withReactiveDomain(...)
+ 47.                         │ └─promises::with_promise_domain(...)
+ 48.                         │   └─domain$wrapSync(expr)
+ 49.                         │     └─base::force(expr)
+ 50.                         └─teal.picks (local) module(childScope$input, childScope$output, childScope, ...)
+ 51.                           ├─shiny::reactiveVal(...)
+ 52.                           │ └─ReactiveVal$new(value, label)
+ 53.                           │   └─shiny (local) initialize(...)
+ 54.                           ├─teal.picks:::restoreValue(...)
+ 55.                           └─teal.picks::resolver(picks, shiny::isolate(data()))
+ 56.                             ├─teal.picks:::determine(x[[i]], data = data_i)
+ 57.                             └─teal.picks:::determine.values(x[[i]], data = data_i)
+ 58.                               └─teal.picks:::.determine_selected(...)</system-out>
+    </testcase>
+    <testcase time="0.215" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_works_using_choices_selected">
+      <error type="error" message="Error in `rlang::eval_tidy(quosure, mask, rlang::caller_env())`: attempt to apply non-function ('test-tm_g_patient_profile.R:162:9')">Error in `rlang::eval_tidy(quosure, mask, rlang::caller_env())`: attempt to apply non-function
+Backtrace:
+     ▆
+  1. ├─shiny::testServer(...) at test-tm_g_patient_profile.R:158:5
+  2. │ ├─shiny:::withMockContext(...)
+  3. │ │ ├─shiny::isolate(...)
+  4. │ │ │ ├─shiny::..stacktraceoff..(...)
+  5. │ │ │ └─ctx$run(...)
+  6. │ │ │   ├─promises::with_promise_domain(...)
+  7. │ │ │   │ └─domain$wrapSync(expr)
+  8. │ │ │   ├─shiny::withReactiveDomain(...)
+  9. │ │ │   │ └─promises::with_promise_domain(...)
+ 10. │ │ │   │   └─domain$wrapSync(expr)
+ 11. │ │ │   │     └─base::force(expr)
+ 12. │ │ │   ├─shiny:::with_otel_span_context(...)
+ 13. │ │ │   │ └─base::force(expr)
+ 14. │ │ │   ├─shiny::captureStackTraces(...)
+ 15. │ │ │   │ └─promises::with_promise_domain(...)
+ 16. │ │ │   │   └─domain$wrapSync(expr)
+ 17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 18. │ │ │   └─env$runWith(self, func)
+ 19. │ │ │     └─shiny (local) contextFunc()
+ 20. │ │ │       └─shiny::..stacktraceon..(expr)
+ 21. │ │ ├─shiny::withReactiveDomain(...)
+ 22. │ │ │ └─promises::with_promise_domain(...)
+ 23. │ │ │   └─domain$wrapSync(expr)
+ 24. │ │ │     └─base::force(expr)
+ 25. │ │ └─withr::with_options(...)
+ 26. │ │   └─base::force(code)
+ 27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+ 28. └─base::.handleSimpleError(...) at test-tm_g_patient_profile.R:162:9
+ 29.   └─shiny (local) h(simpleError(msg, call))</error>
+    </testcase>
+    <testcase time="0.215999999999998" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_works_using_teal.picks_variables">
+      <error type="error" message="Error in `rlang::eval_tidy(quosure, mask, rlang::caller_env())`: attempt to apply non-function ('test-tm_g_patient_profile.R:185:9')">Error in `rlang::eval_tidy(quosure, mask, rlang::caller_env())`: attempt to apply non-function
+Backtrace:
+     ▆
+  1. ├─shiny::testServer(...) at test-tm_g_patient_profile.R:181:5
+  2. │ ├─shiny:::withMockContext(...)
+  3. │ │ ├─shiny::isolate(...)
+  4. │ │ │ ├─shiny::..stacktraceoff..(...)
+  5. │ │ │ └─ctx$run(...)
+  6. │ │ │   ├─promises::with_promise_domain(...)
+  7. │ │ │   │ └─domain$wrapSync(expr)
+  8. │ │ │   ├─shiny::withReactiveDomain(...)
+  9. │ │ │   │ └─promises::with_promise_domain(...)
+ 10. │ │ │   │   └─domain$wrapSync(expr)
+ 11. │ │ │   │     └─base::force(expr)
+ 12. │ │ │   ├─shiny:::with_otel_span_context(...)
+ 13. │ │ │   │ └─base::force(expr)
+ 14. │ │ │   ├─shiny::captureStackTraces(...)
+ 15. │ │ │   │ └─promises::with_promise_domain(...)
+ 16. │ │ │   │   └─domain$wrapSync(expr)
+ 17. │ │ │   │     └─base::withCallingHandlers(expr, error = doCaptureStack)
+ 18. │ │ │   └─env$runWith(self, func)
+ 19. │ │ │     └─shiny (local) contextFunc()
+ 20. │ │ │       └─shiny::..stacktraceon..(expr)
+ 21. │ │ ├─shiny::withReactiveDomain(...)
+ 22. │ │ │ └─promises::with_promise_domain(...)
+ 23. │ │ │   └─domain$wrapSync(expr)
+ 24. │ │ │     └─base::force(expr)
+ 25. │ │ └─withr::with_options(...)
+ 26. │ │   └─base::force(code)
+ 27. │ └─rlang::eval_tidy(quosure, mask, rlang::caller_env())
+ 28. └─base::.handleSimpleError(...) at test-tm_g_patient_profile.R:185:9
+ 29.   └─shiny (local) h(simpleError(msg, call))</error>
+    </testcase>
+  </testsuite>
+  <testsuite name="tm_g_spiderplot" timestamp="2026-07-28T10:12:29Z" hostname="e8209c9aebcf" tests="10" skipped="0" failures="0" errors="0" time="4.919">
+    <testcase time="0.149000000000001" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0310000000000024" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.014999999999997" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.00800000000000267" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.014999999999997" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
+    <testcase time="0.00900000000000034" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
+    <testcase time="2.274" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works"/>
+    <testcase time="0.0779999999999994" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works"/>
+    <testcase time="2.258" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works"/>
+    <testcase time="0.0819999999999972" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works"/>
+  </testsuite>
+  <testsuite name="tm_g_swimlane" timestamp="2026-07-28T10:12:34Z" hostname="e8209c9aebcf" tests="15" skipped="0" failures="0" errors="0" time="13.097">
+    <testcase time="0.0259999999999998" classname="tm_g_swimlane" name="tm_swimlane_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0120000000000005" classname="tm_g_swimlane" name="tm_swimlane_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0100000000000016" classname="tm_g_swimlane" name="tm_swimlane_input_validation_fails_bar_var_is_not_the_expected_class"/>
+    <testcase time="0.0139999999999993" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_teal.picks"/>
+    <testcase time="0.00199999999999889" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_teal.picks"/>
+    <testcase time="0.00900000000000034" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_accepts_optionally_NULL_argument_as_module_argument"/>
+    <testcase time="0.00200000000000244" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_accepts_optionally_NULL_argument_as_module_argument"/>
+    <testcase time="0.0969999999999978" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_choices_selected"/>
+    <testcase time="0.00200000000000244" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_choices_selected"/>
+    <testcase time="2.133" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_using_teal.picks"/>
+    <testcase time="1.924" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_with_optionally_NULL_argument_as_module_argument"/>
+    <testcase time="2.23" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_using_choices_selected"/>
+    <testcase time="2.337" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_using_teal.picks"/>
+    <testcase time="2.33" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_with_optionally_NULL_argument_as_module_argument"/>
+    <testcase time="1.969" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_using_choices_selected"/>
+  </testsuite>
+  <testsuite name="tm_g_waterfall" timestamp="2026-07-28T10:12:47Z" hostname="e8209c9aebcf" tests="8" skipped="0" failures="0" errors="0" time="9.809">
+    <testcase time="0.0990000000000038" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.00599999999999312" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.151000000000003" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0120000000000005" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0210000000000008" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_choices_selected_deprecated_option_"/>
+    <testcase time="0.0129999999999981" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="6.961" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_works_using_choices_selected_deprecated_option_"/>
+    <testcase time="2.546" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_works_using_picks"/>
+  </testsuite>
+  <testsuite name="utils" timestamp="2026-07-28T10:12:57Z" hostname="e8209c9aebcf" tests="13" skipped="0" failures="0" errors="0" time="0.158">
+    <testcase time="0.128" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.00399999999999778" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.00500000000000256" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00399999999999778" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+  </testsuite>
+</testsuites>
