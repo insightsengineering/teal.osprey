@@ -9,7 +9,7 @@
 #' @inheritParams argument_convention
 #' @param patient_id Either a [teal.picks::variables()] object,
 #'   a full [teal.picks::picks()] object, or a [variables()] object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Describing the unique subject ID selection.
 #' @param sl_dataname (`character`) subject level dataset name,
 #' needs to be available in the list passed to the `data`
@@ -22,22 +22,22 @@
 #'        set to NA (default) to omit from analysis
 #' @param sl_start_date Either a [teal.picks::variables()] object,
 #'   a full [teal.picks::picks()] object, or a [variables()] object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For the study start date variable, usually set to treatment start date or
 #'   randomization date.
 #' @param ex_var Either a [teal.picks::variables()] object,
 #'   a full [teal.picks::picks()] object, or a [variables()] object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For the exposure variable to plot as each line. Leave unspecified or set to
 #'   `NULL` if exposure data is not available.
 #' @param ae_var Either a [teal.picks::variables()] object,
 #'   a full [teal.picks::picks()] object, or a [variables()] object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For the adverse event variable to plot as each line. Leave unspecified or
 #'   set to `NULL` if adverse events data is not available.
 #' @param ae_line_col_var Either a [teal.picks::variables()] object,
 #'   a full [teal.picks::picks()] object, or a [variables()] object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For coloring `AE` lines. Leave unspecified or set to `NULL` if adverse
 #'   events data is not available.
 #' @param ae_line_col_opt aesthetic values to map color values
@@ -47,17 +47,17 @@
 #'                        leave unspecified or set to `NULL` if adverse events data is not available
 #' @param rs_var Either a [teal.picks::variables()] object,
 #'   a full [teal.picks::picks()] object, or a [variables()] object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For the response variable to plot as each line. Leave unspecified or set to
 #'   `NULL` if response data is not available.
 #' @param cm_var Either a [teal.picks::variables()] object,
 #'   a full [teal.picks::picks()] object, or a [variables()] object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For the concomitant medication variable to plot as each line. Leave
 #'   unspecified or set to `NULL` if concomitant medications data is not available.
 #' @param lb_var Either a [teal.picks::variables()] object,
 #'   a full [teal.picks::picks()] object, or a [variables()] object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For the lab variable to plot as each line. Leave unspecified or set to
 #'   `NULL` if labs data is not available.
 #' @param x_limit a single `character` string with two numbers

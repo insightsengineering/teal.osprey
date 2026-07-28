@@ -35,7 +35,7 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
 \item{patient_id}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
 a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Describing the unique subject ID selection.}
 
 \item{sl_dataname}{(\code{character}) subject level dataset name,
@@ -50,25 +50,25 @@ set to NA (default) to omit from analysis}
 
 \item{sl_start_date}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
 a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 For the study start date variable, usually set to treatment start date or
 randomization date.}
 
 \item{ex_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
 a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 For the exposure variable to plot as each line. Leave unspecified or set to
 \code{NULL} if exposure data is not available.}
 
 \item{ae_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
 a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 For the adverse event variable to plot as each line. Leave unspecified or
 set to \code{NULL} if adverse events data is not available.}
 
 \item{ae_line_col_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
 a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 For coloring \code{AE} lines. Leave unspecified or set to \code{NULL} if adverse
 events data is not available.}
 
@@ -80,19 +80,19 @@ leave unspecified or set to \code{NULL} if adverse events data is not available}
 
 \item{rs_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
 a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 For the response variable to plot as each line. Leave unspecified or set to
 \code{NULL} if response data is not available.}
 
 \item{cm_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
 a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 For the concomitant medication variable to plot as each line. Leave
 unspecified or set to \code{NULL} if concomitant medications data is not available.}
 
 \item{lb_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
 a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 For the lab variable to plot as each line. Leave unspecified or set to
 \code{NULL} if labs data is not available.}
 

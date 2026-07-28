@@ -33,44 +33,44 @@ analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
 \item{filter_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Object with variable name of data filter, please see details regarding expected values,
 default is \code{NULL}.}
 
 \item{right_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Object with dichotomization variable for the right side.}
 
 \item{left_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Object with dichotomization variable for the left side.}
 
 \item{category_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Object with category (y-axis) variable.}
 
 \item{color_by_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Object with variable that defines color blocks within each bar.}
 
 \item{count_by_var}{Either a (\code{\link[teal.picks:values]{teal.picks::values()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Object with variable that defines how the x axis is calculated.}
 
 \item{facet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Object with variable for row facets.}
 
 \item{sort_by_var}{Either a (\code{\link[teal.picks:values]{teal.picks::values()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Object with argument for order of class and term elements in table,
 default here is \code{"count"}.}
 

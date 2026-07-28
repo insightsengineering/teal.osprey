@@ -34,8 +34,8 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used for markers. Use \code{"ADSL"} when no markers are plotted.}
 
 \item{bar_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Subject-level numeric variable for bar length (from \code{parentname}).}
 
 \item{parentname}{(\code{character(1)})\cr
@@ -44,39 +44,39 @@ available in the list passed to the \code{data} argument of \code{\link[teal:ini
 \code{"ADSL"}}
 
 \item{bar_color_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Subject-level color variable from \code{parentname}.}
 
 \item{sort_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Subject-level sort variable from \code{parentname}.}
 
 \item{marker_pos_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Marker position variable from \code{dataname}).}
 
 \item{marker_shape_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Marker shape variable from \code{dataname}.}
 
 \item{marker_shape_opt}{(\code{numeric})\cr
 Named vector mapping shape values to ggplot shapes.}
 
 \item{marker_color_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Marker color variable from \code{dataname}.}
 
 \item{marker_color_opt}{(\code{character})\cr
 Named vector mapping color values to colors.}
 
 \item{anno_txt_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Subject-level annotation variables from \code{parentname} (multiple selection allowed).}
 
 \item{vref_line}{(\code{numeric})\cr
@@ -105,7 +105,6 @@ the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 This is a teal module that generates a \code{swimlane} plot (bar plot with markers) for \code{ADaM} data
-using \code{\link[teal.picks:variables]{variables()}} encodings.
 }
 \section{Reporting}{
 

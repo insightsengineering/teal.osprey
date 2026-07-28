@@ -8,8 +8,8 @@
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param flag_var_anl Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
 #' @inherit argument_convention return

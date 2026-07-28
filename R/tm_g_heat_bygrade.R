@@ -18,30 +18,30 @@
 #' argument of [teal::init()] \cr
 #' specify to `NA` if no concomitant medications data is available
 #' @param id_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Unique subject ID variable.
 #' @param visit_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Analysis visit variable.
 #' @param ongo_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Study ongoing status variable.
 #' This variable is a derived logical variable. Usually it can be derived from `EOSSTT`.
 #' @param anno_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Annotation variable.
 #' @param heat_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Heatmap variable.
 #' @param cm_dataname (`character`) concomitant medications dataset name,
 #' @param conmed_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Concomitant medications variable,
 #' specify to `NA` if no concomitant medications data is available
 #'

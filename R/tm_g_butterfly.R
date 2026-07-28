@@ -8,37 +8,37 @@
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param filter_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with variable name of data filter, please see details regarding expected values,
 #'   default is `NULL`.
 #' @param right_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with dichotomization variable for the right side.
 #' @param left_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with dichotomization variable for the left side.
 #' @param category_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with category (y-axis) variable.
 #' @param color_by_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with variable that defines color blocks within each bar.
 #' @param count_by_var Either a ([`teal.picks::values()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with variable that defines how the x axis is calculated.
 #' @param facet_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with variable for row facets.
 #' @param sort_by_var Either a ([`teal.picks::values()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with argument for order of class and term elements in table,
 #'   default here is `"count"`.
 #' @param legend_on (`boolean`) value for whether legend is displayed

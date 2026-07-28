@@ -8,8 +8,8 @@
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param term_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with all available choices and pre-selected option names that can be used
 #'   to specify the term for events.
 #' @param parentname (`character(1)`)\cr

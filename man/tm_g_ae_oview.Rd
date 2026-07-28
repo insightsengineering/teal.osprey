@@ -31,8 +31,8 @@ names that can be used as \code{arm_var}. Column \code{arm_var} in the \code{dat
 has to be a factor.}
 
 \item{flag_var_anl}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
-(\code{\link[teal.picks:variables]{variables()}}) object.
-\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
 Object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)}
 

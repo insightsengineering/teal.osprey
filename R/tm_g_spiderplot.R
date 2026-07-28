@@ -8,32 +8,32 @@
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param x_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For x-axis variables.
 #' @param y_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For y-axis variables.
 #' @param marker_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For marker symbol.
 #' @param line_colorby_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For line color.
 #' @param vref_line  vertical reference lines
 #' @param href_line horizontal reference lines
 #' @param anno_txt_var annotation text
 #' @param legend_on boolean value for whether legend is displayed
 #' @param xfacet_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For x facets.
 #' @param yfacet_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`variables()`]) object.
-#'   `choices_selected` is being deprecated as an argument type and will be removed in the future.
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   For y facets.
 #'
 #' @inherit argument_convention return
