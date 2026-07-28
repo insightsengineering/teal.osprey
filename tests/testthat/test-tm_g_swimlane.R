@@ -63,7 +63,7 @@ describe("tm_swimlane input validation", {
     )
   })
 
-  it("fails bar_var is not the expected class", {
+  it("fails if bar_var is not the expected class", {
     expect_error(
       {
         mod <- tm_g_swimlane(
@@ -138,22 +138,26 @@ describe("tm_g_swimlane module creation", {
     expect_s3_class(mod, "teal_module")
     expect_identical(mod$server, srv_g_swimlane)
   })
+})
+
+testthat::describe("test for server module function", {
+  data <- within(teal_data(), {
+    library(nestcolor)
+    library(dplyr)
+    ADSL <- rADSL %>%
+      mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+      filter(STRATA1 == "A" & ARMCD == "ARM A")
+    ADRS <- rADRS %>%
+      filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+      mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+      rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+      arrange(USUBJID)
+  })
+
+  join_keys(data) <- default_cdisc_join_keys[names(data)]
+
 
   it("works using teal.picks", {
-    data <- within(teal_data(), {
-      library(nestcolor)
-      library(dplyr)
-      ADSL <- rADSL %>%
-        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-        filter(STRATA1 == "A" & ARMCD == "ARM A")
-      ADRS <- rADRS %>%
-        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-        arrange(USUBJID)
-    })
-
-    join_keys(data) <- default_cdisc_join_keys[names(data)]
     mod <- tm_g_swimlane(
       label = "Test - Swimlane",
       dataname = dataname,
@@ -183,21 +187,6 @@ describe("tm_g_swimlane module creation", {
   })
 
   it("works with (optionally) NULL argument as module argument", {
-    data <- within(teal_data(), {
-      library(nestcolor)
-      library(dplyr)
-      ADSL <- rADSL %>%
-        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-        filter(STRATA1 == "A" & ARMCD == "ARM A")
-      ADRS <- rADRS %>%
-        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-        arrange(USUBJID)
-    })
-
-    join_keys(data) <- default_cdisc_join_keys[names(data)]
-
     mod <- tm_g_swimlane(
       label = "Test - Swimlane",
       dataname = dataname,
@@ -227,155 +216,6 @@ describe("tm_g_swimlane module creation", {
   })
 
   it("works using choices_selected", {
-    data <- within(teal_data(), {
-      library(nestcolor)
-      library(dplyr)
-      ADSL <- rADSL %>%
-        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-        filter(STRATA1 == "A" & ARMCD == "ARM A")
-      ADRS <- rADRS %>%
-        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-        arrange(USUBJID)
-    })
-
-    join_keys(data) <- default_cdisc_join_keys[names(data)]
-
-    suppressWarnings({
-      mod <- tm_g_swimlane(
-        label = "Test - Swimlane",
-        dataname = dataname,
-        bar_var = bar_var_cs,
-        bar_color_var = bar_color_var_cs,
-        marker_pos_var = marker_pos_var_cs,
-        marker_shape_var = marker_shape_var_cs,
-        marker_shape_opt = marker_shape_opt,
-        marker_color_var = marker_color_var_cs,
-        marker_color_opt = marker_color_opt,
-        anno_txt_var = anno_txt_var_cs
-      )
-    })
-
-    testServer(
-      mod$server,
-      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-      expr = {
-        session$setInputs(
-          arm_ref = "ARM A",
-          arm_trt = "ARM B",
-          ci = "wald", conf_level = 0.95,
-          fontsize = 3,
-          arm_n = FALSE
-        )
-        expect_no_error(session$returned())
-      }
-    )
-  })
-
-  it("works using teal.picks", {
-    data <- within(teal_data(), {
-      library(nestcolor)
-      library(dplyr)
-      ADSL <- rADSL %>%
-        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-        filter(STRATA1 == "A" & ARMCD == "ARM A")
-      ADRS <- rADRS %>%
-        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-        arrange(USUBJID)
-    })
-
-    join_keys(data) <- default_cdisc_join_keys[names(data)]
-    mod <- tm_g_swimlane(
-      label = "Test - Swimlane",
-      dataname = dataname,
-      bar_var = bar_var_picks,
-      bar_color_var = bar_color_var_picks,
-      marker_pos_var = marker_pos_var_picks,
-      marker_shape_var = marker_shape_var_picks,
-      marker_shape_opt = marker_shape_opt,
-      marker_color_var = marker_color_var_picks,
-      marker_color_opt = marker_color_opt,
-      anno_txt_var = anno_txt_var_picks
-    )
-    testServer(
-      mod$server,
-      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-      expr = {
-        session$setInputs(
-          arm_ref = "ARM A",
-          arm_trt = "ARM B",
-          ci = "wald", conf_level = 0.95,
-          fontsize = 3,
-          arm_n = FALSE
-        )
-        expect_no_error(session$returned())
-      }
-    )
-  })
-
-  it("works with (optionally) NULL argument as module argument", {
-    data <- within(teal_data(), {
-      library(nestcolor)
-      library(dplyr)
-      ADSL <- rADSL %>%
-        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-        filter(STRATA1 == "A" & ARMCD == "ARM A")
-      ADRS <- rADRS %>%
-        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-        arrange(USUBJID)
-    })
-
-    join_keys(data) <- default_cdisc_join_keys[names(data)]
-
-    mod <- tm_g_swimlane(
-      label = "Test - Swimlane",
-      dataname = dataname,
-      bar_var = bar_var_picks,
-      bar_color_var = bar_color_var_picks,
-      marker_pos_var = NULL,
-      marker_shape_var = marker_shape_var_picks,
-      marker_shape_opt = marker_shape_opt,
-      marker_color_var = marker_color_var_picks,
-      marker_color_opt = marker_color_opt,
-      anno_txt_var = anno_txt_var_picks
-    )
-    testServer(
-      mod$server,
-      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-      expr = {
-        session$setInputs(
-          arm_ref = "ARM A",
-          arm_trt = "ARM B",
-          ci = "wald", conf_level = 0.95,
-          fontsize = 3,
-          arm_n = FALSE
-        )
-        expect_no_error(session$returned())
-      }
-    )
-  })
-
-  it("works using choices_selected", {
-    data <- within(teal_data(), {
-      library(nestcolor)
-      library(dplyr)
-      ADSL <- rADSL %>%
-        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-        filter(STRATA1 == "A" & ARMCD == "ARM A")
-      ADRS <- rADRS %>%
-        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-        arrange(USUBJID)
-    })
-
-    join_keys(data) <- default_cdisc_join_keys[names(data)]
-
     suppressWarnings({
       mod <- tm_g_swimlane(
         label = "Test - Swimlane",
