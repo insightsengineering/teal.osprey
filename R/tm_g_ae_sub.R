@@ -20,11 +20,10 @@
 #'
 #' @examples
 #' # Example using stream (ADaM) dataset
-#' data <- teal_data() %>%
-#'   within({
-#'     ADSL <- rADSL
-#'     ADAE <- rADAE
-#'   })
+#' data <- within(teal_data(), {
+#'   ADSL <- rADSL
+#'   ADAE <- rADAE
+#' })
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
@@ -42,8 +41,7 @@
 #'         choices = c("SEX", "REGION1", "RACE"),
 #'         selected = c("SEX", "REGION1", "RACE"),
 #'         multiple = TRUE
-#'       ),
-#'       plot_height = c(600, 200, 2000)
+#'       )
 #'     )
 #'   )
 #' )
@@ -192,12 +190,12 @@ srv_g_ae_sub <- function(id,
       obj <- req(data())
 
       teal::validate_input(
-        inputId   = "arm_var-variables-selected",
+        inputId   = "arm_var",
         condition = !is.null(selectors$arm_var()$variables$selected),
         message   = "Please select an arm variable."
       )
       teal::validate_input(
-        inputId   = "group_var-variables-selected",
+        inputId   = "group_var",
         condition = !is.null(selectors$group_var()$variables$selected),
         message   = "Please select an group variable."
       )
@@ -295,14 +293,17 @@ srv_g_ae_sub <- function(id,
 
         teal::validate_has_data(ANL, min_nrow = 10, msg = sprintf("%s has not enough data", dataname))
 
-        shiny::validate(
-          shiny::need(length(group_var_name) > 0L, "Group variable is required."),
-          shiny::need(length(arm_var_name) == 1L, "Arm Variable is required."),
-          shiny::need(
-            is.factor(ANL[[arm_var_name]]),
-            "Arm Variable must be a factor variable, contact app developer."
-          ),
-          shiny::need(input$arm_trt != input$arm_ref, "Treatment and reference should be different.")
+        validate_input("group_var", length(group_var_name) > 0L, "Group variable is required.")
+        validate_input("arm_var", length(arm_var_name) == 1L, "Arm Variable is required.")
+        validate_input(
+          "arm_var",
+          is.factor(ANL[[arm_var_name]]),
+          "Arm Variable must be a factor variable, contact app developer."
+        )
+        validate_input(
+          c("arm_trt", "arm_ref"),
+          input$arm_trt != input$arm_ref,
+          "Treatment and reference should be different."
         )
         sapply(group_var_name, function(x) {
           teal::validate_input(
@@ -311,10 +312,11 @@ srv_g_ae_sub <- function(id,
             message = sprintf("Group variable '%s' must be a factor variable.", x)
           )
         })
-        validate(need(
+        validate_input(
+          c("arm_trt", "arm_ref"),
           input$arm_trt %in% ANL[[arm_var_name]] && input$arm_ref %in% ANL[[arm_var_name]],
           "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
-        ))
+        )
 
         teal::validate_input(
           "arm_var",

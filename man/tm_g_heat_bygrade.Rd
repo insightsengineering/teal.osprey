@@ -40,25 +40,25 @@ argument of \code{\link[teal:init]{teal::init()}} \cr
 specify to \code{NA} if no concomitant medications data is available}
 
 \item{id_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) unique subject ID variable}
+\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) unique subject ID variable}
 
 \item{visit_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) analysis visit variable}
+\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) analysis visit variable}
 
 \item{ongo_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) study ongoing status variable.
+\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) study ongoing status variable.
 This variable is a derived logical variable. Usually it can be derived from \code{EOSSTT}.}
 
 \item{anno_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) annotation variable}
+\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) annotation variable}
 
 \item{heat_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) heatmap variable}
+\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) heatmap variable}
 
 \item{cm_dataname}{(\code{character}) concomitant medications dataset name,}
 
 \item{conmed_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\verb{[teal.picks::variables()]}) concomitant medications variable,
+\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) concomitant medications variable,
 specify to \code{NA} if no concomitant medications data is available}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
@@ -102,43 +102,42 @@ For more information on reporting in \code{teal}, see the vignettes:
 
 \examples{
 # Using picks method
-data <- teal_data() \%>\%
-  within({
-    library(dplyr)
-    library(nestcolor)
-    ADSL <- teal.data::rADSL \%>\% slice(1:30)
-    ADEX <- teal.data::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADAE <- teal.data::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADCM <- teal.data::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    # This preprocess is only to force legacy standard on ADCM
-    ADCM <- ADCM \%>\%
-      select(-starts_with("ATC")) \%>\%
-      unique()
-    # function to derive AVISIT from ADEX
-    .add_visit <- function(data_need_visit) {
-      visit_dates <- ADEX \%>\%
-        filter(PARAMCD == "DOSE") \%>\%
-        distinct(USUBJID, AVISIT, ASTDTM) \%>\%
-        group_by(USUBJID) \%>\%
-        arrange(ASTDTM) \%>\%
-        mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
-        rename(this_vis = ASTDTM)
-      data_visit <- data_need_visit \%>\%
-        select(USUBJID, ASTDTM) \%>\%
-        left_join(visit_dates, by = "USUBJID") \%>\%
-        filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
-        left_join(data_need_visit) \%>\%
-        distinct()
-      return(data_visit)
-    }
-    # derive AVISIT for ADAE and ADCM
-    ADAE <- .add_visit(ADAE)
-    ADCM <- .add_visit(ADCM)
-    # derive ongoing status variable for ADEX
-    ADEX <- ADEX \%>\%
-      filter(PARCAT1 == "INDIVIDUAL") \%>\%
-      mutate(ongo_status = (EOSSTT == "ONGOING"))
-  })
+data <- within(teal_data(), {
+  library(dplyr)
+  library(nestcolor)
+  ADSL <- teal.data::rADSL \%>\% slice(1:30)
+  ADEX <- teal.data::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+  ADAE <- teal.data::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+  ADCM <- teal.data::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+  # This preprocess is only to force legacy standard on ADCM
+  ADCM <- ADCM \%>\%
+    select(-starts_with("ATC")) \%>\%
+    unique()
+  # function to derive AVISIT from ADEX
+  .add_visit <- function(data_need_visit) {
+    visit_dates <- ADEX \%>\%
+      filter(PARAMCD == "DOSE") \%>\%
+      distinct(USUBJID, AVISIT, ASTDTM) \%>\%
+      group_by(USUBJID) \%>\%
+      arrange(ASTDTM) \%>\%
+      mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
+      rename(this_vis = ASTDTM)
+    data_visit <- data_need_visit \%>\%
+      select(USUBJID, ASTDTM) \%>\%
+      left_join(visit_dates, by = "USUBJID") \%>\%
+      filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
+      left_join(data_need_visit) \%>\%
+      distinct()
+    return(data_visit)
+  }
+  # derive AVISIT for ADAE and ADCM
+  ADAE <- .add_visit(ADAE)
+  ADCM <- .add_visit(ADCM)
+  # derive ongoing status variable for ADEX
+  ADEX <- ADEX \%>\%
+    filter(PARCAT1 == "INDIVIDUAL") \%>\%
+    mutate(ongo_status = (EOSSTT == "ONGOING"))
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
@@ -152,7 +151,7 @@ app <- init(
       ae_dataname = "ADAE",
       cm_dataname = "ADCM",
       id_var = variables(
-        choices = teal.picks::is_categorical(min.len = 2),
+        choices = is_categorical(min.len = 2),
         selected = 1L
       ),
       visit_var = variables(
@@ -164,7 +163,7 @@ app <- init(
         selected = 1L
       ),
       anno_var = variables(
-        choices = teal.picks::is_categorical(min.len = 2),
+        choices = is_categorical(min.len = 2),
         selected = c("SEX", "COUNTRY"),
         multiple = TRUE
       ),
@@ -175,8 +174,7 @@ app <- init(
       conmed_var = variables(
         choices = dplyr::starts_with("CMDECOD"),
         selected = 1L
-      ),
-      plot_height = c(600L, 200L, 2000L)
+      )
     )
   )
 )

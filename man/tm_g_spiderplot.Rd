@@ -33,7 +33,7 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{paramcd}{Either a (\verb{[teal.picks::variables()]}) or \code{choices_selected})\cr
+\item{paramcd}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) or \code{choices_selected})\cr
 variable value designating the studied parameter.}
 
 \item{x_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
@@ -100,12 +100,11 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-data <- teal_data() \%>\%
-  within({
-    library(nestcolor)
-    ADSL <- teal.data::rADSL
-    ADTR <- teal.data::rADTR
-  })
+data <- within(teal_data(), {
+  library(nestcolor)
+  ADSL <- teal.data::rADSL
+  ADTR <- teal.data::rADTR
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 

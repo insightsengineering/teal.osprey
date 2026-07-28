@@ -31,12 +31,11 @@
 #' @template author_liaoc10
 #'
 #' @examples
-#' data <- teal_data() %>%
-#'   within({
-#'     library(nestcolor)
-#'     ADSL <- teal.data::rADSL
-#'     ADTR <- teal.data::rADTR
-#'   })
+#' data <- within(teal_data(), {
+#'   library(nestcolor)
+#'   ADSL <- teal.data::rADSL
+#'   ADTR <- teal.data::rADTR
+#' })
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
@@ -324,8 +323,7 @@ srv_g_spider <- function(
       {
         paramcd_col <- merged$variables()$paramcd
         if (!is.null(paramcd_col) && paramcd_col %in% names(merged$data()[["ANL"]])) {
-          choices <- unique(as.character(merged$data()[["ANL"]][[paramcd_col]])) |>
-            sort()
+          choices <- sort(unique(as.character(merged$data()[["ANL"]][[paramcd_col]])))
           teal.widgets::updateOptionalSelectInput(
             session,
             "paramcd_val",
@@ -381,19 +379,23 @@ srv_g_spider <- function(
       vref_line <- as_numeric_from_comma_sep_str(vref_line)
       href_line <- as_numeric_from_comma_sep_str(href_line)
 
-      shiny::validate(
-        teal::need_input(
-          inputId = "paramcd-variables-selected",
-          condition = length(paramcd_col) > 0,
-          message = "Parameter Column is required."
-        ),
-        teal::need_input(
-          inputId = "paramcd_val",
-          condition = length(paramcd) > 0,
-          message = "Parameter Value is required."
-        )
+      validate_input(
+        inputId = "paramcd",
+        condition = length(paramcd_col) > 0,
+        message = "Parameter Column is required."
       )
 
+      validate_input(
+        inputId = "paramcd_val",
+        condition = length(paramcd) > 0,
+        message = "Parameter Value is required."
+      )
+
+      validate_input(
+        c("x_var", "y_var"),
+        condition = x_var != y_var,
+        message = "X and Y variable can't be the same."
+      )
       # format and filter (ANL already merged by merge_srv)
       q1 <- teal.code::eval_code(
         validated_q,
@@ -484,15 +486,15 @@ srv_g_spider <- function(
             },
             vref_line = vref_line,
             href_line = href_line,
-            x_label = if (is.null(formatters::var_labels(get(dataname)[x_var], fill = FALSE))) {
+            x_label = if (is.null(formatters::var_labels(dataname[x_var], fill = FALSE))) {
               x_var
             } else {
-              formatters::var_labels(get(dataname)[x_var], fill = FALSE)
+              formatters::var_labels(dataname[x_var], fill = FALSE)
             },
-            y_label = if (is.null(formatters::var_labels(get(dataname)[y_var], fill = FALSE))) {
+            y_label = if (is.null(formatters::var_labels(dataname[y_var], fill = FALSE))) {
               y_var
             } else {
-              formatters::var_labels(get(dataname)[y_var], fill = FALSE)
+              formatters::var_labels(dataname[y_var], fill = FALSE)
             },
             show_legend = legend_on
           )
@@ -505,7 +507,7 @@ srv_g_spider <- function(
         xfacet_var = xfacet_var,
         vref_line = vref_line,
         href_line = href_line,
-        dataname = dataname,
+        dataname = as.name(dataname),
         legend_on = legend_on
       )
     })

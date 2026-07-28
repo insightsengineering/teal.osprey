@@ -22,9 +22,9 @@ anno_txt_var_cs <- teal.transform::choices_selected(
   selected = "ACTARM"
 )
 
-testthat::describe("tm_swimlane input validation", {
+describe("tm_swimlane input validation", {
   it("plot arguments input validation", {
-    testthat::expect_error(
+    expect_error(
       {
         mod <- tm_g_swimlane(
           label = "Test - Swimlane - Plot Height",
@@ -43,7 +43,7 @@ testthat::describe("tm_swimlane input validation", {
       "Assertion on 'plot_height' failed"
     )
 
-    testthat::expect_error(
+    expect_error(
       {
         mod <- tm_g_swimlane(
           label = "Test - Swimlane - Plot Width",
@@ -64,7 +64,7 @@ testthat::describe("tm_swimlane input validation", {
   })
 
   it("fails bar_var is not the expected class", {
-    testthat::expect_error(
+    expect_error(
       {
         mod <- tm_g_swimlane(
           label = "Test - Swimlane - Plot Height",
@@ -84,7 +84,7 @@ testthat::describe("tm_swimlane input validation", {
   })
 })
 
-testthat::describe("tm_g_swimlane module creation", {
+describe("tm_g_swimlane module creation", {
   it("is correctly created using teal.picks", {
     mod <- tm_g_swimlane(
       label = "Test - Swimlane",
@@ -98,8 +98,8 @@ testthat::describe("tm_g_swimlane module creation", {
       marker_color_opt = marker_color_opt,
       anno_txt_var = anno_txt_var_picks
     )
-    testthat::expect_s3_class(mod, "teal_module")
-    testthat::expect_identical(mod$server, srv_g_swimlane)
+    expect_s3_class(mod, "teal_module")
+    expect_identical(mod$server, srv_g_swimlane)
   })
 
   it("accepts (optionally) NULL argument as module argument", {
@@ -115,8 +115,8 @@ testthat::describe("tm_g_swimlane module creation", {
       marker_color_opt = marker_color_opt,
       anno_txt_var = anno_txt_var_picks
     )
-    testthat::expect_s3_class(mod, "teal_module")
-    testthat::expect_identical(mod$server, srv_g_swimlane)
+    expect_s3_class(mod, "teal_module")
+    expect_identical(mod$server, srv_g_swimlane)
   })
 
   it("is correctly created using choices_selected", {
@@ -135,7 +135,141 @@ testthat::describe("tm_g_swimlane module creation", {
       )
     })
 
-    testthat::expect_s3_class(mod, "teal_module")
-    testthat::expect_identical(mod$server, srv_g_swimlane)
+    expect_s3_class(mod, "teal_module")
+    expect_identical(mod$server, srv_g_swimlane)
+  })
+
+  it("works using teal.picks", {
+    data <- within(teal_data(), {
+      library(nestcolor)
+      library(dplyr)
+      ADSL <- rADSL %>%
+        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+        filter(STRATA1 == "A" & ARMCD == "ARM A")
+      ADRS <- rADRS %>%
+        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+        arrange(USUBJID)
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+    mod <- tm_g_swimlane(
+      label = "Test - Swimlane",
+      dataname = dataname,
+      bar_var = bar_var_picks,
+      bar_color_var = bar_color_var_picks,
+      marker_pos_var = marker_pos_var_picks,
+      marker_shape_var = marker_shape_var_picks,
+      marker_shape_opt = marker_shape_opt,
+      marker_color_var = marker_color_var_picks,
+      marker_color_opt = marker_color_opt,
+      anno_txt_var = anno_txt_var_picks
+    )
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          arm_ref = "ARM A",
+          arm_trt = "ARM B",
+          ci = "wald", conf_level = 0.95,
+          fontsize = 3,
+          arm_n = FALSE
+        )
+        expect_no_error(session$returned())
+      }
+    )
+  })
+
+  it("works with (optionally) NULL argument as module argument", {
+    data <- within(teal_data(), {
+      library(nestcolor)
+      library(dplyr)
+      ADSL <- rADSL %>%
+        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+        filter(STRATA1 == "A" & ARMCD == "ARM A")
+      ADRS <- rADRS %>%
+        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+        arrange(USUBJID)
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+    mod <- tm_g_swimlane(
+      label = "Test - Swimlane",
+      dataname = dataname,
+      bar_var = bar_var_picks,
+      bar_color_var = bar_color_var_picks,
+      marker_pos_var = NULL,
+      marker_shape_var = marker_shape_var_picks,
+      marker_shape_opt = marker_shape_opt,
+      marker_color_var = marker_color_var_picks,
+      marker_color_opt = marker_color_opt,
+      anno_txt_var = anno_txt_var_picks
+    )
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          arm_ref = "ARM A",
+          arm_trt = "ARM B",
+          ci = "wald", conf_level = 0.95,
+          fontsize = 3,
+          arm_n = FALSE
+        )
+        expect_no_error(session$returned())
+      }
+    )
+  })
+
+  it("works using choices_selected", {
+    data <- within(teal_data(), {
+      library(nestcolor)
+      library(dplyr)
+      ADSL <- rADSL %>%
+        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+        filter(STRATA1 == "A" & ARMCD == "ARM A")
+      ADRS <- rADRS %>%
+        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+        arrange(USUBJID)
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+    suppressWarnings({
+      mod <- tm_g_swimlane(
+        label = "Test - Swimlane",
+        dataname = dataname,
+        bar_var = bar_var_cs,
+        bar_color_var = bar_color_var_cs,
+        marker_pos_var = marker_pos_var_cs,
+        marker_shape_var = marker_shape_var_cs,
+        marker_shape_opt = marker_shape_opt,
+        marker_color_var = marker_color_var_cs,
+        marker_color_opt = marker_color_opt,
+        anno_txt_var = anno_txt_var_cs
+      )
+    })
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          arm_ref = "ARM A",
+          arm_trt = "ARM B",
+          ci = "wald", conf_level = 0.95,
+          fontsize = 3,
+          arm_n = FALSE
+        )
+        expect_no_error(session$returned())
+      }
+    )
   })
 })

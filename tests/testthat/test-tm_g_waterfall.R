@@ -91,9 +91,9 @@ facet_var_picks <- teal.picks::variables(
   selected = NULL
 )
 
-testthat::describe("tm_g_waterfall argument verification", {
-  testthat::it("plot arguments input validation", {
-    testthat::expect_error(
+describe("tm_g_waterfall argument verification", {
+  it("plot arguments input validation", {
+    expect_error(
       {
         suppressWarnings(
           tm_g_waterfall(
@@ -119,7 +119,7 @@ testthat::describe("tm_g_waterfall argument verification", {
       "Assertion on 'plot_height' failed"
     )
 
-    testthat::expect_error(
+    expect_error(
       {
         suppressWarnings(
           tm_g_waterfall(
@@ -146,8 +146,8 @@ testthat::describe("tm_g_waterfall argument verification", {
     )
   })
 
-  testthat::it("Forcing Conversion from multiple picks to single", {
-    testthat::expect_warning(
+  it("Forcing Conversion from multiple picks to single", {
+    expect_warning(
       {
         suppressWarnings(
           tm_g_waterfall(
@@ -176,7 +176,7 @@ testthat::describe("tm_g_waterfall argument verification", {
       "`bar_var` accepts only a single variable selection"
     )
 
-    testthat::expect_warning(
+    expect_warning(
       {
         suppressWarnings(
           tm_g_waterfall(
@@ -207,8 +207,8 @@ testthat::describe("tm_g_waterfall argument verification", {
   })
 })
 
-testthat::describe("tm_g_waterfall module creation", {
-  testthat::it("creates a teal module using choices_selected (deprecated option)", {
+describe("tm_g_waterfall module creation", {
+  it("creates a teal module using choices_selected (deprecated option)", {
     mod <- tm_g_waterfall(
       label = "Waterfall",
       dataname_tr = "ADTR",
@@ -226,10 +226,10 @@ testthat::describe("tm_g_waterfall module creation", {
       href_line = "-30, 20",
       plot_height = c(1200, 400, 5000)
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks", {
+  it("creates a teal module using picks", {
     mod <- tm_g_waterfall(
       label = "Waterfall",
       dataname_tr = "ADTR",
@@ -247,6 +247,86 @@ testthat::describe("tm_g_waterfall module creation", {
       href_line = "-30, 20",
       plot_height = c(1200, 400, 5000)
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
+  })
+
+  it("works using choices_selected (deprecated option)", {
+    data <- within(teal_data(), {
+      library(nestcolor)
+      ADSL <- rADSL
+      ADRS <- rADRS
+      ADTR <- rADTR
+      ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+    mod <- tm_g_waterfall(
+      label = "Waterfall",
+      dataname_tr = "ADTR",
+      dataname_rs = "ADRS",
+      bar_paramcd = bar_paramcd_cs,
+      bar_var = bar_var_cs,
+      bar_color_var = bar_color_var_cs,
+      bar_color_opt = NULL,
+      sort_var = sort_var_cs,
+      add_label_var_sl = add_label_var_sl_cs,
+      add_label_paramcd_rs = add_label_paramcd_rs_cs,
+      anno_txt_var_sl = anno_txt_var_sl_cs,
+      anno_txt_paramcd_rs = anno_txt_paramcd_rs_cs,
+      facet_var = facet_var_cs,
+      href_line = "-30, 20",
+      plot_height = c(1200, 400, 5000)
+    )
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          ytick_at = 20, gap_point_val = 15, href_line = 2, show_value = FALSE,
+        )
+        expect_no_error(session$returned())
+      }
+    )
+  })
+
+  it("works using picks", {
+    data <- within(teal_data(), {
+      library(nestcolor)
+      ADSL <- rADSL
+      ADRS <- rADRS
+      ADTR <- rADTR
+      ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+    mod <- tm_g_waterfall(
+      label = "Waterfall",
+      dataname_tr = "ADTR",
+      dataname_rs = "ADRS",
+      bar_paramcd = bar_paramcd_picks,
+      bar_var = bar_var_picks,
+      bar_color_var = bar_color_var_picks,
+      bar_color_opt = NULL,
+      sort_var = sort_var_picks,
+      add_label_var_sl = add_label_var_sl_picks,
+      add_label_paramcd_rs = add_label_paramcd_rs_picks,
+      anno_txt_var_sl = anno_txt_var_sl_picks,
+      anno_txt_paramcd_rs = anno_txt_paramcd_rs_picks,
+      facet_var = facet_var_picks,
+      href_line = "-30, 20",
+      plot_height = c(1200, 400, 5000)
+    )
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          ytick_at = 20, gap_point_val = 15, href_line = 2, show_value = FALSE,
+        )
+        expect_no_error(session$returned())
+      }
+    )
   })
 })

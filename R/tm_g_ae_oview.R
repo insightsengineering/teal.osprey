@@ -8,7 +8,7 @@
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
 #' @param flag_var_anl Either a ([`teal.transform::choices_selected`])
-#'   `choices_selected` object or a (`[teal.picks::variables()]`)
+#'   `choices_selected` object or a ([`teal.picks::variables()`])
 #'   object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
 #' @param dataname (`character(1)`) Name of the events dataset. Required when
@@ -18,35 +18,33 @@
 #' @inheritSection teal::example_module Reporting
 #'
 #' @examples
-#' data <- teal_data() %>%
-#'   within({
-#'     library(dplyr)
-#'     ADSL <- rADSL
-#'     ADAE <- rADAE
-#'     .add_event_flags <- function(dat) {
-#'       dat <- dat %>%
-#'         mutate(
-#'           TMPFL_SER = AESER == "Y",
-#'           TMPFL_REL = AEREL == "Y",
-#'           TMPFL_GR5 = AETOXGR == "5",
-#'           AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
-#'           AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
-#'         )
-#'       labels <- c(
-#'         "Serious AE", "Related AE", "Grade 5 AE",
-#'         "AE related to A: Drug X", "AE related to B: Placebo"
+#' data <- within(teal_data(), {
+#'   library(dplyr)
+#'   ADSL <- rADSL
+#'   ADAE <- rADAE
+#'   .add_event_flags <- function(dat) {
+#'     dat <- dat %>%
+#'       mutate(
+#'         TMPFL_SER = AESER == "Y",
+#'         TMPFL_REL = AEREL == "Y",
+#'         TMPFL_GR5 = AETOXGR == "5",
+#'         AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
+#'         AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
 #'       )
-#'       cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
-#'       for (i in seq_along(labels)) {
-#'         attr(dat[[cols[i]]], "label") <- labels[i]
-#'       }
-#'       dat
+#'     labels <- c(
+#'       "Serious AE", "Related AE", "Grade 5 AE",
+#'       "AE related to A: Drug X", "AE related to B: Placebo"
+#'     )
+#'     cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
+#'     for (i in seq_along(labels)) {
+#'       attr(dat[[cols[i]]], "label") <- labels[i]
 #'     }
-#'     ADAE <- .add_event_flags(ADAE)
-#'   })
+#'     dat
+#'   }
+#'   ADAE <- .add_event_flags(ADAE)
+#' })
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
-#' ADAE <- data[["ADAE"]]
-#' app <- init(
+#' app <- suppressWarnings(init(
 #'   data = data,
 #'   modules = modules(
 #'     tm_g_ae_oview(
@@ -59,11 +57,10 @@
 #'       flag_var_anl = variables(
 #'         choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
 #'         selected = "AEREL1"
-#'       ),
-#'       plot_height = c(600, 200, 2000)
+#'       )
 #'     )
 #'   )
-#' )
+#' ), classes = "picks_delayed")
 #' if (interactive()) {
 #'   shinyApp(app$ui, app$server)
 #' }
@@ -338,24 +335,32 @@ srv_g_ae_oview <- function(
         # Original variable name and dataset for arm_N calculation on the source dataset
         arm_var_orig <- selectors$arm_var()$variables$selected
         arm_dataset <- selectors$arm_var()$datasets$selected
-
-        shiny::validate(
-          shiny::need(
-            length(flag_var_name) > 0,
-            "A Flag Variable needs to be selected."
-          ),
-          shiny::need(
-            length(arm_var_name) > 0,
-            "An Arm Variable needs to be selected."
-          )
+        validate_input(
+          "flag_var_anl",
+          length(flag_var_name) > 0,
+          "A Flag Variable needs to be selected."
         )
 
-        validate(need(
+        validate_input(
+          "arm_var",
+          length(arm_var_name) > 0,
+          "An Arm Variable needs to be selected."
+        )
+
+        validate_input(
+          c("arm_trt", "arm_ref"),
           input$arm_trt %in%
             ANL[[arm_var_name]] &&
             input$arm_ref %in% ANL[[arm_var_name]],
           "Treatment or Control not found in Arm Variable. Perhaps they have been filtered out?"
-        ))
+        )
+
+        validate_input(
+          c("arm_trt", "arm_ref"),
+          input$arm_trt != input$arm_ref,
+          "Treatment and Control can't be the same."
+        )
+
         q1 <- qenv %>%
           teal.code::eval_code(
             code = as.expression(c(

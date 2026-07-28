@@ -48,19 +48,18 @@
 #' @inheritSection teal::example_module Reporting
 #'
 #' @examples
-#' data <- teal.data::teal_data() %>%
-#'   within({
-#'     library(nestcolor)
-#'     library(dplyr)
-#'     ADSL <- rADSL %>%
-#'       mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-#'       filter(STRATA1 == "A" & ARMCD == "ARM A")
-#'     ADRS <- rADRS %>%
-#'       filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-#'       mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-#'       rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-#'       arrange(USUBJID)
-#'   })
+#' data <- within(teal_data(), {
+#'   library(nestcolor)
+#'   library(dplyr)
+#'   ADSL <- rADSL %>%
+#'     mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+#'     filter(STRATA1 == "A" & ARMCD == "ARM A")
+#'   ADRS <- rADRS %>%
+#'     filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+#'     mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+#'     rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+#'     arrange(USUBJID)
+#' })
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
@@ -357,12 +356,12 @@ srv_g_swimlane <- function(id,
         "Vertical Reference Line(s) are invalid"
       )
       teal::validate_input(
-        "bar_var-variables-selected",
+        "bar_var",
         condition = !is.null(pick_selected("bar_var", selectors)),
         "Please select a bar length variable."
       )
       teal::validate_input(
-        "marker_pos_var-variables-selected",
+        "marker_pos_var",
         condition = !is.null(pick_selected("marker_pos_var", selectors))
       )
       obj

@@ -117,19 +117,18 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-data <- teal.data::teal_data() \%>\%
-  within({
-    library(nestcolor)
-    library(dplyr)
-    ADSL <- rADSL \%>\%
-      mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
-      filter(STRATA1 == "A" & ARMCD == "ARM A")
-    ADRS <- rADRS \%>\%
-      filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
-      mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
-      rbind(rADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
-      arrange(USUBJID)
-  })
+data <- within(teal_data(), {
+  library(nestcolor)
+  library(dplyr)
+  ADSL <- rADSL \%>\%
+    mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
+    filter(STRATA1 == "A" & ARMCD == "ARM A")
+  ADRS <- rADRS \%>\%
+    filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
+    mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
+    rbind(rADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+    arrange(USUBJID)
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 

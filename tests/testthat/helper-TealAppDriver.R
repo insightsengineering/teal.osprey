@@ -14,7 +14,7 @@ withr::local_options(
       default = Sys.getenv("SHINYTEST2_DURATION", unset = 0.5 * 1000)
     )
   ),
-  .local_envir = testthat::test_env()
+  .local_envir = test_env()
 )
 
 # Initialization function to create a new TealAppDriver object
@@ -23,7 +23,7 @@ withr::local_options(
 # this package and its "Depends".
 # Related to https://github.com/rstudio/shinytest2/issues/381
 init_teal_app_driver <- function(...) {
-  testthat::with_mocked_bindings(
+  with_mocked_bindings(
     {
       TealAppDriver <- getFromNamespace("TealAppDriver", "teal") # nolint: object_name_linter.
       TealAppDriver$new(...)

@@ -78,25 +78,22 @@
 #' @export
 #'
 #' @examples
-#' data <- teal_data() %>%
-#'   within({
-#'     library(nestcolor)
-#'     library(dplyr)
-#'     ADSL <- rADSL
-#'     ADAE <- rADAE %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-#'     ADCM <- rADCM %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-#'     # The step below is to pre-process ADCM to legacy standard
-#'     ADCM <- ADCM %>%
-#'       select(-starts_with("ATC")) %>%
-#'       unique()
-#'     ADRS <- rADRS %>% mutate(ADT = as.Date(ADTM))
-#'     ADEX <- rADEX %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-#'     ADLB <- rADLB %>% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
-#'   })
+#' data <- within(teal_data(), {
+#'   library(nestcolor)
+#'   library(dplyr)
+#'   ADSL <- rADSL
+#'   ADAE <- rADAE %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+#'   ADCM <- rADCM %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+#'   # The step below is to pre-process ADCM to legacy standard
+#'   ADCM <- ADCM %>%
+#'     select(-starts_with("ATC")) %>%
+#'     unique()
+#'   ADRS <- rADRS %>% mutate(ADT = as.Date(ADTM))
+#'   ADEX <- rADEX %>% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+#'   ADLB <- rADLB %>% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
+#' })
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
-#'
-#' ADSL <- data[["ADSL"]]
 #'
 #' app <- init(
 #'   data = data,
@@ -104,8 +101,8 @@
 #'     tm_g_patient_profile(
 #'       label = "Patient Profile Plot",
 #'       patient_id = variables(
-#'         choices = unique(ADSL$USUBJID),
-#'         selected = unique(ADSL$USUBJID)[1]
+#'         choices = "USUBJID",
+#'         selected = "USUBJID"
 #'       ),
 #'       sl_dataname = "ADSL",
 #'       ex_dataname = "ADEX",
@@ -486,103 +483,96 @@ srv_g_patient_profile <- function(id,
 
         teal::validate_input(
           "select_ADaM",
-          condition = function(x) length(x) > 0L,
+          condition = length(input$select_ADaM) > 0L,
           message = "At least one ADaM data set is required"
         )
         if (isTRUE(select_plot()[lb_dataname])) {
           teal::validate_input(
             "lb_var_show",
-            condition = function(x) length(x) > 0L,
-            message = "At least one Lab value is required"
+            length(input$lb_var_show) > 0L,
+            "At least one Lab value is required"
           )
         }
         teal::validate_input(
           "x_limit",
-          condition = function(x) length(x) == 1L && nzchar(trimws(x)),
-          message = "Study Days Range is required"
+          length(input$x_limit) == 1L && nzchar(trimws(input$x_limit)),
+          "Study Days Range is required"
         )
         teal::validate_input(
           "x_limit",
-          condition = function(x) {
-            vals <- suppressWarnings(as_numeric_from_comma_sep_str(x))
-            !anyNA(vals)
-          },
-          message = "Study Days Range is invalid"
+          !anyNA(suppressWarnings(as_numeric_from_comma_sep_str(input$x_limit))),
+          "Study Days Range is invalid"
         )
         teal::validate_input(
           "x_limit",
-          condition = function(x) length(suppressWarnings(as_numeric_from_comma_sep_str(x))) == 2L,
-          message = "Study Days Range must be two values"
+          length(suppressWarnings(as_numeric_from_comma_sep_str(input$x_limit))) == 2L,
+          "Study Days Range must be two values"
         )
         teal::validate_input(
           "x_limit",
-          condition = function(x) {
-            identical(order(suppressWarnings(as_numeric_from_comma_sep_str(x))), 1:2)
-          },
+          identical(order(suppressWarnings(as_numeric_from_comma_sep_str(input$x_limit))), 1:2),
           message = "Study Days Range mut be: first lower, then upper limit"
         )
 
         teal::validate_input(
-          "patient_id-values-selected",
+          "patient_id",
           condition = !is.null(patient_id_selected),
           message = "Patient ID is required."
         )
         teal::validate_input(
-          "sl_start_date-variables-selected",
+          "sl_start_date",
           condition = !is.null(sl_start_date_selected),
           message = "Date variable is required."
         )
         if (isTRUE(select_plot()[ex_dataname])) {
           teal::validate_input(
-            "ex_var-variables-selected",
+            "ex_var",
             condition = !is.null(ex_var_selected),
             message = "Exposure variable is required."
           )
         }
         if (isTRUE(select_plot()[ae_dataname])) {
           teal::validate_input(
-            "ae_var-variables-selected",
+            "ae_var",
             condition = !is.null(ae_var_selected),
             message = "Adverse Event variable is required."
           )
         }
         if (isTRUE(select_plot()[rs_dataname])) {
           teal::validate_input(
-            "rs_var-variables-selected",
+            "rs_var",
             condition = !is.null(rs_var_selected),
             message = "Tumor response variable is required."
           )
         }
         if (isTRUE(select_plot()[cm_dataname])) {
           teal::validate_input(
-            "cm_var-variables-selected",
+            "cm_var",
             condition = !is.null(cm_var_selected),
             message = "Concomitant medicine variable is required."
           )
         }
         if (isTRUE(select_plot()[lb_dataname])) {
           teal::validate_input(
-            "lb_var-variables-selected",
+            "lb_var",
             condition = !is.null(lb_var_selected),
             message = "Lab variable is required.",
           )
           teal::validate_input(
             "lb_var_show",
-            condition = function(x) length(x) > 0L,
+            condition = length(input$lb_var_show) > 0L,
             message = "At least one Lab value is required."
           )
           teal::validate_input(
-            c("lb_var-variables-selected", "lb_var_show"),
-            condition = function(lb_var, lb_var_show) !isTRUE(any(lb_var == lb_var_show)),
+            c("lb_var", "lb_var_show"),
+            condition = !isTRUE(any(input$lb_var == input$lb_var_show)),
             message = "Lab variable and Lab value must be different"
           )
         }
         if (isTRUE(select_plot()[ae_dataname]) && length(ae_line_col_var_selected) > 0L && !is.null(ae_line_col_opt)) {
           teal::validate_input(
-            "ae_line_col_var-variables-selected",
-            condition = function(x) {
-              length(levels(obj[[ae_dataname]][[ae_line_col_var_selected]])) <= length(ae_line_col_opt)
-            },
+            "ae_line_col_var",
+            length(levels(obj[[ae_dataname]][[ae_line_col_var_selected]])) <= length(ae_line_col_opt),
             message = "Not enough colors provided for Adverse Event line color, unselect"
           )
         }
@@ -676,8 +666,8 @@ srv_g_patient_profile <- function(id,
 
         # ADSL with single subject
         teal::validate_input(
-          "patient_id-values-selected",
-          condition = function(x) nrow(q1[["ADSL"]]) >= 1,
+          "patient_id",
+          condition = nrow(q1[["ADSL"]]) >= 1,
           message = paste(
             "Subject",
             patient_id_selected,
@@ -964,7 +954,7 @@ srv_g_patient_profile <- function(id,
 
         teal::validate_input(
           "select_ADaM",
-          condition = function(x) any(!empty_data_check & select_plot()),
+          condition = any(!empty_data_check & select_plot()),
           message = "The subject does not have information in any selected domain."
         )
 

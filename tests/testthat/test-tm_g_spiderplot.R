@@ -1,6 +1,6 @@
 paramcd_cs <- teal.transform::choices_selected(
-  choices = "SLDINV",
-  selected = "SLDINV"
+  choices = "PARAMCD",
+  selected = "PARAMCD"
 )
 
 x_var_cs <- teal.transform::choices_selected(
@@ -33,44 +33,44 @@ yfacet_var_cs <- teal.transform::choices_selected(
   selected = "ARM",
 )
 
-paramcd_picks <- teal.picks::variables(
+paramcd_picks <- variables(
   choices = "PARAMCD",
   selected = "PARAMCD"
 )
 
-x_var_picks <- teal.picks::variables(
+x_var_picks <- variables(
   choices = c("ADY", "AGE"),
   selected = "ADY",
 )
 
-y_var_picks <- teal.picks::variables(
+y_var_picks <- variables(
   choices = c("PCHG", "CHG", "AVAL"),
   selected = "PCHG"
 )
 
-marker_var_picks <- teal.picks::variables(
+marker_var_picks <- variables(
   choices = c("SEX", "RACE", "USUBJID"),
   selected = "SEX"
 )
 
-line_colorby_var_picks <- teal.picks::variables(
+line_colorby_var_picks <- variables(
   choices = c("SEX", "USUBJID", "RACE"),
   selected = "SEX"
 )
 
-xfacet_var_picks <- teal.picks::variables(
+xfacet_var_picks <- variables(
   choices = c("SEX", "ARM"),
   selected = "SEX"
 )
 
-yfacet_var_picks <- teal.picks::variables(
+yfacet_var_picks <- variables(
   choices = c("SEX", "ARM"),
   selected = "ARM"
 )
 
-testthat::describe("tm_g_spiderplot argument verification", {
-  testthat::it("plot arguments input validation", {
-    testthat::expect_error(
+describe("tm_g_spiderplot argument verification", {
+  it("plot arguments input validation", {
+    expect_error(
       {
         suppressWarnings(
           tm_g_spiderplot(
@@ -87,13 +87,13 @@ testthat::describe("tm_g_spiderplot argument verification", {
             href_line = "-20, 0",
             plot_height = c(600, 2000, 200)
           ),
-          classes = "picks_delayed"
+          classes = c("picks_delayed", "lifecycle_warning_deprecated")
         )
       },
       "Assertion on 'plot_height' failed"
     )
 
-    testthat::expect_error(
+    expect_error(
       {
         suppressWarnings(
           tm_g_spiderplot(
@@ -110,22 +110,22 @@ testthat::describe("tm_g_spiderplot argument verification", {
             href_line = "-20, 0",
             plot_width = c(600, 2000, 200)
           ),
-          classes = "picks_delayed"
+          classes = c("picks_delayed", "lifecycle_warning_deprecated")
         )
       },
       "Assertion on 'plot_width' failed"
     )
   })
 
-  testthat::it("Forcing Conversion from multiple picks to single", {
-    testthat::expect_warning(
+  it("Forcing Conversion from multiple picks to single", {
+    expect_warning(
       {
         suppressWarnings(
           tm_g_spiderplot(
             label = "Spider Plot",
             dataname = "ADTR",
             paramcd = paramcd_cs,
-            x_var = teal.picks::variables(
+            x_var = variables(
               choices = c("ADY", "AGE"),
               selected = "ADY",
               multiple = TRUE
@@ -144,13 +144,13 @@ testthat::describe("tm_g_spiderplot argument verification", {
       "`x_var` accepts only a single variable selection"
     )
 
-    testthat::expect_warning(
+    expect_warning(
       {
         suppressWarnings(
           tm_g_spiderplot(
             label = "Spider Plot",
             dataname = "ADTR",
-            paramcd = teal.picks::variables(
+            paramcd = variables(
               choices = "PARAMCD",
               selected = "PARAMCD",
               multiple = TRUE
@@ -172,8 +172,8 @@ testthat::describe("tm_g_spiderplot argument verification", {
   })
 })
 
-testthat::describe("tm_g_spiderplot module creation", {
-  testthat::it("creates a teal module using choices_selected (default method)", {
+describe("tm_g_spiderplot module creation", {
+  it("creates a teal module using choices_selected (default method)", {
     mod <- suppressWarnings(
       tm_g_spiderplot(
         label = "Spider Plot",
@@ -189,12 +189,12 @@ testthat::describe("tm_g_spiderplot module creation", {
         href_line = "-20, 0",
         plot_height = c(600, 200, 2000)
       ),
-      classes = "picks_delayed"
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
   })
 
-  testthat::it("creates a teal module using picks (.pick method)", {
+  it("creates a teal module using picks (.pick method)", {
     mod <- suppressWarnings(
       tm_g_spiderplot(
         label = "Spider Plot",
@@ -212,6 +212,84 @@ testthat::describe("tm_g_spiderplot module creation", {
       ),
       classes = "picks_delayed"
     )
-    testthat::expect_s3_class(mod, "teal_module")
+    expect_s3_class(mod, "teal_module")
+  })
+
+  it("module using choices_selected works", {
+    mod <- suppressWarnings(
+      tm_g_spiderplot(
+        label = "Spider Plot",
+        dataname = "ADTR",
+        paramcd = paramcd_cs,
+        x_var = x_var_cs,
+        y_var = y_var_cs,
+        marker_var = marker_var_cs,
+        line_colorby_var = line_colorby_var_cs,
+        xfacet_var = xfacet_var_cs,
+        yfacet_var = yfacet_var_cs,
+        vref_line = "10, 37",
+        href_line = "-20, 0"
+      ),
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
+    )
+
+    data <- within(teal_data(), {
+      ADSL <- teal.data::rADSL
+      ADTR <- teal.data::rADTR
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+    # Removed rows mcontaining missing values or values outside the scale range
+    expect_warning(
+      testServer(
+        mod$server,
+        args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+        expr = {
+          session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE)
+          expect_no_error(session$returned())
+        }
+      ),
+      regexp = "rows containing missing values or values outside the scale range"
+    )
+  })
+
+  it("module using picks works", {
+    mod <- suppressWarnings(
+      tm_g_spiderplot(
+        label = "Spider Plot",
+        dataname = "ADTR",
+        paramcd = paramcd_picks,
+        x_var = x_var_picks,
+        y_var = y_var_picks,
+        marker_var = marker_var_picks,
+        line_colorby_var = line_colorby_var_picks,
+        xfacet_var = xfacet_var_picks,
+        yfacet_var = yfacet_var_picks,
+        vref_line = "10, 37",
+        href_line = "-20, 0",
+        plot_height = c(600, 200, 2000)
+      ),
+      classes = "picks_delayed"
+    )
+
+    data <- within(teal_data(), {
+      ADSL <- teal.data::rADSL
+      ADTR <- teal.data::rADTR
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+    expect_warning(
+      testServer(
+        mod$server,
+        args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+        expr = {
+          session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE)
+          expect_no_error(session$returned())
+        }
+      ),
+      regexp = "rows containing missing values or values outside the scale range"
+    )
   })
 })

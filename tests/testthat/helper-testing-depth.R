@@ -44,6 +44,6 @@ skip_if_too_deep <- function(depth) { # nolint: object_name_linter.
   checkmate::assert_numeric(depth, len = 1, lower = 0, upper = 5)
   testing_depth <- get_testing_depth() # by default 3 if there are no env variable
   if (testing_depth < depth) {
-    testthat::skip(paste("testing depth", testing_depth, "is below current testing specification", depth))
+    skip(paste("testing depth", testing_depth, "is below current testing specification", depth))
   }
 }
