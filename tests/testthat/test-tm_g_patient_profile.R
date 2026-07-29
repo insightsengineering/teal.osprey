@@ -14,8 +14,8 @@ patient_id_picks <- teal.picks::variables(
 )
 
 sl_start_date_picks <- teal.picks::variables(
-  selected = "TRTSDTM",
-  choices = c("TRTSDTM", "RANDDT")
+  choices = c("TRTSDTM", "RANDDT"),
+  selected = "TRTSDTM"
 )
 
 ex_var_cs <- teal.transform::choices_selected(
