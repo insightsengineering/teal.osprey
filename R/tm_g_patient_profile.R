@@ -972,6 +972,13 @@ srv_g_patient_profile <- function(id,
 
       q1 <- if (isTRUE(select_plot()[lb_dataname])) {
         if (all(ADLB$USUBJID %in% ADSL$USUBJID)) {
+          adlb_vars <- unique(c(
+            "USUBJID", "STUDYID", "ANRIND", "LBSEQ",
+            "PARAMCD", "BASETYPE", "ADT", "AVISITN",
+            "LBSTRESN", "LBCAT", "LBTESTCD",
+            lb_var_selected
+          ))
+
           qq <- teal.code::eval_code(
             q1,
             code = substitute(
