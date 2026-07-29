@@ -59,15 +59,9 @@
 #'
 tm_g_events_term_id <- function(label,
                                 dataname,
-<<<<<<< Updated upstream
                                 parentname,
-                                term_var,
-                                arm_var,
-=======
-                                parent_dataname,
                                 term_var = teal.picks::variables(dplyr::starts_with("AE")),
                                 arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
->>>>>>> Stashed changes
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
                                 plot_width = NULL,
