@@ -155,7 +155,9 @@ describe("tm_g_patient_profile module creation", {
     )
     expect_s3_class(mod, "teal_module")
   })
+})
 
+describe("tm_g_patient_profile module works using", {
   data <- within(teal_data(), {
     library(nestcolor)
     library(dplyr)
@@ -173,7 +175,7 @@ describe("tm_g_patient_profile module creation", {
 
   join_keys(data) <- default_cdisc_join_keys[names(data)]
 
-  it("works using choices_selected", {
+  it("choices_selected", {
     mod <- suppressWarnings(
       tm_g_patient_profile(
         label = "Patient Profile Plot",
@@ -200,7 +202,7 @@ describe("tm_g_patient_profile module creation", {
     )
   })
 
-  it("works using teal.picks variables", {
+  it("teal.picks", {
     mod <- suppressWarnings(tm_g_patient_profile(
       label = "Patient Profile Plot",
       patient_id = patient_id_picks,
