@@ -63,7 +63,7 @@ describe("tm_swimlane input validation", {
     )
   })
 
-  it("fails if bar_var is not the expected class", {
+  it("fails bar_var is not the expected class", {
     expect_error(
       {
         mod <- tm_g_swimlane(
@@ -138,26 +138,22 @@ describe("tm_g_swimlane module creation", {
     expect_s3_class(mod, "teal_module")
     expect_identical(mod$server, srv_g_swimlane)
   })
-})
-
-testthat::describe("test for server module function", {
-  data <- within(teal_data(), {
-    library(nestcolor)
-    library(dplyr)
-    ADSL <- rADSL %>%
-      mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-      filter(STRATA1 == "A" & ARMCD == "ARM A")
-    ADRS <- rADRS %>%
-      filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-      mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-      rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-      arrange(USUBJID)
-  })
-
-  join_keys(data) <- default_cdisc_join_keys[names(data)]
-
 
   it("works using teal.picks", {
+    data <- within(teal_data(), {
+      library(nestcolor)
+      library(dplyr)
+      ADSL <- rADSL %>%
+        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+        filter(STRATA1 == "A" & ARMCD == "ARM A")
+      ADRS <- rADRS %>%
+        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+        arrange(USUBJID)
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
     mod <- tm_g_swimlane(
       label = "Test - Swimlane",
       dataname = dataname,
@@ -187,6 +183,21 @@ testthat::describe("test for server module function", {
   })
 
   it("works with (optionally) NULL argument as module argument", {
+    data <- within(teal_data(), {
+      library(nestcolor)
+      library(dplyr)
+      ADSL <- rADSL %>%
+        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+        filter(STRATA1 == "A" & ARMCD == "ARM A")
+      ADRS <- rADRS %>%
+        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+        arrange(USUBJID)
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
     mod <- tm_g_swimlane(
       label = "Test - Swimlane",
       dataname = dataname,
@@ -216,6 +227,21 @@ testthat::describe("test for server module function", {
   })
 
   it("works using choices_selected", {
+    data <- within(teal_data(), {
+      library(nestcolor)
+      library(dplyr)
+      ADSL <- rADSL %>%
+        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+        filter(STRATA1 == "A" & ARMCD == "ARM A")
+      ADRS <- rADRS %>%
+        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+        arrange(USUBJID)
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
     suppressWarnings({
       mod <- tm_g_swimlane(
         label = "Test - Swimlane",
