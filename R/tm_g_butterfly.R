@@ -7,22 +7,40 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param filter_var ([`teal.picks::variables()`]) object with variable name of
-#'   data filter, please see details regarding expected values, default is `NULL`
-#' @param right_var ([`teal.picks::variables()`]) object with dichotomization
-#'   variable for right side
-#' @param left_var ([`teal.picks::variables()`]) object with dichotomization
-#'   variable for left side
-#' @param category_var ([`teal.picks::variables()`]) object with category
-#'   (y axis) variable
-#' @param color_by_var ([`teal.picks::variables()`]) object with variable that
-#'   defines color blocks within each bar
-#' @param count_by_var ([`teal.picks::values()`]) object with variable that
-#'   defines how the x axis is calculated
-#' @param facet_var ([`teal.picks::variables()`]) object with variable for row
-#'   facets
-#' @param sort_by_var ([`teal.picks::values()`]) object with argument for order
-#'   of class and term elements in table, default here is `"count"`
+#' @param filter_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with variable name of data filter, please see details regarding expected values,
+#'   default is `NULL`.
+#' @param right_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with dichotomization variable for the right side.
+#' @param left_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with dichotomization variable for the left side.
+#' @param category_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with category (y-axis) variable.
+#' @param color_by_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with variable that defines color blocks within each bar.
+#' @param count_by_var Either a ([`teal.picks::values()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with variable that defines how the x axis is calculated.
+#' @param facet_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with variable for row facets.
+#' @param sort_by_var Either a ([`teal.picks::values()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with argument for order of class and term elements in table,
+#'   default here is `"count"`.
 #' @param legend_on (`boolean`) value for whether legend is displayed
 #'
 #' @details `filter_var` option is designed to work in conjunction with
@@ -108,11 +126,14 @@
 tm_g_butterfly <- function(label,
                            dataname,
                            filter_var = NULL,
-                           right_var,
-                           left_var,
-                           category_var,
-                           color_by_var,
-                           count_by_var,
+                           right_var = teal.picks::variables(teal.picks::is_categorical()),
+                           left_var = teal.picks::variables(teal.picks::is_categorical()),
+                           category_var = teal.picks::variables(teal.picks::is_categorical()),
+                           color_by_var = teal.picks::variables(dplyr::starts_with("AETO")),
+                           count_by_var = values(
+                             choices = c("# of patients", "# of AEs"),
+                             selected = "# of patients"
+                           ),
                            facet_var = NULL,
                            sort_by_var = teal.picks::values(
                              choices = c("count", "alphabetical"),
@@ -194,7 +215,7 @@ ui_g_butterfly <- function(id,
                            sort_by_var,
                            legend_on,
                            pre_output,
-                           post_output) { # nolint: object_name_linter.
+                           post_output) {
   ns <- NS(id)
 
   teal.widgets::standard_layout(
@@ -274,9 +295,7 @@ ui_g_butterfly <- function(id,
   )
 }
 
-# nolint start: object_name_linter.
 srv_g_butterfly <- function(
-  # nolint end: object_name_linter.
   id,
   data,
   right_var,

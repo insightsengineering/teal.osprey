@@ -7,10 +7,12 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param term_var Either a ([`teal.picks::variables()`]) object or
-#' a ([`teal.transform::choices_selected`]) `choices_selected` object with all available choices
-#' and pre-selected option names that can be used to specify the term for events
-#' @param parent_dataname (`character(1)`)\cr
+#' @param term_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with all available choices and pre-selected option names that can be used
+#'   to specify the term for events.
+#' @param parentname (`character(1)`)\cr
 #'  analysis data used form arm_var in the teal module, needs to be
 #'  available in the list passed to the `data` argument of [teal::init()].
 #' @inherit argument_convention return
@@ -35,7 +37,7 @@
 #'     tm_g_events_term_id(
 #'       label = "Common AE",
 #'       dataname = "ADAE",
-#'       parent_dataname = "ADSL",
+#'       parentname = "ADSL",
 #'       term_var = variables(
 #'         choices = c(
 #'           "AEDECOD", "AETERM",
@@ -57,9 +59,15 @@
 #'
 tm_g_events_term_id <- function(label,
                                 dataname,
-                                parent_dataname,
+<<<<<<< Updated upstream
+                                parentname,
                                 term_var,
                                 arm_var,
+=======
+                                parent_dataname,
+                                term_var = teal.picks::variables(dplyr::starts_with("AE")),
+                                arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
+>>>>>>> Stashed changes
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
                                 plot_width = NULL,
@@ -67,13 +75,13 @@ tm_g_events_term_id <- function(label,
   message("Initializing tm_g_events_term_id")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
-  checkmate::assert_string(parent_dataname)
+  checkmate::assert_string(parentname)
 
   term_var <- migrate_choices_selected_to_variables(term_var)
   arm_var <- migrate_choices_selected_to_variables(arm_var)
 
   term_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), term_var)
-  arm_var <- create_picks_helper(teal.picks::datasets(parent_dataname, parent_dataname), arm_var)
+  arm_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), arm_var)
 
   term_var <- force_pick_selection(term_var, "term_var")
   arm_var <- force_pick_selection(arm_var, "arm_var")
@@ -207,7 +215,7 @@ ui_g_events_term_id <- function(id,
 srv_g_events_term_id <- function(id,
                                  data,
                                  dataname,
-                                 parent_dataname,
+                                 parentname,
                                  label,
                                  term_var,
                                  arm_var,
@@ -376,7 +384,7 @@ srv_g_events_term_id <- function(id,
             term = ANL[[term_var_name]],
             id = ANL$USUBJID,
             arm = ANL[[arm_var_name]],
-            arm_N = table(parent_dataname[[arm_var_orig]]),
+            arm_N = table(parentname[[arm_var_orig]]),
             ref = arm_ref,
             trt = arm_trt,
             sort_by = sort_by,
@@ -392,7 +400,7 @@ srv_g_events_term_id <- function(id,
         },
         term_var_name = term_var_name,
         arm_var_name = arm_var_name,
-        parent_dataname = as.name(parent_dataname),
+        parentname = as.name(parentname),
         arm_var_orig = arm_var_orig,
         arm_ref = input$arm_ref,
         arm_trt = input$arm_trt,

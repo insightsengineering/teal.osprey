@@ -3,7 +3,7 @@ describe("tm_g_events_term_id module creation", {
     mod <- suppressWarnings(tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
-      parent_dataname = "ADSL",
+      parentname = "ADSL",
       term_var = choices_selected(
         selected = "AEDECOD",
         choices = c(
@@ -26,7 +26,7 @@ describe("tm_g_events_term_id module creation", {
     mod <- suppressWarnings(tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
-      parent_dataname = "ADSL",
+      parentname = "ADSL",
       term_var = picks(
         datasets("ADAE"),
         variables(
@@ -58,7 +58,7 @@ describe("tm_g_events_term_id module creation", {
     mod <- suppressWarnings(tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
-      parent_dataname = "ADSL",
+      parentname = "ADSL",
       term_var = choices_selected(
         selected = "AEDECOD",
         choices = c(
@@ -93,7 +93,7 @@ describe("tm_g_events_term_id module creation", {
     mod <- suppressWarnings(tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
-      parent_dataname = "ADSL",
+      parentname = "ADSL",
       term_var = picks(
         datasets("ADAE"),
         variables(
@@ -150,7 +150,7 @@ test_that("tm_g_events_term_id coerces multiple variable selection", {
     tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
-      parent_dataname = "ADSL",
+      parentname = "ADSL",
       term_var = term_var,
       arm_var = arm_var
     ),

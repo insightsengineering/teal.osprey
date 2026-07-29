@@ -7,13 +7,11 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param flag_var_anl Either a ([`teal.transform::choices_selected`])
-#'   `choices_selected` object or a ([`teal.picks::variables()`])
-#'   object with variables used to count adverse event
+#' @param flag_var_anl Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
-#' @param dataname (`character(1)`) Name of the events dataset. Required when
-#'   using the default method with [choices_selected][teal.transform::choices_selected()].
-#'   Ignored by the `.picks` method.
 #' @inherit argument_convention return
 #' @inheritSection teal::example_module Reporting
 #'
@@ -68,8 +66,8 @@
 tm_g_ae_oview <- function(
   label,
   dataname,
-  arm_var,
-  flag_var_anl,
+  arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
+  flag_var_anl = teal.picks::variables(dplyr::matches("^(TMPFL|AEREL[1-9])")),
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,

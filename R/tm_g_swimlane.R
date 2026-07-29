@@ -3,7 +3,6 @@
 #' @description
 #'
 #' This is a teal module that generates a `swimlane` plot (bar plot with markers) for `ADaM` data
-#' using [teal.picks::variables()] encodings.
 #'
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
@@ -11,33 +10,40 @@
 #' @param dataname (`character(1)`)\cr
 #'   analysis data used for markers. Use `"ADSL"` when no markers are plotted.
 #' @param bar_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Subject-level numeric variable for bar length (from `parentname`).
 #' @param parentname (`character(1)`)\cr
 #'  analysis data used for several variables in the teal module, needs to be
 #'  available in the list passed to the `data` argument of [teal::init()]. The default is
 #' `"ADSL"`
 #' @param bar_color_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Subject-level color variable from `parentname`.
 #' @param sort_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Subject-level sort variable from `parentname`.
 #' @param marker_pos_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Marker position variable from `dataname`).
 #' @param marker_shape_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Marker shape variable from `dataname`.
 #' @param marker_shape_opt (`numeric`)\cr
 #'   Named vector mapping shape values to ggplot shapes.
 #' @param marker_color_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Marker color variable from `dataname`.
 #' @param marker_color_opt (`character`)\cr
 #'   Named vector mapping color values to colors.
 #' @param anno_txt_var Either a ([`teal.picks::variables()`]) object or a
-#'   ([`teal.transform::choices_selected`]) `choices_selected` object,
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Subject-level annotation variables from `parentname` (multiple selection allowed).
 #' @param vref_line (`numeric`)\cr
 #'   Vertical reference lines.
