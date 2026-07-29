@@ -46,20 +46,23 @@ describe("tm_g_patient_profile input validation", {
       "Assertion on 'plot_height' failed"
     )
 
-    expect_error(
-      {
-        suppressWarnings(
-          tm_g_patient_profile(
-            label = "Patient Profile Plot",
-            patient_id = patient_id_cs,
-            sl_dataname = "ADSL",
-            sl_start_date = sl_start_date_cs,
-            plot_width = c(1200, 5000, 400)
-          ),
-          classes = "picks_delayed"
-        )
-      },
-      "Assertion on 'plot_width' failed"
+    expect_warning(
+      expect_error(
+        {
+          suppressWarnings(
+            tm_g_patient_profile(
+              label = "Patient Profile Plot",
+              patient_id = patient_id_cs,
+              sl_dataname = "ADSL",
+              sl_start_date = sl_start_date_cs,
+              plot_width = c(1200, 5000, 400)
+            ),
+            classes = "picks_delayed"
+          )
+        },
+        "Assertion on 'plot_width' failed"
+      ),
+      "is deprecated"
     )
   })
 
@@ -105,25 +108,51 @@ describe("tm_g_patient_profile input validation", {
 })
 
 describe("tm_g_patient_profile module creation", {
+  it("fails without datanames", {
+    expect_error(
+      suppressWarnings(
+        tm_g_patient_profile(
+          label = "Patient Profile Plot",
+          patient_id = patient_id_cs,
+          sl_dataname = "ADSL",
+          sl_start_date = sl_start_date_cs,
+          plot_height = c(1200, 400, 5000)
+        ),
+        classes = c("picks_delayed", "lifecycle_warning_deprecated")
+      ),
+      "Please specify some datanames."
+    )
+  })
+
   it("creates a teal module using choices_selected", {
-    mod <- suppressWarnings(tm_g_patient_profile(
-      label = "Patient Profile Plot",
-      patient_id = patient_id_cs,
-      sl_dataname = "ADSL",
-      sl_start_date = sl_start_date_cs,
-      plot_height = c(1200, 400, 5000)
-    ), classes = c("picks_delayed", "lifecycle_warning_deprecated"))
+    mod <- suppressWarnings(
+      tm_g_patient_profile(
+        label = "Patient Profile Plot",
+        patient_id = patient_id_cs,
+        sl_dataname = "ADSL",
+        ex_dataname = "ADEX",
+        ex_var = ex_var_cs,
+        sl_start_date = sl_start_date_cs,
+        plot_height = c(1200, 400, 5000)
+      ),
+      classes = c("picks_delayed", "lifecycle_warning_deprecated")
+    )
     expect_s3_class(mod, "teal_module")
   })
 
   it("creates a teal module using teal.picks variables", {
-    mod <- suppressWarnings(tm_g_patient_profile(
-      label = "Patient Profile Plot",
-      patient_id = patient_id_picks,
-      sl_dataname = "ADSL",
-      sl_start_date = sl_start_date_picks,
-      plot_height = c(1200, 400, 5000)
-    ), classes = "picks_delayed")
+    mod <- suppressWarnings(
+      tm_g_patient_profile(
+        label = "Patient Profile Plot",
+        patient_id = patient_id_picks,
+        sl_dataname = "ADSL",
+        ex_dataname = "ADEX",
+        ex_var = ex_var_picks,
+        sl_start_date = sl_start_date_picks,
+        plot_height = c(1200, 400, 5000)
+      ),
+      classes = "picks_delayed"
+    )
     expect_s3_class(mod, "teal_module")
   })
 
