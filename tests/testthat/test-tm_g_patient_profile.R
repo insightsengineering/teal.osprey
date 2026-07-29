@@ -46,8 +46,8 @@ describe("tm_g_patient_profile input validation", {
       "Assertion on 'plot_height' failed"
     )
 
-    expect_warning(
-      expect_error(
+    expect_error(
+      expect_warning(
         {
           suppressWarnings(
             tm_g_patient_profile(
@@ -60,9 +60,9 @@ describe("tm_g_patient_profile input validation", {
             classes = "picks_delayed"
           )
         },
-        "Assertion on 'plot_width' failed"
+        "is deprecated"
       ),
-      "is deprecated"
+      "Assertion on 'plot_width' failed"
     )
   })
 
