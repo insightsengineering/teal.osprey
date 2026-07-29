@@ -39,26 +39,38 @@ needs to be available in the list passed to the \code{data}
 argument of \code{\link[teal:init]{teal::init()}} \cr
 specify to \code{NA} if no concomitant medications data is available}
 
-\item{id_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) unique subject ID variable}
+\item{id_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Unique subject ID variable.}
 
-\item{visit_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) analysis visit variable}
+\item{visit_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Analysis visit variable.}
 
-\item{ongo_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) study ongoing status variable.
+\item{ongo_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Study ongoing status variable.
 This variable is a derived logical variable. Usually it can be derived from \code{EOSSTT}.}
 
-\item{anno_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) annotation variable}
+\item{anno_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Annotation variable.}
 
-\item{heat_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) heatmap variable}
+\item{heat_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Heatmap variable.}
 
 \item{cm_dataname}{(\code{character}) concomitant medications dataset name,}
 
-\item{conmed_var}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) concomitant medications variable,
+\item{conmed_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Concomitant medications variable,
 specify to \code{NA} if no concomitant medications data is available}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr

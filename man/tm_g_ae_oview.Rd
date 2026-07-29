@@ -19,18 +19,21 @@ tm_g_ae_oview(
 \item{label}{(\code{character(1)}) Label shown in the navigation item for the module or module group.
 For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
-\item{dataname}{(\code{character(1)}) Name of the events dataset. Required when
-using the default method with \link[teal.transform:choices_selected]{choices_selected}.
-Ignored by the \code{.picks} method.}
+\item{dataname}{(\code{character(1)})\cr
+analysis data used in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{arm_var}{(\code{choices_selected})\cr
-object with all available choices and the pre-selected option for variable
-names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
-details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
+\item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Object with all available choices and the pre-selected option for variable
+names that can be used as \code{arm_var}. Column \code{arm_var} in the \code{dataname}
+has to be a factor.}
 
-\item{flag_var_anl}{Either a (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object or a (\code{\link[teal.picks:variables]{teal.picks::variables()}})
-object with variables used to count adverse event
+\item{flag_var_anl}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr

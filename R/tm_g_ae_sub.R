@@ -7,8 +7,10 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param arm_var ([`teal.picks::variables()`]) object with variable of the arm.
-#' @param group_var ([`teal.picks::variables()`]) object with  subgroups variables.
+#' @param group_var Either a ([`teal.picks::variables()`]) object or a
+#'   ([`teal.transform::choices_selected()`]) object.
+#'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
+#'   Object with subgroup variables.
 #'
 #' @author Liming Li (Lil128) \email{liming.li@roche.com}
 #' @author Molly He (hey59) \email{hey59@gene.com}
