@@ -7,8 +7,8 @@
 tm_g_ae_sub(
   label,
   dataname,
-  arm_var,
-  group_var,
+  arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
+  group_var = teal.picks::variables(teal.picks::is_categorical()),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
   fontsize = c(5, 3, 7),

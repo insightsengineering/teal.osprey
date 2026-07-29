@@ -6,7 +6,8 @@
 \usage{
 tm_g_patient_profile(
   label = "Patient Profile Plot",
-  patient_id,
+  patient_id = teal.picks::variables(choices = dplyr::starts_with("USUBJ"), selected =
+    1L),
   sl_dataname,
   ex_dataname = NA,
   ae_dataname = NA,

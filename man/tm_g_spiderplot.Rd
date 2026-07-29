@@ -7,11 +7,13 @@
 tm_g_spiderplot(
   label,
   dataname,
-  paramcd,
-  x_var,
-  y_var,
-  marker_var,
-  line_colorby_var,
+  paramcd = teal.picks::variables(choices = dplyr::starts_with("PARAMCD"), selected = 1L),
+  x_var = teal.picks::variables(choices = dplyr::where(is.numeric), selected = 1L),
+  y_var = teal.picks::variables(choices = teal.picks::is_categorical(), selected = 1L),
+  marker_var = teal.picks::variables(choices = teal.picks::is_categorical(), selected =
+    1L),
+  line_colorby_var = teal.picks::variables(choices = teal.picks::is_categorical(),
+    selected = 1L),
   xfacet_var = NULL,
   yfacet_var = NULL,
   vref_line = NULL,
