@@ -72,11 +72,10 @@ To learn more check \code{vignette("transform-input-data", package = "teal")}.}
 
 \item{decorators}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 (named \code{list} of \code{teal_transform_module}) optional,
-decorators for the module \code{plot} output. See \link{decorate_module_section} for which
-object types are supported per module.}
+decorators for the module \code{plot} output.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display butterfly plot as a shiny module
@@ -96,60 +95,28 @@ used directly as filter.
 \section{Decorating Module}{
 
 
-All \code{teal.osprey} plot modules expose a single decoratable output object named \code{plot}.
-Decorators are passed as a named \code{list} of \code{\link[teal:teal_transform_module]{teal::teal_transform_module()}} objects;
-the name of each list element must match the output object name (\code{"plot"}).
+This module generates the following objects, which can be modified in place using decorators:
+\itemize{
+\item \code{plot} (\code{grob}, \code{gtable})
+}
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{tm_g_waterfall(
-  ...,
-  decorators = list(
-    plot = teal::teal_transform_module(...) # applied only to `plot`
-  )
+A Decorator is applied to the specific output using a named list of \code{teal_transform_module} objects.
+The name of this list corresponds to the name of the output to which the decorator is applied.
+See code snippet below:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{tm_g_butterfly(
+   ..., # arguments for module
+   decorators = list(
+     plot = teal_transform_module(...), # applied to the `plot` output
+   )
 )
 }\if{html}{\out{</div>}}
 
-Decorator UI controls appear in the module \strong{encoding} panel. Decorators run in the
-module server after the plot is created and before it is rendered.
+For additional details and examples of decorators, refer to the vignette
+\code{vignette("decorate-module-output", package = "teal.modules.general")}.
 
-\strong{Important:} decorators must not change the class of \code{plot}. Use transformations
-appropriate to the object type returned by the underlying \link{osprey} function.\tabular{lll}{
-   Module \tab Output \tab Typical class of \code{plot} \cr
-   \code{tm_g_spiderplot} \tab \code{plot} \tab \code{ggplot} \cr
-   \code{tm_g_butterfly} \tab \code{plot} \tab \code{grob} / \code{gtable} \cr
-   \code{tm_g_waterfall} \tab \code{plot} \tab \code{grob} / \code{gtable} \cr
-   \code{tm_g_swimlane} \tab \code{plot} \tab \code{grob} / \code{gtable} \cr
-   \code{tm_g_patient_profile} \tab \code{plot} \tab \code{grob} (\code{cowplot} layout) \cr
-   \code{tm_g_ae_oview} \tab \code{plot} \tab \code{grob} \cr
-   \code{tm_g_ae_sub} \tab \code{plot} \tab \code{grob} \cr
-   \code{tm_g_events_term_id} \tab \code{plot} \tab \code{grob} \cr
-   \code{tm_g_heat_bygrade} \tab \code{plot} \tab \code{grob} / \code{gtable} \cr
-}
-
-\itemize{
-\item For \strong{\code{ggplot}} outputs (\code{tm_g_spiderplot} only), use \code{ggplot2} modifiers
-(for example via \code{\link[teal:make_teal_transform_server]{teal::make_teal_transform_server()}}).
-\item For \strong{\code{grob}} outputs (all other modules), use \code{\link[tern:decorate_grob]{tern::decorate_grob()}} or
-other grid-compatible adjustments. Applying \code{ggplot2} layers to \code{plot} in
-those modules will fail silently or break rendering.
-}
-
-Four modules (\code{tm_g_ae_oview}, \code{tm_g_ae_sub}, \code{tm_g_events_term_id}, \code{tm_g_heat_bygrade})
-also provide built-in title and footnote controls via \code{\link[=ui_g_decorate]{ui_g_decorate()}} and
-\code{\link[=srv_g_decorate]{srv_g_decorate()}}. User-defined decorators run \strong{before} that built-in decoration step.
-}
-
-\section{Transforming input data}{
-
-
-All \verb{tm_g_*} modules also accept \code{transformators}, a named \code{list} of
-\code{\link[teal:teal_transform_module]{teal::teal_transform_module()}} objects that modify module \strong{input} data after
-filtering. Their UI appears in the app filter sidebar under \strong{Transform Data}.
-
-See \code{vignette("transform-input-data", package = "teal")} for transformators and
-\code{vignette("transform-module-output", package = "teal")} for decorators.
-
-A demo app using every module with both mechanisms is in
-\code{system.file("examples", "app_decorators_transformators.R", package = "teal.osprey")}.
+To learn more please refer to the vignette
+\code{vignette("transform-module-output", package = "teal")} or the \code{\link[teal:teal_transform_module]{teal::teal_transform_module()}} documentation.
 }
 
 \section{Reporting}{

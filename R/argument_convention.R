@@ -42,8 +42,7 @@
 #'
 #' @param decorators `r lifecycle::badge("experimental")`
 #' (named `list` of `teal_transform_module`) optional,
-#' decorators for the module `plot` output. See [decorate_module_section] for which
-#' object types are supported per module.
+#' decorators for the module `plot` output.
 #'
 #' @return the [teal::module()] object.
 #'

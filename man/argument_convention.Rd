@@ -37,11 +37,10 @@ input data transforms applied after filtering (UI in the filter sidebar under
 
 \item{decorators}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 (named \code{list} of \code{teal_transform_module}) optional,
-decorators for the module \code{plot} output. See \link{decorate_module_section} for which
-object types are supported per module.}
+decorators for the module \code{plot} output.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 The documentation to this function lists all the arguments in teal modules
