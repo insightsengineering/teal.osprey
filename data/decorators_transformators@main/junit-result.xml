@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="shinytest2-tm_g_events_term_id" timestamp="2026-07-31T09:19:00Z" hostname="25a32810476b" tests="5" skipped="5" failures="0" errors="0" time="0.145">
-    <testcase time="0.0289999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_initializes_and_renders_a_plot">
+  <testsuite name="shinytest2-tm_g_events_term_id" timestamp="2026-07-31T09:39:37Z" hostname="d1372ae79a16" tests="5" skipped="5" failures="0" errors="0" time="0.136">
+    <testcase time="0.0269999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_initializes_and_renders_a_plot">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:34:3')"/>
     </testcase>
-    <testcase time="0.05" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_starts_with_expected_label_and_encoding_selections.">
+    <testcase time="0.046" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_starts_with_expected_label_and_encoding_selections.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:54:5')"/>
     </testcase>
-    <testcase time="0.0409999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_changing_term_var_changes_the_plot_and_does_not_throw_validation_errors.">
+    <testcase time="0.04" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_changing_term_var_changes_the_plot_and_does_not_throw_validation_errors.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:80:5')"/>
     </testcase>
     <testcase time="0.012" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_deselection_of_term_var_throws_validation_error.">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:97:3')"/>
     </testcase>
-    <testcase time="0.0130000000000001" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_sort_updates_title">
+    <testcase time="0.0109999999999999" classname="shinytest2_tm_g_events_term_id" name="e2e_tm_g_events_term_id_sort_updates_title">
       <skipped message="Reason: testing depth 3 is below current testing specification 5 ('test-shinytest2-tm_g_events_term_id.R:107:3')"/>
     </testcase>
   </testsuite>
-  <testsuite name="tm_g_ae_oview" timestamp="2026-07-31T09:19:00Z" hostname="25a32810476b" tests="13" skipped="0" failures="0" errors="0" time="4.276">
-    <testcase time="0.077" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_neither_picks_or_choices_selected"/>
-    <testcase time="0.0289999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected">
+  <testsuite name="tm_g_ae_oview" timestamp="2026-07-31T09:39:37Z" hostname="d1372ae79a16" tests="13" skipped="0" failures="0" errors="0" time="4.116">
+    <testcase time="0.0759999999999998" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_arm_var_is_neither_picks_or_choices_selected"/>
+    <testcase time="0.0270000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected">
       <system-out>`arm_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -35,7 +35,7 @@ Backtrace:
  7.   └─teal.osprey:::migrate_choices_selected_to_variables(arm_var)</system-out>
     </testcase>
     <testcase time="0.014" classname="tm_g_ae_oview" name="tm_g_ae_oview_argument_verification_fails_when_flag_var_anl_is_neiter_picks_or_choices_selected"/>
-    <testcase time="0.208" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.197" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>`flag_var_anl` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -45,7 +45,7 @@ Backtrace:
  1. └─teal.osprey::tm_g_ae_oview(...) at test-tm_g_ae_oview.R:78:5
  2.   └─teal.osprey:::migrate_choices_selected_to_variables(flag_var_anl)</system-out>
     </testcase>
-    <testcase time="0.012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.01" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -63,7 +63,7 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00900000000000012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.00800000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
     <testcase time="0.00800000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
@@ -73,8 +73,8 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.0069999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
-    <testcase time="0.00900000000000012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.00700000000000012" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.00800000000000001" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -83,7 +83,7 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="0.00999999999999979" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
+    <testcase time="0.0089999999999999" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected">
       <system-out>variables has eager choices (character) while datasets has dynamic choices. It is not guaranteed that explicitly defined choices will be a subset of data selected in a previous element.
 Backtrace:
     ▆
@@ -92,11 +92,11 @@ Backtrace:
  3.     └─teal.picks::picks(datasets, x)
  4.       └─teal.picks:::.check_picks(new_picks, check_dataset)</system-out>
     </testcase>
-    <testcase time="2.453" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="1.426" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="2.354" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="1.384" classname="tm_g_ae_oview" name="tm_g_ae_oview_module_creation_creates_a_teal_module_using_picks"/>
   </testsuite>
-  <testsuite name="tm_g_ae_sub" timestamp="2026-07-31T09:19:04Z" hostname="25a32810476b" tests="7" skipped="0" failures="0" errors="0" time="1.945">
-    <testcase time="0.0690000000000008" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation">
+  <testsuite name="tm_g_ae_sub" timestamp="2026-07-31T09:39:41Z" hostname="d1372ae79a16" tests="7" skipped="0" failures="0" errors="0" time="1.818">
+    <testcase time="0.0640000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation">
       <system-out>`group_var` was deprecated in teal.osprey 0.5.0.
 ℹ Pass `teal.picks::variables()` (or a full `teal.picks::picks()` chain).
   Support for legacy `teal.transform::choices_selected()`, `filter_spec`, and
@@ -113,123 +113,123 @@ Backtrace:
  8. └─teal.osprey::tm_g_ae_sub(...)
  9.   └─teal.osprey:::migrate_choices_selected_to_variables(group_var)</system-out>
     </testcase>
-    <testcase time="0.0129999999999999" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.00700000000000056" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0120000000000005" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0119999999999996" classname="tm_g_ae_sub" name="tm_g_ae_sub_input_validation_plot_arguments_input_validation"/>
     <testcase time="0.00800000000000001" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.00599999999999934" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_picks"/>
-    <testcase time="0.927" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_choices_selected_works"/>
-    <testcase time="0.915" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_picks_works"/>
+    <testcase time="0.00600000000000023" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="0.859" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_choices_selected_works"/>
+    <testcase time="0.857" classname="tm_g_ae_sub" name="tm_g_ae_sub_module_creation_using_picks_works"/>
   </testsuite>
-  <testsuite name="tm_g_butterfly" timestamp="2026-07-31T09:19:06Z" hostname="25a32810476b" tests="8" skipped="0" failures="0" errors="0" time="3.565">
-    <testcase time="0.0969999999999995" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.0200000000000005" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.00899999999999945" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.00500000000000078" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.0119999999999996" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.00699999999999967" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_picks"/>
-    <testcase time="1.433" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_works_with_choices_selected"/>
-    <testcase time="1.982" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_works_with_picks"/>
+  <testsuite name="tm_g_butterfly" timestamp="2026-07-31T09:39:43Z" hostname="d1372ae79a16" tests="8" skipped="0" failures="0" errors="0" time="3.366">
+    <testcase time="0.0909999999999993" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0190000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.00800000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.00499999999999989" classname="tm_g_butterfly" name="tm_g_butterfly_input_validation_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0110000000000001" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.00700000000000056" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="1.34" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_works_with_choices_selected"/>
+    <testcase time="1.885" classname="tm_g_butterfly" name="tm_g_butterfly_module_creation_works_with_picks"/>
   </testsuite>
-  <testsuite name="tm_g_decorate" timestamp="2026-07-31T09:19:10Z" hostname="25a32810476b" tests="5" skipped="0" failures="0" errors="0" time="0.141">
-    <testcase time="0.134" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
-    <testcase time="0.000999999999999446" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+  <testsuite name="tm_g_decorate" timestamp="2026-07-31T09:39:46Z" hostname="d1372ae79a16" tests="5" skipped="0" failures="0" errors="0" time="0.133">
+    <testcase time="0.125" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00200000000000067" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
     <testcase time="0.00199999999999889" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
-    <testcase time="0.00300000000000011" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
-    <testcase time="0.00100000000000122" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00200000000000067" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
+    <testcase time="0.00200000000000067" classname="tm_g_decorate" name="srv_g_decorate_creation_srv_g_decorate_returns"/>
   </testsuite>
-  <testsuite name="tm_g_events_term_id" timestamp="2026-07-31T09:19:10Z" hostname="25a32810476b" tests="10" skipped="0" failures="0" errors="0" time="1.708">
-    <testcase time="0.0299999999999994" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
+  <testsuite name="tm_g_events_term_id" timestamp="2026-07-31T09:39:46Z" hostname="d1372ae79a16" tests="10" skipped="0" failures="0" errors="0" time="1.599">
+    <testcase time="0.0279999999999987" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
     <testcase time="0.00200000000000067" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
     <testcase time="0.000999999999999446" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected"/>
-    <testcase time="0.00699999999999967" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
-    <testcase time="0.00100000000000122" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
+    <testcase time="0.00600000000000023" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
     <testcase time="0.000999999999999446" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
-    <testcase time="0.824999999999999" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected_works"/>
-    <testcase time="0.801" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks_works"/>
-    <testcase time="0.0370000000000008" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
-    <testcase time="0.00300000000000011" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
+    <testcase time="0.00200000000000067" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks"/>
+    <testcase time="0.771000000000001" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_choices_selected_works"/>
+    <testcase time="0.750999999999999" classname="tm_g_events_term_id" name="tm_g_events_term_id_module_creation_using_picks_works"/>
+    <testcase time="0.0340000000000007" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
+    <testcase time="0.00299999999999834" classname="tm_g_events_term_id" name="tm_g_events_term_id_coerces_multiple_variable_selection"/>
   </testsuite>
-  <testsuite name="tm_g_heat_bygrade" timestamp="2026-07-31T09:19:12Z" hostname="25a32810476b" tests="17" skipped="0" failures="0" errors="0" time="4.548">
-    <testcase time="0.177999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.011000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.0129999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected"/>
+  <testsuite name="tm_g_heat_bygrade" timestamp="2026-07-31T09:39:48Z" hostname="d1372ae79a16" tests="17" skipped="0" failures="0" errors="0" time="4.269">
+    <testcase time="0.168000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0109999999999992" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0120000000000005" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected"/>
     <testcase time="0.0199999999999996" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_choices_selected_with_conmed"/>
     <testcase time="0.00699999999999967" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks"/>
-    <testcase time="0.00699999999999967" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_with_conmed"/>
-    <testcase time="0.887" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected"/>
-    <testcase time="0.0240000000000009" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected"/>
-    <testcase time="1.112" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected_with_conmed"/>
-    <testcase time="0.0280000000000005" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected_with_conmed"/>
-    <testcase time="0.918000000000001" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks"/>
-    <testcase time="0.0240000000000009" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks"/>
-    <testcase time="1.135" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks_with_conmed"/>
-    <testcase time="0.170999999999999" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks_with_conmed"/>
-    <testcase time="0.00800000000000267" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
+    <testcase time="0.00700000000000145" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_creates_a_teal_module_using_picks_with_conmed"/>
+    <testcase time="0.83" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected"/>
+    <testcase time="0.0219999999999985" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected"/>
+    <testcase time="1.043" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected_with_conmed"/>
+    <testcase time="0.0259999999999998" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_choices_selected_with_conmed"/>
+    <testcase time="0.852" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks"/>
+    <testcase time="0.0220000000000002" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks"/>
+    <testcase time="1.059" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks_with_conmed"/>
+    <testcase time="0.173000000000002" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_works_with_picks_with_conmed"/>
+    <testcase time="0.0109999999999992" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
     <testcase time="0.00199999999999889" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
-    <testcase time="0.00300000000000011" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
+    <testcase time="0.00400000000000134" classname="tm_g_heat_bygrade" name="tm_g_heat_bygrade_module_creation_Throws_warning_when_converting_anno_var_to_multiple"/>
   </testsuite>
-  <testsuite name="tm_g_patient_profile" timestamp="2026-07-31T09:19:16Z" hostname="25a32810476b" tests="11" skipped="0" failures="0" errors="0" time="3.593">
+  <testsuite name="tm_g_patient_profile" timestamp="2026-07-31T09:39:52Z" hostname="d1372ae79a16" tests="11" skipped="0" failures="0" errors="0" time="3.407">
     <testcase time="0.0380000000000003" classname="tm_g_patient_profile" name="tm_g_patient_profile_input_validation_plot_arguments_input_validation"/>
     <testcase time="0.00900000000000034" classname="tm_g_patient_profile" name="tm_g_patient_profile_input_validation_plot_arguments_input_validation"/>
     <testcase time="0.00799999999999912" classname="tm_g_patient_profile" name="tm_g_patient_profile_input_validation_Forcing_conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.00700000000000145" classname="tm_g_patient_profile" name="tm_g_patient_profile_input_validation_Forcing_conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.0129999999999981" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_fails_without_datanames"/>
-    <testcase time="0.0189999999999984" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_creates_a_teal_module_using_choices_selected"/>
-    <testcase time="0.00600000000000023" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_creates_a_teal_module_using_teal.picks_variables"/>
-    <testcase time="2.018" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_works_using_choices_selected"/>
-    <testcase time="0.0370000000000026" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_works_using_choices_selected"/>
-    <testcase time="1.389" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_works_using_teal.picks"/>
-    <testcase time="0.049000000000003" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_works_using_teal.picks"/>
+    <testcase time="0.0069999999999979" classname="tm_g_patient_profile" name="tm_g_patient_profile_input_validation_Forcing_conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0110000000000028" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_fails_without_datanames"/>
+    <testcase time="0.0199999999999996" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_creates_a_teal_module_using_choices_selected"/>
+    <testcase time="0.0069999999999979" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_creation_creates_a_teal_module_using_teal.picks_variables"/>
+    <testcase time="1.917" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_works_using_choices_selected"/>
+    <testcase time="0.0350000000000001" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_works_using_choices_selected"/>
+    <testcase time="1.321" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_works_using_teal.picks"/>
+    <testcase time="0.0340000000000025" classname="tm_g_patient_profile" name="tm_g_patient_profile_module_works_using_teal.picks"/>
   </testsuite>
-  <testsuite name="tm_g_spiderplot" timestamp="2026-07-31T09:19:20Z" hostname="25a32810476b" tests="10" skipped="0" failures="0" errors="0" time="5.383">
-    <testcase time="0.103999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.0139999999999993" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.0139999999999993" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+  <testsuite name="tm_g_spiderplot" timestamp="2026-07-31T09:39:56Z" hostname="d1372ae79a16" tests="10" skipped="0" failures="0" errors="0" time="5.084">
+    <testcase time="0.123999999999999" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0130000000000017" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_plot_arguments_input_validation"/>
+    <testcase time="0.0119999999999969" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
     <testcase time="0.00700000000000145" classname="tm_g_spiderplot" name="tm_g_spiderplot_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.596999999999998" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
-    <testcase time="0.00900000000000034" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
-    <testcase time="2.256" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works"/>
-    <testcase time="0.0579999999999998" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works"/>
-    <testcase time="2.264" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works"/>
-    <testcase time="0.0600000000000023" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works"/>
+    <testcase time="0.0130000000000017" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_choices_selected_default_method_"/>
+    <testcase time="0.0069999999999979" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_creates_a_teal_module_using_picks_.pick_method_"/>
+    <testcase time="2.699" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works"/>
+    <testcase time="0.0519999999999996" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_choices_selected_works"/>
+    <testcase time="2.104" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works"/>
+    <testcase time="0.0530000000000008" classname="tm_g_spiderplot" name="tm_g_spiderplot_module_creation_module_using_picks_works"/>
   </testsuite>
-  <testsuite name="tm_g_swimlane" timestamp="2026-07-31T09:19:25Z" hostname="25a32810476b" tests="12" skipped="0" failures="0" errors="0" time="5.653">
-    <testcase time="0.0210000000000008" classname="tm_g_swimlane" name="tm_swimlane_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.00899999999999679" classname="tm_g_swimlane" name="tm_swimlane_input_validation_plot_arguments_input_validation"/>
-    <testcase time="0.00800000000000267" classname="tm_g_swimlane" name="tm_swimlane_input_validation_fails_bar_var_is_not_the_expected_class"/>
-    <testcase time="0.00999999999999801" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_teal.picks"/>
-    <testcase time="0.00200000000000244" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_teal.picks"/>
-    <testcase time="0.0159999999999982" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_accepts_optionally_NULL_argument_as_module_argument"/>
-    <testcase time="0.00199999999999889" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_accepts_optionally_NULL_argument_as_module_argument"/>
-    <testcase time="0.0670000000000002" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_choices_selected"/>
-    <testcase time="0.00200000000000244" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_choices_selected"/>
-    <testcase time="1.769" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_using_teal.picks"/>
-    <testcase time="2.094" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_with_optionally_NULL_argument_as_module_argument"/>
-    <testcase time="1.653" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_using_choices_selected"/>
+  <testsuite name="tm_g_swimlane" timestamp="2026-07-31T09:40:01Z" hostname="d1372ae79a16" tests="12" skipped="0" failures="0" errors="0" time="5.297">
+    <testcase time="0.0189999999999984" classname="tm_g_swimlane" name="tm_swimlane_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.00800000000000267" classname="tm_g_swimlane" name="tm_swimlane_input_validation_plot_arguments_input_validation"/>
+    <testcase time="0.0069999999999979" classname="tm_g_swimlane" name="tm_swimlane_input_validation_fails_bar_var_is_not_the_expected_class"/>
+    <testcase time="0.0100000000000016" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_teal.picks"/>
+    <testcase time="0.000999999999997669" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_teal.picks"/>
+    <testcase time="0.00700000000000145" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_accepts_optionally_NULL_argument_as_module_argument"/>
+    <testcase time="0.00100000000000122" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_accepts_optionally_NULL_argument_as_module_argument"/>
+    <testcase time="0.0739999999999981" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_choices_selected"/>
+    <testcase time="0.00100000000000122" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_is_correctly_created_using_choices_selected"/>
+    <testcase time="1.653" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_using_teal.picks"/>
+    <testcase time="1.986" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_with_optionally_NULL_argument_as_module_argument"/>
+    <testcase time="1.53" classname="tm_g_swimlane" name="tm_g_swimlane_module_creation_works_using_choices_selected"/>
   </testsuite>
-  <testsuite name="tm_g_waterfall" timestamp="2026-07-31T09:19:31Z" hostname="25a32810476b" tests="8" skipped="0" failures="0" errors="0" time="8.102">
-    <testcase time="0.0779999999999959" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_plot_arguments_input_validation"/>
+  <testsuite name="tm_g_waterfall" timestamp="2026-07-31T09:40:06Z" hostname="d1372ae79a16" tests="8" skipped="0" failures="0" errors="0" time="7.657">
+    <testcase time="0.0640000000000001" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_plot_arguments_input_validation"/>
     <testcase time="0.00600000000000023" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_plot_arguments_input_validation"/>
-    <testcase time="0.128999999999998" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.0100000000000051" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
-    <testcase time="0.0189999999999984" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_choices_selected_deprecated_option_"/>
-    <testcase time="0.0180000000000007" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_picks"/>
-    <testcase time="6.13" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_works_using_choices_selected_deprecated_option_"/>
-    <testcase time="1.712" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_works_using_picks"/>
+    <testcase time="0.128" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.00900000000000034" classname="tm_g_waterfall" name="tm_g_waterfall_argument_verification_Forcing_Conversion_from_multiple_picks_to_single"/>
+    <testcase time="0.0169999999999995" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_choices_selected_deprecated_option_"/>
+    <testcase time="0.00999999999999801" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_creates_a_teal_module_using_picks"/>
+    <testcase time="5.833" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_works_using_choices_selected_deprecated_option_"/>
+    <testcase time="1.59" classname="tm_g_waterfall" name="tm_g_waterfall_module_creation_works_using_picks"/>
   </testsuite>
-  <testsuite name="utils" timestamp="2026-07-31T09:19:39Z" hostname="25a32810476b" tests="13" skipped="0" failures="0" errors="0" time="0.119">
-    <testcase time="0.0910000000000011" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
-    <testcase time="0.00400000000000489" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00199999999999534" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+  <testsuite name="utils" timestamp="2026-07-31T09:40:14Z" hostname="d1372ae79a16" tests="13" skipped="0" failures="0" errors="0" time="0.832">
+    <testcase time="0.808" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_converts_comma_sep_string_into_numeric_vector"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00100000000000477" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00199999999999534" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
+    <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
     <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_throws_warning_if_any_entries_are_not_numeric_and_converts_those_to_NAs"/>
-    <testcase time="0.00500000000000256" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.00199999999999534" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00399999999999778" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
+    <testcase time="0.00200000000000244" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
     <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_returns_NULL_if_input_is_NULL_or_whitespace"/>
-    <testcase time="0.00400000000000489" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
+    <testcase time="0.00300000000000011" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
     <testcase time="0.000999999999997669" classname="utils" name="as_numeric_from_comma_sep_str_ignores_empty_values_at_end_of_string"/>
   </testsuite>
 </testsuites>
