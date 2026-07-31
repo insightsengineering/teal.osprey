@@ -313,12 +313,11 @@ ui_g_butterfly <- function(id,
       checkboxInput(
         ns("legend_on"),
         "Add legend",
-        value = a$legend_on
+        value = legend_on
       ),
       teal::ui_transform_teal_data(
         ns("decorator"),
-        transformators = select_decorators(a$decorators, "plot")
-        value = legend_on
+        transformators = select_decorators(decorators, "plot")
       )
     ),
     pre_output = pre_output,

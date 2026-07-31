@@ -98,6 +98,9 @@ the \code{\link[teal:module]{teal::module()}} object.
 \description{
 Display the heatmap by grade as a shiny module
 }
+\details{
+`data`` object is only used for checks
+}
 \section{Decorating Module}{
 
 
@@ -125,9 +128,6 @@ To learn more please refer to the vignette
 \code{vignette("transform-module-output", package = "teal")} or the \code{\link[teal:teal_transform_module]{teal::teal_transform_module()}} documentation.
 }
 
-\details{
-`data`` object is only used for checks
-}
 \section{Reporting}{
 
 

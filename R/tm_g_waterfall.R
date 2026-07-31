@@ -260,7 +260,8 @@ ui_g_waterfall <- function(id,
                            ytick_at,
                            gap_point_val,
                            pre_output,
-                           post_output) {
+                           post_output,
+                           decorators) {
   ns <- NS(id)
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
@@ -339,11 +340,11 @@ ui_g_waterfall <- function(id,
           tags$br(),
           helpText("Enter a numeric value to break very high bars")
         ),
-        value = a$gap_point_val
+        value = gap_point_val
       ),
       teal::ui_transform_teal_data(
         ns("decorator"),
-        transformators = select_decorators(a$decorators, "plot")
+        transformators = select_decorators(decorators, "plot")
       )
     ),
     pre_output = pre_output,

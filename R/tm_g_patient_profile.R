@@ -415,11 +415,11 @@ ui_g_patient_profile <- function(id,
             tags$br(),
             helpText("Enter TWO numeric values of study days range, separated by comma (eg. -28, 750)")
           ),
-          value = a$x_limit
+          value = x_limit
         ),
         teal::ui_transform_teal_data(
           ns("decorator"),
-          transformators = select_decorators(a$decorators, "plot")
+          transformators = select_decorators(decorators, "plot")
         )
       ),
       pre_output = pre_output,

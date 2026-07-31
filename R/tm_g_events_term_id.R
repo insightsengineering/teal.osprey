@@ -143,7 +143,8 @@ tm_g_events_term_id <- function(label,
 ui_g_events_term_id <- function(id,
                                 term_var,
                                 arm_var,
-                                fontsize) {
+                                fontsize,
+                                decorators) {
   ns <- NS(id)
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
@@ -225,7 +226,7 @@ ui_g_events_term_id <- function(id,
       ),
       teal::ui_transform_teal_data(
         ns("decorator"),
-        transformators = select_decorators(args$decorators, "plot")
+        transformators = select_decorators(decorators, "plot")
       ),
       ui_g_decorate(
         ns(NULL),

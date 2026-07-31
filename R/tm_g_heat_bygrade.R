@@ -313,7 +313,7 @@ ui_g_heat_by_grade <- function(
         ),
         teal::ui_transform_teal_data(
           ns("decorator"),
-          transformators = select_decorators(args$decorators, "plot")
+          transformators = select_decorators(decorators, "plot")
         ),
         ui_g_decorate(
           ns(NULL),

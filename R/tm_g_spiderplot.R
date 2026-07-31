@@ -219,7 +219,8 @@ ui_g_spider <- function(id,
                         anno_txt_var,
                         legend_on,
                         pre_output,
-                        post_output) {
+                        post_output,
+                        decorators) {
   ns <- NS(id)
   shiny::tagList(
     teal.widgets::standard_layout(
@@ -307,10 +308,10 @@ ui_g_spider <- function(id,
       ),
       teal::ui_transform_teal_data(
         ns("decorator"),
-        transformators = select_decorators(a$decorators, "plot")
+        transformators = select_decorators(decorators, "plot")
       ),
-      pre_output = a$pre_output,
-      post_output = a$post_output
+      pre_output = pre_output,
+      post_output = post_output
     )
   )
 }

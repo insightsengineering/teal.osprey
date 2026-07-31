@@ -332,11 +332,11 @@ ui_g_swimlane <- function(id,
             tags$br(),
             helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
           ),
-          value = paste(a$vref_line, collapse = ", ")
+          value = paste(vref_line, collapse = ", ")
         ),
         teal::ui_transform_teal_data(
           ns("decorator"),
-          transformators = select_decorators(a$decorators, "plot")
+          transformators = select_decorators(decorators, "plot")
         )
       ),
       pre_output = pre_output,

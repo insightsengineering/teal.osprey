@@ -186,7 +186,8 @@ ui_g_ae_oview <- function(
   id,
   arm_var,
   flag_var_anl,
-  fontsize
+  fontsize,
+  decorators
 ) {
   ns <- NS(id)
 
@@ -240,7 +241,7 @@ ui_g_ae_oview <- function(
       ),
       teal::ui_transform_teal_data(
         ns("decorator"),
-        transformators = select_decorators(args$decorators, "plot")
+        transformators = select_decorators(decorators, "plot")
       ),
       ui_g_decorate(
         ns(NULL),

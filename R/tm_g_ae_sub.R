@@ -126,7 +126,7 @@ tm_g_ae_sub <- function(label,
   )
 }
 
-ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, arm_n = FALSE, decorators = NULL) {
+ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, decorators) {
   ns <- NS(id)
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
@@ -152,7 +152,7 @@ ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, arm_n = FALSE, decorat
       checkboxInput(
         ns("arm_n"),
         "Show N in each arm",
-        value = arm_n
+        value = FALSE
       ),
       tags$div(
         tags$strong("Group variable"),
@@ -179,7 +179,7 @@ ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, arm_n = FALSE, decorat
         ),
         teal::ui_transform_teal_data(
           ns("decorator"),
-          transformators = select_decorators(args$decorators, "plot")
+          transformators = select_decorators(decorators, "plot")
         ),
         ui_g_decorate(
           ns(NULL),
