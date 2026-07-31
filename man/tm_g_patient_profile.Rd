@@ -34,7 +34,10 @@ tm_g_patient_profile(
 \item{label}{(\code{character(1)}) Label shown in the navigation item for the module or module group.
 For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
-\item{patient_id}{(\code{choices_seleced}) unique subject ID variable}
+\item{patient_id}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
+a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Describing the unique subject ID selection.}
 
 \item{sl_dataname}{(\code{character}) subject level dataset name,
 needs to be available in the list passed to the \code{data}
@@ -46,17 +49,29 @@ must be available in the list passed to the \code{data}
 argument of \code{\link[teal:init]{teal::init()}}\cr
 set to NA (default) to omit from analysis}
 
-\item{sl_start_date}{\code{choices_selected} study start date variable, usually set to
-treatment start date or randomization date}
+\item{sl_start_date}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
+a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For the study start date variable, usually set to treatment start date or
+randomization date.}
 
-\item{ex_var}{\code{choices_selected} exposure variable to plot as each line \cr
-leave unspecified or set to \code{NULL} if exposure data is not available}
+\item{ex_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
+a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For the exposure variable to plot as each line. Leave unspecified or set to
+\code{NULL} if exposure data is not available.}
 
-\item{ae_var}{\code{choices_selected} adverse event variable to plot as each line \cr
-leave unspecified or set to \code{NULL} if adverse events data is not available}
+\item{ae_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
+a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For the adverse event variable to plot as each line. Leave unspecified or
+set to \code{NULL} if adverse events data is not available.}
 
-\item{ae_line_col_var}{\code{choices_selected} variable for coloring \code{AE} lines \cr
-leave unspecified or set to \code{NULL} if adverse events data is not available}
+\item{ae_line_col_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
+a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For coloring \code{AE} lines. Leave unspecified or set to \code{NULL} if adverse
+events data is not available.}
 
 \item{ae_line_col_opt}{aesthetic values to map color values
 (named vector to map color values to each name).
@@ -64,15 +79,23 @@ If not \code{NULL}, please make sure this contains all possible
 values for \code{ae_line_col_var} values. \cr
 leave unspecified or set to \code{NULL} if adverse events data is not available}
 
-\item{rs_var}{\code{choices_selected} response variable to plot as each line \cr
-leave unspecified or set to \code{NULL} if response data is not available}
+\item{rs_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
+a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For the response variable to plot as each line. Leave unspecified or set to
+\code{NULL} if response data is not available.}
 
-\item{cm_var}{\code{choices_selected} concomitant medication variable
-to plot as each line \cr
-leave unspecified or set to \code{NULL} if concomitant medications data is not available}
+\item{cm_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
+a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For the concomitant medication variable to plot as each line. Leave
+unspecified or set to \code{NULL} if concomitant medications data is not available.}
 
-\item{lb_var}{\code{choices_selected} lab variable to plot as each line \cr
-leave unspecified or set to \code{NULL} if labs data is not available}
+\item{lb_var}{Either a \code{\link[teal.picks:variables]{teal.picks::variables()}} object,
+a full \code{\link[teal.picks:picks]{teal.picks::picks()}} object, or a \code{\link[teal.picks:variables]{variables()}} object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For the lab variable to plot as each line. Leave unspecified or set to
+\code{NULL} if labs data is not available.}
 
 \item{x_limit}{a single \code{character} string with two numbers
 separated by a comma indicating the x-axis limit,
@@ -113,6 +136,8 @@ is derived for consistency based the start date of user's choice in the app (for
 \item In \code{ADRS} and \code{ADLB}, it would be study day based on \code{ADT} in reference to
 the start date
 }
+
+For every variable domain defined (i.e \code{ae_var}) please set its corresponding analysis dataset (i.e \code{ae_dataset})
 }
 \section{Decorating Module}{
 
@@ -158,34 +183,31 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-data <- teal_data() \%>\%
-  within({
-    library(nestcolor)
-    library(dplyr)
-    ADSL <- rADSL
-    ADAE <- rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-    ADCM <- rADCM \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-    # The step below is to pre-process ADCM to legacy standard
-    ADCM <- ADCM \%>\%
-      select(-starts_with("ATC")) \%>\%
-      unique()
-    ADRS <- rADRS \%>\% mutate(ADT = as.Date(ADTM))
-    ADEX <- rADEX \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
-    ADLB <- rADLB \%>\% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
-  })
+data <- within(teal_data(), {
+  library(nestcolor)
+  library(dplyr)
+  ADSL <- rADSL
+  ADAE <- rADAE \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+  ADCM <- rADCM \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+  # The step below is to pre-process ADCM to legacy standard
+  ADCM <- ADCM \%>\%
+    select(-starts_with("ATC")) \%>\%
+    unique()
+  ADRS <- rADRS \%>\% mutate(ADT = as.Date(ADTM))
+  ADEX <- rADEX \%>\% mutate(ASTDT = as.Date(ASTDTM), AENDT = as.Date(AENDTM))
+  ADLB <- rADLB \%>\% mutate(ADT = as.Date(ADTM), LBSTRESN = as.numeric(LBSTRESC))
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
-
-ADSL <- data[["ADSL"]]
 
 app <- init(
   data = data,
   modules = modules(
     tm_g_patient_profile(
       label = "Patient Profile Plot",
-      patient_id = choices_selected(
-        choices = unique(ADSL$USUBJID),
-        selected = unique(ADSL$USUBJID)[1]
+      patient_id = variables(
+        choices = "USUBJID",
+        selected = "USUBJID"
       ),
       sl_dataname = "ADSL",
       ex_dataname = "ADEX",
@@ -193,32 +215,32 @@ app <- init(
       rs_dataname = "ADRS",
       cm_dataname = "ADCM",
       lb_dataname = "ADLB",
-      sl_start_date = choices_selected(
+      sl_start_date = variables(
         selected = "TRTSDTM",
         choices = c("TRTSDTM", "RANDDT")
       ),
-      ex_var = choices_selected(
+      ex_var = variables(
         selected = "PARCAT2",
         choices = "PARCAT2"
       ),
-      ae_var = choices_selected(
+      ae_var = variables(
         selected = "AEDECOD",
         choices = c("AEDECOD", "AESOC")
       ),
-      ae_line_col_var = choices_selected(
+      ae_line_col_var = variables(
         selected = "AESER",
         choices = c("AESER", "AEREL")
       ),
       ae_line_col_opt = c("Y" = "red", "N" = "blue"),
-      rs_var = choices_selected(
+      rs_var = variables(
         selected = "PARAMCD",
         choices = "PARAMCD"
       ),
-      cm_var = choices_selected(
+      cm_var = variables(
         selected = "CMDECOD",
         choices = c("CMDECOD", "CMCAT")
       ),
-      lb_var = choices_selected(
+      lb_var = variables(
         selected = "LBTESTCD",
         choices = c("LBTESTCD", "LBCAT")
       ),

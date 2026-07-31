@@ -34,21 +34,40 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{paramcd}{(\code{character(1)} or \code{choices_selected})\cr
-variable value designating the studied parameter.
-See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for details.}
+\item{paramcd}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Variable value designating the studied parameter.}
 
-\item{x_var}{x-axis variables}
+\item{x_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For x-axis variables.}
 
-\item{y_var}{y-axis variables}
+\item{y_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For y-axis variables.}
 
-\item{marker_var}{variable dictates marker symbol}
+\item{marker_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For marker symbol.}
 
-\item{line_colorby_var}{variable dictates line color}
+\item{line_colorby_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For line color.}
 
-\item{xfacet_var}{variable for x facets}
+\item{xfacet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For x facets.}
 
-\item{yfacet_var}{variable for y facets}
+\item{yfacet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For y facets.}
 
 \item{vref_line}{vertical reference lines}
 
@@ -127,13 +146,11 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-# Example using stream (ADaM) dataset
-data <- teal_data() \%>\%
-  within({
-    library(nestcolor)
-    ADSL <- rADSL
-    ADTR <- rADTR
-  })
+data <- within(teal_data(), {
+  library(nestcolor)
+  ADSL <- teal.data::rADSL
+  ADTR <- teal.data::rADTR
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
@@ -141,33 +158,33 @@ app <- init(
   data = data,
   modules = modules(
     tm_g_spiderplot(
-      label = "Spider plot",
+      label = "Spider plot (picks)",
       dataname = "ADTR",
-      paramcd = choices_selected(
-        choices = "SLDINV",
-        selected = "SLDINV"
+      paramcd = variables(
+        choices = "PARAMCD",
+        selected = "PARAMCD"
       ),
-      x_var = choices_selected(
-        choices = "ADY",
-        selected = "ADY"
+      x_var = variables(
+        choices = dplyr::where(is.numeric),
+        selected = 1L
       ),
-      y_var = choices_selected(
+      y_var = variables(
         choices = c("PCHG", "CHG", "AVAL"),
         selected = "PCHG"
       ),
-      marker_var = choices_selected(
+      marker_var = variables(
         choices = c("SEX", "RACE", "USUBJID"),
         selected = "SEX"
       ),
-      line_colorby_var = choices_selected(
+      line_colorby_var = variables(
         choices = c("SEX", "USUBJID", "RACE"),
         selected = "SEX"
       ),
-      xfacet_var = choices_selected(
+      xfacet_var = variables(
         choices = c("SEX", "ARM"),
         selected = "SEX"
       ),
-      yfacet_var = choices_selected(
+      yfacet_var = variables(
         choices = c("SEX", "ARM"),
         selected = "ARM"
       ),

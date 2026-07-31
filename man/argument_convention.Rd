@@ -11,14 +11,17 @@ menu item label of the module in the teal app.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{arm_var}{(\code{choices_selected})\cr
-object with all available choices and the pre-selected option for variable
-names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
-details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
+\item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Object with all available choices and the pre-selected option for variable
+names that can be used as \code{arm_var}. Column \code{arm_var} in the \code{dataname}
+has to be a factor.}
 
-\item{paramcd}{(\code{character(1)} or \code{choices_selected})\cr
-variable value designating the studied parameter.
-See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for details.}
+\item{paramcd}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Variable value designating the studied parameter.}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
 Defines initial possible range of font-size. \code{fontsize} is set for

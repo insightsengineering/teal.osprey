@@ -24,12 +24,17 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{arm_var}{(\code{choices_selected})\cr
-object with all available choices and the pre-selected option for variable
-names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
-details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
+\item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Object with all available choices and the pre-selected option for variable
+names that can be used as \code{arm_var}. Column \code{arm_var} in the \code{dataname}
+has to be a factor.}
 
-\item{group_var}{(\code{choices_selected}) subgroups variables. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for details.}
+\item{group_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with subgroup variables.}
 
 \item{plot_height}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
@@ -100,11 +105,10 @@ For more information on reporting in \code{teal}, see the vignettes:
 
 \examples{
 # Example using stream (ADaM) dataset
-data <- teal_data() \%>\%
-  within({
-    ADSL <- rADSL
-    ADAE <- rADAE
-  })
+data <- within(teal_data(), {
+  ADSL <- rADSL
+  ADAE <- rADAE
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
@@ -114,15 +118,15 @@ app <- init(
     tm_g_ae_sub(
       label = "AE by Subgroup",
       dataname = "ADAE",
-      arm_var = choices_selected(
-        selected = "ACTARMCD",
-        choices = c("ACTARM", "ACTARMCD")
+      arm_var = variables(
+        choices = c("ACTARM", "ACTARMCD"),
+        selected = "ACTARMCD"
       ),
-      group_var = choices_selected(
+      group_var = variables(
+        choices = c("SEX", "REGION1", "RACE"),
         selected = c("SEX", "REGION1", "RACE"),
-        choices = c("SEX", "REGION1", "RACE")
-      ),
-      plot_height = c(600, 200, 2000)
+        multiple = TRUE
+      )
     )
   )
 )

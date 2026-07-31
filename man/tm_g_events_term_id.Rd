@@ -7,6 +7,7 @@
 tm_g_events_term_id(
   label,
   dataname,
+  parentname,
   term_var,
   arm_var,
   fontsize = c(5, 3, 7),
@@ -24,13 +25,22 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{term_var}{\link[teal.transform:choices_selected]{teal.transform::choices_selected} object with all available choices
-and pre-selected option names that can be used to specify the term for events}
+\item{parentname}{(\code{character(1)})\cr
+analysis data used form arm_var in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{arm_var}{(\code{choices_selected})\cr
-object with all available choices and the pre-selected option for variable
-names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
-details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
+\item{term_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with all available choices and pre-selected option names that can be used
+to specify the term for events.}
+
+\item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Object with all available choices and the pre-selected option for variable
+names that can be used as \code{arm_var}. Column \code{arm_var} in the \code{dataname}
+has to be a factor.}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
 Defines initial possible range of font-size. \code{fontsize} is set for
@@ -100,11 +110,10 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-data <- teal_data() \%>\%
-  within({
-    ADSL <- rADSL
-    ADAE <- rADAE
-  })
+data <- within(teal_data(), {
+  ADSL <- rADSL
+  ADAE <- rADAE
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
@@ -114,16 +123,17 @@ app <- init(
     tm_g_events_term_id(
       label = "Common AE",
       dataname = "ADAE",
-      term_var = choices_selected(
-        selected = "AEDECOD",
+      parentname = "ADSL",
+      term_var = variables(
         choices = c(
           "AEDECOD", "AETERM",
           "AEHLT", "AELLT", "AEBODSYS"
-        )
+        ),
+        selected = "AEDECOD"
       ),
-      arm_var = choices_selected(
-        selected = "ACTARMCD",
-        choices = c("ACTARM", "ACTARMCD")
+      arm_var = variables(
+        choices = c("ACTARM", "ACTARMCD"),
+        selected = "ACTARMCD"
       ),
       plot_height = c(600, 200, 2000)
     )

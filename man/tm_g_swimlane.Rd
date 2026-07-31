@@ -8,6 +8,7 @@ tm_g_swimlane(
   label,
   dataname,
   bar_var,
+  parentname = "ADSL",
   bar_color_var = NULL,
   sort_var = NULL,
   marker_pos_var = NULL,
@@ -30,35 +31,57 @@ tm_g_swimlane(
 \item{label}{(\code{character(1)}) Label shown in the navigation item for the module or module group.
 For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
-\item{dataname}{analysis data used for plotting, needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal:init]{teal::init()}}. If no markers are to be plotted in the module, \code{"ADSL"} should be
-the input. If markers are to be plotted, data name for the marker data should be the input}
+\item{dataname}{(\code{character(1)})\cr
+analysis data used for markers. Use \code{"ADSL"} when no markers are plotted.}
 
-\item{bar_var}{\link[teal.transform:choices_selected]{teal.transform::choices_selected} subject-level numeric variable from dataset
-to plot as the bar length}
+\item{bar_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Subject-level numeric variable for bar length (from \code{parentname}).}
 
-\item{bar_color_var}{\link[teal.transform:choices_selected]{teal.transform::choices_selected} color by variable (subject-level)}
+\item{parentname}{(\code{character(1)})\cr
+analysis data used for several variables in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
+\code{"ADSL"}}
 
-\item{sort_var}{\code{choices_selected} sort by variable (subject-level)}
+\item{bar_color_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Subject-level color variable from \code{parentname}.}
 
-\item{marker_pos_var}{\link[teal.transform:choices_selected]{teal.transform::choices_selected} variable for marker position from marker data
-(Note: make sure that marker position has the same relative start day as bar length variable \code{bar_var}}
+\item{sort_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Subject-level sort variable from \code{parentname}.}
 
-\item{marker_shape_var}{\link[teal.transform:choices_selected]{teal.transform::choices_selected} marker shape variable from marker data}
+\item{marker_pos_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Marker position variable from \code{dataname}).}
 
-\item{marker_shape_opt}{aesthetic values to map shape values (named vector to map shape values to each name).
-If not \code{NULL}, please make sure this contains all possible values for \code{marker_shape_var} values,
-otherwise shape will be assigned by \code{ggplot} default}
+\item{marker_shape_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Marker shape variable from \code{dataname}.}
 
-\item{marker_color_var}{marker color variable from marker data}
+\item{marker_shape_opt}{(\code{numeric})\cr
+Named vector mapping shape values to ggplot shapes.}
 
-\item{marker_color_opt}{aesthetic values to map color values (named vector to map color values to each name).
-If not \code{NULL}, please make sure this contains all possible values for \code{marker_color_var} values,
-otherwise color will be assigned by \code{ggplot} default}
+\item{marker_color_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Marker color variable from \code{dataname}.}
 
-\item{anno_txt_var}{character vector with subject-level variable names that are selected as annotation}
+\item{marker_color_opt}{(\code{character})\cr
+Named vector mapping color values to colors.}
 
-\item{vref_line}{vertical reference lines}
+\item{anno_txt_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Subject-level annotation variables from \code{parentname} (multiple selection allowed).}
+
+\item{vref_line}{(\code{numeric})\cr
+Vertical reference lines.}
 
 \item{plot_height}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
@@ -72,7 +95,8 @@ with text placed before the output to put the output into context. For example a
 \item{post_output}{(\code{shiny.tag}) optional, with text placed after the output to put the output
 into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} elements are useful.}
 
-\item{x_label}{the label of the x axis}
+\item{x_label}{(\code{character})\cr
+Label of the x axis.}
 
 \item{transformators}{(\code{list} of \code{teal_transform_module}) that will be applied to transform module's data input.
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
@@ -85,7 +109,7 @@ decorators for the module \code{plot} output.}
 the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
-This is teal module that generates a \code{swimlane} plot (bar plot with markers) for \code{ADaM} data
+This is a teal module that generates a \code{swimlane} plot (bar plot with markers) for \code{ADaM} data
 }
 \section{Decorating Module}{
 
@@ -131,20 +155,18 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-# Example using stream (ADaM) dataset
-data <- teal_data() \%>\%
-  within({
-    library(nestcolor)
-    library(dplyr)
-    ADSL <- rADSL \%>\%
-      mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
-      filter(STRATA1 == "A" & ARMCD == "ARM A")
-    ADRS <- rADRS \%>\%
-      filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
-      mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
-      rbind(rADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
-      arrange(USUBJID)
-  })
+data <- within(teal_data(), {
+  library(nestcolor)
+  library(dplyr)
+  ADSL <- rADSL \%>\%
+    mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
+    filter(STRATA1 == "A" & ARMCD == "ARM A")
+  ADRS <- rADRS \%>\%
+    filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
+    mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
+    rbind(rADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+    arrange(USUBJID)
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
@@ -157,28 +179,28 @@ app <- init(
     tm_g_swimlane(
       label = "Swimlane Plot",
       dataname = "ADRS",
-      bar_var = choices_selected(
-        selected = "TRTDURD",
-        choices = c("TRTDURD", "EOSDY")
+      bar_var = variables(
+        choices = c("TRTDURD", "EOSDY"),
+        selected = "TRTDURD"
       ),
-      bar_color_var = choices_selected(
-        selected = "EOSSTT",
-        choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX")
+      bar_color_var = variables(
+        choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX"),
+        selected = "EOSSTT"
       ),
-      sort_var = choices_selected(
-        selected = "ACTARMCD",
-        choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD")
+      sort_var = variables(
+        choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD"),
+        selected = "ACTARMCD"
       ),
-      marker_pos_var = choices_selected(
-        selected = "ADY",
-        choices = c("ADY")
+      marker_pos_var = variables(
+        choices = c("ADY"),
+        selected = "ADY"
       ),
-      marker_shape_var = choices_selected(
+      marker_shape_var = variables(
         selected = "AVALC",
         c("AVALC", "AVISIT")
       ),
       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-      marker_color_var = choices_selected(
+      marker_color_var = variables(
         selected = "AVALC",
         choices = c("AVALC", "AVISIT")
       ),
@@ -187,7 +209,7 @@ app <- init(
         "PD" = "red", "Death" = "black"
       ),
       vref_line = c(30, 60),
-      anno_txt_var = choices_selected(
+      anno_txt_var = variables(
         selected = c("ACTARM", "SEX"),
         choices = c(
           "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",
