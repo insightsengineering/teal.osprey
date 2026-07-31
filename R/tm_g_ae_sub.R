@@ -176,17 +176,17 @@ ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, decorators) {
           min = 0.5,
           max = 1,
           value = 0.95
-        ),
-        teal::ui_transform_teal_data(
-          ns("decorator"),
-          transformators = select_decorators(decorators, "plot")
-        ),
-        ui_g_decorate(
-          ns(NULL),
-          fontsize = fontsize,
-          titles = "AE Table with Subgroups",
-          footnotes = ""
         )
+      ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(decorators, "plot")
+      ),
+      ui_g_decorate(
+        ns(NULL),
+        fontsize = fontsize,
+        titles = "AE Table with Subgroups",
+        footnotes = ""
       )
     )
   )
