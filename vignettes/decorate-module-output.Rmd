@@ -82,7 +82,8 @@ data <- within(teal_data(), {
   ADSL <- rADSL
   ADTR <- rADTR
 })
-data <- teal_data(join_keys = default_cdisc_join_keys[c("ADSL", "ADRS")])
+
+join_keys(data) <- default_cdisc_join_keys[names(data)]
 
 ggplot_caption_decorator <- function(default_caption = "I am a good decorator") {
   teal_transform_module(
@@ -110,12 +111,38 @@ app <- init(
   data = data,
   modules = modules(
     tm_g_spiderplot(
+      label = "Spiderplot",
+      dataname = "ADTR",
       paramcd = variables(
         choices = is_categorical(),
         selected = "PARAMCD"
       ),
+      x_var = variables(
+        choices = dplyr::where(is.numeric),
+        selected = 1L
+      ),
+      y_var = variables(
+        choices = c("PCHG", "CHG", "AVAL"),
+        selected = "PCHG"
+      ),
+      marker_var = variables(
+        choices = c("SEX", "RACE", "USUBJID"),
+        selected = "SEX"
+      ),
+      line_colorby_var = variables(
+        choices = c("SEX", "USUBJID", "RACE"),
+        selected = "SEX"
+      ),
+      xfacet_var = variables(
+        choices = c("SEX", "ARM"),
+        selected = "SEX"
+      ),
+      yfacet_var = variables(
+        choices = c("SEX", "ARM"),
+        selected = "ARM"
+      ),
       decorators = list(
-        plot = ggplot_caption_decorator("I am a Regression")
+        plot = ggplot_caption_decorator("I am a ggplot")
       )
     )
   )
@@ -145,10 +172,11 @@ You can extend them using `grid` and `gridExtra` functions.
 ```{r decorate_grob, message=FALSE, eval=FALSE}
 library(teal.osprey)
 
-data <- teal_data(join_keys = default_cdisc_join_keys[c("ADSL", "ADRS")])
-data <- within(data, {
+data <- within(teal_data(), {
   ADSL <- rADSL
 })
+
+join_keys(data) <- default_cdisc_join_keys[names(data)]
 
 grob_caption_decorator <- function(default_caption = "I am a good decorator") {
   teal_transform_module(
@@ -188,6 +216,8 @@ app <- init(
   data = data,
   modules = modules(
     tm_g_ae_sub(
+      label = "AE subview",
+      dataname = "ADTR",
       arm_var = variables(
         choices = is_categorical(),
         selected = "ACTARMCD"
@@ -197,7 +227,7 @@ app <- init(
         selected = c("SEX", "REGION1", "RACE")
       ),
       decorators = list(
-        plot = grob_caption_decorator("I am a Association")
+        plot = grob_caption_decorator("I am a grob")
       )
     )
   )
@@ -228,10 +258,11 @@ You can extend them using `grid` and `gridExtra` functions.
 ```{r decorate_gtable, message=FALSE, eval=FALSE}
 library(teal.osprey)
 
-data <- teal_data(join_keys = default_cdisc_join_keys[c("ADSL", "ADRS")])
-data <- within(data, {
+data <- within(teal_data, {
   ADSL <- rADSL
 })
+
+join_keys(data) <- default_cdisc_join_keys[names(data)]
 
 grob_caption_decorator <- function(default_caption = "I am a good decorator") {
   teal_transform_module(
@@ -270,7 +301,7 @@ grob_caption_decorator <- function(default_caption = "I am a good decorator") {
 app <- init(
   data = data,
   modules = modules(
-    tm_g_ae_sub(
+    tm_g_swimlane(
       arm_var = variables(
         choices = is_categorical(),
         selected = "ACTARMCD"
@@ -280,7 +311,7 @@ app <- init(
         selected = c("SEX", "REGION1", "RACE")
       ),
       decorators = list(
-        plot = grob_caption_decorator("I am a Association")
+        plot = grob_caption_decorator("I am a gtable")
       )
     )
   )
@@ -310,10 +341,11 @@ You can extend them using `grid` and `gridExtra` functions.
 ```{r decorate_cowplot, message=FALSE, eval=FALSE}
 library(teal.osprey)
 
-data <- teal_data(join_keys = default_cdisc_join_keys[c("ADSL", "ADRS")])
-data <- within(data, {
+data <- within(teal_data(), {
   ADSL <- rADSL
+  ADEX <- rADEX
 })
+join_keys(data) <- default_cdisc_join_keys[names(data)]
 
 grob_caption_decorator <- function(default_caption = "I am a good decorator") {
   teal_transform_module(
@@ -352,17 +384,24 @@ grob_caption_decorator <- function(default_caption = "I am a good decorator") {
 app <- init(
   data = data,
   modules = modules(
-    tm_g_ae_sub(
-      arm_var = variables(
-        choices = is_categorical(),
-        selected = "ACTARMCD"
+    tm_g_patient_profile(
+      label = "Patient Profile Plot",
+      patient_id = variables(
+        choices = "USUBJID",
+        selected = "USUBJID"
       ),
-      group_var = variables(
-        choices = is_categorical(),
-        selected = c("SEX", "REGION1", "RACE")
+      sl_dataname = "ADSL",
+      ex_dataname = "ADEX",
+      sl_start_date = variables(
+        selected = "TRTSDTM",
+        choices = c("TRTSDTM", "RANDDT")
+      ),
+      ex_var = variables(
+        selected = "PARCAT2",
+        choices = "PARCAT2"
       ),
       decorators = list(
-        plot = grob_caption_decorator("I am a Association")
+        plot = grob_caption_decorator("I am a cowplot")
       )
     )
   )
