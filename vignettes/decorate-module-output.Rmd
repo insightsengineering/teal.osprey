@@ -51,7 +51,7 @@ You can also refer the table shown below to know which module outputs can be dec
 | `tm_g_butterfly`        | plot  `grob` / `gtable` |
 | `tm_g_waterfall`        | plot  `grob` / `gtable` |
 | `tm_g_swimlane`         | plot  `grob` / `gtable` |
-| `tm_g_patient_profile`  | plot  `grob` (`cowplot` layout) |
+| `tm_g_patient_profile`  | plot  `grob` / `ggplot` |
 | `tm_g_ae_oview`         | plot  `grob` |
 | `tm_g_ae_sub`           | plot  `grob` |
 | `tm_g_events_term_id`   | plot  `grob` |
@@ -257,14 +257,22 @@ You can extend them using `grid` and `gridExtra` functions.
 
 ```{r decorate_gtable, message=FALSE, eval=FALSE}
 library(teal.osprey)
-
-data <- within(teal_data, {
-  ADSL <- rADSL
+library("dplyr")
+data <- within(teal_data(), {
+  library("dplyr")
+  ADSL <- rADSL %>%
+    mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+    filter(STRATA1 == "A" & ARMCD == "ARM A")
+  ADRS <- rADRS %>%
+    filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+    mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+    rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+    arrange(USUBJID)
 })
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
-grob_caption_decorator <- function(default_caption = "I am a good decorator") {
+gtable_caption_decorator <- function(default_caption = "I am a good decorator") {
   teal_transform_module(
     label = "Caption",
     ui = function(id) {
@@ -281,13 +289,12 @@ grob_caption_decorator <- function(default_caption = "I am a good decorator") {
                   x = 0, hjust = 0,
                   gp = grid::gpar(fontsize = 10, fontface = "italic", col = "gray50")
                 )
-                plot <- gridExtra::arrangeGrob(
+                plot <- gtable_add_grob(
                   plot,
                   footnote_grob,
-                  ncol = 1,
-                  heights = grid::unit.c(
-                    grid::unit(1, "npc") - grid::unit(1, "lines"), grid::unit(1, "lines")
-                  )
+                  t = 1,
+                  l = 1,
+                  clip = "on"
                 )
               },
               footnote = input$footnote
@@ -302,16 +309,18 @@ app <- init(
   data = data,
   modules = modules(
     tm_g_swimlane(
-      arm_var = variables(
-        choices = is_categorical(),
-        selected = "ACTARMCD"
+      label = "Swimlane Plot",
+      dataname = "ADRS",
+      bar_var = variables(
+        choices = c("TRTDURD", "EOSDY"),
+        selected = "TRTDURD"
       ),
-      group_var = variables(
-        choices = is_categorical(),
-        selected = c("SEX", "REGION1", "RACE")
+      bar_color_var = variables(
+        choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX"),
+        selected = "EOSSTT"
       ),
       decorators = list(
-        plot = grob_caption_decorator("I am a gtable")
+        plot = gtable_caption_decorator("I am a gtable")
       )
     )
   )
@@ -333,92 +342,3 @@ url <- roxy.shinylive::create_shinylive_url(code)
 knitr::include_url(url, height = "800px")
 ```
 
-## Decorating `cowplot`
-
-Here's an example to showcase how you can edit an output of class `cowplot`.
-You can extend them using `grid` and `gridExtra` functions.
-
-```{r decorate_cowplot, message=FALSE, eval=FALSE}
-library(teal.osprey)
-
-data <- within(teal_data(), {
-  ADSL <- rADSL
-  ADEX <- rADEX
-})
-join_keys(data) <- default_cdisc_join_keys[names(data)]
-
-grob_caption_decorator <- function(default_caption = "I am a good decorator") {
-  teal_transform_module(
-    label = "Caption",
-    ui = function(id) {
-      shiny::textInput(shiny::NS(id, "footnote"), "Footnote", value = default_caption)
-    },
-    server = function(id, data) {
-      moduleServer(id, function(input, output, session) {
-        reactive({
-          data() |>
-            within(
-              {
-                footnote_grob <- grid::textGrob(
-                  footnote,
-                  x = 0, hjust = 0,
-                  gp = grid::gpar(fontsize = 10, fontface = "italic", col = "gray50")
-                )
-                plot <- gridExtra::arrangeGrob(
-                  plot,
-                  footnote_grob,
-                  ncol = 1,
-                  heights = grid::unit.c(
-                    grid::unit(1, "npc") - grid::unit(1, "lines"), grid::unit(1, "lines")
-                  )
-                )
-              },
-              footnote = input$footnote
-            )
-        })
-      })
-    }
-  )
-}
-
-app <- init(
-  data = data,
-  modules = modules(
-    tm_g_patient_profile(
-      label = "Patient Profile Plot",
-      patient_id = variables(
-        choices = "USUBJID",
-        selected = "USUBJID"
-      ),
-      sl_dataname = "ADSL",
-      ex_dataname = "ADEX",
-      sl_start_date = variables(
-        selected = "TRTSDTM",
-        choices = c("TRTSDTM", "RANDDT")
-      ),
-      ex_var = variables(
-        selected = "PARCAT2",
-        choices = "PARCAT2"
-      ),
-      decorators = list(
-        plot = grob_caption_decorator("I am a cowplot")
-      )
-    )
-  )
-)
-
-if (interactive()) {
-  shinyApp(app$ui, app$server)
-}
-```
-
-```{r shinylive_iframe_4, echo = FALSE, out.width = '150%', out.extra = 'style = "position: relative; z-index:1"', eval = requireNamespace("roxy.shinylive", quietly = TRUE) && knitr::is_html_output() && identical(Sys.getenv("IN_PKGDOWN"), "true")}
-code <- paste0(c(
-  "interactive <- function() TRUE",
-  knitr::knit_code$get("setup"),
-  knitr::knit_code$get("decorate_cowplot")
-), collapse = "\n")
-
-url <- roxy.shinylive::create_shinylive_url(code)
-knitr::include_url(url, height = "800px")
-```

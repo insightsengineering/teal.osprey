@@ -240,12 +240,12 @@ tm_g_swimlane <- function(label,
       marker_pos_var = marker_pos_var,
       marker_shape_var = marker_shape_var,
       marker_color_var = marker_color_var,
-      anno_txt_var = anno_txt_var
+      anno_txt_var = anno_txt_var,
+      dataname = picks(teal.picks::datasets(dataname, dataname))
     )
   )
 
   args <- as.list(environment())
-
   module(
     label = label,
     ui = ui_g_swimlane,
