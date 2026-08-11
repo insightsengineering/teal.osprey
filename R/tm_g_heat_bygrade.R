@@ -151,7 +151,7 @@ tm_g_heat_bygrade <- function(
   ),
   anno_var = teal.picks::variables(
     choices = teal.picks::is_categorical(min.len = 2),
-    selected = 2L,
+    selected = 1L,
     multiple = TRUE
   ),
   heat_var = teal.picks::variables(
