@@ -137,4 +137,23 @@ describe("tm_g_ae_oview module creation", {
       }
     )
   })
+
+  it("creates a module using only default arguments", {
+    mod <- suppressWarnings(tm_g_ae_oview(
+      label = "AE Overview",
+      dataname = "ADAE",
+    ), classes = "picks_delayed")
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          fontsize = 5, conf_level = 0.95, diff_ci_method = "wald",
+          arm_ref = "A: Drug X", arm_trt = "B: Placebo"
+        )
+        expect_no_error(session$returned())
+      }
+    )
+  })
 })

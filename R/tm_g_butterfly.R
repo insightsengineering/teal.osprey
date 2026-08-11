@@ -126,8 +126,8 @@
 tm_g_butterfly <- function(label,
                            dataname,
                            filter_var = NULL,
-                           right_var = teal.picks::variables(teal.picks::is_categorical()),
-                           left_var = teal.picks::variables(teal.picks::is_categorical()),
+                           right_var = teal.picks::variables(function(x) is.factor(x)),
+                           left_var = teal.picks::variables(function(x) is.factor(x)),
                            category_var = teal.picks::variables(teal.picks::is_categorical()),
                            color_by_var = teal.picks::variables(dplyr::starts_with("AETO")),
                            count_by_var = values(

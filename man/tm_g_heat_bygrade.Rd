@@ -14,7 +14,7 @@ tm_g_heat_bygrade(
     1L),
   ongo_var = teal.picks::variables(choices = dplyr::starts_with("ongo"), selected = 1L),
   anno_var = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
-    selected = 2L, multiple = TRUE),
+    selected = 1L, multiple = TRUE),
   heat_var = teal.picks::variables(choices = dplyr::starts_with("AET0"), selected = 1L),
   cm_dataname = NULL,
   conmed_var = NULL,

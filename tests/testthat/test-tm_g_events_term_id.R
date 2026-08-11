@@ -127,6 +127,32 @@ describe("tm_g_events_term_id module creation", {
       }
     )
   })
+
+  it("using default arguments works", {
+    mod <- suppressWarnings(tm_g_events_term_id(
+      label = "Common AE",
+      dataname = "ADAE",
+      parentname = "ADSL",
+    ), classes = "picks_delayed")
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          arm_ref = "A: Drug X",
+          arm_trt = "B: Placebo",
+          ci = "wald", conf_level = 0.95,
+          raterange = c(.1, 1),
+          diffrange = c(-.5, .5),
+          reverse = FALSE,
+          fontsize = 5
+        )
+        session$flushReact()
+        expect_no_error(session$returned())
+      }
+    )
+  })
 })
 
 test_that("tm_g_events_term_id coerces multiple variable selection", {
