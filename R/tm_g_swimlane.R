@@ -129,7 +129,7 @@
 tm_g_swimlane <- function(label,
                           dataname,
                           bar_var = teal.picks::variables(
-                            choices = dplyr::where(is.numeric),
+                            choices = is.numeric,
                             selected = 1L
                           ),
                           parentname = "ADSL",
