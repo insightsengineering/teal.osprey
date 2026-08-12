@@ -54,7 +54,7 @@
 tm_g_ae_sub <- function(label,
                         dataname,
                         arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
-                        group_var = teal.picks::variables(function(x) is.factor(x)),
+                        group_var = teal.picks::variables(is.factor),
                         plot_height = c(600L, 200L, 2000L),
                         plot_width = NULL,
                         fontsize = c(5, 3, 7),
