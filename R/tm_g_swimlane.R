@@ -69,8 +69,6 @@
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
-#' ADSL <- data[["ADSL"]]
-#' ADRS <- data[["ADRS"]]
 #'
 #' app <- init(
 #'   data = data,
