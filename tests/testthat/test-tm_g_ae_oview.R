@@ -75,34 +75,34 @@ describe("tm_g_ae_oview module creation", {
   join_keys(data) <- default_cdisc_join_keys[names(data)]
 
   it("creates a teal module using choices_selected", {
-    mod <- tm_g_ae_oview(
+    mod <- suppressWarnings(tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
       arm_var = arm_var_cs,
       flag_var_anl = flag_var_cs,
       plot_height = c(600, 200, 2000)
-    )
+    ), classes = "picks_delayed")
     expect_s3_class(mod, "teal_module")
   })
 
   it("creates a teal module using picks", {
-    mod <- tm_g_ae_oview(
+    mod <- suppressWarnings(tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
       arm_var = arm_var_picks,
       flag_var_anl = flag_var_picks,
       plot_height = c(600, 200, 2000)
-    )
+    ), classes = "picks_delayed")
     expect_s3_class(mod, "teal_module")
   })
 
   it("creates a teal module using choices_selected", {
-    mod <- tm_g_ae_oview(
+    mod <- suppressWarnings(tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
       arm_var = arm_var_cs,
       flag_var_anl = flag_var_cs
-    )
+    ), classes = "picks_delayed")
     testServer(
       mod$server,
       args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
@@ -123,6 +123,25 @@ describe("tm_g_ae_oview module creation", {
       arm_var = arm_var_picks,
       flag_var_anl = flag_var_picks,
       plot_height = c(600, 200, 2000)
+    ), classes = "picks_delayed")
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          fontsize = 5, conf_level = 0.95, diff_ci_method = "wald",
+          arm_ref = "A: Drug X", arm_trt = "B: Placebo"
+        )
+        expect_no_error(session$returned())
+      }
+    )
+  })
+
+  it("creates a module using only default arguments", {
+    mod <- suppressWarnings(tm_g_ae_oview(
+      label = "AE Overview",
+      dataname = "ADAE",
     ), classes = "picks_delayed")
 
     testServer(

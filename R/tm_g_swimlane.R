@@ -93,8 +93,6 @@
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
 #'
-#' ADSL <- data[["ADSL"]]
-#' ADRS <- data[["ADRS"]]
 #'
 #' app <- init(
 #'   data = data,
@@ -152,7 +150,10 @@
 #'
 tm_g_swimlane <- function(label,
                           dataname,
-                          bar_var,
+                          bar_var = teal.picks::variables(
+                            choices = is.numeric,
+                            selected = 1L
+                          ),
                           parentname = "ADSL",
                           bar_color_var = NULL,
                           sort_var = NULL,

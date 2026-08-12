@@ -182,6 +182,42 @@ describe("tm_g_swimlane module creation", {
     )
   })
 
+  it("works using default arguments", {
+    data <- within(teal_data(), {
+      library(nestcolor)
+      library(dplyr)
+      ADSL <- rADSL %>%
+        mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+        filter(STRATA1 == "A" & ARMCD == "ARM A")
+      ADRS <- rADRS %>%
+        filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+        mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+        rbind(filter(rADRS, PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+        arrange(USUBJID)
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+    mod <- tm_g_swimlane(
+      label = "Test - Swimlane",
+      dataname = dataname,
+    )
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          arm_ref = "ARM A",
+          arm_trt = "ARM B",
+          ci = "wald", conf_level = 0.95,
+          fontsize = 3,
+          arm_n = FALSE
+        )
+        expect_no_error(session$returned())
+      }
+    )
+  })
+
+
   it("works with (optionally) NULL argument as module argument", {
     data <- within(teal_data(), {
       library(nestcolor)

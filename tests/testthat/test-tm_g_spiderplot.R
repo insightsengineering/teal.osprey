@@ -292,4 +292,30 @@ describe("tm_g_spiderplot module creation", {
       regexp = "rows containing missing values or values outside the scale range"
     )
   })
+
+  it("module using default arguments works", {
+    mod <- suppressWarnings(
+      tm_g_spiderplot(
+        label = "Spider Plot",
+        dataname = "ADTR",
+      ),
+      classes = "picks_delayed"
+    )
+
+    data <- within(teal_data(), {
+      ADSL <- teal.data::rADSL
+      ADTR <- teal.data::rADTR
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(paramcd_val = "SLDINV", anno_txt_var = FALSE)
+        expect_no_error(session$returned())
+      }
+    )
+  })
 })

@@ -90,8 +90,8 @@
 tm_g_ae_oview <- function(
   label,
   dataname,
-  arm_var,
-  flag_var_anl,
+  arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
+  flag_var_anl = teal.picks::variables(dplyr::matches("^(TMPFL|AEREL[1-9])")),
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
@@ -106,21 +106,8 @@ tm_g_ae_oview <- function(
   arm_var <- create_picks_helper(teal.picks::datasets(dataname), arm_var)
   flag_var_anl <- create_picks_helper(teal.picks::datasets(dataname), flag_var_anl)
 
-  if (teal.picks::is_pick_multiple(arm_var$variables)) {
-    warning(
-      "`arm_var` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(arm_var$variables, "multiple") <- FALSE
-  }
-
-  if (teal.picks::is_pick_multiple(flag_var_anl$variables)) {
-    warning(
-      "`flag_var_anl` accepts only a single variable selection. ",
-      "Forcing `teal.picks::variables(multiple)` to FALSE."
-    )
-    attr(flag_var_anl$variables, "multiple") <- FALSE
-  }
+  arm_var <- force_pick_selection(arm_var, "arm_var", multiple = FALSE)
+  flag_var_anl <- force_pick_selection(flag_var_anl, "flag_var_anl", multiple = FALSE)
 
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),

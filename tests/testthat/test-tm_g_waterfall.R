@@ -283,9 +283,11 @@ describe("tm_g_waterfall module creation", {
       args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
       expr = {
         session$setInputs(
+          `bar_var-selected` = "PCHG",
           ytick_at = 20, gap_point_val = 15, href_line = 2, show_value = FALSE,
         )
-        expect_no_error(session$returned())
+        session$flushReact()
+        expect_no_error(output_q())
       }
     )
   })
@@ -326,6 +328,34 @@ describe("tm_g_waterfall module creation", {
           ytick_at = 20, gap_point_val = 15, href_line = 2, show_value = FALSE,
         )
         expect_no_error(session$returned())
+      }
+    )
+  })
+
+  it("works using default arguments", {
+    data <- within(teal_data(), {
+      library(nestcolor)
+      ADSL <- rADSL
+      ADRS <- rADRS
+      ADTR <- rADTR
+      ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+    })
+
+    join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+    mod <- tm_g_waterfall(
+      label = "Waterfall"
+    )
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          `bar_var-selected` = "PCHG",
+          ytick_at = 20, gap_point_val = 15, href_line = 2, show_value = FALSE,
+        )
+        session$flushReact()
+        expect_no_error(output_q())
       }
     )
   })

@@ -151,11 +151,14 @@
 tm_g_butterfly <- function(label,
                            dataname,
                            filter_var = NULL,
-                           right_var,
-                           left_var,
-                           category_var,
-                           color_by_var,
-                           count_by_var,
+                           right_var = teal.picks::variables(is.factor),
+                           left_var = teal.picks::variables(is.factor),
+                           category_var = teal.picks::variables(teal.picks::is_categorical()),
+                           color_by_var = teal.picks::variables(dplyr::starts_with("AETO")),
+                           count_by_var = values(
+                             choices = c("# of patients", "# of AEs"),
+                             selected = "# of patients"
+                           ),
                            facet_var = NULL,
                            sort_by_var = teal.picks::values(
                              choices = c("count", "alphabetical"),

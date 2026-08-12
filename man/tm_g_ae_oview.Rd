@@ -7,8 +7,8 @@
 tm_g_ae_oview(
   label,
   dataname,
-  arm_var,
-  flag_var_anl,
+  arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
+  flag_var_anl = teal.picks::variables(dplyr::matches("^(TMPFL|AEREL[1-9])")),
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
