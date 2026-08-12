@@ -231,4 +231,25 @@ describe("tm_g_butterfly module creation", {
       }
     )
   })
+
+  it("works with default arguments", {
+    mod <- suppressWarnings(tm_g_butterfly(
+      label = "Butterfly Plot",
+      dataname = "ADAE",
+    ), classes = "picks_delayed")
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(
+          right_val = "YEARS",
+          left_val = "YEARS",
+          legend_on = TRUE,
+          count_by_var = "# of patients"
+        )
+        session$flushReact()
+        expect_no_error(session$returned())
+      }
+    )
+  })
 })

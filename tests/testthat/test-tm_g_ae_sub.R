@@ -122,6 +122,7 @@ describe("tm_g_ae_sub module creation", {
           arm_ref = "ARM A",
           arm_trt = "ARM B",
           ci = "wald", conf_level = 0.95,
+          arm_var = "ACTARM",
           fontsize = 3,
           arm_n = FALSE
         )
