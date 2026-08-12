@@ -7,7 +7,7 @@
 tm_g_swimlane(
   label,
   dataname,
-  bar_var = teal.picks::variables(choices = dplyr::where(is.numeric), selected = 1L),
+  bar_var = teal.picks::variables(choices = is.numeric, selected = 1L),
   parentname = "ADSL",
   bar_color_var = NULL,
   sort_var = NULL,
