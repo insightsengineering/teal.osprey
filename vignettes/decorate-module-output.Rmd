@@ -59,12 +59,11 @@ You can also refer the table shown below to know which module outputs can be dec
 
 
 
-Also, note that there are four different types of objects that can be decorated:
+Also, note that there are three different types of objects that can be decorated:
 
 1. `ggplot`
 2. `grob`
 3. `gtable`
-4. `cowplot`
 
 
 
@@ -174,6 +173,7 @@ library(teal.osprey)
 
 data <- within(teal_data(), {
   ADSL <- rADSL
+  ADTR <- rADTR
 })
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
@@ -289,7 +289,7 @@ gtable_caption_decorator <- function(default_caption = "I am a good decorator") 
                   x = 0, hjust = 0,
                   gp = grid::gpar(fontsize = 10, fontface = "italic", col = "gray50")
                 )
-                plot <- gtable_add_grob(
+                plot <- gtable::gtable_add_grob(
                   plot,
                   footnote_grob,
                   t = 1,
