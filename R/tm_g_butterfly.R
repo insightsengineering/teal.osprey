@@ -55,6 +55,31 @@
 #'   used directly as filter.
 #'
 #' @inherit argument_convention return
+#'
+#' @section Decorating Module:
+#'
+#' This module generates the following objects, which can be modified in place using decorators:
+#' - `plot` (`grob`, `gtable`)
+#'
+#' A Decorator is applied to the specific output using a named list of `teal_transform_module` objects.
+#' The name of this list corresponds to the name of the output to which the decorator is applied.
+#' See code snippet below:
+#'
+#' ```
+#' tm_g_butterfly(
+#'    ..., # arguments for module
+#'    decorators = list(
+#'      plot = teal_transform_module(...), # applied to the `plot` output
+#'    )
+#' )
+#' ```
+#'
+#' For additional details and examples of decorators, refer to the vignette
+#' `vignette("decorate-module-output", package = "teal.modules.general")`.
+#'
+#' To learn more please refer to the vignette
+#' `vignette("transform-module-output", package = "teal")` or the [`teal::teal_transform_module()`] documentation.
+#'
 #' @inheritSection teal::example_module Reporting
 #'
 #' @template author_zhanc107
@@ -144,7 +169,8 @@ tm_g_butterfly <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL,
-                           transformators = list()) {
+                           transformators = list(),
+                           decorators = list()) {
   message("Initializing tm_g_butterfly")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
@@ -190,6 +216,8 @@ tm_g_butterfly <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  assert_transformators(transformators)
+  teal::assert_decorators(decorators, "plot")
 
   args <- as.list(environment())
 
@@ -215,7 +243,8 @@ ui_g_butterfly <- function(id,
                            sort_by_var,
                            legend_on,
                            pre_output,
-                           post_output) {
+                           post_output,
+                           decorators) {
   ns <- NS(id)
 
   teal.widgets::standard_layout(
@@ -288,6 +317,10 @@ ui_g_butterfly <- function(id,
         ns("legend_on"),
         "Add legend",
         value = legend_on
+      ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(decorators, "plot")
       )
     ),
     pre_output = pre_output,
@@ -307,7 +340,8 @@ srv_g_butterfly <- function(
   filter_var,
   facet_var,
   plot_height,
-  plot_width
+  plot_width,
+  decorators
 ) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
@@ -566,7 +600,13 @@ srv_g_butterfly <- function(
       })
     )
 
-    plot_r <- reactive(output_q()[["plot"]])
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
 
     # Insert the plot into a plot_with_settings module from teal.widgets
     pws <- teal.widgets::plot_with_settings_srv(
@@ -576,6 +616,6 @@ srv_g_butterfly <- function(
       width = plot_width
     )
 
-    set_chunk_dims(pws, output_q)
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

@@ -70,6 +70,30 @@
 #' @template author_qit3
 #'
 #' @inherit argument_convention return
+#' @section Decorating Module:
+#'
+#' This module generates the following objects, which can be modified in place using decorators:
+#' - `plot` (`grob`)
+#'
+#' A Decorator is applied to the specific output using a named list of `teal_transform_module` objects.
+#' The name of this list corresponds to the name of the output to which the decorator is applied.
+#' See code snippet below:
+#'
+#' ```
+#' tm_g_patient_profile(
+#'    ..., # arguments for module
+#'    decorators = list(
+#'      plot = teal_transform_module(...), # applied to the `plot` output
+#'    )
+#' )
+#' ```
+#'
+#' For additional details and examples of decorators, refer to the vignette
+#' `vignette("decorate-module-output", package = "teal.modules.general")`.
+#'
+#' To learn more please refer to the vignette
+#' `vignette("transform-module-output", package = "teal")` or the [`teal::teal_transform_module()`] documentation.
+#'
 #' @inheritSection teal::example_module Reporting
 #'
 #' @details
@@ -180,8 +204,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
                                  plot_width = NULL,
                                  pre_output = NULL,
                                  post_output = NULL,
-                                 transformators = list()) {
-  message("Initializing tm_g_patient_profile")
+                                 transformators = list(),
+                                 decorators = list()) {
   checkmate::assert_string(label)
   checkmate::assert_string(sl_dataname)
   checkmate::assert_string(ex_dataname, na.ok = TRUE)
@@ -255,6 +279,8 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  assert_transformators(transformators)
+  teal::assert_decorators(decorators, "plot")
 
   checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
   if (sum(!is.na(checkboxes)) < 1L) {
@@ -290,7 +316,8 @@ ui_g_patient_profile <- function(id,
                                  lb_var,
                                  x_limit,
                                  pre_output,
-                                 post_output) {
+                                 post_output,
+                                 decorators) {
   ns <- NS(id)
   checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
 
@@ -392,6 +419,10 @@ ui_g_patient_profile <- function(id,
             helpText("Enter TWO numeric values of study days range, separated by comma (eg. -28, 750)")
           ),
           value = x_limit
+        ),
+        teal::ui_transform_teal_data(
+          ns("decorator"),
+          transformators = select_decorators(decorators, "plot")
         )
       ),
       pre_output = pre_output,
@@ -419,14 +450,16 @@ srv_g_patient_profile <- function(id,
                                   label,
                                   ae_line_col_opt,
                                   plot_height,
-                                  plot_width) {
+                                  plot_width,
+                                  decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
-  if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = names(data))
-  if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = names(data))
-  if (!is.na(rs_dataname)) checkmate::assert_names(rs_dataname, subset.of = names(data))
-  if (!is.na(lb_dataname)) checkmate::assert_names(lb_dataname, subset.of = names(data))
-  if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = names(data))
+  data_names <- names(isolate(data()))
+  if (!is.na(ex_dataname)) checkmate::assert_names(ex_dataname, subset.of = data_names)
+  if (!is.na(ae_dataname)) checkmate::assert_names(ae_dataname, subset.of = data_names)
+  if (!is.na(rs_dataname)) checkmate::assert_names(rs_dataname, subset.of = data_names)
+  if (!is.na(lb_dataname)) checkmate::assert_names(lb_dataname, subset.of = data_names)
+  if (!is.na(cm_dataname)) checkmate::assert_names(cm_dataname, subset.of = data_names)
   checkboxes <- c(ex_dataname, ae_dataname, rs_dataname, lb_dataname, cm_dataname)
   checkmate::assert_vector(checkboxes[!is.na(checkboxes)], min.len = 1)
 
@@ -1088,7 +1121,13 @@ srv_g_patient_profile <- function(id,
       )
     })
 
-    plot_r <- reactive(output_q()[["plot"]])
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
 
     pws <- teal.widgets::plot_with_settings_srv(
       id = "patientprofileplot",
@@ -1097,6 +1136,6 @@ srv_g_patient_profile <- function(id,
       width = plot_width
     )
 
-    set_chunk_dims(pws, output_q)
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

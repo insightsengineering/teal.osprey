@@ -61,6 +61,30 @@
 #' @param show_value (`logical(1)`) boolean of whether value of bar height is shown, default is `TRUE`
 #'
 #' @inherit argument_convention return
+#' @section Decorating Module:
+#'
+#' This module generates the following objects, which can be modified in place using decorators:
+#' - `plot` (`grob`, `gtable`)
+#'
+#' A Decorator is applied to the specific output using a named list of `teal_transform_module` objects.
+#' The name of this list corresponds to the name of the output to which the decorator is applied.
+#' See code snippet below:
+#'
+#' ```
+#' tm_g_butterfly(
+#'    ..., # arguments for module
+#'    decorators = list(
+#'      plot = teal_transform_module(...), # applied to the `plot` output
+#'    )
+#' )
+#' ```
+#'
+#' For additional details and examples of decorators, refer to the vignette
+#' `vignette("decorate-module-output", package = "teal.modules.general")`.
+#'
+#' To learn more please refer to the vignette
+#' `vignette("transform-module-output", package = "teal")` or the [`teal::teal_transform_module()`] documentation.
+#'
 #' @inheritSection teal::example_module Reporting
 #'
 #' @export
@@ -128,7 +152,8 @@ tm_g_waterfall <- function(label,
                            plot_width = NULL,
                            pre_output = NULL,
                            post_output = NULL,
-                           transformators = list()) {
+                           transformators = list(),
+                           decorators = list()) {
   message("Initializing tm_g_waterfall")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname_tr)
@@ -144,6 +169,8 @@ tm_g_waterfall <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  assert_transformators(transformators)
+  teal::assert_decorators(decorators, "plot")
 
   checkmate::assert_multi_class(bar_paramcd, classes = c("picks", "values", "choices_selected"))
   checkmate::assert_multi_class(add_label_paramcd_rs, classes = c("picks", "values", "choices_selected"))
@@ -233,7 +260,8 @@ ui_g_waterfall <- function(id,
                            ytick_at,
                            gap_point_val,
                            pre_output,
-                           post_output) {
+                           post_output,
+                           decorators) {
   ns <- NS(id)
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
@@ -313,6 +341,10 @@ ui_g_waterfall <- function(id,
           helpText("Enter a numeric value to break very high bars")
         ),
         value = gap_point_val
+      ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(decorators, "plot")
       )
     ),
     pre_output = pre_output,
@@ -337,7 +369,8 @@ srv_g_waterfall <- function(id,
                             bar_color_opt,
                             label,
                             plot_height,
-                            plot_width) {
+                            plot_width,
+                            decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -627,7 +660,13 @@ srv_g_waterfall <- function(id,
       )
     })
 
-    plot_r <- reactive(output_q()[["plot"]])
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
 
     # Insert the plot into a plot_with_settings module from teal.widgets
     pws <- teal.widgets::plot_with_settings_srv(
@@ -637,6 +676,6 @@ srv_g_waterfall <- function(id,
       width = plot_width
     )
 
-    set_chunk_dims(pws, output_q)
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

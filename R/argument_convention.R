@@ -39,6 +39,14 @@
 #' @param plot_width (`numeric(3)`)\cr
 #'  vector to indicate default value, minimum and maximum values.
 #'
+#' @param transformators (`list` of `teal_transform_module`) optional,
+#' input data transforms applied after filtering (UI in the filter sidebar under
+#' **Transform Data**). See `vignette("transform-input-data", package = "teal")`.
+#'
+#' @param decorators `r lifecycle::badge("experimental")`
+#' (named `list` of `teal_transform_module`) optional,
+#' decorators for the module `plot` output.
+#'
 #' @return the [teal::module()] object.
 #'
 #' @name argument_convention

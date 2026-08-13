@@ -16,6 +16,30 @@
 #' @author Molly He (hey59) \email{hey59@gene.com}
 #'
 #' @inherit argument_convention return
+#' @section Decorating Module:
+#'
+#' This module generates the following objects, which can be modified in place using decorators:
+#' - `plot` (`grob`)
+#'
+#' A Decorator is applied to the specific output using a named list of `teal_transform_module` objects.
+#' The name of this list corresponds to the name of the output to which the decorator is applied.
+#' See code snippet below:
+#'
+#' ```
+#' tm_g_ae_sub(
+#'    ..., # arguments for module
+#'    decorators = list(
+#'      plot = teal_transform_module(...), # applied to the `plot` output
+#'    )
+#' )
+#' ```
+#'
+#' For additional details and examples of decorators, refer to the vignette
+#' `vignette("decorate-module-output", package = "teal.modules.general")`.
+#'
+#' To learn more please refer to the vignette
+#' `vignette("transform-module-output", package = "teal")` or the [`teal::teal_transform_module()`] documentation.
+#'
 #' @inheritSection teal::example_module Reporting
 #'
 #' @export
@@ -58,7 +82,8 @@ tm_g_ae_sub <- function(label,
                         plot_height = c(600L, 200L, 2000L),
                         plot_width = NULL,
                         fontsize = c(5, 3, 7),
-                        transformators = list()) {
+                        transformators = list(),
+                        decorators = list()) {
   message("Initializing tm_g_ae_sub")
 
   arm_var <- migrate_choices_selected_to_variables(arm_var)
@@ -83,6 +108,8 @@ tm_g_ae_sub <- function(label,
     plot_width[1],
     lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
   )
+  assert_transformators(transformators)
+  teal::assert_decorators(decorators, "plot")
   checkmate::assert_class(arm_var, "picks")
   checkmate::assert_class(group_var, "picks")
 
@@ -99,7 +126,7 @@ tm_g_ae_sub <- function(label,
   )
 }
 
-ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, arm_n = FALSE) {
+ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, decorators) {
   ns <- NS(id)
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
@@ -125,7 +152,7 @@ ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, arm_n = FALSE) {
       checkboxInput(
         ns("arm_n"),
         "Show N in each arm",
-        value = arm_n
+        value = FALSE
       ),
       tags$div(
         tags$strong("Group variable"),
@@ -149,13 +176,17 @@ ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, arm_n = FALSE) {
           min = 0.5,
           max = 1,
           value = 0.95
-        ),
-        ui_g_decorate(
-          ns(NULL),
-          fontsize = fontsize,
-          titles = "AE Table with Subgroups",
-          footnotes = ""
         )
+      ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(decorators, "plot")
+      ),
+      ui_g_decorate(
+        ns(NULL),
+        fontsize = fontsize,
+        titles = "AE Table with Subgroups",
+        footnotes = ""
       )
     )
   )
@@ -169,7 +200,8 @@ srv_g_ae_sub <- function(id,
                          group_var,
                          plot_height,
                          plot_width,
-                         fontsize) {
+                         fontsize,
+                         decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
 
@@ -182,6 +214,7 @@ srv_g_ae_sub <- function(id,
       group_var = group_var
     )
 
+    font_size <- reactive(input$fontsize)
     # Initialize picks selectors
     selectors <- teal.picks::picks_srv(
       picks = picks_list,
@@ -379,6 +412,21 @@ srv_g_ae_sub <- function(id,
       })
     )
 
-    set_chunk_dims(pws, output_q)
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
+
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
+    )
+    pws <- decorate_output$pws
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

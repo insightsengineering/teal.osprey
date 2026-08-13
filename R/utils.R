@@ -15,6 +15,19 @@
 #'
 NULL
 
+select_decorators <- utils::getFromNamespace("select_decorators", "teal")
+
+#' Validate module `transformators` argument
+#' @param transformators (`list` or `teal_transform_module`)
+#' @keywords internal
+assert_transformators <- function(transformators) {
+  if (inherits(transformators, "teal_transform_module")) {
+    transformators <- list(transformators)
+  }
+  checkmate::assert_list(transformators, types = "teal_transform_module")
+  invisible(transformators)
+}
+
 #' Utility function for quick filter
 #'
 #'

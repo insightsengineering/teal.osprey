@@ -13,6 +13,30 @@
 #'   Object with variables used to count adverse event
 #'   sub-groups (e.g. Serious events, Related events, etc.)
 #' @inherit argument_convention return
+#' @section Decorating Module:
+#'
+#' This module generates the following objects, which can be modified in place using decorators:
+#' - `plot` (`grob`)
+#'
+#' A Decorator is applied to the specific output using a named list of `teal_transform_module` objects.
+#' The name of this list corresponds to the name of the output to which the decorator is applied.
+#' See code snippet below:
+#'
+#' ```
+#' tm_g_ae_oview(
+#'    ..., # arguments for module
+#'    decorators = list(
+#'      plot = teal_transform_module(...), # applied to the `plot` output
+#'    )
+#' )
+#' ```
+#'
+#' For additional details and examples of decorators, refer to the vignette
+#' `vignette("decorate-module-output", package = "teal.modules.general")`.
+#'
+#' To learn more please refer to the vignette
+#' `vignette("transform-module-output", package = "teal")` or the [`teal::teal_transform_module()`] documentation.
+#'
 #' @inheritSection teal::example_module Reporting
 #'
 #' @examples
@@ -71,7 +95,8 @@ tm_g_ae_oview <- function(
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
-  transformators = list()
+  transformators = list(),
+  decorators = list()
 ) {
   message("Initializing tm_g_ae_oview")
 
@@ -128,6 +153,8 @@ tm_g_ae_oview <- function(
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  assert_transformators(transformators)
+  teal::assert_decorators(decorators, "plot")
 
   args <- as.list(environment())
 
@@ -146,7 +173,8 @@ ui_g_ae_oview <- function(
   id,
   arm_var,
   flag_var_anl,
-  fontsize
+  fontsize,
+  decorators
 ) {
   ns <- NS(id)
 
@@ -198,6 +226,10 @@ ui_g_ae_oview <- function(
         selected = "left",
         multiple = FALSE
       ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(decorators, "plot")
+      ),
       ui_g_decorate(
         ns(NULL),
         fontsize = fontsize,
@@ -214,7 +246,8 @@ srv_g_ae_oview <- function(
   arm_var,
   flag_var_anl,
   plot_height,
-  plot_width
+  plot_width,
+  decorators
 ) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(isolate(data()), "teal_data")
@@ -387,7 +420,21 @@ srv_g_ae_oview <- function(
       })
     )
 
-    plot_r <- reactive(output_q()[["plot"]])
-    set_chunk_dims(pws, output_q)
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
+
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
+    )
+    pws <- decorate_output$pws
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

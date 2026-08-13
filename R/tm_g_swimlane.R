@@ -51,6 +51,30 @@
 #'   Label of the x axis.
 #'
 #' @inherit argument_convention return
+#' @section Decorating Module:
+#'
+#' This module generates the following objects, which can be modified in place using decorators:
+#' - `plot` (`grob`, `gtable`)
+#'
+#' A Decorator is applied to the specific output using a named list of `teal_transform_module` objects.
+#' The name of this list corresponds to the name of the output to which the decorator is applied.
+#' See code snippet below:
+#'
+#' ```
+#' tm_g_swimlane(
+#'    ..., # arguments for module
+#'    decorators = list(
+#'      plot = teal_transform_module(...), # applied to the `plot` output
+#'    )
+#' )
+#' ```
+#'
+#' For additional details and examples of decorators, refer to the vignette
+#' `vignette("decorate-module-output", package = "teal.modules.general")`.
+#'
+#' To learn more please refer to the vignette
+#' `vignette("transform-module-output", package = "teal")` or the [`teal::teal_transform_module()`] documentation.
+#'
 #' @inheritSection teal::example_module Reporting
 #'
 #' @examples
@@ -145,7 +169,10 @@ tm_g_swimlane <- function(label,
                           pre_output = NULL,
                           post_output = NULL,
                           x_label = "Time from First Treatment (Day)",
-                          transformators = list()) {
+                          transformators = list(),
+                          decorators = list()) {
+  message("Initializing tm_g_swimlane")
+
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
 
@@ -202,6 +229,8 @@ tm_g_swimlane <- function(label,
     lower = plot_width[2], upper = plot_width[3], null.ok = TRUE, .var.name = "plot_width"
   )
   checkmate::assert_string(x_label)
+  assert_transformators(transformators)
+  teal::assert_decorators(decorators, "plot")
 
   pick_slots <- Filter(
     Negate(is.null),
@@ -217,7 +246,6 @@ tm_g_swimlane <- function(label,
   )
 
   args <- as.list(environment())
-
   module(
     label = label,
     ui = ui_g_swimlane,
@@ -241,7 +269,8 @@ ui_g_swimlane <- function(id,
                           anno_txt_var,
                           vref_line,
                           pre_output,
-                          post_output) {
+                          post_output,
+                          decorators) {
   ns <- NS(id)
 
   shiny::tagList(
@@ -304,6 +333,10 @@ ui_g_swimlane <- function(id,
             helpText("Enter numeric value(s) of reference lines, separated by comma (eg. 100, 200)")
           ),
           value = paste(vref_line, collapse = ", ")
+        ),
+        teal::ui_transform_teal_data(
+          ns("decorator"),
+          transformators = select_decorators(decorators, "plot")
         )
       ),
       pre_output = pre_output,
@@ -328,7 +361,8 @@ srv_g_swimlane <- function(id,
                            marker_pos_var,
                            marker_shape_var,
                            marker_color_var,
-                           anno_txt_var) {
+                           anno_txt_var,
+                           decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(isolate(data()), "teal_data")
 
@@ -494,7 +528,13 @@ srv_g_swimlane <- function(id,
       )
     })
 
-    plot_r <- reactive(output_q()[["plot"]])
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
 
     pws <- teal.widgets::plot_with_settings_srv(
       id = "swimlaneplot",
@@ -503,6 +543,6 @@ srv_g_swimlane <- function(id,
       width = plot_width
     )
 
-    set_chunk_dims(pws, output_q)
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

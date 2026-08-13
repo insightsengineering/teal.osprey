@@ -37,6 +37,30 @@
 #'   For y facets.
 #'
 #' @inherit argument_convention return
+#' @section Decorating Module:
+#'
+#' This module generates the following objects, which can be modified in place using decorators:
+#' - `plot` (`ggplot`)
+#'
+#' A Decorator is applied to the specific output using a named list of `teal_transform_module` objects.
+#' The name of this list corresponds to the name of the output to which the decorator is applied.
+#' See code snippet below:
+#'
+#' ```
+#' tm_g_spiderplot(
+#'    ..., # arguments for module
+#'    decorators = list(
+#'      plot = teal_transform_module(...), # applied to the `plot` output
+#'    )
+#' )
+#' ```
+#'
+#' For additional details and examples of decorators, refer to the vignette
+#' `vignette("decorate-module-output", package = "teal.modules.general")`.
+#'
+#' To learn more please refer to the vignette
+#' `vignette("transform-module-output", package = "teal")` or the [`teal::teal_transform_module()`] documentation.
+#'
 #' @inheritSection teal::example_module Reporting
 #'
 #' @template author_zhanc107
@@ -127,7 +151,8 @@ tm_g_spiderplot <- function(label,
                             plot_width = NULL,
                             pre_output = NULL,
                             post_output = NULL,
-                            transformators = list()) {
+                            transformators = list(),
+                            decorators = list()) {
   message("Initializing tm_g_spiderplot")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
@@ -180,6 +205,8 @@ tm_g_spiderplot <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  assert_transformators(transformators)
+  teal::assert_decorators(decorators, "plot")
 
   args <- as.list(environment())
   module(
@@ -207,7 +234,8 @@ ui_g_spider <- function(id,
                         anno_txt_var,
                         legend_on,
                         pre_output,
-                        post_output) {
+                        post_output,
+                        decorators) {
   ns <- NS(id)
   shiny::tagList(
     teal.widgets::standard_layout(
@@ -293,6 +321,10 @@ ui_g_spider <- function(id,
           value = href_line
         )
       ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(decorators, "plot")
+      ),
       pre_output = pre_output,
       post_output = post_output
     )
@@ -312,7 +344,8 @@ srv_g_spider <- function(
   yfacet_var,
   label,
   plot_height,
-  plot_width
+  plot_width,
+  decorators
 ) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(shiny::isolate(data()), "teal_data")
@@ -539,7 +572,13 @@ srv_g_spider <- function(
       )
     })
 
-    plot_r <- reactive(output_q()[["plot"]])
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
 
     pws <- teal.widgets::plot_with_settings_srv(
       id = "spiderplot",
@@ -548,6 +587,6 @@ srv_g_spider <- function(
       width = plot_width
     )
 
-    set_chunk_dims(pws, output_q)
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

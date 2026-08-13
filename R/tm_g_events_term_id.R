@@ -16,6 +16,30 @@
 #'  analysis data used form arm_var in the teal module, needs to be
 #'  available in the list passed to the `data` argument of [teal::init()].
 #' @inherit argument_convention return
+#' @section Decorating Module:
+#'
+#' This module generates the following objects, which can be modified in place using decorators:
+#' - `plot` (`grob`)
+#'
+#' A Decorator is applied to the specific output using a named list of `teal_transform_module` objects.
+#' The name of this list corresponds to the name of the output to which the decorator is applied.
+#' See code snippet below:
+#'
+#' ```
+#' tm_g_events_term_id(
+#'    ..., # arguments for module
+#'    decorators = list(
+#'      plot = teal_transform_module(...), # applied to the `plot` output
+#'    )
+#' )
+#' ```
+#'
+#' For additional details and examples of decorators, refer to the vignette
+#' `vignette("decorate-module-output", package = "teal.modules.general")`.
+#'
+#' To learn more please refer to the vignette
+#' `vignette("transform-module-output", package = "teal")` or the [`teal::teal_transform_module()`] documentation.
+#'
 #' @inheritSection teal::example_module Reporting
 #'
 #' @export
@@ -65,7 +89,8 @@ tm_g_events_term_id <- function(label,
                                 fontsize = c(5, 3, 7),
                                 plot_height = c(600L, 200L, 2000L),
                                 plot_width = NULL,
-                                transformators = list()) {
+                                transformators = list(),
+                                decorators = list()) {
   message("Initializing tm_g_events_term_id")
   checkmate::assert_string(label)
   checkmate::assert_string(dataname)
@@ -99,6 +124,8 @@ tm_g_events_term_id <- function(label,
     null.ok = TRUE,
     .var.name = "plot_width"
   )
+  assert_transformators(transformators)
+  teal::assert_decorators(decorators, "plot")
 
   args <- as.list(environment())
 
@@ -116,7 +143,8 @@ tm_g_events_term_id <- function(label,
 ui_g_events_term_id <- function(id,
                                 term_var,
                                 arm_var,
-                                fontsize) {
+                                fontsize,
+                                decorators) {
   ns <- NS(id)
   teal.widgets::standard_layout(
     output = teal.widgets::white_small_well(
@@ -196,6 +224,10 @@ ui_g_events_term_id <- function(id,
           value = FALSE
         )
       ),
+      teal::ui_transform_teal_data(
+        ns("decorator"),
+        transformators = select_decorators(decorators, "plot")
+      ),
       ui_g_decorate(
         ns(NULL),
         fontsize = fontsize,
@@ -214,7 +246,8 @@ srv_g_events_term_id <- function(id,
                                  term_var,
                                  arm_var,
                                  plot_height,
-                                 plot_width) {
+                                 plot_width,
+                                 decorators) {
   checkmate::assert_class(data, "reactive")
   checkmate::assert_class(isolate(data()), "teal_data")
 
@@ -411,7 +444,21 @@ srv_g_events_term_id <- function(id,
       q2
     })
 
-    plot_r <- reactive(output_q()[["plot"]])
-    set_chunk_dims(pws, output_q)
+    decorated_output_q <- teal::srv_transform_teal_data(
+      id = "decorator",
+      data = output_q,
+      transformators = select_decorators(decorators, "plot"),
+      expr = quote(plot)
+    )
+    plot_r <- reactive(decorated_output_q()[["plot"]])
+
+    decorate_output <- srv_g_decorate(
+      id = NULL,
+      plt = plot_r,
+      plot_height = plot_height,
+      plot_width = plot_width
+    )
+    pws <- decorate_output$pws
+    set_chunk_dims(pws, decorated_output_q)
   })
 }

@@ -1,0 +1,344 @@
+---
+title: "Decorate Module Output"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Decorate Module Output}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE}
+library(teal.osprey)
+```
+
+
+## Introduction
+
+The outputs produced by `teal` modules, like graphs or tables, are created by the module developer and look a certain way.
+It is hard to design an output that will satisfy every possible user, so the form of the output should be considered a default value that can be customized.
+Here we describe the concept of _decoration_, enabling the app developer to tailor outputs to their specific requirements without rewriting the original module code.
+
+The decoration process is build upon transformation procedures, introduced in `teal`.
+While `transformators` are meant to edit module's input, decorators are meant to adjust the module's output.
+To distinguish the difference, modules in  `teal.osprey` have 2 separate parameters:
+`transformators` and `decorators`. 
+
+To get a complete understanding refer the following vignettes:
+
+- Transforming the input data in
+[this vignette](https://insightsengineering.github.io/teal/latest-tag/articles/transform-input-data.html).
+- Transforming module output in [this vignette](https://insightsengineering.github.io/teal/latest-tag/articles/transform-module-output.html).
+
+
+## Outputs that can be decorated
+
+It is important to note which output objects from a given module can be decorated.
+The module function documentation's _Decorating Module_ section has this information.
+
+You can also refer the table shown below to know which module outputs can be decorated.
+
+
+| Module                  | Output  (Class) |
+|-------------------------|----------------------------|
+| `tm_g_spiderplot`       | plot  `ggplot` |
+| `tm_g_butterfly`        | plot  `grob` / `gtable` |
+| `tm_g_waterfall`        | plot  `grob` / `gtable` |
+| `tm_g_swimlane`         | plot  `grob` / `gtable` |
+| `tm_g_patient_profile`  | plot  `grob` / `ggplot` |
+| `tm_g_ae_oview`         | plot  `grob` |
+| `tm_g_ae_sub`           | plot  `grob` |
+| `tm_g_events_term_id`   | plot  `grob` |
+| `tm_g_heat_bygrade`     | plot  `grob` / `gtable` |
+
+
+
+Also, note that there are three different types of objects that can be decorated:
+
+1. `ggplot`
+2. `grob`
+3. `gtable`
+
+
+
+## Decorating `ggplot`
+
+
+Here's an example to showcase how you can edit an output of class `ggplot`.
+You can extend them using `ggplot2` functions.
+
+```{r decorate_ggplot, message=FALSE, eval = FALSE}
+library(teal.osprey)
+
+data <- within(teal_data(), {
+  require(nestcolor)
+  ADSL <- rADSL
+  ADTR <- rADTR
+})
+
+join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+ggplot_caption_decorator <- function(default_caption = "I am a good decorator") {
+  teal_transform_module(
+    label = "Caption",
+    ui = function(id) {
+      shiny::textInput(shiny::NS(id, "footnote"), "Footnote", value = default_caption)
+    },
+    server = function(id, data) {
+      moduleServer(id, function(input, output, session) {
+        reactive({
+          data() |>
+            within(
+              {
+                plot <- plot + ggplot2::labs(caption = footnote)
+              },
+              footnote = input$footnote
+            )
+        })
+      })
+    }
+  )
+}
+
+app <- init(
+  data = data,
+  modules = modules(
+    tm_g_spiderplot(
+      label = "Spiderplot",
+      dataname = "ADTR",
+      paramcd = variables(
+        choices = is_categorical(),
+        selected = "PARAMCD"
+      ),
+      x_var = variables(
+        choices = dplyr::where(is.numeric),
+        selected = 1L
+      ),
+      y_var = variables(
+        choices = c("PCHG", "CHG", "AVAL"),
+        selected = "PCHG"
+      ),
+      marker_var = variables(
+        choices = c("SEX", "RACE", "USUBJID"),
+        selected = "SEX"
+      ),
+      line_colorby_var = variables(
+        choices = c("SEX", "USUBJID", "RACE"),
+        selected = "SEX"
+      ),
+      xfacet_var = variables(
+        choices = c("SEX", "ARM"),
+        selected = "SEX"
+      ),
+      yfacet_var = variables(
+        choices = c("SEX", "ARM"),
+        selected = "ARM"
+      ),
+      decorators = list(
+        plot = ggplot_caption_decorator("I am a ggplot")
+      )
+    )
+  )
+)
+
+if (interactive()) {
+  shinyApp(app$ui, app$server)
+}
+```
+
+```{r shinylive_iframe_1, echo = FALSE, out.width = '150%', out.extra = 'style = "position: relative; z-index:1"', eval = requireNamespace("roxy.shinylive", quietly = TRUE) && knitr::is_html_output() && identical(Sys.getenv("IN_PKGDOWN"), "true")}
+code <- paste0(c(
+  "interactive <- function() TRUE",
+  knitr::knit_code$get("setup"),
+  knitr::knit_code$get("decorate_ggplot")
+), collapse = "\n")
+
+url <- roxy.shinylive::create_shinylive_url(code)
+knitr::include_url(url, height = "800px")
+```
+
+## Decorating `grob`
+
+Here's an example to showcase how you can edit an output of class `grob`.
+You can extend them using `grid` and `gridExtra` functions.
+
+```{r decorate_grob, message=FALSE, eval=FALSE}
+library(teal.osprey)
+
+data <- within(teal_data(), {
+  ADSL <- rADSL
+  ADTR <- rADTR
+})
+
+join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+grob_caption_decorator <- function(default_caption = "I am a good decorator") {
+  teal_transform_module(
+    label = "Caption",
+    ui = function(id) {
+      shiny::textInput(shiny::NS(id, "footnote"), "Footnote", value = default_caption)
+    },
+    server = function(id, data) {
+      moduleServer(id, function(input, output, session) {
+        reactive({
+          data() |>
+            within(
+              {
+                footnote_grob <- grid::textGrob(
+                  footnote,
+                  x = 0, hjust = 0,
+                  gp = grid::gpar(fontsize = 10, fontface = "italic", col = "gray50")
+                )
+                plot <- gridExtra::arrangeGrob(
+                  plot,
+                  footnote_grob,
+                  ncol = 1,
+                  heights = grid::unit.c(
+                    grid::unit(1, "npc") - grid::unit(1, "lines"), grid::unit(1, "lines")
+                  )
+                )
+              },
+              footnote = input$footnote
+            )
+        })
+      })
+    }
+  )
+}
+
+app <- init(
+  data = data,
+  modules = modules(
+    tm_g_ae_sub(
+      label = "AE subview",
+      dataname = "ADTR",
+      arm_var = variables(
+        choices = is_categorical(),
+        selected = "ACTARMCD"
+      ),
+      group_var = variables(
+        choices = is_categorical(),
+        selected = c("SEX", "REGION1", "RACE")
+      ),
+      decorators = list(
+        plot = grob_caption_decorator("I am a grob")
+      )
+    )
+  )
+)
+
+if (interactive()) {
+  shinyApp(app$ui, app$server)
+}
+```
+
+```{r shinylive_iframe_2, echo = FALSE, out.width = '150%', out.extra = 'style = "position: relative; z-index:1"', eval = requireNamespace("roxy.shinylive", quietly = TRUE) && knitr::is_html_output() && identical(Sys.getenv("IN_PKGDOWN"), "true")}
+code <- paste0(c(
+  "interactive <- function() TRUE",
+  knitr::knit_code$get("setup"),
+  knitr::knit_code$get("decorate_grob")
+), collapse = "\n")
+
+url <- roxy.shinylive::create_shinylive_url(code)
+knitr::include_url(url, height = "800px")
+```
+
+## Decorating `gtable`
+
+
+Here's an example to showcase how you can edit an output of class `gtable`.
+You can extend them using `grid` and `gridExtra` functions.
+
+```{r decorate_gtable, message=FALSE, eval=FALSE}
+library(teal.osprey)
+library("dplyr")
+data <- within(teal_data(), {
+  library("dplyr")
+  ADSL <- rADSL %>%
+    mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+    filter(STRATA1 == "A" & ARMCD == "ARM A")
+  ADRS <- rADRS %>%
+    filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+    mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+    rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+    arrange(USUBJID)
+})
+
+join_keys(data) <- default_cdisc_join_keys[names(data)]
+
+gtable_caption_decorator <- function(default_caption = "I am a good decorator") {
+  teal_transform_module(
+    label = "Caption",
+    ui = function(id) {
+      shiny::textInput(shiny::NS(id, "footnote"), "Footnote", value = default_caption)
+    },
+    server = function(id, data) {
+      moduleServer(id, function(input, output, session) {
+        reactive({
+          data() |>
+            within(
+              {
+                footnote_grob <- grid::textGrob(
+                  footnote,
+                  x = 0, hjust = 0,
+                  gp = grid::gpar(fontsize = 10, fontface = "italic", col = "gray50")
+                )
+                plot <- gtable::gtable_add_grob(
+                  plot,
+                  footnote_grob,
+                  t = 1,
+                  l = 1,
+                  clip = "on"
+                )
+              },
+              footnote = input$footnote
+            )
+        })
+      })
+    }
+  )
+}
+
+app <- init(
+  data = data,
+  modules = modules(
+    tm_g_swimlane(
+      label = "Swimlane Plot",
+      dataname = "ADRS",
+      bar_var = variables(
+        choices = c("TRTDURD", "EOSDY"),
+        selected = "TRTDURD"
+      ),
+      bar_color_var = variables(
+        choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX"),
+        selected = "EOSSTT"
+      ),
+      decorators = list(
+        plot = gtable_caption_decorator("I am a gtable")
+      )
+    )
+  )
+)
+
+if (interactive()) {
+  shinyApp(app$ui, app$server)
+}
+```
+
+```{r shinylive_iframe_3, echo = FALSE, out.width = '150%', out.extra = 'style = "position: relative; z-index:1"', eval = requireNamespace("roxy.shinylive", quietly = TRUE) && knitr::is_html_output() && identical(Sys.getenv("IN_PKGDOWN"), "true")}
+code <- paste0(c(
+  "interactive <- function() TRUE",
+  knitr::knit_code$get("setup"),
+  knitr::knit_code$get("decorate_gtable")
+), collapse = "\n")
+
+url <- roxy.shinylive::create_shinylive_url(code)
+knitr::include_url(url, height = "800px")
+```
+

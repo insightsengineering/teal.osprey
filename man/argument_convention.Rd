@@ -33,6 +33,14 @@ vector to indicate default value, minimum and maximum values.}
 
 \item{plot_width}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
+
+\item{transformators}{(\code{list} of \code{teal_transform_module}) optional,
+input data transforms applied after filtering (UI in the filter sidebar under
+\strong{Transform Data}). See \code{vignette("transform-input-data", package = "teal")}.}
+
+\item{decorators}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+(named \code{list} of \code{teal_transform_module}) optional,
+decorators for the module \code{plot} output.}
 }
 \value{
 the \code{\link[teal:module]{teal::module()}} object.

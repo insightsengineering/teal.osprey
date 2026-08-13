@@ -42,27 +42,29 @@ Imports:
     tern (>= 0.9.7),
     tidyr (>= 0.8.3)
 Suggests:
-    knitr (>= 1.42),
+    knitr (> 1.42),
     logger (>= 0.4.0),
     nestcolor (>= 0.1.0),
     rmarkdown (>= 2.23),
     shinytest2 (>= 0.4.1),
     testthat (>= 3.2.3),
     withr (>= 3.0.0)
+VignetteBuilder: 
+    knitr
 Remotes:
     insightsengineering/osprey,
     insightsengineering/teal.picks
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal, insightsengineering/teal.picks,
     insightsengineering/teal.slice, insightsengineering/teal.transform,
-    mllg/checkmate, tidyverse/dplyr,
-    insightsengineering/formatters, tidyverse/ggplot2, r-lib/lifecycle,
-    daroczig/logger, rstudio/shinyvalidate, insightsengineering/teal.code,
+    mllg/checkmate, tidyverse/dplyr, insightsengineering/formatters,
+    tidyverse/ggplot2, r-lib/lifecycle, daroczig/logger,
+    rstudio/shinyvalidate, insightsengineering/teal.code,
     insightsengineering/teal.logger, insightsengineering/teal.reporter,
     insightsengineering/teal.widgets, insightsengineering/tern,
     tidyverse/tidyr, yihui/knitr, insightsengineering/nestcolor,
-    rstudio/rmarkdown, rstudio/shinytest2, insightsengineering/teal.data, r-lib/testthat,
-    r-lib/withr
+    rstudio/rmarkdown, rstudio/shinytest2, insightsengineering/teal.data,
+    r-lib/testthat, r-lib/withr
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
