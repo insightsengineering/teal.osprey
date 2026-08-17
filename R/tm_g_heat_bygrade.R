@@ -76,7 +76,7 @@
 #'
 #' @export
 #' @examples
-#' # Using picks method
+#'
 #' data <- within(teal_data(), {
 #'   library(dplyr)
 #'   library(nestcolor)
@@ -394,15 +394,6 @@ srv_g_heat_by_grade <- function(
     )
     heat_var_name <- data_heat$variables()$heat_var
 
-    if (!is.null(conmed_var)) {
-      data_heat <- teal.picks::merge_srv(
-        "merge",
-        data = data_heat$data,
-        selectors = selectors[c("id_var", "anno_var", "visit_var", "ongo_var", "heat_var", "conmed_var")],
-        output_name = "conmed_data"
-      )
-    }
-
     decorate_output <- srv_g_decorate(
       id = NULL,
       plt = plot_r,
@@ -413,10 +404,10 @@ srv_g_heat_by_grade <- function(
     pws <- decorate_output$pws
 
     if (!is.null(conmed_var)) {
-      observeEvent(data_heat$variables()$conmed_var,
+      observeEvent(selectors$conmed_var()$variables$selected,
         {
           ADCM <- data()[[cm_dataname]]
-          conmed_var_name <- data_heat$variables()$conmed_var
+          conmed_var_name <- selectors$conmed_var()$variables$selected
           if (!is.null(conmed_var_name) && conmed_var_name %in% names(ADCM)) {
             choices <- levels(ADCM[[conmed_var_name]])
             updateSelectInput(
@@ -488,6 +479,11 @@ srv_g_heat_by_grade <- function(
             "conmed_var",
             length(conmed_var_name) > 0, "Conmed Variable is required."
           )
+          validate_input(
+            c("cm_dataname", "id_var", "visit_var", "conmed_var"),
+            all(c(id_var_name, visit_var_name, conmed_var_name) %in% colnames(validated_q[[cm_dataname]])),
+            "Variables ID, Visit and Conmed should be present on CM dataset"
+          )
           validate_input("conmed_level", length(input$conmed_level) > 0, "Select Conmed Levels.")
         }
 
@@ -498,6 +494,7 @@ srv_g_heat_by_grade <- function(
             validated_q,
             code = substitute(
               expr = {
+                conmed_data <- dplyr::select(conmed_data_src, dplyr::all_of(unique(c(id_var, visit_var, conmed_var))))
                 conmed_data <- conmed_data %>%
                   filter(conmed_var_name %in% conmed_level)
                 conmed_data[[conmed_var]] <-
@@ -506,7 +503,10 @@ srv_g_heat_by_grade <- function(
                   formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
               },
               env = list(
+                conmed_data_src = as.name(cm_dataname),
                 ADCM = as.name(cm_dataname),
+                id_var = id_var_name,
+                visit_var = visit_var_name,
                 conmed_var = conmed_var_name,
                 conmed_var_name = as.name(conmed_var_name),
                 conmed_level = input$conmed_level
