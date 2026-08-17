@@ -386,13 +386,7 @@ srv_g_heat_by_grade <- function(
 
     selectors <- teal.picks::picks_srv(picks = picks_list, data = data)
 
-    data_heat <- teal.picks::merge_srv(
-      "merge_heat",
-      data = data,
-      selectors = selectors[c("id_var", "heat_var", "visit_var")],
-      output_name = "heat_data"
-    )
-    heat_var_name <- data_heat$variables()$heat_var
+    heat_var_name <- selectors$heat_var()$variables$selected
 
     decorate_output <- srv_g_decorate(
       id = NULL,
@@ -425,7 +419,7 @@ srv_g_heat_by_grade <- function(
     output_q <- shiny::debounce(
       millis = 200,
       r = reactive({
-        qenv <- data_heat$data()
+        qenv <- data()
         teal.reporter::teal_card(qenv) <-
           c(
             teal.reporter::teal_card(qenv),
@@ -470,8 +464,8 @@ srv_g_heat_by_grade <- function(
 
         validate_input(
           c("ae_dataname", "id_var", "visit_var", "heat_var"),
-          all(c(id_var_name, visit_var_name, heat_var_name) %in% colnames(validated_q[["heat_data"]])),
-          "Variables ID, Visit and Heat should be present on heat_data"
+          all(c(id_var_name, visit_var_name, heat_var_name) %in% colnames(ae_dataset)),
+          "Variables ID, Visit and Heat should be present on AE dataset"
         )
 
         if (plot_cm) {
@@ -527,7 +521,7 @@ srv_g_heat_by_grade <- function(
               ongo_var = ongo_var_name,
               anno_data = sl_dataname[, anno_cols],
               anno_var = anno_var_name,
-              heat_data = select(heat_data, all_of(c(id_var_name, visit_var_name, heat_var_name))),
+              heat_data = select(ae_dataname, all_of(c(id_var_name, visit_var_name, heat_var_name))),
               heat_color_var = heat_var_name,
               conmed_data = conmed_data,
               conmed_var = conmed_var_name
