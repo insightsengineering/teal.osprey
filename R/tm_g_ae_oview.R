@@ -393,7 +393,7 @@ srv_g_ae_oview <- function(
         )
 
         arm_subject <- unique(arm_source[, c("USUBJID", arm_var_name), drop = FALSE])
-        arm_count <- table(arm_subject[[arm_var_name]])
+        arm_N <- table(arm_subject[[arm_var_name]]) # nolint: object_name_linter.
 
         q1 <- qenv %>%
           teal.code::eval_code(
@@ -421,7 +421,7 @@ srv_g_ae_oview <- function(
                 term = flags,
                 id = ANL$USUBJID,
                 arm = ANL[[.(arm_var_name)]],
-                arm_count = .(arm_count),
+                arm_N = .(arm_N),
                 ref = .(input$arm_ref),
                 trt = .(input$arm_trt),
                 diff_ci_method = .(input$diff_ci_method),
