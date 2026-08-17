@@ -7,6 +7,7 @@
 tm_g_ae_oview(
   label,
   dataname,
+  parentname = "ADSL",
   arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
   flag_var_anl = teal.picks::variables(dplyr::matches("^(TMPFL|AEREL[1-9])")),
   fontsize = c(5, 3, 7),
@@ -137,6 +138,7 @@ app <- suppressWarnings(init(
     tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
+      parentname = "ADSL",
       arm_var = variables(
         choices = dplyr::starts_with("ACTARM"),
         selected = "ACTARMCD"

@@ -72,6 +72,7 @@
 #'     tm_g_ae_oview(
 #'       label = "AE Overview",
 #'       dataname = "ADAE",
+#'       parentname = "ADSL",
 #'       arm_var = variables(
 #'         choices = dplyr::starts_with("ACTARM"),
 #'         selected = "ACTARMCD"
@@ -90,6 +91,7 @@
 tm_g_ae_oview <- function(
   label,
   dataname,
+  parentname = "ADSL",
   arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
   flag_var_anl = teal.picks::variables(dplyr::matches("^(TMPFL|AEREL[1-9])")),
   fontsize = c(5, 3, 7),
@@ -99,11 +101,12 @@ tm_g_ae_oview <- function(
   decorators = list()
 ) {
   message("Initializing tm_g_ae_oview")
+  checkmate::assert_string(parentname)
 
   arm_var <- migrate_choices_selected_to_variables(arm_var)
   flag_var_anl <- migrate_choices_selected_to_variables(flag_var_anl)
 
-  arm_var <- create_picks_helper(teal.picks::datasets(dataname), arm_var)
+  arm_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), arm_var)
   flag_var_anl <- create_picks_helper(teal.picks::datasets(dataname), flag_var_anl)
 
   arm_var <- force_pick_selection(arm_var, "arm_var", multiple = FALSE)
@@ -165,7 +168,7 @@ tm_g_ae_oview <- function(
     ui = ui_g_ae_oview,
     ui_args = args[names(args) %in% names(formals(ui_g_ae_oview))],
     transformators = transformators,
-    datanames = c("ADSL", dataname)
+    datanames = c(parentname, dataname)
   )
 }
 
@@ -343,6 +346,7 @@ srv_g_ae_oview <- function(
 
         arm_var_name <- merged$variables()$arm_var
         flag_var_name <- merged$variables()$flag_var_anl
+        arm_source <- qenv[[arm_dataset]]
 
         teal::validate_has_data(
           ANL,
@@ -350,9 +354,6 @@ srv_g_ae_oview <- function(
           msg = "Analysis data set must have at least 10 data points"
         )
 
-        # Original variable name and dataset for arm_N calculation on the source dataset
-        arm_var_orig <- selectors$arm_var()$variables$selected
-        arm_dataset <- selectors$arm_var()$datasets$selected
         validate_input(
           "flag_var_anl",
           length(flag_var_name) > 0,
@@ -363,6 +364,18 @@ srv_g_ae_oview <- function(
           "arm_var",
           length(arm_var_name) > 0,
           "An Arm Variable needs to be selected."
+        )
+
+        validate_input(
+          "arm_var",
+          arm_var_name %in% names(arm_source),
+          "Arm Variable must be present on source dataset."
+        )
+
+        validate_input(
+          "arm_var",
+          "USUBJID" %in% names(arm_source),
+          "USUBJID must be present on source dataset."
         )
 
         validate_input(
@@ -378,6 +391,9 @@ srv_g_ae_oview <- function(
           input$arm_trt != input$arm_ref,
           "Treatment and Control can't be the same."
         )
+
+        arm_subject <- unique(arm_source[, c("USUBJID", arm_var_name), drop = FALSE])
+        arm_count <- table(arm_subject[[arm_var_name]])
 
         q1 <- qenv %>%
           teal.code::eval_code(
@@ -405,7 +421,7 @@ srv_g_ae_oview <- function(
                 term = flags,
                 id = ANL$USUBJID,
                 arm = ANL[[.(arm_var_name)]],
-                arm_N = table(ANL[[.(arm_var_name)]]),
+                arm_count = .(arm_count),
                 ref = .(input$arm_ref),
                 trt = .(input$arm_trt),
                 diff_ci_method = .(input$diff_ci_method),
