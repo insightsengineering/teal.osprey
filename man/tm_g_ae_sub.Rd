@@ -7,6 +7,7 @@
 tm_g_ae_sub(
   label,
   dataname,
+  parentname = "ADSL",
   arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
   group_var = teal.picks::variables(is.factor),
   plot_height = c(600L, 200L, 2000L),
@@ -118,6 +119,7 @@ app <- init(
     tm_g_ae_sub(
       label = "AE by Subgroup",
       dataname = "ADAE",
+      parentname = "ADSL",
       arm_var = variables(
         choices = c("ACTARM", "ACTARMCD"),
         selected = "ACTARMCD"
