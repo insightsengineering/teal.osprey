@@ -89,8 +89,8 @@ tm_g_ae_sub <- function(label,
   arm_var <- migrate_choices_selected_to_variables(arm_var)
   group_var <- migrate_choices_selected_to_variables(group_var)
   checkmate::assert_string(dataname)
-  arm_var <- create_picks_helper(teal.picks::datasets(dataname), arm_var)
-  group_var <- create_picks_helper(teal.picks::datasets(dataname), group_var)
+  arm_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), arm_var)
+  group_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), group_var)
 
   checkmate::assert(
     checkmate::check_number(fontsize, finite = TRUE),
