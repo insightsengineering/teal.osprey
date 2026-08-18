@@ -248,16 +248,16 @@ tm_g_patient_profile <- function(label = "Patient Profile Plot",
     ae_var <- create_picks_helper(teal.picks::datasets(ae_dataname, ae_dataname), ae_var)
   }
   if (!is.null(ae_line_col_var) && !is.na(ae_dataname)) {
-    ae_line_col_var <- create_picks_helper(teal.picks::datasets(ae_dataname), ae_line_col_var)
+    ae_line_col_var <- create_picks_helper(teal.picks::datasets(ae_dataname, ae_dataname), ae_line_col_var)
   }
   if (!is.null(rs_var) && !is.na(rs_dataname)) {
-    rs_var <- create_picks_helper(teal.picks::datasets(rs_dataname), rs_var)
+    rs_var <- create_picks_helper(teal.picks::datasets(rs_dataname, rs_dataname), rs_var)
   }
   if (!is.null(cm_var) && !is.na(cm_dataname)) {
-    cm_var <- create_picks_helper(teal.picks::datasets(cm_dataname), cm_var)
+    cm_var <- create_picks_helper(teal.picks::datasets(cm_dataname, cm_dataname), cm_var)
   }
   if (!is.null(lb_var) && !is.na(lb_dataname)) {
-    lb_var <- create_picks_helper(teal.picks::datasets(lb_dataname), lb_var)
+    lb_var <- create_picks_helper(teal.picks::datasets(lb_dataname, lb_dataname), lb_var)
   }
 
   checkmate::assert_class(sl_start_date, "picks")
