@@ -184,15 +184,15 @@ tm_g_butterfly <- function(label,
   count_by_var <- migrate_choices_selected_to_values(count_by_var)
   sort_by_var <- migrate_choices_selected_to_values(sort_by_var)
 
-  right_var <- create_picks_helper(teal.picks::datasets(dataname), right_var)
-  left_var <- create_picks_helper(teal.picks::datasets(dataname), left_var)
-  category_var <- create_picks_helper(teal.picks::datasets(dataname), category_var)
-  color_by_var <- create_picks_helper(teal.picks::datasets(dataname), color_by_var)
+  right_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), right_var)
+  left_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), left_var)
+  category_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), category_var)
+  color_by_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), color_by_var)
   if (!is.null(filter_var)) {
-    filter_var <- create_picks_helper(teal.picks::datasets(dataname), filter_var)
+    filter_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), filter_var)
   }
   if (!is.null(facet_var)) {
-    facet_var <- create_picks_helper(teal.picks::datasets(dataname), facet_var)
+    facet_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), facet_var)
   }
 
   right_var <- force_pick_selection(right_var, "right_var")
