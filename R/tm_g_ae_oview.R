@@ -168,7 +168,7 @@ tm_g_ae_oview <- function(
     ui = ui_g_ae_oview,
     ui_args = args[names(args) %in% names(formals(ui_g_ae_oview))],
     transformators = transformators,
-    datanames = c(parentname, dataname)
+    datanames = .picks_datanames(list(arm_var, flag_var_anl))
   )
 }
 
@@ -372,10 +372,9 @@ srv_g_ae_oview <- function(
           "Arm Variable must be present on source dataset."
         )
 
-        validate_input(
-          "arm_var",
-          "USUBJID" %in% names(arm_source),
-          "USUBJID must be present on source dataset."
+        shiny::validate(
+          shiny::need("USUBJID" %in% names(arm_source),
+          "USUBJID must be present on source dataset.")
         )
 
         validate_input(

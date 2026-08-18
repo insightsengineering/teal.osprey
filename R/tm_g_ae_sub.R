@@ -125,7 +125,7 @@ tm_g_ae_sub <- function(label,
     ui = ui_g_ae_sub,
     ui_args = args[names(args) %in% names(formals(ui_g_ae_sub))],
     transformators = transformators,
-    datanames = c(parentname, dataname)
+    datanames = .picks_datanames(list(arm_var, group_var))
   )
 }
 
@@ -159,7 +159,7 @@ ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, decorators) {
       ),
       tags$div(
         tags$strong("Group variable"),
-        teal.picks::picks_ui(id = ns("groups"), picks = group_var)
+        teal.picks::picks_ui(id = ns("group_var"), picks = group_var)
       ),
       teal.widgets::panel_item(
         "Change group labels",
@@ -398,11 +398,11 @@ srv_g_ae_sub <- function(id,
             plot <- osprey::g_ae_sub(
               id = ANL$USUBJID,
               arm = ANL[[arm_var_name]],
-              arm_sl = as.character(parent_data[[arm_var_name]]),
+              arm_sl = as.character(ANL[[arm_var_name]]),
               trt = trt,
               ref = ref,
               subgroups = ANL[group_var_name],
-              subgroups_sl = parent_data[, group_var_name],
+              subgroups_sl = ANL[, group_var_name],
               subgroups_levels = subgroups_levels,
               conf_level = conf_level,
               diff_ci_method = diff_ci_method,
