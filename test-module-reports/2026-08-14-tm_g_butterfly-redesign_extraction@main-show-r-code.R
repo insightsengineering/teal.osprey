@@ -17,16 +17,16 @@ right_name <- paste("F", collapse = " - ")
 left <- ANL[["RACE"]] %in% "ASIAN"
 left_name <- paste("ASIAN", collapse = " - ")
 plot <- osprey::g_butterfly(category = ANL[["AEBODSYS"]], right_flag = right, left_flag = left, group_names = c(right_name, left_name), block_count = "# of patients", block_color = if (!is.null("AETOXGR")) {
-    ANL[["AETOXGR"]]
+  ANL[["AETOXGR"]]
 } else {
-    NULL
+  NULL
 }, id = ANL$USUBJID, facet_rows = if (!is.null(NULL)) {
-    ANL[[NULL]]
+  ANL[[NULL]]
 } else {
-    NULL
+  NULL
 }, x_label = "# of patients", y_label = "AEBODSYS", legend_label = if (!is.null("AETOXGR")) {
-    "AETOXGR"
+  "AETOXGR"
 } else {
-    ""
+  ""
 }, sort_by = "count", show_legend = TRUE)
 plot
