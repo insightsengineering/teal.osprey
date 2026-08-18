@@ -431,7 +431,21 @@ srv_g_ae_oview <- function(
                 draw = TRUE
               )
             )
-          ))
+        teal.code::eval_code(q1, bquote(
+          plot <- osprey::g_events_term_id(
+            term = flags,
+            id = ANL$USUBJID,
+            arm = ANL[[.(arm_var_name)]],
+            arm_N = .(arm_N),
+            ref = .(input$arm_ref),
+            trt = .(input$arm_trt),
+            diff_ci_method = .(input$diff_ci_method),
+            conf_level = .(input$conf_level),
+            axis_side = .(input$axis),
+            fontsize = .(font_size()),
+            draw = TRUE
+          )
+        ))
         )
       })
     )
