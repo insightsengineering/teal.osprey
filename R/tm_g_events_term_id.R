@@ -12,9 +12,6 @@
 #'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Object with all available choices and pre-selected option names that can be used
 #'   to specify the term for events.
-#' @param parentname (`character(1)`)\cr
-#'  analysis data used form arm_var in the teal module, needs to be
-#'  available in the list passed to the `data` argument of [teal::init()].
 #' @inherit argument_convention return
 #' @section Decorating Module:
 #'

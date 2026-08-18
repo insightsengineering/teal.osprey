@@ -16,6 +16,11 @@
 #'  analysis data used in the teal module, needs to be
 #'  available in the list passed to the `data` argument of [teal::init()].
 #'
+#' @param parentname (`character(1)`)\cr
+#'  analysis data used for several variables in the teal module, needs to be
+#'  available in the list passed to the `data` argument of [teal::init()]. The default is
+#' `"ADSL"`
+#'
 #' @param arm_var Either a ([`teal.picks::variables()`]) object or a
 #'  ([`teal.transform::choices_selected()`]) object.\cr
 #'  `choices_selected` is being deprecated as an argument type and will be removed in the future.

@@ -37,8 +37,10 @@ tm_g_waterfall(
 \item{label}{(\code{character(1)}) Label shown in the navigation item for the module or module group.
 For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
-\item{parentname}{(\code{character(1)}) parent analysis data used in teal module, usually this refers to \code{ADSL},
-which is the default.}
+\item{parentname}{(\code{character(1)})\cr
+analysis data used for several variables in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
+\code{"ADSL"}}
 
 \item{dataname_tr}{(\code{character(1)}) tumor burden analysis data used in teal module to plot as bar height, needs to
 be available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}}

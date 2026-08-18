@@ -13,10 +13,6 @@
 #'   ([`teal.transform::choices_selected()`]) object.
 #'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.
 #'   Subject-level numeric variable for bar length (from `parentname`).
-#' @param parentname (`character(1)`)\cr
-#'  analysis data used for several variables in the teal module, needs to be
-#'  available in the list passed to the `data` argument of [teal::init()]. The default is
-#' `"ADSL"`
 #' @param bar_color_var Either a ([`teal.picks::variables()`]) object or a
 #'   ([`teal.transform::choices_selected()`]) object.
 #'   `choices_selected()` is being deprecated as an argument type and will be removed in the future.

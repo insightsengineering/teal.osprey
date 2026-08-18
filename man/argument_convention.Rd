@@ -11,6 +11,11 @@ menu item label of the module in the teal app.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
+\item{parentname}{(\code{character(1)})\cr
+analysis data used for several variables in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
+\code{"ADSL"}}
+
 \item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
 (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
 \code{choices_selected} is being deprecated as an argument type and will be removed in the future.
