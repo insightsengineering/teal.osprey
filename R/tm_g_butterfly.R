@@ -155,7 +155,7 @@ tm_g_butterfly <- function(label,
                            left_var = teal.picks::variables(is.factor),
                            category_var = teal.picks::variables(teal.picks::is_categorical()),
                            color_by_var = teal.picks::variables(dplyr::starts_with("AETO")),
-                           count_by_var = values(
+                           count_by_var = teal.picks::values(
                              choices = c("# of patients", "# of AEs"),
                              selected = "# of patients"
                            ),
