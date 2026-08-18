@@ -106,8 +106,8 @@ tm_g_ae_oview <- function(
   arm_var <- migrate_choices_selected_to_variables(arm_var)
   flag_var_anl <- migrate_choices_selected_to_variables(flag_var_anl)
 
-  arm_var <- create_picks_helper(teal.picks::datasets(parentname, parentname), arm_var)
-  flag_var_anl <- create_picks_helper(teal.picks::datasets(dataname), flag_var_anl)
+  arm_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), arm_var)
+  flag_var_anl <- create_picks_helper(teal.picks::datasets(dataname, dataname), flag_var_anl)
 
   arm_var <- force_pick_selection(arm_var, "arm_var", multiple = FALSE)
   flag_var_anl <- force_pick_selection(flag_var_anl, "flag_var_anl", multiple = FALSE)
