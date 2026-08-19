@@ -246,6 +246,7 @@ ui_g_ae_oview <- function(
 srv_g_ae_oview <- function(
   id,
   data,
+  parentname,
   arm_var,
   flag_var_anl,
   plot_height,
@@ -346,7 +347,7 @@ srv_g_ae_oview <- function(
 
         arm_var_name <- merged$variables()$arm_var
         flag_var_name <- merged$variables()$flag_var_anl
-        arm_source <- qenv[[arm_dataset]]
+        arm_count_source <- qenv[[parentname]]
 
         teal::validate_has_data(
           ANL,
@@ -368,15 +369,13 @@ srv_g_ae_oview <- function(
 
         validate_input(
           "arm_var",
-          arm_var_name %in% names(arm_source),
-          "Arm Variable must be present on source dataset."
+          arm_var_name %in% names(arm_count_source),
+          sprintf("Arm Variable must be present on %s dataset", parentname)
         )
 
         shiny::validate(
-          shiny::need(
-            "USUBJID" %in% names(arm_source),
-            "USUBJID must be present on source dataset."
-          )
+          shiny::need("USUBJID" %in% names(arm_count_source),
+                      sprintf("USUBJID must be present on %s dataset", parentname))
         )
 
         validate_input(
@@ -393,7 +392,7 @@ srv_g_ae_oview <- function(
           "Treatment and Control can't be the same."
         )
 
-        arm_subject <- unique(arm_source[, c("USUBJID", arm_var_name), drop = FALSE])
+        arm_subject <- unique(arm_count_source[, c("USUBJID", arm_var_name), drop = FALSE])
         arm_N <- table(arm_subject[[arm_var_name]]) # nolint: object_name_linter.
 
         q1 <- qenv %>%

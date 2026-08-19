@@ -484,31 +484,26 @@ srv_g_heat_by_grade <- function(
         teal.reporter::teal_card(validated_q) <- c(teal.reporter::teal_card(validated_q), "### Plot")
 
         if (plot_cm) {
-          validated_q <- teal.code::eval_code(
+          validated_q <- within(
             validated_q,
-            code = substitute(
-              expr = {
-                conmed_data <- dplyr::select(conmed_data_src, dplyr::all_of(unique(c(id_var, visit_var, conmed_var))))
-                conmed_data <- conmed_data %>%
-                  filter(conmed_var_name %in% conmed_level)
-                conmed_data[[conmed_var]] <-
-                  factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
-                formatters::var_labels(conmed_data)[conmed_var] <-
-                  formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
-              },
-              env = list(
-                conmed_data_src = as.name(cm_dataname),
-                ADCM = as.name(cm_dataname),
-                id_var = id_var_name,
-                visit_var = visit_var_name,
-                conmed_var = conmed_var_name,
-                conmed_var_name = as.name(conmed_var_name),
-                conmed_level = input$conmed_level
-              )
-            )
+            {
+              conmed_data <- dplyr::select(conmed_data_src, dplyr::all_of(unique(c(id_var, visit_var, conmed_var))))
+              conmed_data <- conmed_data %>%
+                filter(conmed_var_name %in% conmed_level)
+              conmed_data[[conmed_var]] <-
+                factor(conmed_data[[conmed_var]], levels = unique(conmed_data[[conmed_var]]))
+              formatters::var_labels(conmed_data)[conmed_var] <-
+                formatters::var_labels(ADCM, fill = FALSE)[conmed_var]
+            },
+            conmed_data_src = as.name(cm_dataname),
+            ADCM = as.name(cm_dataname),
+            id_var = id_var_name,
+            visit_var = visit_var_name,
+            conmed_var = conmed_var_name,
+            conmed_var_name = as.name(conmed_var_name),
+            conmed_level = input$conmed_level
           )
         }
-
 
         PARCAT1 <- NULL # nolint: object_name_linter.
         validated_q <- within(
