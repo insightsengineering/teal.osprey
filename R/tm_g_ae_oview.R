@@ -374,8 +374,10 @@ srv_g_ae_oview <- function(
         )
 
         shiny::validate(
-          shiny::need("USUBJID" %in% names(arm_count_source),
-                      sprintf("USUBJID must be present on %s dataset", parentname))
+          shiny::need(
+            "USUBJID" %in% names(arm_count_source),
+            sprintf("USUBJID must be present on %s dataset", parentname)
+          )
         )
 
         validate_input(
