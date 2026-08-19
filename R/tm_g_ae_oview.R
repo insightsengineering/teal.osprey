@@ -42,8 +42,8 @@
 #' @examples
 #' data <- within(teal_data(), {
 #'   library(dplyr)
-#'   ADSL <- rADSL
-#'   ADAE <- rADAE
+#'   ADSL <- teal.data::rADSL
+#'   ADAE <- teal.data::rADAE
 #'   .add_event_flags <- function(dat) {
 #'     dat <- dat %>%
 #'       mutate(

@@ -112,8 +112,8 @@ For more information on reporting in \code{teal}, see the vignettes:
 
 \examples{
 data <- within(teal_data(), {
-  ADSL <- rADSL
-  ADAE <- rADAE
+  ADSL <- teal.data::rADSL
+  ADAE <- teal.data::rADAE
 })
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]

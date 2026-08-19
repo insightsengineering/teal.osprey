@@ -158,13 +158,13 @@ For more information on reporting in \code{teal}, see the vignettes:
 data <- within(teal_data(), {
   library(nestcolor)
   library(dplyr)
-  ADSL <- rADSL \%>\%
+  ADSL <- teal.data::rADSL \%>\%
     mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) \%>\%
     filter(STRATA1 == "A" & ARMCD == "ARM A")
-  ADRS <- rADRS \%>\%
+  ADRS <- teal.data::rADRS \%>\%
     filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") \%>\%
     mutate(AVALC = DCSREAS, ADY = EOSDY) \%>\%
-    rbind(rADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
+    rbind(teal.data::rADRS \%>\% filter(PARAMCD == "OVRINV" & AVALC != "NE")) \%>\%
     arrange(USUBJID)
 })
 

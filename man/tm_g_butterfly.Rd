@@ -164,8 +164,8 @@ data <- teal_data() \%>\%
   within({
     library(nestcolor)
     library(dplyr)
-    ADSL <- rADSL
-    ADAE <- rADAE
+    ADSL <- teal.data::rADSL
+    ADAE <- teal.data::rADAE
     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
     ADAE <- mutate(
       ADAE,

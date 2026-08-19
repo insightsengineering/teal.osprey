@@ -93,9 +93,9 @@
 #' @examples
 #' data <- within(teal_data(), {
 #'   library(nestcolor)
-#'   ADSL <- rADSL
-#'   ADRS <- rADRS
-#'   ADTR <- rADTR
+#'   ADSL <- teal.data::rADSL
+#'   ADRS <- teal.data::rADRS
+#'   ADTR <- teal.data::rADTR
 #'   ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
 #' })
 #'
