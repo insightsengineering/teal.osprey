@@ -7,8 +7,6 @@
 #' @inheritParams teal.widgets::standard_layout
 #' @inheritParams teal::module
 #' @inheritParams argument_convention
-#' @param parentname (`character(1)`) parent analysis data used in teal module, usually this refers to `ADSL`,
-#' which is the default.
 #' @param dataname_tr (`character(1)`) tumor burden analysis data used in teal module to plot as bar height, needs to
 #' be available in the list passed to the `data` argument of [teal::init()]
 #' @param dataname_rs (`character(1)`) response analysis data used in teal module to label response parameters, needs to
@@ -95,9 +93,9 @@
 #' @examples
 #' data <- within(teal_data(), {
 #'   library(nestcolor)
-#'   ADSL <- rADSL
-#'   ADRS <- rADRS
-#'   ADTR <- rADTR
+#'   ADSL <- teal.data::rADSL
+#'   ADRS <- teal.data::rADRS
+#'   ADTR <- teal.data::rADTR
 #'   ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
 #' })
 #'

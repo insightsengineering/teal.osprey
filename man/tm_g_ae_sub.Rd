@@ -7,6 +7,7 @@
 tm_g_ae_sub(
   label,
   dataname,
+  parentname = "ADSL",
   arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
   group_var = teal.picks::variables(is.factor),
   plot_height = c(600L, 200L, 2000L),
@@ -23,6 +24,11 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 \item{dataname}{(\code{character(1)})\cr
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
+
+\item{parentname}{(\code{character(1)})\cr
+analysis data used for several variables in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
+\code{"ADSL"}}
 
 \item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
 (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
@@ -106,8 +112,8 @@ For more information on reporting in \code{teal}, see the vignettes:
 \examples{
 # Example using stream (ADaM) dataset
 data <- within(teal_data(), {
-  ADSL <- rADSL
-  ADAE <- rADAE
+  ADSL <- teal.data::rADSL
+  ADAE <- teal.data::rADAE
 })
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
@@ -118,6 +124,7 @@ app <- init(
     tm_g_ae_sub(
       label = "AE by Subgroup",
       dataname = "ADAE",
+      parentname = "ADSL",
       arm_var = variables(
         choices = c("ACTARM", "ACTARMCD"),
         selected = "ACTARMCD"

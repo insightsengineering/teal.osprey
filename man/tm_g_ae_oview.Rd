@@ -7,6 +7,7 @@
 tm_g_ae_oview(
   label,
   dataname,
+  parentname = "ADSL",
   arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
   flag_var_anl = teal.picks::variables(dplyr::matches("^(TMPFL|AEREL[1-9])")),
   fontsize = c(5, 3, 7),
@@ -23,6 +24,11 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 \item{dataname}{(\code{character(1)})\cr
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
+
+\item{parentname}{(\code{character(1)})\cr
+analysis data used for several variables in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
+\code{"ADSL"}}
 
 \item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
 (\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
@@ -107,8 +113,8 @@ For more information on reporting in \code{teal}, see the vignettes:
 \examples{
 data <- within(teal_data(), {
   library(dplyr)
-  ADSL <- rADSL
-  ADAE <- rADAE
+  ADSL <- teal.data::rADSL
+  ADAE <- teal.data::rADAE
   .add_event_flags <- function(dat) {
     dat <- dat \%>\%
       mutate(
@@ -137,6 +143,7 @@ app <- suppressWarnings(init(
     tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
+      parentname = "ADSL",
       arm_var = variables(
         choices = dplyr::starts_with("ACTARM"),
         selected = "ACTARMCD"

@@ -47,8 +47,8 @@
 #' @examples
 #' # Example using stream (ADaM) dataset
 #' data <- within(teal_data(), {
-#'   ADSL <- rADSL
-#'   ADAE <- rADAE
+#'   ADSL <- teal.data::rADSL
+#'   ADAE <- teal.data::rADAE
 #' })
 #'
 #' join_keys(data) <- default_cdisc_join_keys[names(data)]
@@ -59,6 +59,7 @@
 #'     tm_g_ae_sub(
 #'       label = "AE by Subgroup",
 #'       dataname = "ADAE",
+#'       parentname = "ADSL",
 #'       arm_var = variables(
 #'         choices = c("ACTARM", "ACTARMCD"),
 #'         selected = "ACTARMCD"
@@ -77,6 +78,7 @@
 #'
 tm_g_ae_sub <- function(label,
                         dataname,
+                        parentname = "ADSL",
                         arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
                         group_var = teal.picks::variables(is.factor),
                         plot_height = c(600L, 200L, 2000L),
@@ -89,6 +91,8 @@ tm_g_ae_sub <- function(label,
   arm_var <- migrate_choices_selected_to_variables(arm_var)
   group_var <- migrate_choices_selected_to_variables(group_var)
   checkmate::assert_string(dataname)
+
+  checkmate::assert_string(parentname)
   arm_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), arm_var)
   group_var <- create_picks_helper(teal.picks::datasets(dataname, dataname), group_var)
 
@@ -122,7 +126,7 @@ tm_g_ae_sub <- function(label,
     ui = ui_g_ae_sub,
     ui_args = args[names(args) %in% names(formals(ui_g_ae_sub))],
     transformators = transformators,
-    datanames = c("ADSL", dataname)
+    datanames = .picks_datanames(list(arm_var, group_var))
   )
 }
 
@@ -156,7 +160,7 @@ ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, decorators) {
       ),
       tags$div(
         tags$strong("Group variable"),
-        teal.picks::picks_ui(id = ns("groups"), picks = group_var)
+        teal.picks::picks_ui(id = ns("group_var"), picks = group_var)
       ),
       teal.widgets::panel_item(
         "Change group labels",
@@ -195,6 +199,7 @@ ui_g_ae_sub <- function(id, arm_var, group_var, fontsize, decorators) {
 srv_g_ae_sub <- function(id,
                          data,
                          dataname,
+                         parentname,
                          label,
                          arm_var,
                          group_var,
@@ -322,7 +327,7 @@ srv_g_ae_sub <- function(id,
         qenv <- teal.code::eval_code(qenv, "library(dplyr)")
 
         ANL <- qenv[["ANL"]]
-        ADSL <- qenv[["ADSL"]]
+        parent_data <- qenv[[parentname]]
         arm_var_name <- selectors$arm_var()$variables$selected
         group_var_name <- selectors$group_var()$variables$selected
 
@@ -330,11 +335,19 @@ srv_g_ae_sub <- function(id,
 
         validate_input("group_var", length(group_var_name) > 0L, "Group variable is required.")
         validate_input("arm_var", length(arm_var_name) == 1L, "Arm Variable is required.")
+        validate_input("arm_var", arm_var_name %in% colnames(parent_data), "Arm Variable must exist in parent dataset.")
         validate_input(
           "arm_var",
           is.factor(ANL[[arm_var_name]]),
           "Arm Variable must be a factor variable, contact app developer."
         )
+        sapply(group_var_name, function(x) {
+          teal::validate_input(
+            inputId = "group_var",
+            condition = x %in% names(parent_data),
+            message = sprintf("Group variable '%s' must exist in parent dataset.", x)
+          )
+        })
         validate_input(
           c("arm_trt", "arm_ref"),
           input$arm_trt != input$arm_ref,
@@ -386,11 +399,11 @@ srv_g_ae_sub <- function(id,
             plot <- osprey::g_ae_sub(
               id = ANL$USUBJID,
               arm = ANL[[arm_var_name]],
-              arm_sl = as.character(ANL[[arm_var_name]]),
+              arm_sl = as.character(parent_data[[arm_var_name]]),
               trt = trt,
               ref = ref,
               subgroups = ANL[group_var_name],
-              subgroups_sl = ANL[group_var_name],
+              subgroups_sl = parent_data[, group_var_name],
               subgroups_levels = subgroups_levels,
               conf_level = conf_level,
               diff_ci_method = diff_ci_method,
@@ -400,6 +413,7 @@ srv_g_ae_sub <- function(id,
             )
           },
           dataname = as.name("ANL$USUBJID"),
+          parent_data = as.name(parentname),
           trt = input$arm_trt,
           ref = input$arm_ref,
           conf_level = input$conf_level,

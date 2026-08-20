@@ -147,7 +147,7 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-# Using picks method
+
 data <- within(teal_data(), {
   library(dplyr)
   library(nestcolor)

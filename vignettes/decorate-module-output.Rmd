@@ -266,7 +266,10 @@ data <- within(teal_data(), {
   ADRS <- rADRS %>%
     filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
     mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-    rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+    rbind(
+      rADRS %>%
+        filter(PARAMCD == "OVRINV" & AVALC != "NE")
+    ) %>%
     arrange(USUBJID)
 })
 
