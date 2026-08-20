@@ -1,6 +1,6 @@
 # Teal Module for `Swimlane` Plot
 
-This is teal module that generates a `swimlane` plot (bar plot with
+This is a teal module that generates a `swimlane` plot (bar plot with
 markers) for `ADaM` data
 
 ## Usage
@@ -9,7 +9,8 @@ markers) for `ADaM` data
 tm_g_swimlane(
   label,
   dataname,
-  bar_var,
+  bar_var = teal.picks::variables(choices = is.numeric, selected = 1L),
+  parentname = "ADSL",
   bar_color_var = NULL,
   sort_var = NULL,
   marker_pos_var = NULL,
@@ -24,7 +25,8 @@ tm_g_swimlane(
   pre_output = NULL,
   post_output = NULL,
   x_label = "Time from First Treatment (Day)",
-  transformators = list()
+  transformators = list(),
+  decorators = list()
 )
 ```
 
@@ -37,79 +39,116 @@ tm_g_swimlane(
 
 - dataname:
 
-  analysis data used for plotting, needs to be available in the list
-  passed to the `data` argument of
-  [`teal::init()`](https://insightsengineering.github.io/teal/latest-tag/reference/init.html).
-  If no markers are to be plotted in the module, `"ADSL"` should be the
-  input. If markers are to be plotted, data name for the marker data
-  should be the input
+  (`character(1)`)\
+  analysis data used for markers. Use `"ADSL"` when no markers are
+  plotted.
 
 - bar_var:
 
-  [teal.transform::choices_selected](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html)
-  subject-level numeric variable from dataset to plot as the bar length
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Subject-level numeric variable for
+  bar length (from `parentname`).
+
+- parentname:
+
+  (`character(1)`)\
+  analysis data used for several variables in the teal module, needs to
+  be available in the list passed to the `data` argument of
+  [`teal::init()`](https://insightsengineering.github.io/teal/latest-tag/reference/init.html).
+  The default is `"ADSL"`
 
 - bar_color_var:
 
-  [teal.transform::choices_selected](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html)
-  color by variable (subject-level)
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Subject-level color variable from
+  `parentname`.
 
 - sort_var:
 
-  `choices_selected` sort by variable (subject-level)
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Subject-level sort variable from
+  `parentname`.
 
 - marker_pos_var:
 
-  [teal.transform::choices_selected](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html)
-  variable for marker position from marker data (Note: make sure that
-  marker position has the same relative start day as bar length variable
-  `bar_var`
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Marker position variable from
+  `dataname`).
 
 - marker_shape_var:
 
-  [teal.transform::choices_selected](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html)
-  marker shape variable from marker data
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Marker shape variable from
+  `dataname`.
 
 - marker_shape_opt:
 
-  aesthetic values to map shape values (named vector to map shape values
-  to each name). If not `NULL`, please make sure this contains all
-  possible values for `marker_shape_var` values, otherwise shape will be
-  assigned by `ggplot` default
+  (`numeric`)\
+  Named vector mapping shape values to ggplot shapes.
 
 - marker_color_var:
 
-  marker color variable from marker data
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Marker color variable from
+  `dataname`.
 
 - marker_color_opt:
 
-  aesthetic values to map color values (named vector to map color values
-  to each name). If not `NULL`, please make sure this contains all
-  possible values for `marker_color_var` values, otherwise color will be
-  assigned by `ggplot` default
+  (`character`)\
+  Named vector mapping color values to colors.
 
 - anno_txt_var:
 
-  character vector with subject-level variable names that are selected
-  as annotation
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Subject-level annotation variables
+  from `parentname` (multiple selection allowed).
 
 - vref_line:
 
-  vertical reference lines
+  (`numeric`)\
+  Vertical reference lines.
 
 - plot_height:
 
-  (`numeric(3)`)  
+  (`numeric(3)`)\
   vector to indicate default value, minimum and maximum values.
 
 - plot_width:
 
-  (`numeric(3)`)  
+  (`numeric(3)`)\
   vector to indicate default value, minimum and maximum values.
 
 - pre_output:
 
-  (`shiny.tag`) optional,  
+  (`shiny.tag`) optional,\
   with text placed before the output to put the output into context. For
   example a title.
 
@@ -122,7 +161,8 @@ tm_g_swimlane(
 
 - x_label:
 
-  the label of the x axis
+  (`character`)\
+  Label of the x axis.
 
 - transformators:
 
@@ -130,11 +170,44 @@ tm_g_swimlane(
   module's data input. To learn more check
   [`vignette("transform-input-data", package = "teal")`](https://insightsengineering.github.io/teal/latest-tag/articles/transform-input-data.html).
 
+- decorators:
+
+  **\[experimental\]** (named `list` of `teal_transform_module`)
+  optional, decorators for the module `plot` output.
+
 ## Value
 
 the
 [`teal::module()`](https://insightsengineering.github.io/teal/latest-tag/reference/teal_modules.html)
 object.
+
+## Decorating Module
+
+This module generates the following objects, which can be modified in
+place using decorators:
+
+- `plot` (`grob`, `gtable`)
+
+A Decorator is applied to the specific output using a named list of
+`teal_transform_module` objects. The name of this list corresponds to
+the name of the output to which the decorator is applied. See code
+snippet below:
+
+    tm_g_swimlane(
+       ..., # arguments for module
+       decorators = list(
+         plot = teal_transform_module(...), # applied to the `plot` output
+       )
+    )
+
+For additional details and examples of decorators, refer to the vignette
+[`vignette("decorate-module-output", package = "teal.modules.general")`](https://insightsengineering.github.io/teal.modules.general/latest-tag/articles/decorate-module-output.html).
+
+To learn more please refer to the vignette
+[`vignette("transform-module-output", package = "teal")`](https://insightsengineering.github.io/teal/latest-tag/articles/transform-module-output.html)
+or the
+[`teal::teal_transform_module()`](https://insightsengineering.github.io/teal/latest-tag/reference/teal_transform_module.html)
+documentation.
 
 ## Reporting
 
@@ -157,25 +230,21 @@ Ting Qi (qit3) <qit3@gene.com>
 ## Examples
 
 ``` r
-# Example using stream (ADaM) dataset
-data <- teal_data() %>%
-  within({
-    library(nestcolor)
-    library(dplyr)
-    ADSL <- rADSL %>%
-      mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
-      filter(STRATA1 == "A" & ARMCD == "ARM A")
-    ADRS <- rADRS %>%
-      filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
-      mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
-      rbind(rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
-      arrange(USUBJID)
-  })
+data <- within(teal_data(), {
+  library(nestcolor)
+  library(dplyr)
+  ADSL <- teal.data::rADSL %>%
+    mutate(TRTDURD = as.integer(TRTEDTM - TRTSDTM) + 1) %>%
+    filter(STRATA1 == "A" & ARMCD == "ARM A")
+  ADRS <- teal.data::rADRS %>%
+    filter(PARAMCD == "LSTASDI" & DCSREAS == "Death") %>%
+    mutate(AVALC = DCSREAS, ADY = EOSDY) %>%
+    rbind(teal.data::rADRS %>% filter(PARAMCD == "OVRINV" & AVALC != "NE")) %>%
+    arrange(USUBJID)
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
-ADSL <- data[["ADSL"]]
-ADRS <- data[["ADRS"]]
 
 app <- init(
   data = data,
@@ -183,28 +252,28 @@ app <- init(
     tm_g_swimlane(
       label = "Swimlane Plot",
       dataname = "ADRS",
-      bar_var = choices_selected(
-        selected = "TRTDURD",
-        choices = c("TRTDURD", "EOSDY")
+      bar_var = variables(
+        choices = c("TRTDURD", "EOSDY"),
+        selected = "TRTDURD"
       ),
-      bar_color_var = choices_selected(
-        selected = "EOSSTT",
-        choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX")
+      bar_color_var = variables(
+        choices = c("EOSSTT", "ARM", "ARMCD", "ACTARM", "ACTARMCD", "SEX"),
+        selected = "EOSSTT"
       ),
-      sort_var = choices_selected(
-        selected = "ACTARMCD",
-        choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD")
+      sort_var = variables(
+        choices = c("USUBJID", "SITEID", "ACTARMCD", "TRTDURD"),
+        selected = "ACTARMCD"
       ),
-      marker_pos_var = choices_selected(
-        selected = "ADY",
-        choices = c("ADY")
+      marker_pos_var = variables(
+        choices = c("ADY"),
+        selected = "ADY"
       ),
-      marker_shape_var = choices_selected(
+      marker_shape_var = variables(
         selected = "AVALC",
         c("AVALC", "AVISIT")
       ),
       marker_shape_opt = c("CR" = 16, "PR" = 17, "SD" = 18, "PD" = 15, "Death" = 8),
-      marker_color_var = choices_selected(
+      marker_color_var = variables(
         selected = "AVALC",
         choices = c("AVALC", "AVISIT")
       ),
@@ -213,7 +282,7 @@ app <- init(
         "PD" = "red", "Death" = "black"
       ),
       vref_line = c(30, 60),
-      anno_txt_var = choices_selected(
+      anno_txt_var = variables(
         selected = c("ACTARM", "SEX"),
         choices = c(
           "ARM", "ARMCD", "ACTARM", "ACTARMCD", "AGEGR1",

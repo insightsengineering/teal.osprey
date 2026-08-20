@@ -7,18 +7,21 @@ This is teal module that generates a waterfall plot for `ADaM` data
 ``` r
 tm_g_waterfall(
   label,
+  parentname = "ADSL",
   dataname_tr = "ADTR",
   dataname_rs = "ADRS",
-  bar_paramcd,
-  bar_var,
-  bar_color_var,
+  bar_paramcd = teal.picks::values(choices = teal.picks::is_categorical(), multiple =
+    FALSE),
+  bar_var = teal.picks::variables(choices = is.numeric, multiple = FALSE),
+  bar_color_var = teal.picks::variables(choices = teal.picks::is_categorical(max.len =
+    20), selected = NULL),
   bar_color_opt = NULL,
-  sort_var,
-  add_label_var_sl,
-  add_label_paramcd_rs,
-  anno_txt_var_sl,
-  anno_txt_paramcd_rs,
-  facet_var,
+  sort_var = teal.picks::variables(selected = NULL),
+  add_label_var_sl = teal.picks::variables(selected = NULL),
+  add_label_paramcd_rs = teal.picks::values(selected = NULL, multiple = FALSE),
+  anno_txt_var_sl = teal.picks::variables(selected = NULL, multiple = TRUE),
+  anno_txt_paramcd_rs = teal.picks::values(selected = NULL),
+  facet_var = teal.picks::variables(selected = NULL),
   ytick_at = 20,
   href_line = NULL,
   gap_point_val = NULL,
@@ -27,7 +30,8 @@ tm_g_waterfall(
   plot_width = NULL,
   pre_output = NULL,
   post_output = NULL,
-  transformators = list()
+  transformators = list(),
+  decorators = list()
 )
 ```
 
@@ -38,33 +42,57 @@ tm_g_waterfall(
   (`character(1)`) Label shown in the navigation item for the module or
   module group. For `modules()` defaults to `"root"`. See `Details`.
 
+- parentname:
+
+  (`character(1)`)\
+  analysis data used for several variables in the teal module, needs to
+  be available in the list passed to the `data` argument of
+  [`teal::init()`](https://insightsengineering.github.io/teal/latest-tag/reference/init.html).
+  The default is `"ADSL"`
+
 - dataname_tr:
 
-  tumor burden analysis data used in teal module to plot as bar height,
-  needs to be available in the list passed to the `data` argument of
+  (`character(1)`) tumor burden analysis data used in teal module to
+  plot as bar height, needs to be available in the list passed to the
+  `data` argument of
   [`teal::init()`](https://insightsengineering.github.io/teal/latest-tag/reference/init.html)
 
 - dataname_rs:
 
-  response analysis data used in teal module to label response
-  parameters, needs to be available in the list passed to the `data`
-  argument of
+  (`character(1)`) response analysis data used in teal module to label
+  response parameters, needs to be available in the list passed to the
+  `data` argument of
   [`teal::init()`](https://insightsengineering.github.io/teal/latest-tag/reference/init.html)
 
 - bar_paramcd:
 
-  `choices_selected` parameter in tumor burden data that will be plotted
-  as bar height
+  Either a
+  ([`teal.picks::values()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Parameter in tumor burden data that
+  will be plotted as bar height.
 
 - bar_var:
 
-  `choices_selected` numeric variable from dataset to plot the bar
-  height, e.g., `PCHG`
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Numeric variable from dataset to
+  plot the bar height, e.g., `PCHG`.
 
 - bar_color_var:
 
-  `choices_selected` color by variable (subject level), `None`
-  corresponds to `NULL`
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Color by variable (subject level).
+  Defaults to no selection.
 
 - bar_color_opt:
 
@@ -76,65 +104,96 @@ tm_g_waterfall(
 
 - sort_var:
 
-  `choices_selected` sort by variable (subject level), `None`
-  corresponds to `NULL`
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Sort by variable (subject level).
+  Defaults to no selection.
 
 - add_label_var_sl:
 
-  `choices_selected` add label to bars (subject level), `None`
-  corresponds to `NULL`
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Add label to bars (subject level).
 
 - add_label_paramcd_rs:
 
-  `choices_selected` add label to bars (response dataset), `None`
-  corresponds to `NULL`. At least one of `add_label_var_sl` and
-  `add_label_paramcd_rs` needs to be `NULL`
+  Either a
+  ([`teal.picks::values()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Add label to bars (response
+  dataset). At least one of `add_label_var_sl` and
+  `add_label_paramcd_rs` needs to not be selected.
 
 - anno_txt_var_sl:
 
-  `choices_selected` subject level variables to be displayed in the
-  annotation table, default is `NULL`
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Subject level variables to be
+  displayed in the annotation table, default is no selection.
 
 - anno_txt_paramcd_rs:
 
-  `choices_selected` analysis dataset variables to be displayed in the
-  annotation table, default is `NULL`
+  Either a
+  ([`teal.picks::values()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Analysis dataset variables to be
+  displayed in the annotation table, default is no selection.
 
 - facet_var:
 
-  `choices_selected` facet by variable (subject level), `None`
-  corresponds to `NULL`
+  Either a
+  ([`teal.picks::variables()`](https://insightsengineering.github.io/teal.picks/latest-tag/reference/picks.html))
+  object or a
+  ([`teal.transform::choices_selected()`](https://insightsengineering.github.io/teal.transform/latest-tag/reference/choices_selected.html))
+  object. `choices_selected()` is being deprecated as an argument type
+  and will be removed in the future. Facet by variable (subject level).
+  Defaults to no selection.
 
 - ytick_at:
 
-  bar height axis interval, default is 20
+  (`numeric(1)`) bar height axis interval, default is 20
 
 - href_line:
 
-  numeric vector to plot horizontal reference lines, default is `NULL`
+  (`numeric`) numeric vector to plot horizontal reference lines, default
+  is `NULL`
 
 - gap_point_val:
 
-  singular numeric value for adding bar break when some bars are
-  significantly higher than others, default is `NULL`
+  (`numeric(1)`) singular numeric value for adding bar break when some
+  bars are significantly higher than others, default is `NULL`
 
 - show_value:
 
-  boolean of whether value of bar height is shown, default is `TRUE`
+  (`logical(1)`) boolean of whether value of bar height is shown,
+  default is `TRUE`
 
 - plot_height:
 
-  (`numeric(3)`)  
+  (`numeric(3)`)\
   vector to indicate default value, minimum and maximum values.
 
 - plot_width:
 
-  (`numeric(3)`)  
+  (`numeric(3)`)\
   vector to indicate default value, minimum and maximum values.
 
 - pre_output:
 
-  (`shiny.tag`) optional,  
+  (`shiny.tag`) optional,\
   with text placed before the output to put the output into context. For
   example a title.
 
@@ -151,11 +210,44 @@ tm_g_waterfall(
   module's data input. To learn more check
   [`vignette("transform-input-data", package = "teal")`](https://insightsengineering.github.io/teal/latest-tag/articles/transform-input-data.html).
 
+- decorators:
+
+  **\[experimental\]** (named `list` of `teal_transform_module`)
+  optional, decorators for the module `plot` output.
+
 ## Value
 
 the
 [`teal::module()`](https://insightsengineering.github.io/teal/latest-tag/reference/teal_modules.html)
 object.
+
+## Decorating Module
+
+This module generates the following objects, which can be modified in
+place using decorators:
+
+- `plot` (`grob`, `gtable`)
+
+A Decorator is applied to the specific output using a named list of
+`teal_transform_module` objects. The name of this list corresponds to
+the name of the output to which the decorator is applied. See code
+snippet below:
+
+    tm_g_butterfly(
+       ..., # arguments for module
+       decorators = list(
+         plot = teal_transform_module(...), # applied to the `plot` output
+       )
+    )
+
+For additional details and examples of decorators, refer to the vignette
+[`vignette("decorate-module-output", package = "teal.modules.general")`](https://insightsengineering.github.io/teal.modules.general/latest-tag/articles/decorate-module-output.html).
+
+To learn more please refer to the vignette
+[`vignette("transform-module-output", package = "teal")`](https://insightsengineering.github.io/teal/latest-tag/articles/transform-module-output.html)
+or the
+[`teal::teal_transform_module()`](https://insightsengineering.github.io/teal/latest-tag/reference/teal_transform_module.html)
+documentation.
 
 ## Reporting
 
@@ -180,14 +272,13 @@ houx14 <houx14@gene.com>
 ## Examples
 
 ``` r
-data <- teal_data() %>%
-  within({
-    library(nestcolor)
-    ADSL <- rADSL
-    ADRS <- rADRS
-    ADTR <- rADTR
-    ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
-  })
+data <- within(teal_data(), {
+  library(nestcolor)
+  ADSL <- teal.data::rADSL
+  ADRS <- teal.data::rADRS
+  ADTR <- teal.data::rADTR
+  ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
@@ -198,16 +289,16 @@ app <- init(
       label = "Waterfall",
       dataname_tr = "ADTR",
       dataname_rs = "ADRS",
-      bar_paramcd = choices_selected(c("SLDINV"), "SLDINV"),
-      bar_var = choices_selected(c("PCHG", "AVAL"), "PCHG"),
-      bar_color_var = choices_selected(c("ARMCD", "SEX"), "ARMCD"),
+      bar_paramcd = values(c("SLDINV"), "SLDINV", multiple = FALSE),
+      bar_var = variables(c("PCHG", "AVAL"), "PCHG"),
+      bar_color_var = variables(c("ARMCD", "SEX"), "ARMCD"),
       bar_color_opt = NULL,
-      sort_var = choices_selected(c("ARMCD", "SEX"), NULL),
-      add_label_var_sl = choices_selected(c("SEX", "EOSDY"), NULL),
-      add_label_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-      anno_txt_var_sl = choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
-      anno_txt_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-      facet_var = choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
+      sort_var = variables(c("ARMCD", "SEX"), NULL),
+      add_label_var_sl = variables(c("SEX", "EOSDY"), NULL),
+      add_label_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL, multiple = FALSE),
+      anno_txt_var_sl = variables(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL, multiple = TRUE),
+      anno_txt_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL),
+      facet_var = variables(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
       href_line = "-30, 20"
     )
   )
