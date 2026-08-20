@@ -7,12 +7,14 @@
 tm_g_ae_sub(
   label,
   dataname,
-  arm_var,
-  group_var,
+  parentname = "ADSL",
+  arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
+  group_var = teal.picks::variables(is.factor),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
   fontsize = c(5, 3, 7),
-  transformators = list()
+  transformators = list(),
+  decorators = list()
 )
 }
 \arguments{
@@ -23,12 +25,22 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{arm_var}{(\code{choices_selected})\cr
-object with all available choices and the pre-selected option for variable
-names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
-details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
+\item{parentname}{(\code{character(1)})\cr
+analysis data used for several variables in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
+\code{"ADSL"}}
 
-\item{group_var}{(\code{choices_selected}) subgroups variables. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for details.}
+\item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Object with all available choices and the pre-selected option for variable
+names that can be used as \code{arm_var}. Column \code{arm_var} in the \code{dataname}
+has to be a factor.}
+
+\item{group_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with subgroup variables.}
 
 \item{plot_height}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
@@ -43,13 +55,44 @@ plot.}
 
 \item{transformators}{(\code{list} of \code{teal_transform_module}) that will be applied to transform module's data input.
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
+
+\item{decorators}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+(named \code{list} of \code{teal_transform_module}) optional,
+decorators for the module \code{plot} output.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display the \code{AE} by subgroups plot as a teal module
 }
+\section{Decorating Module}{
+
+
+This module generates the following objects, which can be modified in place using decorators:
+\itemize{
+\item \code{plot} (\code{grob})
+}
+
+A Decorator is applied to the specific output using a named list of \code{teal_transform_module} objects.
+The name of this list corresponds to the name of the output to which the decorator is applied.
+See code snippet below:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{tm_g_ae_sub(
+   ..., # arguments for module
+   decorators = list(
+     plot = teal_transform_module(...), # applied to the `plot` output
+   )
+)
+}\if{html}{\out{</div>}}
+
+For additional details and examples of decorators, refer to the vignette
+\code{vignette("decorate-module-output", package = "teal.modules.general")}.
+
+To learn more please refer to the vignette
+\code{vignette("transform-module-output", package = "teal")} or the \code{\link[teal:teal_transform_module]{teal::teal_transform_module()}} documentation.
+}
+
 \section{Reporting}{
 
 
@@ -68,11 +111,10 @@ For more information on reporting in \code{teal}, see the vignettes:
 
 \examples{
 # Example using stream (ADaM) dataset
-data <- teal_data() \%>\%
-  within({
-    ADSL <- rADSL
-    ADAE <- rADAE
-  })
+data <- within(teal_data(), {
+  ADSL <- teal.data::rADSL
+  ADAE <- teal.data::rADAE
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
@@ -82,15 +124,16 @@ app <- init(
     tm_g_ae_sub(
       label = "AE by Subgroup",
       dataname = "ADAE",
-      arm_var = choices_selected(
-        selected = "ACTARMCD",
-        choices = c("ACTARM", "ACTARMCD")
+      parentname = "ADSL",
+      arm_var = variables(
+        choices = c("ACTARM", "ACTARMCD"),
+        selected = "ACTARMCD"
       ),
-      group_var = choices_selected(
+      group_var = variables(
+        choices = c("SEX", "REGION1", "RACE"),
         selected = c("SEX", "REGION1", "RACE"),
-        choices = c("SEX", "REGION1", "RACE")
-      ),
-      plot_height = c(600, 200, 2000)
+        multiple = TRUE
+      )
     )
   )
 )

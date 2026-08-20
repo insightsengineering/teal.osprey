@@ -7,11 +7,13 @@
 tm_g_spiderplot(
   label,
   dataname,
-  paramcd,
-  x_var,
-  y_var,
-  marker_var,
-  line_colorby_var,
+  paramcd = teal.picks::variables(choices = dplyr::starts_with("PARAMCD"), selected = 1L),
+  x_var = teal.picks::variables(choices = dplyr::where(is.numeric), selected = 1L),
+  y_var = teal.picks::variables(choices = teal.picks::is_categorical(), selected = 1L),
+  marker_var = teal.picks::variables(choices = teal.picks::is_categorical(), selected =
+    1L),
+  line_colorby_var = teal.picks::variables(choices = teal.picks::is_categorical(),
+    selected = 1L),
   xfacet_var = NULL,
   yfacet_var = NULL,
   vref_line = NULL,
@@ -22,7 +24,8 @@ tm_g_spiderplot(
   plot_width = NULL,
   pre_output = NULL,
   post_output = NULL,
-  transformators = list()
+  transformators = list(),
+  decorators = list()
 )
 }
 \arguments{
@@ -33,21 +36,40 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{paramcd}{(\code{character(1)} or \code{choices_selected})\cr
-variable value designating the studied parameter.
-See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for details.}
+\item{paramcd}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Variable value designating the studied parameter.}
 
-\item{x_var}{x-axis variables}
+\item{x_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For x-axis variables.}
 
-\item{y_var}{y-axis variables}
+\item{y_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For y-axis variables.}
 
-\item{marker_var}{variable dictates marker symbol}
+\item{marker_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For marker symbol.}
 
-\item{line_colorby_var}{variable dictates line color}
+\item{line_colorby_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For line color.}
 
-\item{xfacet_var}{variable for x facets}
+\item{xfacet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For x facets.}
 
-\item{yfacet_var}{variable for y facets}
+\item{yfacet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+For y facets.}
 
 \item{vref_line}{vertical reference lines}
 
@@ -71,13 +93,44 @@ into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} el
 
 \item{transformators}{(\code{list} of \code{teal_transform_module}) that will be applied to transform module's data input.
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
+
+\item{decorators}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+(named \code{list} of \code{teal_transform_module}) optional,
+decorators for the module \code{plot} output.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display spider plot as a shiny module
 }
+\section{Decorating Module}{
+
+
+This module generates the following objects, which can be modified in place using decorators:
+\itemize{
+\item \code{plot} (\code{ggplot})
+}
+
+A Decorator is applied to the specific output using a named list of \code{teal_transform_module} objects.
+The name of this list corresponds to the name of the output to which the decorator is applied.
+See code snippet below:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{tm_g_spiderplot(
+   ..., # arguments for module
+   decorators = list(
+     plot = teal_transform_module(...), # applied to the `plot` output
+   )
+)
+}\if{html}{\out{</div>}}
+
+For additional details and examples of decorators, refer to the vignette
+\code{vignette("decorate-module-output", package = "teal.modules.general")}.
+
+To learn more please refer to the vignette
+\code{vignette("transform-module-output", package = "teal")} or the \code{\link[teal:teal_transform_module]{teal::teal_transform_module()}} documentation.
+}
+
 \section{Reporting}{
 
 
@@ -95,13 +148,11 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-# Example using stream (ADaM) dataset
-data <- teal_data() \%>\%
-  within({
-    library(nestcolor)
-    ADSL <- rADSL
-    ADTR <- rADTR
-  })
+data <- within(teal_data(), {
+  library(nestcolor)
+  ADSL <- teal.data::rADSL
+  ADTR <- teal.data::rADTR
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
@@ -109,33 +160,33 @@ app <- init(
   data = data,
   modules = modules(
     tm_g_spiderplot(
-      label = "Spider plot",
+      label = "Spider plot (picks)",
       dataname = "ADTR",
-      paramcd = choices_selected(
-        choices = "SLDINV",
-        selected = "SLDINV"
+      paramcd = variables(
+        choices = "PARAMCD",
+        selected = "PARAMCD"
       ),
-      x_var = choices_selected(
-        choices = "ADY",
-        selected = "ADY"
+      x_var = variables(
+        choices = dplyr::where(is.numeric),
+        selected = 1L
       ),
-      y_var = choices_selected(
+      y_var = variables(
         choices = c("PCHG", "CHG", "AVAL"),
         selected = "PCHG"
       ),
-      marker_var = choices_selected(
+      marker_var = variables(
         choices = c("SEX", "RACE", "USUBJID"),
         selected = "SEX"
       ),
-      line_colorby_var = choices_selected(
+      line_colorby_var = variables(
         choices = c("SEX", "USUBJID", "RACE"),
         selected = "SEX"
       ),
-      xfacet_var = choices_selected(
+      xfacet_var = variables(
         choices = c("SEX", "ARM"),
         selected = "SEX"
       ),
-      yfacet_var = choices_selected(
+      yfacet_var = variables(
         choices = c("SEX", "ARM"),
         selected = "ARM"
       ),

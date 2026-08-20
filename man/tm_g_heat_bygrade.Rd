@@ -9,17 +9,20 @@ tm_g_heat_bygrade(
   sl_dataname,
   ex_dataname,
   ae_dataname,
-  cm_dataname = NA,
-  id_var,
-  visit_var,
-  ongo_var,
-  anno_var,
-  heat_var,
+  id_var = teal.picks::variables(choices = teal.picks::is_categorical(), selected = 1L),
+  visit_var = teal.picks::variables(choices = dplyr::starts_with("AVISIT"), selected =
+    1L),
+  ongo_var = teal.picks::variables(choices = dplyr::starts_with("ongo"), selected = 1L),
+  anno_var = teal.picks::variables(choices = teal.picks::is_categorical(min.len = 2),
+    selected = 1L, multiple = TRUE),
+  heat_var = teal.picks::variables(choices = dplyr::starts_with("AET0"), selected = 1L),
+  cm_dataname = NULL,
   conmed_var = NULL,
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
-  transformators = list()
+  transformators = list(),
+  decorators = list()
 )
 }
 \arguments{
@@ -36,25 +39,41 @@ argument of \code{\link[teal:init]{teal::init()}} \cr}
 
 \item{ae_dataname}{(\code{character}) adverse events dataset name,
 needs to be available in the list passed to the \code{data}
-argument of \code{\link[teal:init]{teal::init()}} \cr}
-
-\item{cm_dataname}{(\code{character}) concomitant medications dataset name,
-needs to be available in the list passed to the \code{data}
 argument of \code{\link[teal:init]{teal::init()}} \cr
 specify to \code{NA} if no concomitant medications data is available}
 
-\item{id_var}{(\code{choices_seleced}) unique subject ID variable}
+\item{id_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Unique subject ID variable.}
 
-\item{visit_var}{(\code{choices_seleced}) analysis visit variable}
+\item{visit_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Analysis visit variable.}
 
-\item{ongo_var}{(\code{choices_seleced}) study ongoing status variable.
+\item{ongo_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Study ongoing status variable.
 This variable is a derived logical variable. Usually it can be derived from \code{EOSSTT}.}
 
-\item{anno_var}{(\code{choices_seleced}) annotation variable}
+\item{anno_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Annotation variable.}
 
-\item{heat_var}{(\code{choices_seleced}) heatmap variable}
+\item{heat_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Heatmap variable.}
 
-\item{conmed_var}{(\code{choices_seleced}) concomitant medications variable,
+\item{cm_dataname}{(\code{character}) concomitant medications dataset name,}
+
+\item{conmed_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Concomitant medications variable,
 specify to \code{NA} if no concomitant medications data is available}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
@@ -70,13 +89,47 @@ vector to indicate default value, minimum and maximum values.}
 
 \item{transformators}{(\code{list} of \code{teal_transform_module}) that will be applied to transform module's data input.
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
+
+\item{decorators}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+(named \code{list} of \code{teal_transform_module}) optional,
+decorators for the module \code{plot} output.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display the heatmap by grade as a shiny module
 }
+\details{
+`data`` object is only used for checks
+}
+\section{Decorating Module}{
+
+
+This module generates the following objects, which can be modified in place using decorators:
+\itemize{
+\item \code{plot} (\code{grob}, \code{gtable})
+}
+
+A Decorator is applied to the specific output using a named list of \code{teal_transform_module} objects.
+The name of this list corresponds to the name of the output to which the decorator is applied.
+See code snippet below:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{tm_g_heat_bygrade(
+   ..., # arguments for module
+   decorators = list(
+     plot = teal_transform_module(...), # applied to the `plot` output
+   )
+)
+}\if{html}{\out{</div>}}
+
+For additional details and examples of decorators, refer to the vignette
+\code{vignette("decorate-module-output", package = "teal.modules.general")}.
+
+To learn more please refer to the vignette
+\code{vignette("transform-module-output", package = "teal")} or the \code{\link[teal:teal_transform_module]{teal::teal_transform_module()}} documentation.
+}
+
 \section{Reporting}{
 
 
@@ -94,47 +147,45 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-data <- teal_data() \%>\%
-  within({
-    library(dplyr)
-    library(nestcolor)
-    ADSL <- rADSL \%>\% slice(1:30)
-    ADEX <- rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADAE <- rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    ADCM <- rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
-    # This preprocess is only to force legacy standard on ADCM
-    ADCM <- ADCM \%>\%
-      select(-starts_with("ATC")) \%>\%
-      unique()
-    # function to derive AVISIT from ADEX
-    .add_visit <- function(data_need_visit) {
-      visit_dates <- ADEX \%>\%
-        filter(PARAMCD == "DOSE") \%>\%
-        distinct(USUBJID, AVISIT, ASTDTM) \%>\%
-        group_by(USUBJID) \%>\%
-        arrange(ASTDTM) \%>\%
-        mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
-        rename(this_vis = ASTDTM)
-      data_visit <- data_need_visit \%>\%
-        select(USUBJID, ASTDTM) \%>\%
-        left_join(visit_dates, by = "USUBJID") \%>\%
-        filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
-        left_join(data_need_visit) \%>\%
-        distinct()
-      return(data_visit)
-    }
-    # derive AVISIT for ADAE and ADCM
-    ADAE <- .add_visit(ADAE)
-    ADCM <- .add_visit(ADCM)
-    # derive ongoing status variable for ADEX
-    ADEX <- ADEX \%>\%
-      filter(PARCAT1 == "INDIVIDUAL") \%>\%
-      mutate(ongo_status = (EOSSTT == "ONGOING"))
-  })
+
+data <- within(teal_data(), {
+  library(dplyr)
+  library(nestcolor)
+  ADSL <- teal.data::rADSL \%>\% slice(1:30)
+  ADEX <- teal.data::rADEX \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+  ADAE <- teal.data::rADAE \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+  ADCM <- teal.data::rADCM \%>\% filter(USUBJID \%in\% ADSL$USUBJID)
+  # This preprocess is only to force legacy standard on ADCM
+  ADCM <- ADCM \%>\%
+    select(-starts_with("ATC")) \%>\%
+    unique()
+  # function to derive AVISIT from ADEX
+  .add_visit <- function(data_need_visit) {
+    visit_dates <- ADEX \%>\%
+      filter(PARAMCD == "DOSE") \%>\%
+      distinct(USUBJID, AVISIT, ASTDTM) \%>\%
+      group_by(USUBJID) \%>\%
+      arrange(ASTDTM) \%>\%
+      mutate(next_vis = lead(ASTDTM), is_last = ifelse(is.na(next_vis), TRUE, FALSE)) \%>\%
+      rename(this_vis = ASTDTM)
+    data_visit <- data_need_visit \%>\%
+      select(USUBJID, ASTDTM) \%>\%
+      left_join(visit_dates, by = "USUBJID") \%>\%
+      filter(ASTDTM > this_vis & (ASTDTM < next_vis | is_last == TRUE)) \%>\%
+      left_join(data_need_visit) \%>\%
+      distinct()
+    return(data_visit)
+  }
+  # derive AVISIT for ADAE and ADCM
+  ADAE <- .add_visit(ADAE)
+  ADCM <- .add_visit(ADCM)
+  # derive ongoing status variable for ADEX
+  ADEX <- ADEX \%>\%
+    filter(PARCAT1 == "INDIVIDUAL") \%>\%
+    mutate(ongo_status = (EOSSTT == "ONGOING"))
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
-
-ADCM <- data[["ADCM"]]
 
 app <- init(
   data = data,
@@ -145,36 +196,35 @@ app <- init(
       ex_dataname = "ADEX",
       ae_dataname = "ADAE",
       cm_dataname = "ADCM",
-      id_var = choices_selected(
-        selected = "USUBJID",
-        choices = c("USUBJID", "SUBJID")
+      id_var = variables(
+        choices = is_categorical(min.len = 2),
+        selected = 1L
       ),
-      visit_var = choices_selected(
-        selected = "AVISIT",
-        choices = c("AVISIT")
+      visit_var = variables(
+        choices = dplyr::starts_with("AVISIT"),
+        selected = 1L
       ),
-      ongo_var = choices_selected(
-        selected = "ongo_status",
-        choices = c("ongo_status")
+      ongo_var = variables(
+        choices = dplyr::starts_with("ongo"),
+        selected = 1L
       ),
-      anno_var = choices_selected(
+      anno_var = variables(
+        choices = is_categorical(min.len = 2),
         selected = c("SEX", "COUNTRY"),
-        choices = c("SEX", "COUNTRY", "USUBJID")
+        multiple = TRUE
       ),
-      heat_var = choices_selected(
-        selected = "AETOXGR",
-        choices = c("AETOXGR")
+      heat_var = variables(
+        choices = dplyr::starts_with("AETO"),
+        selected = 1L
       ),
-      conmed_var = choices_selected(
-        selected = "CMDECOD",
-        choices = c("CMDECOD")
-      ),
-      plot_height = c(600, 200, 2000)
+      conmed_var = variables(
+        choices = dplyr::starts_with("CMDECOD"),
+        selected = 1L
+      )
     )
   )
 )
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-
 }

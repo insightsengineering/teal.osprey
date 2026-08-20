@@ -11,14 +11,22 @@ menu item label of the module in the teal app.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{arm_var}{(\code{choices_selected})\cr
-object with all available choices and the pre-selected option for variable
-names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
-details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
+\item{parentname}{(\code{character(1)})\cr
+analysis data used for several variables in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
+\code{"ADSL"}}
 
-\item{paramcd}{(\code{character(1)} or \code{choices_selected})\cr
-variable value designating the studied parameter.
-See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for details.}
+\item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Object with all available choices and the pre-selected option for variable
+names that can be used as \code{arm_var}. Column \code{arm_var} in the \code{dataname}
+has to be a factor.}
+
+\item{paramcd}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Variable value designating the studied parameter.}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
 Defines initial possible range of font-size. \code{fontsize} is set for
@@ -30,9 +38,17 @@ vector to indicate default value, minimum and maximum values.}
 
 \item{plot_width}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
+
+\item{transformators}{(\code{list} of \code{teal_transform_module}) optional,
+input data transforms applied after filtering (UI in the filter sidebar under
+\strong{Transform Data}). See \code{vignette("transform-input-data", package = "teal")}.}
+
+\item{decorators}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+(named \code{list} of \code{teal_transform_module}) optional,
+decorators for the module \code{plot} output.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 The documentation to this function lists all the arguments in teal modules

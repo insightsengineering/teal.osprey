@@ -8,20 +8,22 @@ tm_g_butterfly(
   label,
   dataname,
   filter_var = NULL,
-  right_var,
-  left_var,
-  category_var,
-  color_by_var,
-  count_by_var,
+  right_var = teal.picks::variables(is.factor),
+  left_var = teal.picks::variables(is.factor),
+  category_var = teal.picks::variables(teal.picks::is_categorical()),
+  color_by_var = teal.picks::variables(dplyr::starts_with("AETO")),
+  count_by_var = teal.picks::values(choices = c("# of patients", "# of AEs"), selected =
+    "# of patients"),
   facet_var = NULL,
-  sort_by_var = teal.transform::choices_selected(selected = "count", choices = c("count",
-    "alphabetical")),
+  sort_by_var = teal.picks::values(choices = c("count", "alphabetical"), selected =
+    "count"),
   legend_on = TRUE,
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
   pre_output = NULL,
   post_output = NULL,
-  transformators = list()
+  transformators = list(),
+  decorators = list()
 )
 }
 \arguments{
@@ -32,25 +34,47 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{filter_var}{(\code{choices_selected}) variable name of data filter, please see details regarding
-expected values, default is\code{NULL}.\code{choices}
-vector with \code{filter_var} choices, default is
-\code{NULL}}
+\item{filter_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with variable name of data filter, please see details regarding expected values,
+default is \code{NULL}.}
 
-\item{right_var}{(\code{choices_selected}) dichotomization variable for right side}
+\item{right_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with dichotomization variable for the right side.}
 
-\item{left_var}{(\code{choices_selected}) dichotomization variable for left side}
+\item{left_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with dichotomization variable for the left side.}
 
-\item{category_var}{(\code{choices_selected}) category (y axis) variable}
+\item{category_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with category (y-axis) variable.}
 
-\item{color_by_var}{(\code{choices_selected}) variable defines color blocks within each bar}
+\item{color_by_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with variable that defines color blocks within each bar.}
 
-\item{count_by_var}{(\code{choices_selected}) variable defines how x axis is calculated}
+\item{count_by_var}{Either a (\code{\link[teal.picks:values]{teal.picks::values()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with variable that defines how the x axis is calculated.}
 
-\item{facet_var}{(\code{choices_selected}) variable for row facets}
+\item{facet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with variable for row facets.}
 
-\item{sort_by_var}{(\code{choices_selected}) argument for order of class and term elements in table,
-default here is "count"}
+\item{sort_by_var}{Either a (\code{\link[teal.picks:values]{teal.picks::values()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with argument for order of class and term elements in table,
+default here is \code{"count"}.}
 
 \item{legend_on}{(\code{boolean}) value for whether legend is displayed}
 
@@ -68,9 +92,13 @@ into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} el
 
 \item{transformators}{(\code{list} of \code{teal_transform_module}) that will be applied to transform module's data input.
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
+
+\item{decorators}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+(named \code{list} of \code{teal_transform_module}) optional,
+decorators for the module \code{plot} output.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display butterfly plot as a shiny module
@@ -87,6 +115,33 @@ observations with "Y" value in each and every selected variables will be
 used for subsequent analysis. Flag variables (from \code{ADaM} datasets) can be
 used directly as filter.
 }
+\section{Decorating Module}{
+
+
+This module generates the following objects, which can be modified in place using decorators:
+\itemize{
+\item \code{plot} (\code{grob}, \code{gtable})
+}
+
+A Decorator is applied to the specific output using a named list of \code{teal_transform_module} objects.
+The name of this list corresponds to the name of the output to which the decorator is applied.
+See code snippet below:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{tm_g_butterfly(
+   ..., # arguments for module
+   decorators = list(
+     plot = teal_transform_module(...), # applied to the `plot` output
+   )
+)
+}\if{html}{\out{</div>}}
+
+For additional details and examples of decorators, refer to the vignette
+\code{vignette("decorate-module-output", package = "teal.modules.general")}.
+
+To learn more please refer to the vignette
+\code{vignette("transform-module-output", package = "teal")} or the \code{\link[teal:teal_transform_module]{teal::teal_transform_module()}} documentation.
+}
+
 \section{Reporting}{
 
 
@@ -104,14 +159,13 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-# Example using stream (ADaM) dataset
 data <- teal_data() \%>\%
   eval_code("set.seed(23) # @linksto ADSL") \%>\%
   within({
     library(nestcolor)
     library(dplyr)
-    ADSL <- rADSL
-    ADAE <- rADAE
+    ADSL <- teal.data::rADSL
+    ADAE <- teal.data::rADAE
     ADSL <- mutate(ADSL, DOSE = paste(sample(1:3, n(), replace = TRUE), "UG"))
     ADAE <- mutate(
       ADAE,
@@ -130,43 +184,42 @@ app <- init(
     tm_g_butterfly(
       label = "Butterfly Plot",
       dataname = "ADAE",
-      right_var = choices_selected(
-        selected = "SEX",
-        choices = c("SEX", "ARM", "RACE")
+      right_var = variables(
+        choices = c("SEX", "ARM", "RACE"),
+        selected = "SEX"
       ),
-      left_var = choices_selected(
-        selected = "RACE",
-        choices = c("SEX", "ARM", "RACE")
+      left_var = variables(
+        choices = c("SEX", "ARM", "RACE"),
+        selected = "RACE"
       ),
-      category_var = choices_selected(
-        selected = "AEBODSYS",
-        choices = c("AEDECOD", "AEBODSYS")
+      category_var = variables(
+        choices = c("AEDECOD", "AEBODSYS"),
+        selected = "AEBODSYS"
       ),
-      color_by_var = choices_selected(
+      color_by_var = variables(
+        choices = c("AETOXGR"),
         selected = "AETOXGR",
-        choices = c("AETOXGR", "None")
+        "allow-clear" = TRUE,
+        fixed = FALSE
       ),
-      count_by_var = choices_selected(
-        selected = "# of patients",
-        choices = c("# of patients", "# of AEs")
+      count_by_var = values(
+        choices = c("# of patients", "# of AEs"),
+        selected = "# of patients"
       ),
-      facet_var = choices_selected(
-        selected = NULL,
-        choices = c("RACE", "SEX", "ARM")
+      facet_var = variables(
+        choices = c("RACE", "SEX", "ARM"),
+        selected = NULL
       ),
-      sort_by_var = choices_selected(
-        selected = "count",
-        choices = c("count", "alphabetical")
-      ),
-      legend_on = TRUE,
-      plot_height = c(600, 200, 2000)
+      sort_by_var = values(
+        choices = c("count", "alphabetical"),
+        selected = "count"
+      )
     )
   )
 )
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-
 }
 \author{
 Carolyn Zhang (zhanc107) \email{carolyn.zhang@duke.edu}

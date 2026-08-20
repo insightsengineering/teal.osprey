@@ -7,12 +7,14 @@
 tm_g_ae_oview(
   label,
   dataname,
-  arm_var,
-  flag_var_anl,
+  parentname = "ADSL",
+  arm_var = teal.picks::variables(dplyr::starts_with("ACTARM")),
+  flag_var_anl = teal.picks::variables(dplyr::matches("^(TMPFL|AEREL[1-9])")),
   fontsize = c(5, 3, 7),
   plot_height = c(600L, 200L, 2000L),
   plot_width = NULL,
-  transformators = list()
+  transformators = list(),
+  decorators = list()
 )
 }
 \arguments{
@@ -23,13 +25,22 @@ For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 analysis data used in the teal module, needs to be
 available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}.}
 
-\item{arm_var}{(\code{choices_selected})\cr
-object with all available choices and the pre-selected option for variable
-names that can be used as \code{arm_var}. See \code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}} for
-details. Column \code{arm_var} in the \code{dataname} has to be a factor.}
+\item{parentname}{(\code{character(1)})\cr
+analysis data used for several variables in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
+\code{"ADSL"}}
 
-\item{flag_var_anl}{(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected}})
-\code{choices_selected} object with variables used to count adverse event
+\item{arm_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.\cr
+\code{choices_selected} is being deprecated as an argument type and will be removed in the future.
+Object with all available choices and the pre-selected option for variable
+names that can be used as \code{arm_var}. Column \code{arm_var} in the \code{dataname}
+has to be a factor.}
+
+\item{flag_var_anl}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Object with variables used to count adverse event
 sub-groups (e.g. Serious events, Related events, etc.)}
 
 \item{fontsize}{(\code{numeric(1)} or \code{numeric(3)})\cr
@@ -45,13 +56,44 @@ vector to indicate default value, minimum and maximum values.}
 
 \item{transformators}{(\code{list} of \code{teal_transform_module}) that will be applied to transform module's data input.
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
+
+\item{decorators}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+(named \code{list} of \code{teal_transform_module}) optional,
+decorators for the module \code{plot} output.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 Display the \code{AE} overview plot as a shiny module
 }
+\section{Decorating Module}{
+
+
+This module generates the following objects, which can be modified in place using decorators:
+\itemize{
+\item \code{plot} (\code{grob})
+}
+
+A Decorator is applied to the specific output using a named list of \code{teal_transform_module} objects.
+The name of this list corresponds to the name of the output to which the decorator is applied.
+See code snippet below:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{tm_g_ae_oview(
+   ..., # arguments for module
+   decorators = list(
+     plot = teal_transform_module(...), # applied to the `plot` output
+   )
+)
+}\if{html}{\out{</div>}}
+
+For additional details and examples of decorators, refer to the vignette
+\code{vignette("decorate-module-output", package = "teal.modules.general")}.
+
+To learn more please refer to the vignette
+\code{vignette("transform-module-output", package = "teal")} or the \code{\link[teal:teal_transform_module]{teal::teal_transform_module()}} documentation.
+}
+
 \section{Reporting}{
 
 
@@ -69,60 +111,51 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-data <- teal_data() \%>\%
-  within({
-    library(dplyr)
-    ADSL <- rADSL
-    ADAE <- rADAE
-    .add_event_flags <- function(dat) {
-      dat <- dat \%>\%
-        mutate(
-          TMPFL_SER = AESER == "Y",
-          TMPFL_REL = AEREL == "Y",
-          TMPFL_GR5 = AETOXGR == "5",
-          AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
-          AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
-        )
-      labels <- c(
-        "Serious AE", "Related AE", "Grade 5 AE",
-        "AE related to A: Drug X", "AE related to B: Placebo"
+data <- within(teal_data(), {
+  library(dplyr)
+  ADSL <- teal.data::rADSL
+  ADAE <- teal.data::rADAE
+  .add_event_flags <- function(dat) {
+    dat <- dat \%>\%
+      mutate(
+        TMPFL_SER = AESER == "Y",
+        TMPFL_REL = AEREL == "Y",
+        TMPFL_GR5 = AETOXGR == "5",
+        AEREL1 = (AEREL == "Y" & ACTARM == "A: Drug X"),
+        AEREL2 = (AEREL == "Y" & ACTARM == "B: Placebo")
       )
-      cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
-      for (i in seq_along(labels)) {
-        attr(dat[[cols[i]]], "label") <- labels[i]
-      }
-      dat
+    labels <- c(
+      "Serious AE", "Related AE", "Grade 5 AE",
+      "AE related to A: Drug X", "AE related to B: Placebo"
+    )
+    cols <- c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
+    for (i in seq_along(labels)) {
+      attr(dat[[cols[i]]], "label") <- labels[i]
     }
-    ADAE <- .add_event_flags(ADAE)
-  })
-
+    dat
+  }
+  ADAE <- .add_event_flags(ADAE)
+})
 join_keys(data) <- default_cdisc_join_keys[names(data)]
-
-ADAE <- data[["ADAE"]]
-
-app <- init(
+app <- suppressWarnings(init(
   data = data,
   modules = modules(
     tm_g_ae_oview(
       label = "AE Overview",
       dataname = "ADAE",
-      arm_var = choices_selected(
-        selected = "ACTARM",
-        choices = c("ACTARM", "ACTARMCD")
+      parentname = "ADSL",
+      arm_var = variables(
+        choices = dplyr::starts_with("ACTARM"),
+        selected = "ACTARMCD"
       ),
-      flag_var_anl = choices_selected(
-        selected = "AEREL1",
-        choices = variable_choices(
-          ADAE,
-          c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2")
-        ),
-      ),
-      plot_height = c(600, 200, 2000)
+      flag_var_anl = variables(
+        choices = c("TMPFL_SER", "TMPFL_REL", "TMPFL_GR5", "AEREL1", "AEREL2"),
+        selected = "AEREL1"
+      )
     )
   )
-)
+), classes = "picks_delayed")
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
-
 }

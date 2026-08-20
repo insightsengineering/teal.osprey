@@ -6,18 +6,21 @@
 \usage{
 tm_g_waterfall(
   label,
+  parentname = "ADSL",
   dataname_tr = "ADTR",
   dataname_rs = "ADRS",
-  bar_paramcd,
-  bar_var,
-  bar_color_var,
+  bar_paramcd = teal.picks::values(choices = teal.picks::is_categorical(), multiple =
+    FALSE),
+  bar_var = teal.picks::variables(choices = is.numeric, multiple = FALSE),
+  bar_color_var = teal.picks::variables(choices = teal.picks::is_categorical(max.len =
+    20), selected = NULL),
   bar_color_opt = NULL,
-  sort_var,
-  add_label_var_sl,
-  add_label_paramcd_rs,
-  anno_txt_var_sl,
-  anno_txt_paramcd_rs,
-  facet_var,
+  sort_var = teal.picks::variables(selected = NULL),
+  add_label_var_sl = teal.picks::variables(selected = NULL),
+  add_label_paramcd_rs = teal.picks::values(selected = NULL, multiple = FALSE),
+  anno_txt_var_sl = teal.picks::variables(selected = NULL, multiple = TRUE),
+  anno_txt_paramcd_rs = teal.picks::values(selected = NULL),
+  facet_var = teal.picks::variables(selected = NULL),
   ytick_at = 20,
   href_line = NULL,
   gap_point_val = NULL,
@@ -26,59 +29,84 @@ tm_g_waterfall(
   plot_width = NULL,
   pre_output = NULL,
   post_output = NULL,
-  transformators = list()
+  transformators = list(),
+  decorators = list()
 )
 }
 \arguments{
 \item{label}{(\code{character(1)}) Label shown in the navigation item for the module or module group.
 For \code{modules()} defaults to \code{"root"}. See \code{Details}.}
 
-\item{dataname_tr}{tumor burden analysis data used in teal module to plot as bar height, needs to
+\item{parentname}{(\code{character(1)})\cr
+analysis data used for several variables in the teal module, needs to be
+available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}. The default is
+\code{"ADSL"}}
+
+\item{dataname_tr}{(\code{character(1)}) tumor burden analysis data used in teal module to plot as bar height, needs to
 be available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}}
 
-\item{dataname_rs}{response analysis data used in teal module to label response parameters, needs to
+\item{dataname_rs}{(\code{character(1)}) response analysis data used in teal module to label response parameters, needs to
 be available in the list passed to the \code{data} argument of \code{\link[teal:init]{teal::init()}}}
 
-\item{bar_paramcd}{\code{choices_selected} parameter in tumor burden data that will be plotted as
-bar height}
+\item{bar_paramcd}{Either a (\code{\link[teal.picks:values]{teal.picks::values()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Parameter in tumor burden data that will be plotted as bar height.}
 
-\item{bar_var}{\code{choices_selected} numeric variable from dataset to plot the bar height, e.g., \code{PCHG}}
+\item{bar_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Numeric variable from dataset to plot the bar height, e.g., \code{PCHG}.}
 
-\item{bar_color_var}{\code{choices_selected} color by variable (subject level), \code{None} corresponds
-to \code{NULL}}
+\item{bar_color_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Color by variable (subject level). Defaults to no selection.}
 
 \item{bar_color_opt}{aesthetic values to map color values (named vector to map color values to each name).
 If not \code{NULL}, please make sure this contains all possible values for \code{bar_color_var} values,
 otherwise color will be assigned by \code{ggplot} default, please note that \code{NULL} needs to be specified
 in this case}
 
-\item{sort_var}{\code{choices_selected} sort by variable (subject level), \code{None} corresponds
-to \code{NULL}}
+\item{sort_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Sort by variable (subject level). Defaults to no selection.}
 
-\item{add_label_var_sl}{\code{choices_selected} add label to bars (subject level), \code{None}
-corresponds to \code{NULL}}
+\item{add_label_var_sl}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Add label to bars (subject level).}
 
-\item{add_label_paramcd_rs}{\code{choices_selected} add label to bars (response dataset), \code{None}
-corresponds to \code{NULL}. At least one of \code{add_label_var_sl} and \code{add_label_paramcd_rs} needs
-to be \code{NULL}}
+\item{add_label_paramcd_rs}{Either a (\code{\link[teal.picks:values]{teal.picks::values()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Add label to bars (response dataset).
+At least one of \code{add_label_var_sl} and \code{add_label_paramcd_rs} needs to not be selected.}
 
-\item{anno_txt_var_sl}{\code{choices_selected} subject level variables to be displayed in the annotation
-table, default is \code{NULL}}
+\item{anno_txt_var_sl}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Subject level variables to be displayed in the annotation table, default is no selection.}
 
-\item{anno_txt_paramcd_rs}{\code{choices_selected} analysis dataset variables to be displayed in the
-annotation table, default is \code{NULL}}
+\item{anno_txt_paramcd_rs}{Either a (\code{\link[teal.picks:values]{teal.picks::values()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Analysis dataset variables to be displayed in the annotation table, default is no selection.}
 
-\item{facet_var}{\code{choices_selected} facet by variable (subject level), \code{None} corresponds to
-\code{NULL}}
+\item{facet_var}{Either a (\code{\link[teal.picks:variables]{teal.picks::variables()}}) object or a
+(\code{\link[teal.transform:choices_selected]{teal.transform::choices_selected()}}) object.
+\code{choices_selected()} is being deprecated as an argument type and will be removed in the future.
+Facet by variable (subject level). Defaults to no selection.}
 
-\item{ytick_at}{bar height axis interval, default is 20}
+\item{ytick_at}{(\code{numeric(1)}) bar height axis interval, default is 20}
 
-\item{href_line}{numeric vector to plot horizontal reference lines, default is \code{NULL}}
+\item{href_line}{(\code{numeric}) numeric vector to plot horizontal reference lines, default is \code{NULL}}
 
-\item{gap_point_val}{singular numeric value for adding bar break when some bars are significantly higher
-than others, default is \code{NULL}}
+\item{gap_point_val}{(\code{numeric(1)}) singular numeric value for adding bar break when some bars
+are significantly higher than others, default is \code{NULL}}
 
-\item{show_value}{boolean of whether value of bar height is shown, default is \code{TRUE}}
+\item{show_value}{(\code{logical(1)}) boolean of whether value of bar height is shown, default is \code{TRUE}}
 
 \item{plot_height}{(\code{numeric(3)})\cr
 vector to indicate default value, minimum and maximum values.}
@@ -94,13 +122,44 @@ into context. For example the \code{\link[shiny:helpText]{shiny::helpText()}} el
 
 \item{transformators}{(\code{list} of \code{teal_transform_module}) that will be applied to transform module's data input.
 To learn more check \code{vignette("transform-input-data", package = "teal")}.}
+
+\item{decorators}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+(named \code{list} of \code{teal_transform_module}) optional,
+decorators for the module \code{plot} output.}
 }
 \value{
-the \code{\link[teal:teal_modules]{teal::module()}} object.
+the \code{\link[teal:module]{teal::module()}} object.
 }
 \description{
 This is teal module that generates a waterfall plot for \code{ADaM} data
 }
+\section{Decorating Module}{
+
+
+This module generates the following objects, which can be modified in place using decorators:
+\itemize{
+\item \code{plot} (\code{grob}, \code{gtable})
+}
+
+A Decorator is applied to the specific output using a named list of \code{teal_transform_module} objects.
+The name of this list corresponds to the name of the output to which the decorator is applied.
+See code snippet below:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{tm_g_butterfly(
+   ..., # arguments for module
+   decorators = list(
+     plot = teal_transform_module(...), # applied to the `plot` output
+   )
+)
+}\if{html}{\out{</div>}}
+
+For additional details and examples of decorators, refer to the vignette
+\code{vignette("decorate-module-output", package = "teal.modules.general")}.
+
+To learn more please refer to the vignette
+\code{vignette("transform-module-output", package = "teal")} or the \code{\link[teal:teal_transform_module]{teal::teal_transform_module()}} documentation.
+}
+
 \section{Reporting}{
 
 
@@ -118,14 +177,13 @@ For more information on reporting in \code{teal}, see the vignettes:
 }
 
 \examples{
-data <- teal_data() \%>\%
-  within({
-    library(nestcolor)
-    ADSL <- rADSL
-    ADRS <- rADRS
-    ADTR <- rADTR
-    ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
-  })
+data <- within(teal_data(), {
+  library(nestcolor)
+  ADSL <- teal.data::rADSL
+  ADRS <- teal.data::rADRS
+  ADTR <- teal.data::rADTR
+  ADSL$SEX <- factor(ADSL$SEX, levels = unique(ADSL$SEX))
+})
 
 join_keys(data) <- default_cdisc_join_keys[names(data)]
 
@@ -136,16 +194,16 @@ app <- init(
       label = "Waterfall",
       dataname_tr = "ADTR",
       dataname_rs = "ADRS",
-      bar_paramcd = choices_selected(c("SLDINV"), "SLDINV"),
-      bar_var = choices_selected(c("PCHG", "AVAL"), "PCHG"),
-      bar_color_var = choices_selected(c("ARMCD", "SEX"), "ARMCD"),
+      bar_paramcd = values(c("SLDINV"), "SLDINV", multiple = FALSE),
+      bar_var = variables(c("PCHG", "AVAL"), "PCHG"),
+      bar_color_var = variables(c("ARMCD", "SEX"), "ARMCD"),
       bar_color_opt = NULL,
-      sort_var = choices_selected(c("ARMCD", "SEX"), NULL),
-      add_label_var_sl = choices_selected(c("SEX", "EOSDY"), NULL),
-      add_label_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-      anno_txt_var_sl = choices_selected(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL),
-      anno_txt_paramcd_rs = choices_selected(c("BESRSPI", "OBJRSPI"), NULL),
-      facet_var = choices_selected(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
+      sort_var = variables(c("ARMCD", "SEX"), NULL),
+      add_label_var_sl = variables(c("SEX", "EOSDY"), NULL),
+      add_label_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL, multiple = FALSE),
+      anno_txt_var_sl = variables(c("SEX", "ARMCD", "BMK1", "BMK2"), NULL, multiple = TRUE),
+      anno_txt_paramcd_rs = values(c("BESRSPI", "OBJRSPI"), NULL),
+      facet_var = variables(c("SEX", "ARMCD", "STRATA1", "STRATA2"), NULL),
       href_line = "-30, 20"
     )
   )
