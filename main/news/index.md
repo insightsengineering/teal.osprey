@@ -1,6 +1,6 @@
 # Changelog
 
-## teal.osprey 0.4.0.9003
+## teal.osprey 0.5.0.9000
 
 #### Enhancements
 
@@ -8,7 +8,13 @@
   the filter sidebar) and `decorators` (plot output transforms in the
   encoding panel).
 - Migrated modules from `teal.transform` to `teal.picks`.
+  [\#348](https://github.com/insightsengineering/teal.osprey/issues/348),
+  [\#356](https://github.com/insightsengineering/teal.osprey/issues/356),
+  [\#351](https://github.com/insightsengineering/teal.osprey/issues/351)
 - Added shinytest2 tests.
+  [\#348](https://github.com/insightsengineering/teal.osprey/issues/348)
+- Added unit tests for all modules.
+  [\#350](https://github.com/insightsengineering/teal.osprey/issues/350)
 
 ## teal.osprey 0.4.0
 
