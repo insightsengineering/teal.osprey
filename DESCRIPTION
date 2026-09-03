@@ -1,7 +1,7 @@
 Package: teal.osprey
 Title: 'teal' Modules for TLG Functions in Osprey
-Version: 0.5.0
-Date: 2026-08-20
+Version: 0.5.0.9000
+Date: 2026-09-03
 Authors@R: c(
     person("Nina", "Qi", , "qit3@gene.com", role = c("aut", "cre")),
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
@@ -52,7 +52,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes:
-    insightsengineering/osprey,
+    insightsengineering/osprey
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal, insightsengineering/teal.picks,
     insightsengineering/teal.slice, insightsengineering/teal.transform,

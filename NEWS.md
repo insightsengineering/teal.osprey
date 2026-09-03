@@ -1,4 +1,4 @@
-# teal.osprey 0.5.0
+# teal.osprey 0.5.0.9000
 
 ### Enhancements
 - All `tm_g_*` modules accept `transformators` (input data transforms in the filter sidebar) and `decorators` (plot output transforms in the encoding panel).
