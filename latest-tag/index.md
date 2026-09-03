@@ -41,29 +41,4 @@ applications making use of `osprey`.
 
 ## Installation
 
-``` r
-# stable versions
-# install.packages("pak")
-pak::pkg_install("insightsengineering/teal.osprey@*release")
-
-# beta versions
-# install.packages("pak")
-pak::pkg_install("insightsengineering/teal.osprey")
-```
-
-## Stargazers and Forkers
-
-### Stargazers over time
-
-[![Stargazers over
-time](https://starchart.cc/insightsengineering/teal.osprey.svg)](https://starchart.cc/insightsengineering/teal.osprey)
-
-### Stargazers
-
-[![Stargazers repo roster for
-@insightsengineering/teal.osprey](https://reporoster.com/stars/insightsengineering/teal.osprey)](https://github.com/insightsengineering/teal.osprey/stargazers)
-
-### Forkers
-
-[![Forkers repo roster for
-@insightsengineering/teal.osprey](https://reporoster.com/forks/insightsengineering/teal.osprey)](https://github.com/insightsengineering/teal.osprey/network/members)
+`# stable versions`` ``# install.packages("pak")`` ``pak``::`[`pkg_install`](https://pak.r-lib.org/reference/pkg_install.html)`(``"insightsengineering/teal.osprey@*release"``)`` `` ``# beta versions`` ``# install.packages("pak")`` ``pak``::`[`pkg_install`](https://pak.r-lib.org/reference/pkg_install.html)`(``"insightsengineering/teal.osprey"``)`

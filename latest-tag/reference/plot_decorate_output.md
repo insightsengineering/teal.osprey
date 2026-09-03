@@ -1,7 +1,7 @@
 # Helper function to plot decorated output UI
 
 Adds
-[`teal.widgets::plot_with_settings_ui()`](https://insightsengineering.github.io/teal.widgets/latest-tag/reference/plot_with_settings.html)
+[`plot_with_settings_ui()`](https://insightsengineering.github.io/teal.widgets/latest-tag/reference/plot_with_settings.html)
 
 ## Usage
 

@@ -33,7 +33,7 @@ ui_g_decorate(
 
 - fontsize:
 
-  (`numeric(1)` or `numeric(3)`)  
+  (`numeric(1)` or `numeric(3)`)\
   Defines initial possible range of font-size. `fontsize` is set for
   [`teal.widgets::optionalSliderInputValMinMax()`](https://insightsengineering.github.io/teal.widgets/latest-tag/reference/optionalSliderInputValMinMax.html)
   which controls font-size in the output plot.
