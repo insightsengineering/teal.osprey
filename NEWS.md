@@ -1,9 +1,10 @@
-# teal.osprey 0.4.0.9003
+# teal.osprey 0.5.0
 
 ### Enhancements
 - All `tm_g_*` modules accept `transformators` (input data transforms in the filter sidebar) and `decorators` (plot output transforms in the encoding panel).
-- Migrated modules from `teal.transform` to `teal.picks`.
-- Added shinytest2 tests.
+- Migrated modules from `teal.transform` to `teal.picks`. #348, #356, #351
+- Added shinytest2 tests. #348
+- Added unit tests for all modules. #350
 
 # teal.osprey 0.4.0
 
