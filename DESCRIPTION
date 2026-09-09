@@ -49,10 +49,10 @@ Suggests:
     shinytest2 (>= 0.4.1),
     testthat (>= 3.2.3),
     withr (>= 3.0.0)
-VignetteBuilder: 
+VignetteBuilder:
     knitr
 Remotes:
-    insightsengineering/osprey
+    insightsengineering/osprey@*release
 Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     insightsengineering/teal, insightsengineering/teal.picks,
     insightsengineering/teal.slice, insightsengineering/teal.transform,
