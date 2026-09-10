@@ -1,4 +1,4 @@
-# teal.osprey 0.5.0.9000
+# teal.osprey 0.5.0.9001
 
 ### Miscellaneous
 * We're adding the `@*release` selector to Remotes because `osprey` is not available on CRAN. This gives teal.gallery an explicit GitHub reference for installing the released version of `osprey` (#360).
