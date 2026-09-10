@@ -1,5 +1,10 @@
 # teal.osprey 0.5.0.9000
 
+### Miscellaneous
+* We're adding the `@*release` selector to Remotes because `osprey` is not available on CRAN. This gives teal.gallery an explicit GitHub reference for installing the released version of `osprey` (#360).
+
+# teal.osprey 0.5.0
+
 ### Enhancements
 - All `tm_g_*` modules accept `transformators` (input data transforms in the filter sidebar) and `decorators` (plot output transforms in the encoding panel).
 - Migrated modules from `teal.transform` to `teal.picks`. #348, #356, #351
@@ -7,7 +12,6 @@
 - Added unit tests for all modules. #350
 
 # teal.osprey 0.4.0
-
 
 ### Enhancements
 - Adds support for reporter and reproducibility by returning a `qenv`-based object from modules.
