@@ -23,14 +23,13 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/insightsengineering/teal.osprey/blob/v0.5.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/insightsengineering/teal.osprey/blob/v0.5.1/DESCRIPTION)
 
 Qi N, Kaledkowski D, Liao C, Li L, Pagacz K (2026). *teal.osprey: 'teal'
-Modules for TLG Functions in Osprey*. R package version 0.4.0.9003,
+Modules for TLG Functions in Osprey*. R package version 0.5.1,
 <https://insightsengineering.github.io/teal.osprey/>.
 
 @Manual{, title = {teal.osprey: 'teal' Modules for TLG Functions in
 Osprey}, author = {Nina Qi and Dawid Kaledkowski and Chendi Liao and
 Liming Li and Konrad Pagacz}, year = {2026}, note = {R package version
-0.4.0.9003}, url = {https://insightsengineering.github.io/teal.osprey/},
-}
+0.5.1}, url = {https://insightsengineering.github.io/teal.osprey/}, }
