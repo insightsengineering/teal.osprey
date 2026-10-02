@@ -19,6 +19,7 @@ flag_var_picks <- variables(
 )
 
 describe("tm_g_ae_oview argument verification", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   it("fails when arm_var is neither picks or choices selected", {
     expect_error(
       tm_g_ae_oview(
@@ -31,7 +32,7 @@ describe("tm_g_ae_oview argument verification", {
     )
   })
 
-  it("fails when flag_var_anl is neiter picks or choices_selected", {
+  it("fails when flag_var_anl is neither picks or choices_selected", {
     expect_error(
       tm_g_ae_oview(
         label = "AE Overview",

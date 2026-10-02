@@ -10,6 +10,7 @@ group_var_cs <- teal.transform::choices_selected(
 
 describe("tm_g_ae_sub input validation", {
   it("plot arguments input validation", {
+    withr::local_options(lifecycle_verbosity = "quiet")
     expect_error(
       {
         suppressWarnings(
@@ -43,6 +44,7 @@ describe("tm_g_ae_sub input validation", {
 
 describe("tm_g_ae_sub module creation", {
   it("creates a teal module using choices_selected", {
+    withr::local_options(lifecycle_verbosity = "quiet")
     mod <- suppressWarnings(tm_g_ae_sub(
       label = "subgroups Plot",
       dataname = "ADAE",

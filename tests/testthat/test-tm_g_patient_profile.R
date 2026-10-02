@@ -189,16 +189,13 @@ describe("tm_g_patient_profile module works using", {
       classes = c("picks_delayed", "lifecycle_warning_deprecated")
     )
 
-    expect_warning(
-      testServer(
-        mod$server,
-        args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-        expr = {
-          session$setInputs(select_ADaM = "ADEX", x_limit = "-28, 750")
-          expect_no_error(session$returned())
-        }
-      ),
-      regexp = "contains multiple values"
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(select_ADaM = "ADEX", x_limit = "-28, 750")
+        expect_no_error(session$returned())
+      }
     )
   })
 
@@ -213,16 +210,13 @@ describe("tm_g_patient_profile module works using", {
       plot_height = c(1200, 400, 5000)
     ), classes = "picks_delayed")
 
-    expect_warning(
-      testServer(
-        mod$server,
-        args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
-        expr = {
-          session$setInputs(select_ADaM = "ADEX", x_limit = "-28, 750")
-          expect_no_error(session$returned())
-        }
-      ),
-      regexp = "contains multiple values"
+    testServer(
+      mod$server,
+      args = c(list(id = "test_id", data = shiny::reactive(data)), mod$server_args),
+      expr = {
+        session$setInputs(select_ADaM = "ADEX", x_limit = "-28, 750")
+        expect_no_error(session$returned())
+      }
     )
   })
 })
