@@ -48,3 +48,6 @@ coverage.*
 ^revdep$
 ^\.covrignore$
 teal_app.lock
+^vignettes/_AGENTS\.Rmd$
+^AGENTS\.md$
+^CLAUDE\.md$
