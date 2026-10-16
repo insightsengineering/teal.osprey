@@ -45,6 +45,10 @@ The `teal.osprey` package uses:
 
 - **osprey** - A package for tables, listings and graphics generation.
 
+The `teal.osprey` package is used by:
+
+- **teal.gallery** - Repository with several example apps that use these modules.
+
 
 ## Workflows
 
