@@ -1,6 +1,6 @@
 # Changelog
 
-## teal.osprey 0.5.1.9001
+## teal.osprey 0.5.1.9002
 
 ## teal.osprey 0.5.1
 
