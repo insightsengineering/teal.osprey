@@ -65,7 +65,7 @@ Config/Needs/verdepcheck: insightsengineering/osprey, rstudio/shiny,
     rstudio/rmarkdown, rstudio/shinytest2, insightsengineering/teal.data,
     r-lib/testthat, r-lib/withr
 Config/Needs/website: insightsengineering/nesttemplate
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1
 Encoding: UTF-8
 Language: en-US
 LazyData: true
