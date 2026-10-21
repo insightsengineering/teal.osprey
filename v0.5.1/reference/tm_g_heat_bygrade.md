@@ -275,8 +275,6 @@ app <- init(
   )
 )
 #> Initializing tm_g_heat_bygrade
-#> Warning: variables(choices = is_categorical(min.len = 2), selected = c("SEX", "COUNTRY"), multiple = TRUE)
-#>  - Setting explicit `selected` while `choices` are delayed (set using `tidyselect`) doesn't guarantee that `selected` is a subset of `choices`.
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }

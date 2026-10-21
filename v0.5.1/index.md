@@ -41,4 +41,11 @@ applications making use of `osprey`.
 
 ## Installation
 
-`# stable versions`` ``# install.packages("pak")`` ``pak``::`[`pkg_install`](https://pak.r-lib.org/reference/pkg_install.html)`(``"insightsengineering/teal.osprey@*release"``)`` `` ``# beta versions`` ``# install.packages("pak")`` ``pak``::`[`pkg_install`](https://pak.r-lib.org/reference/pkg_install.html)`(``"insightsengineering/teal.osprey"``)`
+\
+`# stable versions`\
+`# install.packages("pak")`\
+`pak``::`[`pkg_install`](https://pak.r-lib.org/reference/pkg_install.html)`(``"insightsengineering/teal.osprey@*release"``)`\
+\
+`# beta versions`\
+`# install.packages("pak")`\
+`pak``::`[`pkg_install`](https://pak.r-lib.org/reference/pkg_install.html)`(``"insightsengineering/teal.osprey"``)`
